@@ -25,7 +25,7 @@ Apart from this, please find specific installation requriements based on your ve
 
 
 ### Download
- You can [download]() latest installable version of Rintagi for Windows.
+ You can [download](https://www.rintagi.com/download.aspx) latest installable version of Rintagi for Windows.
 
 ### Installation
    * [Setting up Development System](https://www.rintagi.com/docs/site/Initial-Setup/index.html#installation)  
