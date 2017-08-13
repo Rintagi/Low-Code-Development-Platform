@@ -2,7 +2,7 @@
 
 The world's first open source low-code development platform. Build responsive mission-critical database systems with beautiful web interface.  The only code you need to worry about is unique business rules on three tiers.
 
-Coming Wednesday, August 16 2017. Stay tuned by following us on [twitter](https://www.twitter.com/rintagi).
+Coming <strong>Wednesday, August 16 2017</strong>. Stay tuned by following us on [twitter](https://www.twitter.com/rintagi).
 
 
 ## Table of content
