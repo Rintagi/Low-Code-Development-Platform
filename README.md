@@ -56,4 +56,4 @@ All demos and examples, whether in a code project’s repository or displayed on
 
 
 ## Author
-Developed and maintaned by [Robocoder Corporation](https://www.robocoder.com).
+Developed and maintained by [Robocoder Corporation](https://www.robocoder.com).
