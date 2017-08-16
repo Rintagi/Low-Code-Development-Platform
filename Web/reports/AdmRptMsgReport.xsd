@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DsAdmRptMsg" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="DsAdmRptMsg" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DtAdmRptMsg">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AuthorityLevel" type="xs:string" minOccurs="0" />
+              <xs:element name="ReportName" type="xs:string" minOccurs="0" />
+              <xs:element name="CultureDescIn" type="xs:string" minOccurs="0" />
+              <xs:element name="SystemNameIn" type="xs:string" minOccurs="0" />
+              <xs:element name="SystemName" type="xs:string" minOccurs="0" />
+              <xs:element name="ScreenTitle" type="xs:string" minOccurs="0" />
+              <xs:element name="MenuText" type="xs:string" minOccurs="0" />
+              <xs:element name="DefaultHlpMsg" type="xs:string" minOccurs="0" />
+              <xs:element name="MasterTable" type="xs:string" minOccurs="0" />
+              <xs:element name="TabIndex" type="xs:short" minOccurs="0" />
+              <xs:element name="ColumnHeader" type="xs:string" minOccurs="0" />
+              <xs:element name="ToolTip" type="xs:string" minOccurs="0" />
+              <xs:element name="ErrMessage" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

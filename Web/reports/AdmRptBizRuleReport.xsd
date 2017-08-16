@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DsAdmRptBizRule" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="DsAdmRptBizRule" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DtAdmRptBizRule">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AuthorityLevel" type="xs:string" minOccurs="0" />
+              <xs:element name="ReportName" type="xs:string" minOccurs="0" />
+              <xs:element name="SystemNameIn" type="xs:string" minOccurs="0" />
+              <xs:element name="SystemName" type="xs:string" minOccurs="0" />
+              <xs:element name="ScreenDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="RuleOrder" type="xs:short" minOccurs="0" />
+              <xs:element name="RuleType" type="xs:string" minOccurs="0" />
+              <xs:element name="TableDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="RuleName" type="xs:string" minOccurs="0" />
+              <xs:element name="RuleDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="ProcedureName" type="xs:string" minOccurs="0" />
+              <xs:element name="OnAdd" type="xs:string" minOccurs="0" />
+              <xs:element name="OnUpd" type="xs:string" minOccurs="0" />
+              <xs:element name="OnDel" type="xs:string" minOccurs="0" />
+              <xs:element name="BeforeCRUD" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

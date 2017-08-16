@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DsAdmRptUsr" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="DsAdmRptUsr" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DtAdmRptUsr">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AuthorityLevel" type="xs:string" minOccurs="0" />
+              <xs:element name="CurrCompany" type="xs:string" minOccurs="0" />
+              <xs:element name="UsrGroupIn" type="xs:string" minOccurs="0" />
+              <xs:element name="Active" type="xs:string" minOccurs="0" />
+              <xs:element name="ActiveIn" type="xs:string" minOccurs="0" />
+              <xs:element name="UsrGroupName" type="xs:string" minOccurs="0" />
+              <xs:element name="CultureTypeName" type="xs:string" minOccurs="0" />
+              <xs:element name="RowAuthorityDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="ColAuthorityDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="LoginName" type="xs:string" minOccurs="0" />
+              <xs:element name="UsrName" type="xs:string" minOccurs="0" />
+              <xs:element name="UsrEmail" type="xs:string" minOccurs="0" />
+              <xs:element name="CompanyDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="InvestorName" type="xs:string" minOccurs="0" />
+              <xs:element name="CustomerName" type="xs:string" minOccurs="0" />
+              <xs:element name="VendorName" type="xs:string" minOccurs="0" />
+              <xs:element name="AgentName" type="xs:string" minOccurs="0" />
+              <xs:element name="BrokerName" type="xs:string" minOccurs="0" />
+              <xs:element name="MemberName" type="xs:string" minOccurs="0" />
+              <xs:element name="iUsrName" type="xs:string" minOccurs="0" />
+              <xs:element name="iCompanyDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="iInvestorName" type="xs:string" minOccurs="0" />
+              <xs:element name="iCustomerName" type="xs:string" minOccurs="0" />
+              <xs:element name="iVendorName" type="xs:string" minOccurs="0" />
+              <xs:element name="iAgentName" type="xs:string" minOccurs="0" />
+              <xs:element name="iBrokerName" type="xs:string" minOccurs="0" />
+              <xs:element name="iMemberName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

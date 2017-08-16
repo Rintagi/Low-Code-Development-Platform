@@ -1,0 +1,128 @@
+<%@ Master Language="C#" CodeFile="Default.master.cs" Inherits="RO.Web.DefaultMaster" %>
+<%@ Register TagPrefix="Module" TagName="Auth" Src="modules/AuthModule.ascx" %>
+<%@ Register TagPrefix="Module" TagName="Header" Src="modules/HeaderModule.ascx" %>
+<%@ Register TagPrefix="Module" TagName="Footer" Src="modules/FooterModule.ascx" %>
+<%@ Register TagPrefix="Module" TagName="Sidebar" Src="modules/SidebarModule.ascx" %>
+<!doctype html>
+<html>
+<head runat="server">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=11" />
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <link type="text/css" rel="Stylesheet" href="css/jquery-ui-1.10.4.custom.min.css" />
+    <link type="text/css" rel="stylesheet" href="css/jquery.qtip.min.css" />
+    <link type="text/css" rel="stylesheet" href="css/jquery.datetimepicker.css" />
+    <link type="text/css" rel="Stylesheet" href="css/jquery.multiselect.css" />
+    <link type="text/css" rel="Stylesheet" href="css/jquery.multiselect.filter.css" />
+    <link type="text/css" rel="Stylesheet" href="css/slidebars.css" />
+    <!--[if lt IE 8]><link type="text/css" rel="stylesheet" href="css/_ie.css" /><![endif]-->
+    <link type="text/css" rel="Stylesheet" href="css/_base.css" />
+    <link type="text/css" rel="stylesheet" href="css/_print.css" media="print" />
+    <link type="text/css" rel="Stylesheet" href="css/_screen.css" />
+    <!-- *.css is user indirect controlled. Users change PageObj etc. to regenerate this. -->
+    <link type="text/css" rel="Stylesheet" href="css/sectionH.css" />
+    <link type="text/css" rel="Stylesheet" href="css/sectionF.css" />
+    <link type="text/css" rel="Stylesheet" href="css/sectionD.css" />
+    <link type="text/css" rel="Stylesheet" href="css/sectionS.css" />
+    <!-- application.css is user direct controlled. Users may manually change it. -->
+    <link type="text/css" rel="Stylesheet" href="css/application.css" />
+    <link type="text/css" rel="Stylesheet" href="GetCss.aspx" />
+    <link rel="icon" type="image/png" href="images/logo.png" />
+    <script type="text/javascript" src="scripts/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery-migrate-1.2.1.js"></script>
+    <script type="text/javascript" src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
+    <script type="text/javascript" src="scripts/slidebars.js"></script>
+    <script type="text/javascript" src="scripts/slidebars-menu.js"></script>
+    <script type="text/javascript" src="scripts/i18n/jquery.ui.datepicker-en.js"></script>
+    <script type="text/javascript" src="scripts/jquery.datetimepicker.js"></script>
+    <script type="text/javascript" src="scripts/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery-autocomplete.js"></script>
+    <script type="text/javascript" src="scripts/jquery.ui.stars.js"></script>
+    <script type='text/javascript' src='scripts/jquery.ui.touchPunch.js'></script>
+    <script type="text/javascript" src="scripts/jquery.watermark.js"></script>
+    <script type="text/javascript" src="scripts/jquery.json-2.2.min.js"></script>
+    <script type='text/javascript' src='scripts/jquery.tokeninput.js'></script>
+    <script type='text/javascript' src='scripts/jquery.flexslider.js'></script>
+    <script type='text/javascript' src='scripts/jquery.multiselect.js'></script>
+    <script type='text/javascript' src='scripts/jquery.multiselect.filter.js'></script>
+    <!--[if lte IE 8]><script type="text/javascript" src="scripts/excanvas.js"></script><![endif]-->
+    <!--[if lt IE 9]><script type="text/javascript" src="scripts/HTML5forIE.js"></script><![endif]-->
+    <script type="text/javascript" src="scripts/charts/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="scripts/charts/plugins/jqplot.canvasTextRenderer.js"></script>
+    <script type="text/javascript" src="scripts/charts/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+    <script type="text/javascript" src="scripts/charts/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+    <script type="text/javascript" src="scripts/charts/plugins/jqplot.dateAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="scripts/charts/plugins/jqplot.barRenderer.min.js"></script>
+    <script type="text/javascript" src="scripts/charts/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="scripts/signature_pad.js"></script>
+    <script type="text/javascript" src="scripts/ClientRule.js"></script>
+    <script type="text/javascript" src="scripts/dashboard.js"></script>
+    <script type="text/javascript" src="scripts/UserRule.js"></script>
+    <!-- Google Analytics
+    <meta name="google-site-verification" content="google75978239b0c2cb00.html">
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        }) (window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga'); ga('create', 'UA-43961560-1', 'dentrader.com'); ga('send', 'pageview');
+    </script>
+    -->
+</head>
+<body class="PageBackground HideBgImgOnMobile">
+<div id="sb-site" class="sb-slide">
+    <form id="iForm" method="post" enctype="multipart/form-data" runat="server" defaultbutton="DoNothing">
+    <asp:Button ID="DoNothing" runat="server" Enabled="false" Style="display: none;" />
+    <asp:ScriptManager ID="ScriptManager1" EnableScriptGlobalization="true" EnableScriptLocalization="true" AsyncPostBackTimeout="3600" ScriptMode="Release" runat="server"></asp:ScriptManager>
+    <header class="Form grid grid-pad">
+    <div class="rc-1-12">
+        <div>
+            <div><Module:Auth runat="server" /></div>
+            <div><Module:Header ID="ModuleHeader" runat="server" /></div>
+        </div>
+    </div>
+    </header>
+    <!-- OCC code for Customer Service
+    <div style="position:fixed; top:200px; z-index:9999;">
+        <span class="occIcon-24320-50692">&nbsp;</span>
+        <script type="text/javascript">
+            (function () {
+                var occ = document.createElement('script'); occ.type = 'text/javascript'; occ.async = true;
+                occ.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.onlinechatcenters.com/code-24320-50692.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(occ, s);
+            })();
+        </script>
+    </div>
+    -->
+    <section class="Form grid grid-pad">
+    <div class="rc-1-12">
+        <div class="cntPanel">
+            <div class="Sidebar"><Module:Sidebar ID="ModuleSidebar" runat="server" /></div>
+            <div style="width:100%"><asp:contentplaceholder id="MHR" runat="server" /></div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    </section>
+    <footer class="Form grid grid-pad">
+    <div class="rc-1-12">
+        <div>
+            <Module:Footer id="ModuleFooter" runat="server" />
+        </div>
+    </div>
+    </footer>
+    <%--Used by PopDialog in ClientRule.js--%>
+    <div id="MsgPopup" style="display:none;">
+    <table>
+        <tr>
+            <td><img id="MsgIcon" src="images/Help_x.jpg" alt="" /></td>
+            <td><p id="MsgContent"></p></td>
+        </tr>
+    </table>
+    </div>
+    </form>
+</div>
+<div id="mobileMenuArea" class="sb-slidebar sb-right"></div>
+</body>
+</html>

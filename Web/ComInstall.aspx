@@ -1,0 +1,2 @@
+<%@ Page language="c#" MasterPageFile="Default.master" EnableEventValidation="false" ValidateRequest="false" Inherits="RO.Web.ComInstall" CodeFile="ComInstall.aspx.cs" Title="Compile Programs" %><%@ Register TagPrefix="Module" TagName="ComInstall" Src="modules/ComInstallModule.ascx" %>
+<asp:Content ContentPlaceHolderID="MHR" Runat="Server"><Module:ComInstall id="ModuleComInstall" runat=server /></asp:Content>

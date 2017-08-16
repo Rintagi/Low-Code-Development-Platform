@@ -1,0 +1,2 @@
+<%@ Page language="c#" MasterPageFile="Default.master" EnableEventValidation="false" Inherits="RO.Web.GenDbPorting" CodeFile="GenDbPorting.aspx.cs" Title="Database Porting" %><%@ Register TagPrefix="Module" TagName="GenDbPorting" Src="modules/GenDbPortingModule.ascx" %>
+<asp:Content ContentPlaceHolderID="MHR" Runat="Server"><Module:GenDbPorting id="ModuleGenDbPorting" runat="server" /></asp:Content>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+	<TopMargin>1.00in</TopMargin><BottomMargin>1.00in</BottomMargin><LeftMargin>1.00in</LeftMargin><RightMargin>1.00in</RightMargin>
+	<Width>6.50in</Width>
+	<PageWidth>8.50in</PageWidth><PageHeight>11.00in</PageHeight>
+	<DataSources><DataSource Name="RODesign"><DataSourceReference>RODesign</DataSourceReference></DataSource></DataSources>
+	<DataSets>
+		<DataSet Name="RODesign">
+		<Query>
+			<DataSourceName>RODesign</DataSourceName>
+			<CommandType>StoredProcedure</CommandType>
+			<CommandText>GetS03Rptwiz11</CommandText>
+			<QueryParameters>
+				<QueryParameter Name="@reportId"><Value>=Parameters!reportId.Value</Value></QueryParameter>
+				<QueryParameter Name="@RowAuthoritys"><Value>=Parameters!RowAuthoritys.Value</Value></QueryParameter>
+				<QueryParameter Name="@Usrs"><Value>=Parameters!Usrs.Value</Value></QueryParameter>
+				<QueryParameter Name="@UsrGroups"><Value>=Parameters!UsrGroups.Value</Value></QueryParameter>
+				<QueryParameter Name="@Cultures"><Value>=Parameters!Cultures.Value</Value></QueryParameter>
+				<QueryParameter Name="@Companys"><Value>=Parameters!Companys.Value</Value></QueryParameter>
+				<QueryParameter Name="@Projects"><Value>=Parameters!Projects.Value</Value></QueryParameter>
+				<QueryParameter Name="@Agents"><Value>=Parameters!Agents.Value</Value></QueryParameter>
+				<QueryParameter Name="@Brokers"><Value>=Parameters!Brokers.Value</Value></QueryParameter>
+				<QueryParameter Name="@Customers"><Value>=Parameters!Customers.Value</Value></QueryParameter>
+				<QueryParameter Name="@Investors"><Value>=Parameters!Investors.Value</Value></QueryParameter>
+				<QueryParameter Name="@Members"><Value>=Parameters!Members.Value</Value></QueryParameter>
+				<QueryParameter Name="@Vendors"><Value>=Parameters!Vendors.Value</Value></QueryParameter>
+				<QueryParameter Name="@currCompanyId"><Value>=Parameters!currCompanyId.Value</Value></QueryParameter>
+				<QueryParameter Name="@currProjectId"><Value>=Parameters!currProjectId.Value</Value></QueryParameter>
+				<QueryParameter Name="@MultiDesignDb10"><Value>=Parameters!MultiDesignDb10.Value</Value></QueryParameter>
+				<QueryParameter Name="@bUpd"><Value>=Parameters!bUpd.Value</Value></QueryParameter>
+				<QueryParameter Name="@bXls"><Value>=Parameters!bXls.Value</Value></QueryParameter>
+				<QueryParameter Name="@bVal"><Value>=Parameters!bVal.Value</Value></QueryParameter>
+			</QueryParameters>
+		</Query>
+		<Fields>
+			<Field Name="ReportName"><DataField>ReportName</DataField></Field>
+			<Field Name="AppInfoDesc"><DataField>AppInfoDesc</DataField></Field>
+			<Field Name="ItemOrder"><DataField>ItemOrder</DataField></Field>
+			<Field Name="AppItemName"><DataField>AppItemName</DataField></Field>
+		</Fields>
+		</DataSet>
+	</DataSets>
+	<ReportParameters>
+		<ReportParameter Name="reportId"><DataType>Integer</DataType><Prompt>reportId</Prompt></ReportParameter>
+		<ReportParameter Name="RowAuthoritys"><DataType>String</DataType><Prompt>RowAuthoritys</Prompt></ReportParameter>
+		<ReportParameter Name="Usrs"><DataType>String</DataType><Prompt>Usrs</Prompt></ReportParameter>
+		<ReportParameter Name="UsrGroups"><DataType>String</DataType><Prompt>UsrGroups</Prompt></ReportParameter>
+		<ReportParameter Name="Cultures"><DataType>String</DataType><Prompt>Cultures</Prompt></ReportParameter>
+		<ReportParameter Name="Companys"><DataType>String</DataType><Prompt>Companys</Prompt></ReportParameter>
+		<ReportParameter Name="Projects"><DataType>String</DataType><Prompt>Projects</Prompt></ReportParameter>
+		<ReportParameter Name="Agents"><DataType>String</DataType><Prompt>Agents</Prompt></ReportParameter>
+		<ReportParameter Name="Brokers"><DataType>String</DataType><Prompt>Brokers</Prompt></ReportParameter>
+		<ReportParameter Name="Customers"><DataType>String</DataType><Prompt>Customers</Prompt></ReportParameter>
+		<ReportParameter Name="Investors"><DataType>String</DataType><Prompt>Investors</Prompt></ReportParameter>
+		<ReportParameter Name="Members"><DataType>String</DataType><Prompt>Members</Prompt></ReportParameter>
+		<ReportParameter Name="Vendors"><DataType>String</DataType><Prompt>Vendors</Prompt></ReportParameter>
+		<ReportParameter Name="currCompanyId"><DataType>Integer</DataType><Prompt>currCompanyId</Prompt></ReportParameter>
+		<ReportParameter Name="currProjectId"><DataType>Integer</DataType><Prompt>currProjectId</Prompt></ReportParameter>
+		<ReportParameter Name="MultiDesignDb10"><AllowBlank>true</AllowBlank><Nullable>true</Nullable><DataType>String</DataType><Prompt>MultiDesignDb10</Prompt></ReportParameter>
+		<ReportParameter Name="bUpd"><DataType>String</DataType><Prompt>bUpd</Prompt></ReportParameter>
+		<ReportParameter Name="bXls"><DataType>String</DataType><Prompt>bXls</Prompt></ReportParameter>
+		<ReportParameter Name="bVal"><DataType>String</DataType><Prompt>bVal</Prompt></ReportParameter>
+		<ReportParameter Name="ReportTitle"><DataType>String</DataType><Prompt>ReportTitle</Prompt></ReportParameter>
+		<ReportParameter Name="UsrName"><DataType>String</DataType><Prompt>UsrName</Prompt></ReportParameter>
+		<ReportParameter Name="UrlBase"><DataType>String</DataType><Prompt>UrlBase</Prompt></ReportParameter>
+		<ReportParameter Name="ReportName"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>ReportName</Prompt></ReportParameter>
+		<ReportParameter Name="L_ReportName"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_ReportName</Prompt></ReportParameter>
+		<ReportParameter Name="L_AppInfoDesc"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_AppInfoDesc</Prompt></ReportParameter>
+		<ReportParameter Name="L_ItemOrder"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_ItemOrder</Prompt></ReportParameter>
+		<ReportParameter Name="L_AppItemName"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_AppItemName</Prompt></ReportParameter>
+	</ReportParameters>
+	<PageFooter>
+		<Height>0.70in</Height><Style><BackgroundColor>White</BackgroundColor></Style><PrintOnFirstPage>true</PrintOnFirstPage><PrintOnLastPage>true</PrintOnLastPage>
+		<ReportItems>
+			<Textbox Name="PUsrName"><Top>0.30in</Top><Left>0.00in</Left><Height>0.20in</Height><Width>2.00in</Width><Style><BackgroundColor>White</BackgroundColor><FontSize>7pt</FontSize><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>="By: " &amp; Parameters!UsrName.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+			<Textbox Name="GPageNumber"><Top>0.30in</Top><Left>5.00in</Left><Height>0.20in</Height><Width>1.50in</Width><Style><BackgroundColor>White</BackgroundColor><FontSize>7pt</FontSize><TextAlign>Right</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>="Page " &amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+		</ReportItems>
+	</PageFooter>
+	<Body>
+		<Height>7.50in</Height><Style><BackgroundColor>White</BackgroundColor></Style>
+		<ReportItems>
+			<Table Name="TTbl">
+				<Top>0.00in</Top>
+				<Left>0.00in</Left>
+				<Height>7.50in</Height>
+				<Width>6.50in</Width>
+				<Style><BackgroundColor>White</BackgroundColor></Style>
+				<DataSetName>RODesign</DataSetName>
+				<KeepTogether>false</KeepTogether>
+				<TableColumns>
+					<TableColumn><Width>2.17in</Width></TableColumn>
+					<TableColumn><Width>2.17in</Width></TableColumn>
+					<TableColumn><Width>2.17in</Width></TableColumn>
+				</TableColumns>
+				<Details><TableRows>
+					<TableRow><Height>0.20in</Height><TableCells>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Dt200"><Visibility><Hidden>false</Hidden></Visibility><Style><BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "White", "#DCF0F7")</BackgroundColor><FontStyle>Italic</FontStyle><FontFamily>Verdana</FontFamily><FontSize>8pt</FontSize><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Fields!AppInfoDesc.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Dt210"><Visibility><Hidden>false</Hidden></Visibility><Style><BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "White", "#DCF0F7")</BackgroundColor><Format>#,##0</Format><FontSize>8pt</FontSize><TextAlign>Right</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Fields!ItemOrder.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Dt220"><Visibility><Hidden>false</Hidden></Visibility><Style><BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "White", "#DCF0F7")</BackgroundColor><FontStyle>Italic</FontStyle><FontFamily>Verdana</FontFamily><FontSize>8pt</FontSize><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Fields!AppItemName.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+					</TableCells></TableRow>
+					</TableRows>
+				</Details>
+				<Footer><RepeatOnNewPage>false</RepeatOnNewPage><TableRows>
+					<TableRow><Height>0.35in</Height><TableCells>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Ft200"><Style><BackgroundColor>White</BackgroundColor><FontFamily>Verdana</FontFamily><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value></Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Ft210"><Style><BackgroundColor>White</BackgroundColor><Format>#,##0</Format><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Right</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value></Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Ft220"><Style><BackgroundColor>White</BackgroundColor><FontFamily>Verdana</FontFamily><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value></Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+					</TableCells></TableRow>
+					</TableRows>
+				</Footer>
+				<Header><RepeatOnNewPage>true</RepeatOnNewPage><TableRows>
+					<TableRow><Height>0.25in</Height><TableCells>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Hd200"><Visibility><Hidden>false</Hidden></Visibility><Style><BorderStyle><Default>Groove</Default></BorderStyle><BackgroundColor>#C0C0C0</BackgroundColor><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Center</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Parameters!L_AppInfoDesc.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Hd210"><Visibility><Hidden>false</Hidden></Visibility><Style><BorderStyle><Default>Groove</Default></BorderStyle><BackgroundColor>#C0C0C0</BackgroundColor><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Center</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Parameters!L_ItemOrder.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Hd220"><Visibility><Hidden>false</Hidden></Visibility><Style><BorderStyle><Default>Groove</Default></BorderStyle><BackgroundColor>#C0C0C0</BackgroundColor><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Center</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Parameters!L_AppItemName.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+					</TableCells></TableRow>
+					</TableRows>
+				</Header>
+			</Table>
+		</ReportItems>
+	</Body>
+	<PageHeader>
+		<Height>0.80in</Height><Style><BackgroundColor>White</BackgroundColor></Style><PrintOnFirstPage>true</PrintOnFirstPage><PrintOnLastPage>true</PrintOnLastPage>
+		<ReportItems>
+			<Textbox Name="PReportTitle"><Top>0.25in</Top><Left>0.00in</Left><Height>0.30in</Height><Width>6.50in</Width><Style><BackgroundColor>White</BackgroundColor><FontSize>14pt</FontSize><FontWeight>700</FontWeight><TextAlign>Center</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Parameters!ReportTitle.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+			<Textbox Name="GExecutionTime"><Top>0.00in</Top><Left>5.00in</Left><Height>0.20in</Height><Width>1.50in</Width><Style><BackgroundColor>White</BackgroundColor><FontSize>7pt</FontSize><TextAlign>Right</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Globals!ExecutionTime</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+		</ReportItems>
+	</PageHeader>
+</Report>
+

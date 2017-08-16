@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DsAdmRptPrgList" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="DsAdmRptPrgList" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DtAdmRptPrgList">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AuthorityLevel" type="xs:string" minOccurs="0" />
+              <xs:element name="ReportName" type="xs:string" minOccurs="0" />
+              <xs:element name="SystemNameIn" type="xs:string" minOccurs="0" />
+              <xs:element name="CultureDescIn" type="xs:string" minOccurs="0" />
+              <xs:element name="QId" type="xs:string" minOccurs="0" />
+              <xs:element name="MenuText" type="xs:string" minOccurs="0" />
+              <xs:element name="ProgramType" type="xs:string" minOccurs="0" />
+              <xs:element name="ProgramName" type="xs:string" minOccurs="0" />
+              <xs:element name="Everyone" type="xs:string" minOccurs="0" />
+              <xs:element name="ClientTierList" type="xs:string" minOccurs="0" />
+              <xs:element name="RuleTierList" type="xs:string" minOccurs="0" />
+              <xs:element name="DataTierList" type="xs:string" minOccurs="0" />
+              <xs:element name="ClientRule" type="xs:string" minOccurs="0" />
+              <xs:element name="WebRule" type="xs:string" minOccurs="0" />
+              <xs:element name="ServerRule" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

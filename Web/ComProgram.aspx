@@ -1,0 +1,2 @@
+<%@ Page language="c#" MasterPageFile="Default.master" EnableEventValidation="false" Inherits="RO.Web.ComProgram" CodeFile="ComProgram.aspx.cs" Title="Compile Programs" %><%@ Register TagPrefix="Module" TagName="ComProgram" Src="modules/ComProgramModule.ascx" %>
+<asp:Content ContentPlaceHolderID="MHR" Runat="Server"><Module:ComProgram id="ModuleComProgram" runat="server" /></asp:Content>

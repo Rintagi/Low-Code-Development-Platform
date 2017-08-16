@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+	<TopMargin>1.00in</TopMargin><BottomMargin>1.00in</BottomMargin><LeftMargin>1.00in</LeftMargin><RightMargin>1.00in</RightMargin>
+	<Width>9.00in</Width>
+	<PageWidth>11.00in</PageWidth><PageHeight>8.50in</PageHeight>
+	<DataSources><DataSource Name="RODesign"><DataSourceReference>RODesign</DataSourceReference></DataSource></DataSources>
+	<DataSets>
+		<DataSet Name="RODesign">
+		<Query>
+			<DataSourceName>RODesign</DataSourceName>
+			<CommandType>StoredProcedure</CommandType>
+			<CommandText>GetAdmRptTime</CommandText>
+			<QueryParameters>
+				<QueryParameter Name="@reportId"><Value>=Parameters!reportId.Value</Value></QueryParameter>
+				<QueryParameter Name="@RowAuthoritys"><Value>=Parameters!RowAuthoritys.Value</Value></QueryParameter>
+				<QueryParameter Name="@Usrs"><Value>=Parameters!Usrs.Value</Value></QueryParameter>
+				<QueryParameter Name="@UsrGroups"><Value>=Parameters!UsrGroups.Value</Value></QueryParameter>
+				<QueryParameter Name="@Cultures"><Value>=Parameters!Cultures.Value</Value></QueryParameter>
+				<QueryParameter Name="@Companys"><Value>=Parameters!Companys.Value</Value></QueryParameter>
+				<QueryParameter Name="@Projects"><Value>=Parameters!Projects.Value</Value></QueryParameter>
+				<QueryParameter Name="@Agents"><Value>=Parameters!Agents.Value</Value></QueryParameter>
+				<QueryParameter Name="@Brokers"><Value>=Parameters!Brokers.Value</Value></QueryParameter>
+				<QueryParameter Name="@Customers"><Value>=Parameters!Customers.Value</Value></QueryParameter>
+				<QueryParameter Name="@Investors"><Value>=Parameters!Investors.Value</Value></QueryParameter>
+				<QueryParameter Name="@Members"><Value>=Parameters!Members.Value</Value></QueryParameter>
+				<QueryParameter Name="@Vendors"><Value>=Parameters!Vendors.Value</Value></QueryParameter>
+				<QueryParameter Name="@currCompanyId"><Value>=Parameters!currCompanyId.Value</Value></QueryParameter>
+				<QueryParameter Name="@currProjectId"><Value>=Parameters!currProjectId.Value</Value></QueryParameter>
+				<QueryParameter Name="@MonthEnding"><Value>=Parameters!MonthEnding.Value</Value></QueryParameter>
+				<QueryParameter Name="@NumMonths"><Value>=Parameters!NumMonths.Value</Value></QueryParameter>
+				<QueryParameter Name="@bUpd"><Value>=Parameters!bUpd.Value</Value></QueryParameter>
+				<QueryParameter Name="@bXls"><Value>=Parameters!bXls.Value</Value></QueryParameter>
+				<QueryParameter Name="@bVal"><Value>=Parameters!bVal.Value</Value></QueryParameter>
+			</QueryParameters>
+		</Query>
+		<Fields>
+			<Field Name="ReportName"><DataField>ReportName</DataField></Field>
+			<Field Name="MemberName"><DataField>MemberName</DataField></Field>
+			<Field Name="SredTimeDt"><DataField>SredTimeDt</DataField></Field>
+			<Field Name="Accomplished"><DataField>Accomplished</DataField></Field>
+			<Field Name="HourSpent"><DataField>HourSpent</DataField></Field>
+		</Fields>
+		</DataSet>
+	</DataSets>
+	<ReportParameters>
+		<ReportParameter Name="reportId"><DataType>Integer</DataType><Prompt>reportId</Prompt></ReportParameter>
+		<ReportParameter Name="RowAuthoritys"><DataType>String</DataType><Prompt>RowAuthoritys</Prompt></ReportParameter>
+		<ReportParameter Name="Usrs"><DataType>String</DataType><Prompt>Usrs</Prompt></ReportParameter>
+		<ReportParameter Name="UsrGroups"><DataType>String</DataType><Prompt>UsrGroups</Prompt></ReportParameter>
+		<ReportParameter Name="Cultures"><DataType>String</DataType><Prompt>Cultures</Prompt></ReportParameter>
+		<ReportParameter Name="Companys"><DataType>String</DataType><Prompt>Companys</Prompt></ReportParameter>
+		<ReportParameter Name="Projects"><DataType>String</DataType><Prompt>Projects</Prompt></ReportParameter>
+		<ReportParameter Name="Agents"><DataType>String</DataType><Prompt>Agents</Prompt></ReportParameter>
+		<ReportParameter Name="Brokers"><DataType>String</DataType><Prompt>Brokers</Prompt></ReportParameter>
+		<ReportParameter Name="Customers"><DataType>String</DataType><Prompt>Customers</Prompt></ReportParameter>
+		<ReportParameter Name="Investors"><DataType>String</DataType><Prompt>Investors</Prompt></ReportParameter>
+		<ReportParameter Name="Members"><DataType>String</DataType><Prompt>Members</Prompt></ReportParameter>
+		<ReportParameter Name="Vendors"><DataType>String</DataType><Prompt>Vendors</Prompt></ReportParameter>
+		<ReportParameter Name="currCompanyId"><DataType>Integer</DataType><Prompt>currCompanyId</Prompt></ReportParameter>
+		<ReportParameter Name="currProjectId"><DataType>Integer</DataType><Prompt>currProjectId</Prompt></ReportParameter>
+		<ReportParameter Name="MonthEnding"><DataType>DateTime</DataType><Prompt>MonthEnding</Prompt></ReportParameter>
+		<ReportParameter Name="NumMonths"><Nullable>true</Nullable><DataType>Integer</DataType><Prompt>NumMonths</Prompt></ReportParameter>
+		<ReportParameter Name="bUpd"><DataType>String</DataType><Prompt>bUpd</Prompt></ReportParameter>
+		<ReportParameter Name="bXls"><DataType>String</DataType><Prompt>bXls</Prompt></ReportParameter>
+		<ReportParameter Name="bVal"><DataType>String</DataType><Prompt>bVal</Prompt></ReportParameter>
+		<ReportParameter Name="ReportTitle"><DataType>String</DataType><Prompt>ReportTitle</Prompt></ReportParameter>
+		<ReportParameter Name="UsrName"><DataType>String</DataType><Prompt>UsrName</Prompt></ReportParameter>
+		<ReportParameter Name="UrlBase"><DataType>String</DataType><Prompt>UrlBase</Prompt></ReportParameter>
+		<ReportParameter Name="ReportName"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>ReportName</Prompt></ReportParameter>
+		<ReportParameter Name="L_ReportName"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_ReportName</Prompt></ReportParameter>
+		<ReportParameter Name="L_MemberName"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_MemberName</Prompt></ReportParameter>
+		<ReportParameter Name="L_SredTimeDt"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_SredTimeDt</Prompt></ReportParameter>
+		<ReportParameter Name="L_Accomplished"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_Accomplished</Prompt></ReportParameter>
+		<ReportParameter Name="L_HourSpent"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_HourSpent</Prompt></ReportParameter>
+	</ReportParameters>
+	<PageFooter>
+		<Height>0.70in</Height><Style><BackgroundColor>White</BackgroundColor></Style><PrintOnFirstPage>true</PrintOnFirstPage><PrintOnLastPage>true</PrintOnLastPage>
+		<ReportItems>
+			<Textbox Name="PUsrName"><Top>0.30in</Top><Left>0.00in</Left><Height>0.20in</Height><Width>2.00in</Width><Style><BackgroundColor>White</BackgroundColor><FontSize>7pt</FontSize><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>="By: " &amp; Parameters!UsrName.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+			<Textbox Name="GPageNumber"><Top>0.30in</Top><Left>7.50in</Left><Height>0.20in</Height><Width>1.50in</Width><Style><BackgroundColor>White</BackgroundColor><FontSize>7pt</FontSize><TextAlign>Right</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>="Page " &amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+		</ReportItems>
+	</PageFooter>
+	<Body>
+		<Height>5.00in</Height><Style><BackgroundColor>White</BackgroundColor></Style>
+		<ReportItems>
+			<Table Name="TTbl">
+				<Top>0.00in</Top>
+				<Left>0.00in</Left>
+				<Height>5.00in</Height>
+				<Width>9.00in</Width>
+				<Style><BackgroundColor>White</BackgroundColor></Style>
+				<DataSetName>RODesign</DataSetName>
+				<KeepTogether>false</KeepTogether>
+				<TableColumns>
+					<TableColumn><Width>0.20in</Width></TableColumn>
+					<TableColumn><Width>1.00in</Width></TableColumn>
+					<TableColumn><Width>6.80in</Width></TableColumn>
+					<TableColumn><Width>1.00in</Width></TableColumn>
+				</TableColumns>
+				<Details><TableRows>
+					<TableRow><Height>0.20in</Height><TableCells>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Dt200"><Visibility><Hidden>true</Hidden></Visibility><Style><BackgroundColor>White</BackgroundColor><FontFamily>Verdana</FontFamily><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value></Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Dt210"><Visibility><Hidden>false</Hidden></Visibility><Style><BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "White", "#DCF0F7")</BackgroundColor><Format>d</Format><FontFamily>Courier New</FontFamily><FontSize>8pt</FontSize><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Fields!SredTimeDt.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Dt220"><Visibility><Hidden>false</Hidden></Visibility><Style><BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "White", "#DCF0F7")</BackgroundColor><FontStyle>Italic</FontStyle><FontFamily>Verdana</FontFamily><FontSize>8pt</FontSize><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Fields!Accomplished.Value</Value><CanGrow>true</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Dt230"><Visibility><Hidden>false</Hidden></Visibility><Style><BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, "White", "#DCF0F7")</BackgroundColor><Format>n</Format><FontSize>8pt</FontSize><TextAlign>Right</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Fields!HourSpent.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+					</TableCells></TableRow>
+					</TableRows>
+				</Details>
+				<Footer><RepeatOnNewPage>false</RepeatOnNewPage><TableRows>
+					<TableRow><Height>0.35in</Height><TableCells>
+						<TableCell><ColSpan>3</ColSpan>
+						<ReportItems>
+							<Textbox Name="Ft200"><Style><BackgroundColor>White</BackgroundColor><FontFamily>Verdana</FontFamily><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>="GRAND TOTAL"</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Ft230"><Style><BackgroundColor>White</BackgroundColor><Format>n</Format><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Right</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=SUM(Fields!HourSpent.Value)</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+					</TableCells></TableRow>
+					</TableRows>
+				</Footer>
+				<TableGroups>
+					<TableGroup><Grouping Name="G42"><GroupExpressions><GroupExpression>=Fields!MemberName.Value</GroupExpression></GroupExpressions></Grouping>
+					<Footer><RepeatOnNewPage>false</RepeatOnNewPage><TableRows>
+						<TableRow><Height>0.35in</Height><TableCells>
+							<TableCell><ColSpan>3</ColSpan>
+							<ReportItems>
+								<Textbox Name="G1f100"><Style><BackgroundColor>White</BackgroundColor><FontFamily>Verdana</FontFamily><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>="Total " &amp; Fields!MemberName.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+							</ReportItems>
+							</TableCell>
+							<TableCell>
+							<ReportItems>
+								<Textbox Name="G1230"><Style><BackgroundColor>White</BackgroundColor><Format>n</Format><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Right</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=SUM(Fields!HourSpent.Value)</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+							</ReportItems>
+							</TableCell>
+						</TableCells></TableRow>
+						</TableRows>
+					</Footer>
+					<Header><RepeatOnNewPage>false</RepeatOnNewPage><TableRows>
+						<TableRow><Height>0.22in</Height><TableCells>
+							<TableCell><ColSpan>4</ColSpan>
+							<ReportItems>
+								<Textbox Name="G1h100"><Style><BackgroundColor>White</BackgroundColor><FontFamily>Verdana</FontFamily><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Left</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Parameters!L_MemberName.Value &amp; ": " &amp; Fields!MemberName.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+							</ReportItems>
+							</TableCell>
+						</TableCells></TableRow>
+						</TableRows>
+					</Header>
+					</TableGroup>
+				</TableGroups>
+				<Header><RepeatOnNewPage>true</RepeatOnNewPage><TableRows>
+					<TableRow><Height>0.25in</Height><TableCells>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Hd200"><Visibility><Hidden>true</Hidden></Visibility><Style><BorderStyle><Default>Groove</Default></BorderStyle><BackgroundColor>#C0C0C0</BackgroundColor><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Center</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value></Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Hd210"><Visibility><Hidden>false</Hidden></Visibility><Style><BorderStyle><Default>Groove</Default></BorderStyle><BackgroundColor>#C0C0C0</BackgroundColor><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Center</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Parameters!L_SredTimeDt.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Hd220"><Visibility><Hidden>false</Hidden></Visibility><Style><BorderStyle><Default>Groove</Default></BorderStyle><BackgroundColor>#C0C0C0</BackgroundColor><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Center</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Parameters!L_Accomplished.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+						<TableCell>
+						<ReportItems>
+							<Textbox Name="Hd230"><Visibility><Hidden>false</Hidden></Visibility><Style><BorderStyle><Default>Groove</Default></BorderStyle><BackgroundColor>#C0C0C0</BackgroundColor><FontSize>8pt</FontSize><FontWeight>700</FontWeight><TextAlign>Center</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Parameters!L_HourSpent.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+						</ReportItems>
+						</TableCell>
+					</TableCells></TableRow>
+					</TableRows>
+				</Header>
+			</Table>
+		</ReportItems>
+	</Body>
+	<PageHeader>
+		<Height>0.80in</Height><Style><BackgroundColor>White</BackgroundColor></Style><PrintOnFirstPage>true</PrintOnFirstPage><PrintOnLastPage>true</PrintOnLastPage>
+		<ReportItems>
+			<Textbox Name="PReportTitle"><Top>0.25in</Top><Left>0.00in</Left><Height>0.30in</Height><Width>9.00in</Width><Style><BackgroundColor>White</BackgroundColor><FontSize>14pt</FontSize><FontWeight>700</FontWeight><TextAlign>Center</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Parameters!ReportTitle.Value &amp; " - For " &amp; Parameters!NumMonths.Value &amp; " Month(s) Ending " &amp; Parameters!MonthEnding.Value</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+			<Textbox Name="GExecutionTime"><Top>0.00in</Top><Left>7.50in</Left><Height>0.20in</Height><Width>1.50in</Width><Style><BackgroundColor>White</BackgroundColor><FontSize>7pt</FontSize><TextAlign>Right</TextAlign><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style><Value>=Globals!ExecutionTime</Value><CanGrow>false</CanGrow><CanShrink>false</CanShrink></Textbox>
+		</ReportItems>
+	</PageHeader>
+</Report>
+

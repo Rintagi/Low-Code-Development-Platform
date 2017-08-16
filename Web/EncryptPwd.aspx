@@ -1,0 +1,2 @@
+<%@ Page language="c#" MasterPageFile="Default.master" EnableEventValidation="false" Inherits="RO.Web.EncryptPwd" CodeFile="EncryptPwd.aspx.cs" Title="Encrypt Password" %><%@ Register TagPrefix="Module" TagName="EncryptPwd" Src="modules/EncryptPwdModule.ascx" %>
+<asp:Content ContentPlaceHolderID="MHR" Runat="Server"><Module:EncryptPwd id="ModuleEncryptPwd" runat="server" /></asp:Content>

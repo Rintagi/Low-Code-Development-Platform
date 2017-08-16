@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+***********************************************************************************************
+website.publishproj
+
+WARNING: DO NOT MODIFY this file, it is used for the web publish process.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+***********************************************************************************************
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.30319</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4452657d-93f1-41d4-a144-3fa49f885e04}</ProjectGuid>
+    <SourceWebPhysicalPath>$(MSBuildThisFileDirectory)</SourceWebPhysicalPath>
+    <SourceWebVirtualPath>/Web</SourceWebVirtualPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SourceWebProject>http://localhost/RO</SourceWebProject>
+    <SourceWebMetabasePath>/LM/W3SVC/1/ROOT/RO</SourceWebMetabasePath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <!-- for VS2010 we need to use 10.5 but for VS2012+ we should use VisualStudioVersion -->
+    <WebPublishTargetsVersion Condition=" '$(WebPublishTargetsVersion)' =='' and '$(VisualStudioVersion)' == 10.0 ">10.5</WebPublishTargetsVersion>
+    <WebPublishTargetsVersion Condition=" '$(WebPublishTargetsVersion)'=='' ">$(VisualStudioVersion)</WebPublishTargetsVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(WebPublishTargetsVersion)</VSToolsPath>
+    <_WebPublishTargetsPath Condition=" '$(_WebPublishTargetsPath)'=='' ">$(VSToolsPath)</_WebPublishTargetsPath>
+    <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">1.0.0.0</AssemblyFileVersion>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">1.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <AssemblyAttributes Include="AssemblyFileVersion">
+      <Value>$(AssemblyFileVersion)</Value>
+    </AssemblyAttributes>
+    <AssemblyAttributes Include="AssemblyVersion">
+      <Value>$(AssemblyVersion)</Value>
+    </AssemblyAttributes>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Access3\Access3.csproj">
+      <Project>{24A29344-FEA9-414A-9D1B-AC15E5350D12}</Project>
+      <Name>Access3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common3\Common3.csproj">
+      <Project>{AEB74555-0049-4BE9-AED6-0B425B37BD66}</Project>
+      <Name>Common3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Facade3\Facade3.csproj">
+      <Project>{E1B65B9A-913E-49C4-A808-1A860C43AD54}</Project>
+      <Name>Facade3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rule3\Rule3.csproj">
+      <Project>{5BDD230D-538F-44A5-A6FE-EDC0FAA57B7D}</Project>
+      <Name>Rule3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Service3\Service3.csproj">
+      <Project>{DCF6CD1A-C0E0-47A9-82C1-30F4BF121EBA}</Project>
+      <Name>Service3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SystemFramewk\SystemFramewk.csproj">
+      <Project>{4F199649-19B5-4BEF-846F-FE5D4CBB0ACA}</Project>
+      <Name>SystemFramewk</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UsrAccess\UsrAccess.csproj">
+      <Project>{CEE68C9E-87C5-44C0-8578-7FEDFDF07EF2}</Project>
+      <Name>UsrAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UsrRules\UsrRules.csproj">
+      <Project>{384CF42A-A0E1-43AC-BF0F-83A3E5A801F7}</Project>
+      <Name>UsrRules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebControls\WebControls.csproj">
+      <Project>{0569000B-FE33-4DBF-8EBF-9C5AD5D23810}</Project>
+      <Name>WebControls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebRules\WebRules.csproj">
+      <Project>{E04AF3F0-F94E-4149-B038-2403010CA914}</Project>
+      <Name>WebRules</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(_WebPublishTargetsPath)\Web\Microsoft.WebSite.Publishing.targets" />
+</Project>

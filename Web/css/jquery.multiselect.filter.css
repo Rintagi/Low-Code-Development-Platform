@@ -1,0 +1,6 @@
+.ui-multiselect-hasfilter ul { position:absolute; top:4px; right:0;}
+.ui-multiselect-filter {font-size:12px; padding-right: 5px; position: relative;}
+.ui-multiselect-filter input {width: 85%; font-size:11px; padding:2px; border:1px solid #292929; -webkit-appearance:textfield; -webkit-box-sizing:content-box; }
+.ui-multiselect-filter button {position: absolute; right: 0px; top: 0;}
+.ui-multiselect-filter .ui-button-icon-only {background:none; border:none;}
+.ui-button .ui-button-text {padding: 2px 0;}

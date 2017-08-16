@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DsAdmRptDbTable" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="DsAdmRptDbTable" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DtAdmRptDbTable">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AuthorityLevel" type="xs:string" minOccurs="0" />
+              <xs:element name="ReportName" type="xs:string" minOccurs="0" />
+              <xs:element name="Id" type="xs:string" minOccurs="0" />
+              <xs:element name="TableName" type="xs:string" minOccurs="0" />
+              <xs:element name="TableDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="ModifiedOn" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ColumnName" type="xs:string" minOccurs="0" />
+              <xs:element name="DataTypeName" type="xs:string" minOccurs="0" />
+              <xs:element name="ColumnLength" type="xs:short" minOccurs="0" />
+              <xs:element name="AllowNulls" type="xs:string" minOccurs="0" />
+              <xs:element name="ColumnIdentity" type="xs:string" minOccurs="0" />
+              <xs:element name="PrimaryKey" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

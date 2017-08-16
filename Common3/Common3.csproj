@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AEB74555-0049-4BE9-AED6-0B425B37BD66}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Common3</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Common3</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <GenerateResourceNeverLockTypeAssemblies>true</GenerateResourceNeverLockTypeAssemblies>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Config.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converter.cs" />
+    <Compile Include="Data\Credential.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\CurrPrj.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\CurrSrc.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\CurrTar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\LoginUsr.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\UsrCurr.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\UsrImpr.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\UsrPref.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GoogleAuthenticator.cs" />
+    <Compile Include="Key.cs" />
+    <Compile Include="LunarCal.cs" />
+    <Compile Include="PayPal.cs" />
+    <Compile Include="QRCoder.cs" />
+    <Compile Include="Robot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Square.cs" />
+    <Compile Include="Utils.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ZipLib\ComHelper.cs" />
+    <Compile Include="ZipLib\CRC32.cs" />
+    <Compile Include="ZipLib\Deflate.cs" />
+    <Compile Include="ZipLib\DeflateStream.cs" />
+    <Compile Include="ZipLib\EncryptionAlgorithm.cs" />
+    <Compile Include="ZipLib\Events.cs" />
+    <Compile Include="ZipLib\Exceptions.cs" />
+    <Compile Include="ZipLib\ExtractExistingFileAction.cs" />
+    <Compile Include="ZipLib\FileSelector.cs" />
+    <Compile Include="ZipLib\GZipStream.cs" />
+    <Compile Include="ZipLib\Inflate.cs" />
+    <Compile Include="ZipLib\InfTree.cs" />
+    <Compile Include="ZipLib\OffsetStream.cs" />
+    <Compile Include="ZipLib\ParallelDeflateOutputStream.cs" />
+    <Compile Include="ZipLib\Shared.cs" />
+    <Compile Include="ZipLib\Tree.cs" />
+    <Compile Include="ZipLib\WinZipAes.cs" />
+    <Compile Include="ZipLib\ZipConstants.cs" />
+    <Compile Include="ZipLib\ZipCrypto.cs" />
+    <Compile Include="ZipLib\ZipDirEntry.cs" />
+    <Compile Include="ZipLib\ZipEntry.cs" />
+    <Compile Include="ZipLib\ZipEntry.Extract.cs" />
+    <Compile Include="ZipLib\ZipEntry.Read.cs" />
+    <Compile Include="ZipLib\ZipEntry.Write.cs" />
+    <Compile Include="ZipLib\ZipEntrySource.cs" />
+    <Compile Include="ZipLib\ZipErrorAction.cs" />
+    <Compile Include="ZipLib\ZipFile.AddUpdate.cs" />
+    <Compile Include="ZipLib\ZipFile.Check.cs" />
+    <Compile Include="ZipLib\ZipFile.cs" />
+    <Compile Include="ZipLib\ZipFile.Events.cs" />
+    <Compile Include="ZipLib\ZipFile.Extract.cs" />
+    <Compile Include="ZipLib\ZipFile.Read.cs" />
+    <Compile Include="ZipLib\ZipFile.Save.cs" />
+    <Compile Include="ZipLib\ZipFile.SaveSelfExtractor.cs" />
+    <Compile Include="ZipLib\ZipFile.Selector.cs" />
+    <Compile Include="ZipLib\ZipFile.x-IEnumerable.cs" />
+    <Compile Include="ZipLib\ZipInputStream.cs" />
+    <Compile Include="ZipLib\ZipOutputStream.cs" />
+    <Compile Include="ZipLib\ZipSegmentedStream.cs" />
+    <Compile Include="ZipLib\Zlib.cs" />
+    <Compile Include="ZipLib\ZlibBaseStream.cs" />
+    <Compile Include="ZipLib\ZlibCodec.cs" />
+    <Compile Include="ZipLib\ZlibConstants.cs" />
+    <Compile Include="ZipLib\ZlibStream.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SystemFramewk\SystemFramewk.csproj">
+      <Project>{4F199649-19B5-4BEF-846F-FE5D4CBB0ACA}</Project>
+      <Name>SystemFramewk</Name>
+    </ProjectReference>
+    <Compile Include="DirectPrint.cs" />
+    <Compile Include="Encryption.cs" />
+    <Compile Include="Outlook.cs" />
+    <Compile Include="XLSImport.cs" />
+    <Compile Include="XmlUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ZipLib\License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

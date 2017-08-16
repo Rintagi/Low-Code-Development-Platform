@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+	<TopMargin>1.50in</TopMargin><BottomMargin>2.00in</BottomMargin><LeftMargin>0.00in</LeftMargin><RightMargin>0.00in</RightMargin>
+	<Width>11.00in</Width>
+	<PageWidth>11.00in</PageWidth><PageHeight>8.50in</PageHeight>
+	<DataSources><DataSource Name="RODesign"><DataSourceReference>RODesign</DataSourceReference></DataSource></DataSources>
+	<DataSets>
+		<DataSet Name="RODesign">
+		<Query>
+			<DataSourceName>RODesign</DataSourceName>
+			<CommandType>StoredProcedure</CommandType>
+			<CommandText>GetS03Rptwiz15</CommandText>
+			<QueryParameters>
+				<QueryParameter Name="@reportId"><Value>=Parameters!reportId.Value</Value></QueryParameter>
+				<QueryParameter Name="@RowAuthoritys"><Value>=Parameters!RowAuthoritys.Value</Value></QueryParameter>
+				<QueryParameter Name="@Usrs"><Value>=Parameters!Usrs.Value</Value></QueryParameter>
+				<QueryParameter Name="@UsrGroups"><Value>=Parameters!UsrGroups.Value</Value></QueryParameter>
+				<QueryParameter Name="@Cultures"><Value>=Parameters!Cultures.Value</Value></QueryParameter>
+				<QueryParameter Name="@Companys"><Value>=Parameters!Companys.Value</Value></QueryParameter>
+				<QueryParameter Name="@Projects"><Value>=Parameters!Projects.Value</Value></QueryParameter>
+				<QueryParameter Name="@Agents"><Value>=Parameters!Agents.Value</Value></QueryParameter>
+				<QueryParameter Name="@Brokers"><Value>=Parameters!Brokers.Value</Value></QueryParameter>
+				<QueryParameter Name="@Customers"><Value>=Parameters!Customers.Value</Value></QueryParameter>
+				<QueryParameter Name="@Investors"><Value>=Parameters!Investors.Value</Value></QueryParameter>
+				<QueryParameter Name="@Members"><Value>=Parameters!Members.Value</Value></QueryParameter>
+				<QueryParameter Name="@Vendors"><Value>=Parameters!Vendors.Value</Value></QueryParameter>
+				<QueryParameter Name="@currCompanyId"><Value>=Parameters!currCompanyId.Value</Value></QueryParameter>
+				<QueryParameter Name="@currProjectId"><Value>=Parameters!currProjectId.Value</Value></QueryParameter>
+				<QueryParameter Name="@LoginSuccess10"><Value>=Parameters!LoginSuccess10.Value</Value></QueryParameter>
+				<QueryParameter Name="@bUpd"><Value>=Parameters!bUpd.Value</Value></QueryParameter>
+				<QueryParameter Name="@bXls"><Value>=Parameters!bXls.Value</Value></QueryParameter>
+				<QueryParameter Name="@bVal"><Value>=Parameters!bVal.Value</Value></QueryParameter>
+			</QueryParameters>
+		</Query>
+		<Fields>
+			<Field Name="ReportName"><DataField>ReportName</DataField></Field>
+			<Field Name="LoginName"><DataField>LoginName</DataField></Field>
+			<Field Name="NumAttempt"><DataField>NumAttempt</DataField></Field>
+			<Field Name="LoginSuccess"><DataField>LoginSuccess</DataField></Field>
+		</Fields>
+		</DataSet>
+	</DataSets>
+	<ReportParameters>
+		<ReportParameter Name="reportId"><DataType>Integer</DataType><Prompt>reportId</Prompt></ReportParameter>
+		<ReportParameter Name="RowAuthoritys"><DataType>String</DataType><Prompt>RowAuthoritys</Prompt></ReportParameter>
+		<ReportParameter Name="Usrs"><DataType>String</DataType><Prompt>Usrs</Prompt></ReportParameter>
+		<ReportParameter Name="UsrGroups"><DataType>String</DataType><Prompt>UsrGroups</Prompt></ReportParameter>
+		<ReportParameter Name="Cultures"><DataType>String</DataType><Prompt>Cultures</Prompt></ReportParameter>
+		<ReportParameter Name="Companys"><DataType>String</DataType><Prompt>Companys</Prompt></ReportParameter>
+		<ReportParameter Name="Projects"><DataType>String</DataType><Prompt>Projects</Prompt></ReportParameter>
+		<ReportParameter Name="Agents"><DataType>String</DataType><Prompt>Agents</Prompt></ReportParameter>
+		<ReportParameter Name="Brokers"><DataType>String</DataType><Prompt>Brokers</Prompt></ReportParameter>
+		<ReportParameter Name="Customers"><DataType>String</DataType><Prompt>Customers</Prompt></ReportParameter>
+		<ReportParameter Name="Investors"><DataType>String</DataType><Prompt>Investors</Prompt></ReportParameter>
+		<ReportParameter Name="Members"><DataType>String</DataType><Prompt>Members</Prompt></ReportParameter>
+		<ReportParameter Name="Vendors"><DataType>String</DataType><Prompt>Vendors</Prompt></ReportParameter>
+		<ReportParameter Name="currCompanyId"><DataType>Integer</DataType><Prompt>currCompanyId</Prompt></ReportParameter>
+		<ReportParameter Name="currProjectId"><DataType>Integer</DataType><Prompt>currProjectId</Prompt></ReportParameter>
+		<ReportParameter Name="LoginSuccess10"><AllowBlank>true</AllowBlank><Nullable>true</Nullable><DataType>String</DataType><Prompt>LoginSuccess10</Prompt></ReportParameter>
+		<ReportParameter Name="bUpd"><DataType>String</DataType><Prompt>bUpd</Prompt></ReportParameter>
+		<ReportParameter Name="bXls"><DataType>String</DataType><Prompt>bXls</Prompt></ReportParameter>
+		<ReportParameter Name="bVal"><DataType>String</DataType><Prompt>bVal</Prompt></ReportParameter>
+		<ReportParameter Name="ReportTitle"><DataType>String</DataType><Prompt>ReportTitle</Prompt></ReportParameter>
+		<ReportParameter Name="UsrName"><DataType>String</DataType><Prompt>UsrName</Prompt></ReportParameter>
+		<ReportParameter Name="UrlBase"><DataType>String</DataType><Prompt>UrlBase</Prompt></ReportParameter>
+		<ReportParameter Name="ReportName"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>ReportName</Prompt></ReportParameter>
+		<ReportParameter Name="L_ReportName"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_ReportName</Prompt></ReportParameter>
+		<ReportParameter Name="L_LoginName"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_LoginName</Prompt></ReportParameter>
+		<ReportParameter Name="L_NumAttempt"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_NumAttempt</Prompt></ReportParameter>
+		<ReportParameter Name="L_LoginSuccess"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_LoginSuccess</Prompt></ReportParameter>
+	</ReportParameters>
+	<Body>
+		<Height>3.50in</Height><Style><BackgroundColor>White</BackgroundColor></Style>
+		<ReportItems>
+			<Chart Name="CCha">
+				<Top>0.00in</Top>
+				<Width>10.80in</Width>
+				<Style><BackgroundColor>White</BackgroundColor></Style>
+				<DataSetName>RODesign</DataSetName>
+				<PointWidth>0</PointWidth><Palette>Default</Palette><PlotArea><Style><BorderStyle><Default>None</Default></BorderStyle><BackgroundColor>White</BackgroundColor></Style></PlotArea>
+				<Legend><Visible>true</Visible><Style><BorderStyle><Default>Solid</Default></BorderStyle><FontSize>7pt</FontSize></Style><Position>BottomCenter</Position><Layout>Table</Layout></Legend>
+				<Type>Line</Type><Subtype>Smooth</Subtype>
+				<ThreeDProperties><Enabled>false</Enabled><Rotation>30</Rotation><Inclination>30</Inclination><Shading>Simple</Shading><WallThickness>50</WallThickness></ThreeDProperties>
+				<CategoryAxis><Axis>
+					<Title><Caption>=Parameters!L_LoginName.Value</Caption></Title>
+					<MajorGridLines><Style><BorderStyle><Default>Solid</Default></BorderStyle></Style></MajorGridLines>
+					<MinorGridLines><Style><BorderStyle><Default>Solid</Default></BorderStyle></Style></MinorGridLines>
+					<MajorTickMarks>Outside</MajorTickMarks><Visible>true</Visible>
+				</Axis></CategoryAxis>
+				<ValueAxis><Axis>
+					<Title><Caption></Caption></Title>
+					<MajorGridLines><ShowGridLines>true</ShowGridLines><Style><BorderStyle><Default>Solid</Default></BorderStyle></Style></MajorGridLines>
+					<MinorGridLines><Style><BorderStyle><Default>Solid</Default></BorderStyle></Style></MinorGridLines>
+					<Margin>true</Margin><Scalar>true</Scalar>
+					<MajorTickMarks>Outside</MajorTickMarks><Visible>true</Visible>
+				</Axis></ValueAxis>
+				<CategoryGroupings><CategoryGrouping><DynamicCategories><Grouping Name="CG1038"><GroupExpressions><GroupExpression>=Fields!LoginName.Value</GroupExpression></GroupExpressions></Grouping><Label>=Fields!LoginName.Value</Label></DynamicCategories></CategoryGrouping></CategoryGroupings>
+				<ChartData><ChartSeries><DataPoints><DataPoint><DataValues><DataValue><Value>=Fields!NumAttempt.Value</Value></DataValue></DataValues><Marker><Size>6pt</Size></Marker></DataPoint></DataPoints></ChartSeries></ChartData>
+				<SeriesGroupings><SeriesGrouping><DynamicSeries><Grouping Name="SG1038"><GroupExpressions><GroupExpression>=Fields!LoginSuccess.Value</GroupExpression></GroupExpressions></Grouping><Label>=Fields!LoginSuccess.Value</Label></DynamicSeries></SeriesGrouping></SeriesGroupings>
+			</Chart>
+		</ReportItems>
+	</Body>
+</Report>
+

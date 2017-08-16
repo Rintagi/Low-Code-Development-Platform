@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DsAdmRptUsage" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="DsAdmRptUsage" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DtAdmRptUsage">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AuthorityLevel" type="xs:string" minOccurs="0" />
+              <xs:element name="Summary" type="xs:string" minOccurs="0" />
+              <xs:element name="SystemName" type="xs:string" minOccurs="0" />
+              <xs:element name="UsrTypeGrp" type="xs:string" minOccurs="0" />
+              <xs:element name="UsrTypeName" type="xs:string" minOccurs="0" />
+              <xs:element name="EntityTitle" type="xs:string" minOccurs="0" />
+              <xs:element name="UsrGroupName" type="xs:string" minOccurs="0" />
+              <xs:element name="UsrName" type="xs:string" minOccurs="0" />
+              <xs:element name="UsageDt" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="UsageNote" type="xs:string" minOccurs="0" />
+              <xs:element name="NumTimes" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

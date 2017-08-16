@@ -1,0 +1,19 @@
+﻿<!--
+    You can find existing browser definitions at
+    <windir>\Microsoft.NET\Framework\<ver>\CONFIG\Browsers
+-->
+<browsers>
+	<!-- Disable the Menu Adapter for the Safari browser without changing the root browser file:
+	<browser refID="Safari1Plus">
+		<controlAdapters>
+			<adapter controlType="System.Web.UI.WebControls.Menu"
+               adapterType="" />
+		</controlAdapters>
+	</browser>
+  -->
+	<browser refID="Default">
+		<controlAdapters>
+			<adapter controlType="System.Web.UI.Page" adapterType="RO.Web.PgStateAdapter" />
+		</controlAdapters>
+	</browser>
+</browsers>

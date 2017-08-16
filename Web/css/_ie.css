@@ -1,0 +1,26 @@
+/*
+ * Do not change as this will be overriden by Rintagi upon upgrade.
+*/
+
+/* Fixing ie discrepancies */
+
+* html .column {display:inline;overflow-x:hidden;}
+* html legend {margin:0px -8px 16px 0;padding:0;}
+sup {vertical-align:text-top;}
+sub {vertical-align:text-bottom;}
+html>body p code {*white-space:normal;}
+hr {margin:-8px auto 11px;}
+img {-ms-interpolation-mode:bicubic;}
+* html .clearfix, * html .container {height:1%;}
+fieldset {padding-top:0;}
+legend {margin-top:-0.2em;margin-bottom:1em;margin-left:-0.5em;}
+textarea {overflow:auto;}
+label {vertical-align:middle;position:relative;top:-0.25em;}
+input.text, input.title, textarea {background-color:#fff;border:1px solid #bbb;}
+input.text:focus, input.title:focus {border-color:#666;}
+input.text, input.title, textarea {margin:0.5em 0;}
+/* select {margin:0.5em 0;} */
+input.checkbox, input.radio {position:relative;top:.25em;}
+form.inline div, form.inline p {vertical-align:middle;}
+form.inline input.checkbox, form.inline input.radio, form.inline input.button, form.inline button {margin:0.5em 0;}
+button, input.button {position:relative;top:0.25em;}

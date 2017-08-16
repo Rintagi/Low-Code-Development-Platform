@@ -1,0 +1,2 @@
+<%@ Page language="c#" MasterPageFile="Default.master" EnableEventValidation="false" Inherits="RO.Web.GenReports" CodeFile="GenReports.aspx.cs" Title="Generate Reports" %><%@ Register TagPrefix="Module" TagName="GenReports" Src="modules/GenReportsModule.ascx" %>
+<asp:Content ContentPlaceHolderID="MHR" Runat="Server"><Module:GenReports id="ModuleGenReports" runat="server" /></asp:Content>

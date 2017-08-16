@@ -1,0 +1,6 @@
+/* Application specific CSS hand coded by developer to be used in Default.master
+.grid-pad {max-width: 1096px;}
+body.PageBackground { background-image:url(images/special/simple_office.jpg); }
+*/
+/* All labels are right-justified by default */
+.r-labelR { text-align: left; }

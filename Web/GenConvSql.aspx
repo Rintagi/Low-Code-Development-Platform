@@ -1,0 +1,2 @@
+<%@ Page language="c#" MasterPageFile="Default.master" EnableEventValidation="false" Inherits="RO.Web.GenConvSql" CodeFile="GenConvSql.aspx.cs" Title="Convert SQL" %><%@ Register TagPrefix="Module" TagName="GenConvSql" Src="modules/GenConvSqlModule.ascx" %>
+<asp:Content ContentPlaceHolderID="MHR" Runat="Server"><Module:GenConvSql id="ModuleGenConvSql" runat="server" /></asp:Content>

@@ -1,0 +1,2 @@
+<%@ Page language="c#" MasterPageFile="Default.master" EnableEventValidation="false" Inherits="RO.Web.GenWizards" CodeFile="GenWizards.aspx.cs" Title="Generate Wizards" %><%@ Register TagPrefix="Module" TagName="GenWizards" Src="modules/GenWizardsModule.ascx" %>
+<asp:Content ContentPlaceHolderID="MHR" Runat="Server"><Module:GenWizards id="ModuleGenWizards" runat="server" /></asp:Content>
