@@ -221,7 +221,7 @@
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:44px;text-align:left;' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:60px;text-align:left;' runat="server">
 			<asp:LinkButton id="cEntityImg199hl" CssClass="GrdHead" onClick="cEntityImg199hl_Click" runat="server" /><asp:Image id="cEntityImg199hi" runat="server" />
 		</div></div>
     </td>
@@ -250,7 +250,7 @@
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:44px;text-align:left;' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:60px;text-align:left;' runat="server">
 		    <asp:Label id="cEntityImg199fl" class='GrdFoot' runat="server" />
 		</div></div>
     </td>
@@ -279,8 +279,8 @@
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:44px;text-align:left;' visible="<%# GridColumnVisible(1) %>" onclick='GridEdit("EntityImg199")' runat="server">
-			<asp:ImageButton id="cEntityImg199l" ImageUrl='<%# DataBinder.Eval(Container.DataItem,"EntityImg199").ToString().Trim().Equals(string.Empty) ? "../images/DefaultImg.png" : "data:application/base64;base64," + Convert.ToBase64String((DataBinder.Eval(Container.DataItem,"EntityImg199") as byte[])??(new byte[1]))  %>' style="max-width:44px; max-height:44px;" CssClass="GrdTxtLb" OnClick="cEntityImg199_Click" Enabled="<%# GridColumnEnable(1) %>" CommandArgument='<%# DataBinder.Eval(Container.DataItem,"EntityId199").ToString() %>' runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:60px;text-align:left;' visible="<%# GridColumnVisible(1) %>" onclick='GridEdit("EntityImg199")' runat="server">
+			<asp:ImageButton id="cEntityImg199l" ImageUrl='<%# DataBinder.Eval(Container.DataItem,"EntityImg199").ToString().Trim().Equals(string.Empty) ? "../images/DefaultImg.png" : RO.Common3.Utils.BlobPlaceHolder((DataBinder.Eval(Container.DataItem,"EntityImg199") as byte[])??(new byte[1]),true) %>' style="max-width:60px; max-height:60px;" CssClass="GrdTxtLb" OnClick="cEntityImg199_Click" Enabled="<%# GridColumnEnable(1) %>" CommandArgument='<%# DataBinder.Eval(Container.DataItem,"EntityId199").ToString() %>' runat="server" />
 		</div></div>
     </td>
     <td>
@@ -314,7 +314,7 @@
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(1) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cEntityImg199ml" runat="server" /></div>
 		<div class="DocPanel"><table cellspacing="0" cellpadding="0"><tr>
-		    <td><asp:ImageButton id="cEntityImg199" ImageUrl='<%# DataBinder.Eval(Container.DataItem,"EntityImg199") as byte[] !=null ? "data:application/base64;base64," + Convert.ToBase64String((DataBinder.Eval(Container.DataItem,"EntityImg199") as byte[])??(new byte[1]))  : "~/images/DefaultImg.png" %>' max-width="44px" max-height="44px" runat="server" /></td>
+		    <td><asp:ImageButton id="cEntityImg199" ImageUrl='<%# DataBinder.Eval(Container.DataItem,"EntityImg199") as byte[] !=null ? RO.Common3.Utils.BlobPlaceHolder((DataBinder.Eval(Container.DataItem,"EntityImg199") as byte[])??(new byte[1]),true) : "~/images/DefaultImg.png" %>' style="max-width:60px;max-height:60px;" runat="server" /></td>
 		    <td><asp:FileUpload id="cEntityImg199Fi" runat="server" /></td>
 		    <td><asp:ImageButton ImageUrl="~/images/Btrash.gif" ID="cEntityImg199Del" OnClientClick="if (ConfirmPrompt(this,'Are you sure?')) NoConfirm(); else return false;" runat="server"/></td>
 		</tr></table></div>

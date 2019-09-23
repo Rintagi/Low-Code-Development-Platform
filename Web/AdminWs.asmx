@@ -1214,7 +1214,7 @@ public partial class AdminWs : WebService
                     dr[drv["ColumnName"].ToString()] = iType.Contains("PTY") ? 2 : 3; // 2 is prototype, 3 is production
                 }
             }
-            UsrImpr impr = new UsrImpr("1", "5", "1", "1", "", "", "", "", "", "", "", "");
+            UsrImpr impr = new UsrImpr("1", "5", "1", "1", "", "", "", "", "", "", "", "", "", "", "");
             UsrCurr curr = new UsrCurr();
             DataTable dtRel = (new AdminSystem()).GetLis(98, "GetLisAdmRelease98", false, "N", 0, null, null, 0, string.Empty, string.Empty, dtScrCri.DefaultView, impr, curr, dsCri);
 
@@ -1285,7 +1285,7 @@ public partial class AdminWs : WebService
         KeyValuePair<string, string> conn = (from dr in ((new LoginSystem()).GetSystemsList(string.Empty, string.Empty)).AsEnumerable()
                                              where dr["SystemId"].ToString() == SysId
                                              select new KeyValuePair<string, string>(Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", dr["dbAppUserId"].ToString()), dr["dbAppPassword"].ToString())).First();
-        UsrImpr impr = new UsrImpr("1", "11", "1", "1", "0", "0", "0", "0", "0", "0", "0", "0");
+        UsrImpr impr = new UsrImpr("1", "11", "1", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
         Dictionary<string, string> license = new Dictionary<string, string>();
         string installDtl = "<Params>"
                 + "<installID>" + installID + "</installID>"

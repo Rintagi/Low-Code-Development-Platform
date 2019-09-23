@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -38,12 +41,16 @@ namespace RO.Common3.Data
 			columns.Add("ButtonHlpId116", typeof(string));
 			columns.Add("CultureId116", typeof(string));
 			columns.Add("ButtonTypeId116", typeof(string));
-			columns.Add("ScreenId116", typeof(string));
 			columns.Add("ButtonName116", typeof(string));
+			columns.Add("ButtonLongNm116", typeof(string));
+			columns.Add("ScreenId116", typeof(string));
 			columns.Add("ReportId116", typeof(string));
 			columns.Add("WizardId116", typeof(string));
 			columns.Add("ButtonToolTip116", typeof(string));
 			columns.Add("ButtonVisible116", typeof(string));
+			columns.Add("TopVisible116", typeof(string));
+			columns.Add("RowVisible116", typeof(string));
+			columns.Add("BotVisible116", typeof(string));
 			return dt;
 		}
 	}
@@ -82,6 +89,9 @@ namespace RO.Web
 		private const string KEY_dtScreenId116 = "Cache:dtScreenId116";
 		private const string KEY_dtReportId116 = "Cache:dtReportId116";
 		private const string KEY_dtWizardId116 = "Cache:dtWizardId116";
+		private const string KEY_dtTopVisible116 = "Cache:dtTopVisible116";
+		private const string KEY_dtRowVisible116 = "Cache:dtRowVisible116";
+		private const string KEY_dtBotVisible116 = "Cache:dtBotVisible116";
 
 		private const string KEY_dtSystems = "Cache:dtSystems3_76";
 		private const string KEY_sysConnectionString = "Cache:sysConnectionString3_76";
@@ -145,6 +155,9 @@ namespace RO.Web
 				Session.Remove(KEY_dtScreenId116);
 				Session.Remove(KEY_dtReportId116);
 				Session.Remove(KEY_dtWizardId116);
+				Session.Remove(KEY_dtTopVisible116);
+				Session.Remove(KEY_dtRowVisible116);
+				Session.Remove(KEY_dtBotVisible116);
 				SetButtonHlp();
 				GetSystems();
 				SetColumnAuthority();
@@ -261,7 +274,7 @@ namespace RO.Web
 				base.CTar = new CurrTar(true, row);
 				if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && (new AdminSystem()).IsRegenNeeded(string.Empty,76,0,0,LcSysConnString,LcAppPw))
 				{
-					(new GenScreensSystem()).CreateProgram(76, "Button Override", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
+					(new GenScreensSystem()).CreateProgram(76, "Button Override ( -- no react gen -- )", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
 					Response.Redirect(Request.RawUrl);
 				}
 			}
@@ -588,12 +601,16 @@ namespace RO.Web
 						if (dtAu.Rows[0]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[0]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[1]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[1]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[2]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[2]["ColumnHeader"].ToString() + " Text" + (char)9);}
-						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[3]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[3]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[3]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[4]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[5]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[5]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[6]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[6]["ColumnHeader"].ToString() + " Text" + (char)9);}
-						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[7]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[8]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[9]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[10]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[11]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[11]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[12]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[12]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -601,12 +618,16 @@ namespace RO.Web
 						if (dtAu.Rows[0]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ButtonHlpId116"].ToString(),base.LUser.Culture) + (char)9);}
 						if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId116"].ToString() + (char)9 + drv["CultureId116Text"].ToString() + (char)9);}
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonTypeId116"].ToString() + (char)9 + drv["ButtonTypeId116Text"].ToString() + (char)9);}
-						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(drv["ScreenId116"].ToString() + (char)9 + drv["ScreenId116Text"].ToString() + (char)9);}
-						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonName116"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["ReportId116"].ToString() + (char)9 + drv["ReportId116Text"].ToString() + (char)9);}
-						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["WizardId116"].ToString() + (char)9 + drv["WizardId116Text"].ToString() + (char)9);}
-						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonToolTip116"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonVisible116"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonName116"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonLongNm116"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["ScreenId116"].ToString() + (char)9 + drv["ScreenId116Text"].ToString() + (char)9);}
+						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["ReportId116"].ToString() + (char)9 + drv["ReportId116Text"].ToString() + (char)9);}
+						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["WizardId116"].ToString() + (char)9 + drv["WizardId116Text"].ToString() + (char)9);}
+						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonToolTip116"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonVisible116"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["TopVisible116"].ToString().Replace("\"","\"\"") + "\"" + (char)9 + "\"" + drv["TopVisible116Text"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["RowVisible116"].ToString().Replace("\"","\"\"") + "\"" + (char)9 + "\"" + drv["RowVisible116Text"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["BotVisible116"].ToString().Replace("\"","\"\"") + "\"" + (char)9 + "\"" + drv["BotVisible116Text"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmButtonHlp.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
@@ -664,6 +685,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -682,6 +707,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[6]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[8]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[9]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[11]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[12]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -707,12 +736,16 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[0]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ButtonHlpId116"].ToString(),base.LUser.Culture) + @"\cell ");}
 					if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId116Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonTypeId116Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(drv["ScreenId116Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonName116"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["ReportId116Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["WizardId116Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonToolTip116"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonVisible116"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonName116"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonLongNm116"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["ScreenId116Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["ReportId116Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["WizardId116Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonToolTip116"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonVisible116"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(drv["TopVisible116Text"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["RowVisible116Text"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(drv["BotVisible116Text"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1545,6 +1578,156 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 		}
 
+		private void SetTopVisible116(DropDownList ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtTopVisible116];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(76,"GetDdlTopVisible3S4161",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "TopVisible116 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					else if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(76,"GetDdlTopVisible3S4161",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(76,"GetDdlTopVisible3S4161",true,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					Session[KEY_dtTopVisible116] = dv.Table;
+				}
+			}
+		}
+
+		private void SetRowVisible116(DropDownList ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtRowVisible116];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(76,"GetDdlRowVisible3S4160",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "RowVisible116 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					else if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(76,"GetDdlRowVisible3S4160",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(76,"GetDdlRowVisible3S4160",true,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					Session[KEY_dtRowVisible116] = dv.Table;
+				}
+			}
+		}
+
+		private void SetBotVisible116(DropDownList ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtBotVisible116];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(76,"GetDdlBotVisible3S4163",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "BotVisible116 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					else if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(76,"GetDdlBotVisible3S4163",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(76,"GetDdlBotVisible3S4163",true,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					Session[KEY_dtBotVisible116] = dv.Table;
+				}
+			}
+		}
+
 		private void PopAdmButtonHlp76List(object sender, System.EventArgs e, bool bPageLoad, object ID)
 		{
 			DataTable dt = null;
@@ -1635,6 +1818,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				Session.Remove(KEY_dtScreenId116);
 				Session.Remove(KEY_dtReportId116);
 				Session.Remove(KEY_dtWizardId116);
+				Session.Remove(KEY_dtTopVisible116);
+				Session.Remove(KEY_dtRowVisible116);
+				Session.Remove(KEY_dtBotVisible116);
 				GetCriteria(GetScrCriteria());
 				PopAdmButtonHlp76List(sender, e, false, null);
 			}
@@ -1651,7 +1837,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					string rf = string.Empty;
 					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 0, cFindFilter.SelectedValue) + ")"; }
-					if (rf != string.Empty) { rf = "((" + rf + "  or _NewRow = 'Y' ))"; }
+					if (rf != string.Empty) { rf = "((" + rf + " or _NewRow = 'Y' ))"; }
 					dv.RowFilter = rf;
 					ViewState["_RowFilter"] = rf;
 					GotoPage(0); cAdmButtonHlpGrid_DataBind(dv);
@@ -1908,6 +2094,39 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 							Session[KEY_dtWizardId116] = dtd;
 						}
 						ScrImportDdl(dtd.DefaultView, drv, true, "ButtonHlpId", "WizardId116", "WizardId116Text", 50, "2", true);
+						dtd = (DataTable)Session[KEY_dtTopVisible116];
+						if (dtd == null)
+						{
+							try
+							{
+								dtd = (new AdminSystem()).GetDdl(76,"GetDdlTopVisible3S4161",true,true,0,string.Empty,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr);
+							}
+							catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+							Session[KEY_dtTopVisible116] = dtd;
+						}
+						ScrImportDdl(dtd.DefaultView, drv, false, "ButtonHlpId", "TopVisible116", "TopVisible116Text", 100, "", false);
+						dtd = (DataTable)Session[KEY_dtRowVisible116];
+						if (dtd == null)
+						{
+							try
+							{
+								dtd = (new AdminSystem()).GetDdl(76,"GetDdlRowVisible3S4160",true,true,0,string.Empty,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr);
+							}
+							catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+							Session[KEY_dtRowVisible116] = dtd;
+						}
+						ScrImportDdl(dtd.DefaultView, drv, false, "ButtonHlpId", "RowVisible116", "RowVisible116Text", 100, "", false);
+						dtd = (DataTable)Session[KEY_dtBotVisible116];
+						if (dtd == null)
+						{
+							try
+							{
+								dtd = (new AdminSystem()).GetDdl(76,"GetDdlBotVisible3S4163",true,true,0,string.Empty,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr);
+							}
+							catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+							Session[KEY_dtBotVisible116] = dtd;
+						}
+						ScrImportDdl(dtd.DefaultView, drv, false, "ButtonHlpId", "BotVisible116", "BotVisible116Text", 100, "", false);
 					}
 					jj = jj + 1;
 				}
@@ -2018,7 +2237,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				bool bHasErr = false;
 				for ( int iRow = iStart; iRow < rows.Count; iRow++ )
 				{
-					if (rows[iRow][1].ToString() == string.Empty && rows[iRow][2].ToString() == string.Empty && rows[iRow][3].ToString() == string.Empty && rows[iRow][4].ToString() == string.Empty && rows[iRow][13].ToString() == string.Empty) {idel = idel + 1;}
+					if (rows[iRow][1].ToString() == string.Empty && rows[iRow][2].ToString() == string.Empty && rows[iRow][3].ToString() == string.Empty && rows[iRow][4].ToString() == string.Empty && rows[iRow][14].ToString() == string.Empty && rows[iRow][15].ToString() == string.Empty && rows[iRow][16].ToString() == string.Empty && rows[iRow][17].ToString() == string.Empty && rows[iRow][18].ToString() == string.Empty && rows[iRow][19].ToString() == string.Empty && rows[iRow][20].ToString() == string.Empty) {idel = idel + 1;}
 					else
 					{
 						dt.Rows.Add(dt.NewRow());
@@ -2155,9 +2374,11 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 				cc = ((WebControl)lvi.FindControl("cButtonTypeId116"));
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
-				cc = ((WebControl)lvi.FindControl("cScreenId116"));
-				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 				cc = ((WebControl)lvi.FindControl("cButtonName116"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cButtonLongNm116"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cScreenId116"));
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 				cc = ((WebControl)lvi.FindControl("cReportId116"));
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -2167,6 +2388,12 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 				cc = ((WebControl)lvi.FindControl("cButtonVisible116"));
 				if ((cc.Attributes["OnClick"] == null || cc.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
+				cc = ((WebControl)lvi.FindControl("cTopVisible116"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cRowVisible116"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cBotVisible116"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 		}
 
 		protected void cAdmButtonHlpGrid_OnItemDataBound(object sender, ListViewItemEventArgs e)
@@ -2174,6 +2401,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			// *** GridItemDataBound (before) Web Rule End *** //
 			DataTable dt = (DataTable)Session[KEY_dtAdmButtonHlpGrid];
 			bool isEditItem = false;
+			bool isImage = true;
+			bool hasImageContent = false;
 			DataView dvAdmButtonHlpGrid = dt != null ? dt.DefaultView : null;
 			if (cAdmButtonHlpGrid.EditIndex > -1 && GetDataItemIndex(cAdmButtonHlpGrid.EditIndex) == e.Item.DataItemIndex)
 			{
@@ -2190,6 +2419,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					cb.Checked = base.GetBool(dvAdmButtonHlpGrid[e.Item.DataItemIndex]["ButtonVisible116"].ToString());
 				}
+				SetTopVisible116((DropDownList)e.Item.FindControl("cTopVisible116"),dvAdmButtonHlpGrid[e.Item.DataItemIndex]["TopVisible116"].ToString());
+				SetRowVisible116((DropDownList)e.Item.FindControl("cRowVisible116"),dvAdmButtonHlpGrid[e.Item.DataItemIndex]["RowVisible116"].ToString());
+				SetBotVisible116((DropDownList)e.Item.FindControl("cBotVisible116"),dvAdmButtonHlpGrid[e.Item.DataItemIndex]["BotVisible116"].ToString());
 				GridChkPgDirty(e.Item);
 			}
 			SetClientRule((ListViewDataItem) e.Item,isEditItem);
@@ -2216,6 +2448,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (cAdmButtonHlpGrid.EditIndex > -1 && GetDataItemIndex(cAdmButtonHlpGrid.EditIndex) == e.Item.DataItemIndex)
 			{
 			}
+			else
+			{
+			}
 			// *** GridItemDataBound (after) Web Rule End *** //
 		}
 
@@ -2240,46 +2475,74 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ButtonTypeId116Text", SortDirection.Ascending));
 		}
 
-		protected void cScreenId116hl_Click(object sender, System.EventArgs e)
-		{
-			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "3") { Session.Remove(KEY_lastSortUrl); }
-			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "3"; Session[KEY_lastSortExp] = "ScreenId116Text";Session[KEY_lastSortImg] = "cScreenId116hi";
-			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ScreenId116Text", SortDirection.Ascending));
-		}
-
 		protected void cButtonName116hl_Click(object sender, System.EventArgs e)
 		{
-			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "4") { Session.Remove(KEY_lastSortUrl); }
-			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "4"; Session[KEY_lastSortExp] = "ButtonName116";Session[KEY_lastSortImg] = "cButtonName116hi";
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "3") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "3"; Session[KEY_lastSortExp] = "ButtonName116";Session[KEY_lastSortImg] = "cButtonName116hi";
 			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ButtonName116", SortDirection.Ascending));
+		}
+
+		protected void cButtonLongNm116hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "4") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "4"; Session[KEY_lastSortExp] = "ButtonLongNm116";Session[KEY_lastSortImg] = "cButtonLongNm116hi";
+			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ButtonLongNm116", SortDirection.Ascending));
+		}
+
+		protected void cScreenId116hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "5") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "5"; Session[KEY_lastSortExp] = "ScreenId116Text";Session[KEY_lastSortImg] = "cScreenId116hi";
+			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ScreenId116Text", SortDirection.Ascending));
 		}
 
 		protected void cReportId116hl_Click(object sender, System.EventArgs e)
 		{
-			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "5") { Session.Remove(KEY_lastSortUrl); }
-			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "5"; Session[KEY_lastSortExp] = "ReportId116Text";Session[KEY_lastSortImg] = "cReportId116hi";
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "6") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "6"; Session[KEY_lastSortExp] = "ReportId116Text";Session[KEY_lastSortImg] = "cReportId116hi";
 			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ReportId116Text", SortDirection.Ascending));
 		}
 
 		protected void cWizardId116hl_Click(object sender, System.EventArgs e)
 		{
-			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "6") { Session.Remove(KEY_lastSortUrl); }
-			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "6"; Session[KEY_lastSortExp] = "WizardId116Text";Session[KEY_lastSortImg] = "cWizardId116hi";
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "7") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "7"; Session[KEY_lastSortExp] = "WizardId116Text";Session[KEY_lastSortImg] = "cWizardId116hi";
 			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("WizardId116Text", SortDirection.Ascending));
 		}
 
 		protected void cButtonToolTip116hl_Click(object sender, System.EventArgs e)
 		{
-			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "7") { Session.Remove(KEY_lastSortUrl); }
-			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "7"; Session[KEY_lastSortExp] = "ButtonToolTip116";Session[KEY_lastSortImg] = "cButtonToolTip116hi";
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "8") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "8"; Session[KEY_lastSortExp] = "ButtonToolTip116";Session[KEY_lastSortImg] = "cButtonToolTip116hi";
 			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ButtonToolTip116", SortDirection.Ascending));
 		}
 
 		protected void cButtonVisible116hl_Click(object sender, System.EventArgs e)
 		{
-			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "8") { Session.Remove(KEY_lastSortUrl); }
-			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "8"; Session[KEY_lastSortExp] = "ButtonVisible116";Session[KEY_lastSortImg] = "cButtonVisible116hi";
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "9") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "9"; Session[KEY_lastSortExp] = "ButtonVisible116";Session[KEY_lastSortImg] = "cButtonVisible116hi";
 			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ButtonVisible116", SortDirection.Ascending));
+		}
+
+		protected void cTopVisible116hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "10") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "10"; Session[KEY_lastSortExp] = "TopVisible116Text";Session[KEY_lastSortImg] = "cTopVisible116hi";
+			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("TopVisible116Text", SortDirection.Ascending));
+		}
+
+		protected void cRowVisible116hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "11") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "11"; Session[KEY_lastSortExp] = "RowVisible116Text";Session[KEY_lastSortImg] = "cRowVisible116hi";
+			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("RowVisible116Text", SortDirection.Ascending));
+		}
+
+		protected void cBotVisible116hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "12") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "12"; Session[KEY_lastSortExp] = "BotVisible116Text";Session[KEY_lastSortImg] = "cBotVisible116hi";
+			cAdmButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("BotVisible116Text", SortDirection.Ascending));
 		}
 
 		protected void cAdmButtonHlpGrid_OnItemEditing(object sender, ListViewEditEventArgs e)
@@ -2326,18 +2589,26 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		    if (ml != null) { ml.Text = ColumnHeaderText(1); }
 		    ml = lvi.FindControl("cButtonTypeId116ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(2); }
-		    ml = lvi.FindControl("cScreenId116ml") as Label;
-		    if (ml != null) { ml.Text = ColumnHeaderText(3); }
 		    ml = lvi.FindControl("cButtonName116ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(3); }
+		    ml = lvi.FindControl("cButtonLongNm116ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(4); }
-		    ml = lvi.FindControl("cReportId116ml") as Label;
+		    ml = lvi.FindControl("cScreenId116ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(5); }
-		    ml = lvi.FindControl("cWizardId116ml") as Label;
+		    ml = lvi.FindControl("cReportId116ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(6); }
-		    ml = lvi.FindControl("cButtonToolTip116ml") as Label;
+		    ml = lvi.FindControl("cWizardId116ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(7); }
-		    ml = lvi.FindControl("cButtonVisible116ml") as Label;
+		    ml = lvi.FindControl("cButtonToolTip116ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(8); }
+		    ml = lvi.FindControl("cButtonVisible116ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(9); }
+		    ml = lvi.FindControl("cTopVisible116ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(10); }
+		    ml = lvi.FindControl("cRowVisible116ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(11); }
+		    ml = lvi.FindControl("cBotVisible116ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(12); }
 		}
 
 		protected void GridFill(ListViewItem lvi, DataTable dt, DataRow dr, bool bInsert)
@@ -2371,6 +2642,17 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					dr["ButtonTypeId116Text"] = System.DBNull.Value;
 				}
 			}
+			TextBox tb = null;
+			tb = (TextBox)lvi.FindControl("cButtonName116");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["ButtonName116"] = tb.Text;} else {dr["ButtonName116"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cButtonLongNm116");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["ButtonLongNm116"] = tb.Text;} else {dr["ButtonLongNm116"] = System.DBNull.Value;}
+			}
 			cbb = (RoboCoder.WebControls.ComboBox)lvi.FindControl("cScreenId116");
 			if (cbb != null)
 			{
@@ -2384,12 +2666,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					dr["ScreenId116"] = System.DBNull.Value;
 					dr["ScreenId116Text"] = System.DBNull.Value;
 				}
-			}
-			TextBox tb = null;
-			tb = (TextBox)lvi.FindControl("cButtonName116");
-			if (tb != null)
-			{
-				if (tb.Text != string.Empty) {dr["ButtonName116"] = tb.Text;} else {dr["ButtonName116"] = System.DBNull.Value;}
 			}
 			cbb = (RoboCoder.WebControls.ComboBox)lvi.FindControl("cReportId116");
 			if (cbb != null)
@@ -2429,6 +2705,49 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (cb != null)
 			{
 				dr["ButtonVisible116"] = base.SetBool(cb.Checked);
+			}
+			DropDownList ddl = null;
+			ddl = (DropDownList)lvi.FindControl("cTopVisible116");
+			if (ddl != null)
+			{
+				if (ddl.SelectedIndex >= 0 && ddl.SelectedValue.ToString() != string.Empty)
+				{
+					dr["TopVisible116"] = ddl.SelectedValue;
+					dr["TopVisible116Text"] = ddl.SelectedItem.Text;
+				}
+				else
+				{
+					dr["TopVisible116"] = System.DBNull.Value;
+					dr["TopVisible116Text"] = System.DBNull.Value;
+				}
+			}
+			ddl = (DropDownList)lvi.FindControl("cRowVisible116");
+			if (ddl != null)
+			{
+				if (ddl.SelectedIndex >= 0 && ddl.SelectedValue.ToString() != string.Empty)
+				{
+					dr["RowVisible116"] = ddl.SelectedValue;
+					dr["RowVisible116Text"] = ddl.SelectedItem.Text;
+				}
+				else
+				{
+					dr["RowVisible116"] = System.DBNull.Value;
+					dr["RowVisible116Text"] = System.DBNull.Value;
+				}
+			}
+			ddl = (DropDownList)lvi.FindControl("cBotVisible116");
+			if (ddl != null)
+			{
+				if (ddl.SelectedIndex >= 0 && ddl.SelectedValue.ToString() != string.Empty)
+				{
+					dr["BotVisible116"] = ddl.SelectedValue;
+					dr["BotVisible116Text"] = ddl.SelectedItem.Text;
+				}
+				else
+				{
+					dr["BotVisible116"] = System.DBNull.Value;
+					dr["BotVisible116Text"] = System.DBNull.Value;
+				}
 			}
 		    if (bInsert) { dt.Rows.InsertAt(dr, 0); }
 			Session[KEY_dtAdmButtonHlpGrid] = dt;
@@ -2604,6 +2923,21 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			{
 				bErrNow.Value = "Y"; PreMsgPopup("Value is expected for 'ButtonTypeId', please investigate."); return false;
 			}
+			dt = (DataTable)Session[KEY_dtTopVisible116];
+			if (dt != null && dt.Rows.Count <= 0)
+			{
+				bErrNow.Value = "Y"; PreMsgPopup("Value is expected for 'TopVisible', please investigate."); return false;
+			}
+			dt = (DataTable)Session[KEY_dtRowVisible116];
+			if (dt != null && dt.Rows.Count <= 0)
+			{
+				bErrNow.Value = "Y"; PreMsgPopup("Value is expected for 'RowVisible', please investigate."); return false;
+			}
+			dt = (DataTable)Session[KEY_dtBotVisible116];
+			if (dt != null && dt.Rows.Count <= 0)
+			{
+				bErrNow.Value = "Y"; PreMsgPopup("Value is expected for 'BotVisible', please investigate."); return false;
+			}
 			return true;
 		}
 
@@ -2612,12 +2946,16 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			dr["ButtonHlpId116"] = System.Data.OleDb.OleDbType.Numeric.ToString();
 			dr["CultureId116"] = System.Data.OleDb.OleDbType.Numeric.ToString();
 			dr["ButtonTypeId116"] = System.Data.OleDb.OleDbType.Numeric.ToString();
-			dr["ScreenId116"] = System.Data.OleDb.OleDbType.Numeric.ToString();
 			dr["ButtonName116"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["ButtonLongNm116"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["ScreenId116"] = System.Data.OleDb.OleDbType.Numeric.ToString();
 			dr["ReportId116"] = System.Data.OleDb.OleDbType.Numeric.ToString();
 			dr["WizardId116"] = System.Data.OleDb.OleDbType.Numeric.ToString();
 			dr["ButtonToolTip116"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
 			dr["ButtonVisible116"] = System.Data.OleDb.OleDbType.Char.ToString();
+			dr["TopVisible116"] = System.Data.OleDb.OleDbType.Char.ToString();
+			dr["RowVisible116"] = System.Data.OleDb.OleDbType.Char.ToString();
+			dr["BotVisible116"] = System.Data.OleDb.OleDbType.Char.ToString();
 			return dr;
 		}
 
@@ -2626,12 +2964,16 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			dr["ButtonHlpId116"] = "TextBox";
 			dr["CultureId116"] = "AutoComplete";
 			dr["ButtonTypeId116"] = "AutoComplete";
-			dr["ScreenId116"] = "AutoComplete";
 			dr["ButtonName116"] = "TextBox";
+			dr["ButtonLongNm116"] = "TextBox";
+			dr["ScreenId116"] = "AutoComplete";
 			dr["ReportId116"] = "AutoComplete";
 			dr["WizardId116"] = "AutoComplete";
 			dr["ButtonToolTip116"] = "TextBox";
 			dr["ButtonVisible116"] = "CheckBox";
+			dr["TopVisible116"] = "DropDownList";
+			dr["RowVisible116"] = "DropDownList";
+			dr["BotVisible116"] = "DropDownList";
 			return dr;
 		}
 
@@ -2643,17 +2985,22 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				dr["ButtonHlpId116"] = drv["ButtonHlpId116"].ToString().Trim();
 				dr["CultureId116"] = drv["CultureId116"];
 				dr["ButtonTypeId116"] = drv["ButtonTypeId116"];
-				dr["ScreenId116"] = drv["ScreenId116"];
-				if (bAdd && dtAuth.Rows[3]["ColReadOnly"].ToString() == "Y" && dr["ScreenId116"].ToString() == string.Empty) {dr["ScreenId116"] = System.DBNull.Value;}
 				dr["ButtonName116"] = drv["ButtonName116"].ToString().Trim();
-				if (bAdd && dtAuth.Rows[4]["ColReadOnly"].ToString() == "Y" && dr["ButtonName116"].ToString() == string.Empty) {dr["ButtonName116"] = System.DBNull.Value;}
+				if (bAdd && dtAuth.Rows[3]["ColReadOnly"].ToString() == "Y" && dr["ButtonName116"].ToString() == string.Empty) {dr["ButtonName116"] = System.DBNull.Value;}
+				dr["ButtonLongNm116"] = drv["ButtonLongNm116"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[4]["ColReadOnly"].ToString() == "Y" && dr["ButtonLongNm116"].ToString() == string.Empty) {dr["ButtonLongNm116"] = System.DBNull.Value;}
+				dr["ScreenId116"] = drv["ScreenId116"];
+				if (bAdd && dtAuth.Rows[5]["ColReadOnly"].ToString() == "Y" && dr["ScreenId116"].ToString() == string.Empty) {dr["ScreenId116"] = System.DBNull.Value;}
 				dr["ReportId116"] = drv["ReportId116"];
-				if (bAdd && dtAuth.Rows[5]["ColReadOnly"].ToString() == "Y" && dr["ReportId116"].ToString() == string.Empty) {dr["ReportId116"] = System.DBNull.Value;}
+				if (bAdd && dtAuth.Rows[6]["ColReadOnly"].ToString() == "Y" && dr["ReportId116"].ToString() == string.Empty) {dr["ReportId116"] = System.DBNull.Value;}
 				dr["WizardId116"] = drv["WizardId116"];
-				if (bAdd && dtAuth.Rows[6]["ColReadOnly"].ToString() == "Y" && dr["WizardId116"].ToString() == string.Empty) {dr["WizardId116"] = System.DBNull.Value;}
+				if (bAdd && dtAuth.Rows[7]["ColReadOnly"].ToString() == "Y" && dr["WizardId116"].ToString() == string.Empty) {dr["WizardId116"] = System.DBNull.Value;}
 				dr["ButtonToolTip116"] = drv["ButtonToolTip116"].ToString().Trim();
-				if (bAdd && dtAuth.Rows[7]["ColReadOnly"].ToString() == "Y" && dr["ButtonToolTip116"].ToString() == string.Empty) {dr["ButtonToolTip116"] = System.DBNull.Value;}
+				if (bAdd && dtAuth.Rows[8]["ColReadOnly"].ToString() == "Y" && dr["ButtonToolTip116"].ToString() == string.Empty) {dr["ButtonToolTip116"] = System.DBNull.Value;}
 				dr["ButtonVisible116"] = drv["ButtonVisible116"];
+				dr["TopVisible116"] = drv["TopVisible116"];
+				dr["RowVisible116"] = drv["RowVisible116"];
+				dr["BotVisible116"] = drv["BotVisible116"];
 			}
 			return dr;
 		}
@@ -2673,12 +3020,16 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cButtonHlpId116hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cCultureId116hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cButtonTypeId116hi"); if (hi != null) { hi.Visible = false; }
-			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cScreenId116hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cButtonName116hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cButtonLongNm116hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cScreenId116hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cReportId116hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cWizardId116hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cButtonToolTip116hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cButtonVisible116hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cTopVisible116hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cRowVisible116hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl("cBotVisible116hi"); if (hi != null) { hi.Visible = false; }
 			if (Session[KEY_lastSortImg] != null)
 			{
 				hi = (System.Web.UI.WebControls.Image)cAdmButtonHlpGrid.FindControl((string)Session[KEY_lastSortImg]);
@@ -2687,12 +3038,16 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cButtonHlpId116hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cCultureId116hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cButtonTypeId116hl"));
-			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cScreenId116hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cButtonName116hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cButtonLongNm116hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cScreenId116hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cReportId116hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cWizardId116hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cButtonToolTip116hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cButtonVisible116hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cTopVisible116hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cRowVisible116hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmButtonHlpGrid.FindControl("cBotVisible116hl"));
 		}
 
 		private string GetButtonId(ListViewItem lvi)
@@ -2733,18 +3088,26 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		    if (lb != null) { lb.Text = ColumnHeaderText(1); lb.ToolTip = ColumnToolTip(1); lb.Parent.Visible = GridColumnVisible(1); }
 		    lb = cAdmButtonHlpGrid.FindControl("cButtonTypeId116hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(2); lb.ToolTip = ColumnToolTip(2); lb.Parent.Visible = GridColumnVisible(2); }
-		    lb = cAdmButtonHlpGrid.FindControl("cScreenId116hl") as LinkButton;
-		    if (lb != null) { lb.Text = ColumnHeaderText(3); lb.ToolTip = ColumnToolTip(3); lb.Parent.Visible = GridColumnVisible(3); }
 		    lb = cAdmButtonHlpGrid.FindControl("cButtonName116hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(3); lb.ToolTip = ColumnToolTip(3); lb.Parent.Visible = GridColumnVisible(3); }
+		    lb = cAdmButtonHlpGrid.FindControl("cButtonLongNm116hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(4); lb.ToolTip = ColumnToolTip(4); lb.Parent.Visible = GridColumnVisible(4); }
-		    lb = cAdmButtonHlpGrid.FindControl("cReportId116hl") as LinkButton;
+		    lb = cAdmButtonHlpGrid.FindControl("cScreenId116hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(5); lb.ToolTip = ColumnToolTip(5); lb.Parent.Visible = GridColumnVisible(5); }
-		    lb = cAdmButtonHlpGrid.FindControl("cWizardId116hl") as LinkButton;
+		    lb = cAdmButtonHlpGrid.FindControl("cReportId116hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(6); lb.ToolTip = ColumnToolTip(6); lb.Parent.Visible = GridColumnVisible(6); }
-		    lb = cAdmButtonHlpGrid.FindControl("cButtonToolTip116hl") as LinkButton;
+		    lb = cAdmButtonHlpGrid.FindControl("cWizardId116hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(7); lb.ToolTip = ColumnToolTip(7); lb.Parent.Visible = GridColumnVisible(7); }
-		    lb = cAdmButtonHlpGrid.FindControl("cButtonVisible116hl") as LinkButton;
+		    lb = cAdmButtonHlpGrid.FindControl("cButtonToolTip116hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(8); lb.ToolTip = ColumnToolTip(8); lb.Parent.Visible = GridColumnVisible(8); }
+		    lb = cAdmButtonHlpGrid.FindControl("cButtonVisible116hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(9); lb.ToolTip = ColumnToolTip(9); lb.Parent.Visible = GridColumnVisible(9); }
+		    lb = cAdmButtonHlpGrid.FindControl("cTopVisible116hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(10); lb.ToolTip = ColumnToolTip(10); lb.Parent.Visible = GridColumnVisible(10); }
+		    lb = cAdmButtonHlpGrid.FindControl("cRowVisible116hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(11); lb.ToolTip = ColumnToolTip(11); lb.Parent.Visible = GridColumnVisible(11); }
+		    lb = cAdmButtonHlpGrid.FindControl("cBotVisible116hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(12); lb.ToolTip = ColumnToolTip(12); lb.Parent.Visible = GridColumnVisible(12); }
 		    // Hide DeleteAll:
 			DataTable dtAuthRow = GetAuthRow();
 			if (dtAuthRow != null)
@@ -2763,18 +3126,26 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(1); }
 		    gc = cAdmButtonHlpGrid.FindControl("cButtonTypeId116fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(2); }
-		    gc = cAdmButtonHlpGrid.FindControl("cScreenId116fl") as Label;
-		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(3); }
 		    gc = cAdmButtonHlpGrid.FindControl("cButtonName116fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(3); }
+		    gc = cAdmButtonHlpGrid.FindControl("cButtonLongNm116fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(4); }
-		    gc = cAdmButtonHlpGrid.FindControl("cReportId116fl") as Label;
+		    gc = cAdmButtonHlpGrid.FindControl("cScreenId116fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(5); }
-		    gc = cAdmButtonHlpGrid.FindControl("cWizardId116fl") as Label;
+		    gc = cAdmButtonHlpGrid.FindControl("cReportId116fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(6); }
-		    gc = cAdmButtonHlpGrid.FindControl("cButtonToolTip116fl") as Label;
+		    gc = cAdmButtonHlpGrid.FindControl("cWizardId116fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(7); }
-		    gc = cAdmButtonHlpGrid.FindControl("cButtonVisible116fl") as Label;
+		    gc = cAdmButtonHlpGrid.FindControl("cButtonToolTip116fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(8); }
+		    gc = cAdmButtonHlpGrid.FindControl("cButtonVisible116fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(9); }
+		    gc = cAdmButtonHlpGrid.FindControl("cTopVisible116fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(10); }
+		    gc = cAdmButtonHlpGrid.FindControl("cRowVisible116fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(11); }
+		    gc = cAdmButtonHlpGrid.FindControl("cBotVisible116fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(12); }
 		}
 
 		protected void cbPostBack(object sender, System.EventArgs e)

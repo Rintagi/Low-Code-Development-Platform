@@ -1,0 +1,56 @@
+.project-member {
+  display: flex;
+  position: relative;
+  padding: 10px 0;
+
+  @include themify($themes) {
+    border-bottom: 1px solid themed('colorBorder');
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .project-member__avatar-wrap {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: 10px;
+
+    img {
+      height: 100%;
+      min-width: 100%;
+    }
+  }
+
+  .project-member__name {
+    font-weight: 600;
+    line-height: 18px;
+    margin-bottom: 0;
+    margin-top: 3px;
+  }
+
+  .project-member__post {
+    color: $color-additional;
+    line-height: 15px;
+    font-size: 11px;
+    margin: 0;
+  }
+
+  .project-member__btn {
+    margin-top: 3px;
+    position: absolute;
+    right: 0;
+    padding: 5px 10px;
+    line-height: 16px;
+
+    svg {
+      margin-right: 0;
+      margin-top: 2px;
+      height: 16px;
+      width: 16px;
+    }
+  }
+}

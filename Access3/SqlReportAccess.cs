@@ -89,7 +89,10 @@ namespace RO.Access3
 			cmd.Parameters.Add("@Investors", OleDbType.VarChar).Value = ui.Investors;
 			cmd.Parameters.Add("@Members", OleDbType.VarChar).Value = ui.Members;
 			cmd.Parameters.Add("@Vendors", OleDbType.VarChar).Value = ui.Vendors;
-			cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
+            cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
 			cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
 			foreach (DataRowView drv in dvCri)
 			{
@@ -473,7 +476,10 @@ namespace RO.Access3
 			cmd.Parameters.Add("@Investors", OleDbType.VarChar).Value = ui.Investors;
 			cmd.Parameters.Add("@Members", OleDbType.VarChar).Value = ui.Members;
 			cmd.Parameters.Add("@Vendors", OleDbType.VarChar).Value = ui.Vendors;
-			cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
+            cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
 			cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
             cmd.Parameters.Add("@bAll", OleDbType.Char).Value = bAll ? "Y" : "N";
             cmd.Parameters.Add("@keyId", OleDbType.VarChar).Value = string.IsNullOrEmpty(keyId) ? System.DBNull.Value : (object)keyId;

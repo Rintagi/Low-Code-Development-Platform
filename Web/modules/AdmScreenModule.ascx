@@ -194,6 +194,10 @@
     		<div id="cViewOnly15P1" class="r-td r-labelR" runat="server"><asp:Label id="cViewOnly15Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cViewOnly15P2" class="r-td r-content" runat="server"><asp:DropDownList id="cViewOnly15" CssClass="inp-ddl" DataValueField="ViewOnly15" DataTextField="ViewOnly15Text" runat="server" /><asp:RequiredFieldValidator id="cRFVViewOnly15" ControlToValidate="cViewOnly15" display="none" runat="server" /></div>
     	</div>
+    	<div class="r-tr">
+    		<div id="cSearchAscending15P1" class="r-td r-labelR" runat="server"><asp:Label id="cSearchAscending15Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cSearchAscending15P2" class="r-td r-content" runat="server"><asp:CheckBox id="cSearchAscending15" CssClass="inp-chk" runat="server" /></div>
+    	</div>
     </div></div></div>
     <div class="r-td rc-4-8"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
@@ -209,15 +213,19 @@
     		<div id="cSearchId15P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cSearchId15" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbSearchId15" DataValueField="SearchId15" DataTextField="SearchId15Text" runat="server" /></div>
     	</div>
     	<div class="r-tr">
-    		<div id="cSearchAscending15P1" class="r-td r-labelR" runat="server"><asp:Label id="cSearchAscending15Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cSearchAscending15P2" class="r-td r-content" runat="server"><asp:CheckBox id="cSearchAscending15" CssClass="inp-chk" runat="server" /></div>
+    		<div id="cSearchIdR15P1" class="r-td r-labelR" runat="server"><asp:Label id="cSearchIdR15Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cSearchIdR15P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cSearchIdR15" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbSearchIdR15" DataValueField="SearchIdR15" DataTextField="SearchIdR15Text" runat="server" /></div>
     	</div>
-    </div></div></div>
-    <div class="r-td rc-9-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cSearchDtlId15P1" class="r-td r-labelR" runat="server"><asp:Label id="cSearchDtlId15Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cSearchDtlId15P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cSearchDtlId15" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbSearchDtlId15" DataValueField="SearchDtlId15" DataTextField="SearchDtlId15Text" runat="server" /></div>
     	</div>
+    	<div class="r-tr">
+    		<div id="cSearchDtlIdR15P1" class="r-td r-labelR" runat="server"><asp:Label id="cSearchDtlIdR15Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cSearchDtlIdR15P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cSearchDtlIdR15" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbSearchDtlIdR15" DataValueField="SearchDtlIdR15" DataTextField="SearchDtlIdR15Text" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-9-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cSearchUrlId15P1" class="r-td r-labelR" runat="server"><asp:Label id="cSearchUrlId15Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cSearchUrlId15P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cSearchUrlId15" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbSearchUrlId15" DataValueField="SearchUrlId15" DataTextField="SearchUrlId15Text" runat="server" /></div>
@@ -299,11 +307,6 @@
 		    <div><asp:Button id="cFindButton" onclick="cFindButton_Click" runat="server" /></div>
 		</div>
 		<div class="button-grp">
-		    <div><asp:label ID="cGridSrtLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div class="grdSortDiv"><asp:DropDownList id="cSortFilter" CssClass="inp-ddl" AutoPostBack="true" OnSelectedIndexChanged="cSortFilter_SelectedIndexChanged" runat="server" /></div>
-		    <div><asp:ImageButton ID="cSortImg" CssClass="GrdSort" onClick="cSortImg_Click" Visible="false" runat="server" /></div>
-		</div>
-		<div class="button-grp">
 		    <div class="btnPgGrp">
 		        <div><asp:TextBox id="cPgSize" runat="server" CssClass="inp-ctr" width="25px" /></div>
 		        <div><asp:Button id="cPgSizeButton" onclick="cPgSizeButton_Click" runat="server" /></div>
@@ -349,38 +352,84 @@
 	<asp:ListView id="cAdmScreenGrid" DataKeyNames="ScreenHlpId16" OnItemCommand="cAdmScreenGrid_OnItemCommand" OnSorting="cAdmScreenGrid_OnSorting" OnPreRender="cAdmScreenGrid_OnPreRender" OnPagePropertiesChanging="cAdmScreenGrid_OnPagePropertiesChanging" OnItemEditing="cAdmScreenGrid_OnItemEditing" OnItemCanceling="cAdmScreenGrid_OnItemCanceling" OnItemDeleting="cAdmScreenGrid_OnItemDeleting" OnItemDataBound="cAdmScreenGrid_OnItemDataBound" OnLayoutCreated="cAdmScreenGrid_OnLayoutCreated" OnItemUpdating="cAdmScreenGrid_OnItemUpdating" runat="server">
 	<LayoutTemplate>
 	<table cellpadding="0" cellspacing="0" border="0" width="100%">
-	<tr id="cAdmScreenGridHeader" class="GrdHead" visible="false" runat="server">
+	<tr id="cAdmScreenGridHeader" class="GrdHead" visible="true" runat="server">
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:right;' runat="server">
 			<asp:LinkButton id="cScreenHlpId16hl" CssClass="GrdHead" onClick="cScreenHlpId16hl_Click" runat="server" /><asp:Image id="cScreenHlpId16hi" runat="server" />
-		</div></div>
-    </td>
-    <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:200px;text-align:left;' runat="server">
+		</div><div class='GrdInner' style='max-width:200px;text-align:left;' runat="server">
 			<asp:LinkButton id="cCultureId16hl" CssClass="GrdHead" onClick="cCultureId16hl_Click" style="font-weight:bold; color:black;" runat="server" /><asp:Image id="cCultureId16hi" runat="server" />
 		</div><div class='GrdInner' style='max-width:400px;text-align:left;' runat="server">
 			<asp:LinkButton id="cScreenTitle16hl" CssClass="GrdHead" onClick="cScreenTitle16hl_Click" style="font-weight:bold; color:black;" runat="server" /><asp:Image id="cScreenTitle16hi" runat="server" />
 		</div></div>
 		<div></div>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' runat="server">
-			<asp:LinkButton id="cDefaultHlpMsg16hl" CssClass="GrdHead" onClick="cDefaultHlpMsg16hl_Click" style="font-weight:bold; color:#555555;" runat="server" /><asp:Image id="cDefaultHlpMsg16hi" runat="server" />
+			<asp:LinkButton id="cDefaultHlpMsg16hl" CssClass="GrdHead" onClick="cDefaultHlpMsg16hl_Click" style="color:#888888;" runat="server" /><asp:Image id="cDefaultHlpMsg16hi" runat="server" />
 		</div></div>
 		<div></div>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' runat="server">
-			<asp:LinkButton id="cFootNote16hl" CssClass="GrdHead" onClick="cFootNote16hl_Click" style="font-weight:bold; color:#888888;" runat="server" /><asp:Image id="cFootNote16hi" runat="server" />
+			<asp:LinkButton id="cFootNote16hl" CssClass="GrdHead" onClick="cFootNote16hl_Click" style="color:#50852C;" runat="server" /><asp:Image id="cFootNote16hi" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:300px;text-align:left;' runat="server">
+			<asp:LinkButton id="cAddMsg16hl" CssClass="GrdHead" onClick="cAddMsg16hl_Click" style="font-weight:bold; color:#00468C;" runat="server" /><asp:Image id="cAddMsg16hi" runat="server" />
+		</div><div class='GrdInner' style='max-width:300px;text-align:left;' runat="server">
+			<asp:LinkButton id="cUpdMsg16hl" CssClass="GrdHead" onClick="cUpdMsg16hl_Click" style="color:#555555;" runat="server" /><asp:Image id="cUpdMsg16hi" runat="server" />
+		</div><div class='GrdInner' style='max-width:300px;text-align:left;' runat="server">
+			<asp:LinkButton id="cDelMsg16hl" CssClass="GrdHead" onClick="cDelMsg16hl_Click" style="color:#00468C;" runat="server" /><asp:Image id="cDelMsg16hi" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cIncrementMsg16hl" CssClass="GrdHead" onClick="cIncrementMsg16hl_Click" style="color:#555555;" runat="server" /><asp:Image id="cIncrementMsg16hi" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cNoMasterMsg16hl" CssClass="GrdHead" onClick="cNoMasterMsg16hl_Click" style="color:#888888;" runat="server" /><asp:Image id="cNoMasterMsg16hi" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cNoDetailMsg16hl" CssClass="GrdHead" onClick="cNoDetailMsg16hl_Click" style="color:#888888;" runat="server" /><asp:Image id="cNoDetailMsg16hi" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cAddMasterMsg16hl" CssClass="GrdHead" onClick="cAddMasterMsg16hl_Click" style="color:#888888;" runat="server" /><asp:Image id="cAddMasterMsg16hi" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cAddDetailMsg16hl" CssClass="GrdHead" onClick="cAddDetailMsg16hl_Click" style="color:#888888;" runat="server" /><asp:Image id="cAddDetailMsg16hi" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='max-width:300px;text-align:left;' runat="server">
-			<asp:LinkButton id="cAddMsg16hl" CssClass="GrdHead" onClick="cAddMsg16hl_Click" style="font-weight:bold; color:#00468C;" runat="server" /><asp:Image id="cAddMsg16hi" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cMasterLstTitle16hl" CssClass="GrdHead" onClick="cMasterLstTitle16hl_Click" style="font-weight:bold; color:black;" runat="server" /><asp:Image id="cMasterLstTitle16hi" runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='max-width:300px;text-align:left;' runat="server">
-			<asp:LinkButton id="cUpdMsg16hl" CssClass="GrdHead" onClick="cUpdMsg16hl_Click" style="color:#50852C;" runat="server" /><asp:Image id="cUpdMsg16hi" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cMasterLstSubtitle16hl" CssClass="GrdHead" onClick="cMasterLstSubtitle16hl_Click" style="color:#888888;" runat="server" /><asp:Image id="cMasterLstSubtitle16hi" runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='max-width:300px;text-align:left;' runat="server">
-			<asp:LinkButton id="cDelMsg16hl" CssClass="GrdHead" onClick="cDelMsg16hl_Click" style="color:#00468C;" runat="server" /><asp:Image id="cDelMsg16hi" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cMasterRecTitle16hl" CssClass="GrdHead" onClick="cMasterRecTitle16hl_Click" style="color:#50852C;" runat="server" /><asp:Image id="cMasterRecTitle16hi" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cMasterRecSubtitle16hl" CssClass="GrdHead" onClick="cMasterRecSubtitle16hl_Click" style="font-weight:bold; color:#00468C;" runat="server" /><asp:Image id="cMasterRecSubtitle16hi" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cMasterFoundMsg16hl" CssClass="GrdHead" onClick="cMasterFoundMsg16hl_Click" style="color:#888888;" runat="server" /><asp:Image id="cMasterFoundMsg16hi" runat="server" />
+		</div></div>
+    </td>
+    <td>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cDetailLstTitle16hl" CssClass="GrdHead" onClick="cDetailLstTitle16hl_Click" style="font-weight:bold; color:black;" runat="server" /><asp:Image id="cDetailLstTitle16hi" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cDetailLstSubtitle16hl" CssClass="GrdHead" onClick="cDetailLstSubtitle16hl_Click" style="color:#888888;" runat="server" /><asp:Image id="cDetailLstSubtitle16hi" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cDetailRecTitle16hl" CssClass="GrdHead" onClick="cDetailRecTitle16hl_Click" style="color:#50852C;" runat="server" /><asp:Image id="cDetailRecTitle16hi" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cDetailRecSubtitle16hl" CssClass="GrdHead" onClick="cDetailRecSubtitle16hl_Click" style="font-weight:bold; color:#00468C;" runat="server" /><asp:Image id="cDetailRecSubtitle16hi" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cDetailFoundMsg16hl" CssClass="GrdHead" onClick="cDetailFoundMsg16hl_Click" style="color:#888888;" runat="server" /><asp:Image id="cDetailFoundMsg16hi" runat="server" />
 		</div></div>
     </td>
     <td><asp:linkbutton id="cDeleteAllButton" CssClass="GrdDelAll" tooltip="DELETE ALL" onclick="cDeleteAllButton_Click" runat="server" onclientclick='GridDelete()' /></td>
@@ -390,10 +439,7 @@
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:right;' runat="server">
 		    <asp:Label id="cScreenHlpId16fl" class='GrdFoot' runat="server" />
-		</div></div>
-    </td>
-    <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:200px;text-align:left;' runat="server">
+		</div><div class='GrdInner' style='max-width:200px;text-align:left;' runat="server">
 		    <asp:Label id="cCultureId16fl" class='GrdFoot' runat="server" />
 		</div><div class='GrdInner' style='max-width:400px;text-align:left;' runat="server">
 		    <asp:Label id="cScreenTitle16fl" class='GrdFoot' runat="server" />
@@ -406,18 +452,67 @@
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' runat="server">
 		    <asp:Label id="cFootNote16fl" class='GrdFoot' runat="server" />
 		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:300px;text-align:left;' runat="server">
+		    <asp:Label id="cAddMsg16fl" class='GrdFoot' runat="server" />
+		</div><div class='GrdInner' style='max-width:300px;text-align:left;' runat="server">
+		    <asp:Label id="cUpdMsg16fl" class='GrdFoot' runat="server" />
+		</div><div class='GrdInner' style='max-width:300px;text-align:left;' runat="server">
+		    <asp:Label id="cDelMsg16fl" class='GrdFoot' runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' runat="server">
+		    <asp:Label id="cIncrementMsg16fl" class='GrdFoot' runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' runat="server">
+		    <asp:Label id="cNoMasterMsg16fl" class='GrdFoot' runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' runat="server">
+		    <asp:Label id="cNoDetailMsg16fl" class='GrdFoot' runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' runat="server">
+		    <asp:Label id="cAddMasterMsg16fl" class='GrdFoot' runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' runat="server">
+		    <asp:Label id="cAddDetailMsg16fl" class='GrdFoot' runat="server" />
+		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='max-width:300px;text-align:left;' runat="server">
-		    <asp:Label id="cAddMsg16fl" class='GrdFoot' runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+		    <asp:Label id="cMasterLstTitle16fl" class='GrdFoot' runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='max-width:300px;text-align:left;' runat="server">
-		    <asp:Label id="cUpdMsg16fl" class='GrdFoot' runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+		    <asp:Label id="cMasterLstSubtitle16fl" class='GrdFoot' runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='max-width:300px;text-align:left;' runat="server">
-		    <asp:Label id="cDelMsg16fl" class='GrdFoot' runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+		    <asp:Label id="cMasterRecTitle16fl" class='GrdFoot' runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+		    <asp:Label id="cMasterRecSubtitle16fl" class='GrdFoot' runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+		    <asp:Label id="cMasterFoundMsg16fl" class='GrdFoot' runat="server" />
+		</div></div>
+    </td>
+    <td>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+		    <asp:Label id="cDetailLstTitle16fl" class='GrdFoot' runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+		    <asp:Label id="cDetailLstSubtitle16fl" class='GrdFoot' runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+		    <asp:Label id="cDetailRecTitle16fl" class='GrdFoot' runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet' style='text-align:left;' runat="server">
+		    <asp:Label id="cDetailRecSubtitle16fl" class='GrdFoot' runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' runat="server">
+		    <asp:Label id="cDetailFoundMsg16fl" class='GrdFoot' runat="server" />
 		</div></div>
     </td>
     <td>&nbsp;</td>
@@ -425,37 +520,83 @@
 	<ItemTemplate>
 	<tr id="cAdmScreenGridRow" class='<%# Container.DisplayIndex % 2 == 0 ? "GrdItm" : "GrdAlt" %>' runat="server">
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:right;' visible="<%# GridColumnVisible(24) %>" onclick='GridEdit("ScreenHlpId16")' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:right;' visible="<%# GridColumnVisible(26) %>" onclick='GridEdit("ScreenHlpId16")' runat="server">
 			<asp:Label id="cScreenHlpId16l" Text='<%# RO.Common3.Utils.fmNumeric("0",DataBinder.Eval(Container.DataItem,"ScreenHlpId16").ToString(),base.LUser.Culture) %>' CssClass="GrdTxtLb" runat="server" />
-		</div></div>
-    </td>
-    <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(25) %>" onclick='GridEdit("CultureId16")' runat="server">
+		</div><div class='GrdInner' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(27) %>" onclick='GridEdit("CultureId16")' runat="server">
 			<asp:Label Text='<%# DataBinder.Eval(Container.DataItem,"CultureId16").ToString() %>' Visible="false" runat="server" />
 			<asp:Label id="cCultureId16l" text='<%# DataBinder.Eval(Container.DataItem,"CultureId16Text") %>' CssClass="GrdTxtLb" style="font-weight:bold; color:black;" runat="server" />
-		</div><div class='GrdInner' style='max-width:400px;text-align:left;' visible="<%# GridColumnVisible(26) %>" onclick='GridEdit("ScreenTitle16")' runat="server">
+		</div><div class='GrdInner' style='max-width:400px;text-align:left;' visible="<%# GridColumnVisible(28) %>" onclick='GridEdit("ScreenTitle16")' runat="server">
 			<asp:Label id="cScreenTitle16l" Text='<%# DataBinder.Eval(Container.DataItem,"ScreenTitle16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="font-weight:bold; color:black;" runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' visible="<%# GridColumnVisible(27) %>" onclick='GridEdit("DefaultHlpMsg16")' runat="server">
-			<asp:Label id="cDefaultHlpMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"DefaultHlpMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="font-weight:bold; color:#555555;" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' visible="<%# GridColumnVisible(29) %>" onclick='GridEdit("DefaultHlpMsg16")' runat="server">
+			<asp:Label id="cDefaultHlpMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"DefaultHlpMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="color:#888888;" runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' visible="<%# GridColumnVisible(28) %>" onclick='GridEdit("FootNote16")' runat="server">
-			<asp:Label id="cFootNote16l" Text='<%# DataBinder.Eval(Container.DataItem,"FootNote16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="font-weight:bold; color:#888888;" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' visible="<%# GridColumnVisible(30) %>" onclick='GridEdit("FootNote16")' runat="server">
+			<asp:Label id="cFootNote16l" Text='<%# DataBinder.Eval(Container.DataItem,"FootNote16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="color:#50852C;" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(31) %>" onclick='GridEdit("AddMsg16")' runat="server">
+			<asp:Label id="cAddMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"AddMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="font-weight:bold; color:#00468C;" runat="server" />
+		</div><div class='GrdInner' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(32) %>" onclick='GridEdit("UpdMsg16")' runat="server">
+			<asp:Label id="cUpdMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"UpdMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="color:#555555;" runat="server" />
+		</div><div class='GrdInner' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(33) %>" onclick='GridEdit("DelMsg16")' runat="server">
+			<asp:Label id="cDelMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"DelMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="color:#00468C;" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(34) %>" onclick='GridEdit("IncrementMsg16")' runat="server">
+			<asp:Label id="cIncrementMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"IncrementMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#555555;" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(35) %>" onclick='GridEdit("NoMasterMsg16")' runat="server">
+			<asp:Label id="cNoMasterMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"NoMasterMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#888888;" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(36) %>" onclick='GridEdit("NoDetailMsg16")' runat="server">
+			<asp:Label id="cNoDetailMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"NoDetailMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#888888;" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(37) %>" onclick='GridEdit("AddMasterMsg16")' runat="server">
+			<asp:Label id="cAddMasterMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"AddMasterMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#888888;" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(38) %>" onclick='GridEdit("AddDetailMsg16")' runat="server">
+			<asp:Label id="cAddDetailMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"AddDetailMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#888888;" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(29) %>" onclick='GridEdit("AddMsg16")' runat="server">
-			<asp:Label id="cAddMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"AddMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="font-weight:bold; color:#00468C;" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' visible="<%# GridColumnVisible(39) %>" onclick='GridEdit("MasterLstTitle16")' runat="server">
+			<asp:Label id="cMasterLstTitle16l" Text='<%# DataBinder.Eval(Container.DataItem,"MasterLstTitle16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="font-weight:bold; color:black;" runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(30) %>" onclick='GridEdit("UpdMsg16")' runat="server">
-			<asp:Label id="cUpdMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"UpdMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="color:#50852C;" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' visible="<%# GridColumnVisible(40) %>" onclick='GridEdit("MasterLstSubtitle16")' runat="server">
+			<asp:Label id="cMasterLstSubtitle16l" Text='<%# DataBinder.Eval(Container.DataItem,"MasterLstSubtitle16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#888888;" runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(31) %>" onclick='GridEdit("DelMsg16")' runat="server">
-			<asp:Label id="cDelMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"DelMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" style="color:#00468C;" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' visible="<%# GridColumnVisible(41) %>" onclick='GridEdit("MasterRecTitle16")' runat="server">
+			<asp:Label id="cMasterRecTitle16l" Text='<%# DataBinder.Eval(Container.DataItem,"MasterRecTitle16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#50852C;" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' visible="<%# GridColumnVisible(42) %>" onclick='GridEdit("MasterRecSubtitle16")' runat="server">
+			<asp:Label id="cMasterRecSubtitle16l" Text='<%# DataBinder.Eval(Container.DataItem,"MasterRecSubtitle16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="font-weight:bold; color:#00468C;" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' visible="<%# GridColumnVisible(43) %>" onclick='GridEdit("MasterFoundMsg16")' runat="server">
+			<asp:Label id="cMasterFoundMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"MasterFoundMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#888888;" runat="server" />
+		</div></div>
+    </td>
+    <td>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' visible="<%# GridColumnVisible(44) %>" onclick='GridEdit("DetailLstTitle16")' runat="server">
+			<asp:Label id="cDetailLstTitle16l" Text='<%# DataBinder.Eval(Container.DataItem,"DetailLstTitle16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="font-weight:bold; color:black;" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' visible="<%# GridColumnVisible(45) %>" onclick='GridEdit("DetailLstSubtitle16")' runat="server">
+			<asp:Label id="cDetailLstSubtitle16l" Text='<%# DataBinder.Eval(Container.DataItem,"DetailLstSubtitle16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#888888;" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' visible="<%# GridColumnVisible(46) %>" onclick='GridEdit("DetailRecTitle16")' runat="server">
+			<asp:Label id="cDetailRecTitle16l" Text='<%# DataBinder.Eval(Container.DataItem,"DetailRecTitle16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#50852C;" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet' style='text-align:left;' visible="<%# GridColumnVisible(47) %>" onclick='GridEdit("DetailRecSubtitle16")' runat="server">
+			<asp:Label id="cDetailRecSubtitle16l" Text='<%# DataBinder.Eval(Container.DataItem,"DetailRecSubtitle16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="font-weight:bold; color:#00468C;" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnTablet HideObjOnMobile' style='text-align:left;' visible="<%# GridColumnVisible(48) %>" onclick='GridEdit("DetailFoundMsg16")' runat="server">
+			<asp:Label id="cDetailFoundMsg16l" Text='<%# DataBinder.Eval(Container.DataItem,"DetailFoundMsg16").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" style="color:#888888;" runat="server" />
 		</div></div>
     </td>
 	<td>
@@ -467,36 +608,82 @@
 	<EditItemTemplate>
 	<tr class="GrdEdtTmp" runat="server">
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:right;' visible="<%# GridColumnVisible(24) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cScreenHlpId16ml" runat="server" /></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:right;' visible="<%# GridColumnVisible(26) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cScreenHlpId16ml" runat="server" /></div>
 		    <asp:TextBox id="cScreenHlpId16" CssClass="GrdNum" Text='<%# RO.Common3.Utils.fmNumeric("0",DataBinder.Eval(Container.DataItem,"ScreenHlpId16").ToString(),base.LUser.Culture) %>' runat="server" />
-		</div></div>
-    </td>
-    <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(25) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cCultureId16ml" runat="server" /></div>
+		</div><div class='GrdInner' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(27) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cCultureId16ml" runat="server" /></div>
 		    <rcasp:ComboBox autocomplete="off" id="cCultureId16" CssClass="GrdDdl" DataValueField="CultureId16" DataTextField="CultureId16Text" Mode="A" OnPostBack="cbPostBack" OnSearch="cbCultureId16" runat="server" /><asp:RequiredFieldValidator id="cRFVCultureId16" ControlToValidate="cCultureId16" display="none" runat="server" />
-		</div><div class='GrdInner' style='max-width:400px;text-align:left;' visible="<%# GridColumnVisible(26) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cScreenTitle16ml" runat="server" /></div>
+		</div><div class='GrdInner' style='max-width:400px;text-align:left;' visible="<%# GridColumnVisible(28) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cScreenTitle16ml" runat="server" /></div>
 		    <asp:TextBox id="cScreenTitle16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"ScreenTitle16").ToString() %>' MaxLength="50" runat="server" /><asp:RequiredFieldValidator id="cRFVScreenTitle16" ControlToValidate="cScreenTitle16" display="none" runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' visible="<%# GridColumnVisible(27) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDefaultHlpMsg16ml" runat="server" /></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' visible="<%# GridColumnVisible(29) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDefaultHlpMsg16ml" runat="server" /></div>
 		    <asp:TextBox id="cDefaultHlpMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"DefaultHlpMsg16").ToString() %>' runat="server" /><asp:RequiredFieldValidator id="cRFVDefaultHlpMsg16" ControlToValidate="cDefaultHlpMsg16" display="none" runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' visible="<%# GridColumnVisible(28) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cFootNote16ml" runat="server" /></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:600px;text-align:left;' visible="<%# GridColumnVisible(30) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cFootNote16ml" runat="server" /></div>
 		    <asp:TextBox id="cFootNote16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"FootNote16").ToString() %>' MaxLength="400" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(31) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cAddMsg16ml" runat="server" /></div>
+		    <asp:TextBox id="cAddMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"AddMsg16").ToString() %>' MaxLength="100" runat="server" />
+		</div><div class='GrdInner' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(32) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cUpdMsg16ml" runat="server" /></div>
+		    <asp:TextBox id="cUpdMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"UpdMsg16").ToString() %>' MaxLength="100" runat="server" />
+		</div><div class='GrdInner' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(33) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDelMsg16ml" runat="server" /></div>
+		    <asp:TextBox id="cDelMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"DelMsg16").ToString() %>' MaxLength="100" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(34) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cIncrementMsg16ml" runat="server" /></div>
+		    <asp:TextBox id="cIncrementMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"IncrementMsg16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVIncrementMsg16" ControlToValidate="cIncrementMsg16" display="none" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(35) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cNoMasterMsg16ml" runat="server" /></div>
+		    <asp:TextBox id="cNoMasterMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"NoMasterMsg16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVNoMasterMsg16" ControlToValidate="cNoMasterMsg16" display="none" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(36) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cNoDetailMsg16ml" runat="server" /></div>
+		    <asp:TextBox id="cNoDetailMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"NoDetailMsg16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVNoDetailMsg16" ControlToValidate="cNoDetailMsg16" display="none" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(37) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cAddMasterMsg16ml" runat="server" /></div>
+		    <asp:TextBox id="cAddMasterMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"AddMasterMsg16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVAddMasterMsg16" ControlToValidate="cAddMasterMsg16" display="none" runat="server" />
+		</div><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(38) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cAddDetailMsg16ml" runat="server" /></div>
+		    <asp:TextBox id="cAddDetailMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"AddDetailMsg16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVAddDetailMsg16" ControlToValidate="cAddDetailMsg16" display="none" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(29) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cAddMsg16ml" runat="server" /></div>
-		    <asp:TextBox id="cAddMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"AddMsg16").ToString() %>' MaxLength="100" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(39) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cMasterLstTitle16ml" runat="server" /></div>
+		    <asp:TextBox id="cMasterLstTitle16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"MasterLstTitle16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVMasterLstTitle16" ControlToValidate="cMasterLstTitle16" display="none" runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(30) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cUpdMsg16ml" runat="server" /></div>
-		    <asp:TextBox id="cUpdMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"UpdMsg16").ToString() %>' MaxLength="100" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(40) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cMasterLstSubtitle16ml" runat="server" /></div>
+		    <asp:TextBox id="cMasterLstSubtitle16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"MasterLstSubtitle16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVMasterLstSubtitle16" ControlToValidate="cMasterLstSubtitle16" display="none" runat="server" />
 		</div></div>
 		<div></div>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:300px;text-align:left;' visible="<%# GridColumnVisible(31) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDelMsg16ml" runat="server" /></div>
-		    <asp:TextBox id="cDelMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"DelMsg16").ToString() %>' MaxLength="100" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(41) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cMasterRecTitle16ml" runat="server" /></div>
+		    <asp:TextBox id="cMasterRecTitle16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"MasterRecTitle16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVMasterRecTitle16" ControlToValidate="cMasterRecTitle16" display="none" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(42) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cMasterRecSubtitle16ml" runat="server" /></div>
+		    <asp:TextBox id="cMasterRecSubtitle16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"MasterRecSubtitle16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVMasterRecSubtitle16" ControlToValidate="cMasterRecSubtitle16" display="none" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(43) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cMasterFoundMsg16ml" runat="server" /></div>
+		    <asp:TextBox id="cMasterFoundMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"MasterFoundMsg16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVMasterFoundMsg16" ControlToValidate="cMasterFoundMsg16" display="none" runat="server" />
+		</div></div>
+    </td>
+    <td>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(44) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDetailLstTitle16ml" runat="server" /></div>
+		    <asp:TextBox id="cDetailLstTitle16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"DetailLstTitle16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVDetailLstTitle16" ControlToValidate="cDetailLstTitle16" display="none" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(45) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDetailLstSubtitle16ml" runat="server" /></div>
+		    <asp:TextBox id="cDetailLstSubtitle16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"DetailLstSubtitle16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVDetailLstSubtitle16" ControlToValidate="cDetailLstSubtitle16" display="none" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(46) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDetailRecTitle16ml" runat="server" /></div>
+		    <asp:TextBox id="cDetailRecTitle16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"DetailRecTitle16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVDetailRecTitle16" ControlToValidate="cDetailRecTitle16" display="none" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(47) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDetailRecSubtitle16ml" runat="server" /></div>
+		    <asp:TextBox id="cDetailRecSubtitle16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"DetailRecSubtitle16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVDetailRecSubtitle16" ControlToValidate="cDetailRecSubtitle16" display="none" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(48) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDetailFoundMsg16ml" runat="server" /></div>
+		    <asp:TextBox id="cDetailFoundMsg16" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"DetailFoundMsg16").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVDetailFoundMsg16" ControlToValidate="cDetailFoundMsg16" display="none" runat="server" />
 		</div></div>
     </td>
 	<td>

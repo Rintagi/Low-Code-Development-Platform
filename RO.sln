@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RO", "http://localhost/RO", "{12533305-7929-4CDC-BF76-E50D25C5056F}"
 	ProjectSection(WebsiteProperties) = preProject
@@ -33,27 +33,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service3", "Service3\Service3.csproj", "{DCF6CD1A-C0E0-47A9-82C1-30F4BF121EBA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemFramewk", "SystemFramewk\SystemFramewk.csproj", "{4F199649-19B5-4BEF-846F-FE5D4CBB0ACA}"
-EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WsXls", "http://localhost/WsXls", "{19C15213-AE61-442F-B270-117C261A3C37}"
-	ProjectSection(WebsiteProperties) = preProject
-		UseIISExpress = "False"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		Debug.AspNetCompiler.VirtualPath = "/WsXls"
-		Debug.AspNetCompiler.PhysicalPath = "WsXls\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\WsXls\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/WsXls"
-		Release.AspNetCompiler.PhysicalPath = "WsXls\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\WsXls\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "WsXls\"
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Access3", "Access3\Access3.csproj", "{24A29344-FEA9-414A-9D1B-AC15E5350D12}"
 EndProject
@@ -137,16 +116,6 @@ Global
 		{4F199649-19B5-4BEF-846F-FE5D4CBB0ACA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4F199649-19B5-4BEF-846F-FE5D4CBB0ACA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4F199649-19B5-4BEF-846F-FE5D4CBB0ACA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{19C15213-AE61-442F-B270-117C261A3C37}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{19C15213-AE61-442F-B270-117C261A3C37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{19C15213-AE61-442F-B270-117C261A3C37}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{19C15213-AE61-442F-B270-117C261A3C37}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{19C15213-AE61-442F-B270-117C261A3C37}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{19C15213-AE61-442F-B270-117C261A3C37}.Release|.NET.ActiveCfg = Debug|Any CPU
-		{19C15213-AE61-442F-B270-117C261A3C37}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{19C15213-AE61-442F-B270-117C261A3C37}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{19C15213-AE61-442F-B270-117C261A3C37}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{19C15213-AE61-442F-B270-117C261A3C37}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
 		{24A29344-FEA9-414A-9D1B-AC15E5350D12}.Debug|.NET.ActiveCfg = Debug|Any CPU
 		{24A29344-FEA9-414A-9D1B-AC15E5350D12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{24A29344-FEA9-414A-9D1B-AC15E5350D12}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -200,5 +169,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2A96046E-0086-4EC6-9C11-CA3C378DE3DC}
 	EndGlobalSection
 EndGlobal

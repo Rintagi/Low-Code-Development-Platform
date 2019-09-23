@@ -1,5 +1,6 @@
 // Stock rules only. Written over by robot on each deployment.
 var today = currentDate().split("/");
+var openDatePickerId = null;
 
 function currentDate() 
 {
@@ -980,7 +981,7 @@ function PopDialog(iconUrl, msgContent, focusOnCloseId, yesno) {
         position: mobileStyle ? { my: "center top", at: "center top+25%", of: window } : { my: "center", at: "center", of: window },
         resizable: !mobileStyle,
         draggable: !mobileStyle,
-        minWidth: mobileStyle ? 250 : 400
+        minWidth: mobileStyle ? 250 : 800
     });
     jQuery("#MsgPopup").dialog('open');
 }
@@ -1097,12 +1098,14 @@ function ApplyJQueryWidget(aNamId, aValId) {
         else if (behaviour == "Date") {
             $(e).datepicker({
                 'beforeShow': function (ele, inst) {
+                    openDatePickerId = ele.id;
                     currVal = $(ele).val(); $(ele).attr('onchange', 'return false;');
                     return { dateFormat: WindowsDateFormat2DatePickerDateFormat($(ele).val()) };
                 }, changeMonth: true, changeYear: true,
                 'onSelect': function (el) { if (onchangeScript) { eval(onchangeScript); } else { if (this.fireEvent) this.fireEvent('onchange'); else $(this).fire('change'); }; var n = nextOnTabIndex($(this)); setTimeout(function () { $(n).focus(); }, 0); },
-                'onClose': function (dateText, instance) { if (onchangeScript) { $(this).attr('onchange', onchangeScript); if (currVal != $(this).val()) if (this.fireEvent) this.fireEvent('onchange'); else $(this).fire('change'); } }
+                'onClose': function (dateText, instance) { openDatePickerId = null; if (onchangeScript) { $(this).attr('onchange', onchangeScript); if (currVal != $(this).val()) if (this.fireEvent) this.fireEvent('onchange'); else $(this).fire('change'); } }
             });
+            if (openDatePickerId) setTimeout(function () { $('#' + openDatePickerId).datepicker('show'); });
         }
         else if (behaviour == "Slider") {
             var select = e, title = e.title;

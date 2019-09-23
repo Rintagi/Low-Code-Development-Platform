@@ -437,7 +437,8 @@ namespace RO.Access3
 			{
 				DataRow dr = dt.Rows[0];
 				UsrImpr impr = new UsrImpr(dr[0].ToString(),dr[1].ToString(),dr[2].ToString(),dr[3].ToString(),dr[4].ToString()
-					,dr[5].ToString(),dr[6].ToString(),dr[7].ToString(),dr[8].ToString(),dr[9].ToString(),dr[10].ToString(),dr[11].ToString());
+					,dr[5].ToString(),dr[6].ToString(),dr[7].ToString(),dr[8].ToString(),dr[9].ToString(),dr[10].ToString(),dr[11].ToString()
+                    ,dr[12].ToString(),dr[13].ToString(),dr[14].ToString());
 				return impr;
 			}
 		}

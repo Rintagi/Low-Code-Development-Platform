@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -47,13 +50,16 @@ namespace RO.Common3.Data
 			columns.Add("UsrGroupId93", typeof(string));
 			columns.Add("CompanyId93", typeof(string));
 			columns.Add("ProjectId93", typeof(string));
+			columns.Add("SystemId93", typeof(string));
 			columns.Add("MemberId93", typeof(string));
 			columns.Add("AgentId93", typeof(string));
 			columns.Add("BrokerId93", typeof(string));
 			columns.Add("CustomerId93", typeof(string));
 			columns.Add("InvestorId93", typeof(string));
 			columns.Add("VendorId93", typeof(string));
-			columns.Add("SystemId93", typeof(string));
+			columns.Add("LenderId93", typeof(string));
+			columns.Add("BorrowerId93", typeof(string));
+			columns.Add("GuarantorId93", typeof(string));
 			return dt;
 		}
 	}
@@ -80,13 +86,16 @@ namespace RO.Web
 		private const string KEY_dtUsrGroupId93 = "Cache:dtUsrGroupId93";
 		private const string KEY_dtCompanyId93 = "Cache:dtCompanyId93";
 		private const string KEY_dtProjectId93 = "Cache:dtProjectId93";
+		private const string KEY_dtSystemId93 = "Cache:dtSystemId93";
 		private const string KEY_dtMemberId93 = "Cache:dtMemberId93";
 		private const string KEY_dtAgentId93 = "Cache:dtAgentId93";
 		private const string KEY_dtBrokerId93 = "Cache:dtBrokerId93";
 		private const string KEY_dtCustomerId93 = "Cache:dtCustomerId93";
 		private const string KEY_dtInvestorId93 = "Cache:dtInvestorId93";
 		private const string KEY_dtVendorId93 = "Cache:dtVendorId93";
-		private const string KEY_dtSystemId93 = "Cache:dtSystemId93";
+		private const string KEY_dtLenderId93 = "Cache:dtLenderId93";
+		private const string KEY_dtBorrowerId93 = "Cache:dtBorrowerId93";
+		private const string KEY_dtGuarantorId93 = "Cache:dtGuarantorId93";
 
 		private const string KEY_dtSystems = "Cache:dtSystems3_64";
 		private const string KEY_sysConnectionString = "Cache:sysConnectionString3_64";
@@ -152,13 +161,16 @@ namespace RO.Web
 				Session.Remove(KEY_dtUsrGroupId93);
 				Session.Remove(KEY_dtCompanyId93);
 				Session.Remove(KEY_dtProjectId93);
+				Session.Remove(KEY_dtSystemId93);
 				Session.Remove(KEY_dtMemberId93);
 				Session.Remove(KEY_dtAgentId93);
 				Session.Remove(KEY_dtBrokerId93);
 				Session.Remove(KEY_dtCustomerId93);
 				Session.Remove(KEY_dtInvestorId93);
 				Session.Remove(KEY_dtVendorId93);
-				Session.Remove(KEY_dtSystemId93);
+				Session.Remove(KEY_dtLenderId93);
+				Session.Remove(KEY_dtBorrowerId93);
+				Session.Remove(KEY_dtGuarantorId93);
 				SetButtonHlp();
 				GetSystems();
 				SetColumnAuthority();
@@ -574,6 +586,9 @@ namespace RO.Web
 						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[20]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[20]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[21]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[21]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[22]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[22]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[23]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[23]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[24]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[24]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[25]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[25]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -593,13 +608,16 @@ namespace RO.Web
 						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["UsrGroupId93"].ToString() + (char)9 + drv["UsrGroupId93Text"].ToString() + (char)9);}
 						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(drv["CompanyId93"].ToString() + (char)9 + drv["CompanyId93Text"].ToString() + (char)9);}
 						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(drv["ProjectId93"].ToString() + (char)9 + drv["ProjectId93Text"].ToString() + (char)9);}
-						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId93"].ToString() + (char)9 + drv["MemberId93Text"].ToString() + (char)9);}
-						if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId93"].ToString() + (char)9 + drv["AgentId93Text"].ToString() + (char)9);}
-						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId93"].ToString() + (char)9 + drv["BrokerId93Text"].ToString() + (char)9);}
-						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId93"].ToString() + (char)9 + drv["CustomerId93Text"].ToString() + (char)9);}
-						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId93"].ToString() + (char)9 + drv["InvestorId93Text"].ToString() + (char)9);}
-						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId93"].ToString() + (char)9 + drv["VendorId93Text"].ToString() + (char)9);}
-						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["SystemId93"].ToString() + (char)9 + drv["SystemId93Text"].ToString() + (char)9);}
+						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(drv["SystemId93"].ToString() + (char)9 + drv["SystemId93Text"].ToString() + (char)9);}
+						if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId93"].ToString() + (char)9 + drv["MemberId93Text"].ToString() + (char)9);}
+						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId93"].ToString() + (char)9 + drv["AgentId93Text"].ToString() + (char)9);}
+						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId93"].ToString() + (char)9 + drv["BrokerId93Text"].ToString() + (char)9);}
+						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId93"].ToString() + (char)9 + drv["CustomerId93Text"].ToString() + (char)9);}
+						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId93"].ToString() + (char)9 + drv["InvestorId93Text"].ToString() + (char)9);}
+						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId93"].ToString() + (char)9 + drv["VendorId93Text"].ToString() + (char)9);}
+						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(drv["LenderId93"].ToString() + (char)9 + drv["LenderId93Text"].ToString() + (char)9);}
+						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["BorrowerId93"].ToString() + (char)9 + drv["BorrowerId93Text"].ToString() + (char)9);}
+						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(drv["GuarantorId93"].ToString() + (char)9 + drv["GuarantorId93Text"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmUsrPref.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
@@ -670,6 +688,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -701,6 +722,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[20]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[21]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[22]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[23]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[24]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[25]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -738,13 +762,16 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["UsrGroupId93Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(drv["CompanyId93Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(drv["ProjectId93Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId93Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId93Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId93Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId93Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId93Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId93Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["SystemId93Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(drv["SystemId93Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId93Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId93Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId93Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId93Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId93Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId93Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(drv["LenderId93Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["BorrowerId93Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(drv["GuarantorId93Text"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1868,6 +1895,61 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 		}
 
+		private void SetSystemId93(DropDownList ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtSystemId93];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(64,"GetDdlSystemId3S941",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("UsrPrefId"))
+					{
+						ss = "(UsrPrefId is null";
+						if (string.IsNullOrEmpty(cAdmUsrPref64List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR UsrPrefId = " + cAdmUsrPref64List.SelectedValue + ")";}
+					}
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "SystemId93 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					else if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(64,"GetDdlSystemId3S941",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(64,"GetDdlSystemId3S941",true,true,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					Session[KEY_dtSystemId93] = dv.Table;
+				}
+			}
+		}
+
 		protected void cbMemberId93(object sender, System.EventArgs e)
 		{
 			SetMemberId93((RoboCoder.WebControls.ComboBox)sender,string.Empty);
@@ -2150,57 +2232,143 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 		}
 
-		private void SetSystemId93(DropDownList ddl, string keyId)
+		protected void cbLenderId93(object sender, System.EventArgs e)
 		{
-			DataTable dt = (DataTable)Session[KEY_dtSystemId93];
-			DataView dv = dt != null ? dt.DefaultView : null;
+			SetLenderId93((RoboCoder.WebControls.ComboBox)sender,string.Empty);
+		}
+
+		private void SetLenderId93(RoboCoder.WebControls.ComboBox ddl, string keyId)
+		{
+			System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+			context["method"] = "GetDdlLenderId3S4188";
+			context["addnew"] = "Y";
+			context["mKey"] = "LenderId93";
+			context["mVal"] = "LenderId93Text";
+			context["mTip"] = "LenderId93Text";
+			context["mImg"] = "LenderId93Text";
+			context["ssd"] = Request.QueryString["ssd"];
+			context["scr"] = "64";
+			context["csy"] = "3";
+			context["filter"] = Utils.IsInt(cFilterId.SelectedValue)? cFilterId.SelectedValue : "0";
+			context["isSys"] = "N";
+			context["conn"] = string.Empty;
+			ddl.AutoCompleteUrl = "AutoComplete.aspx/DdlSuggests";
+			ddl.DataContext = context;
 			if (ddl != null)
 			{
-				string ss = string.Empty;
-				ListItem li = null;
-				bool bFirst = false;
-				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
-				if (dv == null)
+			    DataView dv = null;
+				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
+				try
 				{
-					bFirst = true;
-					try
-					{
-						dv = new DataView((new AdminSystem()).GetDdl(64,"GetDdlSystemId3S941",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
-					}
-					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+					dv = new DataView((new AdminSystem()).GetDdl(64,"GetDdlLenderId3S4188",true,false,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
 				}
+				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				if (dv != null)
 				{
 					if (dv.Table.Columns.Contains("UsrPrefId"))
 					{
-						ss = "(UsrPrefId is null";
+						context["pMKeyColID"] = cAdmUsrPref64List.ClientID;
+						context["pMKeyCol"] = "UsrPrefId";
+						string ss = "(UsrPrefId is null";
 						if (string.IsNullOrEmpty(cAdmUsrPref64List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR UsrPrefId = " + cAdmUsrPref64List.SelectedValue + ")";}
+						dv.RowFilter = ss;
 					}
-					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "SystemId93 is not NULL"; }
-					dv.RowFilter = ss;
-					ddl.DataSource = dv; ddl.DataBind();
-					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
-					else if (!bFirst)
+					ddl.DataSource = dv; Session[KEY_dtLenderId93] = dv.Table;
+				    try { ddl.SelectByValue(keyId,string.Empty,true); } catch { try { ddl.SelectedIndex = 0; } catch { } }
+				}
+			}
+		}
+
+		protected void cbBorrowerId93(object sender, System.EventArgs e)
+		{
+			SetBorrowerId93((RoboCoder.WebControls.ComboBox)sender,string.Empty);
+		}
+
+		private void SetBorrowerId93(RoboCoder.WebControls.ComboBox ddl, string keyId)
+		{
+			System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+			context["method"] = "GetDdlBorrowerId3S4189";
+			context["addnew"] = "Y";
+			context["mKey"] = "BorrowerId93";
+			context["mVal"] = "BorrowerId93Text";
+			context["mTip"] = "BorrowerId93Text";
+			context["mImg"] = "BorrowerId93Text";
+			context["ssd"] = Request.QueryString["ssd"];
+			context["scr"] = "64";
+			context["csy"] = "3";
+			context["filter"] = Utils.IsInt(cFilterId.SelectedValue)? cFilterId.SelectedValue : "0";
+			context["isSys"] = "N";
+			context["conn"] = string.Empty;
+			ddl.AutoCompleteUrl = "AutoComplete.aspx/DdlSuggests";
+			ddl.DataContext = context;
+			if (ddl != null)
+			{
+			    DataView dv = null;
+				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
+				try
+				{
+					dv = new DataView((new AdminSystem()).GetDdl(64,"GetDdlBorrowerId3S4189",true,false,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+				}
+				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("UsrPrefId"))
 					{
-						try
-						{
-							dv = new DataView((new AdminSystem()).GetDdl(64,"GetDdlSystemId3S941",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
-						}
-						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
-						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
-						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+						context["pMKeyColID"] = cAdmUsrPref64List.ClientID;
+						context["pMKeyCol"] = "UsrPrefId";
+						string ss = "(UsrPrefId is null";
+						if (string.IsNullOrEmpty(cAdmUsrPref64List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR UsrPrefId = " + cAdmUsrPref64List.SelectedValue + ")";}
+						dv.RowFilter = ss;
 					}
-					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					ddl.DataSource = dv; Session[KEY_dtBorrowerId93] = dv.Table;
+				    try { ddl.SelectByValue(keyId,string.Empty,true); } catch { try { ddl.SelectedIndex = 0; } catch { } }
+				}
+			}
+		}
+
+		protected void cbGuarantorId93(object sender, System.EventArgs e)
+		{
+			SetGuarantorId93((RoboCoder.WebControls.ComboBox)sender,string.Empty);
+		}
+
+		private void SetGuarantorId93(RoboCoder.WebControls.ComboBox ddl, string keyId)
+		{
+			System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+			context["method"] = "GetDdlGuarantorId3S4190";
+			context["addnew"] = "Y";
+			context["mKey"] = "GuarantorId93";
+			context["mVal"] = "GuarantorId93Text";
+			context["mTip"] = "GuarantorId93Text";
+			context["mImg"] = "GuarantorId93Text";
+			context["ssd"] = Request.QueryString["ssd"];
+			context["scr"] = "64";
+			context["csy"] = "3";
+			context["filter"] = Utils.IsInt(cFilterId.SelectedValue)? cFilterId.SelectedValue : "0";
+			context["isSys"] = "N";
+			context["conn"] = string.Empty;
+			ddl.AutoCompleteUrl = "AutoComplete.aspx/DdlSuggests";
+			ddl.DataContext = context;
+			if (ddl != null)
+			{
+			    DataView dv = null;
+				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
+				try
+				{
+					dv = new DataView((new AdminSystem()).GetDdl(64,"GetDdlGuarantorId3S4190",true,false,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+				}
+				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("UsrPrefId"))
 					{
-						try
-						{
-							dv = new DataView((new AdminSystem()).GetDdl(64,"GetDdlSystemId3S941",true,true,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
-						}
-						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
-						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
-						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+						context["pMKeyColID"] = cAdmUsrPref64List.ClientID;
+						context["pMKeyCol"] = "UsrPrefId";
+						string ss = "(UsrPrefId is null";
+						if (string.IsNullOrEmpty(cAdmUsrPref64List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR UsrPrefId = " + cAdmUsrPref64List.SelectedValue + ")";}
+						dv.RowFilter = ss;
 					}
-					Session[KEY_dtSystemId93] = dv.Table;
+					ddl.DataSource = dv; Session[KEY_dtGuarantorId93] = dv.Table;
+				    try { ddl.SelectByValue(keyId,string.Empty,true); } catch { try { ddl.SelectedIndex = 0; } catch { } }
 				}
 			}
 		}
@@ -2293,19 +2461,25 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				SetCompanyId93(cCompanyId93,string.Empty);
 				base.SetFoldBehavior(cProjectId93, dtAuth.Rows[15], cProjectId93P1, cProjectId93Label, cProjectId93P2, null, dtLabel.Rows[15], null, null, null);
 				SetProjectId93(cProjectId93,string.Empty);
-				base.SetFoldBehavior(cMemberId93, dtAuth.Rows[16], cMemberId93P1, cMemberId93Label, cMemberId93P2, null, dtLabel.Rows[16], null, null, null);
+				base.SetFoldBehavior(cSystemId93, dtAuth.Rows[16], cSystemId93P1, cSystemId93Label, cSystemId93P2, null, dtLabel.Rows[16], null, null, null);
+				base.SetFoldBehavior(cMemberId93, dtAuth.Rows[17], cMemberId93P1, cMemberId93Label, cMemberId93P2, null, dtLabel.Rows[17], null, null, null);
 				SetMemberId93(cMemberId93,string.Empty);
-				base.SetFoldBehavior(cAgentId93, dtAuth.Rows[17], cAgentId93P1, cAgentId93Label, cAgentId93P2, null, dtLabel.Rows[17], null, null, null);
+				base.SetFoldBehavior(cAgentId93, dtAuth.Rows[18], cAgentId93P1, cAgentId93Label, cAgentId93P2, null, dtLabel.Rows[18], null, null, null);
 				SetAgentId93(cAgentId93,string.Empty);
-				base.SetFoldBehavior(cBrokerId93, dtAuth.Rows[18], cBrokerId93P1, cBrokerId93Label, cBrokerId93P2, null, dtLabel.Rows[18], null, null, null);
+				base.SetFoldBehavior(cBrokerId93, dtAuth.Rows[19], cBrokerId93P1, cBrokerId93Label, cBrokerId93P2, null, dtLabel.Rows[19], null, null, null);
 				SetBrokerId93(cBrokerId93,string.Empty);
-				base.SetFoldBehavior(cCustomerId93, dtAuth.Rows[19], cCustomerId93P1, cCustomerId93Label, cCustomerId93P2, null, dtLabel.Rows[19], null, null, null);
+				base.SetFoldBehavior(cCustomerId93, dtAuth.Rows[20], cCustomerId93P1, cCustomerId93Label, cCustomerId93P2, null, dtLabel.Rows[20], null, null, null);
 				SetCustomerId93(cCustomerId93,string.Empty);
-				base.SetFoldBehavior(cInvestorId93, dtAuth.Rows[20], cInvestorId93P1, cInvestorId93Label, cInvestorId93P2, null, dtLabel.Rows[20], null, null, null);
+				base.SetFoldBehavior(cInvestorId93, dtAuth.Rows[21], cInvestorId93P1, cInvestorId93Label, cInvestorId93P2, null, dtLabel.Rows[21], null, null, null);
 				SetInvestorId93(cInvestorId93,string.Empty);
-				base.SetFoldBehavior(cVendorId93, dtAuth.Rows[21], cVendorId93P1, cVendorId93Label, cVendorId93P2, null, dtLabel.Rows[21], null, null, null);
+				base.SetFoldBehavior(cVendorId93, dtAuth.Rows[22], cVendorId93P1, cVendorId93Label, cVendorId93P2, null, dtLabel.Rows[22], null, null, null);
 				SetVendorId93(cVendorId93,string.Empty);
-				base.SetFoldBehavior(cSystemId93, dtAuth.Rows[22], cSystemId93P1, cSystemId93Label, cSystemId93P2, null, dtLabel.Rows[22], null, null, null);
+				base.SetFoldBehavior(cLenderId93, dtAuth.Rows[23], cLenderId93P1, cLenderId93Label, cLenderId93P2, null, dtLabel.Rows[23], null, null, null);
+				SetLenderId93(cLenderId93,string.Empty);
+				base.SetFoldBehavior(cBorrowerId93, dtAuth.Rows[24], cBorrowerId93P1, cBorrowerId93Label, cBorrowerId93P2, null, dtLabel.Rows[24], null, null, null);
+				SetBorrowerId93(cBorrowerId93,string.Empty);
+				base.SetFoldBehavior(cGuarantorId93, dtAuth.Rows[25], cGuarantorId93P1, cGuarantorId93Label, cGuarantorId93P2, null, dtLabel.Rows[25], null, null, null);
+				SetGuarantorId93(cGuarantorId93,string.Empty);
 			}
 			if ((cUsrPrefDesc93.Attributes["OnChange"] == null || cUsrPrefDesc93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cUsrPrefDesc93.Visible && !cUsrPrefDesc93.ReadOnly) {cUsrPrefDesc93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cMenuOptId93.Attributes["OnChange"] == null || cMenuOptId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cMenuOptId93.Visible && cMenuOptId93.Enabled) {cMenuOptId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -2322,13 +2496,16 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if ((cUsrGroupId93.Attributes["OnChange"] == null || cUsrGroupId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cUsrGroupId93.Visible && cUsrGroupId93.Enabled) {cUsrGroupId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cCompanyId93.Attributes["OnChange"] == null || cCompanyId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCompanyId93.Visible && cCompanyId93.Enabled) {cCompanyId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cProjectId93.Attributes["OnChange"] == null || cProjectId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cProjectId93.Visible && cProjectId93.Enabled) {cProjectId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cSystemId93.Attributes["OnChange"] == null || cSystemId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSystemId93.Visible && cSystemId93.Enabled) {cSystemId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cMemberId93.Attributes["OnChange"] == null || cMemberId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cMemberId93.Visible && cMemberId93.Enabled) {cMemberId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cAgentId93.Attributes["OnChange"] == null || cAgentId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cAgentId93.Visible && cAgentId93.Enabled) {cAgentId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cBrokerId93.Attributes["OnChange"] == null || cBrokerId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cBrokerId93.Visible && cBrokerId93.Enabled) {cBrokerId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cCustomerId93.Attributes["OnChange"] == null || cCustomerId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCustomerId93.Visible && cCustomerId93.Enabled) {cCustomerId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cInvestorId93.Attributes["OnChange"] == null || cInvestorId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cInvestorId93.Visible && cInvestorId93.Enabled) {cInvestorId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cVendorId93.Attributes["OnChange"] == null || cVendorId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cVendorId93.Visible && cVendorId93.Enabled) {cVendorId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
-			if ((cSystemId93.Attributes["OnChange"] == null || cSystemId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSystemId93.Visible && cSystemId93.Enabled) {cSystemId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cLenderId93.Attributes["OnChange"] == null || cLenderId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cLenderId93.Visible && cLenderId93.Enabled) {cLenderId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cBorrowerId93.Attributes["OnChange"] == null || cBorrowerId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cBorrowerId93.Visible && cBorrowerId93.Enabled) {cBorrowerId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cGuarantorId93.Attributes["OnChange"] == null || cGuarantorId93.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cGuarantorId93.Visible && cGuarantorId93.Enabled) {cGuarantorId93.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 		}
 
 		private DataTable SetFunctionality(DataTable dt)
@@ -2385,13 +2562,16 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				Session.Remove(KEY_dtUsrGroupId93);
 				Session.Remove(KEY_dtCompanyId93);
 				Session.Remove(KEY_dtProjectId93);
+				Session.Remove(KEY_dtSystemId93);
 				Session.Remove(KEY_dtMemberId93);
 				Session.Remove(KEY_dtAgentId93);
 				Session.Remove(KEY_dtBrokerId93);
 				Session.Remove(KEY_dtCustomerId93);
 				Session.Remove(KEY_dtInvestorId93);
 				Session.Remove(KEY_dtVendorId93);
-				Session.Remove(KEY_dtSystemId93);
+				Session.Remove(KEY_dtLenderId93);
+				Session.Remove(KEY_dtBorrowerId93);
+				Session.Remove(KEY_dtGuarantorId93);
 				GetCriteria(GetScrCriteria());
 				cFilterId_SelectedIndexChanged(sender, e);
 		}
@@ -2414,13 +2594,16 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[13]["ColVisible"].ToString() == "Y" && dt.Rows[13]["ColReadOnly"].ToString() != "Y") {SetUsrGroupId93(cUsrGroupId93,string.Empty);}
 			if (dt.Rows[14]["ColVisible"].ToString() == "Y" && dt.Rows[14]["ColReadOnly"].ToString() != "Y") {cCompanyId93.ClearSearch();}
 			if (dt.Rows[15]["ColVisible"].ToString() == "Y" && dt.Rows[15]["ColReadOnly"].ToString() != "Y") {cProjectId93.ClearSearch();}
-			if (dt.Rows[16]["ColVisible"].ToString() == "Y" && dt.Rows[16]["ColReadOnly"].ToString() != "Y") {cMemberId93.ClearSearch();}
-			if (dt.Rows[17]["ColVisible"].ToString() == "Y" && dt.Rows[17]["ColReadOnly"].ToString() != "Y") {cAgentId93.ClearSearch();}
-			if (dt.Rows[18]["ColVisible"].ToString() == "Y" && dt.Rows[18]["ColReadOnly"].ToString() != "Y") {cBrokerId93.ClearSearch();}
-			if (dt.Rows[19]["ColVisible"].ToString() == "Y" && dt.Rows[19]["ColReadOnly"].ToString() != "Y") {cCustomerId93.ClearSearch();}
-			if (dt.Rows[20]["ColVisible"].ToString() == "Y" && dt.Rows[20]["ColReadOnly"].ToString() != "Y") {cInvestorId93.ClearSearch();}
-			if (dt.Rows[21]["ColVisible"].ToString() == "Y" && dt.Rows[21]["ColReadOnly"].ToString() != "Y") {cVendorId93.ClearSearch();}
-			if (dt.Rows[22]["ColVisible"].ToString() == "Y" && dt.Rows[22]["ColReadOnly"].ToString() != "Y") {SetSystemId93(cSystemId93,string.Empty);}
+			if (dt.Rows[16]["ColVisible"].ToString() == "Y" && dt.Rows[16]["ColReadOnly"].ToString() != "Y") {SetSystemId93(cSystemId93,string.Empty);}
+			if (dt.Rows[17]["ColVisible"].ToString() == "Y" && dt.Rows[17]["ColReadOnly"].ToString() != "Y") {cMemberId93.ClearSearch();}
+			if (dt.Rows[18]["ColVisible"].ToString() == "Y" && dt.Rows[18]["ColReadOnly"].ToString() != "Y") {cAgentId93.ClearSearch();}
+			if (dt.Rows[19]["ColVisible"].ToString() == "Y" && dt.Rows[19]["ColReadOnly"].ToString() != "Y") {cBrokerId93.ClearSearch();}
+			if (dt.Rows[20]["ColVisible"].ToString() == "Y" && dt.Rows[20]["ColReadOnly"].ToString() != "Y") {cCustomerId93.ClearSearch();}
+			if (dt.Rows[21]["ColVisible"].ToString() == "Y" && dt.Rows[21]["ColReadOnly"].ToString() != "Y") {cInvestorId93.ClearSearch();}
+			if (dt.Rows[22]["ColVisible"].ToString() == "Y" && dt.Rows[22]["ColReadOnly"].ToString() != "Y") {cVendorId93.ClearSearch();}
+			if (dt.Rows[23]["ColVisible"].ToString() == "Y" && dt.Rows[23]["ColReadOnly"].ToString() != "Y") {cLenderId93.ClearSearch();}
+			if (dt.Rows[24]["ColVisible"].ToString() == "Y" && dt.Rows[24]["ColReadOnly"].ToString() != "Y") {cBorrowerId93.ClearSearch();}
+			if (dt.Rows[25]["ColVisible"].ToString() == "Y" && dt.Rows[25]["ColReadOnly"].ToString() != "Y") {cGuarantorId93.ClearSearch();}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -2442,13 +2625,16 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			SetUsrGroupId93(cUsrGroupId93,string.Empty);
 			cCompanyId93.ClearSearch();
 			cProjectId93.ClearSearch();
+			SetSystemId93(cSystemId93,string.Empty);
 			cMemberId93.ClearSearch();
 			cAgentId93.ClearSearch();
 			cBrokerId93.ClearSearch();
 			cCustomerId93.ClearSearch();
 			cInvestorId93.ClearSearch();
 			cVendorId93.ClearSearch();
-			SetSystemId93(cSystemId93,string.Empty);
+			cLenderId93.ClearSearch();
+			cBorrowerId93.ClearSearch();
+			cGuarantorId93.ClearSearch();
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 		protected void cAdmUsrPref64List_TextChanged(object sender, System.EventArgs e)
@@ -2487,27 +2673,30 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					SetPrjListVisible93(cPrjListVisible93,dr["PrjListVisible93"].ToString());
 					SetSysListVisible93(cSysListVisible93,dr["SysListVisible93"].ToString());
 					try {cPrefDefault93.Checked = base.GetBool(dr["PrefDefault93"].ToString());} catch {cPrefDefault93.Checked = false;}
-					try { if (dr["SampleImage93"].Equals(System.DBNull.Value)) { cSampleImage93.ImageUrl = "~/images/DefaultImg.png"; } else { cSampleImage93.ImageUrl = "data:application/base64;base64," + Convert.ToBase64String(dr["SampleImage93"] as byte[]);} cSampleImage93_Click(sender, new ImageClickEventArgs(0, 0)); }
+					try { if (dr["SampleImage93"].Equals(System.DBNull.Value)) { cSampleImage93.ImageUrl = "~/images/DefaultImg.png"; } else { cSampleImage93.OnClientClick = "window.open('" + GetUrlWithQSHash("DnLoad.aspx?key=" + dr["UsrPrefId93"].ToString() + "&tbl=dbo.UsrPref&knm=UsrPrefId&col=SampleImage&wth=250&sys=3") + "'); return false;"; cSampleImage93.ImageUrl = RO.Common3.Utils.BlobPlaceHolder(dr["SampleImage93"] as byte[],true);} cSampleImage93_Click(sender, new ImageClickEventArgs(0, 0)); }
 					catch { cSampleImage93.ImageUrl = string.Empty; }
 					try {cUsrStyleSheet93.Text = dr["UsrStyleSheet93"].ToString();} catch {cUsrStyleSheet93.Text = string.Empty;}
 					SetUsrId93(cUsrId93,dr["UsrId93"].ToString());
 					SetUsrGroupId93(cUsrGroupId93,dr["UsrGroupId93"].ToString());
 					SetCompanyId93(cCompanyId93,dr["CompanyId93"].ToString());
 					SetProjectId93(cProjectId93,dr["ProjectId93"].ToString());
+					SetSystemId93(cSystemId93,dr["SystemId93"].ToString());
 					SetMemberId93(cMemberId93,dr["MemberId93"].ToString());
 					SetAgentId93(cAgentId93,dr["AgentId93"].ToString());
 					SetBrokerId93(cBrokerId93,dr["BrokerId93"].ToString());
 					SetCustomerId93(cCustomerId93,dr["CustomerId93"].ToString());
 					SetInvestorId93(cInvestorId93,dr["InvestorId93"].ToString());
 					SetVendorId93(cVendorId93,dr["VendorId93"].ToString());
-					SetSystemId93(cSystemId93,dr["SystemId93"].ToString());
+					SetLenderId93(cLenderId93,dr["LenderId93"].ToString());
+					SetBorrowerId93(cBorrowerId93,dr["BorrowerId93"].ToString());
+					SetGuarantorId93(cGuarantorId93,dr["GuarantorId93"].ToString());
 				}
 			}
 			cButPanel.DataBind();
 			ScriptManager.GetCurrent(Parent.Page).SetFocus(cAdmUsrPref64List.FocusID);
 			ShowDirty(false); PanelTop.Update();
-			cSampleImage93Fi.Attributes["onchange"] = "if('" + cUsrPrefId93.Text + "'==''){PopDialog('','Please save the record first before upload','');}else{sendFile(this.files[0],'" + GetUrlWithQSHash("UpLoad.aspx?key=" + cUsrPrefId93.Text + "&tbl=dbo.UsrPref&knm=UsrPrefId&col=SampleImage&sys=" + base.LCurr.SystemId.ToString()) + "',refreshUploadCallback(this,'" + cSampleImage93.ClientID + "')); return false;}";
-			cSampleImage93Del.Attributes["onclick"] = "sendFile('','" + GetUrlWithQSHash("UpLoad.aspx?del=true&key=" + cUsrPrefId93.Text + "&tbl=dbo.UsrPref&knm=UsrPrefId&col=SampleImage&sys=" + base.LCurr.SystemId.ToString()) + "',refreshUploadCallback(this,'" + cSampleImage93.ClientID + "'));return false;";
+			cSampleImage93Fi.Attributes["onchange"] = "if('" + cUsrPrefId93.Text + "'==''){PopDialog('','Please save the record first before upload','');}else{sendFile(this.files[0],'" + GetUrlWithQSHash("UpLoad.aspx?key=" + cUsrPrefId93.Text + "&tbl=dbo.UsrPref&knm=UsrPrefId&col=SampleImage&wth=250&sys=" + base.LCurr.SystemId.ToString()) + "',refreshUploadCallback(this,'" + cSampleImage93.ClientID + "')); return false;}";
+			cSampleImage93Del.Attributes["onclick"] = "sendFile('','" + GetUrlWithQSHash("UpLoad.aspx?del=true&key=" + cUsrPrefId93.Text + "&tbl=dbo.UsrPref&knm=UsrPrefId&col=SampleImage&wth=250&sys=" + base.LCurr.SystemId.ToString()) + "',refreshUploadCallback(this,'" + cSampleImage93.ClientID + "'));return false;";
 			// *** List Selection (End of) Web Rule starts here *** //
 		}
 
@@ -2723,6 +2912,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["CompanyId93"] = "Numeric"; drDisp["CompanyId93"] = "AutoComplete";
 			try {dr["ProjectId93"] = cProjectId93.SelectedValue;} catch {}
 			drType["ProjectId93"] = "Numeric"; drDisp["ProjectId93"] = "AutoComplete";
+			try {dr["SystemId93"] = cSystemId93.SelectedValue;} catch {}
+			drType["SystemId93"] = "Numeric"; drDisp["SystemId93"] = "DropDownList";
 			try {dr["MemberId93"] = cMemberId93.SelectedValue;} catch {}
 			drType["MemberId93"] = "Numeric"; drDisp["MemberId93"] = "AutoComplete";
 			try {dr["AgentId93"] = cAgentId93.SelectedValue;} catch {}
@@ -2735,8 +2926,12 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["InvestorId93"] = "Numeric"; drDisp["InvestorId93"] = "AutoComplete";
 			try {dr["VendorId93"] = cVendorId93.SelectedValue;} catch {}
 			drType["VendorId93"] = "Numeric"; drDisp["VendorId93"] = "AutoComplete";
-			try {dr["SystemId93"] = cSystemId93.SelectedValue;} catch {}
-			drType["SystemId93"] = "Numeric"; drDisp["SystemId93"] = "DropDownList";
+			try {dr["LenderId93"] = cLenderId93.SelectedValue;} catch {}
+			drType["LenderId93"] = "Numeric"; drDisp["LenderId93"] = "AutoComplete";
+			try {dr["BorrowerId93"] = cBorrowerId93.SelectedValue;} catch {}
+			drType["BorrowerId93"] = "Numeric"; drDisp["BorrowerId93"] = "AutoComplete";
+			try {dr["GuarantorId93"] = cGuarantorId93.SelectedValue;} catch {}
+			drType["GuarantorId93"] = "Numeric"; drDisp["GuarantorId93"] = "AutoComplete";
 			if (bAdd)
 			{
 			}

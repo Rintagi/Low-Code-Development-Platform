@@ -1,0 +1,28 @@
+.not-found {
+  text-align: center;
+  height: 100vh;
+  overflow: auto;
+  display: flex;
+  background: url(../img/404/bg_404.png) no-repeat center;
+  background-size: cover;
+
+  .not-found__content {
+    margin: auto;
+    padding: 10px;
+  }
+
+  .not-found__info {
+    color: #ffffff;
+    margin-bottom: 20px;
+    margin-top: 90px;
+  }
+
+  .not-found__image {
+    max-width: 500px;
+    width: 100%;
+  }
+
+  button {
+    margin: 0;
+  }
+}

@@ -490,7 +490,7 @@
                             <asp:CheckBox ID="cTermsOfServiceCB" CssClass="cbTermOfService" runat="server" />
                         </div>
                         <div class="cbTerm">
-                            <asp:HyperLink ID="cTermsOfServiceLink" CssClass="inp-txtln TermsOfServiceLink" Target="_blank" NavigateUrl="~/License.txt" runat="server" />
+                            <asp:HyperLink ID="cTermsOfServiceLink" CssClass="inp-txtln TermsOfServiceLink" Target="_blank" NavigateUrl="~/home/terms_of_service.pdf" runat="server" />
                         </div>
                     </asp:Panel>
                     <div class="LoginButton">

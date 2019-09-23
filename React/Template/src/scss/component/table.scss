@@ -1,0 +1,133 @@
+.table {
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  tbody td, th {
+    border: none;
+    padding: 10px;
+
+    @include themify($themes) {
+      color: themed('colorTextAdditional');
+    }
+  }
+
+  thead th {
+
+    @include themify($themes) {
+      color: themed('colorText');
+      border-bottom-color: themed('colorBorder');
+    }
+  }
+
+  .badge {
+    color: #ffffff;
+    padding: 6px 20px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 400;
+
+    &.badge-success {
+      background-color: $color-fintrux;
+    }
+
+    &.badge-warning {
+      background-color: $color-yellow;
+    }
+
+    &.badge-primary {
+      background-color: $color-blue;
+    }
+
+    &.badge-danger {
+      background-color: $color-red;
+    }
+
+    &.badge-disabled {
+      background-color: #dddddd;
+    }
+  }
+
+  &.table--bordered {
+
+    tr {
+
+      @include themify($themes) {
+        border-bottom: 1px solid themed('colorBorder');
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  &.table--head-accent {
+
+    thead {
+
+      @include themify($themes) {
+        color: themed('colorTextAdditional');
+        background-color: themed('colorHover');
+      }
+
+      th {
+        border-bottom: none;
+      }
+    }
+  }
+
+  &.table-striped {
+
+    tbody tr:nth-of-type(odd) {
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+    }
+  }
+
+  &.table-hover {
+
+    tbody tr {
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+
+        @include themify($themes) {
+          background-color: themed('colorBackgroundBody');
+        }
+      }
+    }
+  }
+
+  &.table--inverse {
+
+    thead th {
+
+      @include themify($themes) {
+        color: themed('colorTextInverse');
+        border-bottom-color: themed('colorBorderInverse');
+      }
+    }
+
+    tbody td, th {
+
+      @include themify($themes) {
+        color: themed('colorTextAdditionalInverse');
+      }
+    }
+
+    &.table-hover {
+
+      tbody tr:hover {
+
+        @include themify($themes) {
+          background-color: themed('colorBackgroundBodyInverse');
+        }
+      }
+    }
+  }
+}

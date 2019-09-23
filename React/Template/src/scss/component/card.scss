@@ -1,0 +1,77 @@
+.card {
+  width: 100%;
+  padding-bottom: 30px;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+
+  .card-body {
+    padding: 35px 30px 30px 30px;
+    height: 100%;
+    border-radius: 5px;
+
+    @include themify($themes) {
+      background-color: themed('colorBackground');
+    }
+  }
+
+  .card__title {
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    position: relative;
+
+    &:not(:first-child) {
+      margin-top: 40px;
+    }
+
+    .subhead {
+      text-transform: none;
+      font-size: 14px;
+      line-height: 18px;
+      opacity: 0.7;
+      margin-top: 3px;
+    }
+
+    * {
+      margin-bottom: 0;
+    }
+  }
+
+  &.card--inverse {
+
+    .card-body {
+
+      @include themify($themes) {
+        background-color: themed('colorBackgroundInverse');
+      }
+    }
+
+    .card__title {
+
+      h5 {
+
+        @include themify($themes) {
+          color: themed('colorTextInverse');
+        }
+      }
+    }
+  }
+
+  &.card--not-full-height {
+    height: auto;
+  }
+}
+
+.squared-corner-theme {
+
+  .card-body {
+    border-radius: 0;
+  }
+}
+
+.blocks-with-shadow-theme {
+
+  .card-body {
+    box-shadow: 0 10px 30px 1px rgba(0, 0, 0, 0.06);
+  }
+}

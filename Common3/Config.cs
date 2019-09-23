@@ -277,7 +277,7 @@ namespace RO.Common3
 
 		public static string GetConnStr(string dbProvider, string dbServer, string dbDatabase, string dbService, string dbUserId)
 		{
-			if (dbProvider == "Sqloledb")
+            if (dbProvider == "Sqloledb" || dbProvider == "MSOLEDBSQL")
 			{
 				return "Provider=" + dbProvider + ";Data Source=" + dbServer + ";database=" + dbDatabase + ";Connect Timeout=" + DesTimeout + ";" + dbService + "User ID=" + dbUserId + ";password=";
 			}

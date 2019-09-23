@@ -5,6 +5,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE FUNCTION [dbo].[BreakString](@RecId int, @SrcString varchar(MAX), @Token varchar(MAX),  @Delimiter char(1))
 RETURNS @idsTbl table (RecId int, Token varchar(1000))
 /* WITH ENCRYPTION */  
@@ -30,7 +31,9 @@ INSERT INTO @idsTbl(RecId, Token)
 RETURN 
 --SELECT * FROM dbo.BreakString(1, '1,2,,4', '', ',')
 --SELECT * FROM dbo.BreakString(1, ', ,', '', ',')
-END 
+END
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41,6 +44,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Multidesign function to map ColumnId for WrCloneScreen:
 CREATE FUNCTION [dbo].[fColumn] (@cid int, @uClause nvarchar(2000)) RETURNS nvarchar(max)
 /* WITH ENCRYPTION */
@@ -120,7 +124,9 @@ BEGIN
 		+ char(13) + char(10) + @uClause
 	END
 	RETURN @iClause
-END 
+END
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -131,6 +137,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
 CREATE FUNCTION [dbo].[fFormatMoney] (@v money, @padding tinyint) RETURNS varchar(100)
 /* WITH ENCRYPTION */
 AS
@@ -149,7 +159,14 @@ BEGIN
 	END
 	IF @padding > len(@rv) SELECT @rv = space(@padding - len(@rv)) + @rv
 	RETURN @rv
-END 
+END
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -160,6 +177,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
 -- Input:inStr		as the input string to be changed
 -- Input:Keywords	are the words that will change to the case that are presented in acronyms
 -- Input:Ignore		words that stay the way they are
@@ -251,7 +272,14 @@ BEGIN
  END
 END
 RETURN  @result
-END 
+END
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -262,6 +290,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE FUNCTION [dbo].[fKeyFilter] (@UsrId int, @CompanyId int, @ProjectId int, @SystemId int, @Tbl varchar(10)) RETURNS varchar(4000)
 /* WITH ENCRYPTION */
 AS
@@ -273,6 +302,9 @@ DECLARE	 @UsrGroupLs	varchar(1000)
 		,@CustomerId	int
 		,@InvestorId	int
 		,@VendorId		int
+		,@LenderId		int
+		,@BorrowerId	int
+		,@GuarantorId	int
 		,@wClause		varchar(4000)
 SELECT	 @UsrGroupLs = UsrGroupLs
 		,@MemberId = isnull(MemberId,0)
@@ -281,6 +313,9 @@ SELECT	 @UsrGroupLs = UsrGroupLs
 		,@CustomerId = isnull(CustomerId,0)
 		,@InvestorId = isnull(InvestorId,0)
 		,@VendorId = isnull(VendorId,0)
+		,@LenderId = isnull(@LenderId,0)
+		,@BorrowerId = isnull(@BorrowerId,0)
+		,@GuarantorId = isnull(@GuarantorId,0)
 	FROM dbo.Usr WHERE UsrId = @UsrId
 IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE UsrId = @UsrId AND SystemId = @SystemId) <> 1
   IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE UsrId = @UsrId AND SystemId is null) <> 1
@@ -302,7 +337,19 @@ IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE UsrId = @UsrId AND SystemId = @S
 								  IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE InvestorId = @InvestorId AND SystemId is null) <> 1
 									IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE VendorId = @VendorId AND SystemId = @SystemId) <> 1
 									  IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE VendorId = @VendorId AND SystemId is null) <> 1
-										SELECT @wClause = @Tbl + 'PrefDefault = ''Y'' AND ' + @Tbl + 'SystemId = ' + convert(varchar,@SystemId)
+										IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE LenderId = @LenderId AND SystemId = @SystemId) <> 1
+										  IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE LenderId = @LenderId AND SystemId is null) <> 1
+											IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE BorrowerId = @BorrowerId AND SystemId = @SystemId) <> 1
+											  IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE BorrowerId = @BorrowerId AND SystemId is null) <> 1
+												IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE GuarantorId = @GuarantorId AND SystemId = @SystemId) <> 1
+												  IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE GuarantorId = @GuarantorId AND SystemId is null) <> 1
+													SELECT @wClause = @Tbl + 'PrefDefault = ''Y'' AND ' + @Tbl + 'SystemId = ' + convert(varchar,@SystemId)
+												  ELSE SELECT @wClause = @Tbl + 'GuarantorId = ' + convert(varchar,@GuarantorId) + ' AND ' + @Tbl + 'SystemId is null'
+												ELSE SELECT @wClause = @Tbl + 'GuarantorId = ' + convert(varchar,@GuarantorId) + ' AND ' + @Tbl + 'SystemId = ' + convert(varchar,@SystemId)
+											  ELSE SELECT @wClause = @Tbl + 'BorrowerId = ' + convert(varchar,@BorrowerId) + ' AND ' + @Tbl + 'SystemId is null'
+											ELSE SELECT @wClause = @Tbl + 'BorrowerId = ' + convert(varchar,@BorrowerId) + ' AND ' + @Tbl + 'SystemId = ' + convert(varchar,@SystemId)
+										  ELSE SELECT @wClause = @Tbl + 'LenderId = ' + convert(varchar,@LenderId) + ' AND ' + @Tbl + 'SystemId is null'
+										ELSE SELECT @wClause = @Tbl + 'LenderId = ' + convert(varchar,@LenderId) + ' AND ' + @Tbl + 'SystemId = ' + convert(varchar,@SystemId)
 									  ELSE SELECT @wClause = @Tbl + 'VendorId = ' + convert(varchar,@VendorId) + ' AND ' + @Tbl + 'SystemId is null'
 									ELSE SELECT @wClause = @Tbl + 'VendorId = ' + convert(varchar,@VendorId) + ' AND ' + @Tbl + 'SystemId = ' + convert(varchar,@SystemId)
 								  ELSE SELECT @wClause = @Tbl + 'InvestorId = ' + convert(varchar,@InvestorId) + ' AND ' + @Tbl + 'SystemId is null'
@@ -324,7 +371,8 @@ IF (SELECT COUNT('true') FROM dbo.UsrPref WHERE UsrId = @UsrId AND SystemId = @S
   ELSE SELECT @wClause = @Tbl + 'UsrId = ' + convert(varchar,@UsrId) + ' AND ' + @Tbl + 'SystemId is null'
 ELSE SELECT @wClause = @Tbl + 'UsrId = ' + convert(varchar,@UsrId) + ' AND ' + @Tbl + 'SystemId = ' + convert(varchar,@SystemId)
 RETURN @wClause
-END 
+END
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -335,18 +383,21 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Return a string of all children of the permission key comma delimited with ().
 CREATE FUNCTION [dbo].[fKeyHier] (@tblName varchar(50), @key int) RETURNS varchar(4000)
 /* WITH ENCRYPTION */
 AS
 BEGIN
 	DECLARE  @tt	varchar(4000)
-	IF @tblName IN ('Company','Agent','Broker','Customer','Investor','Member','Vendor','Project')
+	IF @tblName IN ('Company','Agent','Broker','Customer','Investor','Member','Vendor','Borrower','Guarantor','Lender','Project')
 		SELECT @tt = dbo.fKeyRecu (@tblName,@key)
 	ELSE	/* 'Usr','UsrGroup','Culture' */
 		SELECT @tt = ',' + convert(varchar,@key)
 	RETURN '(' + right(@tt, len(@tt) - 1) + ')'
-END 
+END
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -357,6 +408,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Return a string of all children of the permission key comma delimited and begins with a comma.
 CREATE FUNCTION [dbo].[fKeyRecu] (@tblName varchar(50), @key int) RETURNS varchar(4000)
 /* WITH ENCRYPTION */
@@ -379,6 +431,12 @@ BEGIN
 		DECLARE curs CURSOR FAST_FORWARD FOR SELECT MemberId FROM ROCmon.dbo.Member WHERE ParentId = @key FOR READ ONLY
 	ELSE IF @tblName = 'Vendor'
 		DECLARE curs CURSOR FAST_FORWARD FOR SELECT VendorId FROM ROCmon.dbo.Vendor WHERE ParentId = @key FOR READ ONLY
+	ELSE IF @tblName = 'Lender'
+		DECLARE curs CURSOR FAST_FORWARD FOR SELECT LenderId FROM ROCmon.dbo.Lender WHERE ParentId = @key FOR READ ONLY
+	ELSE IF @tblName = 'Borrower'
+		DECLARE curs CURSOR FAST_FORWARD FOR SELECT BorrowerId FROM ROCmon.dbo.Borrower WHERE ParentId = @key FOR READ ONLY
+	ELSE IF @tblName = 'Guarantor'
+		DECLARE curs CURSOR FAST_FORWARD FOR SELECT GuarantorId FROM ROCmon.dbo.Guarantor WHERE ParentId = @key FOR READ ONLY
 	ELSE IF @tblName = 'Project'
 		DECLARE curs CURSOR FAST_FORWARD FOR SELECT ProjectId FROM ROCmon.dbo.Project WHERE ParentId = @key FOR READ ONLY
 	OPEN curs
@@ -391,7 +449,8 @@ BEGIN
 	CLOSE curs
 	DEALLOCATE curs
 	RETURN ',' + convert(varchar,@key) + @tKey
-END 
+END
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -402,6 +461,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE FUNCTION [dbo].[fNameAbbr] (@nm nvarchar(max)) RETURNS nvarchar(max)
 /* WITH ENCRYPTION */
 AS
@@ -415,7 +475,9 @@ BEGIN
 	ELSE
 		SELECT @out = LEFT(LTRIM(@nm),1) + '.' + dbo.fNameAbbr(RIGHT(@nm,LEN(@nm)-@end))
 	RETURN @out
-END 
+END
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -426,12 +488,15 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE FUNCTION [dbo].[fNullCha] (@v nvarchar(max)) RETURNS nvarchar(max)
 /* WITH ENCRYPTION */
 AS
 BEGIN
 	RETURN ISNULL('''' + REPLACE(@v,'''','''''') + '''','NULL')
-END 
+END
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -442,12 +507,19 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
 CREATE FUNCTION [dbo].[fNullInt] (@v int) RETURNS varchar(10)
 /* WITH ENCRYPTION */
 AS
 BEGIN
 	RETURN ISNULL(CONVERT(varchar(10),@v),'NULL')
-END 
+END
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -458,6 +530,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- No access to database. Should only exist in ??Design database.
 CREATE FUNCTION [dbo].[fNum2Word](@CultureId smallint, @iNum int) RETURNS nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -567,7 +641,11 @@ BEGIN
 		SELECT @sWord = rtrim(@sWord + ' ' + @ss), @pos = @pos - 1
 	END
 	RETURN ltrim(@sWord)
-END 
+END
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -578,6 +656,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Return a string with all punctuations removed.
 CREATE FUNCTION [dbo].[fRmPunc](@str nvarchar(4000)) RETURNS nvarchar(4000)
 /* WITH ENCRYPTION */
@@ -592,7 +672,12 @@ BEGIN
 	    SELECT @ii = @ii+1
 	END
 	RETURN @str
-END 
+END
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -603,6 +688,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE FUNCTION [dbo].[fSelRowAuth] (@RowAuthId smallint, @ScreenId int, @ReportId int, @key varchar(50)) RETURNS char(1)
 /* WITH ENCRYPTION */
 AS
@@ -680,7 +767,12 @@ BEGIN
 		END
 	END
 	RETURN @rtn
-END 
+END
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -691,6 +783,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design.
 CREATE FUNCTION [dbo].[fSredTime]() RETURNS TABLE 
 AS
@@ -702,7 +796,12 @@ RETURN
 	FROM dbo.SredMebr r
 	INNER JOIN dbo.SredTime s ON r.MemberId = s.MemberId
 	GROUP BY convert(char(4),datepart(yyyy,s.SredTimeDt)) + right('0'+convert(varchar(2),datepart(mm,s.SredTimeDt)),2), r.MemberId, r.MemberName, r.MnWorkHours
-) 
+)
+
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -713,6 +812,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only: Strip all HTML tags from the input string.
 CREATE FUNCTION [dbo].[fStripHtml] (@str nvarchar(max)) RETURNS nvarchar(max)
 /* WITH ENCRYPTION */
@@ -740,7 +841,9 @@ BEGIN
 		SELECT @out = LEFT(@str,@pos-1) + dbo.fStripHtml(RIGHT(@str,LEN(@str)-@end))
 	RETURN @out
 	*/
-END 
+END
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -751,6 +854,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Multidesign function to map TableId for WrCloneScreen:
 CREATE FUNCTION [dbo].[fTable] (@tid int, @uClause nvarchar(2000)) RETURNS nvarchar(max)
 /* WITH ENCRYPTION */
@@ -783,7 +887,41 @@ BEGIN
 		+ char(13) + char(10) + @uClause
 	END
 	RETURN @iClause
-END 
+END
+
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fWeekDays') AND type='FN')
+DROP FUNCTION dbo.fWeekDays
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+-- Both dates are inclusive. Return number of week days in between.
+CREATE FUNCTION [dbo].[fWeekDays] (@dtFr datetime, @dtTo datetime) RETURNS int
+/* WITH ENCRYPTION */
+AS
+BEGIN
+	DECLARE	  @dt		datetime
+		, @iWd		int
+	SELECT @dt = @dtFr, @iWd = 0
+	WHILE @dt <= @dtTo
+	BEGIN
+		IF datepart(dw,@dt) >= 2 AND datepart(dw,@dt) <= 6
+		BEGIN
+			SELECT @iWd = @iWd + 1	-- Monday to Friday
+		END
+		SELECT @dt = dateadd(dd,1,@dt)
+	END
+	RETURN @iWd
+END
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -794,6 +932,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Both dates are inclusive. Return number of working days in between except holidays.
 CREATE FUNCTION [dbo].[fWorkingDays] (@dtFr datetime, @dtTo datetime) RETURNS int
 /* WITH ENCRYPTION */
@@ -812,7 +952,9 @@ BEGIN
 		SELECT @dt = dateadd(dd,1,@dt)
 	END
 	RETURN @iWd
-END 
+END
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -823,6 +965,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE FUNCTION [dbo].[Split_Strings_XML]
 (
    @List       NVARCHAR(MAX),
@@ -845,7 +990,10 @@ AS
             ,@Delimiter,'</i><i>')
           + '</i>').query('.')
       ) AS a CROSS APPLY x.nodes('i') AS y(i)
-   ); 
+   );
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -856,6 +1004,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE FUNCTION [dbo].[SplitID_Match]
 (
    @List1       NVARCHAR(MAX),
@@ -888,7 +1038,9 @@ OR
 )
 OR
 (@Op = 'T')
-) 
+)
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -899,6 +1051,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetAdmRptBizRuleR]
  @usrName	nvarchar(50)
 ,@wClause	varchar(max)
@@ -947,7 +1100,9 @@ SELECT @fClause = 'FROM #br'
 SELECT @oClause = 'ORDER BY SystemName,ScreenDesc,RuleOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 DROP table dbo.#br
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -958,6 +1113,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design
 CREATE PROCEDURE [dbo].[_GetAdmRptDataDictR]
  @wClause		nvarchar(max)
@@ -981,6 +1138,8 @@ IF @TableName is not null SELECT @wClause = @wClause + ' AND a.TableName like ''
 IF @ColumnName is not null SELECT @wClause = @wClause + ' AND b.ColumnName like ''%' + @ColumnName + '%'''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -991,6 +1150,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design
 CREATE PROCEDURE [dbo].[_GetAdmRptDataDictV]
  @wClause		nvarchar(max)
@@ -1006,6 +1167,8 @@ SELECT @SystemName = SystemName FROM dbo.Systems WHERE SystemId = @SystemId
 SELECT @sClause = 'SELECT ReportName=''DataDict_' + convert(nvarchar,@SystemId) + ''',SystemName=''' + @SystemName + ''' + '' System'''
 EXEC (@sClause)
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1016,6 +1179,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetAdmRptMsgR]
  @usrName	nvarchar(50)
 ,@wClause	varchar(max)
@@ -1067,7 +1232,11 @@ SELECT @fClause = 'FROM #msg'
 SELECT @oClause = 'ORDER BY SystemName,ScreenTitle,MasterTable desc,TabIndex'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 DROP table dbo.#msg
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1078,6 +1247,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design Only: Active users accessig Menus, Screens, reports(TBD).
 -- _GetAdmRptPermR 'John Doe','',1,4
 CREATE PROCEDURE [dbo].[_GetAdmRptPermR]
@@ -1134,6 +1304,12 @@ BEGIN
 		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + MemberName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM ROCmon.dbo.Member WHERE MemberId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND MemberName like ''%' + @EntityName + '%''' END
 	+ ' ELSE IF @TableName = ''Vendor'''
 		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + VendorName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM ROCmon.dbo.Vendor WHERE VendorId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND VendorName like ''%' + @EntityName + '%''' END
+	+ ' ELSE IF @TableName = ''Borrower'''
+		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + BorrowerName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM ROCmon.dbo.Borrower WHERE BorrowerId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND BorrowerName like ''%' + @EntityName + '%''' END
+	+ ' ELSE IF @TableName = ''Guarantor'''
+		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + GuarantorName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM ROCmon.dbo.Guarantor WHERE GuarantorId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND GuarantorName like ''%' + @EntityName + '%''' END
+	+ ' ELSE IF @TableName = ''Lender'''
+		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + LenderName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM ROCmon.dbo.Lender WHERE LenderId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND LenderName like ''%' + @EntityName + '%''' END
 	+ ' ELSE IF @TableName = ''UsrGroup'''
 		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + UsrGroupName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM dbo.UsrGroup WHERE USrGroupId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND UsrGroupName like ''%' + @EntityName + '%''' END
 	+ ' ELSE IF @TableName = ''Company'''
@@ -1157,6 +1333,12 @@ BEGIN
 		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + b.MemberName + '': '' + UsrName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM dbo.Usr a INNER JOIN ROCmon.dbo.Member b ON a.MemberId = b.MemberId WHERE a.Active = ''Y'' AND a.MemberId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND b.MemberName like ''%' + @EntityName + '%''' END
 	+ ' ELSE IF @TableName = ''Vendor'''
 		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + b.VendorName + '': '' + UsrName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM dbo.Usr a INNER JOIN ROCmon.dbo.Vendor b ON a.VendorId = b.VendorId WHERE a.Active = ''Y'' AND a.VendorId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND b.VendorName like ''%' + @EntityName + '%''' END
+	+ ' ELSE IF @TableName = ''Borrower'''
+		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + b.BorrowerName + '': '' + UsrName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM dbo.Usr a INNER JOIN ROCmon.dbo.Borrower b ON a.BorrowerId = b.BorrowerId WHERE a.Active = ''Y'' AND a.BorrowerId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND b.BorrowerName like ''%' + @EntityName + '%''' END
+	+ ' ELSE IF @TableName = ''Guarantor'''
+		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + b.GuarantorName + '': '' + UsrName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM dbo.Usr a INNER JOIN ROCmon.dbo.Guarantor b ON a.GuarantorId = b.GuarantorId WHERE a.Active = ''Y'' AND a.GuarantorId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND b.GuarantorName like ''%' + @EntityName + '%''' END
+	+ ' ELSE IF @TableName = ''Lender'''
+		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + b.LenderName + '': '' + UsrName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM dbo.Usr a INNER JOIN ROCmon.dbo.Lender b ON a.LenderId = b.LenderId WHERE a.Active = ''Y'' AND a.LenderId = @PermId' + CASE WHEN @EntityName is null THEN '' ELSE ' AND b.LenderName like ''%' + @EntityName + '%''' END
 	+ ' ELSE IF @TableName = ''UsrGroup'''
 		+ ' INSERT #prm SELECT ''MENU'', @Parent + ISNULL(@MenuText,@defMenuText), @TableName + '': '' + b.UsrGroupName + '': '' + UsrName, CASE WHEN @GrantDeny = ''G'' THEN ''YES'' ELSE ''NO'' END, ''N/A'', ''N/A'', ''N/A'' FROM dbo.Usr a INNER JOIN dbo.UsrGroup b ON b.UsrGroupId = @PermId WHERE a.Active = ''Y'' AND charindex('','' + convert(varchar,@PermId) + '','',replace(replace(a.UsrGroupLs,''('','',''),'')'','','')) > 0' + CASE WHEN @EntityName is null THEN '' ELSE ' AND b.UsrGroupName like ''%' + @EntityName + '%''' END
 	+ ' ELSE IF @TableName = ''Company'''
@@ -1251,7 +1433,8 @@ SELECT @iClause = @iClause + ' FETCH NEXT FROM RCur INTO @RowAuthId, @AllowSel'
 + ' CLOSE SCur DEALLOCATE SCur'
 SELECT @sClause = ' SELECT PermType, PermTitle, UserName, Psel, Padd, Pupd, Pdel FROM #prm ORDER BY PermType, PermTitle, UserName'
 EXEC (@iClause + ' ' + @sClause + ' DROP TABLE #prm')
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1262,6 +1445,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetAdmRptPermV]
  @usrName		nvarchar(50)
 ,@wClause		varchar(max)
@@ -1280,7 +1465,9 @@ SELECT @SystemName = SystemName FROM dbo.Systems WHERE SystemId = @SystemId
 SELECT @sClause = 'SELECT ReportName=''Permission_' + convert(nvarchar,@SystemId) + ''', ReportCriteria='''
 	+ 'Active User Only:' + @ActiveOnly + isnull('  Contains:' + @EntityName,'') + '  System:' + @SystemName + '  Culture:' + @CultureDesc + ''''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1291,6 +1478,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetAdmRptPrgList]
  @usrName	nvarchar(50)
 ,@wClause	varchar(max)
@@ -1482,7 +1670,10 @@ FROM #mnu a LEFT OUTER JOIN #lis b ON a.ProgramType = b.ProgramType AND a.Progra
 DROP TABLE dbo.#mnu
 DROP TABLE dbo.#hlp
 DROP TABLE dbo.#lis
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1493,6 +1684,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetAdmRptPrgListR]
  @usrName	nvarchar(50)
 ,@wClause	varchar(max)
@@ -1514,7 +1707,11 @@ SELECT @sDefCultureId = convert(varchar,CultureId) FROM RODesign.dbo.VwCulture W
 SELECT @sCultureId = convert(varchar,@CultureId), @sSystemId = convert(varchar,@SystemId)
 -- Call _GetAdmRptPrgList in each design db to bypass Sybase not allowing cursor within a dynamic sql:
 EXEC (@DesDb + '.dbo.' + '_GetAdmRptPrgList ''' + @usrName + ''',''' + @wClause + ''',' + @sCultureId + ',' + @sSystemId + ',''' + @SystemNameIn + ''',''' + @CultureDescIn + ''',' + @sDefCultureId)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1525,6 +1722,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 --_GetAdmRptSredR 'NL','','2013.06.30',1
 CREATE PROCEDURE [dbo].[_GetAdmRptSredR]
  @usrName		nvarchar(50)
@@ -1558,7 +1756,11 @@ SELECT @wClause = @wClause + ' AND g.SredTimeDt >= ''' + convert(varchar,@MonthF
 SELECT @gClause = 'GROUP BY r.LT10PercShare,m.MemberName,r.MnSalary,r.MnNtxBenefit,r.MnTaxBenefit,r.MnWorkHours'
 SELECT @oClause = 'ORDER BY r.LT10PercShare DESC,m.MemberName,r.MnSalary,r.MnNtxBenefit,r.MnTaxBenefit,r.MnWorkHours'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @gClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1569,6 +1771,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetAdmRptStatR]
  @wClause	nvarchar(max)
 ,@MemberId	Int
@@ -1587,7 +1791,11 @@ IF @MnFr is not null SELECT @wClause = @wClause + ' AND t.YearMn >= ' + @MnFr
 IF @MnTo is not null SELECT @wClause = @wClause + ' AND t.YearMn <= ' + @MnTo
 SELECT @oClause = ''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1598,6 +1806,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetAdmRptStatV]
  @wClause	nvarchar(max)
 ,@MemberId	Int
@@ -1608,7 +1818,11 @@ SET NOCOUNT ON
 /* It is mandatory for this procedure to return at least one row */
 SELECT @sClause = 'SELECT ReportName=''SR&EDStatistic_'''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1619,6 +1833,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
 CREATE PROCEDURE [dbo].[_GetAdmRptTblR]
  @usrName	nvarchar(50)
 ,@wClause	varchar(max)
@@ -1650,7 +1868,14 @@ DEALLOCATE tbl_cursor
 SELECT @fClause = 'FROM (' + right(@f1Clause,len(@f1Clause) - 7) + ') a INNER JOIN (' + right(@f2Clause,len(@f2Clause) - 7) + ') b ON a.Id = b.cId INNER JOIN dbo.CtDataType c ON b.DataType = c.DataTypeId'
 SELECT @oClause = 'ORDER BY a.TableName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1661,6 +1886,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetAdmRptTimeR]
  @wClause		nvarchar(max)
 ,@MonthEnding	DateTime
@@ -1681,7 +1908,11 @@ SELECT @fClause = 'FROM dbo.SredTime t INNER JOIN ROCmon.dbo.Member m ON t.Membe
 IF @MonthEnding is not null SELECT @wClause = @wClause + ' AND t.SredTimeDt >= ''' + convert(varchar,@MonthFr,102) + ''' AND t.SredTimeDt <= ''' + convert(varchar,@MonthEnding,102) + ''''
 SELECT @oClause = 'ORDER BY m.MemberName, t.SredTimeDt'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1692,6 +1923,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetAdmRptTimeV]
  @wClause		nvarchar(max)
 ,@MonthEnding	DateTime
@@ -1703,7 +1936,11 @@ SET NOCOUNT ON
 /* It is mandatory for this procedure to return at least one row */
 SELECT @sClause = 'SELECT ReportName=''SR&EDTimeReport_'''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1714,6 +1951,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Only in ??Design
 CREATE PROCEDURE [dbo].[_GetAdmRptUsageR]
  @usrName	nvarchar(50)
@@ -1729,6 +1967,9 @@ CREATE PROCEDURE [dbo].[_GetAdmRptUsageR]
 ,@CustomerId	int
 ,@InvestorId	int
 ,@MemberId		int
+,@BorrowerId	int
+,@GuarantorId	int
+,@LenderId		int
 ,@UsrGroupId	smallint
 ,@UserId		int
 /* WITH ENCRYPTION */
@@ -1752,12 +1993,15 @@ SELECT @sClause = 'INSERT INTO #Usage SELECT'
 + ' CASE WHEN b.CompanyLs is not null THEN ''COMPANIES'' WHEN b.ProjectLs is not null THEN ''PROJECTS'''
 + ' WHEN b.AgentId is not null THEN ''AGENTS'' WHEN b.BrokerId is not null THEN ''BROKERS'''
 + ' WHEN b.VendorId is not null THEN ''VENDORS'' WHEN b.CustomerId is not null THEN ''CUSTOMERS'''
-+ ' WHEN b.InvestorId is not null THEN ''INVESTORS'' WHEN b.MemberId is not null THEN ''MEMBERS'' ELSE '''' END'
++ ' WHEN b.InvestorId is not null THEN ''INVESTORS'' WHEN b.MemberId is not null THEN ''MEMBERS'''
++ ' WHEN b.BorrowerId is not null THEN ''BORROWERS'' WHEN b.GuarantorId is not null THEN ''GUARANTORS'''
++ ' WHEN b.LenderId is not null THEN ''LENDERS'' ELSE '''' END'
 + ',CASE WHEN b.CompanyLs is not null THEN upper(p7.CompanyDesc) WHEN b.ProjectLs is not null THEN upper(p8.ProjectDesc)'
 + ' WHEN b.AgentId is not null THEN upper(p1.AgentName) WHEN b.BrokerId is not null THEN upper(p2.BrokerName)'
 + ' WHEN b.VendorId is not null THEN upper(p3.VendorName) WHEN b.CustomerId is not null THEN upper(p4.CustomerName)'
 + ' WHEN b.InvestorId is not null THEN upper(p5.InvestorName) WHEN b.MemberId is not null THEN upper(p6.MemberName)'
-+ ' ELSE '''' END'
++ ' WHEN b.BorrowerId is not null THEN upper(p11.BorrowerName) WHEN b.GuarantorId is not null THEN upper(p12.GuarantorName)'
++ ' WHEN b.LenderId is not null THEN upper(p13.LenderName) ELSE '''' END'
 + ',c.UsrGroupName,b.UsrName,a.UsageDt,a.EntityTitle,a.UsageNote'
 SELECT @fClause = 'FROM ' + @dbDesDabatase + '.dbo.Usage a INNER JOIN dbo.Usr b ON a.UsrId = b.UsrId'
 IF @UserId is not null SELECT @fClause = @fClause + ' AND b.UsrId = ' + convert(varchar,@UserId)
@@ -1779,6 +2023,15 @@ IF @InvestorId is not null SELECT @fClause = @fClause + ' AND b.InvestorId = ' +
 IF @MemberId is not null SELECT @fClause = @fClause + ' INNER' ELSE SELECT @fClause = @fClause + ' LEFT OUTER'
 SELECT @fClause = @fClause + ' JOIN ROCmon.dbo.Member p6 ON b.MemberId = p6.MemberId'
 IF @MemberId is not null SELECT @fClause = @fClause + ' AND b.MemberId = ' + convert(varchar,@MemberId)
+IF @BorrowerId is not null SELECT @fClause = @fClause + ' INNER' ELSE SELECT @fClause = @fClause + ' LEFT OUTER'
+SELECT @fClause = @fClause + ' JOIN ROCmon.dbo.Borrower p11 ON b.BorrowerId = p11.BorrowerId'
+IF @BorrowerId is not null SELECT @fClause = @fClause + ' AND b.BorrowerId = ' + convert(varchar,@BorrowerId)
+IF @GuarantorId is not null SELECT @fClause = @fClause + ' INNER' ELSE SELECT @fClause = @fClause + ' LEFT OUTER'
+SELECT @fClause = @fClause + ' JOIN ROCmon.dbo.Guarantor p12 ON b.GuarantorId = p12.GuarantorId'
+IF @GuarantorId is not null SELECT @fClause = @fClause + ' AND b.GuarantorId = ' + convert(varchar,@GuarantorId)
+IF @LenderId is not null SELECT @fClause = @fClause + ' INNER' ELSE SELECT @fClause = @fClause + ' LEFT OUTER'
+SELECT @fClause = @fClause + ' JOIN ROCmon.dbo.Lender p13 ON b.LenderId = p13.LenderId'
+IF @LenderId is not null SELECT @fClause = @fClause + ' AND b.LenderId = ' + convert(varchar,@LenderId)
 
 SELECT @fClause = @fClause + ' INNER JOIN dbo.UsrGroup c ON c.UsrGroupId = convert(int,replace(left(b.UsrGroupLs,charindex('')'',replace(b.UsrGroupLs,'','','')''))-1),''('',SPACE(0)))'
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN ROCmon.dbo.Company p7 ON p7.CompanyId = convert(int,replace(left(b.CompanyLs,charindex('')'',replace(b.CompanyLs,'','','')''))-1),''('',SPACE(0)))'
@@ -1792,7 +2045,8 @@ EXEC (@xClause + ' ' + @sClause + ' ' + @fClause + ' ' + @wClause)
 SELECT AuthorityLevel=@usrName,Summary=@Summary,SystemName=@SystemName,UsrTypeGrp,UsrTypeName,EntityTitle,UsrGroupName,UsrName,UsageDt,UsageNote,NumTimes=1
 	FROM #Usage ORDER BY UsrTypeGrp,UsrTypeName,EntityTitle,UsrGroupName,UsrName,UsageDt
 DROP TABLE dbo.#Usage
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1803,6 +2057,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetAdmRptUsrAuditR]
  @wClause			varchar(max)
 ,@LoginSuccess10	Char(1)
@@ -1825,7 +2080,10 @@ IF @AttemptDt40 is not null SELECT @wClause = @wClause + ' AND t1288.AttemptDt >
 IF @AttemptDt50 is not null SELECT @wClause = @wClause + ' AND t1288.AttemptDt <= ''' + CONVERT(varchar(10),@AttemptDt50,102) + ''''
 SELECT @oClause = 'ORDER BY t1288.AttemptDt'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1836,6 +2094,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetAdmRptUsrAuditV]
  @wClause			varchar(max)
 ,@LoginSuccess10	Char(1)
@@ -1856,7 +2115,10 @@ IF @AttemptDt40 is not null SELECT @sClause = @sClause + '  From:' + CONVERT(var
 IF @AttemptDt50 is not null SELECT @sClause = @sClause + '  To:' + CONVERT(varchar(10),@AttemptDt50,102)
 SELECT @sClause = @sClause + ''''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1867,6 +2129,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetAdmRptUsrR]
  @usrName		nvarchar(50)
 ,@wClause		varchar(max)
@@ -1893,10 +2156,10 @@ SELECT @sClause = 'SELECT DISTINCT AuthorityLevel=''' + @usrName + ''',CurrCompa
 IF @UsrGroupId IS NULL SELECT @sClause = @sClause + '''ALL''' ELSE SELECT @sClause = @sClause + 'b.UsrGroupName'
 SELECT @sClause = @sClause + ',a.Active,ActiveIn=CASE WHEN a.Active=''Y'' THEN ''Active Users'' ELSE ''Inactive Users'' END'
 + ',b.UsrGroupName, d.CultureTypeName, RowAuthorityDesc=e.RowAuthName, ColAuthorityDesc='''', a.LoginName, a.UsrName, a.UsrEmail, z.CompanyDesc, g.InvestorName'
-+ ',h.CustomerName, j.VendorName, m.AgentName, n.BrokerName, k.MemberName'
++ ',h.CustomerName, j.VendorName, m.AgentName, n.BrokerName, k.MemberName, o.BorrowerName, p.GuarantorName, q.LenderName'
 + ',iUsrName = CASE WHEN a1.UsrName IS NULL THEN '''' ELSE ''Impersonating '' + CASE WHEN a1.Active=''Y'' THEN ''Active'' ELSE ''Inactive'' END + '' User ... '' + a1.UsrName END'
 + ',iCompanyDesc=z1.CompanyDesc, iInvestorName=g1.InvestorName, iCustomerName=h1.CustomerName, iVendorName=j1.VendorName, iAgentName=m1.AgentName'
-+ ',iBrokerName=n1.BrokerName, iMemberName=k1.MemberName'
++ ',iBrokerName=n1.BrokerName, iMemberName=k1.MemberName, iBorrowerName=o1.BorrowerName, iGuarantorName=p1.GuarantorName, iLenderName=q1.LenderName'
 SELECT @fClause = 'FROM dbo.Usr a'
 + ' INNER JOIN dbo.UsrGroup b ON charindex('','' + convert(varchar,b.UsrGroupId) + '','', replace(replace(a.UsrGroupLs,''('','',''),'')'','','')) > 0'
 + ' INNER JOIN RODesign.dbo.VwCulture d ON a.CultureId = d.CultureId'
@@ -1909,6 +2172,9 @@ SELECT @fClause = 'FROM dbo.Usr a'
 + ' LEFT OUTER JOIN ROCmon.dbo.Agent m ON a.AgentId = m.AgentId'
 + ' LEFT OUTER JOIN ROCmon.dbo.Broker n ON a.BrokerId = n.BrokerId'
 + ' LEFT OUTER JOIN ROCmon.dbo.Member k ON a.MemberId = k.MemberId'
++ ' LEFT OUTER JOIN ROCmon.dbo.Borrower o ON a.BorrowerId = o.BorrowerId'
++ ' LEFT OUTER JOIN ROCmon.dbo.Guarantor p ON a.GuarantorId = p.GuarantorId'
++ ' LEFT OUTER JOIN ROCmon.dbo.Lender q ON a.LenderId = q.LenderId'
 + ' LEFT OUTER JOIN UsrImpr c ON a.UsrId = c.UsrId'
 + ' LEFT OUTER JOIN dbo.Usr a1 ON c.ImprUsrId = a1.UsrId'
 + ' LEFT OUTER JOIN ROCmon.dbo.Company z1 ON charindex('','' + convert(varchar,z1.CompanyId) + '','', replace(replace(a1.CompanyLs,''('','',''),'')'','','')) > 0'
@@ -1919,11 +2185,15 @@ SELECT @fClause = 'FROM dbo.Usr a'
 + ' LEFT OUTER JOIN ROCmon.dbo.Agent m1 ON a1.AgentId = m1.AgentId'
 + ' LEFT OUTER JOIN ROCmon.dbo.Broker n1 ON a1.BrokerId = n1.BrokerId'
 + ' LEFT OUTER JOIN ROCmon.dbo.Member k1 ON a1.MemberId = k1.MemberId'
++ ' LEFT OUTER JOIN ROCmon.dbo.Borrower o1 ON a1.BorrowerId = o1.BorrowerId'
++ ' LEFT OUTER JOIN ROCmon.dbo.Guarantor p1 ON a1.GuarantorId = p1.GuarantorId'
++ ' LEFT OUTER JOIN ROCmon.dbo.Lender q1 ON a1.LenderId = q1.LenderId'
 SELECT @oClause = 'ORDER BY a.Active,b.UsrGroupName,a.UsrName'
 IF @CompanyId is not null SELECT @wClause = @wClause + ' AND charindex('',' + convert(varchar,@CompanyId) + ','',replace(replace(a.CompanyLs,''('','',''),'')'','','')) > 0'
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a.','Y',null,'UsrId',@wClause OUTPUT
 EXEC (@xClause + ' ' + @sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1934,6 +2204,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[_GetInAgentId]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -1946,7 +2223,44 @@ SELECT @sClause = 'SELECT a.AgentId, a.AgentName'
 SELECT @fClause = 'FROM ROCmon.dbo.Agent a'
 SELECT @oClause = 'ORDER BY a.AgentName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+
+
+ 
+ 
+
+
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetInBorrowerId') AND type='P')
+DROP PROCEDURE dbo._GetInBorrowerId
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+CREATE PROCEDURE [dbo].[_GetInBorrowerId]
+ @wClause	varchar(max)
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @sClause		varchar(4000)
+	,@fClause		varchar(4000)
+	,@oClause		varchar(1000)
+SET NOCOUNT ON
+SELECT @sClause = 'SELECT a.BorrowerId, a.BorrowerName'
+SELECT @fClause = 'FROM ROCmon.dbo.Borrower a'
+SELECT @oClause = 'ORDER BY a.BorrowerName'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1957,6 +2271,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[_GetInBrokerId]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -1969,7 +2290,18 @@ SELECT @sClause = 'SELECT a.BrokerId, a.BrokerName'
 SELECT @fClause = 'FROM ROCmon.dbo.Broker a'
 SELECT @oClause = 'ORDER BY a.BrokerName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1980,7 +2312,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE [dbo].[_GetInCBox] AS SELECT CheckBoxCd, CheckBoxName FROM dbo.CtCheckBox WHERE CultureId = 1 
+
+CREATE PROCEDURE [dbo].[_GetInCBox] AS SELECT CheckBoxCd, CheckBoxName FROM dbo.CtCheckBox WHERE CultureId = 1
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -1991,6 +2325,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetInCheckBox]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2002,7 +2337,10 @@ SET NOCOUNT ON
 SELECT @sClause = 'SELECT CheckBoxCd, CheckBoxName'
 SELECT @fClause = 'FROM dbo.CtCheckBox'
 IF @wClause is null SELECT @wClause = 'WHERE CultureId = 1' ELSE SELECT @wClause = @wClause + ' AND CultureId = 1'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause) 
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2013,6 +2351,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Only in ??Design
 CREATE PROCEDURE [dbo].[_GetInCompanyId]
  @wClause	varchar(max)
@@ -2030,7 +2369,9 @@ SELECT @fClause = 'FROM ROCmon.dbo.Company a'
 IF @bAll = 'N' SELECT @keyId = ISNULL(@keyId,'()'), @wClause = @wClause + ' AND (CompanyId IN ' + CASE WHEN @keyId='()' THEN '(0)' ELSE CASE WHEN LEFT(@keyId,1) = '(' THEN @keyId ELSE '(' + @keyId + ')' END  END  + ')'
 SELECT @oClause = 'ORDER BY a.CompanyDesc'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2041,6 +2382,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetInCultureId]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2053,7 +2396,11 @@ SELECT @sClause = 'SELECT a.CultureId, a.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a'
 SELECT @oClause = 'ORDER BY a.CultureTypeDesc'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2064,6 +2411,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[_GetInCustomerId]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2076,7 +2430,44 @@ SELECT @sClause = 'SELECT a.CustomerId, a.CustomerName'
 SELECT @fClause = 'FROM ROCmon.dbo.Customer a'
 SELECT @oClause = 'ORDER BY a.CustomerName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+
+
+ 
+ 
+
+
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetInGuarantorId') AND type='P')
+DROP PROCEDURE dbo._GetInGuarantorId
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+CREATE PROCEDURE [dbo].[_GetInGuarantorId]
+ @wClause	varchar(max)
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @sClause		varchar(4000)
+	,@fClause		varchar(4000)
+	,@oClause		varchar(1000)
+SET NOCOUNT ON
+SELECT @sClause = 'SELECT a.GuarantorId, a.GuarantorName'
+SELECT @fClause = 'FROM ROCmon.dbo.Guarantor a'
+SELECT @oClause = 'ORDER BY a.GuarantorName'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2087,6 +2478,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
 CREATE PROCEDURE [dbo].[_GetInId]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2113,7 +2508,15 @@ DEALLOCATE tbl_cursor
 SELECT @fClause = 'FROM (' + right(@f1Clause,len(@f1Clause) - 7) + ') a'
 SELECT @oClause = 'ORDER BY a.TableDesc'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2124,6 +2527,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[_GetInInvestorId]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2136,7 +2546,43 @@ SELECT @sClause = 'SELECT a.InvestorId, a.InvestorName'
 SELECT @fClause = 'FROM ROCmon.dbo.Investor a'
 SELECT @oClause = 'ORDER BY a.InvestorName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+
+
+ 
+ 
+
+
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetInLenderId') AND type='P')
+DROP PROCEDURE dbo._GetInLenderId
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[_GetInLenderId]
+ @wClause	varchar(max)
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @sClause		varchar(4000)
+	,@fClause		varchar(4000)
+	,@oClause		varchar(1000)
+SET NOCOUNT ON
+SELECT @sClause = 'SELECT a.LenderId, a.LenderName'
+SELECT @fClause = 'FROM ROCmon.dbo.Lender a'
+SELECT @oClause = 'ORDER BY a.LenderName'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2147,6 +2593,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetInMemberId]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2159,7 +2607,18 @@ SELECT @sClause = 'SELECT a.MemberId, a.MemberName'
 SELECT @fClause = 'FROM ROCmon.dbo.Member a'
 SELECT @oClause = 'ORDER BY a.MemberName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2170,7 +2629,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE dbo._GetInMultiDesign AS SELECT MultiDesignDb='Y', MultiDesignDesc='YES' UNION SELECT MultiDesignDb='N', MultiDesignDesc='NO' 
+
+CREATE PROCEDURE dbo._GetInMultiDesign AS SELECT MultiDesignDb='Y', MultiDesignDesc='YES' UNION SELECT MultiDesignDb='N', MultiDesignDesc='NO'  
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2181,6 +2641,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetInProjectId]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2193,7 +2654,11 @@ SELECT @sClause = 'SELECT a.ProjectId, a.ProjectDesc'
 SELECT @fClause = 'FROM ROCmon.dbo.Project a'
 SELECT @oClause = 'ORDER BY a.ProjectDesc'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2204,6 +2669,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetInSredMebr]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2215,7 +2681,11 @@ SET NOCOUNT ON
 SELECT @sClause = 'SELECT a.MemberId, a.MemberName'
 SELECT @fClause = 'FROM dbo.SredMebr a'
 SELECT @oClause = 'ORDER BY a.MemberName'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause) 
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2226,6 +2696,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetInSredMn]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2251,7 +2723,11 @@ SELECT @sClause = 'SELECT DISTINCT a.YearMn, YearMonth = LEFT(a.YearMn,4) + '' '
 SELECT @fClause = 'FROM dbo.fSredTime() a'
 SELECT @oClause = 'ORDER BY a.YearMn'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2262,6 +2738,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[_GetInSystemId]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2274,7 +2757,18 @@ SELECT @sClause = 'SELECT a.SystemId, a.SystemName'
 SELECT @fClause = 'FROM dbo.Systems a'
 SELECT @oClause = 'ORDER BY a.SystemName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2285,6 +2779,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 --Cannot use UsrId as criteria name for now.
 CREATE PROCEDURE [dbo].[_GetInUserId]
  @wClause	varchar(max)
@@ -2298,7 +2793,16 @@ SELECT @sClause = 'SELECT UserId=a.UsrId, a.UsrName'
 SELECT @fClause = 'FROM dbo.Usr a'
 SELECT @oClause = 'ORDER BY a.UsrName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2309,6 +2813,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[_GetInUsrGroupId]
  @wClause	varchar(max)
 ,@bAll		char(1)= NULL
@@ -2325,7 +2831,18 @@ SELECT @fClause = 'FROM dbo.UsrGroup a'
 IF @bAll = 'N' SELECT @keyId = ISNULL(@keyId,'()'), @wClause = @wClause + ' AND (UsrGroupId IN ' + CASE WHEN @keyId='()' THEN '(0)' ELSE CASE WHEN LEFT(@keyId,1) = '(' THEN @keyId ELSE '(' + @keyId + ')' END  END  + ')'
 SELECT @oClause = 'ORDER BY a.UsrGroupName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2336,6 +2853,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[_GetInVendorId]
  @wClause	varchar(max)
 /* WITH ENCRYPTION */
@@ -2348,7 +2872,18 @@ SELECT @sClause = 'SELECT a.VendorId, a.VendorName'
 SELECT @fClause = 'FROM ROCmon.dbo.Vendor a'
 SELECT @oClause = 'ORDER BY a.VendorName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2359,6 +2894,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo._GetS03Rptwiz11R
  @wClause	nvarchar(max)
 ,@MultiDesignDb10	Char(1)
@@ -2377,7 +2913,8 @@ SELECT @fClause = 'FROM dbo.VwAppItem t1287'
 IF @MultiDesignDb10 is not null SELECT @wClause = @wClause + ' AND t1287.MultiDesignDb = ''' + @MultiDesignDb10 + ''''
 SELECT @oClause = ''
 EXEC (@dfClause+ ' '  + @sfClause + ' ' + @sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2388,6 +2925,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo._GetS03Rptwiz11V
  @wClause	nvarchar(max)
 ,@MultiDesignDb10	Char(1)
@@ -2398,7 +2936,8 @@ SET NOCOUNT ON
 /* It is mandatory for this procedure to return at least one row */
 SELECT @sClause = 'SELECT ReportName=''ReleaseContent_'''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2409,6 +2948,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetS03Rptwiz14R]
  @wClause	nvarchar(4000)
 ,@LoginSuccess10	Char(1)
@@ -2429,7 +2969,9 @@ IF @LoginSuccess10 is not null SELECT @wClause = @wClause + ' AND t1288.LoginSuc
 IF @ValidUser20 is not null SELECT @wClause = @wClause + ' AND t1288.ValidUser = ''' + @ValidUser20 + ''''
 SELECT @oClause = 'ORDER BY t1288.AttemptDt desc'
 EXEC (@dfClause+ ' '  + @sfClause + ' ' + @sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2440,6 +2982,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetS03Rptwiz14V]
  @wClause	nvarchar(4000)
 ,@LoginSuccess10	Char(1)
@@ -2451,7 +2994,9 @@ SET NOCOUNT ON
 /* It is mandatory for this procedure to return at least one row */
 SELECT @sClause = 'SELECT ReportName=''UserLoginAuditReport_'''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2462,6 +3007,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetS03Rptwiz15R]
  @wClause	nvarchar(max)
 ,@LoginSuccess10	Char(1)
@@ -2480,7 +3026,9 @@ SELECT @fClause = 'FROM dbo.VwNumSuccess t1291'
 IF @LoginSuccess10 is not null SELECT @wClause = @wClause + ' AND t1291.LoginSuccess = ''' + @LoginSuccess10 + ''''
 SELECT @oClause = ''
 EXEC (@dfClause+ ' '  + @sfClause + ' ' + @sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2491,6 +3039,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetS03Rptwiz15V]
  @wClause	nvarchar(max)
 ,@LoginSuccess10	Char(1)
@@ -2501,7 +3050,9 @@ SET NOCOUNT ON
 /* It is mandatory for this procedure to return at least one row */
 SELECT @sClause = 'SELECT ReportName=''Loginsummarychart_'''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2512,6 +3063,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetS03Rptwiz5R]
  @wClause	nvarchar(4000)
 ,@VersionDt10	DateTime
@@ -2526,7 +3078,10 @@ SELECT @fClause = 'FROM dbo.AppInfo t135'
 IF @VersionDt10 is not null SELECT @wClause = @wClause + ' AND t135.VersionDt >= ''' + convert(varchar,@VersionDt10,102) + ''''
 SELECT @oClause = 'ORDER BY t135.AppInfoDesc'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2537,6 +3092,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[_GetS03Rptwiz5V]
  @wClause	nvarchar(4000)
 ,@VersionDt10	DateTime
@@ -2547,7 +3103,10 @@ SET NOCOUNT ON
 /* It is mandatory for this procedure to return at least one row */
 SELECT @sClause = 'SELECT ReportName=''ReleaseTracking_'''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2558,6 +3117,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[AddAdmRptWiz95Dt]
  @RptwizId		int
 ,@RptwizDtlId	int
@@ -2602,6 +3163,10 @@ BEGIN
 	SELECT @RptwizDtlId
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2612,6 +3177,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[Ae_DelServerRule]
  @ServerRuleId		int
 /* WITH ENCRYPTION */
@@ -2643,6 +3209,8 @@ BEGIN
 	EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @dClause + '''')
 END
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2653,6 +3221,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Add1M
  @UsrId		Int
 ,@UserId		int
@@ -2690,7 +3259,10 @@ DECLARE	 @ScrAuditId		bigint
 		,@OPwdNoRepeat		SmallInt
 		,@OIPAlert		Char(1)
 		,@OUsrMobile		VarChar(50)
-SELECT @SearchCol=UsrId,@OUsrEmail=UsrEmail,@OUsrName=UsrName,@OCustomerId=CustomerId,@OVendorId=VendorId,@OMemberId=MemberId,@OActive=Active,@OInvestorId=InvestorId,@ODefSystemId=DefSystemId,@OAgentId=AgentId,@OBrokerId=BrokerId,@OLoginName=LoginName,@OFailedAttempt=FailedAttempt,@OLastSuccessDt=LastSuccessDt,@OLastFailedDt=LastFailedDt,@OHintQuestionId=HintQuestionId,@OHintAnswer=HintAnswer,@ODefCompanyId=DefCompanyId,@ODefProjectId=DefProjectId,@OUsrGroupLs=UsrGroupLs,@OCompanyLs=CompanyLs,@OProjectLs=ProjectLs,@OCultureId=CultureId,@OInternalUsr=InternalUsr,@OTechnicalUsr=TechnicalUsr,@OPwdDuration=PwdDuration,@OPwdWarn=PwdWarn,@OPwdNoRepeat=PwdNoRepeat,@OIPAlert=IPAlert,@OUsrMobile=UsrMobile FROM dbo.Usr WHERE UsrId=@UsrId
+		,@OLenderId		Int
+		,@OBorrowerId		Int
+		,@OGuarantorId		Int
+SELECT @SearchCol=UsrId,@OUsrEmail=UsrEmail,@OUsrName=UsrName,@OCustomerId=CustomerId,@OVendorId=VendorId,@OMemberId=MemberId,@OActive=Active,@OInvestorId=InvestorId,@ODefSystemId=DefSystemId,@OAgentId=AgentId,@OBrokerId=BrokerId,@OLoginName=LoginName,@OFailedAttempt=FailedAttempt,@OLastSuccessDt=LastSuccessDt,@OLastFailedDt=LastFailedDt,@OHintQuestionId=HintQuestionId,@OHintAnswer=HintAnswer,@ODefCompanyId=DefCompanyId,@ODefProjectId=DefProjectId,@OUsrGroupLs=UsrGroupLs,@OCompanyLs=CompanyLs,@OProjectLs=ProjectLs,@OCultureId=CultureId,@OInternalUsr=InternalUsr,@OTechnicalUsr=TechnicalUsr,@OPwdDuration=PwdDuration,@OPwdWarn=PwdWarn,@OPwdNoRepeat=PwdNoRepeat,@OIPAlert=IPAlert,@OUsrMobile=UsrMobile,@OLenderId=LenderId,@OBorrowerId=BorrowerId,@OGuarantorId=GuarantorId FROM dbo.Usr WHERE UsrId=@UsrId
 INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
 	SELECT 'A',1,'Y',1,@UsrId,ISNULL(@SearchCol,''),@UserId,getutcdate()
 SELECT @ScrAuditId = @@IDENTITY
@@ -2781,7 +3353,17 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 IF @OUsrMobile IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
 	SELECT @ScrAuditId,4143,'Mobile',7442,'UsrMobile',@OUsrMobile,NULL
-RETURN 0 
+IF @OLenderId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @ScrAuditId,4185,'Lender',7499,'LenderId',CONVERT(varchar(10),@OLenderId),NULL
+IF @OBorrowerId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @ScrAuditId,4186,'Borrower',7497,'BorrowerId',CONVERT(varchar(10),@OBorrowerId),NULL
+IF @OGuarantorId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @ScrAuditId,4187,'Guarantor',7498,'GuarantorId',CONVERT(varchar(10),@OGuarantorId),NULL
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2792,6 +3374,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Add5D
  @UsrGroupAuthId		Int
 ,@UserId		int
@@ -2820,7 +3403,8 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 IF @OProjectId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
 	SELECT @ScrAuditId,1745,'Project',1738,'ProjectId',CONVERT(varchar(10),@OProjectId),NULL
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2831,6 +3415,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Add5M
  @UsrGroupId		SmallInt
 ,@UserId		int
@@ -2855,7 +3440,8 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 IF @OCompanyId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
 	SELECT @ScrAuditId,1752,'Company',1769,'CompanyId',CONVERT(varchar(10),@OCompanyId),NULL
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2866,6 +3452,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Add76M
  @ButtonHlpId		Int
 ,@UserId		int
@@ -2882,7 +3469,11 @@ DECLARE	 @ScrAuditId		bigint
 		,@OButtonVisible		Char(1)
 		,@OReportId		Int
 		,@OWizardId		Int
-SELECT @SearchCol=ButtonHlpId,@OScreenId=ScreenId,@OCultureId=CultureId,@OButtonTypeId=ButtonTypeId,@OButtonName=ButtonName,@OButtonToolTip=ButtonToolTip,@OButtonVisible=ButtonVisible,@OReportId=ReportId,@OWizardId=WizardId FROM dbo.ButtonHlp WHERE ButtonHlpId=@ButtonHlpId
+		,@OButtonLongNm		NVarChar(400)
+		,@ORowVisible		Char(1)
+		,@OTopVisible		Char(1)
+		,@OBotVisible		Char(1)
+SELECT @SearchCol=ButtonHlpId,@OScreenId=ScreenId,@OCultureId=CultureId,@OButtonTypeId=ButtonTypeId,@OButtonName=ButtonName,@OButtonToolTip=ButtonToolTip,@OButtonVisible=ButtonVisible,@OReportId=ReportId,@OWizardId=WizardId,@OButtonLongNm=ButtonLongNm,@ORowVisible=RowVisible,@OTopVisible=TopVisible,@OBotVisible=BotVisible FROM dbo.ButtonHlp WHERE ButtonHlpId=@ButtonHlpId
 INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
 	SELECT 'A',76,'Y',116,@ButtonHlpId,ISNULL(@SearchCol,''),@UserId,getutcdate()
 SELECT @ScrAuditId = @@IDENTITY
@@ -2903,14 +3494,27 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 	SELECT @ScrAuditId,1212,'Alternate Tool Tip',1025,'ButtonToolTip',@OButtonToolTip,NULL
 IF @OButtonVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,1213,'Visible',1026,'ButtonVisible',@OButtonVisible,NULL
+	SELECT @ScrAuditId,1213,'Visibility',1026,'ButtonVisible',@OButtonVisible,NULL
 IF @OReportId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
 	SELECT @ScrAuditId,1214,'Report',1041,'ReportId',CONVERT(varchar(10),@OReportId),NULL
 IF @OWizardId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
 	SELECT @ScrAuditId,1215,'Wizard',1042,'WizardId',CONVERT(varchar(10),@OWizardId),NULL
-RETURN 0 
+IF @OButtonLongNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @ScrAuditId,4159,'Alternative Long Name',7472,'ButtonLongNm',@OButtonLongNm,NULL
+IF @ORowVisible IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @ScrAuditId,4160,'Row Menu',7475,'RowVisible',@ORowVisible,NULL
+IF @OTopVisible IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @ScrAuditId,4161,'Top Menu',7473,'TopVisible',@OTopVisible,NULL
+IF @OBotVisible IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,NULL
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -2921,6 +3525,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Del1M
  @UsrId		Int
 ,@UserId		int
@@ -2958,7 +3563,10 @@ DECLARE	 @ScrAuditId		bigint
 		,@OPwdNoRepeat		SmallInt
 		,@OIPAlert		Char(1)
 		,@OUsrMobile		VarChar(50)
-SELECT @SearchCol=UsrId,@OUsrEmail=UsrEmail,@OUsrName=UsrName,@OCustomerId=CustomerId,@OVendorId=VendorId,@OMemberId=MemberId,@OActive=Active,@OInvestorId=InvestorId,@ODefSystemId=DefSystemId,@OAgentId=AgentId,@OBrokerId=BrokerId,@OLoginName=LoginName,@OFailedAttempt=FailedAttempt,@OLastSuccessDt=LastSuccessDt,@OLastFailedDt=LastFailedDt,@OHintQuestionId=HintQuestionId,@OHintAnswer=HintAnswer,@ODefCompanyId=DefCompanyId,@ODefProjectId=DefProjectId,@OUsrGroupLs=UsrGroupLs,@OCompanyLs=CompanyLs,@OProjectLs=ProjectLs,@OCultureId=CultureId,@OInternalUsr=InternalUsr,@OTechnicalUsr=TechnicalUsr,@OPwdDuration=PwdDuration,@OPwdWarn=PwdWarn,@OPwdNoRepeat=PwdNoRepeat,@OIPAlert=IPAlert,@OUsrMobile=UsrMobile FROM dbo.Usr WHERE UsrId=@UsrId
+		,@OLenderId		Int
+		,@OBorrowerId		Int
+		,@OGuarantorId		Int
+SELECT @SearchCol=UsrId,@OUsrEmail=UsrEmail,@OUsrName=UsrName,@OCustomerId=CustomerId,@OVendorId=VendorId,@OMemberId=MemberId,@OActive=Active,@OInvestorId=InvestorId,@ODefSystemId=DefSystemId,@OAgentId=AgentId,@OBrokerId=BrokerId,@OLoginName=LoginName,@OFailedAttempt=FailedAttempt,@OLastSuccessDt=LastSuccessDt,@OLastFailedDt=LastFailedDt,@OHintQuestionId=HintQuestionId,@OHintAnswer=HintAnswer,@ODefCompanyId=DefCompanyId,@ODefProjectId=DefProjectId,@OUsrGroupLs=UsrGroupLs,@OCompanyLs=CompanyLs,@OProjectLs=ProjectLs,@OCultureId=CultureId,@OInternalUsr=InternalUsr,@OTechnicalUsr=TechnicalUsr,@OPwdDuration=PwdDuration,@OPwdWarn=PwdWarn,@OPwdNoRepeat=PwdNoRepeat,@OIPAlert=IPAlert,@OUsrMobile=UsrMobile,@OLenderId=LenderId,@OBorrowerId=BorrowerId,@OGuarantorId=GuarantorId FROM dbo.Usr WHERE UsrId=@UsrId
 INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
 	SELECT 'D',1,'Y',1,@UsrId,ISNULL(@SearchCol,''),@UserId,getutcdate()
 SELECT @ScrAuditId = @@IDENTITY
@@ -3049,7 +3657,17 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 IF @OUsrMobile IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,4143,'Mobile',7442,'UsrMobile',@OUsrMobile,NULL
-RETURN 0 
+IF @OLenderId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4185,'Lender',7499,'LenderId',CONVERT(varchar(10),@OLenderId),NULL
+IF @OBorrowerId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4186,'Borrower',7497,'BorrowerId',CONVERT(varchar(10),@OBorrowerId),NULL
+IF @OGuarantorId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4187,'Guarantor',7498,'GuarantorId',CONVERT(varchar(10),@OGuarantorId),NULL
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3060,6 +3678,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Del5D
  @UsrGroupAuthId		Int
 ,@UserId		int
@@ -3088,7 +3707,8 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 IF @OProjectId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,1745,'Project',1738,'ProjectId',CONVERT(varchar(10),@OProjectId),NULL
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3099,6 +3719,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Del5M
  @UsrGroupId		SmallInt
 ,@UserId		int
@@ -3123,7 +3744,8 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 IF @OCompanyId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,1752,'Company',1769,'CompanyId',CONVERT(varchar(10),@OCompanyId),NULL
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3134,6 +3756,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Del76M
  @ButtonHlpId		Int
 ,@UserId		int
@@ -3150,7 +3773,11 @@ DECLARE	 @ScrAuditId		bigint
 		,@OButtonVisible		Char(1)
 		,@OReportId		Int
 		,@OWizardId		Int
-SELECT @SearchCol=ButtonHlpId,@OScreenId=ScreenId,@OCultureId=CultureId,@OButtonTypeId=ButtonTypeId,@OButtonName=ButtonName,@OButtonToolTip=ButtonToolTip,@OButtonVisible=ButtonVisible,@OReportId=ReportId,@OWizardId=WizardId FROM dbo.ButtonHlp WHERE ButtonHlpId=@ButtonHlpId
+		,@OButtonLongNm		NVarChar(400)
+		,@ORowVisible		Char(1)
+		,@OTopVisible		Char(1)
+		,@OBotVisible		Char(1)
+SELECT @SearchCol=ButtonHlpId,@OScreenId=ScreenId,@OCultureId=CultureId,@OButtonTypeId=ButtonTypeId,@OButtonName=ButtonName,@OButtonToolTip=ButtonToolTip,@OButtonVisible=ButtonVisible,@OReportId=ReportId,@OWizardId=WizardId,@OButtonLongNm=ButtonLongNm,@ORowVisible=RowVisible,@OTopVisible=TopVisible,@OBotVisible=BotVisible FROM dbo.ButtonHlp WHERE ButtonHlpId=@ButtonHlpId
 INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
 	SELECT 'D',76,'Y',116,@ButtonHlpId,ISNULL(@SearchCol,''),@UserId,getutcdate()
 SELECT @ScrAuditId = @@IDENTITY
@@ -3171,14 +3798,27 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 	SELECT @ScrAuditId,1212,'Alternate Tool Tip',1025,'ButtonToolTip',@OButtonToolTip,NULL
 IF @OButtonVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1213,'Visible',1026,'ButtonVisible',@OButtonVisible,NULL
+	SELECT @ScrAuditId,1213,'Visibility',1026,'ButtonVisible',@OButtonVisible,NULL
 IF @OReportId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,1214,'Report',1041,'ReportId',CONVERT(varchar(10),@OReportId),NULL
 IF @OWizardId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,1215,'Wizard',1042,'WizardId',CONVERT(varchar(10),@OWizardId),NULL
-RETURN 0 
+IF @OButtonLongNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4159,'Alternative Long Name',7472,'ButtonLongNm',@OButtonLongNm,NULL
+IF @ORowVisible IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4160,'Row Menu',7475,'RowVisible',@ORowVisible,NULL
+IF @OTopVisible IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4161,'Top Menu',7473,'TopVisible',@OTopVisible,NULL
+IF @OBotVisible IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,NULL
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3189,6 +3829,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Upd1M
  @UsrId		Int
 ,@UsrEmail		NVarChar(50)
@@ -3220,6 +3861,9 @@ CREATE PROCEDURE dbo.Audit_Upd1M
 ,@PwdNoRepeat		SmallInt
 ,@IPAlert		Char(1)
 ,@UsrMobile		VarChar(50)
+,@LenderId		Int
+,@BorrowerId		Int
+,@GuarantorId		Int
 ,@UserId		int
 /* WITH ENCRYPTION */
 AS
@@ -3255,8 +3899,11 @@ DECLARE	 @ScrAuditId		bigint
 		,@OPwdNoRepeat		SmallInt
 		,@OIPAlert		Char(1)
 		,@OUsrMobile		VarChar(50)
-SELECT @SearchCol=UsrId,@OUsrEmail=UsrEmail,@OUsrName=UsrName,@OCustomerId=CustomerId,@OVendorId=VendorId,@OMemberId=MemberId,@OActive=Active,@OInvestorId=InvestorId,@ODefSystemId=DefSystemId,@OAgentId=AgentId,@OBrokerId=BrokerId,@OLoginName=LoginName,@OFailedAttempt=FailedAttempt,@OLastSuccessDt=LastSuccessDt,@OLastFailedDt=LastFailedDt,@OHintQuestionId=HintQuestionId,@OHintAnswer=HintAnswer,@ODefCompanyId=DefCompanyId,@ODefProjectId=DefProjectId,@OUsrGroupLs=UsrGroupLs,@OCompanyLs=CompanyLs,@OProjectLs=ProjectLs,@OCultureId=CultureId,@OInternalUsr=InternalUsr,@OTechnicalUsr=TechnicalUsr,@OPwdDuration=PwdDuration,@OPwdWarn=PwdWarn,@OPwdNoRepeat=PwdNoRepeat,@OIPAlert=IPAlert,@OUsrMobile=UsrMobile FROM dbo.Usr WHERE UsrId=@UsrId
-IF ((@OUsrEmail IS NOT NULL AND @UsrEmail IS NULL) OR (@OUsrEmail IS NULL AND @UsrEmail IS NOT NULL) OR (@OUsrEmail <> @UsrEmail)) OR ((@OUsrName IS NOT NULL AND @UsrName IS NULL) OR (@OUsrName IS NULL AND @UsrName IS NOT NULL) OR (@OUsrName <> @UsrName)) OR ((@OCustomerId IS NOT NULL AND @CustomerId IS NULL) OR (@OCustomerId IS NULL AND @CustomerId IS NOT NULL) OR (@OCustomerId <> @CustomerId)) OR ((@OVendorId IS NOT NULL AND @VendorId IS NULL) OR (@OVendorId IS NULL AND @VendorId IS NOT NULL) OR (@OVendorId <> @VendorId)) OR ((@OMemberId IS NOT NULL AND @MemberId IS NULL) OR (@OMemberId IS NULL AND @MemberId IS NOT NULL) OR (@OMemberId <> @MemberId)) OR ((@OActive IS NOT NULL AND @Active IS NULL) OR (@OActive IS NULL AND @Active IS NOT NULL) OR (@OActive <> @Active)) OR ((@OInvestorId IS NOT NULL AND @InvestorId IS NULL) OR (@OInvestorId IS NULL AND @InvestorId IS NOT NULL) OR (@OInvestorId <> @InvestorId)) OR ((@ODefSystemId IS NOT NULL AND @DefSystemId IS NULL) OR (@ODefSystemId IS NULL AND @DefSystemId IS NOT NULL) OR (@ODefSystemId <> @DefSystemId)) OR ((@OAgentId IS NOT NULL AND @AgentId IS NULL) OR (@OAgentId IS NULL AND @AgentId IS NOT NULL) OR (@OAgentId <> @AgentId)) OR ((@OBrokerId IS NOT NULL AND @BrokerId IS NULL) OR (@OBrokerId IS NULL AND @BrokerId IS NOT NULL) OR (@OBrokerId <> @BrokerId)) OR ((@OLoginName IS NOT NULL AND @LoginName IS NULL) OR (@OLoginName IS NULL AND @LoginName IS NOT NULL) OR (@OLoginName <> @LoginName)) OR ((@OFailedAttempt IS NOT NULL AND @FailedAttempt IS NULL) OR (@OFailedAttempt IS NULL AND @FailedAttempt IS NOT NULL) OR (@OFailedAttempt <> @FailedAttempt)) OR ((@OLastSuccessDt IS NOT NULL AND @LastSuccessDt IS NULL) OR (@OLastSuccessDt IS NULL AND @LastSuccessDt IS NOT NULL) OR (@OLastSuccessDt <> @LastSuccessDt)) OR ((@OLastFailedDt IS NOT NULL AND @LastFailedDt IS NULL) OR (@OLastFailedDt IS NULL AND @LastFailedDt IS NOT NULL) OR (@OLastFailedDt <> @LastFailedDt)) OR ((@OHintQuestionId IS NOT NULL AND @HintQuestionId IS NULL) OR (@OHintQuestionId IS NULL AND @HintQuestionId IS NOT NULL) OR (@OHintQuestionId <> @HintQuestionId)) OR ((@OHintAnswer IS NOT NULL AND @HintAnswer IS NULL) OR (@OHintAnswer IS NULL AND @HintAnswer IS NOT NULL) OR (@OHintAnswer <> @HintAnswer)) OR ((@ODefCompanyId IS NOT NULL AND @DefCompanyId IS NULL) OR (@ODefCompanyId IS NULL AND @DefCompanyId IS NOT NULL) OR (@ODefCompanyId <> @DefCompanyId)) OR ((@ODefProjectId IS NOT NULL AND @DefProjectId IS NULL) OR (@ODefProjectId IS NULL AND @DefProjectId IS NOT NULL) OR (@ODefProjectId <> @DefProjectId)) OR ((@OUsrGroupLs IS NOT NULL AND @UsrGroupLs IS NULL) OR (@OUsrGroupLs IS NULL AND @UsrGroupLs IS NOT NULL) OR (@OUsrGroupLs <> @UsrGroupLs)) OR ((@OCompanyLs IS NOT NULL AND @CompanyLs IS NULL) OR (@OCompanyLs IS NULL AND @CompanyLs IS NOT NULL) OR (@OCompanyLs <> @CompanyLs)) OR ((@OProjectLs IS NOT NULL AND @ProjectLs IS NULL) OR (@OProjectLs IS NULL AND @ProjectLs IS NOT NULL) OR (@OProjectLs <> @ProjectLs)) OR ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OInternalUsr IS NOT NULL AND @InternalUsr IS NULL) OR (@OInternalUsr IS NULL AND @InternalUsr IS NOT NULL) OR (@OInternalUsr <> @InternalUsr)) OR ((@OTechnicalUsr IS NOT NULL AND @TechnicalUsr IS NULL) OR (@OTechnicalUsr IS NULL AND @TechnicalUsr IS NOT NULL) OR (@OTechnicalUsr <> @TechnicalUsr)) OR ((@OPwdDuration IS NOT NULL AND @PwdDuration IS NULL) OR (@OPwdDuration IS NULL AND @PwdDuration IS NOT NULL) OR (@OPwdDuration <> @PwdDuration)) OR ((@OPwdWarn IS NOT NULL AND @PwdWarn IS NULL) OR (@OPwdWarn IS NULL AND @PwdWarn IS NOT NULL) OR (@OPwdWarn <> @PwdWarn)) OR ((@OPwdNoRepeat IS NOT NULL AND @PwdNoRepeat IS NULL) OR (@OPwdNoRepeat IS NULL AND @PwdNoRepeat IS NOT NULL) OR (@OPwdNoRepeat <> @PwdNoRepeat)) OR ((@OIPAlert IS NOT NULL AND @IPAlert IS NULL) OR (@OIPAlert IS NULL AND @IPAlert IS NOT NULL) OR (@OIPAlert <> @IPAlert)) OR ((@OUsrMobile IS NOT NULL AND @UsrMobile IS NULL) OR (@OUsrMobile IS NULL AND @UsrMobile IS NOT NULL) OR (@OUsrMobile <> @UsrMobile))
+		,@OLenderId		Int
+		,@OBorrowerId		Int
+		,@OGuarantorId		Int
+SELECT @SearchCol=UsrId,@OUsrEmail=UsrEmail,@OUsrName=UsrName,@OCustomerId=CustomerId,@OVendorId=VendorId,@OMemberId=MemberId,@OActive=Active,@OInvestorId=InvestorId,@ODefSystemId=DefSystemId,@OAgentId=AgentId,@OBrokerId=BrokerId,@OLoginName=LoginName,@OFailedAttempt=FailedAttempt,@OLastSuccessDt=LastSuccessDt,@OLastFailedDt=LastFailedDt,@OHintQuestionId=HintQuestionId,@OHintAnswer=HintAnswer,@ODefCompanyId=DefCompanyId,@ODefProjectId=DefProjectId,@OUsrGroupLs=UsrGroupLs,@OCompanyLs=CompanyLs,@OProjectLs=ProjectLs,@OCultureId=CultureId,@OInternalUsr=InternalUsr,@OTechnicalUsr=TechnicalUsr,@OPwdDuration=PwdDuration,@OPwdWarn=PwdWarn,@OPwdNoRepeat=PwdNoRepeat,@OIPAlert=IPAlert,@OUsrMobile=UsrMobile,@OLenderId=LenderId,@OBorrowerId=BorrowerId,@OGuarantorId=GuarantorId FROM dbo.Usr WHERE UsrId=@UsrId
+IF ((@OUsrEmail IS NOT NULL AND @UsrEmail IS NULL) OR (@OUsrEmail IS NULL AND @UsrEmail IS NOT NULL) OR (@OUsrEmail <> @UsrEmail)) OR ((@OUsrName IS NOT NULL AND @UsrName IS NULL) OR (@OUsrName IS NULL AND @UsrName IS NOT NULL) OR (@OUsrName <> @UsrName)) OR ((@OCustomerId IS NOT NULL AND @CustomerId IS NULL) OR (@OCustomerId IS NULL AND @CustomerId IS NOT NULL) OR (@OCustomerId <> @CustomerId)) OR ((@OVendorId IS NOT NULL AND @VendorId IS NULL) OR (@OVendorId IS NULL AND @VendorId IS NOT NULL) OR (@OVendorId <> @VendorId)) OR ((@OMemberId IS NOT NULL AND @MemberId IS NULL) OR (@OMemberId IS NULL AND @MemberId IS NOT NULL) OR (@OMemberId <> @MemberId)) OR ((@OActive IS NOT NULL AND @Active IS NULL) OR (@OActive IS NULL AND @Active IS NOT NULL) OR (@OActive <> @Active)) OR ((@OInvestorId IS NOT NULL AND @InvestorId IS NULL) OR (@OInvestorId IS NULL AND @InvestorId IS NOT NULL) OR (@OInvestorId <> @InvestorId)) OR ((@ODefSystemId IS NOT NULL AND @DefSystemId IS NULL) OR (@ODefSystemId IS NULL AND @DefSystemId IS NOT NULL) OR (@ODefSystemId <> @DefSystemId)) OR ((@OAgentId IS NOT NULL AND @AgentId IS NULL) OR (@OAgentId IS NULL AND @AgentId IS NOT NULL) OR (@OAgentId <> @AgentId)) OR ((@OBrokerId IS NOT NULL AND @BrokerId IS NULL) OR (@OBrokerId IS NULL AND @BrokerId IS NOT NULL) OR (@OBrokerId <> @BrokerId)) OR ((@OLoginName IS NOT NULL AND @LoginName IS NULL) OR (@OLoginName IS NULL AND @LoginName IS NOT NULL) OR (@OLoginName <> @LoginName)) OR ((@OFailedAttempt IS NOT NULL AND @FailedAttempt IS NULL) OR (@OFailedAttempt IS NULL AND @FailedAttempt IS NOT NULL) OR (@OFailedAttempt <> @FailedAttempt)) OR ((@OLastSuccessDt IS NOT NULL AND @LastSuccessDt IS NULL) OR (@OLastSuccessDt IS NULL AND @LastSuccessDt IS NOT NULL) OR (@OLastSuccessDt <> @LastSuccessDt)) OR ((@OLastFailedDt IS NOT NULL AND @LastFailedDt IS NULL) OR (@OLastFailedDt IS NULL AND @LastFailedDt IS NOT NULL) OR (@OLastFailedDt <> @LastFailedDt)) OR ((@OHintQuestionId IS NOT NULL AND @HintQuestionId IS NULL) OR (@OHintQuestionId IS NULL AND @HintQuestionId IS NOT NULL) OR (@OHintQuestionId <> @HintQuestionId)) OR ((@OHintAnswer IS NOT NULL AND @HintAnswer IS NULL) OR (@OHintAnswer IS NULL AND @HintAnswer IS NOT NULL) OR (@OHintAnswer <> @HintAnswer)) OR ((@ODefCompanyId IS NOT NULL AND @DefCompanyId IS NULL) OR (@ODefCompanyId IS NULL AND @DefCompanyId IS NOT NULL) OR (@ODefCompanyId <> @DefCompanyId)) OR ((@ODefProjectId IS NOT NULL AND @DefProjectId IS NULL) OR (@ODefProjectId IS NULL AND @DefProjectId IS NOT NULL) OR (@ODefProjectId <> @DefProjectId)) OR ((@OUsrGroupLs IS NOT NULL AND @UsrGroupLs IS NULL) OR (@OUsrGroupLs IS NULL AND @UsrGroupLs IS NOT NULL) OR (@OUsrGroupLs <> @UsrGroupLs)) OR ((@OCompanyLs IS NOT NULL AND @CompanyLs IS NULL) OR (@OCompanyLs IS NULL AND @CompanyLs IS NOT NULL) OR (@OCompanyLs <> @CompanyLs)) OR ((@OProjectLs IS NOT NULL AND @ProjectLs IS NULL) OR (@OProjectLs IS NULL AND @ProjectLs IS NOT NULL) OR (@OProjectLs <> @ProjectLs)) OR ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OInternalUsr IS NOT NULL AND @InternalUsr IS NULL) OR (@OInternalUsr IS NULL AND @InternalUsr IS NOT NULL) OR (@OInternalUsr <> @InternalUsr)) OR ((@OTechnicalUsr IS NOT NULL AND @TechnicalUsr IS NULL) OR (@OTechnicalUsr IS NULL AND @TechnicalUsr IS NOT NULL) OR (@OTechnicalUsr <> @TechnicalUsr)) OR ((@OPwdDuration IS NOT NULL AND @PwdDuration IS NULL) OR (@OPwdDuration IS NULL AND @PwdDuration IS NOT NULL) OR (@OPwdDuration <> @PwdDuration)) OR ((@OPwdWarn IS NOT NULL AND @PwdWarn IS NULL) OR (@OPwdWarn IS NULL AND @PwdWarn IS NOT NULL) OR (@OPwdWarn <> @PwdWarn)) OR ((@OPwdNoRepeat IS NOT NULL AND @PwdNoRepeat IS NULL) OR (@OPwdNoRepeat IS NULL AND @PwdNoRepeat IS NOT NULL) OR (@OPwdNoRepeat <> @PwdNoRepeat)) OR ((@OIPAlert IS NOT NULL AND @IPAlert IS NULL) OR (@OIPAlert IS NULL AND @IPAlert IS NOT NULL) OR (@OIPAlert <> @IPAlert)) OR ((@OUsrMobile IS NOT NULL AND @UsrMobile IS NULL) OR (@OUsrMobile IS NULL AND @UsrMobile IS NOT NULL) OR (@OUsrMobile <> @UsrMobile)) OR ((@OLenderId IS NOT NULL AND @LenderId IS NULL) OR (@OLenderId IS NULL AND @LenderId IS NOT NULL) OR (@OLenderId <> @LenderId)) OR ((@OBorrowerId IS NOT NULL AND @BorrowerId IS NULL) OR (@OBorrowerId IS NULL AND @BorrowerId IS NOT NULL) OR (@OBorrowerId <> @BorrowerId)) OR ((@OGuarantorId IS NOT NULL AND @GuarantorId IS NULL) OR (@OGuarantorId IS NULL AND @GuarantorId IS NOT NULL) OR (@OGuarantorId <> @GuarantorId))
 BEGIN
 INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
 	SELECT 'U',1,'Y',1,@UsrId,ISNULL(@SearchCol,''),@UserId,getutcdate()
@@ -3348,8 +3995,18 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 IF (@OUsrMobile IS NOT NULL AND @UsrMobile IS NULL) OR (@OUsrMobile IS NULL AND @UsrMobile IS NOT NULL) OR (@OUsrMobile <> @UsrMobile)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,4143,'Mobile',7442,'UsrMobile',@OUsrMobile,@UsrMobile
+IF (@OLenderId IS NOT NULL AND @LenderId IS NULL) OR (@OLenderId IS NULL AND @LenderId IS NOT NULL) OR (@OLenderId <> @LenderId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4185,'Lender',7499,'LenderId',CONVERT(varchar(10),@OLenderId),CONVERT(varchar(10),@LenderId)
+IF (@OBorrowerId IS NOT NULL AND @BorrowerId IS NULL) OR (@OBorrowerId IS NULL AND @BorrowerId IS NOT NULL) OR (@OBorrowerId <> @BorrowerId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4186,'Borrower',7497,'BorrowerId',CONVERT(varchar(10),@OBorrowerId),CONVERT(varchar(10),@BorrowerId)
+IF (@OGuarantorId IS NOT NULL AND @GuarantorId IS NULL) OR (@OGuarantorId IS NULL AND @GuarantorId IS NOT NULL) OR (@OGuarantorId <> @GuarantorId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4187,'Guarantor',7498,'GuarantorId',CONVERT(varchar(10),@OGuarantorId),CONVERT(varchar(10),@GuarantorId)
 END
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3360,6 +4017,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Upd5D
  @UsrGroupAuthId		Int
 ,@SystemId		TinyInt
@@ -3395,7 +4053,8 @@ IF (@OProjectId IS NOT NULL AND @ProjectId IS NULL) OR (@OProjectId IS NULL AND 
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,1745,'Project',1738,'ProjectId',CONVERT(varchar(10),@OProjectId),CONVERT(varchar(10),@ProjectId)
 END
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3406,6 +4065,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Upd5M
  @UsrGroupId		SmallInt
 ,@UsrGroupName		NVarChar(50)
@@ -3436,7 +4096,8 @@ IF (@OCompanyId IS NOT NULL AND @CompanyId IS NULL) OR (@OCompanyId IS NULL AND 
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,1752,'Company',1769,'CompanyId',CONVERT(varchar(10),@OCompanyId),CONVERT(varchar(10),@CompanyId)
 END
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3447,6 +4108,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo.Audit_Upd76M
  @ButtonHlpId		Int
 ,@ScreenId		Int
@@ -3457,6 +4119,10 @@ CREATE PROCEDURE dbo.Audit_Upd76M
 ,@ButtonVisible		Char(1)
 ,@ReportId		Int
 ,@WizardId		Int
+,@ButtonLongNm		NVarChar(400)
+,@RowVisible		Char(1)
+,@TopVisible		Char(1)
+,@BotVisible		Char(1)
 ,@UserId		int
 /* WITH ENCRYPTION */
 AS
@@ -3471,8 +4137,12 @@ DECLARE	 @ScrAuditId		bigint
 		,@OButtonVisible		Char(1)
 		,@OReportId		Int
 		,@OWizardId		Int
-SELECT @SearchCol=ButtonHlpId,@OScreenId=ScreenId,@OCultureId=CultureId,@OButtonTypeId=ButtonTypeId,@OButtonName=ButtonName,@OButtonToolTip=ButtonToolTip,@OButtonVisible=ButtonVisible,@OReportId=ReportId,@OWizardId=WizardId FROM dbo.ButtonHlp WHERE ButtonHlpId=@ButtonHlpId
-IF ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OButtonTypeId IS NOT NULL AND @ButtonTypeId IS NULL) OR (@OButtonTypeId IS NULL AND @ButtonTypeId IS NOT NULL) OR (@OButtonTypeId <> @ButtonTypeId)) OR ((@OButtonName IS NOT NULL AND @ButtonName IS NULL) OR (@OButtonName IS NULL AND @ButtonName IS NOT NULL) OR (@OButtonName <> @ButtonName)) OR ((@OButtonToolTip IS NOT NULL AND @ButtonToolTip IS NULL) OR (@OButtonToolTip IS NULL AND @ButtonToolTip IS NOT NULL) OR (@OButtonToolTip <> @ButtonToolTip)) OR ((@OButtonVisible IS NOT NULL AND @ButtonVisible IS NULL) OR (@OButtonVisible IS NULL AND @ButtonVisible IS NOT NULL) OR (@OButtonVisible <> @ButtonVisible)) OR ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId))
+		,@OButtonLongNm		NVarChar(400)
+		,@ORowVisible		Char(1)
+		,@OTopVisible		Char(1)
+		,@OBotVisible		Char(1)
+SELECT @SearchCol=ButtonHlpId,@OScreenId=ScreenId,@OCultureId=CultureId,@OButtonTypeId=ButtonTypeId,@OButtonName=ButtonName,@OButtonToolTip=ButtonToolTip,@OButtonVisible=ButtonVisible,@OReportId=ReportId,@OWizardId=WizardId,@OButtonLongNm=ButtonLongNm,@ORowVisible=RowVisible,@OTopVisible=TopVisible,@OBotVisible=BotVisible FROM dbo.ButtonHlp WHERE ButtonHlpId=@ButtonHlpId
+IF ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OButtonTypeId IS NOT NULL AND @ButtonTypeId IS NULL) OR (@OButtonTypeId IS NULL AND @ButtonTypeId IS NOT NULL) OR (@OButtonTypeId <> @ButtonTypeId)) OR ((@OButtonName IS NOT NULL AND @ButtonName IS NULL) OR (@OButtonName IS NULL AND @ButtonName IS NOT NULL) OR (@OButtonName <> @ButtonName)) OR ((@OButtonToolTip IS NOT NULL AND @ButtonToolTip IS NULL) OR (@OButtonToolTip IS NULL AND @ButtonToolTip IS NOT NULL) OR (@OButtonToolTip <> @ButtonToolTip)) OR ((@OButtonVisible IS NOT NULL AND @ButtonVisible IS NULL) OR (@OButtonVisible IS NULL AND @ButtonVisible IS NOT NULL) OR (@OButtonVisible <> @ButtonVisible)) OR ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId)) OR ((@OButtonLongNm IS NOT NULL AND @ButtonLongNm IS NULL) OR (@OButtonLongNm IS NULL AND @ButtonLongNm IS NOT NULL) OR (@OButtonLongNm <> @ButtonLongNm)) OR ((@ORowVisible IS NOT NULL AND @RowVisible IS NULL) OR (@ORowVisible IS NULL AND @RowVisible IS NOT NULL) OR (@ORowVisible <> @RowVisible)) OR ((@OTopVisible IS NOT NULL AND @TopVisible IS NULL) OR (@OTopVisible IS NULL AND @TopVisible IS NOT NULL) OR (@OTopVisible <> @TopVisible)) OR ((@OBotVisible IS NOT NULL AND @BotVisible IS NULL) OR (@OBotVisible IS NULL AND @BotVisible IS NOT NULL) OR (@OBotVisible <> @BotVisible))
 BEGIN
 INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
 	SELECT 'U',76,'Y',116,@ButtonHlpId,ISNULL(@SearchCol,''),@UserId,getutcdate()
@@ -3494,15 +4164,28 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 	SELECT @ScrAuditId,1212,'Alternate Tool Tip',1025,'ButtonToolTip',@OButtonToolTip,@ButtonToolTip
 IF (@OButtonVisible IS NOT NULL AND @ButtonVisible IS NULL) OR (@OButtonVisible IS NULL AND @ButtonVisible IS NOT NULL) OR (@OButtonVisible <> @ButtonVisible)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1213,'Visible',1026,'ButtonVisible',@OButtonVisible,@ButtonVisible
+	SELECT @ScrAuditId,1213,'Visibility',1026,'ButtonVisible',@OButtonVisible,@ButtonVisible
 IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,1214,'Report',1041,'ReportId',CONVERT(varchar(10),@OReportId),CONVERT(varchar(10),@ReportId)
 IF (@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,1215,'Wizard',1042,'WizardId',CONVERT(varchar(10),@OWizardId),CONVERT(varchar(10),@WizardId)
+IF (@OButtonLongNm IS NOT NULL AND @ButtonLongNm IS NULL) OR (@OButtonLongNm IS NULL AND @ButtonLongNm IS NOT NULL) OR (@OButtonLongNm <> @ButtonLongNm)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4159,'Alternative Long Name',7472,'ButtonLongNm',@OButtonLongNm,@ButtonLongNm
+IF (@ORowVisible IS NOT NULL AND @RowVisible IS NULL) OR (@ORowVisible IS NULL AND @RowVisible IS NOT NULL) OR (@ORowVisible <> @RowVisible)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4160,'Row Menu',7475,'RowVisible',@ORowVisible,@RowVisible
+IF (@OTopVisible IS NOT NULL AND @TopVisible IS NULL) OR (@OTopVisible IS NULL AND @TopVisible IS NOT NULL) OR (@OTopVisible <> @TopVisible)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4161,'Top Menu',7473,'TopVisible',@OTopVisible,@TopVisible
+IF (@OBotVisible IS NOT NULL AND @BotVisible IS NULL) OR (@OBotVisible IS NULL AND @BotVisible IS NOT NULL) OR (@OBotVisible <> @BotVisible)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,@BotVisible
 END
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3513,6 +4196,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[CancelUserAccount]
  @UsrId                 int
@@ -3520,7 +4205,11 @@ CREATE PROCEDURE [dbo].[CancelUserAccount]
 AS
 SET NOCOUNT ON
 UPDATE dbo.Usr SET Active = 'N' WHERE UsrId = @UsrId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3531,6 +4220,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[ChkAdminLogin]
  @RowAuths	varchar(1000)
@@ -3543,7 +4234,12 @@ IF (charindex(nchar(191) + convert(varchar,@RowAuthorityId) + nchar(191),nchar(1
 	SELECT 0
 ELSE
 	SELECT 1
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3554,6 +4250,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[ChkLoginFPStatus]
  @LoginName	nvarchar(32)
@@ -3564,7 +4262,11 @@ IF (SELECT ISNULL(FailedAttemptFP,0) FROM dbo.Usr WHERE LoginName = @LoginName) 
 	SELECT 0
 ELSE
 	SELECT 1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3575,6 +4277,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[ChkLoginStatus]
  @LoginName	nvarchar(32)
@@ -3585,7 +4289,11 @@ IF (SELECT ISNULL(FailedAttempt,0) FROM dbo.Usr WHERE LoginName = @LoginName) >=
 	SELECT 0
 ELSE
 	SELECT 1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3596,6 +4304,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only.
 CREATE PROCEDURE [dbo].[CountEmailsSent]
 /* WITH ENCRYPTION */
@@ -3620,7 +4329,9 @@ END
 IF @ms >= 0 AND @ms < 1000 WAITFOR DELAY '00:00:01'
 UPDATE dbo.LastEmail SET LastEmailDt = getdate(), LastEmailCnt = @cnt
 SELECT @cnt
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3631,6 +4342,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[CountRptCri]
  @ReportCriId		int
 /* WITH ENCRYPTION */
@@ -3648,7 +4360,9 @@ IF @TableName is not null and @TableName <> '' and exists (SELECT 1 FROM RODesig
 	EXEC ('SELECT COUNT(1) FROM ' + @db + '.dbo.' + @TableName)
 ELSE
 	SELECT 0
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3659,6 +4373,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[CountScrCri]
  @ScreenCriId		int
 ,@MultiDesignDb		char(1)
@@ -3678,7 +4393,9 @@ SELECT @sClause = 'DECLARE @TableName varchar(500), @db varchar(50), @ColumnName
 + ' ELSE'
 + '		SELECT 0'
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3689,6 +4406,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkAppItem]
  @AppItemId		int
 /* WITH ENCRYPTION */
@@ -3701,7 +4420,12 @@ BEGIN
 	RAISERROR('Please either empty the Relative Path for current path or make sure it ends with "\" and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3712,6 +4436,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkAuthCol]
  @ColOvrdId		int
 /* WITH ENCRYPTION */
@@ -3743,7 +4469,11 @@ UPDATE dbo.ColOvrd SET ScreenId = d.ScreenId, Priority = @Priority
 	FROM dbo.ColOvrd a INNER JOIN dbo.ScreenObj d ON a.ScreenObjId = d.ScreenObjId
 	LEFT OUTER JOIN RODesign.dbo.VwPermKeyRow p on p.PermKeyRowId = a.PermKeyRowId
 	WHERE a.ColOvrdId = @ColOvrdId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3754,6 +4484,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkClientRule]
  @ClientRuleId		int
 /* WITH ENCRYPTION */
@@ -3797,7 +4529,9 @@ BEGIN
 	RAISERROR(@ErrMsg,18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3808,6 +4542,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[Cr_ChkCulture01]
  @ScreenId	Int
 /* WITH ENCRYPTION */
@@ -3819,7 +4554,9 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 IF NOT EXISTS (SELECT 1 FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
 */
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3830,6 +4567,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkCulture02]
  @ScreenObjId	Int
 /* WITH ENCRYPTION */
@@ -3839,7 +4578,11 @@ SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF NOT EXISTS (SELECT 1 FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3850,6 +4593,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkCulture03]
  @ScreenTabId	Int
 /* WITH ENCRYPTION */
@@ -3859,7 +4604,11 @@ SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF NOT EXISTS (SELECT 1 FROM dbo.ScreenTabHlp WHERE ScreenTabId = @ScreenTabId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3870,6 +4619,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkCulture04]
  @ScreenFilterId	Int
 /* WITH ENCRYPTION */
@@ -3879,7 +4630,11 @@ SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF NOT EXISTS (SELECT 1 FROM dbo.ScreenFilterHlp WHERE ScreenFilterId = @ScreenFilterId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3890,6 +4645,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkCulture05]
  @ReportId	Int
 /* WITH ENCRYPTION */
@@ -3899,7 +4656,11 @@ SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF NOT EXISTS (SELECT 1 FROM dbo.ReportHlp WHERE ReportId = @ReportId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3910,6 +4671,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkCulture06]
  @ReportCriId	Int
 /* WITH ENCRYPTION */
@@ -3919,7 +4682,11 @@ SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF NOT EXISTS (SELECT 1 FROM dbo.ReportCriHlp WHERE ReportCriId = @ReportCriId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3930,6 +4697,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkCulture07]
  @ReportObjId	Int
 /* WITH ENCRYPTION */
@@ -3939,7 +4708,11 @@ SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF NOT EXISTS (SELECT 1 FROM dbo.ReportObjHlp WHERE ReportObjId = @ReportObjId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3950,6 +4723,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkCulture08]
  @ScreenCriId	Int
 /* WITH ENCRYPTION */
@@ -3959,7 +4734,11 @@ SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF NOT EXISTS (SELECT 1 FROM dbo.ScreenCriHlp WHERE ScreenCriId = @ScreenCriId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3970,6 +4749,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkCulture09]
  @MsgId	Int
 /* WITH ENCRYPTION */
@@ -3979,7 +4760,11 @@ SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF NOT EXISTS (SELECT 1 FROM dbo.MsgCenter WHERE MsgId = @MsgId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3990,6 +4775,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Cr_ChkCulture10]
  @CultureTypeId	Int
@@ -4000,7 +4787,11 @@ SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF NOT EXISTS (SELECT 1 FROM dbo.CtCultureLbl WHERE CultureTypeId = @CultureTypeId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4011,6 +4802,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkCustomDtl]
  @CustomDtlId		int
 /* WITH ENCRYPTION */
@@ -4023,7 +4816,12 @@ BEGIN
 	RAISERROR('Please either empty the Relative Path for current path or make sure it ends with "\" and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4034,6 +4832,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkDbColumn]
  @TableId		int
 ,@ColumnName	varchar(50)
@@ -4051,6 +4851,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4061,6 +4865,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkDupTblByName]
  @TableId		int
 ,@TableName		varchar(500)
@@ -4073,6 +4879,8 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4083,12 +4891,19 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkEveryone]
  @MenuId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4099,6 +4914,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkGlobalCriteria]
 /* WITH ENCRYPTION */
 AS
@@ -4108,7 +4925,12 @@ BEGIN
 	RAISERROR('Each system may only have one Global Criteria, please verify and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4119,6 +4941,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Cr_ChkMember]
  @MemberId		int
@@ -4135,7 +4959,11 @@ BEGIN
 	RAISERROR('Cannot delete this member because time has been allocated it. Please inactivate instead.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4146,6 +4974,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkMenuLoop]
  @MenuId	int
 /* WITH ENCRYPTION */
@@ -4171,6 +5001,9 @@ BEGIN
 	END
 END
 RETURN 0 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4181,6 +5014,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkPrimaryKey]
  @TableId	int
 /* WITH ENCRYPTION */
@@ -4197,6 +5032,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4207,6 +5046,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkReportColHeader]
  @ReportCriId	Int
 /* WITH ENCRYPTION */
@@ -4265,7 +5106,11 @@ BEGIN
 	RETURN 1
 END
 */
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4276,6 +5121,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[Cr_ChkReportGrp]
  @ReportId	Int
 /* WITH ENCRYPTION */
@@ -4288,7 +5134,17 @@ BEGIN
 	RAISERROR('Criteria column may not have more than one default Reporting Group, please correct and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4299,6 +5155,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkReportGrpLoop]
  @ReportGrpId	int
 /* WITH ENCRYPTION */
@@ -4326,6 +5184,10 @@ BEGIN
 	END
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4336,6 +5198,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[Cr_ChkReportMargins]
  @ReportId	int
 /* WITH ENCRYPTION */
@@ -4369,6 +5232,8 @@ IF @PageHeight < (@TopMargin + @BottomMargin)
 IF @AllowSelect = 'Y' AND @ReportTypeCd not in ('R','T')
 	BEGIN RAISERROR('{43}',18,2) WITH SETERROR RETURN 1 END
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4379,6 +5244,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkReportParentGrp]
  @ReportId	Int
 /* WITH ENCRYPTION */
@@ -4404,6 +5271,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4414,6 +5285,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design
 CREATE PROCEDURE [dbo].[Cr_ChkRmRptStyle]
  @RptStyleId	int
@@ -4436,7 +5309,12 @@ BEGIN
 	RAISERROR('Default code is needed for easy reporting wizard, please do not delete.  Thank you.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4447,6 +5325,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkRowOvrd]
  @RowOvrdId		int
 /* WITH ENCRYPTION */
@@ -4465,7 +5345,12 @@ UPDATE dbo.RowOvrd SET RowOvrdDesc = case
 	INNER JOIN RODesign.dbo.VwRowAuth b ON a.RowAuthId = b.RowAuthId
 	LEFT OUTER JOIN dbo.Screen c ON a.ScreenId = c.ScreenId
 	LEFT OUTER JOIN dbo.Report d ON a.ReportId = d.ReportId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4476,6 +5361,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkRptCtr]
  @RptCtrId	int
 /* WITH ENCRYPTION */
@@ -4499,7 +5386,12 @@ BEGIN
 	RAISERROR('{27}{%s}',18,2,@TestDesc) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4510,6 +5402,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkRptElm]
  @RptElmId	int
 /* WITH ENCRYPTION */
@@ -4544,7 +5438,12 @@ BEGIN
 	RAISERROR('{25}{%s}{%s}',18,2,@TestDesc,@ReportDesc) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4555,6 +5454,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkRptStyle]
  @RptStyleId	int
 /* WITH ENCRYPTION */
@@ -4567,7 +5468,12 @@ BEGIN
 	RAISERROR('Default code "%s" already exists, please empty Default code and try again.',18,2,@DefaultCd) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4578,6 +5484,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkRptwizCri]
  @RptwizId		int
 /* WITH ENCRYPTION */
@@ -4608,6 +5516,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4618,6 +5530,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkScreenColHeader]
  @ScreenCriId	Int
 /* WITH ENCRYPTION */
@@ -4685,7 +5599,11 @@ BEGIN
 	RETURN 1
 END
 */
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -4696,6 +5614,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkScreenObj]
  @ScreenObjId	Int
 /* WITH ENCRYPTION */
@@ -4989,7 +5909,11 @@ BEGIN
 	RAISERROR('Please make sure column Name %s is unique and try again.',18,2,@ColumnName) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5000,6 +5924,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkTables]
 /* WITH ENCRYPTION */
 AS
@@ -5052,6 +5978,34 @@ BEGIN
 	RAISERROR('Please make sure Vendor table in Cmon database has columns "VendorId", "ParentId", "VendorName" and "Active" then try again.',18,2) WITH SETERROR
 	RETURN 1
 END
+IF NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'BorrowerId' AND t.name = 'Borrower')
+OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'ParentId' AND t.name = 'Borrower')
+OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'BorrowerName' AND t.name = 'Borrower')
+OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'Active' AND t.name = 'Borrower')
+BEGIN
+	RAISERROR('Please make sure Vendor table in Cmon database has columns "BorrowerId", "ParentId", "BorrowerName" and "Active" then try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'GuarantorId' AND t.name = 'Guarantor')
+OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'ParentId' AND t.name = 'Guarantor')
+OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'GuarantorName' AND t.name = 'Guarantor')
+OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'Active' AND t.name = 'Guarantor')
+BEGIN
+	RAISERROR('Please make sure Vendor table in Cmon database has columns "GuarantorId", "ParentId", "GuarantorName" and "Active" then try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'LenderId' AND t.name = 'Lender')
+OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'ParentId' AND t.name = 'Lender')
+OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'LenderName' AND t.name = 'Lender')
+OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'Active' AND t.name = 'Lender')
+BEGIN
+	RAISERROR('Please make sure Vendor table in Cmon database has columns "LenderId", "ParentId", "LenderName" and "Active" then try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+
+
+
+
 IF NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'CompanyId' AND t.name = 'Company')
 OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'ParentId' AND t.name = 'Company')
 OR NOT EXISTS (SELECT 1 FROM ROCmon.sys.columns c JOIN ROCmon.sys.tables t ON c.object_id = t.object_id WHERE c.name = 'CompanyDesc' AND t.name = 'Company')
@@ -5068,7 +6022,9 @@ BEGIN
 	RAISERROR('Please make sure Project table in Cmon database has columns "ProjectId", "ParentId", "ProjectDesc" and "Active" then try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5079,6 +6035,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ChkWebRule]
  @WebRuleId		int
 /* WITH ENCRYPTION */
@@ -5105,7 +6063,11 @@ BEGIN
 	RAISERROR('{4}',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5116,6 +6078,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Cr_DelCTier]
  @ClientTierId	tinyint
@@ -5128,6 +6092,8 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5138,6 +6104,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[Cr_DelDbColumn]
  @ColumnId	Int
 ,@CultureId smallint
@@ -5187,7 +6154,12 @@ BEGIN
 	RAISERROR('{73}{%s}{%s}',18,2,@ColumnDesc,@ScreenTitle) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5198,6 +6170,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Cr_DelDTier]
  @DataTierId	tinyint
@@ -5210,6 +6184,8 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5220,6 +6196,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_DelRptElm]
  @RptElmId	int
 /* WITH ENCRYPTION */
@@ -5232,7 +6210,12 @@ BEGIN
 	RAISERROR('{26}{%s}',18,2,@RptElmDesc) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5243,6 +6226,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Cr_DelRTier]
  @RuleTierId	tinyint
@@ -5255,6 +6240,8 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5265,6 +6252,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_DelScreenTab]
  @ScreenTabId	int
 /* WITH ENCRYPTION */
@@ -5275,7 +6264,12 @@ BEGIN
 	RAISERROR('Please remove all screen object reference to this tab folder and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5286,6 +6280,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_NoDelCatRef]
  @RptwizCatId	smallint
 /* WITH ENCRYPTION */
@@ -5297,6 +6293,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5307,6 +6307,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_NoReportDelWhenRef]
  @ReportGrpId	int
 /* WITH ENCRYPTION */
@@ -5320,6 +6322,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5330,6 +6336,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Cr_OneDefCTier]
 /* WITH ENCRYPTION */
@@ -5341,6 +6349,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5351,6 +6363,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Cr_OneDefDTier]
 /* WITH ENCRYPTION */
@@ -5362,6 +6376,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5372,6 +6390,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Cr_OneDefRTier]
 /* WITH ENCRYPTION */
@@ -5383,6 +6403,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5393,6 +6417,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_OneObjectTypeOnly]
  @ButtonHlpId		int
 /* WITH ENCRYPTION */
@@ -5413,6 +6439,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5423,6 +6453,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[Cr_OneTemplateDefaultOnly]
 /* WITH ENCRYPTION */
 AS
@@ -5432,7 +6469,16 @@ BEGIN
 	RAISERROR('Please choose one and only one template default and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5443,6 +6489,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_RmRptCriCRule]
  @ReportCriHlpId	int
 /* WITH ENCRYPTION */
@@ -5453,7 +6501,12 @@ BEGIN
 	RAISERROR('{9}',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5464,6 +6517,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[Cr_RmScrCriCRule]
  @ScreenCriHlpId	int
 /* WITH ENCRYPTION */
@@ -5474,7 +6530,12 @@ BEGIN
 	RAISERROR('{8}',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5485,6 +6546,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[Cr_RmScrObjCRule]
  @ScreenObjId	int
 /* WITH ENCRYPTION */
@@ -5496,7 +6560,12 @@ BEGIN
 	RAISERROR('{6}',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5507,6 +6576,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[Cr_RmScrObjHlpCRule]
  @ScreenObjHlpId	int
 /* WITH ENCRYPTION */
@@ -5517,7 +6589,12 @@ BEGIN
 	RAISERROR('{6}',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5528,6 +6605,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_RmScrObjWRule]
  @ScreenObjId	int
 /* WITH ENCRYPTION */
@@ -5568,7 +6647,12 @@ BEGIN
 	RAISERROR('Please do not delete this primary key column, thank you.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5579,6 +6663,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Cr_ValidGrpAuth]
  @UsrGroupAuthId	int
 /* WITH ENCRYPTION */
@@ -5591,6 +6677,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5601,14 +6691,27 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[CrChkAuthority]
- @UsrGroupId		varchar(1000)
+ @UsrId				int
+,@UsrGroupId		varchar(1000)
 ,@RowAuthoritys		varchar(1000)
 /* WITH ENCRYPTION */
 AS
 DECLARE	 @sClause	varchar(4000)
 SET NOCOUNT ON
+IF EXISTS (SELECT 1 FROM dbo.Usr WHERE UsrId = @UsrId AND CompanyLs is null)
+BEGIN
+	RAISERROR('Please select one or more representing companies and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF EXISTS (SELECT 1 FROM dbo.Usr WHERE UsrId = @UsrId AND ProjectLs is null)
+BEGIN
+	RAISERROR('Please select one or more representing projects and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
 SELECT @sClause = 'IF EXISTS (SELECT 1 FROM dbo.UsrGroup a'
 + ' INNER JOIN RODesign.dbo.VwRowAuth b ON a.RowAuthorityId = b.RowAuthId'
 	+ ' AND a.UsrGroupId in ' + @UsrGroupId + ' AND b.SysAdmin = ''Y'')'
@@ -5618,7 +6721,11 @@ SELECT @sClause = 'IF EXISTS (SELECT 1 FROM dbo.UsrGroup a'
 	+ ' RAISERROR(''Please do not assign User Group "Sys Administrator"; only System Administrator is authorized to do that.'',18,2) WITH SETERROR'
 + ' END'
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5629,6 +6736,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design Only
 CREATE PROCEDURE [dbo].[CrChkDelRowAuth]
  @RowAuthId		int
@@ -5661,6 +6770,10 @@ END
 CLOSE curs
 DEALLOCATE curs
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5671,6 +6784,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 /* ??Design only */
 CREATE PROCEDURE [dbo].[CrChkDupUsrByEmail]
  @UsrId			int
@@ -5695,7 +6809,10 @@ BEGIN
 END
 /* In case user change login name */
 IF @UsrId is not NULL UPDATE dbo.UsrAudit SET UsrId = @UsrId WHERE UsrId is null AND LoginName = @LoginName
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5706,6 +6823,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* ??Design only */
 CREATE PROCEDURE [dbo].[CrChkLocalUsr]
  @UsrId		int
@@ -5719,7 +6838,11 @@ BEGIN
 	RAISERROR('Please do not add or modify user information from legacy system except checking Active/Inactive.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5730,6 +6853,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* ??Design only */
 CREATE PROCEDURE [dbo].[CrChkOvride]
  @OvrideId	Int
@@ -5749,6 +6874,11 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+ 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5759,6 +6889,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design Only.
 CREATE PROCEDURE [dbo].[CrChkPwdConfirm]
  @UsrId			int
@@ -5805,6 +6937,9 @@ BEGIN
 	EXEC dbo.SetLoginStatus @LoginName, 'Y', '','',''
 END
 RETURN 0 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5815,6 +6950,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* ??Design only */
 CREATE PROCEDURE [dbo].[CrDelUsr]
  @UsrId		int
@@ -5870,7 +7007,9 @@ END
 CLOSE scur DEALLOCATE scur
 RETURN 0
 
-select REPLACE(REPLACE(UsrGroupLs,'(',','),')',','), CHARINDEX(',6,',REPLACE(REPLACE(UsrGroupLs,'(',','),')',',')) from Usr 
+select REPLACE(REPLACE(UsrGroupLs,'(',','),')',','), CHARINDEX(',6,',REPLACE(REPLACE(UsrGroupLs,'(',','),')',',')) from Usr
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5881,6 +7020,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design Only.
 CREATE PROCEDURE [dbo].[CrOneAdminDbOnly]
 /* WITH ENCRYPTION */
@@ -5891,7 +7032,11 @@ BEGIN
 	RAISERROR('There should only be one and only one database marked as administration database, please rectify and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5902,6 +7047,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[CrOneCultureDefaultOnly]
 /* WITH ENCRYPTION */
@@ -5912,7 +7059,11 @@ BEGIN
 	RAISERROR('Please choose one and only one culture default and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5923,6 +7074,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design Only.
 CREATE PROCEDURE [dbo].[CrOneDbServerOnly]
  @ReleaseId		smallint
@@ -5937,6 +7090,11 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+ 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5947,6 +7105,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design Only.
 CREATE PROCEDURE [dbo].[CrOneDisplayDefaultOnly]
 /* WITH ENCRYPTION */
@@ -5957,7 +7116,11 @@ BEGIN
 	RAISERROR('Please choose one and only one display default and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -5968,16 +7131,20 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design Only.
 CREATE PROCEDURE [dbo].[CrOnePrefDefaultOnly]
  @UsrId		int
 ,@UsrGroupId	smallint
-,@MemberId	int
-,@AgentId	int
-,@BrokerId	int
+,@MemberId		int
+,@AgentId		int
+,@BrokerId		int
 ,@CustomerId	int
 ,@InvestorId	int
-,@VendorId	int
+,@VendorId		int
+,@BorrowerId	int
+,@GuarantorId	int
+,@LenderId		int
 ,@SystemId	tinyint
 /* WITH ENCRYPTION */
 AS
@@ -6022,12 +7189,37 @@ BEGIN
 	RAISERROR('Please only choose one preference per Vendor-System and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (BorrowerId is not null AND BorrowerId = @BorrowerId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('Please only choose one preference per Borrower-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (GuarantorId is not null AND GuarantorId = @GuarantorId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('Please only choose one preference per Guarantor-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (LenderId is not null AND LenderId = @LenderId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('Please only choose one preference per Lender-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
 IF (SELECT count('true') FROM dbo.UsrPref WHERE SystemId = @SystemId AND PrefDefault = 'Y') > 1
 BEGIN
 	RAISERROR('Please choose only one User Preference Default for this system and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+
+
+
+
+ 
+ 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6038,6 +7230,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[CrOneSysAdminOnly]
 /* WITH ENCRYPTION */
@@ -6048,7 +7242,11 @@ BEGIN
 	RAISERROR('Please make sure there is one and only one Sys Administrator and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6059,6 +7257,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[DelAdmRptWiz95Dt]
  @RptwizDtlId	int
 /* WITH ENCRYPTION */
@@ -6067,6 +7267,10 @@ SET NOCOUNT ON
 IF EXISTS (SELECT 1 FROM dbo.RptwizDtl WHERE RptwizDtlId = @RptwizDtlId)
 	DELETE FROM dbo.RptwizDtl WHERE RptwizDtlId = @RptwizDtlId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6077,6 +7281,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[DelLastCriteria]
  @ScreenId		int
 ,@ReportId		int
@@ -6115,6 +7321,10 @@ BEGIN
 	DEALLOCATE sysCursor
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6125,6 +7335,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[DelMemCri]
  @GenPrefix		varchar(10)
 ,@ReportId		int
@@ -6160,6 +7372,10 @@ BEGIN
 	END
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6170,6 +7386,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[DelMemFld]
  @GenPrefix		varchar(10)
 ,@MemFldId		int
@@ -6187,6 +7405,10 @@ BEGIN
 	DELETE FROM dbo.RptMemFld WHERE RptMemFldId = @MemFldId
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6197,6 +7419,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[DelReportCriDel]
  @GenPrefix			varchar(10)
 ,@appDatabase		varchar(50)
@@ -6227,7 +7451,9 @@ BEGIN
 	END
 END
 */
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6238,6 +7464,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[DelReportDel]
  @GenPrefix			varchar(10)
 ,@srcDatabase		varchar(50)
@@ -6269,7 +7497,11 @@ EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @sClause + '''')
 SELECT @sClause = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''_Get' + @programName + 'X'''') AND xtype = ''''P'''') DROP PROCEDURE _Get' + @programName + 'X'
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @sClause + '''')
 */
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6280,6 +7512,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[DelRptCriteria]
  @GenPrefix		varchar(10)
 ,@ReportId		int
@@ -6299,6 +7533,10 @@ BEGIN
 			AND NOT EXISTS (SELECT 1 FROM dbo.ReportCri a WHERE a.ReportCriId = dbo.ReportLstCri.ReportCriId)
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6309,6 +7547,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[DelScreenCriDel]
  @appDatabase		varchar(50)
 ,@procedureName		varchar(50)
@@ -6318,7 +7559,12 @@ DECLARE	 @sClause	varchar(8000)
 SET NOCOUNT ON
 SELECT @sClause = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''GetDdl' + @procedureName + ''''') AND xtype = ''''P'''') DROP PROCEDURE GetDdl' + @procedureName
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @sClause + '''')
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6329,6 +7575,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[DelScreenDel]
  @srcDatabase		varchar(50)
 ,@appDatabase		varchar(50)
@@ -6389,6 +7637,10 @@ BEGIN
 	EXEC (@desDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedure0Sql + '''')
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6399,6 +7651,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[DelWizardDel]
  @srcDatabase		varchar(50)
 ,@appDatabase		varchar(50)
@@ -6415,7 +7670,12 @@ SELECT @wClause = 'WHERE ProgramName = ''' + @programName + ''''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 SELECT @sClause = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''Wiz' + @programName + ''''') AND xtype = ''''P'''') DROP PROCEDURE Wiz' + @programName
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @sClause + '''')
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6426,6 +7686,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* This only exists in ??Design and used by GenDbPorting only */
 CREATE PROCEDURE [dbo].[ExecScript]
  @CmdName	varchar(100)
@@ -6451,7 +7713,12 @@ BEGIN
 	RAISERROR ('%d - Error when execute %s ',16,1,@@PROCID,@cmd) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6462,6 +7729,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[GenPwdSend]
  @LoginName	nvarchar(32)
@@ -6481,6 +7750,10 @@ ELSE
 SELECT @Prefix = left(replace(@UsrName,' ',space(0)),3)
 SELECT @NewPwd = @Prefix + right(replace(convert(varchar,rand()),'.','0'),5)
 IF @NewPwd is null BEGIN SELECT '' RETURN 1 END ELSE BEGIN SELECT @NewPwd RETURN 0 END 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6491,6 +7764,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmAppInfo82ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -6511,7 +7785,8 @@ SELECT @sClause = 'SELECT AppInfoId135=b135.AppInfoId'
 + ', Readme135=b135.Readme'
 SELECT @wClause = 'WHERE b135.AppInfoId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6522,6 +7797,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmAppItem83ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -6549,7 +7825,8 @@ SELECT @sClause = 'SELECT AppItemId136=b136.AppItemId'
 + ', CustomId136=b136.CustomId'
 SELECT @wClause = 'WHERE b136.AppItemId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6560,6 +7837,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmAtRowAuth22ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -6579,7 +7857,8 @@ SELECT @sClause = 'SELECT RowAuthId236=b236.RowAuthId'
 + ', SysAdmin236=b236.SysAdmin'
 SELECT @wClause = 'WHERE b236.RowAuthId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6590,6 +7869,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmAtRowAuth22DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -6605,6 +7885,9 @@ CREATE PROCEDURE GetAdmAtRowAuth22DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -6630,6 +7913,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM RODesign.dbo.AtRowAuthPrm b237' 
@@ -6647,7 +7933,8 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6658,6 +7945,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmAuthCol16ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -6670,7 +7958,8 @@ SELECT @fClause = 'FROM dbo.ScreenObj b14'
 SELECT @sClause = 'SELECT ScreenObjId14=b14.ScreenObjId'
 SELECT @wClause = 'WHERE b14.ScreenObjId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6681,6 +7970,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmAuthCol16DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -6696,6 +7986,9 @@ CREATE PROCEDURE GetAdmAuthCol16DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -6721,6 +8014,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.ColOvrd b241' 
@@ -6745,7 +8041,8 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6756,6 +8053,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmChgPwd71ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -6770,7 +8068,8 @@ SELECT @sClause = 'SELECT UsrId1=b1.UsrId'
 + ', ConfirmPwd1=b1.ConfirmPwd'
 SELECT @wClause = 'WHERE b1.UsrId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6781,6 +8080,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmClientRule79ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -6809,7 +8109,8 @@ SELECT @sClause = 'SELECT ClientRuleId127=b127.ClientRuleId'
 + ', ScriptParam127=b127.ScriptParam'
 SELECT @wClause = 'WHERE b127.ClientRuleId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6820,6 +8121,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmClnTier105ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -6844,7 +8146,8 @@ SELECT @sClause = 'SELECT ClientTierId194=b194.ClientTierId'
 + ', IsDefault194=b194.IsDefault'
 SELECT @wClause = 'WHERE b194.ClientTierId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6855,6 +8158,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmColHlp1006ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -6867,7 +8171,8 @@ SELECT @fClause = 'FROM dbo.ScreenObj b14'
 SELECT @sClause = 'SELECT ScreenObjId14=b14.ScreenObjId'
 SELECT @wClause = 'WHERE b14.ScreenObjId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6878,6 +8183,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmColHlp1006DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -6893,6 +8199,9 @@ CREATE PROCEDURE GetAdmColHlp1006DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -6918,6 +8227,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -6939,7 +8251,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6950,6 +8263,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmCronJob118ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -6973,7 +8287,8 @@ SELECT @sClause = 'SELECT CronJobId264=b264.CronJobId'
 + ', DayOfWeek264=b264.DayOfWeek'
 SELECT @wClause = 'WHERE b264.CronJobId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -6984,6 +8299,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmCtCulture8ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7003,7 +8319,8 @@ SELECT @sClause = 'SELECT CultureTypeId8=b8.CultureTypeId'
 + ', ToTranslate8=b8.ToTranslate'
 SELECT @wClause = 'WHERE b8.CultureTypeId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7014,6 +8331,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmCtCulture8DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -7029,6 +8347,9 @@ CREATE PROCEDURE GetAdmCtCulture8DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -7054,6 +8375,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -7071,7 +8395,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7082,6 +8407,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmDataCat96ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7099,7 +8425,8 @@ SELECT @sClause = 'SELECT RptwizCatId181=b181.RptwizCatId'
 + ', SampleImage181=b181.SampleImage'
 SELECT @wClause = 'WHERE b181.RptwizCatId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7110,6 +8437,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmDataCat96DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -7125,6 +8453,9 @@ CREATE PROCEDURE GetAdmDataCat96DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -7150,6 +8481,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.RptwizCatDtl b182' 
@@ -7173,7 +8507,8 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7184,6 +8519,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmDatTier107ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7210,7 +8546,8 @@ SELECT @sClause = 'SELECT DataTierId195=b195.DataTierId'
 + ', IsDefault195=b195.IsDefault'
 SELECT @wClause = 'WHERE b195.DataTierId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7221,6 +8558,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmDbKey15ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7238,7 +8576,8 @@ SELECT @sClause = 'SELECT KeyId20=b20.KeyId'
 + ', RefColumnId20=b20.RefColumnId'
 SELECT @wClause = 'WHERE b20.KeyId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7249,6 +8588,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmDbTable2ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7271,7 +8611,8 @@ SELECT @sClause = 'SELECT TableId3=b3.TableId'
 + ', VirtualSql3=b3.VirtualSql'
 SELECT @wClause = 'WHERE b3.TableId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7282,6 +8623,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmDbTable2DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -7297,6 +8639,9 @@ CREATE PROCEDURE GetAdmDbTable2DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -7322,6 +8667,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.DbColumn b5' 
@@ -7348,7 +8696,8 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7359,6 +8708,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetAdmEntity103ById]
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7374,7 +8724,11 @@ SELECT @sClause = 'SELECT EntityId199=b199.EntityId'
 + ', DeployPath199=b199.DeployPath'
 SELECT @wClause = 'WHERE b199.EntityId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7385,6 +8739,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmLabel112ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7403,7 +8758,8 @@ SELECT @sClause = 'SELECT LabelId215=b215.LabelId'
 + ', SortOrder215=b215.SortOrder'
 SELECT @wClause = 'WHERE b215.LabelId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7414,6 +8770,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmMaintMsg109ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7430,7 +8787,8 @@ SELECT @sClause = 'SELECT MaintMsgId233=b233.MaintMsgId'
 + ', LastEmailDt233=b233.LastEmailDt'
 SELECT @wClause = 'WHERE b233.MaintMsgId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7441,6 +8799,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetAdmMember122ById]
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7463,7 +8822,11 @@ SELECT @sClause = 'SELECT MemberId54=b54.MemberId'
 + ', Active54=b54.Active'
 SELECT @wClause = 'WHERE b54.MemberId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7474,6 +8837,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmMenu35ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7495,7 +8859,8 @@ SELECT @sClause = 'SELECT MenuId39=b39.MenuId'
 + ', IconUrl39=b39.IconUrl'
 SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7506,6 +8871,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmMenuDrg121ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7520,7 +8886,8 @@ SELECT @sClause = 'SELECT MenuId39=b39.MenuId'
 + ', MenuIndex39=b39.MenuIndex'
 SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7531,6 +8898,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmMenuHlp36ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7543,7 +8911,8 @@ SELECT @fClause = 'FROM dbo.Menu b39'
 SELECT @sClause = 'SELECT MenuId39=b39.MenuId'
 SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7554,6 +8923,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmMenuHlp36DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -7569,6 +8939,9 @@ CREATE PROCEDURE GetAdmMenuHlp36DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -7594,6 +8967,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -7612,7 +8988,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7623,6 +9000,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmMenuOpt111ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7649,7 +9027,8 @@ SELECT @sClause = 'SELECT MenuOptId248=b248.MenuOptId'
 + ', SidMenuIvk248=b248.SidMenuIvk'
 SELECT @wClause = 'WHERE b248.MenuOptId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7660,6 +9039,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmMenuPerm58ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7672,7 +9052,8 @@ SELECT @fClause = 'FROM dbo.Menu b39'
 SELECT @sClause = 'SELECT MenuId39=b39.MenuId'
 SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7683,6 +9064,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmMenuPerm58DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -7698,6 +9080,9 @@ CREATE PROCEDURE GetAdmMenuPerm58DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -7723,6 +9108,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.MenuPrm b231' 
@@ -7743,7 +9131,8 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7754,6 +9143,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmMsgCenter86ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7768,7 +9158,8 @@ SELECT @sClause = 'SELECT MsgId146=b146.MsgId'
 + ', MsgSource146=b146.MsgSource'
 SELECT @wClause = 'WHERE b146.MsgId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7779,6 +9170,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmMsgCenter86DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -7794,6 +9186,9 @@ CREATE PROCEDURE GetAdmMsgCenter86DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -7819,6 +9214,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -7838,7 +9236,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7849,6 +9248,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmOvride78ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7864,7 +9264,8 @@ SELECT @sClause = 'SELECT OvrideId122=b122.OvrideId'
 + ', PromptModal122=b122.PromptModal'
 SELECT @wClause = 'WHERE b122.OvrideId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7875,6 +9276,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmOvride78DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -7890,6 +9292,9 @@ CREATE PROCEDURE GetAdmOvride78DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -7915,6 +9320,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@UsrGroupId		SmallInt
@@ -7931,7 +9339,8 @@ SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupId','UsrGroup','b123.','N','N',null,'N','OvrideGrpId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7942,6 +9351,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmPageObj1001ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -7965,7 +9375,8 @@ SELECT @sClause = 'SELECT PageObjId1277=b1277.PageObjId'
 + ', PageObjSrp1277=b1277.PageObjSrp'
 SELECT @wClause = 'WHERE b1277.PageObjId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -7976,6 +9387,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmPageObj1001DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -7991,6 +9403,9 @@ CREATE PROCEDURE GetAdmPageObj1001DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -8016,6 +9431,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM RODesign.dbo.PageLnk b1278'
@@ -8034,7 +9452,8 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8045,6 +9464,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmPayment1021ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -8058,7 +9478,8 @@ SELECT @sClause = 'SELECT UsrId1=b1.UsrId'
 + ', LoginName1=b1.LoginName'
 SELECT @wClause = 'WHERE b1.UsrId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8069,6 +9490,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetAdmPuDbTable]
  @SystemId	tinyint
 ,@TableId	int
@@ -8202,6 +9624,8 @@ SELECT @iClause = @iClause + ' FETCH NEXT FROM cur2 INTO @Des END CLOSE cur2 DEA
 -- Report changes:
 EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @dClause + ''',''' + @sClause + ''',''' + @iClause + ''','' SELECT * FROM #rst DROP TABLE #rst DROP TABLE dbo.#sync''')
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8212,6 +9636,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRelease98ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -8232,7 +9657,8 @@ SELECT @sClause = 'SELECT ReleaseId191=b191.ReleaseId'
 + ', ReadMe191=b191.ReadMe'
 SELECT @wClause = 'WHERE b191.ReleaseId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8243,6 +9669,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRelease98DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -8258,6 +9685,9 @@ CREATE PROCEDURE GetAdmRelease98DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -8283,6 +9713,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM RODesign.dbo.ReleaseDtl b192' 
@@ -8317,7 +9750,8 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8328,6 +9762,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmReport67ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -8368,7 +9803,8 @@ SELECT @sClause = 'SELECT ReportId22=b22.ReportId'
 + ', XlsCode22=b22.XlsCode'
 SELECT @wClause = 'WHERE b22.ReportId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8379,6 +9815,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmReport67DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -8394,6 +9831,9 @@ CREATE PROCEDURE GetAdmReport67DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -8419,6 +9859,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -8440,7 +9883,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8451,6 +9895,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmReportCri69ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -8484,7 +9929,8 @@ SELECT @sClause = 'SELECT ReportCriId97=b97.ReportCriId'
 + ', RegClause97=b97.RegClause'
 SELECT @wClause = 'WHERE b97.ReportCriId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8495,6 +9941,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmReportCri69DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -8510,6 +9957,9 @@ CREATE PROCEDURE GetAdmReportCri69DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -8535,6 +9985,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -8554,7 +10007,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8565,6 +10019,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[GetAdmReportGrp65ById]
  @ReportId		int
 /* WITH ENCRYPTION */
@@ -8577,7 +10037,16 @@ SELECT @sClause = 'SELECT ReportId22=b22.ReportId'
 SELECT @fClause = 'FROM dbo.Report b22'
 SELECT @wClause = 'WHERE b22.ReportId = ' + isnull(convert(varchar,@ReportId),'null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8588,6 +10057,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[GetAdmReportGrp65DtlById]
  @ReportId		int
 /* WITH ENCRYPTION */
@@ -8602,7 +10077,16 @@ SELECT @fClause = 'FROM dbo.ReportGrp b94 INNER JOIN (SELECT DISTINCT ReportGrpI
 SELECT @oClause = 'ORDER BY b94.ReportGrpIndex'
 SELECT @wClause = 'WHERE b94.ReportId = ' + isnull(convert(varchar,@ReportId),'null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8613,6 +10097,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmReportObj13ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -8635,7 +10120,8 @@ SELECT @sClause = 'SELECT ReportObjId23=b23.ReportObjId'
 + ', ReportCriId23=b23.ReportCriId'
 SELECT @wClause = 'WHERE b23.ReportObjId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8646,6 +10132,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmReportObj13DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -8661,6 +10148,9 @@ CREATE PROCEDURE GetAdmReportObj13DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -8686,6 +10176,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -8706,7 +10199,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8717,6 +10211,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRowOvrd17ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -8736,7 +10231,8 @@ SELECT @sClause = 'SELECT RowOvrdId238=b238.RowOvrdId'
 + ', AllowDel238=b238.AllowDel'
 SELECT @wClause = 'WHERE b238.RowOvrdId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8747,6 +10243,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRowOvrd17DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -8762,6 +10259,9 @@ CREATE PROCEDURE GetAdmRowOvrd17DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -8787,6 +10287,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.RowOvrdPrm b239' 
@@ -8807,7 +10310,8 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8818,6 +10322,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptBizRule
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -8832,6 +10337,9 @@ CREATE PROCEDURE GetAdmRptBizRule
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@SystemId TinyInt
@@ -8848,7 +10356,8 @@ EXEC RODesign.dbo.Pop1Int @Usrs, @UsrId OUTPUT
 SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetAdmRptBizRuleR @usrName, @wClause, @SystemId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8859,6 +10368,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptCha100ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -8878,7 +10388,8 @@ SELECT @sClause = 'SELECT RptChaId206=b206.RptChaId'
 + ', SeriesGrp206=b206.SeriesGrp'
 SELECT @wClause = 'WHERE b206.RptChaId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8889,6 +10400,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptCtr90ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -8924,7 +10436,8 @@ SELECT @sClause = 'SELECT RptCtrId161=b161.RptCtrId'
 + ', CtrToolTip161=b161.CtrToolTip'
 SELECT @wClause = 'WHERE b161.RptCtrId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8935,6 +10448,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptDataDict
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -8949,6 +10463,9 @@ CREATE PROCEDURE GetAdmRptDataDict
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@SystemId TinyInt
@@ -8968,7 +10485,8 @@ SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 IF @bVal = 'N' EXEC dbo._GetAdmRptDataDictR @wClause, @SystemId, @TableName, @ColumnName
 ELSE EXEC dbo._GetAdmRptDataDictV @wClause, @SystemId, @TableName, @ColumnName
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -8979,6 +10497,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptDbTable
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -8993,6 +10512,9 @@ CREATE PROCEDURE GetAdmRptDbTable
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@Id VarChar(50)
@@ -9011,7 +10533,8 @@ SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 IF @ModifiedAfter IS NOT NULL SELECT @wClause = @wClause + ' AND (ModifiedOn >= ''' + convert(varchar,@ModifiedAfter,102) + ''')'
 EXEC dbo._GetAdmRptTblR @usrName, @wClause, @Id
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9022,6 +10545,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptMsg
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -9036,6 +10560,9 @@ CREATE PROCEDURE GetAdmRptMsg
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@CultureId SmallInt
@@ -9053,7 +10580,8 @@ EXEC RODesign.dbo.Pop1Int @Usrs, @UsrId OUTPUT
 SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetAdmRptMsgR @usrName, @wClause, @CultureId, @SystemId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9064,6 +10592,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptPerm
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -9078,6 +10607,9 @@ CREATE PROCEDURE GetAdmRptPerm
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@ActiveOnly Char(1)
@@ -9098,7 +10630,8 @@ SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 IF @bVal = 'N' EXEC dbo._GetAdmRptPermR @usrName, @wClause, @ActiveOnly, @EntityName, @CultureId, @SystemId
 ELSE EXEC dbo._GetAdmRptPermV @usrName, @wClause, @ActiveOnly, @EntityName, @CultureId, @SystemId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9109,6 +10642,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptPrgList
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -9123,6 +10657,9 @@ CREATE PROCEDURE GetAdmRptPrgList
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@CultureId SmallInt
@@ -9140,7 +10677,8 @@ EXEC RODesign.dbo.Pop1Int @Usrs, @UsrId OUTPUT
 SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetAdmRptPrgListR @usrName, @wClause, @CultureId, @SystemId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9151,6 +10689,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptSred
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -9165,6 +10704,9 @@ CREATE PROCEDURE GetAdmRptSred
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@MonthEnding DateTime
@@ -9182,7 +10724,8 @@ EXEC RODesign.dbo.Pop1Int @Usrs, @UsrId OUTPUT
 SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetAdmRptSredR @usrName, @wClause, @MonthEnding, @NumMonths
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9193,6 +10736,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptStat
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -9207,6 +10751,9 @@ CREATE PROCEDURE GetAdmRptStat
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@MemberId Int
@@ -9226,7 +10773,8 @@ SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 IF @bVal = 'N' EXEC dbo._GetAdmRptStatR @wClause, @MemberId, @MnFr, @MnTo
 ELSE EXEC dbo._GetAdmRptStatV @wClause, @MemberId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9237,6 +10785,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptStyle89ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -9286,7 +10835,8 @@ SELECT @sClause = 'SELECT RptStyleId167=b167.RptStyleId'
 + ', PadBottom167=b167.PadBottom'
 SELECT @wClause = 'WHERE b167.RptStyleId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9297,6 +10847,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptTbl92ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -9319,7 +10870,8 @@ SELECT @sClause = 'SELECT RptTblId162=b162.RptTblId'
 + ', ColWidth162=b162.ColWidth'
 SELECT @wClause = 'WHERE b162.RptTblId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9330,6 +10882,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptTbl92DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -9345,6 +10898,9 @@ CREATE PROCEDURE GetAdmRptTbl92DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -9370,6 +10926,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.RptCel b164' 
@@ -9388,7 +10947,8 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9399,6 +10959,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptTime
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -9413,6 +10974,9 @@ CREATE PROCEDURE GetAdmRptTime
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@MonthEnding DateTime
@@ -9431,7 +10995,8 @@ SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 IF @bVal = 'N' EXEC dbo._GetAdmRptTimeR @wClause, @MonthEnding, @NumMonths
 ELSE EXEC dbo._GetAdmRptTimeV @wClause, @MonthEnding, @NumMonths
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9442,6 +11007,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptUsage
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -9456,6 +11022,9 @@ CREATE PROCEDURE GetAdmRptUsage
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@Summary Char(1)
@@ -9463,13 +11032,16 @@ CREATE PROCEDURE GetAdmRptUsage
 ,@FrDate DateTime
 ,@ToDate DateTime
 ,@CompanyId Int
+,@ProjectId Int
 ,@AgentId Int
 ,@BrokerId Int
 ,@VendorId Int
-,@ProjectId Int
 ,@CustomerId Int
 ,@InvestorId Int
 ,@MemberId Int
+,@BorrowerId Int
+,@GuarantorId Int
+,@LenderId Int
 ,@UsrGroupId SmallInt
 ,@UserId Int
 ,@bUpd char(1)
@@ -9491,8 +11063,9 @@ BEGIN
     RETURN 1
 END
 IF @ToDate IS NOT NULL SELECT @wClause = @wClause + ' AND (a.UsageDt < ''' + convert(varchar,DATEADD(day,1,@ToDate),102) + ''')'
-EXEC dbo._GetAdmRptUsageR @usrName, @wClause, @RowAuthoritys, @Summary, @SystemId, @CompanyId, @AgentId, @BrokerId, @VendorId, @ProjectId, @CustomerId, @InvestorId, @MemberId, @UsrGroupId, @UserId
-RETURN 0 
+EXEC dbo._GetAdmRptUsageR @usrName, @wClause, @RowAuthoritys, @Summary, @SystemId, @CompanyId, @AgentId, @BrokerId, @VendorId, @ProjectId, @CustomerId, @InvestorId, @MemberId, @BorrowerId, @GuarantorId, @LenderId, @UsrGroupId, @UserId
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9503,6 +11076,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptUsr
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -9517,6 +11091,9 @@ CREATE PROCEDURE GetAdmRptUsr
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@Active Char(1)
@@ -9542,7 +11119,8 @@ BEGIN
 END
 IF @UsrGroupId IS NOT NULL SELECT @wClause = @wClause + ' AND (b.UsrGroupId = ' + convert(varchar,@UsrGroupId) + ')'
 EXEC dbo._GetAdmRptUsrR @usrName, @wClause, @RowAuthoritys, @UsrGroupId, @CompanyId, @currProjectId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9553,6 +11131,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRptUsrAudit
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -9567,6 +11146,9 @@ CREATE PROCEDURE GetAdmRptUsrAudit
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@LoginSuccess10 Char(1)
@@ -9588,7 +11170,8 @@ SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 IF @bVal = 'N' EXEC dbo._GetAdmRptUsrAuditR @wClause, @LoginSuccess10, @ValidUser20, @LoginName30, @AttemptDt40, @AttemptDt50
 ELSE EXEC dbo._GetAdmRptUsrAuditV @wClause, @LoginSuccess10, @ValidUser20, @LoginName30, @AttemptDt40, @AttemptDt50
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9599,6 +11182,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetAdmRptWiz95ById]
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -9618,7 +11202,11 @@ SELECT @sClause = 'SELECT RptwizId183=b183.RptwizId, RptwizName183=b183.RptwizNa
 + ', GPositive183=GPositive, GFormat183=b183.GFormat'
 SELECT @wClause = 'WHERE b183.RptwizId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9629,6 +11217,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetAdmRptWiz95DtlById]
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -9694,7 +11283,11 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9705,6 +11298,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmRulTier106ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -9723,7 +11317,8 @@ SELECT @sClause = 'SELECT RuleTierId196=b196.RuleTierId'
 + ', IsDefault196=b196.IsDefault'
 SELECT @wClause = 'WHERE b196.RuleTierId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9734,6 +11329,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmScreen9ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -9747,11 +11343,13 @@ SELECT @sClause = 'SELECT ScreenId15=b15.ScreenId'
 + ', ProgramName15=b15.ProgramName'
 + ', ScreenTypeId15=b15.ScreenTypeId'
 + ', ViewOnly15=b15.ViewOnly'
++ ', SearchAscending15=b15.SearchAscending'
 + ', MasterTableId15=b15.MasterTableId'
 + ', SearchTableId15=b15.SearchTableId'
 + ', SearchId15=b15.SearchId'
-+ ', SearchAscending15=b15.SearchAscending'
++ ', SearchIdR15=b15.SearchIdR'
 + ', SearchDtlId15=b15.SearchDtlId'
++ ', SearchDtlIdR15=b15.SearchDtlIdR'
 + ', SearchUrlId15=b15.SearchUrlId'
 + ', SearchImgId15=b15.SearchImgId'
 + ', DetailTableId15=b15.DetailTableId'
@@ -9769,7 +11367,8 @@ SELECT @sClause = 'SELECT ScreenId15=b15.ScreenId'
 + ', ScreenFilter15URL=b15.ScreenFilter'
 SELECT @wClause = 'WHERE b15.ScreenId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9780,6 +11379,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmScreen9DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -9795,6 +11395,9 @@ CREATE PROCEDURE GetAdmScreen9DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -9820,6 +11423,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -9834,6 +11440,21 @@ SELECT @sClause = 'SELECT ScreenHlpId16=b16.ScreenHlpId'
 + ', AddMsg16=b16.AddMsg'
 + ', UpdMsg16=b16.UpdMsg'
 + ', DelMsg16=b16.DelMsg'
++ ', IncrementMsg16=b16.IncrementMsg'
++ ', NoMasterMsg16=b16.NoMasterMsg'
++ ', NoDetailMsg16=b16.NoDetailMsg'
++ ', AddMasterMsg16=b16.AddMasterMsg'
++ ', AddDetailMsg16=b16.AddDetailMsg'
++ ', MasterLstTitle16=b16.MasterLstTitle'
++ ', MasterLstSubtitle16=b16.MasterLstSubtitle'
++ ', MasterRecTitle16=b16.MasterRecTitle'
++ ', MasterRecSubtitle16=b16.MasterRecSubtitle'
++ ', MasterFoundMsg16=b16.MasterFoundMsg'
++ ', DetailLstTitle16=b16.DetailLstTitle'
++ ', DetailLstSubtitle16=b16.DetailLstSubtitle'
++ ', DetailRecTitle16=b16.DetailRecTitle'
++ ', DetailRecSubtitle16=b16.DetailRecSubtitle'
++ ', DetailFoundMsg16=b16.DetailFoundMsg'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b16.ScreenId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
@@ -9844,7 +11465,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9855,6 +11477,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmScreenCri73ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -9882,7 +11505,8 @@ SELECT @sClause = 'SELECT ScreenCriId104=b104.ScreenCriId'
 + ', DdlFtrColumnId104=b104.DdlFtrColumnId'
 SELECT @wClause = 'WHERE b104.ScreenCriId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9893,6 +11517,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmScreenCri73DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -9908,6 +11533,9 @@ CREATE PROCEDURE GetAdmScreenCri73DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -9933,6 +11561,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -9952,7 +11583,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9963,6 +11595,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmScreenFilter59ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -9980,7 +11613,8 @@ SELECT @sClause = 'SELECT ScreenFilterId86=b86.ScreenFilterId'
 + ', ApplyToMst86=b86.ApplyToMst'
 SELECT @wClause = 'WHERE b86.ScreenFilterId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -9991,6 +11625,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmScreenFilter59DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -10006,6 +11641,9 @@ CREATE PROCEDURE GetAdmScreenFilter59DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -10031,6 +11669,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -10050,7 +11691,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10061,6 +11703,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmScreenObj10ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10083,6 +11726,8 @@ SELECT @sClause = 'SELECT ScreenObjId14=b14.ScreenObjId'
 + ', ColumnJustify14=b14.ColumnJustify'
 + ', ColumnSize14=b14.ColumnSize'
 + ', ColumnHeight14=b14.ColumnHeight'
++ ', ResizeWidth14=b14.ResizeWidth'
++ ', ResizeHeight14=b14.ResizeHeight'
 + ', SortOrder14=b14.SortOrder'
 + ', ScreenId14=b14.ScreenId'
 + ', GroupRowId14=b14.GroupRowId'
@@ -10096,6 +11741,7 @@ SELECT @sClause = 'SELECT ScreenObjId14=b14.ScreenObjId'
 + ', DdlAdnColumnId14=b14.DdlAdnColumnId'
 + ', DdlFtrColumnId14=b14.DdlFtrColumnId'
 + ', ColumnLink14=b14.ColumnLink'
++ ', DtlLstPosId14=b14.DtlLstPosId'
 + ', LabelVertical14=b14.LabelVertical'
 + ', LabelCss14=b14.LabelCss'
 + ', ContentCss14=b14.ContentCss'
@@ -10113,7 +11759,8 @@ SELECT @sClause = 'SELECT ScreenObjId14=b14.ScreenObjId'
 + ', MatchCd14=b14.MatchCd'
 SELECT @wClause = 'WHERE b14.ScreenObjId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10124,6 +11771,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmScreenTab54ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10139,7 +11787,8 @@ SELECT @sClause = 'SELECT ScreenTabId19=b19.ScreenTabId'
 + ', TabFolderOrder19=b19.TabFolderOrder'
 SELECT @wClause = 'WHERE b19.ScreenTabId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10150,6 +11799,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmScreenTab54DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -10165,6 +11815,9 @@ CREATE PROCEDURE GetAdmScreenTab54DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -10190,6 +11843,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -10208,7 +11864,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10219,6 +11876,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmSctGrpCol1003ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10235,7 +11893,8 @@ SELECT @sClause = 'SELECT SctGrpColId1284=b1284.SctGrpColId'
 + ', SctGrpColDiv1284=b1284.SctGrpColDiv'
 SELECT @wClause = 'WHERE b1284.SctGrpColId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10246,6 +11905,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmSctGrpRow1004ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10261,7 +11921,8 @@ SELECT @sClause = 'SELECT SctGrpRowId1283=b1283.SctGrpRowId'
 + ', SctGrpRowCss1283=b1283.SctGrpRowCss'
 SELECT @wClause = 'WHERE b1283.SctGrpRowId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10272,6 +11933,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmServerRule14ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10302,7 +11964,8 @@ SELECT @sClause = 'SELECT ServerRuleId24=b24.ServerRuleId'
 + ', LastGenDt24=b24.LastGenDt'
 SELECT @wClause = 'WHERE b24.ServerRuleId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10313,6 +11976,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmSignup1018ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10329,7 +11993,8 @@ SELECT @sClause = 'SELECT UsrId270=b270.UsrId'
 + ', UsrPassword270=b270.UsrPassword'
 SELECT @wClause = 'WHERE b270.UsrId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10340,6 +12005,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmStaticCs115ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10354,7 +12020,8 @@ SELECT @sClause = 'SELECT StaticCsId260=b260.StaticCsId'
 + ', StyleDef260=b260.StyleDef'
 SELECT @wClause = 'WHERE b260.StaticCsId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10365,6 +12032,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmStaticJs116ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10379,7 +12047,8 @@ SELECT @sClause = 'SELECT StaticJsId261=b261.StaticJsId'
 + ', ScriptDef261=b261.ScriptDef'
 SELECT @wClause = 'WHERE b261.StaticJsId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10390,6 +12059,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmStaticPg114ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10413,7 +12083,8 @@ SELECT @sClause = 'SELECT StaticPgId259=b259.StaticPgId'
 + ', StaticPgJs259=b259.StaticPgJs'
 SELECT @wClause = 'WHERE b259.StaticPgId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10424,6 +12095,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmSystems87ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10459,7 +12131,8 @@ SELECT @sClause = 'SELECT SystemId45=b45.SystemId'
 + ', WebAddress45=b45.WebAddress'
 SELECT @wClause = 'WHERE b45.SystemId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10470,6 +12143,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmTbdRule113ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10485,7 +12159,8 @@ SELECT @sClause = 'SELECT TbdRuleId254=b254.TbdRuleId'
 + ', TbdRuleDesc254=b254.TbdRuleDesc'
 SELECT @wClause = 'WHERE b254.TbdRuleId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10496,6 +12171,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmUsr1ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10530,20 +12206,24 @@ SELECT @sClause = 'SELECT UsrId1=b1.UsrId'
 + ', FailedAttempt1=b1.FailedAttempt'
 + ', LastSuccessDt1=b1.LastSuccessDt'
 + ', LastFailedDt1=b1.LastFailedDt'
++ ', CompanyLs1=b1.CompanyLs'
++ ', ProjectLs1=b1.ProjectLs'
 + ', ModifiedOn1=b1.ModifiedOn'
 + ', HintQuestionId1=b1.HintQuestionId'
 + ', HintAnswer1=b1.HintAnswer'
-+ ', CompanyLs1=b1.CompanyLs'
 + ', InvestorId1=b1.InvestorId'
 + ', CustomerId1=b1.CustomerId'
 + ', VendorId1=b1.VendorId'
 + ', AgentId1=b1.AgentId'
 + ', BrokerId1=b1.BrokerId'
 + ', MemberId1=b1.MemberId'
-+ ', ProjectLs1=b1.ProjectLs'
++ ', LenderId1=b1.LenderId'
++ ', BorrowerId1=b1.BorrowerId'
++ ', GuarantorId1=b1.GuarantorId'
 SELECT @wClause = 'WHERE b1.UsrId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10554,6 +12234,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmUsrGroup5ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10569,7 +12250,8 @@ SELECT @sClause = 'SELECT UsrGroupId7=b7.UsrGroupId'
 + ', CompanyId7=b7.CompanyId'
 SELECT @wClause = 'WHERE b7.UsrGroupId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10580,6 +12262,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmUsrGroup5DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -10595,6 +12278,9 @@ CREATE PROCEDURE GetAdmUsrGroup5DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -10620,6 +12306,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CompanyId		Int
@@ -10652,7 +12341,8 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','b58.','N',null,'UsrGroupAuthId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectId','Project','b58.','N',null,'UsrGroupAuthId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10663,6 +12353,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmUsrImpr66ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10684,7 +12375,8 @@ SELECT @sClause = 'SELECT UsrImprId95=b95.UsrImprId'
 + ', SignOff95=b95.SignOff'
 SELECT @wClause = 'WHERE b95.UsrImprId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10695,6 +12387,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmUsrPref64ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10720,16 +12413,20 @@ SELECT @sClause = 'SELECT UsrPrefId93=b93.UsrPrefId'
 + ', UsrGroupId93=b93.UsrGroupId'
 + ', CompanyId93=b93.CompanyId'
 + ', ProjectId93=b93.ProjectId'
++ ', SystemId93=b93.SystemId'
 + ', MemberId93=b93.MemberId'
 + ', AgentId93=b93.AgentId'
 + ', BrokerId93=b93.BrokerId'
 + ', CustomerId93=b93.CustomerId'
 + ', InvestorId93=b93.InvestorId'
 + ', VendorId93=b93.VendorId'
-+ ', SystemId93=b93.SystemId'
++ ', LenderId93=b93.LenderId'
++ ', BorrowerId93=b93.BorrowerId'
++ ', GuarantorId93=b93.GuarantorId'
 SELECT @wClause = 'WHERE b93.UsrPrefId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10740,6 +12437,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmWebRule80ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10758,9 +12456,18 @@ SELECT @sClause = 'SELECT WebRuleId128=b128.WebRuleId'
 + ', ButtonTypeId128=b128.ButtonTypeId'
 + ', EventId128=b128.EventId'
 + ', WebRuleProg128=b128.WebRuleProg'
++ ', ReactEventId128=b128.ReactEventId'
++ ', ReactRuleProg128=b128.ReactRuleProg'
++ ', ReduxEventId128=b128.ReduxEventId'
++ ', ReduxRuleProg128=b128.ReduxRuleProg'
++ ', ServiceEventId128=b128.ServiceEventId'
++ ', ServiceRuleProg128=b128.ServiceRuleProg'
++ ', AsmxEventId128=b128.AsmxEventId'
++ ', AsmxRuleProg128=b128.AsmxRuleProg'
 SELECT @wClause = 'WHERE b128.WebRuleId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10771,6 +12478,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmWizardObj49ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10792,7 +12500,8 @@ SELECT @sClause = 'SELECT WizardId71=b71.WizardId'
 + ', AuthRequired71=b71.AuthRequired'
 SELECT @wClause = 'WHERE b71.WizardId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10803,6 +12512,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmWizardObj49DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -10818,6 +12528,9 @@ CREATE PROCEDURE GetAdmWizardObj49DtlById
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -10843,6 +12556,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.WizardObj b72' 
@@ -10858,7 +12574,8 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10869,6 +12586,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmWizardRule50ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -10888,7 +12606,8 @@ SELECT @sClause = 'SELECT WizardRuleId73=b73.WizardRuleId'
 + ', BeforeCRUD73=b73.BeforeCRUD'
 SELECT @wClause = 'WHERE b73.WizardRuleId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10899,6 +12618,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[GetAdvRule]
  @screenId		int
 /* WITH ENCRYPTION */
@@ -10911,7 +12633,12 @@ SELECT @sClause = 'SELECT a.RuleLayerCd, a.RuleName, a.RmFuncProc, a.AdvRuleProg
 SELECT @fClause = 'FROM dbo.AdvRule a'
 SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10922,13 +12649,20 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetAllowSelect]
  @ReportId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 SELECT AllowSelect, AuthRequired FROM dbo.Report WHERE ReportId = @ReportId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10939,12 +12673,19 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetAppVersion]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 SELECT replace(max(AppInfoDesc),space(1),space(0)) FROM dbo.AppInfo WHERE VersionDt is not null
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -10955,6 +12696,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetAuthCol]
  @ScreenId		int
 ,@Usrs			varchar(1000)
@@ -10968,6 +12711,9 @@ CREATE PROCEDURE [dbo].[GetAuthCol]
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors	varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId	int
 ,@currProjectId	int
 ,@rowAuthoritys varchar(1000)
@@ -11036,13 +12782,21 @@ BEGIN
 		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Agents+nchar(191)) > 0 SELECT @upd = 'Y' END
 	ELSE IF @PermKeyDesc = 'Broker'
 		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Brokers+nchar(191)) > 0 SELECT @upd = 'Y' END
+	ELSE IF @PermKeyDesc = 'Borrower'
+		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Borrowers+nchar(191)) > 0 SELECT @upd = 'Y' END
+	ELSE IF @PermKeyDesc = 'Guarantor'
+		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Guarantors+nchar(191)) > 0 SELECT @upd = 'Y' END
+	ELSE IF @PermKeyDesc = 'Lender'
+		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Lenders+nchar(191)) > 0 SELECT @upd = 'Y' END
 	IF @upd = 'Y' UPDATE #tbl SET ColVisible = @ColVisible, ColReadOnly = @ColReadOnly WHERE ScreenObjId = @ScreenObjId
 	FETCH NEXT FROM cur1 INTO @ScreenObjId, @PermKeyDesc, @PermId, @ColVisible, @ColReadOnly
 END
 CLOSE cur1 DEALLOCATE cur1
 SELECT MasterTable, DisplayName, DisplayMode, ColVisible, ColReadOnly, ColName FROM #tbl ORDER BY tid
 DROP TABLE dbo.#tbl
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11053,6 +12807,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetAuthExp]
  @ScreenId		int
 ,@CultureId		smallint
@@ -11067,6 +12822,9 @@ CREATE PROCEDURE [dbo].[GetAuthExp]
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors	varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId	int
 ,@currProjectId	int
 /* WITH ENCRYPTION */
@@ -11122,6 +12880,12 @@ BEGIN
 		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Agents+nchar(191)) > 0 SELECT @upd = 'Y' END
 	ELSE IF @PermKeyDesc = 'Broker'
 		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Brokers+nchar(191)) > 0 SELECT @upd = 'Y' END
+	ELSE IF @PermKeyDesc = 'Borrower'
+		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Borrowers+nchar(191)) > 0 SELECT @upd = 'Y' END
+	ELSE IF @PermKeyDesc = 'Guarantor'
+		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Guarantors+nchar(191)) > 0 SELECT @upd = 'Y' END
+	ELSE IF @PermKeyDesc = 'Lender'
+		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Lenders+nchar(191)) > 0 SELECT @upd = 'Y' END
 	IF @upd = 'Y' UPDATE #exp SET ColExport = @ColExport, ColumnHeader = isnull(@ColumnHeader,ColumnHeader)
 		WHERE ScreenObjId = @ScreenObjId
 	FETCH NEXT FROM cur1 INTO @ScreenObjId, @PermKeyDesc, @PermId, @ColExport, @ColumnHeader
@@ -11129,7 +12893,11 @@ END
 CLOSE cur1 DEALLOCATE cur1
 SELECT ScreenObjId, ColExport, ColumnHeader FROM #exp ORDER BY tid
 DROP TABLE dbo.#exp
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11140,6 +12908,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- AllowSel not selected here for security reasons.
 CREATE PROCEDURE [dbo].[GetAuthRow]
  @ScreenId		int
@@ -11171,7 +12941,8 @@ BEGIN
 	END
 END
 SELECT AllowAdd = @AllowAdd, AllowUpd = @AllowUpd, AllowDel = @AllowDel, ViewOnly FROM Screen s WHERE ScreenId = @ScreenId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11182,6 +12953,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetButtonHlp]
  @ScreenId	int
 ,@ReportId	int
@@ -11200,10 +12972,14 @@ SET NOCOUNT ON
 -- Default button visibility:
 IF @ScreenId <> 0 SELECT @Visible = CASE WHEN ViewOnly = 'Y' THEN 'ViewOnlyVisible' ELSE 'ButtonVisible' END FROM dbo.Screen WHERE ScreenId = @ScreenId
 IF object_id('tempdb.dbo.#bh') is not null DROP TABLE dbo.#bh
-CREATE TABLE #bh (tid smallint IDENTITY(1,1) not null, ButtonTypeId tinyint not null, ButtonTypeName varchar(50) not null, ButtonName nvarchar(200) null
-	,ButtonToolTip nvarchar(400) null, ButtonVisible char(1) not null)
-SELECT @i1Clause = ' INSERT INTO #bh (ButtonTypeId, ButtonTypeName, ButtonName, ButtonToolTip, ButtonVisible)'
-+ ' SELECT a.ButtonTypeId,b.ButtonTypeName,a.ButtonName,a.ButtonToolTip,b.' + isnull(@Visible,'ButtonVisible')
+CREATE TABLE #bh (tid smallint IDENTITY(1,1) not null, ButtonTypeId tinyint not null, ButtonTypeName varchar(50) not null
+	, ButtonName nvarchar(200) null, ButtonLongNm nvarchar(400) null
+	, ButtonToolTip nvarchar(400) null, ButtonVisible char(1) not null, TopVisible char(1) not null, RowVisible char(1) not null, BotVisible char(1) not null)
+SELECT @i1Clause = ' INSERT INTO #bh (ButtonTypeId,ButtonTypeName,ButtonName,ButtonLongNm,ButtonToolTip,ButtonVisible,TopVisible,RowVisible,BotVisible)'
++ ' SELECT a.ButtonTypeId,b.ButtonTypeName,a.ButtonName,a.ButtonLongNm,a.ButtonToolTip,b.' + isnull(@Visible,'ButtonVisible')
++ ',CASE WHEN b.' + isnull(@Visible,'TopVisible') + ' = ''N'' THEN ''N'' ELSE b.TopVisible END'
++ ',CASE WHEN b.' + isnull(@Visible,'RowVisible') + ' = ''N'' THEN ''N'' ELSE b.RowVisible END'
++ ',CASE WHEN b.' + isnull(@Visible,'BotVisible') + ' = ''N'' THEN ''N'' ELSE b.BotVisible END'
 + ' FROM RODesign.dbo.CtButtonHlp a INNER JOIN RODesign.dbo.CtButtonType b ON a.ButtonTypeId = b.ButtonTypeId WHERE b.ObjectType='
 IF @ScreenId <> 0 SELECT @i1Clause = @i1Clause + '''S'''
 	ELSE IF @ReportId <> 0 SELECT @i1Clause = @i1Clause + '''R'''
@@ -11212,15 +12988,16 @@ SELECT @i1Clause = @i1Clause + ' AND a.CultureId=', @i2Clause = convert(varchar,
 
 -- Audit button visibility:
 IF EXISTS (SELECT 1 FROM dbo.Screen WHERE ScreenId = @ScreenId AND GenAudit = 'Y')
-	SELECT @u0Clause = ' UPDATE #bh SET ButtonVisible = ''Y'' WHERE ButtonTypeName = ''Audit'''
+	SELECT @u0Clause = ' UPDATE #bh SET ButtonVisible = ''Y'', TopVisible = ''L'' WHERE ButtonTypeName = ''Audit'''
 ELSE
 	SELECT @u0Clause = ''
 
 -- Button override:
 SELECT @u1Clause = ' UPDATE #bh SET'
 + ' ButtonName = case when b.ButtonName is not null and b.ButtonName <> '''' then b.ButtonName else #bh.ButtonName end'
++ ',ButtonLongNm = case when b.ButtonLongNm is not null and b.ButtonLongNm <> '''' then b.ButtonLongNm else #bh.ButtonLongNm end'
 + ',ButtonToolTip = case when b.ButtonToolTip is not null and b.ButtonToolTip <> '''' then b.ButtonToolTip else #bh.ButtonToolTip end'
-+ ',ButtonVisible = b.ButtonVisible'
++ ',ButtonVisible = b.ButtonVisible,TopVisible = b.TopVisible,RowVisible = b.RowVisible,BotVisible = b.BotVisible'
 + ' FROM dbo.ButtonHlp b WHERE b.'
 IF @ScreenId <> 0 SELECT @u1Clause = @u1Clause + 'ScreenId=' + convert(varchar,@ScreenId)
 	ELSE IF @ReportId <> 0 SELECT @u1Clause = @u1Clause + 'ReportId=' + convert(varchar,@ReportId)
@@ -11239,9 +13016,16 @@ BEGIN
 	SELECT @u2Clause = @u2Clause + ' AND c.ButtonTypeId=b.ButtonTypeId AND c.CultureId=' + convert(varchar,@CultureId) + ')'
 END
 EXEC (@i1Clause + @i2Clause + @u0Clause + @u1Clause + @u2Clause)
+/* Assuming ViewItem button is visible to all screens, hide it when screen type is TabFolder Only */
+UPDATE bh SET bh.ButtonVisible = CASE WHEN s.ScreenTypeId = 5 THEN 'N' ELSE ButtonVisible END
+	FROM #bh bh
+	INNER JOIN Screen s ON s.ScreenId = @ScreenId
+	WHERE bh.ButtonTypeName = 'DrillDown'
 SELECT * FROM #bh ORDER BY tid
 DROP table dbo.#bh
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11252,6 +13036,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetClientRule]
  @ScreenId	int
 ,@ReportId	int
@@ -11389,7 +13175,9 @@ DEALLOCATE cur
 SELECT MasterTable,ColName,ScriptEvent,ScriptName,ParamName,ParamType,ClientRuleProg,ParamInGrid FROM #rst ORDER BY tid
 DROP TABLE dbo.#rul
 DROP TABLE dbo.#rst
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11400,6 +13188,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* Only exists in ??Design */
 CREATE PROCEDURE [dbo].[GetClientTier]
  @EntityId	int
@@ -11410,7 +13200,12 @@ SELECT	 a.ClientTierId, a.ClientTierName, a.LanguageCd, a.FrameworkCd, a.DevProg
 	FROM dbo.ClientTier a
 	WHERE a.EntityId = @EntityId
 	ORDER BY a.IsDefault DESC, a.ClientTierName
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11421,6 +13216,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- This exists only in ??Design.
 CREATE PROCEDURE [dbo].[GetCompanyList]
  @Usrs				varchar(1000)
@@ -11466,7 +13262,11 @@ IF charindex('1=1',@wClause) <= 0
 ELSE
 	SELECT @uClause = 'UNION SELECT CompanyId = null, CompanyDesc = space(0) FROM ROCmon.dbo.Company'
 EXEC (@sClause + ' ' + @fClause + ' ' + @uClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11477,6 +13277,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- This exists only in ??Design for Registering New Users.
 CREATE PROCEDURE [dbo].[GetConnection]
  @SystemName	nvarchar(50)
@@ -11484,7 +13286,12 @@ CREATE PROCEDURE [dbo].[GetConnection]
 AS
 SET NOCOUNT ON
 SELECT dbAppProvider,a.dbAppServer,a.dbAppDatabase,a.dbAppUserId,a.dbAppPassword FROM dbo.Systems a WHERE a.SystemName = @SystemName
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11495,6 +13302,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetCriReportGrp]
  @GenPrefix		varchar(10)
 ,@reportId		int
@@ -11526,7 +13335,12 @@ SELECT @wClause = 'WHERE ReportId = ' + CONVERT(varchar,@reportId)
 SELECT @oClause = 'ORDER BY ReportGrpIndex'
 SELECT @tClause = 'SELECT ParentGrpId, ReportGrpId, ContentVertical, LabelVertical, BorderWidth, GrpStyle FROM #tbl ORDER BY tid'
 EXEC (@dClause + ' ' + @xClause + ' ' + @sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause + ' ' + @tClause + ' DROP TABLE dbo.#tbl')
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11537,6 +13351,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetCronJob]
  @cronJobId	int=null
 ,@joblink	varchar(200)=null
@@ -11548,6 +13363,10 @@ WHERE
 (@cronJobId IS NULL OR CronJobId = @cronJobId) AND (@joblink IS NULL OR JobLink = @joblink)
 ORDER BY NextRun
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11558,6 +13377,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* Only in ??Design */
 CREATE PROCEDURE [dbo].[GetCult]
  @lang		varchar(10)
@@ -11568,7 +13389,12 @@ SELECT top 1 CultureId, Ord=CASE WHEN @lang = CultureTypeName THEN 0 ELSE 1 END
 	FROM RODesign.dbo.VwCulture 
 	WHERE CultureTypeName = @lang OR CultureTypeName like LEFT(@lang,2) + '%'
 	ORDER BY Ord
-RETURN 0 
+RETURN 0
+
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11579,6 +13405,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* DECLARE @wClause nvarchar(4000) EXEC RODesign.dbo.GetCurrFilter 1,'CompanyLs','Company','b1.','Y','Y',null,'UsrId',@wClause OUTPUT SELECT @wClause */
 CREATE PROCEDURE [dbo].[GetCurrFilter]
  @CurrKey			int
@@ -11620,6 +13448,8 @@ BEGIN
 	SELECT @wClause = isnull(@wClause,space(0)) + @wFilter
 END
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11630,6 +13460,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetCustomById]
  @customId		int
 /* WITH ENCRYPTION */
@@ -11642,7 +13474,12 @@ SELECT @sClause = 'SELECT a.CustomId,a.GenerateCm'
 SELECT @fClause = 'FROM dbo.Custom a'
 SELECT @wClause = 'WHERE a.CustomId = ' + CONVERT(varchar,@customId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11653,6 +13490,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetCustomList]
  @searchTxt		nvarchar(25)
 /* WITH ENCRYPTION */
@@ -11670,7 +13509,12 @@ ELSE
 	SELECT @wClause = 'WHERE a.CustomDesc + CASE WHEN a.GenerateCm = ''N'' THEN '' (no gen)'' ELSE space(0) END LIKE ''%' + LOWER(@searchTxt) + '%'''
 SELECT @oClause = 'ORDER BY a.CustomDesc'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11681,6 +13525,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* Only exists in ??Design */
 CREATE PROCEDURE [dbo].[GetDataTier]
  @EntityId	int
@@ -11693,7 +13539,12 @@ SELECT	a.DataTierId, a.DataTierName, a.DbProviderCd
 	FROM dbo.DataTier a INNER JOIN RODesign.dbo.CtDbProvider b ON a.DbProviderCd = b.DbProviderCd
 	WHERE a.EntityId = @EntityId
 	ORDER BY a.IsDefault DESC, a.DataTierName
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11704,6 +13555,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[GetDByteOle]
  @DataTypeName	varchar(50)
@@ -11717,7 +13569,11 @@ SELECT @sClause = 'SELECT a.DataTypeDByteOle'
 SELECT @fClause = 'FROM dbo.CtDataType a'
 SELECT @wClause = 'WHERE a.DataTypeName = ''' + @DataTypeName + ''''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11728,6 +13584,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlAccessCd]
  @bAll		char(1)
 ,@keyId		Char(100)
@@ -11764,7 +13621,11 @@ IF @bAll = 'Y' SELECT @wClause = 'WHERE (1=1 OR ' ELSE SELECT @wClause = 'WHERE 
 IF @keyId is not null SELECT @wClause = @wClause + 'AccessCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11775,6 +13636,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Do not delete. Used by AdmRptWiz:
 CREATE PROCEDURE [dbo].[GetDdlAccessCd3S1673]
  @screenId		int
@@ -11817,7 +13680,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AccessCd183=null, AccessCd183Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11828,6 +13695,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlAgentId3S1145
  @screenId		int
 ,@bAll		char(1)
@@ -11844,6 +13712,9 @@ CREATE PROCEDURE GetDdlAgentId3S1145
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -11870,7 +13741,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AgentId93=null, AgentId93Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11881,6 +13753,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlAgentId3S934
  @screenId		int
 ,@bAll		char(1)
@@ -11897,6 +13770,9 @@ CREATE PROCEDURE GetDdlAgentId3S934
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -11923,7 +13799,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AgentId1=null, AgentId1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11934,6 +13811,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlAggregateCd3S1238
  @screenId		int
 ,@bAll		char(1)
@@ -11950,6 +13828,9 @@ CREATE PROCEDURE GetDdlAggregateCd3S1238
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -11975,7 +13856,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AggregateCd14=null, AggregateCd14Text=null, AggregateSort=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -11986,6 +13868,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlAggregateCd3S1652]
  @screenId		int
 ,@bAll		char(1)
@@ -12027,7 +13910,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AggregateCd184=null, AggregateCd184Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12038,6 +13925,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlAggregateCd3S1684]
  @screenId		int
 ,@bAll		char(1)
@@ -12079,7 +13967,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AggregateCd184=null, AggregateCd184Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12090,6 +13982,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlAlignment3S1235]
  @screenId		int
 ,@bAll		char(1)
@@ -12127,7 +14020,11 @@ IF @keyId is not null SELECT @wClause = @wClause + 'a119.AlignmentCd = ''' + con
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12138,6 +14035,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlAllowSel3S201
  @screenId		int
 ,@bAll		char(1)
@@ -12154,6 +14052,9 @@ CREATE PROCEDURE GetDdlAllowSel3S201
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12179,7 +14080,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AllowSel238=null, AllowSel238Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12190,6 +14092,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlAllowSel3S309
  @screenId		int
 ,@bAll		char(1)
@@ -12206,6 +14109,9 @@ CREATE PROCEDURE GetDdlAllowSel3S309
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12231,7 +14137,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AllowSel236=null, AllowSel236Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12242,6 +14149,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlAndCondition3S1981
  @screenId		int
 ,@bAll		char(1)
@@ -12258,6 +14166,9 @@ CREATE PROCEDURE GetDdlAndCondition3S1981
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12283,7 +14194,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AndCondition239=null, AndCondition239Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12294,6 +14206,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlAppInfoId3S1352
  @screenId		int
 ,@bAll		char(1)
@@ -12310,6 +14223,9 @@ CREATE PROCEDURE GetDdlAppInfoId3S1352
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12335,7 +14251,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AppInfoId136=null, AppInfoId136Text=null, AppInfoDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12346,6 +14263,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlAppItemLink3S1349
  @screenId		int
 ,@bAll		char(1)
@@ -12362,6 +14280,9 @@ CREATE PROCEDURE GetDdlAppItemLink3S1349
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12387,7 +14308,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT AppItemLink135=null, AppItemLink135Text=null, AppInfoId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12398,6 +14320,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlAppZipId3S1416
  @screenId		int
 ,@bAll		char(1)
@@ -12414,6 +14337,9 @@ CREATE PROCEDURE GetDdlAppZipId3S1416
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12440,7 +14366,65 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DocId=null, DocLink=null, DocName=null, DocSize=null, InputOn=null, LoginName=null, AppInfoId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAsmxEventId3S4214') AND type='P')
+DROP PROCEDURE dbo.GetDdlAsmxEventId3S4214
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlAsmxEventId3S4214
+ @screenId		int
+,@bAll		char(1)
+,@keyId		TinyInt
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AsmxEventId128=a1310.RuleAsmxTypeId, AsmxEventId128Text=a1310.RuleAsmxTypeDesc'
+SELECT @fClause = 'FROM RODesign.dbo.CtRuleAsmxType a1310'
+SELECT @oClause = 'ORDER BY a1310.RuleAsmxTypeDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1310.RuleAsmxTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1310.RuleAsmxTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT AsmxEventId128=null, AsmxEventId128Text=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12451,6 +14435,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlBeforeCRUD3S163
  @screenId		int
 ,@bAll		char(1)
@@ -12467,6 +14452,9 @@ CREATE PROCEDURE GetDdlBeforeCRUD3S163
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12492,7 +14480,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT BeforeCRUD24=null, BeforeCRUD24Text=null, CrudTypeSort=null, CrudTypeDesc1289=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12503,6 +14492,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlBgGradType3S1551
  @screenId		int
 ,@bAll		char(1)
@@ -12519,6 +14509,9 @@ CREATE PROCEDURE GetDdlBgGradType3S1551
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12544,7 +14537,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT BgGradType167=null, BgGradType167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12555,6 +14549,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlBorderStyleB3S1544
  @screenId		int
 ,@bAll		char(1)
@@ -12571,6 +14566,9 @@ CREATE PROCEDURE GetDdlBorderStyleB3S1544
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12596,7 +14594,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT BorderStyleB167=null, BorderStyleB167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12607,6 +14606,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlBorderStyleD3S1540
  @screenId		int
 ,@bAll		char(1)
@@ -12623,6 +14623,9 @@ CREATE PROCEDURE GetDdlBorderStyleD3S1540
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12648,7 +14651,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT BorderStyleD167=null, BorderStyleD167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12659,6 +14663,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlBorderStyleL3S1541
  @screenId		int
 ,@bAll		char(1)
@@ -12675,6 +14680,9 @@ CREATE PROCEDURE GetDdlBorderStyleL3S1541
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12700,7 +14708,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT BorderStyleL167=null, BorderStyleL167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12711,6 +14720,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlBorderStyleR3S1542
  @screenId		int
 ,@bAll		char(1)
@@ -12727,6 +14737,9 @@ CREATE PROCEDURE GetDdlBorderStyleR3S1542
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12752,7 +14765,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT BorderStyleR167=null, BorderStyleR167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12763,6 +14777,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlBorderStyleT3S1543
  @screenId		int
 ,@bAll		char(1)
@@ -12779,6 +14794,9 @@ CREATE PROCEDURE GetDdlBorderStyleT3S1543
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12804,7 +14822,181 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT BorderStyleT167=null, BorderStyleT167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorrowerId3S4186') AND type='P')
+DROP PROCEDURE dbo.GetDdlBorrowerId3S4186
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlBorrowerId3S4186
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='ROCmon')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BorrowerId1=a1308.BorrowerId, BorrowerId1Text=a1308.BorrowerName, a1308.Active'
+SELECT @fClause = 'FROM ROCmon.dbo.Borrower a1308'
+SELECT @oClause = 'ORDER BY a1308.BorrowerName'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1308.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1308.BorrowerName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1308.BorrowerId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1308.','N','N',null,'N','BorrowerId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT BorrowerId1=null, BorrowerId1Text=null, Active=null WHERE 1<>1
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorrowerId3S4189') AND type='P')
+DROP PROCEDURE dbo.GetDdlBorrowerId3S4189
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlBorrowerId3S4189
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='ROCmon')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BorrowerId93=a1308.BorrowerId, BorrowerId93Text=a1308.BorrowerName, a1308.Active'
+SELECT @fClause = 'FROM ROCmon.dbo.Borrower a1308'
+SELECT @oClause = 'ORDER BY a1308.BorrowerName'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1308.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1308.BorrowerName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1308.BorrowerId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1308.','N','N',null,'N','BorrowerId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT BorrowerId93=null, BorrowerId93Text=null, Active=null WHERE 1<>1
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBotVisible3S4163') AND type='P')
+DROP PROCEDURE dbo.GetDdlBotVisible3S4163
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlBotVisible3S4163
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Char(100)
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BotVisible116=a1306.ButtonStyleCd, BotVisible116Text=a1306.ButtonStyleDesc'
+SELECT @fClause = 'FROM RODesign.dbo.CtButtonStyle a1306'
+SELECT @oClause = 'ORDER BY a1306.ButtonStyleDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1306.ButtonStyleDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1306.ButtonStyleCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT BotVisible116=null, BotVisible116Text=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12815,6 +15007,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlBrokerId3S1146
  @screenId		int
 ,@bAll		char(1)
@@ -12831,6 +15024,9 @@ CREATE PROCEDURE GetDdlBrokerId3S1146
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12857,7 +15053,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT BrokerId93=null, BrokerId93Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12868,6 +15065,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlBrokerId3S935
  @screenId		int
 ,@bAll		char(1)
@@ -12884,6 +15082,9 @@ CREATE PROCEDURE GetDdlBrokerId3S935
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12910,7 +15111,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT BrokerId1=null, BrokerId1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12921,6 +15123,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlButtonTypeId3S1210
  @screenId		int
 ,@bAll		char(1)
@@ -12937,6 +15140,9 @@ CREATE PROCEDURE GetDdlButtonTypeId3S1210
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -12962,7 +15168,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ButtonTypeId116=null, ButtonTypeId116Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -12973,6 +15180,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlButtonTypeId3S1288
  @screenId		int
 ,@bAll		char(1)
@@ -12989,6 +15197,9 @@ CREATE PROCEDURE GetDdlButtonTypeId3S1288
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13014,7 +15225,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ButtonTypeId128=null, ButtonTypeId128Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13025,6 +15237,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlButtonTypeId3S1297
  @screenId		int
 ,@bAll		char(1)
@@ -13041,6 +15254,9 @@ CREATE PROCEDURE GetDdlButtonTypeId3S1297
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13066,7 +15282,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ButtonTypeId131=null, ButtonTypeId131Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13077,6 +15294,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCategoryGrp3S1736
  @screenId		int
 ,@bAll		char(1)
@@ -13093,6 +15311,9 @@ CREATE PROCEDURE GetDdlCategoryGrp3S1736
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13118,7 +15339,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CategoryGrp206=null, CategoryGrp206Text=null, ReportId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13129,6 +15351,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCelNum3S1624
  @screenId		int
 ,@bAll		char(1)
@@ -13145,6 +15368,9 @@ CREATE PROCEDURE GetDdlCelNum3S1624
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13170,7 +15396,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CelNum164=null, CelNum164Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13181,6 +15408,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlChangedBy3S4112
  @screenId		int
 ,@bAll		char(1)
@@ -13197,6 +15425,9 @@ CREATE PROCEDURE GetDdlChangedBy3S4112
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13223,7 +15454,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ChangedBy1300=null, ChangedBy1300Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13234,6 +15466,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlClientScript3S1261
  @screenId		int
 ,@bAll		char(1)
@@ -13250,6 +15483,9 @@ CREATE PROCEDURE GetDdlClientScript3S1261
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13275,7 +15511,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ClientScript127=null, ClientScript127Text=null, ClientScriptHelp126=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13286,6 +15523,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlColumnId3S1181
  @screenId		int
 ,@bAll		char(1)
@@ -13302,6 +15540,9 @@ CREATE PROCEDURE GetDdlColumnId3S1181
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13327,7 +15568,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ColumnId104=null, ColumnId104Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13338,6 +15580,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlColumnId3S1195]
  @screenId		int
 ,@bAll		char(1)
@@ -13379,7 +15622,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ColumnId107=null, ColumnId107Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13390,6 +15635,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlColumnId3S1644]
  @screenId		int
 ,@bAll		char(1)
@@ -13431,7 +15677,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ColumnId184=null, ColumnId184Text=null, ColObjective5=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13442,6 +15692,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlColumnId3S1667
  @screenId		int
 ,@bAll		char(1)
@@ -13458,6 +15709,9 @@ CREATE PROCEDURE GetDdlColumnId3S1667
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13483,7 +15737,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ColumnId182=null, ColumnId182Text=null, TableId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13494,6 +15749,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlColumnId3S167
  @screenId		int
 ,@bAll		char(1)
@@ -13510,6 +15766,9 @@ CREATE PROCEDURE GetDdlColumnId3S167
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13535,7 +15794,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ColumnId20=null, ColumnId20Text=null, TableId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13546,6 +15806,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlColumnId3S642
  @screenId		int
 ,@bAll		char(1)
@@ -13562,6 +15823,9 @@ CREATE PROCEDURE GetDdlColumnId3S642
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13587,7 +15851,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ColumnId72=null, ColumnId72Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13598,6 +15863,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlColumnId3S74
  @screenId		int
 ,@bAll		char(1)
@@ -13614,6 +15880,9 @@ CREATE PROCEDURE GetDdlColumnId3S74
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13639,7 +15908,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ColumnId14=null, ColumnId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13650,6 +15920,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlColumnJustify3S1422
  @screenId		int
 ,@bAll		char(1)
@@ -13666,6 +15937,9 @@ CREATE PROCEDURE GetDdlColumnJustify3S1422
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13691,7 +15965,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ColumnJustify14=null, ColumnJustify14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13702,6 +15977,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlColumnJustify3S1425
  @screenId		int
 ,@bAll		char(1)
@@ -13718,6 +15994,9 @@ CREATE PROCEDURE GetDdlColumnJustify3S1425
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13743,7 +16022,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ColumnJustify104=null, ColumnJustify104Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13754,6 +16034,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlComListVisible3S1305
  @screenId		int
 ,@bAll		char(1)
@@ -13770,6 +16051,9 @@ CREATE PROCEDURE GetDdlComListVisible3S1305
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13795,7 +16079,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ComListVisible93=null, ComListVisible93Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13806,6 +16091,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCompanyId3S1306
  @screenId		int
 ,@bAll		char(1)
@@ -13822,6 +16108,9 @@ CREATE PROCEDURE GetDdlCompanyId3S1306
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13849,7 +16138,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CompanyId93=null, CompanyId93Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13860,6 +16150,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCompanyId3S1744
  @screenId		int
 ,@bAll		char(1)
@@ -13876,6 +16167,9 @@ CREATE PROCEDURE GetDdlCompanyId3S1744
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13903,7 +16197,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CompanyId58=null, CompanyId58Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13914,6 +16209,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCompanyId3S1752
  @screenId		int
 ,@bAll		char(1)
@@ -13930,6 +16226,9 @@ CREATE PROCEDURE GetDdlCompanyId3S1752
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -13957,7 +16256,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CompanyId7=null, CompanyId7Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -13968,6 +16268,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCompanyId3S1971
  @screenId		int
 ,@bAll		char(1)
@@ -13984,6 +16285,9 @@ CREATE PROCEDURE GetDdlCompanyId3S1971
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14011,7 +16315,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CompanyId215=null, CompanyId215Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14022,6 +16327,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCompanyLs3S1742
  @screenId		int
 ,@bAll		char(1)
@@ -14038,6 +16344,9 @@ CREATE PROCEDURE GetDdlCompanyLs3S1742
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14065,7 +16374,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CompanyLs1=null, CompanyLs1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14076,6 +16386,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCopyReportId3S1012
  @screenId		int
 ,@bAll		char(1)
@@ -14092,6 +16403,9 @@ CREATE PROCEDURE GetDdlCopyReportId3S1012
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14120,7 +16434,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CopyReportId22=null, CopyReportId22Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14131,6 +16446,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCountryCd3S2070
  @screenId		int
 ,@bAll		char(1)
@@ -14147,6 +16463,9 @@ CREATE PROCEDURE GetDdlCountryCd3S2070
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14172,7 +16491,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CountryCd8=null, CountryCd8Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14183,6 +16503,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlCountryId3S2070]
  @screenId		int
 ,@bAll		char(1)
@@ -14224,7 +16545,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CountryId8=null, CountryId8Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14235,6 +16560,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlCriOperatorId3S1645]
  @screenId		int
 ,@bAll		char(1)
@@ -14276,7 +16602,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CriOperatorId184=null, CriOperatorId184Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14287,6 +16617,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCtrGrouping3S1595
  @screenId		int
 ,@bAll		char(1)
@@ -14303,6 +16634,9 @@ CREATE PROCEDURE GetDdlCtrGrouping3S1595
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14328,7 +16662,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CtrGrouping161=null, CtrGrouping161Text=null, ReportId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14339,6 +16674,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCtrToggle3S1697
  @screenId		int
 ,@bAll		char(1)
@@ -14355,6 +16691,9 @@ CREATE PROCEDURE GetDdlCtrToggle3S1697
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14380,7 +16719,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CtrToggle161=null, CtrToggle161Text=null, ReportId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14391,6 +16731,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCtrVisibility3S1587
  @screenId		int
 ,@bAll		char(1)
@@ -14407,6 +16748,9 @@ CREATE PROCEDURE GetDdlCtrVisibility3S1587
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14432,7 +16776,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CtrVisibility161=null, CtrVisibility161Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14443,6 +16788,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCudAction3S4106
  @screenId		int
 ,@bAll		char(1)
@@ -14459,6 +16805,9 @@ CREATE PROCEDURE GetDdlCudAction3S4106
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14484,7 +16833,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CudAction1300=null, CudAction1300Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14495,6 +16845,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[GetDdlCultureId]
  @screenId		int
@@ -14512,6 +16863,9 @@ CREATE PROCEDURE [dbo].[GetDdlCultureId]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors	varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14523,7 +16877,11 @@ DECLARE	 @wClause		nvarchar(max)
 IF @bAll = 'Y' SELECT @wClause = CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE N'%' + REPLACE(REPLACE(@FilterTxt,'''',''''''),' ','%') + '%' END
 SELECT @Cultures = CASE WHEN @Cultures is null OR @Cultures = '' OR CHARINDEX(nchar(191),@Cultures) >= 1 THEN '1' ELSE @Cultures END
 EXEC dbo.GetLang @Cultures, @wClause
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14534,6 +16892,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId103C18
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -14576,7 +16935,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId=null, CultureTypeDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14587,6 +16947,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId103C19
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -14601,6 +16962,9 @@ CREATE PROCEDURE GetDdlCultureId103C19
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14631,7 +16995,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId=null, CultureTypeDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14642,6 +17007,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId103C48
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -14656,6 +17022,9 @@ CREATE PROCEDURE GetDdlCultureId103C48
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14683,7 +17052,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureTypeId=null, CultureTypeDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14694,6 +17064,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId103C56
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -14736,7 +17107,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId=null, CultureTypeDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14747,6 +17119,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId303C10
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -14789,7 +17162,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId=null, CultureTypeDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14800,6 +17174,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1022
  @screenId		int
 ,@bAll		char(1)
@@ -14816,6 +17191,9 @@ CREATE PROCEDURE GetDdlCultureId3S1022
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14845,7 +17223,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId96=null, CultureId96Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14856,6 +17235,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1097
  @screenId		int
 ,@bAll		char(1)
@@ -14872,6 +17252,9 @@ CREATE PROCEDURE GetDdlCultureId3S1097
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14900,7 +17283,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId98=null, CultureId98Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14911,6 +17295,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1191
  @screenId		int
 ,@bAll		char(1)
@@ -14927,6 +17312,9 @@ CREATE PROCEDURE GetDdlCultureId3S1191
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -14955,7 +17343,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId105=null, CultureId105Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -14966,6 +17355,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1209
  @screenId		int
 ,@bAll		char(1)
@@ -14982,6 +17372,9 @@ CREATE PROCEDURE GetDdlCultureId3S1209
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15010,7 +17403,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId116=null, CultureId116Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15021,6 +17415,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1259
  @screenId		int
 ,@bAll		char(1)
@@ -15037,6 +17432,9 @@ CREATE PROCEDURE GetDdlCultureId3S1259
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15063,7 +17461,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId127=null, CultureId127Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15074,6 +17473,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlCultureId3S1271]
  @screenId		int
 ,@bAll		char(1)
@@ -15118,7 +17518,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId21=null, CultureId21Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15129,6 +17531,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1276
  @screenId		int
 ,@bAll		char(1)
@@ -15145,6 +17548,9 @@ CREATE PROCEDURE GetDdlCultureId3S1276
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15173,7 +17579,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId99=null, CultureId99Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15184,6 +17591,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1296
  @screenId		int
 ,@bAll		char(1)
@@ -15200,6 +17608,9 @@ CREATE PROCEDURE GetDdlCultureId3S1296
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15226,7 +17637,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId131=null, CultureId131Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15237,6 +17649,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1414
  @screenId		int
 ,@bAll		char(1)
@@ -15253,6 +17666,9 @@ CREATE PROCEDURE GetDdlCultureId3S1414
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15281,7 +17697,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId147=null, CultureId147Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15292,6 +17709,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1746
  @screenId		int
 ,@bAll		char(1)
@@ -15308,6 +17726,9 @@ CREATE PROCEDURE GetDdlCultureId3S1746
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15339,7 +17760,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId1=null, CultureId1Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15350,6 +17772,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1892
  @screenId		int
 ,@bAll		char(1)
@@ -15366,6 +17789,9 @@ CREATE PROCEDURE GetDdlCultureId3S1892
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15392,7 +17818,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId242=null, CultureId242Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15403,6 +17830,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S1967
  @screenId		int
 ,@bAll		char(1)
@@ -15419,6 +17847,9 @@ CREATE PROCEDURE GetDdlCultureId3S1967
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15444,7 +17875,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId215=null, CultureId215Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15455,6 +17887,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S3255
  @screenId		int
 ,@bAll		char(1)
@@ -15471,6 +17904,9 @@ CREATE PROCEDURE GetDdlCultureId3S3255
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15498,7 +17934,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId21=null, CultureId21Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15509,6 +17946,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S448
  @screenId		int
 ,@bAll		char(1)
@@ -15525,6 +17963,9 @@ CREATE PROCEDURE GetDdlCultureId3S448
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15552,7 +17993,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId40=null, CultureId40Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15563,6 +18005,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S53
  @screenId		int
 ,@bAll		char(1)
@@ -15579,6 +18022,9 @@ CREATE PROCEDURE GetDdlCultureId3S53
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15607,7 +18053,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId16=null, CultureId16Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15618,6 +18065,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S721
  @screenId		int
 ,@bAll		char(1)
@@ -15634,6 +18082,9 @@ CREATE PROCEDURE GetDdlCultureId3S721
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15661,7 +18112,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId80=null, CultureId80Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15672,6 +18124,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureId3S848
  @screenId		int
 ,@bAll		char(1)
@@ -15688,6 +18141,9 @@ CREATE PROCEDURE GetDdlCultureId3S848
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15716,7 +18172,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureId87=null, CultureId87Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15727,6 +18184,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlCultureTypeId3S3073]
  @screenId		int
 ,@bAll		char(1)
@@ -15768,7 +18226,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureTypeId135=null, CultureTypeId135Text=null, CurrencyCd8=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15779,6 +18241,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCultureTypeName3S3073
  @screenId		int
 ,@bAll		char(1)
@@ -15795,6 +18258,9 @@ CREATE PROCEDURE GetDdlCultureTypeName3S3073
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15820,7 +18286,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CultureTypeName135=null, CultureTypeName135Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15831,6 +18298,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlCustomDtlLink3S1379]
  @screenId		int
 ,@bAll		char(1)
@@ -15873,7 +18341,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CustomDtlLink133=null, CustomDtlLink133Text=null, CustomId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15884,6 +18356,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCustomerId3S1147
  @screenId		int
 ,@bAll		char(1)
@@ -15900,6 +18373,9 @@ CREATE PROCEDURE GetDdlCustomerId3S1147
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15926,7 +18402,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CustomerId93=null, CustomerId93Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15937,6 +18414,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlCustomerId3S6
  @screenId		int
 ,@bAll		char(1)
@@ -15953,6 +18431,9 @@ CREATE PROCEDURE GetDdlCustomerId3S6
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -15979,7 +18460,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CustomerId1=null, CustomerId1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -15990,6 +18472,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlCustomId3S1381]
  @screenId		int
 ,@bAll		char(1)
@@ -16031,7 +18514,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CustomId134=null, CustomId134Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16042,6 +18529,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDataType3S17
  @screenId		int
 ,@bAll		char(1)
@@ -16058,6 +18546,9 @@ CREATE PROCEDURE GetDdlDataType3S17
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16083,7 +18574,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DataType5=null, DataType5Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16094,6 +18586,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDataTypeId3S1081
  @screenId		int
 ,@bAll		char(1)
@@ -16110,6 +18603,9 @@ CREATE PROCEDURE GetDdlDataTypeId3S1081
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16135,7 +18631,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DataTypeId97=null, DataTypeId97Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16146,6 +18643,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDataTypeId3S133
  @screenId		int
 ,@bAll		char(1)
@@ -16162,6 +18660,9 @@ CREATE PROCEDURE GetDdlDataTypeId3S133
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16187,7 +18688,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DataTypeId23=null, DataTypeId23Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16198,6 +18700,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[GetDdlDbProviderCd]
  @bAll		char(1)
@@ -16232,7 +18735,11 @@ IF @keyId is not null SELECT @wClause = @wClause + 'DbProviderCd = ''' + convert
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16243,6 +18750,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDbProviderCd3S1357
  @screenId		int
 ,@bAll		char(1)
@@ -16259,6 +18767,9 @@ CREATE PROCEDURE GetDdlDbProviderCd3S1357
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16284,7 +18795,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DbProviderCd136=null, DbProviderCd136Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16295,6 +18807,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlDbProviderCd3S1390]
  @screenId		int
 ,@bAll		char(1)
@@ -16336,7 +18849,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DbProviderCd134=null, DbProviderCd134Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16347,6 +18864,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDbProviderCd3S1830
  @screenId		int
 ,@bAll		char(1)
@@ -16363,6 +18881,9 @@ CREATE PROCEDURE GetDdlDbProviderCd3S1830
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16388,7 +18909,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DbProviderCd195=null, DbProviderCd195Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16399,6 +18921,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDdlAdnColumnId3S1281
  @screenId		int
 ,@bAll		char(1)
@@ -16415,6 +18938,9 @@ CREATE PROCEDURE GetDdlDdlAdnColumnId3S1281
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16440,7 +18966,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DdlAdnColumnId14=null, DdlAdnColumnId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16451,6 +18978,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDdlFtrColumnId3S1282
  @screenId		int
 ,@bAll		char(1)
@@ -16467,6 +18995,9 @@ CREATE PROCEDURE GetDdlDdlFtrColumnId3S1282
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16492,7 +19023,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DdlFtrColumnId14=null, DdlFtrColumnId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16503,6 +19035,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDdlFtrColumnId3S3365
  @screenId		int
 ,@bAll		char(1)
@@ -16519,6 +19052,9 @@ CREATE PROCEDURE GetDdlDdlFtrColumnId3S3365
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16544,7 +19080,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DdlFtrColumnId104=null, DdlFtrColumnId104Text=null, ScreenId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16555,6 +19092,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDdlFtrColumnId3S3367
  @screenId		int
 ,@bAll		char(1)
@@ -16571,6 +19109,9 @@ CREATE PROCEDURE GetDdlDdlFtrColumnId3S3367
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16596,7 +19137,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DdlFtrColumnId97=null, DdlFtrColumnId97Text=null, ReportId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16607,6 +19149,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDdlKeyColumnId3S1185
  @screenId		int
 ,@bAll		char(1)
@@ -16623,6 +19166,9 @@ CREATE PROCEDURE GetDdlDdlKeyColumnId3S1185
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16648,7 +19194,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DdlKeyColumnId104=null, DdlKeyColumnId104Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16659,6 +19206,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDdlKeyColumnId3S82
  @screenId		int
 ,@bAll		char(1)
@@ -16675,6 +19223,9 @@ CREATE PROCEDURE GetDdlDdlKeyColumnId3S82
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16700,7 +19251,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DdlKeyColumnId14=null, DdlKeyColumnId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16711,6 +19263,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDdlRefColumnId3S1186
  @screenId		int
 ,@bAll		char(1)
@@ -16727,6 +19280,9 @@ CREATE PROCEDURE GetDdlDdlRefColumnId3S1186
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16752,7 +19308,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DdlRefColumnId104=null, DdlRefColumnId104Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16763,6 +19320,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDdlRefColumnId3S83
  @screenId		int
 ,@bAll		char(1)
@@ -16779,6 +19337,9 @@ CREATE PROCEDURE GetDdlDdlRefColumnId3S83
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16804,7 +19365,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DdlRefColumnId14=null, DdlRefColumnId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16815,6 +19377,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDdlSrtColumnId3S1269
  @screenId		int
 ,@bAll		char(1)
@@ -16831,6 +19394,9 @@ CREATE PROCEDURE GetDdlDdlSrtColumnId3S1269
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16856,7 +19422,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DdlSrtColumnId14=null, DdlSrtColumnId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16867,6 +19434,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDdlSrtColumnId3S1278
  @screenId		int
 ,@bAll		char(1)
@@ -16883,6 +19451,9 @@ CREATE PROCEDURE GetDdlDdlSrtColumnId3S1278
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -16908,7 +19479,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DdlSrtColumnId104=null, DdlSrtColumnId104Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16919,6 +19491,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDefaultCd103C32
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -16960,7 +19533,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DefaultCd=null, DefaultName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -16971,6 +19545,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDefaultCd3S1571
  @screenId		int
 ,@bAll		char(1)
@@ -16987,6 +19562,9 @@ CREATE PROCEDURE GetDdlDefaultCd3S1571
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17012,7 +19590,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DefaultCd167=null, DefaultCd167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17023,6 +19602,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDefCompanyId3S1304
  @screenId		int
 ,@bAll		char(1)
@@ -17039,6 +19619,9 @@ CREATE PROCEDURE GetDdlDefCompanyId3S1304
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17066,7 +19649,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DefCompanyId1=null, DefCompanyId1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17077,6 +19661,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDefProjectId3S1481
  @screenId		int
 ,@bAll		char(1)
@@ -17093,6 +19678,9 @@ CREATE PROCEDURE GetDdlDefProjectId3S1481
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17122,7 +19710,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DefProjectId1=null, DefProjectId1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17133,6 +19722,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDefSystemId3S497
  @screenId		int
 ,@bAll		char(1)
@@ -17149,6 +19739,9 @@ CREATE PROCEDURE GetDdlDefSystemId3S497
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17174,7 +19767,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DefSystemId1=null, DefSystemId1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17185,6 +19779,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDetailTableId3S60
  @screenId		int
 ,@bAll		char(1)
@@ -17201,6 +19796,9 @@ CREATE PROCEDURE GetDdlDetailTableId3S60
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17227,7 +19825,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DetailTableId15=null, DetailTableId15Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17238,6 +19837,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDirection3S1568
  @screenId		int
 ,@bAll		char(1)
@@ -17254,6 +19854,9 @@ CREATE PROCEDURE GetDdlDirection3S1568
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17279,7 +19882,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT Direction167=null, Direction167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17290,6 +19894,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDisplayModeId3S1083
  @screenId		int
 ,@bAll		char(1)
@@ -17306,6 +19911,9 @@ CREATE PROCEDURE GetDdlDisplayModeId3S1083
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17331,7 +19939,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DisplayModeId97=null, DisplayModeId97Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17342,6 +19951,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDisplayModeId3S1183
  @screenId		int
 ,@bAll		char(1)
@@ -17358,6 +19968,9 @@ CREATE PROCEDURE GetDdlDisplayModeId3S1183
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17383,7 +19996,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DisplayModeId104=null, DisplayModeId104Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17394,6 +20008,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDisplayModeId3S1843
  @screenId		int
 ,@bAll		char(1)
@@ -17410,6 +20025,9 @@ CREATE PROCEDURE GetDdlDisplayModeId3S1843
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17435,7 +20053,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DisplayModeId182=null, DisplayModeId182Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17446,6 +20065,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlDisplayModeId3S81
  @screenId		int
 ,@bAll		char(1)
@@ -17462,6 +20082,9 @@ CREATE PROCEDURE GetDdlDisplayModeId3S81
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17487,7 +20110,65 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DisplayModeId14=null, DisplayModeId14Text=null, DisplayDesc18=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDtlLstPosId3S4206') AND type='P')
+DROP PROCEDURE dbo.GetDdlDtlLstPosId3S4206
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlDtlLstPosId3S4206
+ @screenId		int
+,@bAll		char(1)
+,@keyId		TinyInt
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DtlLstPosId14=a1314.DtlLstPosId, DtlLstPosId14Text=a1314.DtlLstPosNm'
+SELECT @fClause = 'FROM RODesign.dbo.CtDtlLstPos a1314'
+SELECT @oClause = 'ORDER BY a1314.DtlLstPosNm'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1314.DtlLstPosNm LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1314.DtlLstPosId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT DtlLstPosId14=null, DtlLstPosId14Text=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17498,6 +20179,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlEnNumberRule203C1077
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -17539,7 +20221,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CheckBoxCd=null, CheckBoxName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17550,6 +20233,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlEnteredBy3S3096
  @screenId		int
 ,@bAll		char(1)
@@ -17566,6 +20250,9 @@ CREATE PROCEDURE GetDdlEnteredBy3S3096
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17597,6 +20284,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
@@ -17604,7 +20294,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT EnteredBy272=null, EnteredBy272Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17615,6 +20306,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlEntityId2003C36]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -17654,7 +20346,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT EntityId=null, EntityName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17665,48 +20361,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE GetDdlEntityId203C36
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a199.EntityId, a199.EntityName'
-SELECT @fClause = 'FROM RODesign.dbo.Entity a199'
-SELECT @oClause = 'ORDER BY a199.EntityName'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a199.EntityName LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a199.EntityId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT EntityId=null, EntityName=null WHERE 1<>1
-RETURN 0 
+CREATE PROCEDURE GetDdlEntityId203C36 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a199.EntityId, a199.EntityName'SELECT @fClause = 'FROM RODesign.dbo.Entity a199'SELECT @oClause = 'ORDER BY a199.EntityName'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a199.EntityName LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a199.EntityId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT EntityId=null, EntityName=null WHERE 1<>1RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17717,6 +20372,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlEntityId3S1704
  @screenId		int
 ,@bAll		char(1)
@@ -17733,6 +20389,9 @@ CREATE PROCEDURE GetDdlEntityId3S1704
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17758,7 +20417,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT EntityId191=null, EntityId191Text=null, DeployPath199=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17769,6 +20429,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlEntityId3S1814
  @screenId		int
 ,@bAll		char(1)
@@ -17785,6 +20446,9 @@ CREATE PROCEDURE GetDdlEntityId3S1814
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17810,7 +20474,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT EntityId194=null, EntityId194Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17821,6 +20486,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlEntityId3S1822
  @screenId		int
 ,@bAll		char(1)
@@ -17837,6 +20503,9 @@ CREATE PROCEDURE GetDdlEntityId3S1822
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17862,7 +20531,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT EntityId196=null, EntityId196Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17873,6 +20543,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlEntityId3S1829
  @screenId		int
 ,@bAll		char(1)
@@ -17889,6 +20560,9 @@ CREATE PROCEDURE GetDdlEntityId3S1829
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17914,7 +20588,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT EntityId195=null, EntityId195Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17925,6 +20600,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlEventId3S1289
  @screenId		int
 ,@bAll		char(1)
@@ -17941,6 +20617,9 @@ CREATE PROCEDURE GetDdlEventId3S1289
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17966,7 +20645,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT EventId128=null, EventId128Text=null, EventCode=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -17977,6 +20657,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlEveryone3S838]
  @screenId		int
 ,@bAll		char(1)
@@ -18005,7 +20686,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT Everyone85=null, Everyone85Text=null, EveryoneSort=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18016,6 +20701,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlFontStyle3S1554
  @screenId		int
 ,@bAll		char(1)
@@ -18032,6 +20718,9 @@ CREATE PROCEDURE GetDdlFontStyle3S1554
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18057,7 +20746,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT FontStyle167=null, FontStyle167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18068,6 +20758,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlFontWeight3S1557
  @screenId		int
 ,@bAll		char(1)
@@ -18084,6 +20775,9 @@ CREATE PROCEDURE GetDdlFontWeight3S1557
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18109,7 +20803,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT FontWeight167=null, FontWeight167Text=null, FontWeightName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18120,6 +20815,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetDdlFrameworkCd]
  @bAll		char(1)
 ,@keyId		Char(100)
@@ -18153,7 +20850,12 @@ IF @keyId is not null SELECT @wClause = @wClause + 'FrameworkCd = ''' + convert(
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18164,6 +20866,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlFrameworkCd3S1356
  @screenId		int
 ,@bAll		char(1)
@@ -18180,6 +20883,9 @@ CREATE PROCEDURE GetDdlFrameworkCd3S1356
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18205,7 +20911,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT FrameworkCd136=null, FrameworkCd136Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18216,6 +20923,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlFrameworkCd3S1389]
  @screenId		int
 ,@bAll		char(1)
@@ -18257,7 +20965,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT FrameworkCd134=null, FrameworkCd134Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18268,6 +20980,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlFrameworkCd3S1816
  @screenId		int
 ,@bAll		char(1)
@@ -18284,6 +20997,9 @@ CREATE PROCEDURE GetDdlFrameworkCd3S1816
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18309,7 +21025,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT FrameworkCd194=null, FrameworkCd194Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18320,6 +21037,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlFrameworkCd3S1824
  @screenId		int
 ,@bAll		char(1)
@@ -18336,6 +21054,9 @@ CREATE PROCEDURE GetDdlFrameworkCd3S1824
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18361,7 +21082,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT FrameworkCd196=null, FrameworkCd196Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18372,6 +21094,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlGFormat3S1794]
  @screenId		int
 ,@bAll		char(1)
@@ -18413,7 +21136,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GFormat183=null, GFormat183Text=null, FormatSort=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18424,6 +21151,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlGPositive3S1637]
  @screenId		int
 ,@bAll		char(1)
@@ -18450,7 +21178,11 @@ SET NOCOUNT ON
 DECLARE	 @sClause		varchar(8000)
 SELECT @sClause = 'SELECT GPositive183 = ''Y'', GPositive183Text = ''+ve'' UNION SELECT GPositive183 = ''N'', GPositive183Text = ''-ve'''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18461,6 +21193,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlGrantDeny3S1798]
  @screenId		int
 ,@bAll		char(1)
@@ -18502,7 +21235,10 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GrantDeny1279=null, GrantDeny1279Text=null, EveryoneSort=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18513,6 +21249,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlGrantDeny3S838
  @screenId		int
 ,@bAll		char(1)
@@ -18529,6 +21266,9 @@ CREATE PROCEDURE GetDdlGrantDeny3S838
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18554,7 +21294,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GrantDeny231=null, GrantDeny231Text=null, EveryoneSort=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18565,6 +21306,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlGridGrpCd3S2016
  @screenId		int
 ,@bAll		char(1)
@@ -18581,6 +21323,9 @@ CREATE PROCEDURE GetDdlGridGrpCd3S2016
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18606,7 +21351,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GridGrpCd14=null, GridGrpCd14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18617,6 +21363,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlGroupColId303C46]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -18656,7 +21403,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GroupColId=null, GroupColName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18667,6 +21416,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlGroupColId3S1204
  @screenId		int
 ,@bAll		char(1)
@@ -18683,6 +21433,9 @@ CREATE PROCEDURE GetDdlGroupColId3S1204
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18708,7 +21461,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GroupColId14=null, GroupColId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18719,6 +21473,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlGroupColId3S3120
  @screenId		int
 ,@bAll		char(1)
@@ -18735,6 +21490,9 @@ CREATE PROCEDURE GetDdlGroupColId3S3120
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18760,7 +21518,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GroupColId1277=null, GroupColId1277Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18771,6 +21530,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlGroupColId3S3140
  @screenId		int
 ,@bAll		char(1)
@@ -18787,6 +21547,9 @@ CREATE PROCEDURE GetDdlGroupColId3S3140
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18812,7 +21575,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GroupColId1284=null, GroupColId1284Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18823,6 +21587,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlGroupColId3S3264
  @screenId		int
 ,@bAll		char(1)
@@ -18839,6 +21604,9 @@ CREATE PROCEDURE GetDdlGroupColId3S3264
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18864,7 +21632,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GroupColId14=null, GroupColId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18875,6 +21644,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlGroupRowId3S3119
  @screenId		int
 ,@bAll		char(1)
@@ -18891,6 +21661,9 @@ CREATE PROCEDURE GetDdlGroupRowId3S3119
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18916,7 +21689,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GroupRowId1277=null, GroupRowId1277Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18927,6 +21701,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlGroupRowId3S3136
  @screenId		int
 ,@bAll		char(1)
@@ -18943,6 +21718,9 @@ CREATE PROCEDURE GetDdlGroupRowId3S3136
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -18968,7 +21746,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GroupRowId14=null, GroupRowId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -18979,6 +21758,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlGroupRowId3S3147
  @screenId		int
 ,@bAll		char(1)
@@ -18995,6 +21775,9 @@ CREATE PROCEDURE GetDdlGroupRowId3S3147
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19020,7 +21803,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GroupRowId1283=null, GroupRowId1283Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19031,6 +21815,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlGroupRowId3S3263
  @screenId		int
 ,@bAll		char(1)
@@ -19047,6 +21832,9 @@ CREATE PROCEDURE GetDdlGroupRowId3S3263
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19072,7 +21860,124 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT GroupRowId14=null, GroupRowId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGuarantorId3S4187') AND type='P')
+DROP PROCEDURE dbo.GetDdlGuarantorId3S4187
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlGuarantorId3S4187
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='ROCmon')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GuarantorId1=a1309.GuarantorId, GuarantorId1Text=a1309.GuarantorName, a1309.Active'
+SELECT @fClause = 'FROM ROCmon.dbo.Guarantor a1309'
+SELECT @oClause = 'ORDER BY a1309.GuarantorName'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1309.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1309.GuarantorName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1309.GuarantorId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1309.','N','N',null,'N','GuarantorId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT GuarantorId1=null, GuarantorId1Text=null, Active=null WHERE 1<>1
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGuarantorId3S4190') AND type='P')
+DROP PROCEDURE dbo.GetDdlGuarantorId3S4190
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlGuarantorId3S4190
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='ROCmon')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GuarantorId93=a1309.GuarantorId, GuarantorId93Text=a1309.GuarantorName, a1309.Active'
+SELECT @fClause = 'FROM ROCmon.dbo.Guarantor a1309'
+SELECT @oClause = 'ORDER BY a1309.GuarantorName'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1309.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1309.GuarantorName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1309.GuarantorId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1309.','N','N',null,'N','GuarantorId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT GuarantorId93=null, GuarantorId93Text=null, Active=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19083,6 +21988,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlHintQuestionId3S1119
  @screenId		int
 ,@bAll		char(1)
@@ -19099,6 +22005,9 @@ CREATE PROCEDURE GetDdlHintQuestionId3S1119
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19124,7 +22033,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT HintQuestionId1=null, HintQuestionId1Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19135,6 +22045,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlHomeTabId3S1863]
  @screenId		int
 ,@bAll		char(1)
@@ -19176,7 +22087,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT HomeTabId226=null, HomeTabId226Text=null, HomeTabOrder=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19187,6 +22102,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlImprUsrId3S1002
  @screenId		int
 ,@bAll		char(1)
@@ -19203,6 +22119,9 @@ CREATE PROCEDURE GetDdlImprUsrId3S1002
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19234,6 +22153,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
@@ -19241,7 +22163,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ImprUsrId95=null, ImprUsrId95Text=null, Active=null, PicMed1=null, FailedAttempt1=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19252,6 +22175,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlInputBy3S1768]
  @screenId		int
 ,@bAll		char(1)
@@ -19299,7 +22223,11 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19310,6 +22238,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlInputBy3S1790]
  @screenId		int
 ,@bAll		char(1)
@@ -19357,7 +22286,11 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19368,6 +22301,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlInputBy3S1924
  @screenId		int
 ,@bAll		char(1)
@@ -19384,6 +22318,9 @@ CREATE PROCEDURE GetDdlInputBy3S1924
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19415,6 +22352,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
@@ -19422,7 +22362,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT InputBy248=null, InputBy248Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19433,6 +22374,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlInputBy3S3360
  @screenId		int
 ,@bAll		char(1)
@@ -19449,6 +22391,9 @@ CREATE PROCEDURE GetDdlInputBy3S3360
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19480,6 +22425,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
@@ -19487,7 +22435,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT InputBy95=null, InputBy95Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19498,6 +22447,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlInvestorId3S1148
  @screenId		int
 ,@bAll		char(1)
@@ -19514,6 +22464,9 @@ CREATE PROCEDURE GetDdlInvestorId3S1148
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19540,7 +22493,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT InvestorId93=null, InvestorId93Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19551,6 +22505,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlInvestorId3S316
  @screenId		int
 ,@bAll		char(1)
@@ -19567,6 +22522,9 @@ CREATE PROCEDURE GetDdlInvestorId3S316
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19593,7 +22551,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT InvestorId1=null, InvestorId1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19604,6 +22563,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlKeyId3S1667]
  @screenId		int
 ,@bAll		char(1)
@@ -19632,7 +22592,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT KeyId182=null, KeyId182Text=null, RefTableId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19643,6 +22607,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[GetDdlLanguageCd]
  @bAll		char(1)
@@ -19677,7 +22642,11 @@ IF @keyId is not null SELECT @wClause = @wClause + 'LanguageCd = ''' + convert(v
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19688,6 +22657,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlLanguageCd3S1355
  @screenId		int
 ,@bAll		char(1)
@@ -19704,6 +22674,9 @@ CREATE PROCEDURE GetDdlLanguageCd3S1355
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19729,7 +22702,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT LanguageCd136=null, LanguageCd136Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19740,6 +22714,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlLanguageCd3S1388]
  @screenId		int
 ,@bAll		char(1)
@@ -19781,7 +22756,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT LanguageCd134=null, LanguageCd134Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19792,6 +22771,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlLanguageCd3S1815
  @screenId		int
 ,@bAll		char(1)
@@ -19808,6 +22788,9 @@ CREATE PROCEDURE GetDdlLanguageCd3S1815
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19833,7 +22816,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT LanguageCd194=null, LanguageCd194Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19844,6 +22828,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlLanguageCd3S1823
  @screenId		int
 ,@bAll		char(1)
@@ -19860,6 +22845,9 @@ CREATE PROCEDURE GetDdlLanguageCd3S1823
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -19885,7 +22873,124 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT LanguageCd196=null, LanguageCd196Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlLenderId3S4185') AND type='P')
+DROP PROCEDURE dbo.GetDdlLenderId3S4185
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlLenderId3S4185
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='ROCmon')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' LenderId1=a1307.LenderId, LenderId1Text=a1307.LenderName, a1307.Active'
+SELECT @fClause = 'FROM ROCmon.dbo.Lender a1307'
+SELECT @oClause = 'ORDER BY a1307.LenderName'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1307.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1307.LenderName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1307.LenderId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1307.','N','N',null,'N','LenderId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT LenderId1=null, LenderId1Text=null, Active=null WHERE 1<>1
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlLenderId3S4188') AND type='P')
+DROP PROCEDURE dbo.GetDdlLenderId3S4188
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlLenderId3S4188
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='ROCmon')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' LenderId93=a1307.LenderId, LenderId93Text=a1307.LenderName, a1307.Active'
+SELECT @fClause = 'FROM ROCmon.dbo.Lender a1307'
+SELECT @oClause = 'ORDER BY a1307.LenderName'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1307.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1307.LenderName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1307.LenderId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1307.','N','N',null,'N','LenderId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT LenderId93=null, LenderId93Text=null, Active=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19896,6 +23001,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlLineBottom3S1237]
  @screenId		int
 ,@bAll		char(1)
@@ -19933,7 +23039,11 @@ IF @keyId is not null SELECT @wClause = @wClause + 'a120.LineTypeCd = ''' + conv
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19944,6 +23054,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlLineTop3S1236]
  @screenId		int
 ,@bAll		char(1)
@@ -19981,7 +23092,11 @@ IF @keyId is not null SELECT @wClause = @wClause + 'a120.LineTypeCd = ''' + conv
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -19992,6 +23107,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlLinkJustify3S3124]
  @screenId		int
 ,@bAll		char(1)
@@ -20033,7 +23149,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT LinkJustify1277=null, LinkJustify1277Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20044,6 +23164,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlLinkTypeCd3S1798]
  @screenId		int
 ,@bAll		char(1)
@@ -20085,7 +23206,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT LinkTypeCd226=null, LinkTypeCd226Text=null, LinkTypeDesc277=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20096,6 +23221,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlLinkTypeCd3S3123
  @screenId		int
 ,@bAll		char(1)
@@ -20112,6 +23238,9 @@ CREATE PROCEDURE GetDdlLinkTypeCd3S3123
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20137,7 +23266,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT LinkTypeCd1277=null, LinkTypeCd1277Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20148,6 +23278,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlLinkVertical3S3125]
  @screenId		int
 ,@bAll		char(1)
@@ -20189,7 +23320,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT LinkVertical1277=null, LinkVertical1277Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20200,6 +23335,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlMasterTableId3S59
  @screenId		int
 ,@bAll		char(1)
@@ -20216,6 +23352,9 @@ CREATE PROCEDURE GetDdlMasterTableId3S59
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20242,7 +23381,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MasterTableId15=null, MasterTableId15Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20253,6 +23393,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlMasterTableId3S635
  @screenId		int
 ,@bAll		char(1)
@@ -20269,6 +23410,9 @@ CREATE PROCEDURE GetDdlMasterTableId3S635
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20295,7 +23439,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MasterTableId71=null, MasterTableId71Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20306,6 +23451,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlMatchCd3S1806
  @screenId		int
 ,@bAll		char(1)
@@ -20322,6 +23468,9 @@ CREATE PROCEDURE GetDdlMatchCd3S1806
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20347,7 +23496,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MatchCd14=null, MatchCd14Text=null, MatchSort=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20358,6 +23508,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlMemberId103C63
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -20400,7 +23551,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MemberId=null, MemberName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20411,6 +23563,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlMemberId3S1144
  @screenId		int
 ,@bAll		char(1)
@@ -20427,6 +23580,9 @@ CREATE PROCEDURE GetDdlMemberId3S1144
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20453,7 +23609,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MemberId93=null, MemberId93Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20464,6 +23621,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlMemberId3S3079
  @screenId		int
 ,@bAll		char(1)
@@ -20480,6 +23638,9 @@ CREATE PROCEDURE GetDdlMemberId3S3079
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20506,7 +23667,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MemberId274=null, MemberId274Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20517,6 +23679,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlMemberId3S3092
  @screenId		int
 ,@bAll		char(1)
@@ -20533,6 +23696,9 @@ CREATE PROCEDURE GetDdlMemberId3S3092
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20559,7 +23725,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MemberId272=null, MemberId272Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20570,6 +23737,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlMemberId3S8
  @screenId		int
 ,@bAll		char(1)
@@ -20586,6 +23754,9 @@ CREATE PROCEDURE GetDdlMemberId3S8
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20612,7 +23783,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MemberId1=null, MemberId1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20623,6 +23795,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlMenuOptId3S944
  @screenId		int
 ,@bAll		char(1)
@@ -20639,6 +23812,9 @@ CREATE PROCEDURE GetDdlMenuOptId3S944
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20667,7 +23843,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MenuOptId93=null, MenuOptId93Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20678,6 +23855,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlMenuOption3S944]
  @screenId		int
 ,@bAll		char(1)
@@ -20706,7 +23884,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MenuOption93=null, MenuOption93Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20717,6 +23899,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlModifiedBy3S1394]
  @screenId		int
 ,@bAll		char(1)
@@ -20771,7 +23954,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ModifiedBy134=null, ModifiedBy134Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20782,6 +23969,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlModifiedBy3S1397
  @screenId		int
 ,@bAll		char(1)
@@ -20798,6 +23986,9 @@ CREATE PROCEDURE GetDdlModifiedBy3S1397
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20829,6 +24020,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
@@ -20836,7 +24030,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ModifiedBy24=null, ModifiedBy24Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20847,6 +24042,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlModifiedBy3S1451
  @screenId		int
 ,@bAll		char(1)
@@ -20863,6 +24059,9 @@ CREATE PROCEDURE GetDdlModifiedBy3S1451
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20894,6 +24093,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
@@ -20901,7 +24103,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ModifiedBy3=null, ModifiedBy3Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20912,6 +24115,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlModifiedBy3S1470
  @screenId		int
 ,@bAll		char(1)
@@ -20928,6 +24132,9 @@ CREATE PROCEDURE GetDdlModifiedBy3S1470
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20962,6 +24169,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
@@ -20969,7 +24179,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ModifiedBy22=null, ModifiedBy22Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -20980,6 +24191,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlModifiedBy3S3098
  @screenId		int
 ,@bAll		char(1)
@@ -20996,6 +24208,9 @@ CREATE PROCEDURE GetDdlModifiedBy3S3098
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21027,6 +24242,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
@@ -21034,7 +24252,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ModifiedBy272=null, ModifiedBy272Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21045,6 +24264,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlModifiedBy3S3362
  @screenId		int
 ,@bAll		char(1)
@@ -21061,6 +24281,9 @@ CREATE PROCEDURE GetDdlModifiedBy3S3362
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21092,6 +24315,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
@@ -21099,7 +24325,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ModifiedBy95=null, ModifiedBy95Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21110,6 +24337,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlMsgTypeCd3S1409
  @screenId		int
 ,@bAll		char(1)
@@ -21126,6 +24354,9 @@ CREATE PROCEDURE GetDdlMsgTypeCd3S1409
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21151,7 +24382,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT MsgTypeCd146=null, MsgTypeCd146Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21162,6 +24394,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlObjectType3S1715
  @screenId		int
 ,@bAll		char(1)
@@ -21178,6 +24411,9 @@ CREATE PROCEDURE GetDdlObjectType3S1715
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21203,7 +24439,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ObjectType192=null, ObjectType192Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21214,6 +24451,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetDdlObjectTypeCd1003C26]
  @screenId		int
 ,@RowAuthoritys		varchar(1000)
@@ -21250,7 +24489,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ObjectTypeCd=null, ObjectTypeName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21261,6 +24504,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlObjectTypeCd3S1354
  @screenId		int
 ,@bAll		char(1)
@@ -21277,6 +24521,9 @@ CREATE PROCEDURE GetDdlObjectTypeCd3S1354
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21302,7 +24549,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ObjectTypeCd136=null, ObjectTypeCd136Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21313,6 +24561,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlObjectTypeCd3S1383]
  @screenId		int
 ,@bAll		char(1)
@@ -21354,7 +24603,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ObjectTypeCd134=null, ObjectTypeCd134Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21365,6 +24618,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetDdlOperator3S1652]
 /* WITH ENCRYPTION */
 AS
@@ -21376,7 +24631,12 @@ SELECT @sClause = 'SELECT Operator184 = a100.OperatorName, Operator184Text = a10
 SELECT @fClause = 'FROM RODesign.dbo.CtOperator a100'
 SELECT @oClause = 'ORDER BY a100.OperatorId'
 EXEC (@sClause + ' ' + @fClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21387,6 +24647,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlOperatorId3S1024
  @screenId		int
 ,@bAll		char(1)
@@ -21403,6 +24664,9 @@ CREATE PROCEDURE GetDdlOperatorId3S1024
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21428,7 +24692,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT OperatorId23=null, OperatorId23Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21439,6 +24704,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlOperatorId3S1196]
  @screenId		int
 ,@bAll		char(1)
@@ -21480,7 +24746,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT OperatorId107=null, OperatorId107Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21491,6 +24759,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlOperatorId3S3305
  @screenId		int
 ,@bAll		char(1)
@@ -21507,6 +24776,9 @@ CREATE PROCEDURE GetDdlOperatorId3S3305
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21532,7 +24804,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT OperatorId104=null, OperatorId104Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21543,6 +24816,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlOriColumnId33S1682]
  @rptwizCatId		int
 ,@bAll				char(1)
@@ -21619,7 +24893,11 @@ SELECT @sClause = ' DECLARE @CultureId smallint'
 + ' SELECT ColumnId33=ColumnId, ColumnId33Text=ColumnHeader, NumericData FROM #col'
 SELECT @oClause = 'ORDER BY ColumnHeader'
 EXEC (@dClause + ' ' + @fClause + ' ' + @wClause + ' ' + @sClause + ' ' + @oClause + ' DROP TABLE dbo.#col')
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21630,6 +24908,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlOrientationCd3S1010
  @screenId		int
 ,@bAll		char(1)
@@ -21646,6 +24925,9 @@ CREATE PROCEDURE GetDdlOrientationCd3S1010
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21671,7 +24953,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT OrientationCd22=null, OrientationCd22Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21682,6 +24965,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlOrientationCd3S1674]
  @screenId		int
 ,@bAll		char(1)
@@ -21723,7 +25007,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT OrientationCd183=null, OrientationCd183Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21734,6 +25022,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlOvrideId3S1239
  @screenId		int
 ,@bAll		char(1)
@@ -21750,6 +25039,9 @@ CREATE PROCEDURE GetDdlOvrideId3S1239
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21775,7 +25067,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT OvrideId236=null, OvrideId236Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21786,6 +25079,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlPageObjId3S1863]
  @screenId		int
 ,@bAll		char(1)
@@ -21827,7 +25121,10 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PageObjId1279=null, PageObjId1279Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21838,6 +25135,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlParentGrpId3S982
  @screenId		int
 ,@bAll		char(1)
@@ -21854,6 +25152,9 @@ CREATE PROCEDURE GetDdlParentGrpId3S982
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21879,7 +25180,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ParentGrpId94=null, ParentGrpId94Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21890,6 +25192,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlParentId3S1609
  @screenId		int
 ,@bAll		char(1)
@@ -21906,6 +25209,9 @@ CREATE PROCEDURE GetDdlParentId3S1609
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -21931,7 +25237,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ParentId162=null, ParentId162Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21942,6 +25249,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlParentId3S3080]
  @screenId		int
 ,@bAll		char(1)
@@ -21984,7 +25292,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ParentId54=null, ParentId54Text=null, MemberId=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -21995,6 +25307,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlPermId3S1751
  @screenId		int
 ,@bAll		char(1)
@@ -22011,6 +25324,9 @@ CREATE PROCEDURE GetDdlPermId3S1751
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22044,6 +25360,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Members,'MemberId
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupId','UsrGroup','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Vendors,'VendorId','Vendor','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1299.','Y',null,'PermKeyRowId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1299.','Y',null,'PermKeyRowId',@wClause OUTPUT
@@ -22051,7 +25370,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PermId231=null, PermId231Text=null, Active=null, PermKeyId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22062,6 +25382,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlPermId3S1887]
  @screenId		int
 ,@bAll		char(1)
@@ -22118,7 +25439,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PermId241=null, PermId241Text=null, Active=null, PermKeyId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22129,6 +25452,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlPermKeyId3S182
  @screenId		int
 ,@bAll		char(1)
@@ -22145,6 +25469,9 @@ CREATE PROCEDURE GetDdlPermKeyId3S182
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22170,7 +25497,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PermKeyId241=null, PermKeyId241Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22181,6 +25509,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlPermKeyId3S1877
  @screenId		int
 ,@bAll		char(1)
@@ -22197,6 +25526,9 @@ CREATE PROCEDURE GetDdlPermKeyId3S1877
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22222,7 +25554,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PermKeyId237=null, PermKeyId237Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22233,6 +25566,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlPermKeyId3S1882
  @screenId		int
 ,@bAll		char(1)
@@ -22249,6 +25583,9 @@ CREATE PROCEDURE GetDdlPermKeyId3S1882
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22274,7 +25611,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PermKeyId239=null, PermKeyId239Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22285,6 +25623,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlPermKeyId3S833
  @screenId		int
 ,@bAll		char(1)
@@ -22301,6 +25640,9 @@ CREATE PROCEDURE GetDdlPermKeyId3S833
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22326,7 +25668,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PermKeyId231=null, PermKeyId231Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22337,6 +25680,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlPermKeyRowId3S1887
  @screenId		int
 ,@bAll		char(1)
@@ -22353,6 +25697,9 @@ CREATE PROCEDURE GetDdlPermKeyRowId3S1887
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22386,6 +25733,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Members,'MemberId
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupId','UsrGroup','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Vendors,'VendorId','Vendor','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1299.','Y',null,'PermKeyRowId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1299.','Y',null,'PermKeyRowId',@wClause OUTPUT
@@ -22393,7 +25743,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PermKeyRowId241=null, PermKeyRowId241Text=null, Active=null, PermKeyId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22404,6 +25755,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlPopup3S1805]
  @screenId		int
 ,@bAll		char(1)
@@ -22427,7 +25779,11 @@ IF @keyId is not null SELECT @wClause = @wClause + 'a125.CheckBoxCd = ''' + conv
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22438,6 +25794,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlPrjListVisible3S1467
  @screenId		int
 ,@bAll		char(1)
@@ -22454,6 +25811,9 @@ CREATE PROCEDURE GetDdlPrjListVisible3S1467
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22479,7 +25839,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PrjListVisible93=null, PrjListVisible93Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22490,6 +25851,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlProjectId3S1459
  @screenId		int
 ,@bAll		char(1)
@@ -22506,6 +25868,9 @@ CREATE PROCEDURE GetDdlProjectId3S1459
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22535,7 +25900,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ProjectId93=null, ProjectId93Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22546,6 +25912,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlProjectId3S1745
  @screenId		int
 ,@bAll		char(1)
@@ -22562,6 +25929,9 @@ CREATE PROCEDURE GetDdlProjectId3S1745
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22591,7 +25961,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ProjectId58=null, ProjectId58Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22602,6 +25973,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlProjectId3S1926
  @screenId		int
 ,@bAll		char(1)
@@ -22618,6 +25990,9 @@ CREATE PROCEDURE GetDdlProjectId3S1926
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22647,7 +26022,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ProjectId248=null, ProjectId248Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22658,6 +26034,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlProjectLs3S1743
  @screenId		int
 ,@bAll		char(1)
@@ -22674,6 +26051,9 @@ CREATE PROCEDURE GetDdlProjectLs3S1743
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22703,7 +26083,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ProjectLs1=null, ProjectLs1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22714,6 +26095,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlPRptCtrId3S1574
  @screenId		int
 ,@bAll		char(1)
@@ -22730,6 +26112,9 @@ CREATE PROCEDURE GetDdlPRptCtrId3S1574
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22755,7 +26140,122 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PRptCtrId161=null, PRptCtrId161Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReactEventId3S4207') AND type='P')
+DROP PROCEDURE dbo.GetDdlReactEventId3S4207
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlReactEventId3S4207
+ @screenId		int
+,@bAll		char(1)
+,@keyId		TinyInt
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReactEventId128=a1311.RuleReactTypeId, ReactEventId128Text=a1311.RuleReactTypeDesc'
+SELECT @fClause = 'FROM RODesign.dbo.CtRuleReactType a1311'
+SELECT @oClause = 'ORDER BY a1311.RuleReactTypeDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1311.RuleReactTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1311.RuleReactTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ReactEventId128=null, ReactEventId128Text=null WHERE 1<>1
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReduxEventId3S4210') AND type='P')
+DROP PROCEDURE dbo.GetDdlReduxEventId3S4210
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlReduxEventId3S4210
+ @screenId		int
+,@bAll		char(1)
+,@keyId		TinyInt
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReduxEventId128=a1316.RuleReduxTypeId, ReduxEventId128Text=a1316.RuleReduxTypeDesc'
+SELECT @fClause = 'FROM RODesign.dbo.CtRuleReduxType a1316'
+SELECT @oClause = 'ORDER BY a1316.RuleReduxTypeDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1316.RuleReduxTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1316.RuleReduxTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ReduxEventId128=null, ReduxEventId128Text=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22766,6 +26266,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRefColumnId3S169
  @screenId		int
 ,@bAll		char(1)
@@ -22782,6 +26283,9 @@ CREATE PROCEDURE GetDdlRefColumnId3S169
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22807,7 +26311,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RefColumnId20=null, RefColumnId20Text=null, TableId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22818,6 +26323,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRefTableId3S168
  @screenId		int
 ,@bAll		char(1)
@@ -22834,6 +26340,9 @@ CREATE PROCEDURE GetDdlRefTableId3S168
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22860,7 +26369,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RefTableId20=null, RefTableId20Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22871,6 +26381,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReleaseOs3S1703
  @screenId		int
 ,@bAll		char(1)
@@ -22887,6 +26398,9 @@ CREATE PROCEDURE GetDdlReleaseOs3S1703
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -22912,7 +26426,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReleaseOs191=null, ReleaseOs191Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22923,6 +26438,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlReleaseTypeId3003C37]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -22962,7 +26478,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReleaseTypeId=null, ReleaseTypeName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -22973,48 +26493,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE GetDdlReleaseTypeId303C37
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a193.ReleaseTypeId, a193.ReleaseTypeName'
-SELECT @fClause = 'FROM RODesign.dbo.CtReleaseType a193'
-SELECT @oClause = 'ORDER BY a193.ReleaseTypeName'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a193.ReleaseTypeName LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a193.ReleaseTypeId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ReleaseTypeId=null, ReleaseTypeName=null WHERE 1<>1
-RETURN 0 
+CREATE PROCEDURE GetDdlReleaseTypeId303C37 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a193.ReleaseTypeId, a193.ReleaseTypeName'SELECT @fClause = 'FROM RODesign.dbo.CtReleaseType a193'SELECT @oClause = 'ORDER BY a193.ReleaseTypeName'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a193.ReleaseTypeName LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a193.ReleaseTypeId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ReleaseTypeId=null, ReleaseTypeName=null WHERE 1<>1RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23025,6 +26504,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReleaseTypeId3S1705
  @screenId		int
 ,@bAll		char(1)
@@ -23041,6 +26521,9 @@ CREATE PROCEDURE GetDdlReleaseTypeId3S1705
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -23066,7 +26549,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReleaseTypeId191=null, ReleaseTypeId191Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23077,6 +26561,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportCriHlpId3S1267
  @screenId		int
 ,@bAll		char(1)
@@ -23093,6 +26578,9 @@ CREATE PROCEDURE GetDdlReportCriHlpId3S1267
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -23119,7 +26607,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportCriHlpId127=null, ReportCriHlpId127Text=null, ReportId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23130,6 +26619,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportCriId3S1025
  @screenId		int
 ,@bAll		char(1)
@@ -23146,6 +26636,9 @@ CREATE PROCEDURE GetDdlReportCriId3S1025
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -23171,7 +26664,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportCriId23=null, ReportCriId23Text=null, ReportId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23182,6 +26676,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportGrpId3S1076
  @screenId		int
 ,@bAll		char(1)
@@ -23198,6 +26693,9 @@ CREATE PROCEDURE GetDdlReportGrpId3S1076
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -23223,7 +26721,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportGrpId97=null, ReportGrpId97Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23234,6 +26733,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlReportId1003C13]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23276,7 +26776,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23287,6 +26791,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetDdlReportId1003C2]
  @screenId		int
 ,@RowAuthoritys		varchar(1000)
@@ -23326,7 +26832,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23337,6 +26847,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlReportId1003C4]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23379,7 +26890,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23390,6 +26905,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId103C13
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23404,6 +26920,9 @@ CREATE PROCEDURE GetDdlReportId103C13
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -23434,7 +26953,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23445,6 +26965,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId103C2
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23489,7 +27010,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23500,6 +27022,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId103C29
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23544,7 +27067,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23555,6 +27079,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId103C30
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23599,7 +27124,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23610,6 +27136,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId103C34
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23654,7 +27181,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23665,6 +27193,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId103C4
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23679,6 +27208,9 @@ CREATE PROCEDURE GetDdlReportId103C4
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -23709,7 +27241,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23720,6 +27253,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlReportId1503C11]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23762,7 +27296,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23773,6 +27311,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId203C11
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23817,7 +27356,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23828,6 +27368,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId203C39
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -23872,7 +27413,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23883,6 +27425,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S1075
  @screenId		int
 ,@bAll		char(1)
@@ -23899,6 +27442,9 @@ CREATE PROCEDURE GetDdlReportId3S1075
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -23927,7 +27473,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId97=null, ReportId97Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23938,6 +27485,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S121
  @screenId		int
 ,@bAll		char(1)
@@ -23954,6 +27502,9 @@ CREATE PROCEDURE GetDdlReportId3S121
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -23982,7 +27533,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId23=null, ReportId23Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -23993,6 +27545,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S1214
  @screenId		int
 ,@bAll		char(1)
@@ -24009,6 +27562,9 @@ CREATE PROCEDURE GetDdlReportId3S1214
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24037,7 +27593,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId116=null, ReportId116Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24048,6 +27605,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S1265
  @screenId		int
 ,@bAll		char(1)
@@ -24064,6 +27622,9 @@ CREATE PROCEDURE GetDdlReportId3S1265
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24092,7 +27653,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId127=null, ReportId127Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24103,6 +27665,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S1365
  @screenId		int
 ,@bAll		char(1)
@@ -24119,6 +27682,9 @@ CREATE PROCEDURE GetDdlReportId3S1365
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24147,7 +27713,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId136=null, ReportId136Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24158,6 +27725,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S1577
  @screenId		int
 ,@bAll		char(1)
@@ -24174,6 +27742,9 @@ CREATE PROCEDURE GetDdlReportId3S1577
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24202,7 +27773,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId161=null, ReportId161Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24213,6 +27785,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S1599
  @screenId		int
 ,@bAll		char(1)
@@ -24229,6 +27802,9 @@ CREATE PROCEDURE GetDdlReportId3S1599
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24257,7 +27833,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId160=null, ReportId160Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24268,6 +27845,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlReportId3S1672]
  @screenId		int
 ,@bAll		char(1)
@@ -24323,7 +27901,11 @@ END
 ELSE
 	SELECT ReportId183=null, ReportId183Text=null WHERE 1<>1
 */
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24334,6 +27916,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S1695
  @screenId		int
 ,@bAll		char(1)
@@ -24350,6 +27933,9 @@ CREATE PROCEDURE GetDdlReportId3S1695
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24378,7 +27964,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId162=null, ReportId162Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24389,6 +27976,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S1733
  @screenId		int
 ,@bAll		char(1)
@@ -24405,6 +27993,9 @@ CREATE PROCEDURE GetDdlReportId3S1733
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24433,7 +28024,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId206=null, ReportId206Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24444,6 +28036,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S1750
  @screenId		int
 ,@bAll		char(1)
@@ -24460,6 +28053,9 @@ CREATE PROCEDURE GetDdlReportId3S1750
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24488,7 +28084,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId238=null, ReportId238Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24499,6 +28096,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlReportId3S1766]
  @screenId		int
 ,@bAll		char(1)
@@ -24524,7 +28122,11 @@ SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24535,6 +28137,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S436
  @screenId		int
 ,@bAll		char(1)
@@ -24551,6 +28154,9 @@ CREATE PROCEDURE GetDdlReportId3S436
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24579,7 +28185,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId39=null, ReportId39Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24590,6 +28197,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportId3S967
  @screenId		int
 ,@bAll		char(1)
@@ -24606,6 +28214,9 @@ CREATE PROCEDURE GetDdlReportId3S967
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24634,7 +28245,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportId94=null, ReportId94Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24645,6 +28257,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlReportSctId3S1223]
  @screenId		int
 ,@bAll		char(1)
@@ -24682,7 +28295,11 @@ IF @keyId is not null SELECT @wClause = @wClause + 'a118.ReportSctId = ' + conve
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24693,6 +28310,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlReportTypeCd3S1729
  @screenId		int
 ,@bAll		char(1)
@@ -24709,6 +28327,9 @@ CREATE PROCEDURE GetDdlReportTypeCd3S1729
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24734,7 +28355,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ReportTypeCd22=null, ReportTypeCd22Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24745,6 +28367,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRowAuthId3S200
  @screenId		int
 ,@bAll		char(1)
@@ -24761,6 +28384,9 @@ CREATE PROCEDURE GetDdlRowAuthId3S200
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24786,7 +28412,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RowAuthId238=null, RowAuthId238Text=null, OvrideId=null, PromptAlways=null, PromptModal=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24797,6 +28424,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRowAuthorityId3S26
  @screenId		int
 ,@bAll		char(1)
@@ -24813,6 +28441,9 @@ CREATE PROCEDURE GetDdlRowAuthorityId3S26
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24838,7 +28469,65 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RowAuthorityId7=null, RowAuthorityId7Text=null, OvrideId=null, PromptAlways=null, PromptModal=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRowVisible3S4160') AND type='P')
+DROP PROCEDURE dbo.GetDdlRowVisible3S4160
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlRowVisible3S4160
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Char(100)
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RowVisible116=a1306.ButtonStyleCd, RowVisible116Text=a1306.ButtonStyleDesc'
+SELECT @fClause = 'FROM RODesign.dbo.CtButtonStyle a1306'
+SELECT @oClause = 'ORDER BY a1306.ButtonStyleDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1306.ButtonStyleDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1306.ButtonStyleCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT RowVisible116=null, RowVisible116Text=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24849,6 +28538,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptCelId3S1576
  @screenId		int
 ,@bAll		char(1)
@@ -24865,6 +28555,9 @@ CREATE PROCEDURE GetDdlRptCelId3S1576
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24890,7 +28583,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptCelId161=null, RptCelId161Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24901,6 +28595,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetDdlRptChart3S1652]
 /* WITH ENCRYPTION */
 AS
@@ -24912,7 +28608,12 @@ SELECT @sClause = 'SELECT RptChartCd184 = a184.RptChartCd, RptChartCd184Text = a
 SELECT @fClause = 'FROM RODesign.dbo.CtRptChart a184'
 SELECT @oClause = 'ORDER BY a184.RptChartName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24923,6 +28624,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptChaTypeCd3S1734
  @screenId		int
 ,@bAll		char(1)
@@ -24939,6 +28641,9 @@ CREATE PROCEDURE GetDdlRptChaTypeCd3S1734
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -24964,7 +28669,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptChaTypeCd206=null, RptChaTypeCd206Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -24975,6 +28681,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlRptChaTypeCd3S1739]
  @screenId		int
 ,@bAll		char(1)
@@ -25016,7 +28723,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptChaTypeCd183=null, RptChaTypeCd183Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25027,6 +28738,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptCtrId203C31
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -25068,7 +28780,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptCtrId=null, RptCtrDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25079,6 +28792,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptCtrId3S1610
  @screenId		int
 ,@bAll		char(1)
@@ -25095,6 +28809,9 @@ CREATE PROCEDURE GetDdlRptCtrId3S1610
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25120,7 +28837,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptCtrId162=null, RptCtrId162Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25131,6 +28849,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptCtrId3S1732
  @screenId		int
 ,@bAll		char(1)
@@ -25147,6 +28866,9 @@ CREATE PROCEDURE GetDdlRptCtrId3S1732
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25172,7 +28894,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptCtrId206=null, RptCtrId206Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25183,6 +28906,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptCtrTypeCd3S1578
  @screenId		int
 ,@bAll		char(1)
@@ -25199,6 +28923,9 @@ CREATE PROCEDURE GetDdlRptCtrTypeCd3S1578
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25224,7 +28951,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptCtrTypeCd161=null, RptCtrTypeCd161Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25235,6 +28963,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptElmId3S1575
  @screenId		int
 ,@bAll		char(1)
@@ -25251,6 +28980,9 @@ CREATE PROCEDURE GetDdlRptElmId3S1575
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25276,7 +29008,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptElmId161=null, RptElmId161Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25287,6 +29020,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptElmTypeCd3S1600
  @screenId		int
 ,@bAll		char(1)
@@ -25303,6 +29037,9 @@ CREATE PROCEDURE GetDdlRptElmTypeCd3S1600
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25328,7 +29065,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptElmTypeCd160=null, RptElmTypeCd160Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25339,6 +29077,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetDdlRptGroupId3S1652]
 /* WITH ENCRYPTION */
 AS
@@ -25350,7 +29090,12 @@ SELECT @sClause = 'SELECT RptGroupId184 = a186.RptGroupId, RptGroupId184Text = a
 SELECT @fClause = 'FROM RODesign.dbo.CtRptGroup a186'
 SELECT @oClause = 'ORDER BY a186.RptGroupId'
 EXEC (@sClause + ' ' + @fClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25361,6 +29106,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlRptMemCri]
  @GenPrefix		varchar(10)
 ,@reportId		int
@@ -25395,7 +29141,11 @@ EXEC RODesign.dbo.GetPermFilter null,0,@RowAuthoritys,@Usrs,'InputBy','Usr','a.'
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a.','Y',null,'RptMemCriId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25406,6 +29156,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlRptMemFld]
  @GenPrefix		varchar(10)
 ,@bAll			char(1)
@@ -25436,7 +29187,11 @@ EXEC RODesign.dbo.GetPermFilter null,0,@RowAuthoritys,@Usrs,'InputBy','Usr','a.'
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a.','Y',null,'RptMemFldId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25447,6 +29202,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptObjTypeCd3S1469
  @screenId		int
 ,@bAll		char(1)
@@ -25463,6 +29219,9 @@ CREATE PROCEDURE GetDdlRptObjTypeCd3S1469
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25488,7 +29247,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptObjTypeCd23=null, RptObjTypeCd23Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25499,6 +29259,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptStyleId3S1580
  @screenId		int
 ,@bAll		char(1)
@@ -25515,6 +29276,9 @@ CREATE PROCEDURE GetDdlRptStyleId3S1580
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25540,7 +29304,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptStyleId161=null, RptStyleId161Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25551,6 +29316,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptStyleId3S1601
  @screenId		int
 ,@bAll		char(1)
@@ -25567,6 +29333,9 @@ CREATE PROCEDURE GetDdlRptStyleId3S1601
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25592,7 +29361,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptStyleId160=null, RptStyleId160Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25603,6 +29373,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptTblTypeCd3S1611
  @screenId		int
 ,@bAll		char(1)
@@ -25619,6 +29390,9 @@ CREATE PROCEDURE GetDdlRptTblTypeCd3S1611
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25644,7 +29418,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptTblTypeCd162=null, RptTblTypeCd162Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25655,6 +29430,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptTemplate3S1728
  @screenId		int
 ,@bAll		char(1)
@@ -25671,6 +29447,9 @@ CREATE PROCEDURE GetDdlRptTemplate3S1728
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25697,7 +29476,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT DocId=null, DocLink=null, DocName=null, DocSize=null, InputOn=null, LoginName=null, ReportId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25708,6 +29488,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlRptwizCatId3S1638]
  @screenId		int
 ,@bAll		char(1)
@@ -25749,7 +29530,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptwizCatId183=null, RptwizCatId183Text=null, CatDescription181=null, RptwizCatImg181=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25760,6 +29545,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlRptwizTypeCd3S1637]
  @screenId		int
 ,@bAll		char(1)
@@ -25793,7 +29579,11 @@ SELECT @sClause = ' IF object_id(''tempdb.dbo.#type'') is not null DROP TABLE db
 --+ ' INSERT #type SELECT ''D'', ''Document Merging'', ''This merges selected fields into your choice of rtf and txt documents.'''
 + ' SELECT * FROM #type'
 EXEC (@sClause + ' DROP TABLE dbo.#type')
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25804,6 +29594,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRptwizTypId3S1671
  @screenId		int
 ,@bAll		char(1)
@@ -25820,6 +29611,9 @@ CREATE PROCEDURE GetDdlRptwizTypId3S1671
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25845,7 +29639,65 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RptwizTypId181=null, RptwizTypId181Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleAsmxTypeId3S4192') AND type='P')
+DROP PROCEDURE dbo.GetDdlRuleAsmxTypeId3S4192
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlRuleAsmxTypeId3S4192
+ @screenId		int
+,@bAll		char(1)
+,@keyId		TinyInt
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleAsmxTypeId1313=a1310.RuleAsmxTypeId, RuleAsmxTypeId1313Text=a1310.RuleAsmxTypeDesc'
+SELECT @fClause = 'FROM RODesign.dbo.CtRuleAsmxType a1310'
+SELECT @oClause = 'ORDER BY a1310.RuleAsmxTypeDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1310.RuleAsmxTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1310.RuleAsmxTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT RuleAsmxTypeId1313=null, RuleAsmxTypeId1313Text=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25856,6 +29708,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRuleCntTypeId3S4075
  @screenId		int
 ,@bAll		char(1)
@@ -25872,6 +29725,9 @@ CREATE PROCEDURE GetDdlRuleCntTypeId3S4075
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25897,7 +29753,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RuleCntTypeId127=null, RuleCntTypeId127Text=null, RuleCntTypeDesc1294=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25908,6 +29765,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlRuleLayerCd3S1627]
  @screenId		int
 ,@bAll		char(1)
@@ -25949,7 +29807,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RuleLayerCd179=null, RuleLayerCd179Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -25960,6 +29820,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRuleMethodId3S4073
  @screenId		int
 ,@bAll		char(1)
@@ -25976,6 +29837,9 @@ CREATE PROCEDURE GetDdlRuleMethodId3S4073
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -26001,7 +29865,65 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RuleMethodId127=null, RuleMethodId127Text=null, RuleMethodId=null, RuleMethodDesc1295=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleReactTypeId3S4199') AND type='P')
+DROP PROCEDURE dbo.GetDdlRuleReactTypeId3S4199
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlRuleReactTypeId3S4199
+ @screenId		int
+,@bAll		char(1)
+,@keyId		TinyInt
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleReactTypeId1312=a1311.RuleReactTypeId, RuleReactTypeId1312Text=a1311.RuleReactTypeDesc'
+SELECT @fClause = 'FROM RODesign.dbo.CtRuleReactType a1311'
+SELECT @oClause = 'ORDER BY a1311.RuleReactTypeDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1311.RuleReactTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1311.RuleReactTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT RuleReactTypeId1312=null, RuleReactTypeId1312Text=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26012,6 +29934,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRuleTypeId3S1284
  @screenId		int
 ,@bAll		char(1)
@@ -26028,6 +29951,9 @@ CREATE PROCEDURE GetDdlRuleTypeId3S1284
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -26053,7 +29979,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RuleTypeId128=null, RuleTypeId128Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26064,6 +29991,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRuleTypeId3S1293
  @screenId		int
 ,@bAll		char(1)
@@ -26080,6 +30008,9 @@ CREATE PROCEDURE GetDdlRuleTypeId3S1293
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -26105,7 +30036,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RuleTypeId127=null, RuleTypeId127Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26116,6 +30048,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRuleTypeId3S151
  @screenId		int
 ,@bAll		char(1)
@@ -26132,6 +30065,9 @@ CREATE PROCEDURE GetDdlRuleTypeId3S151
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -26157,7 +30093,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RuleTypeId24=null, RuleTypeId24Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26168,6 +30105,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlRuleTypeId3S654
  @screenId		int
 ,@bAll		char(1)
@@ -26184,6 +30122,9 @@ CREATE PROCEDURE GetDdlRuleTypeId3S654
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -26209,7 +30150,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT RuleTypeId73=null, RuleTypeId73Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26220,6 +30162,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenCriHlpId3S1266
  @screenId		int
 ,@bAll		char(1)
@@ -26236,6 +30179,9 @@ CREATE PROCEDURE GetDdlScreenCriHlpId3S1266
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -26262,7 +30208,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenCriHlpId127=null, ScreenCriHlpId127Text=null, ScreenId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26273,6 +30220,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenCriId3S1197]
  @screenId		int
 ,@bAll		char(1)
@@ -26314,7 +30262,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenCriId107=null, ScreenCriId107Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26325,6 +30275,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenCriId3S1302]
  @screenId		int
 ,@bAll		char(1)
@@ -26366,7 +30317,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenCriId128=null, ScreenCriId128Text=null, ScreenId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26377,6 +30332,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId1003C1]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26416,7 +30372,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26427,6 +30387,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId1003C12]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26466,7 +30427,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26477,6 +30442,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId1003C15]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26516,7 +30482,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26527,6 +30497,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId1003C16]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26566,7 +30537,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26577,6 +30552,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId1003C3]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26616,7 +30592,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26627,6 +30607,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId1003C5]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26666,7 +30647,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26677,6 +30662,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId1003C9]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26716,7 +30702,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26727,6 +30717,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId1005C16]
  @screenId		int
 ,@RowAuthoritys		varchar(1000)
@@ -26763,7 +30755,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26774,6 +30770,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId103C1]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26813,7 +30810,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26824,6 +30825,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId103C1072
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26865,7 +30867,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26876,6 +30879,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId103C1074
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26890,6 +30894,9 @@ CREATE PROCEDURE GetDdlScreenId103C1074
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -26917,7 +30924,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26928,6 +30936,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId103C1075]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -26969,7 +30978,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -26980,6 +30991,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId103C1078]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27019,7 +31031,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27030,6 +31046,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId103C12]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27069,7 +31086,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27080,6 +31099,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId103C15
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27094,6 +31114,9 @@ CREATE PROCEDURE GetDdlScreenId103C15
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -27121,7 +31144,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27132,6 +31156,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId103C16
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27146,6 +31171,9 @@ CREATE PROCEDURE GetDdlScreenId103C16
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -27173,7 +31201,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27184,6 +31213,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId103C3
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27225,7 +31255,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27236,6 +31267,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId103C38
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27277,7 +31309,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27288,6 +31321,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId103C45]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27327,7 +31361,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27338,6 +31374,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId103C5]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27377,7 +31414,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27388,6 +31427,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId103C52
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27429,7 +31469,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27440,6 +31481,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId103C60
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27454,6 +31496,9 @@ CREATE PROCEDURE GetDdlScreenId103C60
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -27481,7 +31526,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ProgramName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27492,6 +31538,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId103C9
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27533,7 +31580,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27544,6 +31592,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId104C1075]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27585,7 +31634,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27596,6 +31647,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId105C1075]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27637,7 +31689,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27648,6 +31702,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId203C60]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -27687,7 +31742,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId=null, ProgramName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27698,6 +31757,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId3S1159]
  @screenId		int
 ,@bAll		char(1)
@@ -27739,7 +31799,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId106=null, ScreenId106Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27750,6 +31814,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S1179
  @screenId		int
 ,@bAll		char(1)
@@ -27766,6 +31831,9 @@ CREATE PROCEDURE GetDdlScreenId3S1179
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -27791,7 +31859,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId104=null, ScreenId104Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27802,6 +31871,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId3S1194]
  @screenId		int
 ,@bAll		char(1)
@@ -27843,7 +31913,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId107=null, ScreenId107Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27854,6 +31926,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S1208
  @screenId		int
 ,@bAll		char(1)
@@ -27870,6 +31943,9 @@ CREATE PROCEDURE GetDdlScreenId3S1208
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -27895,7 +31971,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId116=null, ScreenId116Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27906,6 +31983,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S1258
  @screenId		int
 ,@bAll		char(1)
@@ -27922,6 +32000,9 @@ CREATE PROCEDURE GetDdlScreenId3S1258
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -27947,7 +32028,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId127=null, ScreenId127Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27958,6 +32040,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S1268
  @screenId		int
 ,@bAll		char(1)
@@ -27974,6 +32057,9 @@ CREATE PROCEDURE GetDdlScreenId3S1268
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -27999,7 +32085,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId14=null, ScreenId14Text=null, ScreenTypeId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28010,6 +32097,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S1286
  @screenId		int
 ,@bAll		char(1)
@@ -28026,6 +32114,9 @@ CREATE PROCEDURE GetDdlScreenId3S1286
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28051,7 +32142,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId128=null, ScreenId128Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28062,6 +32154,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S1364
  @screenId		int
 ,@bAll		char(1)
@@ -28078,6 +32171,9 @@ CREATE PROCEDURE GetDdlScreenId3S1364
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28103,7 +32199,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId136=null, ScreenId136Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28114,6 +32211,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S139
  @screenId		int
 ,@bAll		char(1)
@@ -28130,6 +32228,9 @@ CREATE PROCEDURE GetDdlScreenId3S139
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28155,7 +32256,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId24=null, ScreenId24Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28166,6 +32268,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId3S1631]
  @screenId		int
 ,@bAll		char(1)
@@ -28207,7 +32310,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId179=null, ScreenId179Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28218,6 +32323,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S188
  @screenId		int
 ,@bAll		char(1)
@@ -28234,6 +32340,9 @@ CREATE PROCEDURE GetDdlScreenId3S188
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28259,7 +32368,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId238=null, ScreenId238Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28270,6 +32380,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenId3S1883]
  @screenId		int
 ,@bAll		char(1)
@@ -28311,7 +32422,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId241=null, ScreenId241Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28322,6 +32435,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S1977
  @screenId		int
 ,@bAll		char(1)
@@ -28338,6 +32452,9 @@ CREATE PROCEDURE GetDdlScreenId3S1977
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28363,7 +32480,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId254=null, ScreenId254Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28374,6 +32492,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S3162
  @screenId		int
 ,@bAll		char(1)
@@ -28390,6 +32509,9 @@ CREATE PROCEDURE GetDdlScreenId3S3162
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28415,7 +32537,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId19=null, ScreenId19Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28426,6 +32549,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S3261
  @screenId		int
 ,@bAll		char(1)
@@ -28442,6 +32566,9 @@ CREATE PROCEDURE GetDdlScreenId3S3261
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28467,7 +32594,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId14=null, ScreenId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28478,6 +32606,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S4107
  @screenId		int
 ,@bAll		char(1)
@@ -28494,6 +32623,9 @@ CREATE PROCEDURE GetDdlScreenId3S4107
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28519,7 +32651,122 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId1300=null, ScreenId1300Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S4196') AND type='P')
+DROP PROCEDURE dbo.GetDdlScreenId3S4196
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlScreenId3S4196
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId1313=a15.ScreenId, ScreenId1313Text=a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId1313=null, ScreenId1313Text=null WHERE 1<>1
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S4203') AND type='P')
+DROP PROCEDURE dbo.GetDdlScreenId3S4203
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlScreenId3S4203
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId1312=a15.ScreenId, ScreenId1312Text=a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId1312=null, ScreenId1312Text=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28530,6 +32777,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S435
  @screenId		int
 ,@bAll		char(1)
@@ -28546,6 +32794,9 @@ CREATE PROCEDURE GetDdlScreenId3S435
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28571,7 +32822,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId39=null, ScreenId39Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28582,6 +32834,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenId3S841
  @screenId		int
 ,@bAll		char(1)
@@ -28598,6 +32851,9 @@ CREATE PROCEDURE GetDdlScreenId3S841
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28623,7 +32879,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId86=null, ScreenId86Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28634,6 +32891,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenObjHlpId3S1260
  @screenId		int
 ,@bAll		char(1)
@@ -28650,6 +32908,9 @@ CREATE PROCEDURE GetDdlScreenObjHlpId3S1260
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28676,7 +32937,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenObjHlpId127=null, ScreenObjHlpId127Text=null, ScreenId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28687,6 +32949,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenObjId3S1287
  @screenId		int
 ,@bAll		char(1)
@@ -28703,6 +32966,9 @@ CREATE PROCEDURE GetDdlScreenObjId3S1287
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28728,7 +32994,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenObjId128=null, ScreenObjId128Text=null, ScreenId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28739,6 +33006,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlScreenObjId3S181]
  @screenId		int
 ,@bAll		char(1)
@@ -28780,7 +33048,66 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenObjId241=null, ScreenObjId241Text=null, ScreenId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenObjId3S4204') AND type='P')
+DROP PROCEDURE dbo.GetDdlScreenObjId3S4204
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlScreenObjId3S4204
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId1312=a14.ScreenObjId, ScreenObjId1312Text=a14.ColumnName, a14.ScreenId'
+SELECT @fClause = 'FROM dbo.ScreenObj a14'
+SELECT @oClause = 'ORDER BY a14.ColumnName'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a14.ColumnName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a14.ScreenObjId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenObjId1312=null, ScreenObjId1312Text=null, ScreenId=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28791,6 +33118,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlScreenTypeId3S45
  @screenId		int
 ,@bAll		char(1)
@@ -28807,6 +33135,9 @@ CREATE PROCEDURE GetDdlScreenTypeId3S45
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28832,7 +33163,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenTypeId15=null, ScreenTypeId15Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28843,6 +33175,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSearchDtlId3S4148
  @screenId		int
 ,@bAll		char(1)
@@ -28859,6 +33192,9 @@ CREATE PROCEDURE GetDdlSearchDtlId3S4148
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28884,7 +33220,65 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SearchDtlId15=null, SearchDtlId15Text=null, TableId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchDtlIdR3S4165') AND type='P')
+DROP PROCEDURE dbo.GetDdlSearchDtlIdR3S4165
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlSearchDtlIdR3S4165
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SearchDtlIdR15=a5.ColumnId, SearchDtlIdR15Text=a5.ColumnDesc, a5.TableId'
+SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @oClause = 'ORDER BY a5.ColumnDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT SearchDtlIdR15=null, SearchDtlIdR15Text=null, TableId=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28895,6 +33289,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSearchId3S46
  @screenId		int
 ,@bAll		char(1)
@@ -28911,6 +33306,9 @@ CREATE PROCEDURE GetDdlSearchId3S46
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28936,7 +33334,65 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SearchId15=null, SearchId15Text=null, TableId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchIdR3S4164') AND type='P')
+DROP PROCEDURE dbo.GetDdlSearchIdR3S4164
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlSearchIdR3S4164
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SearchIdR15=a5.ColumnId, SearchIdR15Text=a5.ColumnDesc, a5.TableId'
+SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @oClause = 'ORDER BY a5.ColumnDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT SearchIdR15=null, SearchIdR15Text=null, TableId=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28947,6 +33403,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSearchImgId3S4146
  @screenId		int
 ,@bAll		char(1)
@@ -28963,6 +33420,9 @@ CREATE PROCEDURE GetDdlSearchImgId3S4146
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -28988,7 +33448,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SearchImgId15=null, SearchImgId15Text=null, TableId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28999,6 +33460,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSearchTableId3S4145
  @screenId		int
 ,@bAll		char(1)
@@ -29015,6 +33477,9 @@ CREATE PROCEDURE GetDdlSearchTableId3S4145
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -29041,7 +33506,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SearchTableId15=null, SearchTableId15Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29052,6 +33518,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSearchUrlId3S4147
  @screenId		int
 ,@bAll		char(1)
@@ -29068,6 +33535,9 @@ CREATE PROCEDURE GetDdlSearchUrlId3S4147
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -29093,7 +33563,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SearchUrlId15=null, SearchUrlId15Text=null, TableId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29104,6 +33575,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSectionCd103C1073
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -29145,7 +33617,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SectionCd=null, SectionName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29156,6 +33629,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSectionCd3S3118
  @screenId		int
 ,@bAll		char(1)
@@ -29172,6 +33646,9 @@ CREATE PROCEDURE GetDdlSectionCd3S3118
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -29197,7 +33674,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SectionCd1277=null, SectionCd1277Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29208,6 +33686,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSectionCd3S3139
  @screenId		int
 ,@bAll		char(1)
@@ -29224,6 +33703,9 @@ CREATE PROCEDURE GetDdlSectionCd3S3139
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -29249,7 +33731,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SectionCd1284=null, SectionCd1284Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29260,6 +33743,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSectionCd3S3146
  @screenId		int
 ,@bAll		char(1)
@@ -29276,6 +33760,9 @@ CREATE PROCEDURE GetDdlSectionCd3S3146
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -29301,7 +33788,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SectionCd1283=null, SectionCd1283Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29312,6 +33800,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelAgent3S1312]
  @screenId		int
 ,@bAll		char(1)
@@ -29340,7 +33829,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelAgent13=null, SelAgent13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29351,6 +33844,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelAgent3S1322]
  @screenId		int
 ,@bAll		char(1)
@@ -29379,7 +33873,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelAgent10=null, SelAgent10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29390,6 +33888,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelBroker3S1313]
  @screenId		int
 ,@bAll		char(1)
@@ -29418,7 +33917,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelBroker13=null, SelBroker13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29429,6 +33932,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelBroker3S1323]
  @screenId		int
 ,@bAll		char(1)
@@ -29457,7 +33961,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelBroker10=null, SelBroker10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29468,6 +33976,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelColumnId33S1682]
  @screenId			int
 ,@bAll				char(1)
@@ -29544,7 +34053,11 @@ SELECT @sClause = ' DECLARE @CultureId smallint'
 	+ ', ColumnId99Text = ColumnHeader'
 + ' , NumericData, RptwizDtlId FROM #col'
 EXEC (@dClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause + ' ' + @sClause + ' DROP TABLE dbo.#col')
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29555,6 +34068,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelColumnId44S1682]
  @screenId			int
 ,@bAll				char(1)
@@ -29616,7 +34130,11 @@ SELECT @sClause = ' DECLARE @CultureId smallint'
 + ' case when ColSort >= 0 then ''['' + ''ASC] '' + ColumnHeader else ''['' + ''DSC] '' + ColumnHeader end'
 + ', ColSort, RptwizDtlId FROM #col'
 EXEC (@dClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause + ' ' + @sClause + ' DROP TABLE dbo.#col')
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29627,6 +34145,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelColumnId77S1682]
  @screenId			int
 ,@bAll				char(1)
@@ -29693,7 +34212,11 @@ SELECT @sClause = ' DECLARE @CultureId smallint'
 + ' SELECT ColumnId77 = Cid, ColumnId77Text = ''['' + OperatorName + ''] '' + ColumnHeader, ColumnId'
 + ', OperatorName, NumericData, RptwizDtlId FROM #col'
 EXEC (@dClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause + ' ' + @sClause + ' DROP TABLE dbo.#col')
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29704,6 +34227,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelCompany3S1311]
  @screenId		int
 ,@bAll		char(1)
@@ -29732,7 +34256,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelCompany13=null, SelCompany13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29743,6 +34271,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelCompany3S1321]
  @screenId		int
 ,@bAll		char(1)
@@ -29771,7 +34300,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelCompany10=null, SelCompany10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29782,6 +34315,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelCulture3S1310]
  @screenId		int
 ,@bAll		char(1)
@@ -29810,7 +34344,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelCulture13=null, SelCulture13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29821,6 +34359,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelCulture3S1320]
  @screenId		int
 ,@bAll		char(1)
@@ -29849,7 +34388,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelCulture10=null, SelCulture10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29860,6 +34403,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelCustomer3S1314]
  @screenId		int
 ,@bAll		char(1)
@@ -29888,7 +34432,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelCustomer13=null, SelCustomer13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29899,6 +34447,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelCustomer3S1324]
  @screenId		int
 ,@bAll		char(1)
@@ -29927,7 +34476,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelCustomer10=null, SelCustomer10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29938,6 +34491,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelInvestor3S1315]
  @screenId		int
 ,@bAll		char(1)
@@ -29966,7 +34520,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelInvestor13=null, SelInvestor13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -29977,6 +34535,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelInvestor3S1325]
  @screenId		int
 ,@bAll		char(1)
@@ -30005,7 +34564,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelInvestor10=null, SelInvestor10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30016,6 +34579,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSelLevel3S1308
  @screenId		int
 ,@bAll		char(1)
@@ -30032,6 +34596,9 @@ CREATE PROCEDURE GetDdlSelLevel3S1308
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30057,7 +34624,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelLevel239=null, SelLevel239Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30068,6 +34636,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSelLevel3S1879
  @screenId		int
 ,@bAll		char(1)
@@ -30084,6 +34653,9 @@ CREATE PROCEDURE GetDdlSelLevel3S1879
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30109,7 +34681,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelLevel237=null, SelLevel237Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30120,6 +34693,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelMember3S1316]
  @screenId		int
 ,@bAll		char(1)
@@ -30148,7 +34722,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelMember13=null, SelMember13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30159,6 +34737,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelMember3S1326]
  @screenId		int
 ,@bAll		char(1)
@@ -30187,7 +34766,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelMember10=null, SelMember10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30198,6 +34781,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelProject3S1461]
  @screenId		int
 ,@bAll		char(1)
@@ -30226,7 +34810,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelProject10=null, SelProject10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30237,6 +34825,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelProject3S1462]
  @screenId		int
 ,@bAll		char(1)
@@ -30265,7 +34854,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelProject13=null, SelProject13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30276,6 +34869,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelUsr3S1308]
  @screenId		int
 ,@bAll		char(1)
@@ -30304,7 +34898,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelUsr13=null, SelUsr13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30315,6 +34913,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelUsr3S1318]
  @screenId		int
 ,@bAll		char(1)
@@ -30343,7 +34942,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelUsr10=null, SelUsr10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30354,6 +34957,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelUsrGroup3S1309]
  @screenId		int
 ,@bAll		char(1)
@@ -30382,7 +34986,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelUsrGroup13=null, SelUsrGroup13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30393,6 +35001,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelUsrGroup3S1319]
  @screenId		int
 ,@bAll		char(1)
@@ -30421,7 +35030,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelUsrGroup10=null, SelUsrGroup10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30432,6 +35045,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelVendor3S1317]
  @screenId		int
 ,@bAll		char(1)
@@ -30460,7 +35074,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelVendor13=null, SelVendor13Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30471,6 +35089,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlSelVendor3S1327]
  @screenId		int
 ,@bAll		char(1)
@@ -30499,7 +35118,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SelVendor10=null, SelVendor10Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30510,6 +35133,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSeriesGrp3S1738
  @screenId		int
 ,@bAll		char(1)
@@ -30526,6 +35150,9 @@ CREATE PROCEDURE GetDdlSeriesGrp3S1738
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30551,7 +35178,65 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SeriesGrp206=null, SeriesGrp206Text=null, ReportId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlServiceEventId3S4212') AND type='P')
+DROP PROCEDURE dbo.GetDdlServiceEventId3S4212
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlServiceEventId3S4212
+ @screenId		int
+,@bAll		char(1)
+,@keyId		TinyInt
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ServiceEventId128=a1315.RuleServiceTypeId, ServiceEventId128Text=a1315.RuleServiceTypeDesc'
+SELECT @fClause = 'FROM RODesign.dbo.CtRuleServiceType a1315'
+SELECT @oClause = 'ORDER BY a1315.RuleServiceTypeDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1315.RuleServiceTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1315.RuleServiceTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ServiceEventId128=null, ServiceEventId128Text=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30562,6 +35247,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSheetNameList3S4150
  @screenId		int
 ,@bAll		char(1)
@@ -30578,6 +35264,9 @@ CREATE PROCEDURE GetDdlSheetNameList3S4150
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30604,7 +35293,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SheetNameList=null, SheetNameListText=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30615,6 +35305,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSProcOnly3S1722
  @screenId		int
 ,@bAll		char(1)
@@ -30631,6 +35322,9 @@ CREATE PROCEDURE GetDdlSProcOnly3S1722
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30656,7 +35350,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SProcOnly192=null, SProcOnly192Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30667,6 +35362,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSrcClientTierId3S1716
  @screenId		int
 ,@bAll		char(1)
@@ -30683,6 +35379,9 @@ CREATE PROCEDURE GetDdlSrcClientTierId3S1716
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30708,7 +35407,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SrcClientTierId192=null, SrcClientTierId192Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30719,6 +35419,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSrcDataTierId3S1720
  @screenId		int
 ,@bAll		char(1)
@@ -30735,6 +35436,9 @@ CREATE PROCEDURE GetDdlSrcDataTierId3S1720
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30760,7 +35464,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SrcDataTierId192=null, SrcDataTierId192Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30771,6 +35476,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSrcRuleTierId3S1718
  @screenId		int
 ,@bAll		char(1)
@@ -30787,6 +35493,9 @@ CREATE PROCEDURE GetDdlSrcRuleTierId3S1718
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30812,7 +35521,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SrcRuleTierId192=null, SrcRuleTierId192Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30823,6 +35533,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlStaticCsId3S2011
  @screenId		int
 ,@bAll		char(1)
@@ -30839,6 +35550,9 @@ CREATE PROCEDURE GetDdlStaticCsId3S2011
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30864,7 +35578,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT StaticCsId259=null, StaticCsId259Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30875,6 +35590,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlStaticJsId3S2012
  @screenId		int
 ,@bAll		char(1)
@@ -30891,6 +35607,9 @@ CREATE PROCEDURE GetDdlStaticJsId3S2012
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30916,7 +35635,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT StaticJsId259=null, StaticJsId259Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30927,6 +35647,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlStaticPgId3S1998
  @screenId		int
 ,@bAll		char(1)
@@ -30943,6 +35664,9 @@ CREATE PROCEDURE GetDdlStaticPgId3S1998
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -30968,7 +35692,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT StaticPgId39=null, StaticPgId39Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -30979,6 +35704,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSysListVisible3S943
  @screenId		int
 ,@bAll		char(1)
@@ -30995,6 +35721,9 @@ CREATE PROCEDURE GetDdlSysListVisible3S943
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31020,7 +35749,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SysListVisible93=null, SysListVisible93Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31031,6 +35761,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSysRowAuthorityId3S553
  @screenId		int
 ,@bAll		char(1)
@@ -31047,6 +35778,9 @@ CREATE PROCEDURE GetDdlSysRowAuthorityId3S553
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31072,7 +35806,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SysRowAuthorityId58=null, SysRowAuthorityId58Text=null, OvrideId=null, PromptAlways=null, PromptModal=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31083,6 +35818,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSystemId3S430
  @screenId		int
 ,@bAll		char(1)
@@ -31099,6 +35835,9 @@ CREATE PROCEDURE GetDdlSystemId3S430
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31124,7 +35863,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SystemId3=null, SystemId3Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31135,6 +35875,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSystemId3S552
  @screenId		int
 ,@bAll		char(1)
@@ -31151,6 +35892,9 @@ CREATE PROCEDURE GetDdlSystemId3S552
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31176,7 +35920,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SystemId58=null, SystemId58Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31187,6 +35932,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlSystemId3S941
  @screenId		int
 ,@bAll		char(1)
@@ -31203,6 +35949,9 @@ CREATE PROCEDURE GetDdlSystemId3S941
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31228,7 +35977,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SystemId93=null, SystemId93Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31239,6 +35989,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlTabFolderId2003C47]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -31278,7 +36029,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenTabId=null, TabFolderName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31289,6 +36044,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlTabFolderId203C47]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -31328,7 +36084,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenTabId=null, TabFolderName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31339,6 +36097,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTabFolderId3S3291
  @screenId		int
 ,@bAll		char(1)
@@ -31355,6 +36114,9 @@ CREATE PROCEDURE GetDdlTabFolderId3S3291
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31380,7 +36142,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TabFolderId14=null, TabFolderId14Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31391,6 +36154,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlTabFolderId3S84]
  @screenId		int
 ,@bAll		char(1)
@@ -31432,7 +36196,9 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TabFolderId14=null, TabFolderId14Text=null, TabFolderOrder=null, ScreenId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31443,6 +36209,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTableId3S1077
  @screenId		int
 ,@bAll		char(1)
@@ -31459,6 +36226,9 @@ CREATE PROCEDURE GetDdlTableId3S1077
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31485,7 +36255,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TableId97=null, TableId97Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31496,6 +36267,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTableId3S166
  @screenId		int
 ,@bAll		char(1)
@@ -31512,6 +36284,9 @@ CREATE PROCEDURE GetDdlTableId3S166
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31538,7 +36313,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TableId20=null, TableId20Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31549,6 +36325,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTableId3S1663
  @screenId		int
 ,@bAll		char(1)
@@ -31565,6 +36342,9 @@ CREATE PROCEDURE GetDdlTableId3S1663
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31591,7 +36371,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TableId181=null, TableId181Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31602,6 +36383,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTableId3S4109
  @screenId		int
 ,@bAll		char(1)
@@ -31618,6 +36400,9 @@ CREATE PROCEDURE GetDdlTableId3S4109
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31644,7 +36429,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TableId1300=null, TableId1300Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31655,6 +36441,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlTarClientTierId3S1717]
  @screenId		int
 ,@bAll		char(1)
@@ -31678,7 +36465,11 @@ IF @keyId is not null SELECT @wClause = @wClause + 'a194.ClientTierId = ' + conv
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31689,6 +36480,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTarDataTierId3S1721
  @screenId		int
 ,@bAll		char(1)
@@ -31705,6 +36497,9 @@ CREATE PROCEDURE GetDdlTarDataTierId3S1721
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31730,7 +36525,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TarDataTierId192=null, TarDataTierId192Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31741,6 +36537,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlTarRuleTierId3S1719]
  @screenId		int
 ,@bAll		char(1)
@@ -31764,7 +36561,11 @@ IF @keyId is not null SELECT @wClause = @wClause + 'a196.RuleTierId = ' + conver
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31775,6 +36576,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTblGrouping3S1615
  @screenId		int
 ,@bAll		char(1)
@@ -31791,6 +36593,9 @@ CREATE PROCEDURE GetDdlTblGrouping3S1615
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31816,7 +36621,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TblGrouping162=null, TblGrouping162Text=null, ReportId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31827,6 +36633,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTblToggle3S1696
  @screenId		int
 ,@bAll		char(1)
@@ -31843,6 +36650,9 @@ CREATE PROCEDURE GetDdlTblToggle3S1696
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31868,7 +36678,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TblToggle162=null, TblToggle162Text=null, ReportId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31879,6 +36690,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTblVisibility3S1617
  @screenId		int
 ,@bAll		char(1)
@@ -31895,6 +36707,9 @@ CREATE PROCEDURE GetDdlTblVisibility3S1617
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31920,7 +36735,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TblVisibility162=null, TblVisibility162Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31931,6 +36747,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTestCulture3S3076
  @screenId		int
 ,@bAll		char(1)
@@ -31947,6 +36764,9 @@ CREATE PROCEDURE GetDdlTestCulture3S3076
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -31972,7 +36792,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TestCulture95=null, TestCulture95Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31983,6 +36804,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTextAlign3S1560
  @screenId		int
 ,@bAll		char(1)
@@ -31999,6 +36821,9 @@ CREATE PROCEDURE GetDdlTextAlign3S1560
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -32024,7 +36849,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TextAlign167=null, TextAlign167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32035,6 +36861,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlTextDecor3S1559
  @screenId		int
 ,@bAll		char(1)
@@ -32051,6 +36878,9 @@ CREATE PROCEDURE GetDdlTextDecor3S1559
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -32076,7 +36906,65 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT TextDecor167=null, TextDecor167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTopVisible3S4161') AND type='P')
+DROP PROCEDURE dbo.GetDdlTopVisible3S4161
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetDdlTopVisible3S4161
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Char(100)
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TopVisible116=a1306.ButtonStyleCd, TopVisible116Text=a1306.ButtonStyleDesc'
+SELECT @fClause = 'FROM RODesign.dbo.CtButtonStyle a1306'
+SELECT @oClause = 'ORDER BY a1306.ButtonStyleDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1306.ButtonStyleDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1306.ButtonStyleCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT TopVisible116=null, TopVisible116Text=null WHERE 1<>1
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32087,6 +36975,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlToTranslate103C61
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -32128,7 +37017,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CheckBoxCd=null, CheckBoxName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32139,6 +37029,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlUnitCd3S1525
  @screenId		int
 ,@bAll		char(1)
@@ -32155,6 +37046,9 @@ CREATE PROCEDURE GetDdlUnitCd3S1525
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -32180,7 +37074,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UnitCd22=null, UnitCd22Text=null, UnitOrder=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32191,6 +37086,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlUnitCd3S1679]
  @screenId		int
 ,@bAll		char(1)
@@ -32232,7 +37128,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UnitCd183=null, UnitCd183Text=null, UnitOrder=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32243,6 +37143,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlUserId3S3090
  @screenId		int
 ,@bAll		char(1)
@@ -32259,6 +37160,9 @@ CREATE PROCEDURE GetDdlUserId3S3090
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -32286,7 +37190,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UserId274=null, UserId274Text=null, Active=null, MemberId=null, PicMed275=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32297,6 +37202,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlUsrGroupId3S1143
  @screenId		int
 ,@bAll		char(1)
@@ -32313,6 +37219,9 @@ CREATE PROCEDURE GetDdlUsrGroupId3S1143
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -32341,7 +37250,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UsrGroupId93=null, UsrGroupId93Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32352,6 +37262,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlUsrGroupId3S1246
  @screenId		int
 ,@bAll		char(1)
@@ -32368,6 +37279,9 @@ CREATE PROCEDURE GetDdlUsrGroupId3S1246
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -32396,7 +37310,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UsrGroupId123=null, UsrGroupId123Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32407,6 +37322,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlUsrGroupId3S833]
  @screenId		int
 ,@bAll		char(1)
@@ -32440,7 +37356,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UsrGroupId85=null, UsrGroupId85Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32451,6 +37371,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlUsrGroupLs301C24]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -32493,7 +37414,10 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UsrGroupId=null, UsrGroupName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32504,51 +37428,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE GetDdlUsrGroupLs303C24
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a7.UsrGroupId, a7.UsrGroupName'
-SELECT @fClause = 'FROM RODesign.dbo.UsrGroup a7'
-SELECT @oClause = 'ORDER BY a7.UsrGroupName'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a7.UsrGroupName LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a7.UsrGroupId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyId','Company','a7.','Y','N',null,'Y','UsrGroupId',@wClause OUTPUT,@Usrs
-SELECT @tClause = ''
-EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupId','UsrGroup','a7.','N','N',null,'N','UsrGroupId',@tClause OUTPUT,@Usrs
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','a7.','N',null,'UsrGroupId',@wClause OUTPUT
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT UsrGroupId=null, UsrGroupName=null WHERE 1<>1
-RETURN 0 
+CREATE PROCEDURE GetDdlUsrGroupLs303C24 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a7.UsrGroupId, a7.UsrGroupName'SELECT @fClause = 'FROM RODesign.dbo.UsrGroup a7'SELECT @oClause = 'ORDER BY a7.UsrGroupName'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a7.UsrGroupName LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a7.UsrGroupId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyId','Company','a7.','Y','N',null,'Y','UsrGroupId',@wClause OUTPUT,@UsrsSELECT @tClause = ''EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupId','UsrGroup','a7.','N','N',null,'N','UsrGroupId',@tClause OUTPUT,@UsrsIF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','a7.','N',null,'UsrGroupId',@wClause OUTPUTEXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT UsrGroupId=null, UsrGroupName=null WHERE 1<>1RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32559,6 +37439,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlUsrGroupLs305C24]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -32601,7 +37482,10 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UsrGroupId=null, UsrGroupName=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32612,6 +37496,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlUsrGroupLs3S1741
  @screenId		int
 ,@bAll		char(1)
@@ -32628,6 +37513,9 @@ CREATE PROCEDURE GetDdlUsrGroupLs3S1741
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -32656,7 +37544,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UsrGroupLs1=null, UsrGroupLs1Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32667,6 +37556,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlUsrId3S1641]
  @screenId		int
 ,@bAll		char(1)
@@ -32721,7 +37611,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UsrId183=null, UsrId183Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32732,6 +37626,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlUsrId3S1767]
  @screenId		int
 ,@bAll		char(1)
@@ -32779,7 +37674,11 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32790,6 +37689,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlUsrId3S1789]
  @screenId		int
 ,@bAll		char(1)
@@ -32837,7 +37737,11 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32848,6 +37752,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlUsrId3S940
  @screenId		int
 ,@bAll		char(1)
@@ -32864,6 +37769,9 @@ CREATE PROCEDURE GetDdlUsrId3S940
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -32890,7 +37798,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UsrId93=null, UsrId93Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32901,6 +37810,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlUsrId3S986
  @screenId		int
 ,@bAll		char(1)
@@ -32917,6 +37827,9 @@ CREATE PROCEDURE GetDdlUsrId3S986
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -32948,6 +37861,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
@@ -32955,7 +37871,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UsrId95=null, UsrId95Text=null, Active=null, PicMed1=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -32966,6 +37883,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlUsrImprLink3S1749
  @screenId		int
 ,@bAll		char(1)
@@ -32982,6 +37900,9 @@ CREATE PROCEDURE GetDdlUsrImprLink3S1749
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33010,7 +37931,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT UsrImprLink1=null, UsrImprLink1Text=null, UsrId=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33021,6 +37943,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlVendorId3S1149
  @screenId		int
 ,@bAll		char(1)
@@ -33037,6 +37960,9 @@ CREATE PROCEDURE GetDdlVendorId3S1149
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33063,7 +37989,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT VendorId93=null, VendorId93Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33074,6 +38001,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlVendorId3S7
  @screenId		int
 ,@bAll		char(1)
@@ -33090,6 +38018,9 @@ CREATE PROCEDURE GetDdlVendorId3S7
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33116,7 +38047,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT VendorId1=null, VendorId1Text=null, Active=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33127,6 +38059,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlVerticalAlign3S1561
  @screenId		int
 ,@bAll		char(1)
@@ -33143,6 +38076,9 @@ CREATE PROCEDURE GetDdlVerticalAlign3S1561
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33168,7 +38104,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT VerticalAlign167=null, VerticalAlign167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33179,6 +38116,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlViewOnly3S3103
  @screenId		int
 ,@bAll		char(1)
@@ -33195,6 +38133,9 @@ CREATE PROCEDURE GetDdlViewOnly3S3103
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33220,7 +38161,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ViewOnly15=null, ViewOnly15Text=null, ViewTypeSort=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33231,6 +38173,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetDdlWizardId1003C17]
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -33270,7 +38213,11 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT WizardId=null, WizardTitle=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33281,6 +38228,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlWizardId103C17
  @screenId		int
 ,@Usrs		varchar(4000)
@@ -33322,7 +38270,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT WizardId=null, WizardTitle=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33333,6 +38282,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlWizardId3S1215
  @screenId		int
 ,@bAll		char(1)
@@ -33349,6 +38299,9 @@ CREATE PROCEDURE GetDdlWizardId3S1215
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33374,7 +38327,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT WizardId116=null, WizardId116Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33385,6 +38339,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlWizardId3S1366
  @screenId		int
 ,@bAll		char(1)
@@ -33401,6 +38356,9 @@ CREATE PROCEDURE GetDdlWizardId3S1366
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33426,7 +38384,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT WizardId136=null, WizardId136Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33437,6 +38396,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlWizardId3S645
  @screenId		int
 ,@bAll		char(1)
@@ -33453,6 +38413,9 @@ CREATE PROCEDURE GetDdlWizardId3S645
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33478,7 +38441,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT WizardId73=null, WizardId73Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33489,6 +38453,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlWizardId3S839
  @screenId		int
 ,@bAll		char(1)
@@ -33505,6 +38470,9 @@ CREATE PROCEDURE GetDdlWizardId3S839
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33530,7 +38498,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT WizardId39=null, WizardId39Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33541,6 +38510,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlWizardTypeId3S634
  @screenId		int
 ,@bAll		char(1)
@@ -33557,6 +38527,9 @@ CREATE PROCEDURE GetDdlWizardTypeId3S634
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33582,7 +38555,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT WizardTypeId71=null, WizardTypeId71Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33593,6 +38567,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetDdlWritingMode3S1569
  @screenId		int
 ,@bAll		char(1)
@@ -33609,6 +38584,9 @@ CREATE PROCEDURE GetDdlWritingMode3S1569
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -33634,7 +38612,8 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT WritingMode167=null, WritingMode167Text=null WHERE 1<>1
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33645,6 +38624,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 /* Called by GenScreensRules */
 CREATE PROCEDURE [dbo].[GetDistinctScreenTab]
  @screenId		int
@@ -33660,7 +38640,9 @@ SELECT @fClause = 'FROM dbo.ScreenTab'
 SELECT @wClause = 'WHERE ScreenId = ' + CONVERT(varchar,@screenId)
 SELECT @oClause = 'ORDER BY TabFolderOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33671,6 +38653,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetDocImage]
  @ReportId		int
 ,@TemplateId	smallint
@@ -33700,7 +38684,12 @@ BEGIN
 	RAISERROR('Plese load the requested document template "%s" and try again.',18,2,@TemplateName) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33711,6 +38700,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* Only exists in ??Design */
 CREATE PROCEDURE [dbo].[GetEntityList]
 /* WITH ENCRYPTION */
@@ -33727,7 +38718,12 @@ SELECT a.EntityId, a.EntityName, a.EntityCode, a.DeployPath
 	INNER JOIN dbo.DataTier d ON a.EntityId = d.EntityId AND d.IsDefault = 'Y'
 	INNER JOIN RODesign.dbo.CtDbProvider e ON d.DbProviderCd = e.DbProviderCd
 ORDER BY a.EntityName
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33738,6 +38734,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmAppInfo82
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -33753,6 +38750,9 @@ CREATE PROCEDURE GetExpAdmAppInfo82
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@VersionDt53	DateTime
@@ -33784,6 +38784,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.AppInfo b135 (NOLOCK)' 
@@ -33832,7 +38835,8 @@ BEGIN
 	IF @VersionDt53 is not null SELECT @wClause = @wClause + ' AND (DATEADD(hour, DATEDIFF(hour, 0, b135.VersionDt), 0) >= ''' + convert(varchar,@VersionDt53,120) + ''')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33843,6 +38847,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmAppItem83
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -33858,6 +38863,9 @@ CREATE PROCEDURE GetExpAdmAppItem83
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@AppItemCode44	NVarChar(max)
@@ -33889,6 +38897,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.AppItem b136 (NOLOCK)' 
@@ -33956,7 +38967,8 @@ BEGIN
 	IF @AppItemCode44 is not null SELECT @wClause = @wClause + ' AND (b136.AppItemCode like N''%' + replace(@AppItemCode44,'''','''''') + '%'')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -33967,6 +38979,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmAtRowAuth22
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -33982,6 +38995,9 @@ CREATE PROCEDURE GetExpAdmAtRowAuth22
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -34012,6 +39028,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.AtRowAuth b236 (NOLOCK)' 
@@ -34065,7 +39084,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b236.RowAuthId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -34076,6 +39096,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmAuthCol16
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -34091,6 +39112,9 @@ CREATE PROCEDURE GetExpAdmAuthCol16
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -34121,6 +39145,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenObj b14 (NOLOCK)' 
@@ -34170,7 +39197,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -34181,6 +39209,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmChgPwd71
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -34196,6 +39225,9 @@ CREATE PROCEDURE GetExpAdmChgPwd71
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -34226,6 +39258,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CustomerId		Int
@@ -34238,6 +39273,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CompanyId		VarChar
 	,@ProjectId		VarChar
 	,@CultureId		SmallInt
+	,@BorrowerId		Int
+	,@GuarantorId		Int
+	,@LenderId		Int
 SELECT @fClause='FROM RODesign.dbo.Usr b1 (NOLOCK)'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId1Text=b1.UsrId'
 + ', UsrId1=b1.UsrId'
@@ -34278,12 +39316,16 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','b1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','b1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','b1.','Y',null,'UsrId',@wClause OUTPUT
 IF @key is not null SELECT @wClause = @wClause + ' AND (b1.UsrId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -34294,6 +39336,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmClientRule79
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -34309,6 +39352,9 @@ CREATE PROCEDURE GetExpAdmClientRule79
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId9	Int
@@ -34342,6 +39388,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -34421,7 +39470,8 @@ BEGIN
 	IF @CultureId10 is not null SELECT @wClause = @wClause + ' AND (b127.CultureId = ' + convert(varchar,@CultureId10) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -34432,6 +39482,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmClnTier105
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -34447,6 +39498,9 @@ CREATE PROCEDURE GetExpAdmClnTier105
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -34477,6 +39531,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.ClientTier b194 (NOLOCK)' 
@@ -34527,7 +39584,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b194.ClientTierId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -34538,6 +39596,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmColHlp1006
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -34553,6 +39612,9 @@ CREATE PROCEDURE GetExpAdmColHlp1006
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -34583,6 +39645,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -34629,7 +39694,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -34640,6 +39706,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmCronJob118
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -34655,6 +39722,9 @@ CREATE PROCEDURE GetExpAdmCronJob118
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -34685,6 +39755,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.CronJob b264 (NOLOCK)'
@@ -34728,7 +39801,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b264.CronJobId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -34739,6 +39813,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmCtCulture8
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -34754,6 +39829,9 @@ CREATE PROCEDURE GetExpAdmCtCulture8
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ToTranslate61	Char(1)
@@ -34786,6 +39864,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -34842,7 +39923,8 @@ BEGIN
 	IF @EnNumberRule1077 is not null SELECT @wClause = @wClause + ' AND (b8.EnNumberRule = N''' + @EnNumberRule1077 + ''')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -34853,6 +39935,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmDataCat96
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -34868,6 +39951,9 @@ CREATE PROCEDURE GetExpAdmDataCat96
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -34898,6 +39984,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptwizCat b181 (NOLOCK)' 
@@ -34955,7 +40044,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b181.RptwizCatId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -34966,6 +40056,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmDatTier107
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -34981,6 +40072,9 @@ CREATE PROCEDURE GetExpAdmDatTier107
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -35011,6 +40105,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.DataTier b195 (NOLOCK)' 
@@ -35061,7 +40158,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b195.DataTierId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -35072,6 +40170,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmDbKey15
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -35087,6 +40186,9 @@ CREATE PROCEDURE GetExpAdmDbKey15
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -35117,6 +40219,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.DbKey b20 (NOLOCK)' 
@@ -35162,7 +40267,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b20.KeyId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -35173,6 +40279,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmDbTable2
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -35188,6 +40295,9 @@ CREATE PROCEDURE GetExpAdmDbTable2
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@TableName25	VarChar(500)
@@ -35220,6 +40330,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.DbTable b3 (NOLOCK)' 
@@ -35291,7 +40404,8 @@ BEGIN
 	IF @TableDesc42 is not null SELECT @wClause = @wClause + ' AND (b3.TableDesc like N''%' + replace(@TableDesc42,'''','''''') + '%'')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -35302,6 +40416,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmLabel112
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -35317,6 +40432,9 @@ CREATE PROCEDURE GetExpAdmLabel112
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@CultureId48	SmallInt
@@ -35351,6 +40469,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -35406,7 +40527,8 @@ BEGIN
 	IF @LabelText50 is not null SELECT @wClause = @wClause + ' AND (b215.LabelText like N''%' + replace(@LabelText50,'''','''''') + '%'')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -35417,6 +40539,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmMaintMsg109
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -35432,6 +40555,9 @@ CREATE PROCEDURE GetExpAdmMaintMsg109
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -35462,6 +40588,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.MaintMsg b233 (NOLOCK)'
@@ -35498,7 +40627,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b233.MaintMsgId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -35509,6 +40639,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetExpAdmMember122]
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -35603,7 +40734,11 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Members,'MemberId
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b54.MemberId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -35614,6 +40749,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmMenu35
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -35629,6 +40765,9 @@ CREATE PROCEDURE GetExpAdmMenu35
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -35659,6 +40798,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)' 
@@ -35708,7 +40850,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -35719,6 +40862,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmMenuDrg121
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -35734,6 +40878,9 @@ CREATE PROCEDURE GetExpAdmMenuDrg121
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -35764,6 +40911,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)'
@@ -35798,7 +40948,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -35809,6 +40960,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmMenuHlp36
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -35824,6 +40976,9 @@ CREATE PROCEDURE GetExpAdmMenuHlp36
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -35854,6 +41009,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -35897,7 +41055,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -35908,6 +41067,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmMenuOpt111
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -35923,6 +41083,9 @@ CREATE PROCEDURE GetExpAdmMenuOpt111
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -35953,6 +41116,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@ProjectId		Int
@@ -36007,7 +41173,8 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectId','Project','b248.','N',null,'MenuOptId',@wClause OUTPUT
 IF @key is not null SELECT @wClause = @wClause + ' AND (b248.MenuOptId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -36018,6 +41185,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmMenuPerm58
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -36033,6 +41201,9 @@ CREATE PROCEDURE GetExpAdmMenuPerm58
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -36063,6 +41234,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)' 
@@ -36108,7 +41282,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -36119,6 +41294,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmMsgCenter86
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -36134,6 +41310,9 @@ CREATE PROCEDURE GetExpAdmMsgCenter86
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@MsgId28	Int
@@ -36167,6 +41346,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -36221,7 +41403,8 @@ BEGIN
 	IF @MsgName70 is not null SELECT @wClause = @wClause + ' AND (b146.MsgName like N''%' + replace(@MsgName70,'''','''''') + '%'')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -36232,6 +41415,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmOvride78
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -36247,6 +41431,9 @@ CREATE PROCEDURE GetExpAdmOvride78
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -36277,6 +41464,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@UsrGroupId		SmallInt
@@ -36321,7 +41511,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGro
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b122.OvrideId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -36332,6 +41523,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmPageObj1001
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -36347,6 +41539,9 @@ CREATE PROCEDURE GetExpAdmPageObj1001
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@SectionCd1073	Char(1)
@@ -36378,6 +41573,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.PageObj b1277 (NOLOCK)' 
@@ -36442,7 +41640,8 @@ BEGIN
 	IF @SectionCd1073 is not null SELECT @wClause = @wClause + ' AND (b1277.SectionCd = N''' + @SectionCd1073 + ''')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -36453,6 +41652,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmPayment1021
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -36468,6 +41668,9 @@ CREATE PROCEDURE GetExpAdmPayment1021
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -36498,6 +41701,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CustomerId		Int
@@ -36510,6 +41716,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CompanyId		VarChar
 	,@ProjectId		VarChar
 	,@CultureId		SmallInt
+	,@BorrowerId		Int
+	,@GuarantorId		Int
+	,@LenderId		Int
 SELECT @fClause='FROM RODesign.dbo.Usr b1 (NOLOCK)'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId1Text=b1.UsrId'
 + ', UsrId1=b1.UsrId'
@@ -36549,12 +41758,16 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','b1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','b1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','b1.','Y',null,'UsrId',@wClause OUTPUT
 IF @key is not null SELECT @wClause = @wClause + ' AND (b1.UsrId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -36565,6 +41778,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmRelease98
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -36580,6 +41794,9 @@ CREATE PROCEDURE GetExpAdmRelease98
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReleaseDate35	DateTime
@@ -36613,6 +41830,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.Release b191 (NOLOCK)' 
@@ -36693,7 +41913,8 @@ BEGIN
 	IF @ReleaseTypeId37 is not null SELECT @wClause = @wClause + ' AND (b191.ReleaseTypeId = ' + convert(varchar,@ReleaseTypeId37) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -36704,6 +41925,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmReport67
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -36719,6 +41941,9 @@ CREATE PROCEDURE GetExpAdmReport67
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -36749,6 +41974,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CompanyId		VarChar
@@ -36838,7 +42066,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b22.ReportId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -36849,6 +42078,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmReportCri69
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -36864,6 +42094,9 @@ CREATE PROCEDURE GetExpAdmReportCri69
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReportId4	Int
@@ -36895,6 +42128,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -36976,7 +42212,8 @@ BEGIN
 	IF @ReportId4 is not null SELECT @wClause = @wClause + ' AND (b97.ReportId = ' + convert(varchar,@ReportId4) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -36987,6 +42224,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmReportObj13
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -37002,6 +42240,9 @@ CREATE PROCEDURE GetExpAdmReportObj13
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReportId13	Int
@@ -37033,6 +42274,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -37102,7 +42346,8 @@ BEGIN
 	IF @ReportId13 is not null SELECT @wClause = @wClause + ' AND (b23.ReportId = ' + convert(varchar,@ReportId13) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -37113,6 +42358,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmRowOvrd17
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -37128,6 +42374,9 @@ CREATE PROCEDURE GetExpAdmRowOvrd17
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId38	Int
@@ -37160,6 +42409,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RowOvrd b238 (NOLOCK)' 
@@ -37225,7 +42477,8 @@ BEGIN
 	IF @ReportId39 is not null SELECT @wClause = @wClause + ' AND (b238.ReportId = ' + convert(varchar,@ReportId39) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -37236,6 +42489,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmRptCha100
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -37251,6 +42505,9 @@ CREATE PROCEDURE GetExpAdmRptCha100
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -37281,6 +42538,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptCha b206 (NOLOCK)' 
@@ -37330,7 +42590,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b206.RptChaId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -37341,6 +42602,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmRptCtr90
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -37356,6 +42618,9 @@ CREATE PROCEDURE GetExpAdmRptCtr90
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReportId29	Int
@@ -37388,6 +42653,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptCtr b161 (NOLOCK)' 
@@ -37466,7 +42734,8 @@ BEGIN
 	IF @CtrValue67 is not null SELECT @wClause = @wClause + ' AND (b161.CtrValue like N''%' + replace(@CtrValue67,'''','''''') + '%'')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -37477,6 +42746,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmRptStyle89
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -37492,6 +42762,9 @@ CREATE PROCEDURE GetExpAdmRptStyle89
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@DefaultCd32	Char(2)
@@ -37523,6 +42796,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptStyle b167 (NOLOCK)' 
@@ -37624,7 +42900,8 @@ BEGIN
 	IF @DefaultCd32 is not null SELECT @wClause = @wClause + ' AND (b167.DefaultCd = N''' + @DefaultCd32 + ''')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -37635,6 +42912,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmRptTbl92
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -37650,6 +42928,9 @@ CREATE PROCEDURE GetExpAdmRptTbl92
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReportId34	Int
@@ -37682,6 +42963,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptTbl b162 (NOLOCK)' 
@@ -37754,7 +43038,8 @@ BEGIN
 	IF @RptCtrId31 is not null SELECT @wClause = @wClause + ' AND (b162.RptCtrId = ' + convert(varchar,@RptCtrId31) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -37765,6 +43050,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetExpAdmRptWiz95]
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -37892,7 +43178,11 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b183.RptwizId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -37903,6 +43193,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmRulTier106
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -37918,6 +43209,9 @@ CREATE PROCEDURE GetExpAdmRulTier106
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -37948,6 +43242,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.RuleTier b196 (NOLOCK)' 
@@ -37992,7 +43289,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b196.RuleTierId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -38003,6 +43301,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmScreen9
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -38018,6 +43317,9 @@ CREATE PROCEDURE GetExpAdmScreen9
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId60	Int
@@ -38049,6 +43351,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -38058,7 +43363,9 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ViewTypeCd,ViewT
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableDesc FROM dbo.DbTable (NOLOCK))x146 ON b15.MasterTableId = x146.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableDesc FROM dbo.DbTable (NOLOCK))x7451 ON b15.SearchTableId = x7451.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc,TableId FROM dbo.DbColumn (NOLOCK))x128 ON b15.SearchId = x128.ColumnId AND x7451.TableId = x128.TableId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc,TableId FROM dbo.DbColumn (NOLOCK))x7478 ON b15.SearchIdR = x7478.ColumnId AND x7451.TableId = x7478.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc,TableId FROM dbo.DbColumn (NOLOCK))x7450 ON b15.SearchDtlId = x7450.ColumnId AND x7451.TableId = x7450.TableId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc,TableId FROM dbo.DbColumn (NOLOCK))x7479 ON b15.SearchDtlIdR = x7479.ColumnId AND x7451.TableId = x7479.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc,TableId FROM dbo.DbColumn (NOLOCK))x7449 ON b15.SearchUrlId = x7449.ColumnId AND x7451.TableId = x7449.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc,TableId FROM dbo.DbColumn (NOLOCK))x7448 ON b15.SearchImgId = x7448.ColumnId AND x7451.TableId = x7448.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableDesc FROM dbo.DbTable (NOLOCK))x147 ON b15.DetailTableId = x147.TableId' 
@@ -38071,15 +43378,19 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', ScreenTypeId15Text=x127.ScreenTypeDesc'
 + ', ViewOnly15=x3245.ViewTypeCd'
 + ', ViewOnly15Text=x3245.ViewTypeName'
++ ', SearchAscending15=b15.SearchAscending'
 + ', MasterTableId15=x146.TableId'
 + ', MasterTableId15Text=x146.TableDesc'
 + ', SearchTableId15=x7451.TableId'
 + ', SearchTableId15Text=x7451.TableDesc'
 + ', SearchId15=x128.ColumnId'
 + ', SearchId15Text=x128.ColumnDesc'
-+ ', SearchAscending15=b15.SearchAscending'
++ ', SearchIdR15=x7478.ColumnId'
++ ', SearchIdR15Text=x7478.ColumnDesc'
 + ', SearchDtlId15=x7450.ColumnId'
 + ', SearchDtlId15Text=x7450.ColumnDesc'
++ ', SearchDtlIdR15=x7479.ColumnId'
++ ', SearchDtlIdR15Text=x7479.ColumnDesc'
 + ', SearchUrlId15=x7449.ColumnId'
 + ', SearchUrlId15Text=x7449.ColumnDesc'
 + ', SearchImgId15=x7448.ColumnId'
@@ -38104,7 +43415,22 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', FootNote16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.FootNote' else 'null' end
 + ', AddMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.AddMsg' else 'null' end
 + ', UpdMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.UpdMsg' else 'null' end
-+ ', DelMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.DelMsg' else 'null' end + ''
++ ', DelMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.DelMsg' else 'null' end
++ ', IncrementMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.IncrementMsg' else 'null' end
++ ', NoMasterMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.NoMasterMsg' else 'null' end
++ ', NoDetailMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.NoDetailMsg' else 'null' end
++ ', AddMasterMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.AddMasterMsg' else 'null' end
++ ', AddDetailMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.AddDetailMsg' else 'null' end
++ ', MasterLstTitle16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.MasterLstTitle' else 'null' end
++ ', MasterLstSubtitle16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.MasterLstSubtitle' else 'null' end
++ ', MasterRecTitle16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.MasterRecTitle' else 'null' end
++ ', MasterRecSubtitle16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.MasterRecSubtitle' else 'null' end
++ ', MasterFoundMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.MasterFoundMsg' else 'null' end
++ ', DetailLstTitle16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.DetailLstTitle' else 'null' end
++ ', DetailLstSubtitle16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.DetailLstSubtitle' else 'null' end
++ ', DetailRecTitle16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.DetailRecTitle' else 'null' end
++ ', DetailRecSubtitle16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.DetailRecSubtitle' else 'null' end
++ ', DetailFoundMsg16=' + case when charindex('b16 ',@fClause) > 0 then 'b16.DetailFoundMsg' else 'null' end + ''
 SELECT @oClause='ORDER BY b15.ScreenId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -38141,7 +43467,8 @@ BEGIN
 	IF @ScreenId60 is not null SELECT @wClause = @wClause + ' AND (b15.ScreenId = ' + convert(varchar,@ScreenId60) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -38152,6 +43479,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmScreenCri73
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -38167,6 +43495,9 @@ CREATE PROCEDURE GetExpAdmScreenCri73
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId3	Int
@@ -38198,6 +43529,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -38279,7 +43613,8 @@ BEGIN
 	IF @ScreenId3 is not null SELECT @wClause = @wClause + ' AND (b104.ScreenId = ' + convert(varchar,@ScreenId3) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -38290,6 +43625,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmScreenFilter59
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -38305,6 +43641,9 @@ CREATE PROCEDURE GetExpAdmScreenFilter59
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId1072	Int
@@ -38336,6 +43675,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -38391,7 +43733,8 @@ BEGIN
 	IF @ScreenId1072 is not null SELECT @wClause = @wClause + ' AND (b86.ScreenId = ' + convert(varchar,@ScreenId1072) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -38402,6 +43745,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmScreenObj10
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -38417,6 +43761,9 @@ CREATE PROCEDURE GetExpAdmScreenObj10
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -38447,6 +43794,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenObj b14 (NOLOCK)' 
@@ -38462,6 +43812,7 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnD
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x1119 ON b14.DdlSrtColumnId = x1119.ColumnId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x1123 ON b14.DdlAdnColumnId = x1123.ColumnId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x1124 ON b14.DdlFtrColumnId = x1124.ColumnId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT DtlLstPosId,DtlLstPosNm FROM RODesign.dbo.CtDtlLstPos (NOLOCK))x7542 ON b14.DtlLstPosId = x7542.DtlLstPosId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT AggregateCd,AggregateName FROM RODesign.dbo.CtAggregate (NOLOCK))x1082 ON b14.AggregateCd = x1082.AggregateCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT MatchCd,MatchName FROM RODesign.dbo.CtMatch (NOLOCK))x1849 ON b14.MatchCd = x1849.MatchCd'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14Text=b14.ScreenObjId'
@@ -38480,6 +43831,8 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', ColumnJustify14Text=x1365.JustifyName'
 + ', ColumnSize14=b14.ColumnSize'
 + ', ColumnHeight14=b14.ColumnHeight'
++ ', ResizeWidth14=b14.ResizeWidth'
++ ', ResizeHeight14=b14.ResizeHeight'
 + ', SortOrder14=b14.SortOrder'
 + ', ScreenId14=x934.ScreenId'
 + ', ScreenId14Text=x934.ScreenDesc'
@@ -38504,6 +43857,8 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', DdlFtrColumnId14=x1124.ColumnId'
 + ', DdlFtrColumnId14Text=x1124.ColumnDesc'
 + ', ColumnLink14=b14.ColumnLink'
++ ', DtlLstPosId14=x7542.DtlLstPosId'
++ ', DtlLstPosId14Text=x7542.DtlLstPosNm'
 + ', LabelVertical14=b14.LabelVertical'
 + ', LabelCss14=b14.LabelCss'
 + ', ContentCss14=b14.ContentCss'
@@ -38548,7 +43903,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -38559,6 +43915,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmScreenTab54
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -38574,6 +43931,9 @@ CREATE PROCEDURE GetExpAdmScreenTab54
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -38604,6 +43964,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -38652,7 +44015,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b19.ScreenTabId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -38663,6 +44027,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmSctGrpCol1003
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -38678,6 +44043,9 @@ CREATE PROCEDURE GetExpAdmSctGrpCol1003
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -38708,6 +44076,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.SctGrpCol b1284 (NOLOCK)' 
@@ -38748,7 +44119,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b1284.SctGrpColId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -38759,6 +44131,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmSctGrpRow1004
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -38774,6 +44147,9 @@ CREATE PROCEDURE GetExpAdmSctGrpRow1004
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -38804,6 +44180,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.SctGrpRow b1283 (NOLOCK)' 
@@ -38843,7 +44222,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b1283.SctGrpRowId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -38854,6 +44234,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmServerRule14
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -38869,6 +44250,9 @@ CREATE PROCEDURE GetExpAdmServerRule14
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId16	Int
@@ -38900,6 +44284,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ServerRule b24 (NOLOCK)' 
@@ -38964,7 +44351,8 @@ BEGIN
 	IF @ScreenId16 is not null SELECT @wClause = @wClause + ' AND (b24.ScreenId = ' + convert(varchar,@ScreenId16) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -38975,6 +44363,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmSignup1018
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -38990,6 +44379,9 @@ CREATE PROCEDURE GetExpAdmSignup1018
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -39020,6 +44412,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.VwUsr b270 (NOLOCK)'
@@ -39057,7 +44452,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b270.UsrId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -39068,6 +44464,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmStaticCs115
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -39083,6 +44480,9 @@ CREATE PROCEDURE GetExpAdmStaticCs115
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -39113,6 +44513,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticCs b260 (NOLOCK)'
@@ -39147,7 +44550,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b260.StaticCsId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -39158,6 +44562,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmStaticJs116
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -39173,6 +44578,9 @@ CREATE PROCEDURE GetExpAdmStaticJs116
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -39203,6 +44611,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticJs b261 (NOLOCK)'
@@ -39237,7 +44648,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b261.StaticJsId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -39248,6 +44660,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmStaticPg114
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -39263,6 +44676,9 @@ CREATE PROCEDURE GetExpAdmStaticPg114
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@StaticPgId1070	Int
@@ -39295,6 +44711,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticPg b259 (NOLOCK)' 
@@ -39346,7 +44765,8 @@ BEGIN
 	IF @StaticMeta55 is not null SELECT @wClause = @wClause + ' AND (b259.StaticMeta like N''%' + replace(@StaticMeta55,'''','''''') + '%'')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -39357,6 +44777,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmSystems87
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -39372,6 +44793,9 @@ CREATE PROCEDURE GetExpAdmSystems87
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -39402,6 +44826,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.Systems b45 (NOLOCK)'
@@ -39457,7 +44884,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b45.SystemId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -39468,6 +44896,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmTbdRule113
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -39483,6 +44912,9 @@ CREATE PROCEDURE GetExpAdmTbdRule113
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId52	Int
@@ -39514,6 +44946,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.TbdRule b254 (NOLOCK)' 
@@ -39555,7 +44990,8 @@ BEGIN
 	IF @ScreenId52 is not null SELECT @wClause = @wClause + ' AND (b254.ScreenId = ' + convert(varchar,@ScreenId52) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -39566,6 +45002,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmUsr1
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -39581,6 +45018,9 @@ CREATE PROCEDURE GetExpAdmUsr1
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@UsrEmail22	NVarChar(50)
@@ -39614,6 +45054,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CustomerId		Int
@@ -39626,6 +45069,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CompanyId		VarChar
 	,@ProjectId		VarChar
 	,@CultureId		SmallInt
+	,@BorrowerId		Int
+	,@GuarantorId		Int
+	,@LenderId		Int
 SELECT @fClause='FROM RODesign.dbo.Usr b1 (NOLOCK)' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x1743 ON b1.CultureId = x1743.CultureId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CompanyId,CompanyDesc FROM ROCmon.dbo.Company (NOLOCK))x1163 ON b1.DefCompanyId = x1163.CompanyId' 
@@ -39637,7 +45083,10 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CustomerId,Custo
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT VendorId,VendorName FROM ROCmon.dbo.Vendor (NOLOCK))x7 ON b1.VendorId = x7.VendorId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT AgentId,AgentName FROM ROCmon.dbo.Agent (NOLOCK))x830 ON b1.AgentId = x830.AgentId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT BrokerId,BrokerName FROM ROCmon.dbo.Broker (NOLOCK))x831 ON b1.BrokerId = x831.BrokerId' 
-SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT MemberId,MemberName FROM ROCmon.dbo.Member (NOLOCK))x8 ON b1.MemberId = x8.MemberId'
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT MemberId,MemberName FROM ROCmon.dbo.Member (NOLOCK))x8 ON b1.MemberId = x8.MemberId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT LenderId,LenderName FROM ROCmon.dbo.Lender (NOLOCK))x7499 ON b1.LenderId = x7499.LenderId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT BorrowerId,BorrowerName FROM ROCmon.dbo.Borrower (NOLOCK))x7497 ON b1.BorrowerId = x7497.BorrowerId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT GuarantorId,GuarantorName FROM ROCmon.dbo.Guarantor (NOLOCK))x7498 ON b1.GuarantorId = x7498.GuarantorId'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId1Text=b1.UsrId'
 + ', UsrId1=b1.UsrId'
 + ', LoginName1=b1.LoginName'
@@ -39667,11 +45116,12 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', FailedAttempt1=b1.FailedAttempt'
 + ', LastSuccessDt1=b1.LastSuccessDt'
 + ', LastFailedDt1=b1.LastFailedDt'
++ ', CompanyLs1=b1.CompanyLs'
++ ', ProjectLs1=b1.ProjectLs'
 + ', ModifiedOn1=b1.ModifiedOn'
 + ', HintQuestionId1=x947.HintQuestionId'
 + ', HintQuestionId1Text=x947.HintQuestionDesc'
 + ', HintAnswer1=b1.HintAnswer'
-+ ', CompanyLs1=b1.CompanyLs'
 + ', InvestorId1=x272.InvestorId'
 + ', InvestorId1Text=x272.InvestorName'
 + ', CustomerId1=x6.CustomerId'
@@ -39684,7 +45134,12 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', BrokerId1Text=x831.BrokerName'
 + ', MemberId1=x8.MemberId'
 + ', MemberId1Text=x8.MemberName'
-+ ', ProjectLs1=b1.ProjectLs'
++ ', LenderId1=x7499.LenderId'
++ ', LenderId1Text=x7499.LenderName'
++ ', BorrowerId1=x7497.BorrowerId'
++ ', BorrowerId1Text=x7497.BorrowerName'
++ ', GuarantorId1=x7498.GuarantorId'
++ ', GuarantorId1Text=x7498.GuarantorName'
 SELECT @oClause='ORDER BY b1.UsrId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -39725,6 +45180,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','b1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','b1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','b1.','Y',null,'UsrId',@wClause OUTPUT
@@ -39736,7 +45194,8 @@ BEGIN
 	IF @UsrGroupLs24 is not null SELECT @wClause = @wClause + ' AND  EXISTS ( SELECT 1 FROM RODesign.dbo.SplitID_Match(b1.UsrGroupLs,''' + replace(@UsrGroupLs24,'''','''''') + ''','','',''O'') m)'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -39747,6 +45206,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmUsrGroup5
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -39762,6 +45222,9 @@ CREATE PROCEDURE GetExpAdmUsrGroup5
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -39792,6 +45255,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@UsrGroupId		SmallInt
@@ -39857,7 +45323,8 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectId','Project','b58.','N',null,'UsrGroupAuthId',@wClause OUTPUT
 IF @key is not null SELECT @wClause = @wClause + ' AND (b7.UsrGroupId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -39868,6 +45335,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmUsrImpr66
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -39883,6 +45351,9 @@ CREATE PROCEDURE GetExpAdmUsrImpr66
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -39913,6 +45384,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.UsrImpr b95 (NOLOCK)' 
@@ -39970,7 +45444,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'InputBy','U
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b95.UsrImprId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -39981,6 +45456,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmUsrPref64
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -39996,6 +45472,9 @@ CREATE PROCEDURE GetExpAdmUsrPref64
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -40026,6 +45505,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@UsrGroupId		SmallInt
@@ -40037,6 +45519,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@VendorId		Int
 	,@CompanyId		Int
 	,@ProjectId		Int
+	,@LenderId		Int
+	,@BorrowerId		Int
+	,@GuarantorId		Int
 SELECT @fClause='FROM RODesign.dbo.UsrPref b93 (NOLOCK)' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT MenuOptId,MenuOptName FROM RODesign.dbo.MyMenuOpt (NOLOCK))x851 ON b93.MenuOptId = x851.MenuOptId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT SysListVisibleCode,SysListVisibleDesc FROM RODesign.dbo.CtSysListVisible (NOLOCK))x1164 ON b93.ComListVisible = x1164.SysListVisibleCode' 
@@ -40046,13 +45531,16 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT UsrId,UsrName FR
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT UsrGroupId,UsrGroupName FROM RODesign.dbo.UsrGroup (NOLOCK))x952 ON b93.UsrGroupId = x952.UsrGroupId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CompanyId,CompanyDesc FROM ROCmon.dbo.Company (NOLOCK))x1165 ON b93.CompanyId = x1165.CompanyId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ProjectId,ProjectDesc FROM ROCmon.dbo.Project (NOLOCK))x1380 ON b93.ProjectId = x1380.ProjectId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT SystemId,SystemName FROM RODesign.dbo.Systems (NOLOCK))x848 ON b93.SystemId = x848.SystemId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT MemberId,MemberName FROM ROCmon.dbo.Member (NOLOCK))x953 ON b93.MemberId = x953.MemberId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT AgentId,AgentName FROM ROCmon.dbo.Agent (NOLOCK))x954 ON b93.AgentId = x954.AgentId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT BrokerId,BrokerName FROM ROCmon.dbo.Broker (NOLOCK))x955 ON b93.BrokerId = x955.BrokerId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CustomerId,CustomerName FROM ROCmon.dbo.Customer (NOLOCK))x956 ON b93.CustomerId = x956.CustomerId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT InvestorId,InvestorName FROM ROCmon.dbo.Investor (NOLOCK))x957 ON b93.InvestorId = x957.InvestorId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT VendorId,VendorName FROM ROCmon.dbo.Vendor (NOLOCK))x958 ON b93.VendorId = x958.VendorId' 
-SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT SystemId,SystemName FROM RODesign.dbo.Systems (NOLOCK))x848 ON b93.SystemId = x848.SystemId'
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT LenderId,LenderName FROM ROCmon.dbo.Lender (NOLOCK))x7512 ON b93.LenderId = x7512.LenderId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT BorrowerId,BorrowerName FROM ROCmon.dbo.Borrower (NOLOCK))x7513 ON b93.BorrowerId = x7513.BorrowerId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT GuarantorId,GuarantorName FROM ROCmon.dbo.Guarantor (NOLOCK))x7514 ON b93.GuarantorId = x7514.GuarantorId'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrPrefId93Text=b93.UsrPrefId'
 + ', UsrPrefId93=b93.UsrPrefId'
 + ', UsrPrefDesc93=b93.UsrPrefDesc'
@@ -40078,6 +45566,8 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', CompanyId93Text=x1165.CompanyDesc'
 + ', ProjectId93=x1380.ProjectId'
 + ', ProjectId93Text=x1380.ProjectDesc'
++ ', SystemId93=x848.SystemId'
++ ', SystemId93Text=x848.SystemName'
 + ', MemberId93=x953.MemberId'
 + ', MemberId93Text=x953.MemberName'
 + ', AgentId93=x954.AgentId'
@@ -40090,8 +45580,12 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', InvestorId93Text=x957.InvestorName'
 + ', VendorId93=x958.VendorId'
 + ', VendorId93Text=x958.VendorName'
-+ ', SystemId93=x848.SystemId'
-+ ', SystemId93Text=x848.SystemName'
++ ', LenderId93=x7512.LenderId'
++ ', LenderId93Text=x7512.LenderName'
++ ', BorrowerId93=x7513.BorrowerId'
++ ', BorrowerId93Text=x7513.BorrowerName'
++ ', GuarantorId93=x7514.GuarantorId'
++ ', GuarantorId93Text=x7514.GuarantorName'
 SELECT @oClause='ORDER BY b93.UsrPrefId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -40126,12 +45620,16 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Customers,'CustomerId','Customer','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'InvestorId','Investor','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Vendors,'VendorId','Vendor','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','b93.','N',null,'UsrPrefId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectId','Project','b93.','N',null,'UsrPrefId',@wClause OUTPUT
 IF @key is not null SELECT @wClause = @wClause + ' AND (b93.UsrPrefId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40142,6 +45640,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmWebRule80
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -40157,6 +45656,9 @@ CREATE PROCEDURE GetExpAdmWebRule80
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId15	Int
@@ -40188,6 +45690,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.WebRule b128 (NOLOCK)' 
@@ -40195,7 +45700,11 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleTypeId,RuleT
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen (NOLOCK))x1129 ON b128.ScreenId = x1129.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenObjId,ColumnDesc,ScreenId FROM dbo.ScreenObj (NOLOCK))x1130 ON b128.ScreenObjId = x1130.ScreenObjId AND x1129.ScreenId = x1130.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ButtonTypeId,ButtonTypeDesc FROM RODesign.dbo.VwScrButton (NOLOCK))x1131 ON b128.ButtonTypeId = x1131.ButtonTypeId' 
-SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT EventId,EventDesc FROM RODesign.dbo.CtEvent (NOLOCK))x1132 ON b128.EventId = x1132.EventId'
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT EventId,EventDesc FROM RODesign.dbo.CtEvent (NOLOCK))x1132 ON b128.EventId = x1132.EventId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleReactTypeId,RuleReactTypeDesc FROM RODesign.dbo.CtRuleReactType (NOLOCK))x7552 ON b128.ReactEventId = x7552.RuleReactTypeId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleReduxTypeId,RuleReduxTypeDesc FROM RODesign.dbo.CtRuleReduxType (NOLOCK))x7550 ON b128.ReduxEventId = x7550.RuleReduxTypeId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleServiceTypeId,RuleServiceTypeDesc FROM RODesign.dbo.CtRuleServiceType (NOLOCK))x7548 ON b128.ServiceEventId = x7548.RuleServiceTypeId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleAsmxTypeId,RuleAsmxTypeDesc FROM RODesign.dbo.CtRuleAsmxType (NOLOCK))x7546 ON b128.AsmxEventId = x7546.RuleAsmxTypeId'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WebRuleId128Text=b128.WebRuleId'
 + ', WebRuleId128=b128.WebRuleId'
 + ', RuleName128=b128.RuleName'
@@ -40211,6 +45720,18 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', EventId128=x1132.EventId'
 + ', EventId128Text=x1132.EventDesc'
 + ', WebRuleProg128=b128.WebRuleProg'
++ ', ReactEventId128=x7552.RuleReactTypeId'
++ ', ReactEventId128Text=x7552.RuleReactTypeDesc'
++ ', ReactRuleProg128=b128.ReactRuleProg'
++ ', ReduxEventId128=x7550.RuleReduxTypeId'
++ ', ReduxEventId128Text=x7550.RuleReduxTypeDesc'
++ ', ReduxRuleProg128=b128.ReduxRuleProg'
++ ', ServiceEventId128=x7548.RuleServiceTypeId'
++ ', ServiceEventId128Text=x7548.RuleServiceTypeDesc'
++ ', ServiceRuleProg128=b128.ServiceRuleProg'
++ ', AsmxEventId128=x7546.RuleAsmxTypeId'
++ ', AsmxEventId128Text=x7546.RuleAsmxTypeDesc'
++ ', AsmxRuleProg128=b128.AsmxRuleProg'
 SELECT @oClause='ORDER BY b128.WebRuleId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -40242,7 +45763,8 @@ BEGIN
 	IF @ScreenId15 is not null SELECT @wClause = @wClause + ' AND (b128.ScreenId = ' + convert(varchar,@ScreenId15) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40253,6 +45775,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmWizardObj49
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -40268,6 +45791,9 @@ CREATE PROCEDURE GetExpAdmWizardObj49
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -40298,6 +45824,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Wizard b71 (NOLOCK)' 
@@ -40351,7 +45880,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b71.WizardId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40362,6 +45892,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmWizardRule50
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -40377,6 +45908,9 @@ CREATE PROCEDURE GetExpAdmWizardRule50
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@WizardId17	Int
@@ -40408,6 +45942,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.WizardRule b73 (NOLOCK)' 
@@ -40455,7 +45992,8 @@ BEGIN
 	IF @WizardId17 is not null SELECT @wClause = @wClause + ' AND (b73.WizardId = ' + convert(varchar,@WizardId17) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40466,6 +46004,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[GetFxRate]
  @FrCurrency		char(3)
@@ -40484,7 +46023,11 @@ BEGIN
 END
 ELSE
 	SELECT ToFxRate='1.0', ValidFr=@Today
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40495,6 +46038,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetGaugeValue]
  @ReportId	Int
 /* WITH ENCRYPTION */
@@ -40510,7 +46055,12 @@ SELECT GMinValue, GLowRange, GMidRange, GMaxValue, GNeedle
 	LEFT OUTER JOIN dbo.DbColumn b4 ON a.GMaxValueId = b4.ColumnId
 	LEFT OUTER JOIN dbo.DbColumn b5 ON a.GNeedleId = b5.ColumnId
 	WHERE ReportId = @ReportId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40521,6 +46071,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[GetGlobalFilter]
  @usrId		int
 ,@screenId	int
@@ -40536,7 +46089,11 @@ BEGIN
 	SELECT @FilterDesc = convert(nvarchar(4000),FilterDesc) FROM dbo.GlobalFilter WHERE UsrId = @usrId AND FilterDefault = 'Y'
 	IF @@ROWCOUNT <> 0 SELECT FilterDesc = @FilterDesc
 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40547,6 +46104,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only exists in ??Design:
 CREATE PROCEDURE [dbo].[GetHintAnswer]
  @UsrId		Int
@@ -40560,7 +46119,12 @@ SELECT @sClause = 'SELECT HintAnswer'
 SELECT @fClause = 'FROM RODesign.dbo.Usr'
 SELECT @wClause = 'WHERE UsrId = ' + isnull(convert(varchar,@UsrId),'null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40571,6 +46135,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only exists in ??Design:
 CREATE PROCEDURE [dbo].[GetHintQuestion]
 /* WITH ENCRYPTION */
@@ -40585,7 +46151,12 @@ SELECT @sClause = 'SELECT HintQuestionId, HintQuestionDesc'
 SELECT @fClause = 'FROM dbo.CtHintQuestion'
 SELECT @oClause = 'ORDER BY HintQuestionDesc'
 EXEC (@uClause + ' ' + @sClause + ' ' + @fClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40596,6 +46167,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only exists in ??Design:
 CREATE PROCEDURE [dbo].[GetHintQuestionId]
  @UsrId		Int
@@ -40609,7 +46182,12 @@ SELECT @sClause = 'SELECT HintQuestionId'
 SELECT @fClause = 'FROM RODesign.dbo.Usr'
 SELECT @wClause = 'WHERE UsrId = ' + isnull(convert(varchar,@UsrId),'null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40620,6 +46198,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Only in ??Design
 CREATE PROCEDURE [dbo].[GetHomeTabs]
  @UsrId			int
@@ -40694,7 +46273,11 @@ ELSE SELECT @wClause = 'WHERE b.UsrId = ' + convert(varchar,@UsrId) + ' AND b.Sy
 SELECT @wClause = @wClause + ' AND LinkTypeCd = ''H'''
 SELECT @oClause = 'ORDER BY c.HomeTabOrder, a.UsrLinkOrd'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40705,6 +46288,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn2Id
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -40719,6 +46303,9 @@ CREATE PROCEDURE GetIn2Id
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -40735,7 +46322,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40746,6 +46334,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn53Active
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -40760,6 +46349,9 @@ CREATE PROCEDURE GetIn53Active
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -40776,7 +46368,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCheckBox @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40787,6 +46380,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn53CompanyId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -40801,6 +46395,9 @@ CREATE PROCEDURE GetIn53CompanyId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -40822,7 +46419,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','a.','N',null,'CompanyId',@wClause OUTPUT
 EXEC dbo._GetInCompanyId @wClause, @bAll, @keyId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40833,6 +46431,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn53UsrGroupId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -40847,6 +46446,9 @@ CREATE PROCEDURE GetIn53UsrGroupId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -40870,7 +46472,8 @@ EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@UsrGroups,'UsrGro
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','a.','N',null,'UsrGroupId',@wClause OUTPUT
 EXEC dbo._GetInUsrGroupId @wClause, @bAll, @keyId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40881,6 +46484,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54AgentId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -40895,6 +46499,9 @@ CREATE PROCEDURE GetIn54AgentId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -40915,7 +46522,58 @@ SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Agents,'AgentId','Agent','a.','N','N',null,'N','AgentId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC dbo._GetInAgentId @wClause
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetIn54BorrowerId') AND type='P')
+DROP PROCEDURE dbo.GetIn54BorrowerId
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetIn54BorrowerId
+ @reportId		int
+,@RowAuthoritys		varchar(1000)
+,@Usrs		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Cultures		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@Customers		varchar(1000)
+,@Investors		varchar(1000)
+,@Members		varchar(1000)
+,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @wClause		varchar(max)
+	,@tClause		varchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@AllowSel		char(1)
+	,@RowAuthorityId	smallint
+	,@BorrowerId		Int
+SELECT @wClause = 'WHERE 1=1'
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a.','N','N',null,'N','BorrowerId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC dbo._GetInBorrowerId @wClause
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40926,6 +46584,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54BrokerId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -40940,6 +46599,9 @@ CREATE PROCEDURE GetIn54BrokerId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -40960,7 +46622,8 @@ SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Brokers,'BrokerId','Broker','a.','N','N',null,'N','BrokerId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC dbo._GetInBrokerId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -40971,6 +46634,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54CompanyId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -40985,6 +46649,9 @@ CREATE PROCEDURE GetIn54CompanyId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41006,7 +46673,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','a.','N',null,'CompanyId',@wClause OUTPUT
 EXEC dbo._GetInCompanyId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41017,6 +46685,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54CustomerId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41031,6 +46700,9 @@ CREATE PROCEDURE GetIn54CustomerId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41051,7 +46723,58 @@ SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Customers,'CustomerId','Customer','a.','N','N',null,'N','CustomerId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC dbo._GetInCustomerId @wClause
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetIn54GuarantorId') AND type='P')
+DROP PROCEDURE dbo.GetIn54GuarantorId
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetIn54GuarantorId
+ @reportId		int
+,@RowAuthoritys		varchar(1000)
+,@Usrs		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Cultures		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@Customers		varchar(1000)
+,@Investors		varchar(1000)
+,@Members		varchar(1000)
+,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @wClause		varchar(max)
+	,@tClause		varchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@AllowSel		char(1)
+	,@RowAuthorityId	smallint
+	,@GuarantorId		Int
+SELECT @wClause = 'WHERE 1=1'
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a.','N','N',null,'N','GuarantorId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC dbo._GetInGuarantorId @wClause
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41062,6 +46785,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54InvestorId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41076,6 +46800,9 @@ CREATE PROCEDURE GetIn54InvestorId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41096,7 +46823,58 @@ SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Investors,'InvestorId','Investor','a.','N','N',null,'N','InvestorId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC dbo._GetInInvestorId @wClause
-RETURN 0 
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetIn54LenderId') AND type='P')
+DROP PROCEDURE dbo.GetIn54LenderId
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE GetIn54LenderId
+ @reportId		int
+,@RowAuthoritys		varchar(1000)
+,@Usrs		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Cultures		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@Customers		varchar(1000)
+,@Investors		varchar(1000)
+,@Members		varchar(1000)
+,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @wClause		varchar(max)
+	,@tClause		varchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@AllowSel		char(1)
+	,@RowAuthorityId	smallint
+	,@LenderId		Int
+SELECT @wClause = 'WHERE 1=1'
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Lenders,'LenderId','Lender','a.','N','N',null,'N','LenderId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC dbo._GetInLenderId @wClause
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41107,6 +46885,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54MemberId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41121,6 +46900,9 @@ CREATE PROCEDURE GetIn54MemberId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41141,7 +46923,8 @@ SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Members,'MemberId','Member','a.','N','N',null,'N','MemberId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC dbo._GetInMemberId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41152,6 +46935,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54ProjectId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41166,6 +46950,9 @@ CREATE PROCEDURE GetIn54ProjectId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41190,7 +46977,8 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','a.','N',null,'ProjectId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectId','Project','a.','N',null,'ProjectId',@wClause OUTPUT
 EXEC dbo._GetInProjectId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41201,6 +46989,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54SystemId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41215,6 +47004,9 @@ CREATE PROCEDURE GetIn54SystemId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41231,7 +47023,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSystemId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41242,6 +47035,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54UserId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41256,6 +47050,9 @@ CREATE PROCEDURE GetIn54UserId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41281,6 +47078,9 @@ DECLARE	 @wClause		varchar(max)
 	,@CompanyId		VarChar
 	,@ProjectId		VarChar
 	,@CultureId		SmallInt
+	,@BorrowerId		Int
+	,@GuarantorId		Int
+	,@LenderId		Int
 SELECT @wClause = 'WHERE 1=1'
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Companys,'CompanyLs','Company','a.','Y','Y',null,'Y','UsrId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Projects,'ProjectLs','Project','a.','Y','Y',null,'Y','UsrId',@wClause OUTPUT,@Usrs
@@ -41294,11 +47094,15 @@ EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Agents,'AgentId','Agent','a.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Brokers,'BrokerId','Broker','a.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','a.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Lenders,'LenderId','Lender','a.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a.','Y',null,'UsrId',@wClause OUTPUT
 EXEC dbo._GetInUserId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41309,6 +47113,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54UsrGroupId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41323,6 +47128,9 @@ CREATE PROCEDURE GetIn54UsrGroupId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41346,7 +47154,8 @@ EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@UsrGroups,'UsrGro
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','a.','N',null,'UsrGroupId',@wClause OUTPUT
 EXEC dbo._GetInUsrGroupId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41357,6 +47166,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn54VendorId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41371,6 +47181,9 @@ CREATE PROCEDURE GetIn54VendorId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41391,7 +47204,8 @@ SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter null,@reportId,@RowAuthoritys,@Vendors,'VendorId','Vendor','a.','N','N',null,'N','VendorId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC dbo._GetInVendorId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41402,6 +47216,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn55SystemId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41416,6 +47231,9 @@ CREATE PROCEDURE GetIn55SystemId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41432,7 +47250,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSystemId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41443,6 +47262,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn56CultureId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41457,6 +47277,9 @@ CREATE PROCEDURE GetIn56CultureId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41473,7 +47296,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCultureId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41484,6 +47308,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn56SystemId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41498,6 +47323,9 @@ CREATE PROCEDURE GetIn56SystemId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41514,7 +47342,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSystemId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41525,7 +47354,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE [dbo].[GetIn57SystemId]
+
+CREATE PROCEDURE GetIn57SystemId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
 ,@Usrs		varchar(1000)
@@ -41555,7 +47385,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSystemId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41566,6 +47397,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn58CultureId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41580,6 +47412,9 @@ CREATE PROCEDURE GetIn58CultureId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41596,7 +47431,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCultureId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41607,6 +47443,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn58SystemId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41621,6 +47458,9 @@ CREATE PROCEDURE GetIn58SystemId
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41637,7 +47477,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSystemId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41648,6 +47489,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn61MemberId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41678,7 +47520,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSredMebr @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41689,6 +47532,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn61MnFr
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41719,7 +47563,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSredMn @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41730,6 +47575,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn61MnTo
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41760,7 +47606,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSredMn @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41771,7 +47618,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE [dbo].[GetIn62CultureId]
+
+CREATE PROCEDURE GetIn62CultureId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
 ,@Usrs		varchar(1000)
@@ -41785,6 +47633,9 @@ CREATE PROCEDURE [dbo].[GetIn62CultureId]
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41801,7 +47652,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCultureId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41812,7 +47664,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE [dbo].[GetIn62SystemId]
+
+CREATE PROCEDURE GetIn62SystemId
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
 ,@Usrs		varchar(1000)
@@ -41826,6 +47679,9 @@ CREATE PROCEDURE [dbo].[GetIn62SystemId]
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41842,7 +47698,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSystemId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41853,7 +47710,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE [dbo].[GetIn64ValidUser20]
+
+CREATE PROCEDURE GetIn64ValidUser20
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
 ,@Usrs		varchar(1000)
@@ -41867,6 +47725,9 @@ CREATE PROCEDURE [dbo].[GetIn64ValidUser20]
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@bAll		char(1)=null
@@ -41883,7 +47744,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCheckBox @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41894,6 +47756,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetIn65SystemId]
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41922,7 +47785,9 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSystemId @wClause
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41933,6 +47798,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetIn66SystemId]
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -41961,7 +47827,9 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInSystemId @wClause
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -41972,6 +47840,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetIn6MultiDesignDb10]
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -42000,7 +47869,10 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInMultiDesign
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42011,6 +47883,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetIn7ValidUser10]
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -42039,7 +47912,10 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCheckBox
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42050,6 +47926,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetIn7ValidUser20]
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -42078,7 +47955,10 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCheckBox
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42089,6 +47969,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetIn8ValidUser20]
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -42117,7 +47998,9 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCBox
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42128,6 +48011,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetIn9LoginSuccess10]
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -42158,7 +48042,9 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCBox
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42169,6 +48055,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
 CREATE PROCEDURE [dbo].[GetInfoByCol]
  @ScreenId	int
 ,@ColumnName	varchar(50)
@@ -42184,7 +48074,14 @@ SELECT @fClause = 'FROM dbo.ScreenObj a'
 + ' INNER JOIN RODesign.dbo.CtDisplayType c ON a.DisplayModeId = c.TypeId'
 SELECT @wClause = 'WHERE a.MasterTable = ''Y'' AND a.ScreenId = ' + convert(varchar,@ScreenId) + ' AND a.ColumnName = ''' + @ColumnName + ''''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42195,6 +48092,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetLabel]
  @CultureId		smallint
 ,@LabelCat		varchar(50)
@@ -42222,7 +48120,11 @@ ELSE
 	SELECT @wClause = @wClause + ' AND CompanyId = ' + convert(varchar,@CompanyId)
 SELECT @oClause = 'ORDER BY SortOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42233,6 +48135,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetLabels]
  @CultureId		smallint
 ,@LabelCat		varchar(50)
@@ -42266,7 +48169,11 @@ INSERT #label (LabelKey, LabelText, SortOrder)
 END
 SELECT LabelKey, LabelText FROM #Label ORDER BY SortOrder
 DROP TABLE dbo.#label
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42277,6 +48184,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[GetLang]
  @CultureId		smallint
@@ -42306,7 +48215,11 @@ ELSE
 		WHERE CultureTypeLabel like @WhereClause
 		ORDER BY CultureTypeLabel
 DROP TABLE dbo.#lang
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42317,6 +48230,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetLastCriteria]
  @ScreenId	Int
 ,@ReportId	Int
@@ -42348,7 +48263,9 @@ BEGIN
 		LEFT OUTER JOIN dbo.ReportCri b ON a.ReportCriId = b.ReportCriId
 		WHERE a.UsrId = @UsrId AND a.ReportId = @ReportId ORDER BY b.TabIndex
 END
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42359,6 +48276,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetLastPageInfo]
  @ScreenId	Int
 ,@UsrId		Int
@@ -42373,7 +48292,12 @@ BEGIN
 		FROM dbo.Screen WHERE ScreenId = @ScreenId
 END
 SELECT LastPageInfo FROM dbo.ScreenLstInf WHERE UsrId = @UsrId AND ScreenId = @ScreenId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42384,6 +48308,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[GetLinkedUserLogin]
  @UsrId         int
@@ -42391,7 +48318,9 @@ CREATE PROCEDURE [dbo].[GetLinkedUserLogin]
 AS
 SELECT * FROM dbo.UsrProvider WHERE UsrId = @UsrId 
 
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42402,6 +48331,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmAppInfo82
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -42417,6 +48347,9 @@ CREATE PROCEDURE GetLisAdmAppInfo82
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@VersionDt53	DateTime
@@ -42448,10 +48381,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.AppInfo b135 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppInfoId135=b135.AppInfoId, AppInfoId135Text=b135.AppInfoDesc, AppInfoId135Dtl=b135.Readme'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppInfoId135=b135.AppInfoId, AppInfoId135Text=b135.AppInfoDesc, AppInfoId135Dtl=b135.Readme, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b135.AppInfoDesc DESC'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -42486,7 +48422,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b135.AppInfoDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b135.Readme LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42497,6 +48434,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmAppItem83
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -42512,6 +48450,9 @@ CREATE PROCEDURE GetLisAdmAppItem83
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@AppItemCode44	NVarChar(max)
@@ -42543,10 +48484,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.AppItem b136 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppItemId136=b136.AppItemId, AppItemId136Text=b136.AppItemDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppItemId136=b136.AppItemId, AppItemId136Text=b136.AppItemDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b136.AppItemDesc DESC'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -42581,7 +48525,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b136.AppItemDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42592,6 +48537,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmAtRowAuth22
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -42607,6 +48553,9 @@ CREATE PROCEDURE GetLisAdmAtRowAuth22
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -42637,10 +48586,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.AtRowAuth b236 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RowAuthId236=b236.RowAuthId, RowAuthId236Text=b236.RowAuthName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RowAuthId236=b236.RowAuthId, RowAuthId236Text=b236.RowAuthName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b236.RowAuthName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -42671,7 +48623,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b236.RowAuthId = ' + @ke
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b236.RowAuthName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42682,6 +48635,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmAuthCol16
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -42697,6 +48651,9 @@ CREATE PROCEDURE GetLisAdmAuthCol16
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -42727,10 +48684,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenObj b14 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14=b14.ScreenObjId, ScreenObjId14Text=b14.ColumnDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14=b14.ScreenObjId, ScreenObjId14Text=b14.ColumnDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b14.ColumnDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -42761,7 +48721,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @k
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b14.ColumnDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42772,6 +48733,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmButtonHlp76
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -42787,6 +48749,9 @@ CREATE PROCEDURE GetLisAdmButtonHlp76
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@CultureId19	SmallInt
@@ -42818,6 +48783,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -42826,21 +48794,31 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,Cultur
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ButtonTypeId,ButtonTypeDesc FROM RODesign.dbo.CtButtonType)x1023 ON b116.ButtonTypeId = x1023.ButtonTypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen)x1021 ON b116.ScreenId = x1021.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportId,ReportDesc FROM dbo.Report)x1041 ON b116.ReportId = x1041.ReportId' 
-SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT WizardId,WizardTitle FROM dbo.Wizard)x1042 ON b116.WizardId = x1042.WizardId'
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT WizardId,WizardTitle FROM dbo.Wizard)x1042 ON b116.WizardId = x1042.WizardId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ButtonStyleCd,ButtonStyleDesc FROM RODesign.dbo.CtButtonStyle)x7473 ON b116.TopVisible = x7473.ButtonStyleCd' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ButtonStyleCd,ButtonStyleDesc FROM RODesign.dbo.CtButtonStyle)x7475 ON b116.RowVisible = x7475.ButtonStyleCd' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ButtonStyleCd,ButtonStyleDesc FROM RODesign.dbo.CtButtonStyle)x7474 ON b116.BotVisible = x7474.ButtonStyleCd'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ButtonHlpId116=b116.ButtonHlpId'
 + ', CultureId116=x1022.CultureId'
 + ', CultureId116Text=x1022.CultureTypeDesc'
 + ', ButtonTypeId116=x1023.ButtonTypeId'
 + ', ButtonTypeId116Text=x1023.ButtonTypeDesc'
++ ', ButtonName116=b116.ButtonName'
++ ', ButtonLongNm116=b116.ButtonLongNm'
 + ', ScreenId116=x1021.ScreenId'
 + ', ScreenId116Text=x1021.ScreenDesc'
-+ ', ButtonName116=b116.ButtonName'
 + ', ReportId116=x1041.ReportId'
 + ', ReportId116Text=x1041.ReportDesc'
 + ', WizardId116=x1042.WizardId'
 + ', WizardId116Text=x1042.WizardTitle'
 + ', ButtonToolTip116=b116.ButtonToolTip'
 + ', ButtonVisible116=b116.ButtonVisible'
++ ', TopVisible116=x7473.ButtonStyleCd'
++ ', TopVisible116Text=x7473.ButtonStyleDesc'
++ ', RowVisible116=x7475.ButtonStyleCd'
++ ', RowVisible116Text=x7475.ButtonStyleDesc'
++ ', BotVisible116=x7474.ButtonStyleCd'
++ ', BotVisible116Text=x7474.ButtonStyleDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY x1021.ScreenDesc, x1041.ReportDesc, x1042.WizardTitle'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -42875,7 +48853,8 @@ BEGIN
 	IF @CultureId19 is not null SELECT @wClause = @wClause + ' AND (b116.CultureId = ' + convert(varchar,@CultureId19) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42886,6 +48865,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmChgPwd71
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -42901,6 +48881,9 @@ CREATE PROCEDURE GetLisAdmChgPwd71
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -42931,6 +48914,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CustomerId		Int
@@ -42943,8 +48929,11 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CompanyId		VarChar
 	,@ProjectId		VarChar
 	,@CultureId		SmallInt
+	,@BorrowerId		Int
+	,@GuarantorId		Int
+	,@LenderId		Int
 SELECT @fClause='FROM RODesign.dbo.SrUsr b1 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId1=b1.UsrId, UsrId1Text=b1.UsrTitle, UsrId1Dtl=b1.UsrDetail, UsrId1Img=b1.PicMed, b1.Active'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId1=b1.UsrId, UsrId1Text=b1.UsrTitle, UsrId1Dtl=b1.UsrDetail, UsrId1Img=b1.PicMed, b1.Active, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b1.Active DESC,b1.UsrTitle'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -42980,6 +48969,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','b1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','b1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','b1.','Y',null,'UsrId',@wClause OUTPUT
@@ -42988,7 +48980,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b1.UsrId = ' + @key + ')
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1.UsrTitle LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b1.UsrDetail LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -42999,6 +48992,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmClientRule79
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43014,6 +49008,9 @@ CREATE PROCEDURE GetLisAdmClientRule79
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId9	Int
@@ -43047,11 +49044,14 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
 SELECT @fClause='FROM dbo.ClientRule b127 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ClientRuleId127=b127.ClientRuleId, ClientRuleId127Text=b127.RuleDesc, ClientRuleId127Dtl=b127.RuleDescription'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ClientRuleId127=b127.ClientRuleId, ClientRuleId127Text=b127.RuleDesc, ClientRuleId127Dtl=b127.RuleDescription, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b127.RuleDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -43089,7 +49089,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b127.RuleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b127.RuleDescription LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -43100,6 +49101,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmClnTier105
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43115,6 +49117,9 @@ CREATE PROCEDURE GetLisAdmClnTier105
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -43145,10 +49150,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.ClientTier b194 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ClientTierId194=b194.ClientTierId, ClientTierId194Text=b194.ClientTierName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ClientTierId194=b194.ClientTierId, ClientTierId194Text=b194.ClientTierName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b194.ClientTierName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -43179,7 +49187,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b194.ClientTierId = ' + 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b194.ClientTierName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -43190,6 +49199,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmColDrg1007
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43205,6 +49215,9 @@ CREATE PROCEDURE GetLisAdmColDrg1007
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId1074	Int
@@ -43236,6 +49249,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenObj b14' 
@@ -43254,7 +49270,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', TabFolderId14=x119.ScreenTabId'
 + ', TabFolderId14Text=x119.TabFolderName'
 + ', TabIndex14=b14.TabIndex'
-+ ', MasterTable14=b14.MasterTable'
++ ', MasterTable14=b14.MasterTable, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -43286,7 +49302,8 @@ BEGIN
 	IF @ScreenId1074 is not null SELECT @wClause = @wClause + ' AND (b14.ScreenId = ' + convert(varchar,@ScreenId1074) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -43297,6 +49314,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmColHlp1006
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43312,6 +49330,9 @@ CREATE PROCEDURE GetLisAdmColHlp1006
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -43342,10 +49363,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenObj b14 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14=b14.ScreenObjId, ScreenObjId14Text=b14.ColumnDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14=b14.ScreenObjId, ScreenObjId14Text=b14.ColumnDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b14.ColumnDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -43376,7 +49400,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @k
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b14.ColumnDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -43387,6 +49412,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmCronJob118
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43402,6 +49428,9 @@ CREATE PROCEDURE GetLisAdmCronJob118
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -43432,10 +49461,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.CronJob b264 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CronJobId264=b264.CronJobId, CronJobId264Text=b264.CronJobName, CronJobId264Dtl=b264.LastStatus'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CronJobId264=b264.CronJobId, CronJobId264Text=b264.CronJobName, CronJobId264Dtl=b264.LastStatus, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b264.CronJobName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -43466,7 +49498,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b264.CronJobId = ' + @ke
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b264.CronJobName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b264.LastStatus LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -43477,6 +49510,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmCtButtonHlp81
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43492,6 +49526,9 @@ CREATE PROCEDURE GetLisAdmCtButtonHlp81
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@CultureId18	SmallInt
@@ -43523,6 +49560,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -43535,7 +49575,8 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', ButtonTypeId131=x1150.ButtonTypeId'
 + ', ButtonTypeId131Text=x1150.ButtonTypeDesc'
 + ', ButtonName131=b131.ButtonName'
-+ ', ButtonToolTip131=b131.ButtonToolTip'
++ ', ButtonLongNm131=b131.ButtonLongNm'
++ ', ButtonToolTip131=b131.ButtonToolTip, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY x1149.CultureTypeDesc, x1150.ButtonTypeDesc, b131.ButtonName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -43568,7 +49609,8 @@ BEGIN
 	IF @CultureId18 is not null SELECT @wClause = @wClause + ' AND (b131.CultureId = ' + convert(varchar,@CultureId18) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -43579,6 +49621,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmCtCulture8
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43594,6 +49637,9 @@ CREATE PROCEDURE GetLisAdmCtCulture8
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ToTranslate61	Char(1)
@@ -43626,10 +49672,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.CtCulture b8 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureTypeId8=b8.CultureTypeId, CultureTypeId8Text=b8.CultureTypeDesc, CultureTypeId8Dtl=b8.CultureTypeName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureTypeId8=b8.CultureTypeId, CultureTypeId8Text=b8.CultureTypeDesc, CultureTypeId8Dtl=b8.CultureTypeName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b8.CultureTypeDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -43665,7 +49714,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b8.CultureTypeDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b8.CultureTypeName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -43676,6 +49726,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmCtDisplayType32
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43691,6 +49742,9 @@ CREATE PROCEDURE GetLisAdmCtDisplayType32
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -43721,13 +49775,16 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.CtDisplayType b18'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TypeId18=b18.TypeId'
 + ', TypeName18=b18.TypeName'
 + ', TypeDesc18=b18.TypeDesc'
-+ ', DisplayDefault18=b18.DisplayDefault'
++ ', DisplayDefault18=b18.DisplayDefault, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -43755,7 +49812,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b18.TypeId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -43766,6 +49824,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmDataCat96
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43781,6 +49840,9 @@ CREATE PROCEDURE GetLisAdmDataCat96
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -43811,10 +49873,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptwizCat b181 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptwizCatId181=b181.RptwizCatId, RptwizCatId181Text=b181.RptwizCatDesc, RptwizCatId181Dtl=b181.CatDescription'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptwizCatId181=b181.RptwizCatId, RptwizCatId181Text=b181.RptwizCatDesc, RptwizCatId181Dtl=b181.CatDescription, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b181.RptwizCatDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -43845,7 +49910,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b181.RptwizCatId = ' + @
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b181.RptwizCatDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b181.CatDescription LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -43856,6 +49922,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmDatTier107
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43871,6 +49938,9 @@ CREATE PROCEDURE GetLisAdmDatTier107
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -43901,10 +49971,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.DataTier b195 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DataTierId195=b195.DataTierId, DataTierId195Text=b195.DataTierName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DataTierId195=b195.DataTierId, DataTierId195Text=b195.DataTierName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b195.DataTierName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -43935,7 +50008,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b195.DataTierId = ' + @k
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b195.DataTierName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -43946,6 +50020,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmDbKey15
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -43961,6 +50036,9 @@ CREATE PROCEDURE GetLisAdmDbKey15
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -43991,10 +50069,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.DbKey b20 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' KeyId20=b20.KeyId, KeyId20Text=b20.KeyName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' KeyId20=b20.KeyId, KeyId20Text=b20.KeyName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b20.KeyName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44025,7 +50106,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b20.KeyId = ' + @key + '
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b20.KeyName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44036,6 +50118,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmDbTable2
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -44051,6 +50134,9 @@ CREATE PROCEDURE GetLisAdmDbTable2
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@TableName25	VarChar(500)
@@ -44083,10 +50169,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.DbTable b3 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TableId3=b3.TableId, TableId3Text=b3.TableDesc, TableId3Dtl=b3.TblObjective'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TableId3=b3.TableId, TableId3Text=b3.TableDesc, TableId3Dtl=b3.TblObjective, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b3.TableDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44123,7 +50212,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b3.TableDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b3.TblObjective LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44134,6 +50224,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmEntity103
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -44149,6 +50240,9 @@ CREATE PROCEDURE GetLisAdmEntity103
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -44179,6 +50273,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.Entity b199'
@@ -44186,7 +50283,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', EntityImg199=b199.EntityImg'
 + ', EntityName199=b199.EntityName'
 + ', EntityCode199=b199.EntityCode'
-+ ', DeployPath199=b199.DeployPath'
++ ', DeployPath199=b199.DeployPath, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44214,7 +50311,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b199.EntityId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44225,6 +50323,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmLabel112
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -44240,6 +50339,9 @@ CREATE PROCEDURE GetLisAdmLabel112
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@CultureId48	SmallInt
@@ -44274,12 +50376,15 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
 	,@CompanyId		Int
 SELECT @fClause='FROM dbo.Label b215 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' LabelId215=b215.LabelId, LabelId215Text=b215.LabelDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' LabelId215=b215.LabelId, LabelId215Text=b215.LabelDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b215.LabelDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44321,7 +50426,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b215.LabelDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44332,6 +50438,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmLabelVw119
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -44347,6 +50454,9 @@ CREATE PROCEDURE GetLisAdmLabelVw119
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@CultureId56	SmallInt
@@ -44379,6 +50489,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
@@ -44390,7 +50503,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', LabelCat265=b265.LabelCat'
 + ', LabelKey265=b265.LabelKey'
 + ', LabelText265=b265.LabelText'
-+ ', SortOrder265=b265.SortOrder'
++ ', SortOrder265=b265.SortOrder, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b265.SortOrder'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44424,7 +50537,8 @@ BEGIN
 	IF @LabelCat59 is not null SELECT @wClause = @wClause + ' AND (b265.LabelCat = N''' + @LabelCat59 + ''')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44435,6 +50549,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmMaintMsg109
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -44450,6 +50565,9 @@ CREATE PROCEDURE GetLisAdmMaintMsg109
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -44480,10 +50598,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.MaintMsg b233 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MaintMsgId233=b233.MaintMsgId, MaintMsgId233Text=b233.MaintMsgName, MaintMsgId233Dtl=b233.MaintMessage'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MaintMsgId233=b233.MaintMsgId, MaintMsgId233Text=b233.MaintMsgName, MaintMsgId233Dtl=b233.MaintMessage, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b233.MaintMsgName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44514,7 +50635,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b233.MaintMsgId = ' + @k
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b233.MaintMsgName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b233.MaintMessage LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44525,6 +50647,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmMember122
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -44540,6 +50663,9 @@ CREATE PROCEDURE GetLisAdmMember122
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -44570,6 +50696,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@MemberId		Int
@@ -44587,7 +50716,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', MnSalary274=b274.MnSalary'
 + ', MnNtxBenefit274=b274.MnNtxBenefit'
 + ', MnTaxBenefit274=b274.MnTaxBenefit'
-+ ', MnWorkHours274=b274.MnWorkHours'
++ ', MnWorkHours274=b274.MnWorkHours, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44616,7 +50745,8 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Members,'MemberId
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b274.SredMebrId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44627,6 +50757,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmMenu35
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -44642,6 +50773,9 @@ CREATE PROCEDURE GetLisAdmMenu35
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -44672,10 +50806,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b39.MenuId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44706,7 +50843,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b39.MenuId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44717,6 +50855,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmMenuDrg121
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -44732,6 +50871,9 @@ CREATE PROCEDURE GetLisAdmMenuDrg121
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -44762,10 +50904,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b39.MenuId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44796,7 +50941,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b39.MenuId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44807,6 +50953,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmMenuHlp36
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -44822,6 +50969,9 @@ CREATE PROCEDURE GetLisAdmMenuHlp36
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -44852,10 +51002,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b39.MenuId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44886,7 +51039,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b39.MenuId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44897,6 +51051,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmMenuOpt111
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -44912,6 +51067,9 @@ CREATE PROCEDURE GetLisAdmMenuOpt111
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -44942,11 +51100,14 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@ProjectId		Int
 SELECT @fClause='FROM RODesign.dbo.MyMenuOpt b248 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuOptId248=b248.MenuOptId, MenuOptId248Text=b248.MenuOptName, MenuOptId248Dtl=b248.MenuOptDesc, MenuOptId248Url=b248.MenuOptImg'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuOptId248=b248.MenuOptId, MenuOptId248Text=b248.MenuOptName, MenuOptId248Dtl=b248.MenuOptDesc, MenuOptId248Url=b248.MenuOptImg, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b248.MenuOptName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -44980,7 +51141,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b248.MenuOptId = ' + @ke
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b248.MenuOptName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b248.MenuOptDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44991,6 +51153,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmMenuPerm58
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45006,6 +51169,9 @@ CREATE PROCEDURE GetLisAdmMenuPerm58
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -45036,10 +51202,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b39.MenuId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -45070,7 +51239,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b39.MenuId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -45081,6 +51251,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmMsgCenter86
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45096,6 +51267,9 @@ CREATE PROCEDURE GetLisAdmMsgCenter86
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@MsgId28	Int
@@ -45129,10 +51303,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Msg b146 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MsgId146=b146.MsgId, MsgId146Text=b146.MsgName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MsgId146=b146.MsgId, MsgId146Text=b146.MsgName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b146.MsgName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -45169,7 +51346,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b146.MsgName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -45180,6 +51358,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmOvride78
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45195,6 +51374,9 @@ CREATE PROCEDURE GetLisAdmOvride78
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -45225,10 +51407,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.Ovride b122 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' OvrideId122=b122.OvrideId, OvrideId122Text=b122.OvrideName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' OvrideId122=b122.OvrideId, OvrideId122Text=b122.OvrideName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b122.OvrideName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -45259,7 +51444,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b122.OvrideId = ' + @key
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b122.OvrideName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -45270,6 +51456,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmPageObj1001
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45285,6 +51472,9 @@ CREATE PROCEDURE GetLisAdmPageObj1001
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@SectionCd1073	Char(1)
@@ -45316,10 +51506,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.PageObj b1277 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PageObjId1277=b1277.PageObjId, PageObjId1277Text=b1277.PageObjDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PageObjId1277=b1277.PageObjId, PageObjId1277Text=b1277.PageObjDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b1277.PageObjDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -45354,7 +51547,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1277.PageObjDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -45365,6 +51559,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmPayment1021
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45380,6 +51575,9 @@ CREATE PROCEDURE GetLisAdmPayment1021
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -45410,6 +51608,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CustomerId		Int
@@ -45422,8 +51623,11 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CompanyId		VarChar
 	,@ProjectId		VarChar
 	,@CultureId		SmallInt
+	,@BorrowerId		Int
+	,@GuarantorId		Int
+	,@LenderId		Int
 SELECT @fClause='FROM RODesign.dbo.Usr b1 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId1=b1.UsrId, UsrId1Text=b1.LoginName, b1.Active'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId1=b1.UsrId, UsrId1Text=b1.LoginName, b1.Active, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b1.Active DESC,b1.LoginName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -45459,6 +51663,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','b1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','b1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','b1.','Y',null,'UsrId',@wClause OUTPUT
@@ -45467,7 +51674,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b1.UsrId = ' + @key + ')
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1.LoginName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -45478,6 +51686,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmRelease98
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45493,6 +51702,9 @@ CREATE PROCEDURE GetLisAdmRelease98
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReleaseDate35	DateTime
@@ -45526,10 +51738,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.Release b191 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReleaseId191=b191.ReleaseId, ReleaseId191Text=b191.ReleaseDesc, ReleaseId191Dtl=b191.ReadMe'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReleaseId191=b191.ReleaseId, ReleaseId191Text=b191.ReleaseDesc, ReleaseId191Dtl=b191.ReadMe, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b191.ReleaseDesc DESC'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -45566,7 +51781,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b191.ReleaseDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b191.ReadMe LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -45577,6 +51793,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmReport67
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45592,6 +51809,9 @@ CREATE PROCEDURE GetLisAdmReport67
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -45622,11 +51842,14 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CompanyId		VarChar
 SELECT @fClause='FROM dbo.Report b22 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId22=b22.ReportId, ReportId22Text=b22.ReportDesc, ReportId22Dtl=b22.ProgramName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId22=b22.ReportId, ReportId22Text=b22.ReportDesc, ReportId22Dtl=b22.ProgramName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b22.ReportDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -45660,7 +51883,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b22.ReportId = ' + @key 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b22.ReportDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b22.ProgramName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -45671,6 +51895,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmReportCri69
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45686,6 +51911,9 @@ CREATE PROCEDURE GetLisAdmReportCri69
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReportId4	Int
@@ -45717,10 +51945,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ReportCri b97 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportCriId97=b97.ReportCriId, ReportCriId97Text=b97.ReportCriDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportCriId97=b97.ReportCriId, ReportCriId97Text=b97.ReportCriDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b97.ReportCriDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -45755,7 +51986,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b97.ReportCriDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -45766,6 +51998,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmReportGrp65
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45781,6 +52014,9 @@ CREATE PROCEDURE GetLisAdmReportGrp65
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReportId2	Int
@@ -45812,6 +52048,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ReportGrp b94' 
@@ -45827,7 +52066,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', ContentVertical94=b94.ContentVertical'
 + ', LabelVertical94=b94.LabelVertical'
 + ', BorderWidth94=b94.BorderWidth'
-+ ', GrpStyle94=b94.GrpStyle'
++ ', GrpStyle94=b94.GrpStyle, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY x882.ReportDesc, b94.ReportGrpIndex'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -45859,7 +52098,8 @@ BEGIN
 	IF @ReportId2 is not null SELECT @wClause = @wClause + ' AND (b94.ReportId = ' + convert(varchar,@ReportId2) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -45870,6 +52110,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmReportObj13
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45885,6 +52126,9 @@ CREATE PROCEDURE GetLisAdmReportObj13
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReportId13	Int
@@ -45916,10 +52160,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ReportObj b23 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportObjId23=b23.ReportObjId, ReportObjId23Text=b23.ColumnDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportObjId23=b23.ReportObjId, ReportObjId23Text=b23.ColumnDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b23.ColumnDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -45954,7 +52201,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b23.ColumnDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -45965,6 +52213,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmRowOvrd17
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -45980,6 +52229,9 @@ CREATE PROCEDURE GetLisAdmRowOvrd17
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId38	Int
@@ -46012,10 +52264,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RowOvrd b238 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RowOvrdId238=b238.RowOvrdId, RowOvrdId238Text=b238.RowOvrdDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RowOvrdId238=b238.RowOvrdId, RowOvrdId238Text=b238.RowOvrdDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b238.RowOvrdDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -46051,7 +52306,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b238.RowOvrdDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -46062,6 +52318,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmRptCha100
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -46077,6 +52334,9 @@ CREATE PROCEDURE GetLisAdmRptCha100
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -46107,10 +52367,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptCha b206 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptChaId206=b206.RptChaId, RptChaId206Text=b206.RptChaDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptChaId206=b206.RptChaId, RptChaId206Text=b206.RptChaDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b206.RptChaDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -46141,7 +52404,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b206.RptChaId = ' + @key
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b206.RptChaDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -46152,6 +52416,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmRptCtr90
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -46167,6 +52432,9 @@ CREATE PROCEDURE GetLisAdmRptCtr90
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReportId29	Int
@@ -46199,10 +52467,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptCtr b161 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptCtrId161=b161.RptCtrId, RptCtrId161Text=b161.RptCtrDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptCtrId161=b161.RptCtrId, RptCtrId161Text=b161.RptCtrDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b161.RptCtrDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -46238,7 +52509,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b161.RptCtrDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -46249,6 +52521,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmRptElm91
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -46264,6 +52537,9 @@ CREATE PROCEDURE GetLisAdmRptElm91
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReportId30	Int
@@ -46295,6 +52571,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptElm b160' 
@@ -46312,7 +52591,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', ElmColumns160=b160.ElmColumns'
 + ', ElmColSpacing160=b160.ElmColSpacing'
 + ', ElmPrintFirst160=b160.ElmPrintFirst'
-+ ', ElmPrintLast160=b160.ElmPrintLast'
++ ', ElmPrintLast160=b160.ElmPrintLast, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -46344,7 +52623,8 @@ BEGIN
 	IF @ReportId30 is not null SELECT @wClause = @wClause + ' AND (b160.ReportId = ' + convert(varchar,@ReportId30) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -46355,6 +52635,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmRptStyle89
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -46370,6 +52651,9 @@ CREATE PROCEDURE GetLisAdmRptStyle89
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@DefaultCd32	Char(2)
@@ -46401,10 +52685,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptStyle b167 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptStyleId167=b167.RptStyleId, RptStyleId167Text=b167.RptStyleDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptStyleId167=b167.RptStyleId, RptStyleId167Text=b167.RptStyleDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b167.RptStyleDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -46439,7 +52726,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b167.RptStyleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -46450,6 +52738,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmRptTbl92
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -46465,6 +52754,9 @@ CREATE PROCEDURE GetLisAdmRptTbl92
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ReportId34	Int
@@ -46497,10 +52789,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptTbl b162 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptTblId162=b162.RptTblId, RptTblId162Text=b162.RptTblDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptTblId162=b162.RptTblId, RptTblId162Text=b162.RptTblDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b162.RptTblDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -46536,7 +52831,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b162.RptTblDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -46547,6 +52843,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetLisAdmRptWiz95]
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -46627,7 +52924,11 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b183.RptwizId = ' + @key
 SELECT @FilterTxt = REPLACE(@FilterTxt, '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b183.RptwizName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -46638,6 +52939,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmRptwizTyp97
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -46653,6 +52955,9 @@ CREATE PROCEDURE GetLisAdmRptwizTyp97
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -46683,11 +52988,14 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptwizTyp b185'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptwizTypId185=b185.RptwizTypId'
-+ ', RptwizTypName185=b185.RptwizTypName'
++ ', RptwizTypName185=b185.RptwizTypName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -46715,7 +53023,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b185.RptwizTypId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -46726,6 +53035,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmRulTier106
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -46741,6 +53051,9 @@ CREATE PROCEDURE GetLisAdmRulTier106
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -46771,10 +53084,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.RuleTier b196 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleTierId196=b196.RuleTierId, RuleTierId196Text=b196.RuleTierName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleTierId196=b196.RuleTierId, RuleTierId196Text=b196.RuleTierName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b196.RuleTierName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -46805,7 +53121,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b196.RuleTierId = ' + @k
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b196.RuleTierName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -46816,6 +53133,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmScrAudit1019
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -46831,6 +53149,9 @@ CREATE PROCEDURE GetLisAdmScrAudit1019
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId1075	Int
@@ -46862,6 +53183,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScrAudit b1300' 
@@ -46881,7 +53205,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', RowDesc1300=b1300.RowDesc'
 + ', ChangedBy1300=x7418.UsrId'
 + ', ChangedBy1300Text=x7418.UsrName'
-+ ', ChangedOn1300=b1300.ChangedOn'
++ ', ChangedOn1300=b1300.ChangedOn, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY x7425.ScreenDesc, b1300.ChangedOn'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -46913,7 +53237,8 @@ BEGIN
 	IF @ScreenId1075 is not null SELECT @wClause = @wClause + ' AND (b1300.ScreenId = ' + convert(varchar,@ScreenId1075) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -46924,6 +53249,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmScrAuditDtl1020
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -46939,6 +53265,9 @@ CREATE PROCEDURE GetLisAdmScrAuditDtl1020
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScrAuditId1076	BigInt
@@ -46970,6 +53299,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScrAuditDtl b1301'
@@ -46980,7 +53312,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', ColumnId1301=b1301.ColumnId'
 + ', ColumnDesc1301=b1301.ColumnDesc'
 + ', ChangedFr1301=b1301.ChangedFr'
-+ ', ChangedTo1301=b1301.ChangedTo'
++ ', ChangedTo1301=b1301.ChangedTo, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47012,7 +53344,8 @@ BEGIN
 	IF @ScrAuditId1076 is not null SELECT @wClause = @wClause + ' AND (b1301.ScrAuditId = ' + convert(varchar,@ScrAuditId1076) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47023,6 +53356,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmScreen9
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47038,6 +53372,9 @@ CREATE PROCEDURE GetLisAdmScreen9
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId60	Int
@@ -47069,10 +53406,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Screen b15 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId15=b15.ScreenId, ScreenId15Text=b15.ScreenDesc, ScreenId15Dtl=b15.ProgramName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId15=b15.ScreenId, ScreenId15Text=b15.ScreenDesc, ScreenId15Dtl=b15.ProgramName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b15.ScreenDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47107,7 +53447,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b15.ScreenDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b15.ProgramName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47118,6 +53459,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmScreenCri73
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47133,6 +53475,9 @@ CREATE PROCEDURE GetLisAdmScreenCri73
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId3	Int
@@ -47164,10 +53509,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenCri b104 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenCriId104=b104.ScreenCriId, ScreenCriId104Text=b104.ScreenCriDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenCriId104=b104.ScreenCriId, ScreenCriId104Text=b104.ScreenCriDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b104.ScreenCriDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47202,7 +53550,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b104.ScreenCriDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47213,6 +53562,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmScreenFilter59
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47228,6 +53578,9 @@ CREATE PROCEDURE GetLisAdmScreenFilter59
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId1072	Int
@@ -47259,10 +53612,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenFilter b86 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenFilterId86=b86.ScreenFilterId, ScreenFilterId86Text=b86.ScreenFilterDesc, ScreenFilterId86Dtl=b86.FilterClause'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenFilterId86=b86.ScreenFilterId, ScreenFilterId86Text=b86.ScreenFilterDesc, ScreenFilterId86Dtl=b86.FilterClause, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b86.ScreenFilterDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47297,7 +53653,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b86.ScreenFilterDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b86.FilterClause LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47308,6 +53665,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmScreenObj10
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47323,6 +53681,9 @@ CREATE PROCEDURE GetLisAdmScreenObj10
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -47353,10 +53714,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenObj b14 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14=b14.ScreenObjId, ScreenObjId14Text=b14.ColumnDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14=b14.ScreenObjId, ScreenObjId14Text=b14.ColumnDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b14.ColumnDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47387,7 +53751,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @k
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b14.ColumnDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47398,6 +53763,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmScreenTab54
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47413,6 +53779,9 @@ CREATE PROCEDURE GetLisAdmScreenTab54
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -47443,10 +53812,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenTab b19 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenTabId19=b19.ScreenTabId, ScreenTabId19Text=b19.ScreenTabDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenTabId19=b19.ScreenTabId, ScreenTabId19Text=b19.ScreenTabDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b19.ScreenTabDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47477,7 +53849,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b19.ScreenTabId = ' + @k
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b19.ScreenTabDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47488,6 +53861,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmSctGrpCol1003
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47503,6 +53877,9 @@ CREATE PROCEDURE GetLisAdmSctGrpCol1003
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -47533,10 +53910,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.SctGrpCol b1284 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SctGrpColId1284=b1284.SctGrpColId, SctGrpColId1284Text=b1284.SctGrpColDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SctGrpColId1284=b1284.SctGrpColId, SctGrpColId1284Text=b1284.SctGrpColDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b1284.SctGrpColDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47567,7 +53947,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b1284.SctGrpColId = ' + 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1284.SctGrpColDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47578,6 +53959,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmSctGrpRow1004
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47593,6 +53975,9 @@ CREATE PROCEDURE GetLisAdmSctGrpRow1004
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -47623,10 +54008,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.SctGrpRow b1283 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SctGrpRowId1283=b1283.SctGrpRowId, SctGrpRowId1283Text=b1283.SctGrpRowDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SctGrpRowId1283=b1283.SctGrpRowId, SctGrpRowId1283Text=b1283.SctGrpRowDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b1283.SctGrpRowDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47657,7 +54045,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b1283.SctGrpRowId = ' + 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1283.SctGrpRowDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47668,6 +54057,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmServerRule14
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47683,6 +54073,9 @@ CREATE PROCEDURE GetLisAdmServerRule14
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId16	Int
@@ -47714,10 +54107,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ServerRule b24 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ServerRuleId24=b24.ServerRuleId, ServerRuleId24Text=b24.RuleDesc, ServerRuleId24Dtl=b24.RuleDescription'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ServerRuleId24=b24.ServerRuleId, ServerRuleId24Text=b24.RuleDesc, ServerRuleId24Dtl=b24.RuleDescription, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b24.RuleDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47753,7 +54149,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b24.RuleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b24.RuleDescription LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47764,6 +54161,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmSignup1018
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47779,6 +54177,9 @@ CREATE PROCEDURE GetLisAdmSignup1018
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -47809,10 +54210,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.VwUsr b270 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId270=b270.UsrId, UsrId270Text=b270.UsrEmail, b270.Active'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId270=b270.UsrId, UsrId270Text=b270.UsrEmail, b270.Active, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b270.Active DESC,b270.UsrEmail'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47844,7 +54248,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b270.UsrId = ' + @key + 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b270.UsrEmail LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47855,6 +54260,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmSredTime123
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47870,6 +54276,9 @@ CREATE PROCEDURE GetLisAdmSredTime123
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@MemberId63	Int
@@ -47903,6 +54312,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@MemberId		Int
@@ -47921,7 +54333,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', ModifiedBy272=x3215.UsrId'
 + ', ModifiedBy272Text=x3215.UsrName'
 + ', ModifiedOn272=b272.ModifiedOn'
-+ ', Accomplished272=b272.Accomplished'
++ ', Accomplished272=b272.Accomplished, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b272.SredTimeDt'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -47957,7 +54369,8 @@ BEGIN
 	IF @SredTimeDt66 is not null SELECT @wClause = @wClause + ' AND (DATEADD(hour, DATEDIFF(hour, 0, b272.SredTimeDt), 0) <= ''' + convert(varchar,@SredTimeDt66,120) + ''')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -47968,6 +54381,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmStaticCs115
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -47983,6 +54397,9 @@ CREATE PROCEDURE GetLisAdmStaticCs115
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -48013,10 +54430,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticCs b260 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticCsId260=b260.StaticCsId, StaticCsId260Text=b260.StaticCsNm'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticCsId260=b260.StaticCsId, StaticCsId260Text=b260.StaticCsNm, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b260.StaticCsNm'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -48047,7 +54467,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b260.StaticCsId = ' + @k
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b260.StaticCsNm LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -48058,6 +54479,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmStaticFi117
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -48073,6 +54495,9 @@ CREATE PROCEDURE GetLisAdmStaticFi117
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -48103,11 +54528,14 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticFi b262'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticFiId262=b262.StaticFiId'
-+ ', StaticFiUrl262=b262.StaticFiUrl'
++ ', StaticFiUrl262=b262.StaticFiUrl, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -48135,7 +54563,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b262.StaticFiId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -48146,6 +54575,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmStaticJs116
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -48161,6 +54591,9 @@ CREATE PROCEDURE GetLisAdmStaticJs116
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -48191,10 +54624,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticJs b261 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticJsId261=b261.StaticJsId, StaticJsId261Text=b261.StaticJsNm'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticJsId261=b261.StaticJsId, StaticJsId261Text=b261.StaticJsNm, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b261.StaticJsNm'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -48225,7 +54661,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b261.StaticJsId = ' + @k
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b261.StaticJsNm LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -48236,6 +54673,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmStaticPg114
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -48251,6 +54689,9 @@ CREATE PROCEDURE GetLisAdmStaticPg114
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@StaticPgId1070	Int
@@ -48283,10 +54724,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticPg b259 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticPgId259=b259.StaticPgId, StaticPgId259Text=b259.StaticPgDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticPgId259=b259.StaticPgId, StaticPgId259Text=b259.StaticPgDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b259.StaticPgDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -48322,7 +54766,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b259.StaticPgDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -48333,6 +54778,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmSystems87
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -48348,6 +54794,9 @@ CREATE PROCEDURE GetLisAdmSystems87
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -48378,10 +54827,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.Systems b45 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SystemId45=b45.SystemId, SystemId45Text=b45.SystemName, SystemId45Dtl=b45.SystemId, b45.Active'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SystemId45=b45.SystemId, SystemId45Text=b45.SystemName, SystemId45Dtl=b45.SystemId, b45.Active, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b45.Active DESC,b45.SystemName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -48412,7 +54864,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b45.SystemId = ' + @key 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b45.SystemName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b45.SystemId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -48423,6 +54876,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmTbdRule113
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -48438,6 +54892,9 @@ CREATE PROCEDURE GetLisAdmTbdRule113
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId52	Int
@@ -48469,10 +54926,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.TbdRule b254 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TbdRuleId254=b254.TbdRuleId, TbdRuleId254Text=b254.TbdRuleName, TbdRuleId254Dtl=b254.TbdRuleDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TbdRuleId254=b254.TbdRuleId, TbdRuleId254Text=b254.TbdRuleName, TbdRuleId254Dtl=b254.TbdRuleDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b254.TbdRuleName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -48507,7 +54967,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b254.TbdRuleName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b254.TbdRuleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -48518,6 +54979,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmTemplate53
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -48533,6 +54995,9 @@ CREATE PROCEDURE GetLisAdmTemplate53
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -48563,13 +55028,16 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Template b79'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TemplateId79=b79.TemplateId'
 + ', TemplateName79=b79.TemplateName'
 + ', TmplPrefix79=b79.TmplPrefix'
-+ ', TmplDefault79=b79.TmplDefault'
++ ', TmplDefault79=b79.TmplDefault, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -48597,7 +55065,8 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b79.TemplateId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -48608,6 +55077,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmUsr1
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -48623,6 +55093,9 @@ CREATE PROCEDURE GetLisAdmUsr1
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@UsrEmail22	NVarChar(50)
@@ -48656,6 +55129,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@CustomerId		Int
@@ -48668,8 +55144,11 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CompanyId		VarChar
 	,@ProjectId		VarChar
 	,@CultureId		SmallInt
+	,@BorrowerId		Int
+	,@GuarantorId		Int
+	,@LenderId		Int
 SELECT @fClause='FROM RODesign.dbo.SrUsr b1 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId1=b1.UsrId, UsrId1Text=b1.UsrTitle, UsrId1Dtl=b1.UsrDetail, UsrId1Img=b1.PicMed, b1.Active'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrId1=b1.UsrId, UsrId1Text=b1.UsrTitle, UsrId1TextR=b1.Active, UsrId1Dtl=b1.UsrDetail, UsrId1DtlR=b1.UsrGroupLs, UsrId1Img=b1.PicMed, b1.Active, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b1.Active DESC,b1.UsrTitle'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -48710,6 +55189,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'Invest
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupLs','UsrGroup','b1.','N','Y',null,'N','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','b1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','b1.','Y',null,'UsrId',@wClause OUTPUT
@@ -48722,9 +55204,10 @@ BEGIN
 END
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
-IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1.UsrTitle LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b1.UsrDetail LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
+IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1.UsrTitle LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b1.Active LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b1.UsrDetail LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b1.UsrGroupLs LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -48735,6 +55218,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmUsrGroup5
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -48750,6 +55234,9 @@ CREATE PROCEDURE GetLisAdmUsrGroup5
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -48780,12 +55267,15 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@UsrGroupId		SmallInt
 	,@CompanyId		Int
 SELECT @fClause='FROM RODesign.dbo.UsrGroup b7 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrGroupId7=b7.UsrGroupId, UsrGroupId7Text=b7.UsrGroupName'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrGroupId7=b7.UsrGroupId, UsrGroupId7Text=b7.UsrGroupName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b7.UsrGroupName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -48819,7 +55309,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b7.UsrGroupId = ' + @key
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b7.UsrGroupName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -48830,6 +55321,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmUsrImpr66
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -48845,6 +55337,9 @@ CREATE PROCEDURE GetLisAdmUsrImpr66
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -48875,10 +55370,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.UsrImpr b95 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrImprId95=b95.UsrImprId, UsrImprId95Text=b95.UsrImprDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrImprId95=b95.UsrImprId, UsrImprId95Text=b95.UsrImprDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b95.UsrImprDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -48912,7 +55410,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b95.UsrImprId = ' + @key
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b95.UsrImprDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -48923,6 +55422,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmUsrPref64
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -48938,6 +55438,9 @@ CREATE PROCEDURE GetLisAdmUsrPref64
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -48968,6 +55471,9 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 	,@UsrGroupId		SmallInt
@@ -48979,8 +55485,11 @@ DECLARE	 @sClause		nvarchar(max)
 	,@VendorId		Int
 	,@CompanyId		Int
 	,@ProjectId		Int
+	,@LenderId		Int
+	,@BorrowerId		Int
+	,@GuarantorId		Int
 SELECT @fClause='FROM RODesign.dbo.UsrPref b93 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrPrefId93=b93.UsrPrefId, UsrPrefId93Text=b93.UsrPrefDesc'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UsrPrefId93=b93.UsrPrefId, UsrPrefId93Text=b93.UsrPrefDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b93.UsrPrefDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -49015,6 +55524,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Customers,'CustomerId','Customer','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'InvestorId','Investor','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Vendors,'VendorId','Vendor','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','b93.','N','N',null,'Y','UsrPrefId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','b93.','N',null,'UsrPrefId',@wClause OUTPUT
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectId','Project','b93.','N',null,'UsrPrefId',@wClause OUTPUT
@@ -49023,7 +55535,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b93.UsrPrefId = ' + @key
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b93.UsrPrefDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49034,6 +55547,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmWebRule80
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -49049,6 +55563,9 @@ CREATE PROCEDURE GetLisAdmWebRule80
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@ScreenId15	Int
@@ -49080,10 +55597,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.WebRule b128 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WebRuleId128=b128.WebRuleId, WebRuleId128Text=b128.RuleDesc, WebRuleId128Dtl=b128.RuleDescription'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WebRuleId128=b128.WebRuleId, WebRuleId128Text=b128.RuleDesc, WebRuleId128Dtl=b128.RuleDescription, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b128.RuleDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -49118,7 +55638,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b128.RuleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b128.RuleDescription LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49129,6 +55650,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmWizardObj49
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -49144,6 +55666,9 @@ CREATE PROCEDURE GetLisAdmWizardObj49
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -49174,10 +55699,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Wizard b71 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardId71=b71.WizardId, WizardId71Text=b71.WizardTitle'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardId71=b71.WizardId, WizardId71Text=b71.WizardTitle, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b71.WizardTitle'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -49208,7 +55736,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b71.WizardId = ' + @key 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b71.WizardTitle LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49219,6 +55748,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmWizardRule50
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -49234,6 +55764,9 @@ CREATE PROCEDURE GetLisAdmWizardRule50
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@WizardId17	Int
@@ -49265,10 +55798,13 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelInvestor		char(1)
 	,@SelMember		char(1)
 	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.WizardRule b73 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardRuleId73=b73.WizardRuleId, WizardRuleId73Text=b73.RuleDesc, WizardRuleId73Dtl=b73.RuleDescription'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardRuleId73=b73.WizardRuleId, WizardRuleId73Text=b73.RuleDesc, WizardRuleId73Dtl=b73.RuleDescription, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b73.RuleDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -49303,7 +55839,8 @@ END
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b73.RuleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b73.RuleDescription LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49314,6 +55851,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 -- This exists only in ??Design.
 CREATE PROCEDURE [dbo].[GetLoginLegacy]
  @LoginName	nvarchar(32)
@@ -49328,7 +55868,11 @@ SELECT R.UsrId, R.UsrName, R.UsrEmail, R.InternalUsr, R.TechnicalUsr, R.CultureI
 	FROM dbo.Usr R
 	INNER JOIN dbo.VwCulture C ON R.CultureId = C.CultureId
 	WHERE R.LoginName = @LoginName AND pwdcompare(@Password,R.ExtPassword,0) = 1 AND R.Active = 'Y'
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49339,6 +55883,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- This exists only in ??Design.
 CREATE PROCEDURE [dbo].[GetLoginSecure]
  @LoginName			nvarchar(32)
@@ -49383,7 +55929,9 @@ BEGIN
 		)
 		AND R.Active = 'Y'
 END
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49394,6 +55942,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design:
 CREATE PROCEDURE [dbo].[GetMaintMsg]
 /* WITH ENCRYPTION */
@@ -49402,7 +55952,12 @@ SET NOCOUNT ON
 DECLARE	 @MaintMessage	nvarchar(2000)
 SELECT @MaintMessage = MaintMessage FROM dbo.MaintMsg WHERE ShowOnLogin = 'Y'
 IF @@ROWCOUNT <= 0 SELECT '' ELSE SELECT @MaintMessage
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49413,6 +55968,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetMemCri]
  @GenPrefix	varchar(10)
 ,@ReportId	Int
@@ -49430,6 +55987,10 @@ ELSE
 		LEFT OUTER JOIN dbo.ReportCri b ON a.ReportCriId = b.ReportCriId
 		WHERE a.RptMemCriId = @MemCriId ORDER BY b.TabIndex
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49440,6 +56001,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetMenu]
  @CultureId		smallint
 ,@SystemId		tinyint
@@ -49604,16 +56167,17 @@ END
 CLOSE curs
 DEALLOCATE curs
 IF @Screenid IS NOT NULL AND @Screenid <> 0
-	SELECT RootQId,ParentQId,QId,ParentId,MenuId,MenuText,NavigateUrl,QueryStr,IconUrl,Popup,GroupTitle FROM #menu WHERE ScreenId IS NOT NULL AND ScreenId = @ScreenId ORDER BY Qid
+	SELECT RootQId,ParentQId,QId,ParentId,MenuId,MenuText,NavigateUrl,QueryStr,IconUrl,Popup,GroupTitle, ScreenId FROM #menu WHERE ScreenId IS NOT NULL AND ScreenId = @ScreenId ORDER BY Qid
 ELSE IF @Reportid IS NOT NULL AND @Reportid <> 0
-	SELECT RootQId,ParentQId,QId,ParentId,MenuId,MenuText,NavigateUrl,QueryStr,IconUrl,Popup,GroupTitle FROM #menu  WHERE ReportId IS NOT NULL AND ReportId = @ReportId ORDER BY Qid
+	SELECT RootQId,ParentQId,QId,ParentId,MenuId,MenuText,NavigateUrl,QueryStr,IconUrl,Popup,GroupTitle, ScreenId FROM #menu  WHERE ReportId IS NOT NULL AND ReportId = @ReportId ORDER BY Qid
 ELSE IF @Wizardid IS NOT NULL AND @Wizardid <> 0
-	SELECT RootQId,ParentQId,QId,ParentId,MenuId,MenuText,NavigateUrl,QueryStr,IconUrl,Popup,GroupTitle FROM #menu  WHERE WizardId IS NOT NULL AND WizardId = @WizardId ORDER BY Qid
+	SELECT RootQId,ParentQId,QId,ParentId,MenuId,MenuText,NavigateUrl,QueryStr,IconUrl,Popup,GroupTitle, ScreenId FROM #menu  WHERE WizardId IS NOT NULL AND WizardId = @WizardId ORDER BY Qid
 ELSE
-	SELECT RootQId,ParentQId,QId,ParentId,MenuId,MenuText,NavigateUrl,QueryStr,IconUrl,Popup,GroupTitle FROM #menu ORDER BY Qid
+	SELECT RootQId,ParentQId,QId,ParentId,MenuId,MenuText,NavigateUrl,QueryStr,IconUrl,Popup,GroupTitle, ScreenId FROM #menu ORDER BY Qid
 DROP TABLE dbo.#menu
 DROP TABLE dbo.#hlp
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49624,6 +56188,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetMsg]
  @MsgId		Int
 ,@CultureId	smallint
@@ -49640,7 +56206,11 @@ IF @CultureId <> @DefCultureId AND EXISTS (SELECT 'true' FROM dbo.MsgCenter WHER
 ELSE
 	SELECT a.Msg, MsgSource = @MsgSource, b.CultureTypeName FROM dbo.MsgCenter a INNER JOIN RODesign.dbo.VwCulture b ON a.CultureId = b.CultureId
 	WHERE a.MsgId = @MsgId and a.CultureId = @DefCultureId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49651,6 +56221,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetObjGroupCol]
  @screenId		int
 /* WITH ENCRYPTION */
@@ -49681,7 +56252,11 @@ CLOSE cur1
 DEALLOCATE cur1
 SELECT GroupColId, ColCssClass, TabFolderId FROM #tbl
 DROP TABLE #tbl
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49692,6 +56267,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design
 CREATE PROCEDURE [dbo].[GetPageLnk]
  @PageObjId		smallint
@@ -49706,7 +56283,10 @@ SELECT @fClause = 'FROM dbo.PageLnk a'
 SELECT @wClause = 'WHERE a.PageObjId = ' + CONVERT(varchar,@PageObjId)
 SELECT @oClause = 'ORDER BY a.PageLnkOrd'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49717,6 +56297,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Only in ??Design
 CREATE PROCEDURE [dbo].[GetPageObj]
  @SectionCd		char(1)
@@ -49735,7 +56316,10 @@ SELECT @fClause = 'FROM dbo.PageObj a'
 SELECT @wClause = 'WHERE a.SectionCd = ''' + @SectionCd + ''''
 SELECT @oClause = 'ORDER BY a.PageObjOrd'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49746,6 +56330,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* DECLARE @wClause nvarchar(4000) EXEC RODesign.dbo.GetPermFilter 1,null,'1','8?1','CompanyLs','Company','b1.','Y','Y',null,'Y','UsrId',@wClause OUTPUT SELECT @wClause */
 CREATE PROCEDURE [dbo].[GetPermFilter]
  @ScreenId			int  
@@ -49867,7 +56453,9 @@ IF @Usrs is not null AND @PermKeyName = @PKeyColName AND EXISTS (SELECT 1 FROM R
 	SELECT @wClause = isnull(@wClause,space(0)) + @wFilter + ')' + @dFilter + ')' + @gFilter + ')'
 ELSE
 	SELECT @wClause = isnull(@wClause,space(0)) + @wFilter + ')))'
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49878,6 +56466,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design.
 CREATE PROCEDURE [dbo].[GetPrinterList]
  @UsrGroups		varchar(1000)
@@ -49898,6 +56488,10 @@ SELECT @wClause = 'WHERE (NOT EXISTS (SELECT 1 FROM dbo.Printer_UsrGroupId x WHE
 	+ replace(@Members,nchar(191),',') + ')))'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49908,6 +56502,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- This exists only in ??Design.
 CREATE PROCEDURE [dbo].[GetProjectList]
  @Usrs				varchar(1000)
@@ -49953,7 +56548,11 @@ SELECT @wClause = @cc + ')'
 IF @currCompanyId <> 0 SELECT @wClause = @wClause + ' AND (CompanyId is null OR CompanyId IN ' + RODesign.dbo.fKeyHier('Company',@currCompanyId) + ')'
 IF charindex('1=1',@wClause) <= 0 SELECT @uClause = space(0) ELSE SELECT @uClause = 'UNION SELECT ProjectId = null, ProjectDesc = space(0) FROM ROCmon.dbo.Project ' + @wClause
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @uClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -49964,6 +56563,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design:
 CREATE PROCEDURE [dbo].[GetPwdExpMsg]
  @UsrId			int
@@ -49989,7 +56590,11 @@ BEGIN
 END
 ELSE
 	SELECT ''
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50000,6 +56605,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* Only exists in ??Design */
 CREATE PROCEDURE [dbo].[GetReleaseDtl]
  @ReleaseId	int
@@ -50028,7 +56635,13 @@ SELECT @fClause = 'FROM dbo.ReleaseDtl b'
 SELECT @wClause = 'WHERE b.ReleaseId = ' + convert(varchar,@ReleaseId)
 SELECT @oClause = 'ORDER BY b.RunOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50039,6 +56652,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- InstDeplPath and InstPath are kept in case it is needed for Linux backup and restore:
 /* This only exists in ??Design */
 CREATE PROCEDURE [dbo].[GetReleaseInf]
@@ -50058,7 +56673,12 @@ SELECT @fClause = 'FROM dbo.Release a'
 + ' INNER JOIN dbo.Entity c ON a.EntityId = c.EntityId'
 SELECT @wClause = 'WHERE a.ReleaseId = ' + convert(varchar, @ReleaseId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50069,6 +56689,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 /* Only in ??Design */
 CREATE PROCEDURE [dbo].[GetReleaseVer]
  @ReleaseId	int
@@ -50095,7 +56716,12 @@ SELECT @sClause = 'DECLARE @iClause varchar(4000), @SysProgram char(1), @SystemN
 + ' SELECT VersionName = AppInfoDesc + space(15 - len(AppInfoDesc)) + SystemName FROM #ver ORDER BY tid'
 + ' DROP TABLE dbo.#ver'
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50106,6 +56732,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportById]
  @GenPrefix		varchar(10)
 ,@desDatabase	varchar(50)
@@ -50126,7 +56754,12 @@ SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'Report a'
 + ' INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 SELECT @wClause = 'WHERE a.ReportId = ' + CONVERT(varchar,@reportId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50137,6 +56770,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportCha]
  @GenPrefix		varchar(10)
 ,@RptCtrId		int
@@ -50158,7 +56793,12 @@ SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'RptCha a'
 + ' LEFT OUTER JOIN dbo.' + @GenPrefix + 'ReportObj sg ON a.SeriesGrp = sg.ReportObjId'
 SELECT @wClause = 'WHERE a.RptCtrId = ' + CONVERT(varchar,@RptCtrId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50169,6 +56809,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportColumns]
  @GenPrefix		varchar(10)
 ,@reportId		int
@@ -50188,7 +56830,11 @@ SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'ReportObj a'
 SELECT @wClause = 'WHERE a.ReportId = ' + CONVERT(varchar,@reportId)
 SELECT @oClause = 'ORDER BY a.TabIndex'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50199,6 +56845,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportCriDel]
  @GenPrefix		varchar(10)
 ,@reportId		int
@@ -50212,7 +56860,12 @@ SELECT @sClause = 'SELECT ProcedureName = ColumnName'
 SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'ReportCri'
 SELECT @wClause = 'WHERE ReportId = ' + convert(varchar,@reportId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50223,6 +56876,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetReportCriHlp]
  @ReportId	int
 ,@CultureId	smallint
@@ -50248,7 +56902,11 @@ SELECT ColumnHeader = isnull(a.ColumnHeader,''), b.ColumnSize, RowSize=CASE WHEN
 	INNER JOIN RODesign.dbo.CtDisplayType e ON b.DisplayModeId = e.TypeId
 	ORDER BY a.TabIndex
 DROP TABLE dbo.#hlp
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50259,6 +56917,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportCriteria]
  @GenPrefix		varchar(10)
 ,@reportId		int
@@ -50288,7 +56948,9 @@ SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'ReportCri a'
 SELECT @wClause = 'WHERE a.ReportId = ' + CONVERT(varchar,@reportId)
 SELECT @oClause = 'ORDER BY a.TabIndex'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50299,6 +56961,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetReportCtr]
  @GenPrefix		varchar(10)
 ,@PRptCtrId		int
@@ -50351,6 +57014,8 @@ ELSE IF @RptElmId is not null SELECT @wClause = 'WHERE a.RptElmId = ' + CONVERT(
 ELSE SELECT @wClause = 'WHERE a.RptCelId = ' + CONVERT(varchar,@RptCelId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50361,6 +57026,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportDel]
  @GenPrefix			varchar(10)
 ,@srcDatabase		varchar(50)
@@ -50372,7 +57039,11 @@ SET NOCOUNT ON
 SELECT @sClause = 'SELECT a.ReportId, a.ProgramName, b.dbAppDatabase'
 SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'ReportDel a INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 EXEC (@sClause + ' ' + @fClause)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50383,6 +57054,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportElm]
  @GenPrefix		varchar(10)
 ,@reportId		int
@@ -50424,6 +57097,8 @@ SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'RptElm a'
 SELECT @wClause = 'WHERE a.ReportId = ' + CONVERT(varchar,@reportId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50434,6 +57109,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportHlp]
  @ReportId		int
 ,@CultureId		smallint
@@ -50453,7 +57130,11 @@ IF @CultureId <> @DefCultureId AND EXISTS (SELECT 'true' FROM dbo.ReportHlp WHER
 ELSE
 	SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd, TemplateName = @TemplateName
 		FROM dbo.ReportHlp WHERE ReportId = @ReportId and CultureId = @DefCultureId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50464,6 +57145,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
 CREATE PROCEDURE [dbo].[GetReportItem]
  @ReportId	int
 /* WITH ENCRYPTION */
@@ -50478,7 +57163,14 @@ SELECT b.ReportSctName, a.ReportItemName, a.ItemFormula, a.FontFamily, a.FontSiz
 FROM dbo.ReportItem a INNER JOIN RODesign.dbo.CtReportSct b ON a.ReportSctId = b.ReportSctId
 WHERE ReportId = @ReportId ORDER BY ReportSctName
 */
-RETURN 0 
+RETURN 0
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50489,6 +57181,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportList]
  @searchTxt		nvarchar(25)
 /* WITH ENCRYPTION */
@@ -50509,7 +57203,11 @@ ELSE
 	SELECT @wClause = 'WHERE a.ReportTitle LIKE ''%' + LOWER(@searchTxt) + '%'''
 SELECT @oClause = 'ORDER BY a.ReportTitle'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50520,6 +57218,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportObjHlp]
  @GenPrefix	varchar(10)
 ,@ReportId	int
@@ -50559,7 +57259,11 @@ BEGIN
 END
 SELECT ColumnName, ColumnHeader, RptObjTypeCd FROM #labl ORDER BY TabIndex
 DROP table dbo.#labl
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50570,6 +57274,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportParm]
  @GenPrefix		varchar(10)
 ,@reportId		int
@@ -50681,7 +57387,10 @@ BEGIN
 END
 CLOSE criCursor
 DEALLOCATE criCursor
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50692,13 +57401,24 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
 -- This exists only in ??Design.
 CREATE PROCEDURE [dbo].[GetReportSct]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 SELECT ReportSctName FROM dbo.CtReportSct ORDER BY ReportSctName
-RETURN 0 
+RETURN 0
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50709,6 +57429,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetReportTbl]
  @GenPrefix		varchar(10)
 ,@RptCtrId		int
@@ -50740,7 +57462,12 @@ ELSE
 	SELECT @wClause = @wClause + ' AND a.ParentId = ' + convert(varchar,@ParentId)
 SELECT @oClause = 'ORDER BY a.RptTblTypeCd, a.TblOrder, b.RowNum, c.TblOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50751,6 +57478,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetRptCriHlp]
  @GenPrefix	varchar(10)
 ,@ReportId	int
@@ -50796,7 +57524,11 @@ ELSE
 		INNER JOIN RODesign.dbo.CtDisplayType e ON b.DisplayModeId = e.TypeId
 		ORDER BY a.TabIndex
 DROP TABLE dbo.#hlp
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50807,6 +57539,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[GetRptCriteria]
  @GenPrefix		varchar(10)
 ,@ReportId	Int
@@ -50835,7 +57570,9 @@ BEGIN
 		LEFT OUTER JOIN dbo.ReportCri b ON a.ReportCriId = b.ReportCriId
 		WHERE a.UsrId = @UsrId AND a.ReportId = @ReportId ORDER BY b.TabIndex
 END
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50846,6 +57583,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetRptHlp]
  @GenPrefix	varchar(10)
 ,@ReportId		int
@@ -50880,7 +57619,11 @@ BEGIN
 		SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd,TemplateName=@TemplateName
 			FROM dbo.ReportHlp WHERE ReportId = @ReportId and CultureId = @DefCultureId
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50891,13 +57634,20 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetRptWizId]
  @reportId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 SELECT RptWizId FROM dbo.RptWiz WHERE ReportId = @reportId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50908,6 +57658,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* Only exists in ??Design */
 CREATE PROCEDURE [dbo].[GetRuleTier]
  @EntityId	int
@@ -50918,7 +57670,12 @@ SELECT	 a.RuleTierId, a.RuleTierName, a.LanguageCd, a.FrameworkCd, a.DevProgramP
 	FROM dbo.RuleTier a
 	WHERE a.EntityId = @EntityId
 	ORDER BY a.IsDefault DESC, a.RuleTierName
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50929,6 +57686,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetS03Rptwiz11
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -50960,7 +57718,8 @@ SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 IF @bVal = 'N' EXEC dbo._GetS03Rptwiz11R @wClause, @MultiDesignDb10
 ELSE EXEC dbo._GetS03Rptwiz11V @wClause, @MultiDesignDb10
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -50971,6 +57730,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetS03Rptwiz14]
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -51003,7 +57763,9 @@ SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 IF @bVal = 'N' EXEC dbo._GetS03Rptwiz14R @wClause, @LoginSuccess10, @ValidUser20
 ELSE EXEC dbo._GetS03Rptwiz14V @wClause, @LoginSuccess10, @ValidUser20
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51014,6 +57776,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetS03Rptwiz15]
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -51045,7 +57808,9 @@ SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 IF @bVal = 'N' EXEC dbo._GetS03Rptwiz15R @wClause, @LoginSuccess10
 ELSE EXEC dbo._GetS03Rptwiz15V @wClause, @LoginSuccess10
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51056,6 +57821,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetS03Rptwiz5]
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -51087,7 +57853,10 @@ SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
 IF @bVal = 'N' EXEC dbo._GetS03Rptwiz5R @wClause, @VersionDt10
 ELSE EXEC dbo._GetS03Rptwiz5V @wClause, @VersionDt10
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51098,6 +57867,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[GetSByteOle]
  @DataTypeName	varchar(50)
@@ -51111,7 +57881,11 @@ SELECT @sClause = 'SELECT a.DataTypeSByteOle'
 SELECT @fClause = 'FROM dbo.CtDataType a'
 SELECT @wClause = 'WHERE a.DataTypeName = ''' + @DataTypeName + ''''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51122,6 +57896,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetSchemaScrImp]
  @screenId	int
 ,@cultureId	smallint
@@ -51191,7 +57966,10 @@ INSERT INTO #buff (sXml) VALUES ('</TABLE>')
 INSERT INTO #buff (sXml) VALUES ('<BR><SPAN STYLE=''FONT-SIZE:9pt;FONT-FAMILY:verdana;''>Note: Please be aware that the first row is reserved for heading and it should be filled. The non-nullable column of an AutoComplete, DropDownList, ListBox or RadioButtonList can be left empty if the description followed can be matched uniquely by the system. For numeric columns please only use "General", "Percentage" or "Number" format with "-" for negative number. The row is not imported when all non-nullable columns are empty.</SPAN>')
 SELECT sXml FROM #buff ORDER BY tid
 DROP TABLE dbo.#buff
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51202,6 +57980,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetSchemaWizImp]
  @wizardId	int
 ,@cultureId	smallint
@@ -51247,7 +58027,11 @@ INSERT INTO #buff (sXml) VALUES ('</TABLE>')
 INSERT INTO #buff (sXml) VALUES ('<BR><SPAN STYLE=''FONT-SIZE:9pt;FONT-FAMILY:verdana;''>Note: Please be aware that the first row is reserved for heading and it should be filled. For numeric columns please only use "General", "Percentage" or "Number" format with "-" for negative number. The row is not imported when all non-nullable columns are empty.</SPAN>')
 SELECT sXml FROM #buff ORDER BY tid
 DROP TABLE dbo.#buff
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51258,6 +58042,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenAud]
  @screenId		int
 ,@screenTypeName	char(2)
@@ -51623,7 +58409,9 @@ SELECT rClause FROM #rtn ORDER BY tid
 DROP TABLE dbo.#rtn
 DROP TABLE dbo.#mst
 DROP TABLE dbo.#dtl
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51634,6 +58422,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetScreenById]
  @desDatabase		varchar(50)
 ,@srcDatabase		varchar(50)
@@ -51655,7 +58444,10 @@ SELECT @fClause = 'FROM dbo.Screen a'
 + ' INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 EXEC (@dClause + ' ' + @sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51666,6 +58458,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenColumns]
  @screenId		int
 /* WITH ENCRYPTION */
@@ -51675,8 +58469,8 @@ SET NOCOUNT ON
 DECLARE @tableId int, @mstId int, @dtlId int
 SELECT @mstId = MasterTableId, @dtlId = isnull(DetailTableId,MasterTableId) FROM dbo.Screen WHERE ScreenId = @screenId
 IF object_id('tempdb.dbo.#mst') is not null DROP TABLE dbo.#mst
-CREATE TABLE #mst (Tid smallint IDENTITY(1,1) not null, TableId int not null, TableOrder int not null)
-DECLARE TblCur CURSOR FOR SELECT b.TableId FROM dbo.ScreenObj a INNER JOIN dbo.DbColumn b ON a.ColumnId = b.ColumnId
+CREATE TABLE #mst (TableId int not null, TableOrder int not null)
+DECLARE TblCur CURSOR FAST_FORWARD FOR SELECT b.TableId FROM dbo.ScreenObj a INNER JOIN dbo.DbColumn b ON a.ColumnId = b.ColumnId
 WHERE a.ScreenId = @screenId ORDER BY a.MasterTable desc, a.TabIndex	/* Do not sort by b.PrimaryKey desc */
 FOR READ ONLY OPEN TblCur
 FETCH NEXT FROM TblCur INTO @tableId
@@ -51688,7 +58482,7 @@ CLOSE TblCur DEALLOCATE TblCur
 
 SELECT a.IgnoreConfirm,a.MasterTable,m.TableOrder,a.TabIndex,a.ScreenObjId,g1.RowCssClass,g2.ColCssClass, a.NewGroupRow,a.LabelVertical,a.LabelCss,a.ContentCss
 ,a.ColumnId,ColName=isnull(b.ColumnName,a.ColumnName),a.ColumnName,ColTblPK=f.ColumnName,a.DefaultValue,a.HyperLinkUrl,a.SystemValue,a.ColumnWrap,a.GridGrpCd,a.HideOnTablet,a.HideOnMobile
-,a.ColumnSize,ColumnHeight=CASE WHEN c.TypeName='ListBox' THEN ISNULL(a.ColumnHeight,1) ELSE a.ColumnHeight END
+,a.ColumnSize,ColumnHeight=CASE WHEN c.TypeName='ListBox' THEN ISNULL(a.ColumnHeight,1) ELSE a.ColumnHeight END, a.ResizeWidth, a.ResizeHeight
 ,DisplayMode=c.TypeDesc,DisplayName=c.TypeName,ColumnScale=ISNULL(b.ColumnScale,CASE WHEN b.DataType=6 THEN '4' WHEN b.DataType='7' THEN '2' ELSE '0' END),NumericData=ISNULL(d.NumericData,'N'),ColumnJustify=ISNULL(a.ColumnJustify,'L')
 ,DdlKeySystemId=t0.SystemId,DdlKeyTableId=x0.TableId,DdlKeyTableName=t0.TableName,DdlKeyColumnName=x0.ColumnName,a.DdlKeyColumnId,DdlKeyNumeric=ISNULL(d0.NumericData,'N')
 ,DdlRefTableId=x3.TableId,a.DdlRefColumnId,DdlRefColLen=x3.ColumnLength,DdlRefColumnName=x3.ColumnName
@@ -51731,7 +58525,9 @@ LEFT OUTER JOIN #mst m ON (case when b.TableId is null then (case when a.MasterT
 WHERE a.ScreenId = @screenId
 ORDER BY a.TabIndex	/* Do not sort by b.PrimaryKey desc; Assuming order by MasterTable DESC, TabFolderOrder, TabIndex from Ir_UpdScreenObjInd */
 DROP TABLE dbo.#mst
-RETURN 0 
+RETURN 0
+ 
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51742,6 +58538,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[GetScreenCriDel]
  @screenId		int
 /* WITH ENCRYPTION */
@@ -51760,7 +58559,12 @@ SELECT @s2Clause = 'SELECT ProcedureName = a.ColumnName + convert(varchar,b.Tabl
 SELECT @f2Clause = 'FROM dbo.ScreenObj a INNER JOIN dbo.DbColumn b ON a.ColumnId = b.ColumnId'
 SELECT @w2Clause = 'WHERE a.ScreenId = ' + convert(varchar,@screenId) + ' AND a.DdlKeyColumnId is not null'
 EXEC (@s1Clause + ' ' + @f1Clause + ' ' + @w1Clause + ' UNION ' + @s2Clause + ' ' + @f2Clause + ' ' + @w2Clause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51771,6 +58575,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetScreenCriHlp]
  @ScreenId	int
 ,@CultureId	smallint
@@ -51797,7 +58602,11 @@ SELECT ColumnHeader = isnull(a.ColumnHeader,''), b.ColumnSize, b.RowSize, Displa
 	INNER JOIN RODesign.dbo.CtDisplayType e ON b.DisplayModeId = e.TypeId
 	ORDER BY a.TabIndex
 DROP TABLE dbo.#hlp
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51808,6 +58617,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenCriteria]
  @screenId		int
 /* WITH ENCRYPTION */
@@ -51842,7 +58653,9 @@ SELECT @fClause = 'FROM dbo.ScreenCri a'
 SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 SELECT @oClause = 'ORDER BY a.TabIndex'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -51853,6 +58666,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenCud]
  @screenId		int
 ,@screenTypeName	char(2)
@@ -52205,7 +59020,11 @@ DROP TABLE dbo.#rtn
 DROP TABLE dbo.#mst
 DROP TABLE dbo.#dtl
 */
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -52216,6 +59035,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenDel]
  @srcDatabase		varchar(50)
 /* WITH ENCRYPTION */
@@ -52227,7 +59048,12 @@ SELECT @sClause = 'SELECT a.ScreenId, a.ProgramName, a.MultiDesignDb, b.dbAppDat
 SELECT @fClause = 'FROM dbo.ScreenDel a'
 SELECT @fClause = @fClause + ' INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 EXEC (@sClause + ' ' + @fClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -52238,6 +59064,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenFilter]
 @ScreenId	int,
 @CultureId	smallint
@@ -52257,7 +59085,11 @@ SELECT a.ScreenFilterId, b.FilterName
 	INNER JOIN #hlp b ON a.ScreenFilterId = b.ScreenFilterId
 	WHERE a.ScreenId = @screenId ORDER BY a.FilterOrder
 DROP TABLE dbo.#hlp
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -52268,6 +59100,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenHlp]
  @ScreenId	int
 ,@CultureId	smallint
@@ -52277,10 +59111,13 @@ SET NOCOUNT ON
 DECLARE	@DefCultureId smallint
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF @CultureId <> @DefCultureId AND EXISTS (SELECT 'true' FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId and CultureId = @CultureId)
-	SELECT DefaultHlpMsg, FootNote, ScreenTitle, AddMsg, UpdMsg, DelMsg FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId and CultureId = @CultureId
+	SELECT DefaultHlpMsg, FootNote, ScreenTitle, AddMsg, UpdMsg, DelMsg, MasterLstTitle, MasterLstSubtitle, MasterRecTitle, MasterRecSubtitle, DetailLstTitle, DetailLstSubtitle, DetailRecTitle, DetailRecSubtitle, NoMasterMsg, NoDetailMsg, AddMasterMsg, AddDetailMsg, MasterFoundMsg, DetailFoundMsg, IncrementMsg
+		FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId and CultureId = @CultureId
 ELSE
-	SELECT DefaultHlpMsg, FootNote, ScreenTitle, AddMsg, UpdMsg, DelMsg FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId and CultureId = @DefCultureId
-RETURN 0 
+	SELECT DefaultHlpMsg, FootNote, ScreenTitle, AddMsg, UpdMsg, DelMsg, MasterLstTitle, MasterLstSubtitle, MasterRecTitle, MasterRecSubtitle, DetailLstTitle, DetailLstSubtitle, DetailRecTitle, DetailRecSubtitle, NoMasterMsg, NoDetailMsg, AddMasterMsg, AddDetailMsg, MasterFoundMsg, DetailFoundMsg, IncrementMsg
+		FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId and CultureId = @DefCultureId
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -52291,6 +59128,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetScreenLabel]
  @ScreenId		int
 ,@CultureId		smallint
@@ -52305,6 +59143,9 @@ CREATE PROCEDURE [dbo].[GetScreenLabel]
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors	varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId	int
 ,@currProjectId	int
 /* WITH ENCRYPTION */
@@ -52361,6 +59202,12 @@ BEGIN
 		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Agents+nchar(191)) > 0 SELECT @upd = 'Y' END
 	ELSE IF @PermKeyDesc = 'Broker'
 		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Brokers+nchar(191)) > 0 SELECT @upd = 'Y' END
+	ELSE IF @PermKeyDesc = 'Borrower'
+		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Borrowers+nchar(191)) > 0 SELECT @upd = 'Y' END
+	ELSE IF @PermKeyDesc = 'Guarantor'
+		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Guarantors+nchar(191)) > 0 SELECT @upd = 'Y' END
+	ELSE IF @PermKeyDesc = 'Lender'
+		BEGIN  IF charindex(nchar(191)+convert(varchar,@PermId)+nchar(191), nchar(191)+@Lenders+nchar(191)) > 0 SELECT @upd = 'Y' END
 	IF @upd = 'Y' UPDATE #hlp SET ColumnHeader = isnull(@ColumnHeader,ColumnHeader)
 			, ToolTip = isnull(@ToolTip,ToolTip), ErrMessage = isnull(@ErrMessage,ErrMessage)
 		WHERE ScreenObjId = @ScreenObjId
@@ -52368,16 +59215,22 @@ BEGIN
 END
 CLOSE cur1 DEALLOCATE cur1
 
-SELECT ColumnHeader = isnull(a.ColumnHeader,''), b.ColumnSize, ColumnHeight=CASE WHEN e.TypeName='ListBox' THEN ISNULL(b.ColumnHeight,1) ELSE b.ColumnHeight END
+SELECT ColumnHeader = isnull(a.ColumnHeader,''), b.ResizeWidth, b.ResizeHeight
+	, b.ColumnSize, ColumnHeight=CASE WHEN e.TypeName='ListBox' THEN ISNULL(b.ColumnHeight,1) ELSE b.ColumnHeight END
 	, b.ColumnJustify, a.ToolTip, a.ErrMessage, a.tbHint, b.RequiredValid, b.MaskValid, b.RangeValidType, c.TableId
 	, b.ColumnName, DisplayMode = e.TypeDesc, DisplayName = e.TypeName, b.IgnoreConfirm, b.GridGrpCd
+	, c.ColumnLength, c.DataType, b.DtlLstPosId
 	FROM #hlp a
 	INNER JOIN dbo.ScreenObj b ON a.ScreenObjId = b.ScreenObjId
 	INNER JOIN RODesign.dbo.CtDisplayType e ON b.DisplayModeId = e.TypeId
 	LEFT OUTER JOIN dbo.DbColumn c ON b.ColumnId = c.ColumnId
 	ORDER BY b.TabIndex
 DROP TABLE dbo.#hlp
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -52388,6 +59241,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[GetScreenLis1Proc]
  @procedureName		varchar(200)
 ,@criClause			varchar(4000)
@@ -52423,6 +59279,9 @@ SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13) + ' @use
 + ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@Key' + CHAR(9) + CHAR(9) + 'nvarchar(500)' + CHAR(13)
 + ',@FilterTxt' + CHAR(9) + CHAR(9) + 'nvarchar(500)' + CHAR(13)
 + @paramCriSql
@@ -52453,6 +59312,9 @@ SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13) + ' @use
 + CHAR(9) + ',@SelInvestor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
 + CHAR(9) + ',@SelMember' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
 + CHAR(9) + ',@SelVendor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
++ CHAR(9) + ',@SelLender' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
++ CHAR(9) + ',@SelBorrower' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
++ CHAR(9) + ',@SelGuarantor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
 + CHAR(9) + ',@SelProject' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
 + CHAR(9) + ',@RowAuthorityId' + CHAR(9) + 'smallint' + CHAR(13) + @declare1Sql
 -- @sClause comes after @fClause for GetExp to work properly:
@@ -52494,7 +59356,11 @@ SELECT @procedureSql2 = 'SELECT @pp = @Usrs' + CHAR(13)
 SELECT @procedureSql3 = @selfClause + @criClause
 + 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -52505,6 +59371,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenLis2Proc]
  @procedureName		varchar(200)
 ,@param2Sql			varchar(4000)
@@ -52525,7 +59393,17 @@ SELECT @procedure2Sql = 'CREATE PROCEDURE ' + @procedureName + CHAR(13)
 + @whereClause
 + 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause)' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
-RETURN 0 
+RETURN 0
+
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -52536,6 +59414,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenLis3Proc]
  @procedureName		varchar(200)
 ,@paramKeySql		varchar(4000)
@@ -52570,6 +59450,9 @@ SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13)
 + ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@screenFilterId' + CHAR(9) + 'int' + CHAR(13)
 + ',@currCompanyId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
 + ',@currProjectId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
@@ -52594,6 +59477,9 @@ SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13)
 + CHAR(9) + ',@SelInvestor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
 + CHAR(9) + ',@SelMember' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
 + CHAR(9) + ',@SelVendor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
++ CHAR(9) + ',@SelLender' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
++ CHAR(9) + ',@SelBorrower' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
++ CHAR(9) + ',@SelGuarantor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
 + CHAR(9) + ',@SelProject' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
 + CHAR(9) + ',@RowAuthorityId' + CHAR(9) + 'smallint' + CHAR(13) + @declareSql
 + 'SELECT @fClause = ''''FROM ' + @fromClause + '''''' + CHAR(13)
@@ -52610,7 +59496,11 @@ SELECT @procedureSql2 = @whereClause
 SELECT @procedureSql3 = @selfClause
 + 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -52621,6 +59511,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Do not check for RequiredValid because criteria could pass null even when manadatory.
 CREATE PROCEDURE [dbo].[GetScreenLisCri]
  @screenId		int
@@ -52717,6 +59609,8 @@ CLOSE criCursor
 DEALLOCATE criCursor
 IF @tmpClause <> '' SELECT @criClause = @criClause + 'ELSE' + CHAR(13) + 'BEGIN' + CHAR(13) + @tmpClause + 'END' + CHAR(13)
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -52727,6 +59621,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenLisI1ById]
  @screenId		int
 ,@procedureName		varchar(200)
@@ -52819,6 +59715,8 @@ DECLARE	 @proc1Name		varchar(200)
 	,@searchDtlName		varchar(50)
 	,@searchUrlName		varchar(50)
 	,@searchImgName		varchar(50)
+	,@searchIdRName		varchar(50)
+	,@searchDtlRName	varchar(50)
 	,@foundIndex		int
 	,@foundEnd			int
 	,@foundLen			int
@@ -52913,7 +59811,7 @@ DECLARE objCursor CURSOR FOR
 		LEFT OUTER JOIN dbo.DbColumn x14 ON a.DdlFtrColumnId = x14.ColumnId
 		LEFT OUTER JOIN dbo.DbTable x15 ON x14.TableId = x15.TableId
 		LEFT OUTER JOIN RODesign.dbo.Systems x16 ON x15.SystemId = x16.SystemId
-		LEFT OUTER JOIN (SELECT t1.ColumnId, t2.ColumnName FROM dbo.ScreenObj t1 LEFT OUTER JOIN dbo.DbColumn t2 ON t1.DdlKeyColumnId = t2.ColumnId) x17 ON a.DdlFtrColumnId = x17.ColumnId
+		LEFT OUTER JOIN (SELECT DISTINCT t1.ColumnId, t2.ColumnName FROM dbo.ScreenObj t1 LEFT OUTER JOIN dbo.DbColumn t2 ON t1.DdlKeyColumnId = t2.ColumnId) x17 ON a.DdlFtrColumnId = x17.ColumnId
 	WHERE a.ScreenId = @ScreenId ORDER BY a.TabIndex
 FOR READ ONLY
 OPEN objCursor
@@ -52945,6 +59843,7 @@ BEGIN
 		SELECT @searchTableName = CASE WHEN d.MultiDesignDb='N' THEN s.dbAppDatabase+'.dbo.'+d.TableName WHEN @multiDesignDb='N' THEN @sysDatabase+'.dbo.'+d.TableName ELSE 'dbo.'+d.TableName END
 			,@searchColumnName = c1.ColumnName, @searchAscending = a.SearchAscending
 			,@searchDtlName = c2.ColumnName, @searchUrlName = c3.ColumnName, @searchImgName = c4.ColumnName
+			,@searchIdRName = c5.ColumnName,@searchDtlRName = c6.ColumnName
 			FROM dbo.Screen a
 			LEFT OUTER JOIN dbo.DbColumn c1 ON a.SearchId = c1.ColumnId
 			LEFT OUTER JOIN dbo.DbTable d ON c1.TableId = d.TableId
@@ -52952,13 +59851,17 @@ BEGIN
 			LEFT OUTER JOIN dbo.DbColumn c2 ON a.SearchDtlId = c2.ColumnId
 			LEFT OUTER JOIN dbo.DbColumn c3 ON a.SearchUrlId = c3.ColumnId
 			LEFT OUTER JOIN dbo.DbColumn c4 ON a.SearchImgId = c4.ColumnId
+			LEFT OUTER JOIN dbo.DbColumn c5 ON a.SearchIdR = c5.ColumnId
+			LEFT OUTER JOIN dbo.DbColumn c6 ON a.SearchDtlIdR = c6.ColumnId
 			WHERE a.ScreenId = @screenId
 		IF @@ROWCOUNT <> 1 RAISERROR('Please specify search column and try again.',18,2) WITH SETERROR
 		--IF @searchTableName <> @tableName RAISERROR('Search column %s of table %s must belong to the master table %s, operation aborted.',18,2,@columnName,@searchTableName,@tableName) WITH SETERROR
 		SELECT @from1Clause = REPLACE(@fromClause,@tableName,@searchTableName)
 		SELECT @select1Clause = @columnName + CONVERT(VARCHAR(10),@tableId) + '=' + @tableAbbr + '.' + @dbColumnName
 			+ ', ' + @columnName + CONVERT(VARCHAR(10),@tableId) + 'Text=' + @tableAbbr+'.'+@searchColumnName
+			+ ISNULL(', ' + @columnName + CONVERT(VARCHAR(10),@tableId) + 'TextR=' + @tableAbbr+'.'+@searchIdRName,'')
 			+ ISNULL(', ' + @columnName + CONVERT(VARCHAR(10),@tableId) + 'Dtl=' + @tableAbbr+'.'+@searchDtlName,'')
+			+ ISNULL(', ' + @columnName + CONVERT(VARCHAR(10),@tableId) + 'DtlR=' + @tableAbbr+'.'+@searchDtlRName,'')
 			+ ISNULL(', ' + @columnName + CONVERT(VARCHAR(10),@tableId) + 'Url=' + @tableAbbr+'.'+@searchUrlName,'')
 			+ ISNULL(', ' + @columnName + CONVERT(VARCHAR(10),@tableId) + 'Img=' + @tableAbbr+'.'+@searchImgName,'')
 		-- SELECT DISCTINCT requires order clause in the select clause:
@@ -52991,7 +59894,9 @@ BEGIN
 			+ 'SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,''''['''',''''[[]''''),''''%'''',''''[%]''''),''''_'''',''''[_]''''), '''''''''''''''','''''''''''''''''''''''') ' + CHAR(13)
 			+ 'IF @FilterTxt is not null AND @FilterTxt <> '''''''' SELECT @wClause = @wClause + '''' AND ('
 			+ @tableAbbr+'.'+@searchColumnName +' LIKE N''''''''%'''' + REPLACE(@FilterTxt,'''' '''',''''%'''') + ''''%'''''''''
+			+ ISNULL(' OR ' + @tableAbbr+'.'+@searchIdRName +' LIKE N''''''''%'''' + REPLACE(@FilterTxt,'''' '''',''''%'''') + ''''%''''''''','')
 			+ ISNULL(' OR ' + @tableAbbr+'.'+@searchDtlName +' LIKE N''''''''%'''' + REPLACE(@FilterTxt,'''' '''',''''%'''') + ''''%''''''''','')
+			+ ISNULL(' OR ' + @tableAbbr+'.'+@searchDtlRName +' LIKE N''''''''%'''' + REPLACE(@FilterTxt,'''' '''',''''%'''') + ''''%''''''''','')
 			+ ') ''''' + CHAR(13)
 	END
 	IF @tableId is NOT NULL
@@ -53154,8 +60059,9 @@ BEGIN
 END
 CLOSE objCursor
 DEALLOCATE objCursor
+
 /* Prepare Search List procedure */
-SELECT @proc1Name = 'GetLis' + @procedureName
+SELECT @proc1Name = 'GetLis' + @procedureName, @select1Clause = @select1Clause + ', MatchCount=COUNT(1) OVER ()'
 IF @order1Clause = '' EXEC dbo.GetSortOrder @screenId,@fromClause,@sysDatabase,'Y',@order1Clause OUTPUT
 EXEC dbo.GetScreenLis1Proc @proc1Name, @criNfilterTxtClause, @paramCriSql, @param1Sql, @declare1Sql, @select1Clause, @from1Clause, @order1Clause, @allClause, @selfClause, @screenId, @pKeyTableAbbr, @sysDatabase, @desDatabase, @procedure1Sql1 OUTPUT, @procedure1Sql2 OUTPUT, @procedure1Sql3 OUTPUT
 IF @procedure1Sql1 IS NULL OR @procedure1Sql2 IS NULL OR @procedure1Sql3 IS NULL
@@ -53186,6 +60092,7 @@ END
 SELECT @dropProcedure1Sql = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''' + @proc1Name + ''''') AND type = ''''P'''') DROP PROCEDURE ' + @proc1Name
 SELECT @dropProcedure2Sql = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''' + @proc2Name + ''''') AND type = ''''P'''') DROP PROCEDURE ' + @proc2Name
 SELECT @dropProcedure4Sql = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''' + @proc4Name + ''''') AND type = ''''P'''') DROP PROCEDURE ' + @proc4Name
+PRINT @procedure1Sql1 + @procedure1Sql2 + @procedure1Sql3
 IF @multiDesignDb = 'Y'
 BEGIN
 	DECLARE sysCursor CURSOR FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
@@ -53234,7 +60141,8 @@ SELECT 	 parameter1Names='Usrs,RowAuthoritys'+@parameter1Names
 	,parameter4Names='Usrs,RowAuthoritys'+@parameter4Names
 	,parameter4Types='string,string'+@parameter4Types
 	,parameter4SByte='VarChar,VarChar'+@parameter4SByte
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -53245,6 +60153,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetScreenLisI2ById]
  @screenId		int
 ,@procedureName		varchar(200)
@@ -53409,7 +60318,7 @@ DECLARE objCursor CURSOR FOR
 		LEFT OUTER JOIN dbo.DbColumn x14 ON a.DdlFtrColumnId = x14.ColumnId
 		LEFT OUTER JOIN dbo.DbTable x15 ON x14.TableId = x15.TableId
 		LEFT OUTER JOIN RODesign.dbo.Systems x16 ON x15.SystemId = x16.SystemId
-		LEFT OUTER JOIN (SELECT t1.ColumnId, t2.ColumnName FROM dbo.ScreenObj t1 LEFT OUTER JOIN dbo.DbColumn t2 ON t1.DdlKeyColumnId = t2.ColumnId) x17 ON a.DdlFtrColumnId = x17.ColumnId
+		LEFT OUTER JOIN (SELECT DISTINCT t1.ColumnId, t2.ColumnName FROM dbo.ScreenObj t1 LEFT OUTER JOIN dbo.DbColumn t2 ON t1.DdlKeyColumnId = t2.ColumnId) x17 ON a.DdlFtrColumnId = x17.ColumnId
 	WHERE a.ScreenId = @ScreenId ORDER BY a.TabIndex
 FOR READ ONLY
 OPEN objCursor
@@ -53656,7 +60565,9 @@ SELECT 	 parameter1Names='RowAuthoritys'+@parameter1Names
 	,parameter2SByte=RIGHT(@parameter2SByte,LEN(@parameter2SByte)-1)
 	,parameter2DByte=RIGHT(@parameter2DByte,LEN(@parameter2DByte)-1)
 	,calling2Params='c'+@procedureName+'List.SelectedValue'
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -53667,6 +60578,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetScreenLisI3ById]
  @screenId		int
 ,@procedureName		varchar(200)
@@ -53812,7 +60724,7 @@ DECLARE objCursor CURSOR FOR
 		LEFT OUTER JOIN dbo.DbColumn x14 ON a.DdlFtrColumnId = x14.ColumnId
 		LEFT OUTER JOIN dbo.DbTable x15 ON x14.TableId = x15.TableId
 		LEFT OUTER JOIN RODesign.dbo.Systems x16 ON x15.SystemId = x16.SystemId
-		LEFT OUTER JOIN (SELECT t1.ColumnId, t2.ColumnName FROM dbo.ScreenObj t1 LEFT OUTER JOIN dbo.DbColumn t2 ON t1.DdlKeyColumnId = t2.ColumnId) x17 ON a.DdlFtrColumnId = x17.ColumnId
+		LEFT OUTER JOIN (SELECT DISTINCT t1.ColumnId, t2.ColumnName FROM dbo.ScreenObj t1 LEFT OUTER JOIN dbo.DbColumn t2 ON t1.DdlKeyColumnId = t2.ColumnId) x17 ON a.DdlFtrColumnId = x17.ColumnId
 	WHERE a.ScreenId = @ScreenId ORDER BY a.TabIndex
 FOR READ ONLY
 OPEN objCursor
@@ -53963,6 +60875,7 @@ CLOSE objCursor
 DEALLOCATE objCursor
 SELECT @proc1Name = 'GetLis' + @procedureName, @fromClause = left(@fromClause,len(@fromClause)-2)
 IF @select1Clause <> '' AND right(@select1Clause,4) = ' end' SELECT @select1Clause = @select1Clause + ' + '''''
+SELECT @select1Clause = @select1Clause + ', MatchCount=COUNT(1) OVER ()'
 EXEC dbo.GetSortOrder @screenId,@fromClause,@sysDatabase,'Y',@orderClause OUTPUT
 SELECT @fromClause = replace(@fromClause,' (NOLOCK)',space(0))	-- Ready for update.
 EXEC dbo.GetScreenLis1Proc @proc1Name, @criClause, @paramCriSql, @param1Sql, @declare1Sql, @select1Clause, @fromClause, @orderClause, @allClause, @selfClause, @screenId, @pKeyTableAbbr, @sysDatabase, @desDatabase, @procedure1Sql1 OUTPUT, @procedure1Sql2 OUTPUT, @procedure1Sql3 OUTPUT
@@ -54000,7 +60913,9 @@ END
 SELECT parameter1Names='Usrs,RowAuthoritys'+@parameter1Names
 	,parameter1Types='string,string'+@parameter1Types
 	,parameter1SByte='VarChar,VarChar'+@parameter1SByte
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54011,6 +60926,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetScreenLisParm]
  @screenId			int
 ,@reportId			int
@@ -54102,7 +61018,9 @@ IF charindex('Projects',@paramSql) > 0
 		+ case when @MulProject = 'Y' then 'ProjectLs' else 'ProjectId' end + ''''',''''Project'''','''''
 		+ @tableAbbr + ''''',''''' + @MulProject + ''''',' + isnull('''''' + @ExtProject + '''''','null') + ',''''' + @pKeyColName + ''''',@wClause OUTPUT' + CHAR(13)
 SELECT @param1Sql = @param1Sql + @paramSql
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54113,6 +61031,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenList]
  @searchTxt		nvarchar(25)
 /* WITH ENCRYPTION */
@@ -54122,11 +61042,12 @@ DECLARE	 @sClause	varchar(8000)
 	,@wClause	varchar(8000)
 	,@oClause	varchar(8000)
 SET NOCOUNT ON
-SELECT @sClause = 'SELECT a.ScreenId, ScreenType = c.ScreenTypeName, b.GenerateSc, b.GenerateSr'
+SELECT @sClause = 'SELECT a.ScreenId, ScreenType = c.ScreenTypeName, b.GenerateSc, b.GenerateSr, b.ReactGenerated, b.ProgramName'
 + ', ScreenTitle = a.ScreenTitle + CASE'
 + ' WHEN b.GenerateSc = ''N'' AND b.GenerateSr = ''N'' THEN '' (no gen)'''
 + ' WHEN b.GenerateSc = ''Y'' AND b.GenerateSr = ''N'' THEN '' (cln gen)'''
 + ' WHEN b.GenerateSc = ''N'' AND b.GenerateSr = ''Y'' THEN '' (srv gen)'''
++ ' WHEN c.ScreenTypeName = ''I3'' THEN '' ( -- no react gen -- )'''
 + ' ELSE space(0) END'
 SELECT @fClause = 'FROM dbo.ScreenHlp a'
 + ' INNER JOIN dbo.Screen b ON a.ScreenId = b.ScreenId'
@@ -54139,10 +61060,12 @@ ELSE
 	+ ' WHEN b.GenerateSc = ''N'' AND b.GenerateSr = ''N'' THEN '' (no gen)'''
 	+ ' WHEN b.GenerateSc = ''Y'' AND b.GenerateSr = ''N'' THEN '' (cln gen)'''
 	+ ' WHEN b.GenerateSc = ''N'' AND b.GenerateSr = ''Y'' THEN '' (srv gen)'''
+	+ ' WHEN c.ScreenTypeName = ''I3'' THEN '' ( -- no react gen -- )'''
 	+ ' ELSE space(0) END LIKE ''%' + LOWER(@searchTxt) + '%'''
 SELECT @oClause = 'ORDER BY a.ScreenTitle'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54153,6 +61076,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[GetScreenObjDdlById]
  @screenId		int
 ,@screenObjId		int
@@ -54423,7 +61347,9 @@ SELECT 	 parameter1Names='RowAuthoritys'+@parameter1Names
 	,parameter3DByte='VarWChar'
 	,calling3Params='filterTxt'
 */
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54434,6 +61360,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 /* @param1Sql is replaced by all the parameters in UsrImpr */
 CREATE PROCEDURE [dbo].[GetScreenObjDdlProc]
  @procedureName		varchar(200)
@@ -54472,6 +61399,9 @@ SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13)
 + ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
 + ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
 + ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
++ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@currCompanyId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) 
 + ',@currProjectId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) 
 + ',@FilterTxt' + CHAR(9) + CHAR(9) + 'nvarchar(1000) = null' + CHAR(13)
@@ -54515,7 +61445,11 @@ SELECT @procedureSql3 = @selfClause
 + 'ELSE' + CHAR(13)
 + CHAR(9) + 'SELECT ' + @select2Clause + ' WHERE 1<>1' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54526,6 +61460,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScreenTab]
  @ScreenId	int
 ,@CultureId	smallint
@@ -54545,7 +61481,11 @@ SELECT TabFolderId = a.ScreenTabId, b.TabFolderName, a.TabFolderOrder
 	INNER JOIN #hlp b ON a.ScreenTabId = b.ScreenTabId
 	WHERE a.ScreenId = @ScreenId ORDER BY a.TabFolderOrder
 DROP TABLE dbo.#hlp
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54556,6 +61496,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetScrImpTmpl]
  @screenId	int
 ,@cultureId	smallint
@@ -54694,7 +61636,11 @@ INSERT INTO @xmlTable
 select '</Row></Table></Worksheet></Workbook>'
 
 SELECT xml FROM @xmlTable ORDER by xid
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54705,6 +61651,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetServerRule]
  @screenId		int
 /* WITH ENCRYPTION */
@@ -54723,7 +61671,12 @@ SELECT @fClause = 'FROM dbo.ServerRule a'
 SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 SELECT @oClause = 'ORDER BY a.RuleOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54734,6 +61687,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetSortOrder]
  @screenId	int
 ,@fromClause	varchar(8000)
@@ -54809,6 +61764,8 @@ BEGIN
 	SELECT @orderClause = @sOrderBy
 END
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54819,6 +61776,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- This exists only in ??Design.
 CREATE PROCEDURE [dbo].[GetSystemsList]
 /* WITH ENCRYPTION */
@@ -54830,7 +61789,15 @@ SELECT a.SystemId, a.SystemName, a.SystemAbbr, a.ServerName, a.dbDesDatabase
 	,a.AdminEmail,a.AdminPhone,a.CustServEmail,a.CustServPhone,a.CustServFax,a.WebAddress,a.Active
 	FROM dbo.Systems a
 ORDER BY SysProgram DESC, a.SystemName
-RETURN 0 
+RETURN 0
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54841,6 +61808,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Only in ??Design:
 CREATE PROCEDURE [dbo].[GetUsrImpr]
  @usrId			int
@@ -54856,6 +61824,7 @@ SELECT @UsrGroupLs = UsrGroupLs FROM dbo.Usr WHERE UsrId = @UsrId
 SELECT @dClause = 'DECLARE @Usrs varchar(1000), @Cultures varchar(1000), @Companys varchar(1000)'
 	+ ', @Projects varchar(1000), @Investors varchar(1000), @Customers varchar(1000)'
 	+ ', @Vendors varchar(1000), @Agents varchar(1000), @Brokers varchar(1000), @Members varchar(1000)'
+	+ ', @Borrowers varchar(1000), @Guarantors varchar(1000), @Lenders varchar(1000)'
 	+ ', @UsrGroups varchar(1000), @RowAuthoritys varchar(1000)'
 	+ ', @UsrGroupId int, @RowAuthorityId smallint'
 	+ ' SET NOCOUNT ON'
@@ -54871,6 +61840,9 @@ SELECT @xClause = 'SELECT @Usrs = convert(varchar,UsrId)'
 	+ ', @Agents = convert(varchar,ISNULL(AgentId,0))'
 	+ ', @Brokers = convert(varchar,ISNULL(BrokerId,0))'
 	+ ', @Members = convert(varchar,ISNULL(MemberId,0))'
+	+ ', @Borrowers = convert(varchar,ISNULL(BorrowerId,0))'
+	+ ', @Guarantors = convert(varchar,ISNULL(GuarantorId,0))'
+	+ ', @Lenders = convert(varchar,ISNULL(LenderId,0))'
 	+ ' FROM dbo.Usr WHERE UsrId = ' + convert(varchar,@usrId)
 	+ ' DECLARE Cur1 CURSOR FOR'
 	+ ' SELECT UsrGroupId, RowAuthorityId FROM dbo.UsrGroup WHERE UsrGroupId in ' + @UsrGroupLs
@@ -54916,9 +61888,13 @@ SELECT @xClause = 'SELECT @Usrs = convert(varchar,UsrId)'
 	+ ' END'
 	+ ' CLOSE Cur2 DEALLOCATE Cur2'
 	+ ' DROP TABLE dbo.#UImpr'
-	+ ' SELECT @Usrs, @UsrGroups, @Cultures, @RowAuthoritys, @Companys, @Projects, @Investors, @Customers, @Vendors, @Agents, @Brokers, @Members'
+	+ ' SELECT @Usrs, @UsrGroups, @Cultures, @RowAuthoritys, @Companys, @Projects, @Investors, @Customers, @Vendors, @Agents, @Brokers, @Members, @Borrowers, @Guarantors, @Lenders'
 EXEC (@dClause + ' ' + @xClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54929,6 +61905,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[GetUsrImprNext]
  @usrId		int
@@ -54936,7 +61913,11 @@ CREATE PROCEDURE [dbo].[GetUsrImprNext]
 AS
 SET NOCOUNT ON
 SELECT ImprUsrId FROM dbo.UsrImpr WHERE UsrId = @usrId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54947,6 +61928,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Only in ??Design
 CREATE PROCEDURE [dbo].[GetUsrPref]
  @UsrId			int
@@ -54969,7 +61951,11 @@ SELECT @wClause = 'WHERE ' + dbo.fKeyFilter (@UsrId, @CompanyId, @ProjectId, @Sy
 SELECT @dClause = 'SELECT SysListVisible=''Y'',PrjListVisible=''Y'',ComListVisible=''Y'''
 + ',MenuOption = ''T'',TopMenuCss = NULL,TopMenuJs=NULL,TopMenuIvk=NULL,SidMenuCss=NULL,SidMenuJs=NULL,SidMenuIvk=NULL,UsrStyleSheet=NULL,MasterPgFile=NULL '
 EXEC ('IF NOT EXISTS (SELECT 1 ' + @fClause + ' ' + @wClause + ') ' + @dClause + ' ELSE ' + @sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54980,6 +61966,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[GetWebRule]
  @screenId		int
 /* WITH ENCRYPTION */
@@ -54996,7 +61985,12 @@ SELECT @fClause = 'FROM dbo.WebRule a'
 + ' LEFT OUTER JOIN RODesign.dbo.CtButtonType e ON a.ButtonTypeId = e.ButtonTypeId'
 SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55007,6 +62001,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[GetWizardById]
  @desDatabase		varchar(50)
 ,@srcDatabase		varchar(50)
@@ -55024,7 +62021,12 @@ SELECT @fClause = 'FROM dbo.Wizard a'
 + ' INNER JOIN dbo.DbTable c ON a.MasterTableId = c.TableId'
 SELECT @wClause = 'WHERE a.WizardId = ' + CONVERT(varchar,@wizardId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55035,6 +62037,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[GetWizardColumns]
  @wizardId		int
 /* WITH ENCRYPTION */
@@ -55054,7 +62059,12 @@ SELECT @fClause = 'FROM dbo.WizardObj a'
 SELECT @wClause = 'WHERE a.WizardId = ' + CONVERT(varchar,@wizardId)
 SELECT @oClause = 'ORDER BY b.PrimaryKey desc, a.TabIndex'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55065,6 +62075,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[GetWizardDel]
  @srcDatabase		varchar(50)
 /* WITH ENCRYPTION */
@@ -55076,7 +62089,12 @@ SELECT @sClause = 'SELECT a.WizardId, a.ProgramName, b.dbAppDatabase'
 SELECT @fClause = 'FROM dbo.WizardDel a'
 + ' INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 EXEC (@sClause + ' ' + @fClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55087,6 +62105,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[GetWizardList]
  @searchTxt		nvarchar(25)
 /* WITH ENCRYPTION */
@@ -55105,7 +62126,12 @@ ELSE
 	SELECT @wClause = 'WHERE a.WizardTitle LIKE ''%' + LOWER(@searchTxt) + '%'''
 SELECT @oClause = 'ORDER BY a.WizardTitle'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55116,6 +62142,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetWizardRule]
  @wizardId		int
 /* WITH ENCRYPTION */
@@ -55130,7 +62158,13 @@ SELECT @fClause = 'FROM dbo.WizardRule a'
 SELECT @wClause = 'WHERE a.WizardId = ' + CONVERT(varchar,@wizardId)
 SELECT @oClause = 'ORDER BY a.RuleOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55141,6 +62175,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[GetWizImpTmpl]
  @wizardId	int
 ,@cultureId	smallint
@@ -55210,7 +62246,11 @@ INSERT INTO @xmlTable
 select '</Row></Table></Worksheet></Workbook>'
 
 SELECT xml FROM @xmlTable ORDER by xid
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55221,6 +62261,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* This only exists in ??Design */
 CREATE PROCEDURE [dbo].[GetYrReadme]
  @ReleaseId	int
@@ -55248,7 +62290,12 @@ SELECT @sClause = 'DECLARE @iClause varchar(4000), @SysProgram char(1), @SystemN
 + ' SELECT SystemName, AppInfoDesc, Prerequisite, Readme FROM #ver ORDER BY tid'
 + ' DROP TABLE dbo.#ver'
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55259,6 +62306,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[IniLastCriteria]
  @ScreenId		int
 ,@ReportId		int
@@ -55322,7 +62371,12 @@ BEGIN
 	DEALLOCATE sysCursor
 END
 ELSE EXEC dbo.DelLastCriteria null,null,@UsrId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55333,6 +62387,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[IniMemCri]
  @GenPrefix		varchar(10)
 ,@ReportId		int
@@ -55352,7 +62408,12 @@ ELSE
 		FROM dbo.ReportCri a
 		WHERE a.ReportId = @ReportId
 		AND NOT EXISTS (SELECT 1 FROM dbo.RptMemCriDtl b WHERE b.RptMemCriId = @MemCriId AND a.ReportCriId = b.ReportCriId)
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55363,6 +62424,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[IniRptCriteria]
  @GenPrefix		varchar(10)
 ,@ReportId		int
@@ -55387,7 +62450,12 @@ BEGIN
 END
 ELSE
 	EXEC dbo.DelRptCriteria null,null,@UsrId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55398,6 +62466,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_AssignPermUp]
  @MenuId		int
 /* WITH ENCRYPTION */
@@ -55442,7 +62512,12 @@ BEGIN
 	DEALLOCATE menu_cursor
 END
 */
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55453,6 +62528,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_ChgReportCriGrp]
  @ReportId		int
 ,@ReportCriId	Int
@@ -55479,6 +62556,10 @@ BEGIN
 	END
 END
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55489,13 +62570,20 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelAuthCol]
 @ScreenObjId	int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 DELETE FROM dbo.ColOvrd WHERE ScreenObjId = @ScreenObjId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55506,6 +62594,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[Ir_DelDbKey]
  @ScreenObjId		int
 ,@ColumnId			int
@@ -55546,7 +62635,11 @@ BEGIN
 	IF @DoDelete = 'Y' DELETE FROM dbo.DbKey WHERE TableId = @TableId AND RefTableId = @RefTableId
 END
 */
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55557,6 +62650,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Ir_DelMemberUsr]
  @MemberId	int
@@ -55567,7 +62661,11 @@ SET NOCOUNT ON
 DECLARE	 @OUserId int
 SELECT @OUserId = UserId FROM dbo.SredMebr WHERE MemberId = @MemberId
 If @UserId <> @OUserId UPDATE dbo.Usr SET MemberId = null WHERE UsrId = @OUserId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55578,6 +62676,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelMenuHlp]
 @MenuId		int
 /* WITH ENCRYPTION */
@@ -55609,7 +62709,10 @@ DROP TABLE dbo.#mnu
 
 DELETE FROM dbo.MenuPrm WHERE MenuId = @MenuId
 DELETE FROM dbo.MenuHlp WHERE MenuId = @MenuId
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55620,6 +62723,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelOldRptonDel]
  @ReportId		int
 ,@ProgramName	varchar(50)
@@ -55653,7 +62758,9 @@ SELECT @MenuId = MenuId FROM dbo.Menu WHERE ReportId = @ReportId
 DELETE FROM dbo.MenuHlp WHERE MenuId = @MenuId
 DELETE FROM dbo.MenuPrm WHERE MenuId = @MenuId
 DELETE FROM dbo.Menu WHERE MenuId = @MenuId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55664,6 +62771,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[Ir_DelOldRptonRen]
  @ReportId		int
 ,@ProgramName	varchar(50)
@@ -55679,7 +62789,16 @@ BEGIN
 		SET ColumnDesc = REPLACE(ColumnDesc,@oProgramName,@ProgramName)
 		WHERE ReportId = @ReportId
 END
-RETURN 0 
+RETURN 0
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55690,6 +62809,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelOldScronDel]
  @ScreenId	int
 ,@ProgramName	varchar(50)
@@ -55732,7 +62853,9 @@ SELECT @MenuId = MenuId FROM dbo.Menu WHERE ScreenId = @ScreenId
 DELETE FROM dbo.MenuHlp WHERE MenuId = @MenuId
 DELETE FROM dbo.MenuPrm WHERE MenuId = @MenuId
 DELETE FROM dbo.Menu WHERE MenuId = @MenuId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55743,6 +62866,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelOldScronRen]
  @ScreenId	int
 ,@ProgramName	varchar(50)
@@ -55760,7 +62885,9 @@ BEGIN
 		SET ColumnDesc = REPLACE(ColumnDesc,@oProgramName,@ProgramName)
 		WHERE ScreenId = @ScreenId
 END
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55771,6 +62898,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelOldWizonDel]
  @WizardId	int
 ,@ProgramName	varchar(50)
@@ -55788,6 +62917,10 @@ DELETE FROM dbo.MenuHlp WHERE MenuId = @MenuId
 DELETE FROM dbo.MenuPrm WHERE MenuId = @MenuId
 DELETE FROM dbo.Menu WHERE MenuId = @MenuId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55798,6 +62931,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[Ir_DelOldWizonRen]
  @WizardId	int
 ,@ProgramName	varchar(50)
@@ -55807,7 +62946,16 @@ DECLARE	 @oProgramName	varchar(50)
 SET NOCOUNT ON
 SELECT @oProgramName = ProgramName FROM dbo.Wizard WHERE WizardId = @WizardId
 IF @oProgramName <> @ProgramName INSERT INTO dbo.WizardDel (WizardId, ProgramName) SELECT @WizardId, @oProgramName
-RETURN 0 
+RETURN 0
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55818,6 +62966,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelRefColumn]
  @ColumnId	int
 /* WITH ENCRYPTION */
@@ -55825,6 +62975,10 @@ AS
 SET NOCOUNT ON
 DELETE FROM dbo.DbKey WHERE ColumnId = @ColumnId OR RefColumnId = @ColumnId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55835,13 +62989,22 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[Ir_DelReportObjHlp]
  @ReportObjId	int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 DELETE FROM dbo.ReportObjHlp WHERE ReportObjId = @ReportObjId
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55852,6 +63015,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelRptCel]
  @RptCelId	int
 /* WITH ENCRYPTION */
@@ -55859,6 +63024,10 @@ AS
 SET NOCOUNT ON
 DELETE FROM dbo.RptCtr WHERE RptCelId = @RptCelId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55869,6 +63038,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelRptCtr]
  @RptCtrId	int
 /* WITH ENCRYPTION */
@@ -55885,6 +63056,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55895,6 +63070,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelRptTbl]
  @RptTblId	int
 /* WITH ENCRYPTION */
@@ -55908,6 +63085,10 @@ END
 DELETE FROM dbo.RptCtr WHERE EXISTS 
 	(SELECT 1 FROM dbo.RptCel WHERE RptCel.RptTblId = @RptTblId AND RptCtr.RptCelId = RptCel.RptCelId)
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55918,6 +63099,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_DelRptTmpl]
  @TemplateId	int
 /* WITH ENCRYPTION */
@@ -55928,7 +63111,12 @@ SET NOCOUNT ON
 SELECT @TmplPrefix = TmplPrefix, @TmplDefault = TmplDefault FROM dbo.Template WHERE TemplateId = @TemplateId
 IF @TmplDefault = 'Y' BEGIN RAISERROR('{39}',18,2) WITH SETERROR RETURN 1 END
 IF @TmplPrefix <> '' DELETE FROM dbo.RptTemplate WHERE charindex(@TmplPrefix,DocName) = 1
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55939,6 +63127,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Ir_GenPageObj]
  @PageObjId		int
@@ -55948,7 +63138,8 @@ SET NOCOUNT ON
 DECLARE	 @SectionCd		char(1)
 SELECT @SectionCd = SectionCd FROM dbo.PageObj WHERE PageObjId = @PageObjId
 UPDATE dbo.CtSection SET NeedRegen = 'Y' WHERE SectionCd = @SectionCd
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55959,6 +63150,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Ir_IniPageObj]
 /* WITH ENCRYPTION */
@@ -55985,7 +63178,10 @@ BEGIN
 		, 'AdmSctGrpRow.aspx?typ=N&col=SctGrpRowId&key=' + convert(varchar,@SctGrpRowId)
 		, 'AdmSctGrpCol.aspx?typ=N&col=SctGrpColId&key=' + convert(varchar,@SctGrpColId)
 END
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55996,6 +63192,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_InitAppInfo]
  @AppInfoId		int
 /* WITH ENCRYPTION */
@@ -56030,7 +63228,13 @@ BEGIN
 	INSERT INTO dbo.AppInfo (AppInfoDesc, VersionMa, VersionMi)
 	SELECT right(space(3)+convert(varchar,@VersionMa),4) + '.' + right(space(3)+convert(varchar,@VersionMi),4), @VersionMa, @VersionMi
 END
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56041,6 +63245,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_InitCustom]
  @CustomId int
 /* WITH ENCRYPTION */
@@ -56051,6 +63257,10 @@ SELECT @CustomDesc = GenerateCm + ':' + CustomName FROM dbo.Custom WHERE CustomI
 UPDATE dbo.Custom SET CustomDesc = @CustomDesc WHERE CustomId = @CustomId
 UPDATE dbo.CustomDtl SET CustomDtlDesc = @CustomDesc + ':' + ObjectTypeCd + ':' + isnull(LanguageCd,'*') + ':' + isnull(FrameworkCd,'*') + ':' + isnull(DbProviderCd,'*') + ':' + ProgramName WHERE CustomId = @CustomId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56061,6 +63271,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[Ir_InitLabel]
  @LabelId	int
 /* WITH ENCRYPTION */
@@ -56070,7 +63281,11 @@ UPDATE dbo.Label SET
 LabelDesc = LabelCat + ': ' + ISNULL(RIGHT('000'+CONVERT(varchar,SortOrder),4)+' ','') + LabelKey + ' (' + b.CultureTypeName + ')'
 FROM dbo.Label a INNER JOIN RODesign.dbo.VwCulture b ON a.CultureId = b.CultureId
 WHERE LabelId = @LabelId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56081,6 +63296,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_InitMenuHlp]
  @MenuId	int
 /* WITH ENCRYPTION */
@@ -56124,7 +63341,10 @@ BEGIN
 	UPDATE dbo.Menu SET MenuIndex = tid * 10 FROM dbo.Menu a INNER JOIN #mnu b ON a.MenuId = b.MenuId
 	DROP TABLE dbo.#mnu
 END
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56135,6 +63355,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_InitReportClauses]
  @ReportId	int
 /* WITH ENCRYPTION */
@@ -56167,7 +63389,11 @@ IF @ReportTypeCd = 'X' AND (@XlsClause is null OR @XlsClause = '')
 
 /* In case of a conversion from Crystal report to SQL Reporting */
 EXEC dbo.WrRptConvSql @ReportId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56178,6 +63404,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_InitReportCriClauses]
  @ReportCriId	int
 /* WITH ENCRYPTION */
@@ -56199,7 +63427,13 @@ BEGIN
 END
 ELSE
 	UPDATE dbo.ReportCri SET RegClause = '' WHERE ReportCriId = @ReportCriId
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56210,6 +63444,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Enter @dbDesDatabase name when copying from another database:
 CREATE PROCEDURE [dbo].[Ir_InitReportObj]
  @NReportId			int
@@ -56414,7 +63649,9 @@ SELECT @x4Clause = ' DELETE FROM dbo.RptCtr WHERE ReportId = ' + CONVERT(varchar
 + ' END'
 -- Bypass varchar(max) running as varchar(8000) issue on certain SQL server versions;
 EXEC dbo.MkStoredProcedure @x1Clause, @x2Clause, @x3Clause, @x4Clause
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56425,6 +63662,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_InitReportObjHlp]
  @ReportObjId	int
 /* WITH ENCRYPTION */
@@ -56437,7 +63676,11 @@ IF NOT EXISTS (SELECT 1 from dbo.ReportObjHlp WHERE CultureId = @CultureId and R
 	INSERT dbo.ReportObjHlp (ReportObjHlpDesc,ReportObjId,CultureId,ColumnHeader)
 	SELECT ColumnDesc + ' (' + @CultureTypeName + ')',@ReportObjId,@CultureId,ColumnName
 	FROM dbo.ReportObj WHERE ReportObjId = @ReportObjId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56448,6 +63691,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_InitScreenObj]
  @ScreenId	int
 ,@DbId		tinyint
@@ -56602,7 +63847,8 @@ UPDATE dbo.Screen SET
 	,ScreenObj = 'AdmScreenObj.aspx?id=26&key=' + convert(varchar,isnull(@ScreenObjId,0)) + '&typ=N&sys=' + convert(varchar,@DbId)
 	,ScreenFilter = 'AdmScreenFilter.aspx?id=181&cri1=' + convert(varchar,@ScreenId) + '&typ=N&sys=' + convert(varchar,@DbId)
 	WHERE ScreenId = @ScreenId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56613,6 +63859,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_InitScreenObjHlp]
  @ScreenObjId	int
 /* WITH ENCRYPTION */
@@ -56640,7 +63888,11 @@ BEGIN
 		UPDATE dbo.DbColumn SET ColObjective = convert(varchar(200),@ToolTip) WHERE ColumnId = @ColumnId
 	END
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56651,6 +63903,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_InitStaticPg]
  @StaticPgId	int
 ,@StaticPgNm	varchar(50)
@@ -56680,6 +63934,10 @@ UPDATE dbo.StaticPg
 	, StaticPgDesc = @StaticPgTitle + ' (' + @StaticPgNm + ')'
 	WHERE StaticPgId = @StaticPgId
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56690,6 +63948,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
 CREATE PROCEDURE [dbo].[Ir_InitWizardObj]
  @WizardId	int
 ,@MasterTableId	int
@@ -56706,7 +63968,13 @@ BEGIN
 		SELECT @WizardId,ColumnId,@programName + right(space(6) + convert(varchar,(ColumnId-@offset)*10),6) + ': ' + ColumnName,(ColumnId-@offset)*10
 		FROM dbo.DbColumn WHERE TableId = @masterTableId
 END
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56717,6 +63985,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_MemScreenObjHlp]
  @ScreenObjHlpId	int
 ,@ScreenObjId		int
@@ -56757,7 +64027,11 @@ BEGIN
 			EXEC dbo.WrUpdMemTranslate @DefTbHint, @CultureId, @TbHint
 	END
 END
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56768,6 +64042,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdAdvRule]
  @AdvRuleId		int
 ,@CultureId		smallint
@@ -56782,7 +64059,11 @@ UPDATE dbo.AdvRule SET RuleDesc = isnull(b.ScreenTitle,space(0)) + ' [' + c.Rule
 	INNER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId
 		AND b.CultureId = CASE WHEN EXISTS (SELECT 1 FROM dbo.ScreenHlp x WHERE x.ScreenId = a.ScreenId AND x.CultureId = @CultureId) THEN @CultureId ELSE @DefCultureId END
 	WHERE a.AdvRuleId = @AdvRuleId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56793,6 +64074,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdAppItem]
  @AppItemId	int
 ,@DbId		tinyint
@@ -56831,7 +64114,36 @@ UPDATE dbo.AppItem SET
 	 AppItemDesc = @AppInfoDesc + ':' + ObjectTypeCd + ':' + right(space(4)+convert(varchar,ItemOrder),5) + ':' + isnull(LanguageCd,'*') + ':' + isnull(FrameworkCd,'*') + ':' + isnull(DbProviderCd,'*') + ': ' + AppItemName
 	,AppItemLink = 'SearchLink("AdmAppItem.aspx?id=213&key=' + convert(varchar,@AppItemId) + '&typ=N&sys=' + convert(varchar,@DbId) + '","","",""); return false;'
 WHERE AppItemId = @AppItemId
-RETURN 0 
+RETURN 0
+
+
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdAsmxRule') AND type='P')
+DROP PROCEDURE dbo.Ir_UpdAsmxRule
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[Ir_UpdAsmxRule]
+ @RuleAsmxId		int
+,@CultureId		smallint
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @DefCultureId		smallint
+SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
+UPDATE dbo.RuleAsmx SET RuleAsmxDesc = isnull(b.ScreenTitle,space(0)) + ': ' + a.RuleAsmxName
+	FROM dbo.RuleAsmx a
+	LEFT OUTER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId
+	AND b.CultureId = CASE WHEN EXISTS (SELECT 1 FROM dbo.ScreenHlp x WHERE x.ScreenId = a.ScreenId AND x.CultureId = @CultureId) THEN @CultureId ELSE @DefCultureId END
+	WHERE a.RuleAsmxId = @RuleAsmxId
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56842,6 +64154,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdClientRule]
  @ClientRuleId		int
 /* WITH ENCRYPTION */
@@ -56878,7 +64192,9 @@ UPDATE dbo.ClientRule SET
 	LEFT OUTER JOIN dbo.ReportHlp d3 ON c3.ReportId = d3.ReportId AND d3.CultureId = @CultureId
 	LEFT OUTER JOIN dbo.ScreenHlp sh ON sh.ScreenId = a.ScreenId AND sh.CultureId = @CultureId
 	WHERE a.ClientRuleId = @ClientRuleId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56889,6 +64205,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[Ir_UpdColByCol]
  @ColumnId		int
 ,@ColumnName	varchar(50)
@@ -56924,7 +64241,9 @@ BEGIN
 		+ '		UPDATE dbo.DbColumn SET PrevColName = ''' + @ColName + ''' WHERE ColumnId = ' + CONVERT(varchar(50),@ColumnId)
 	EXEC (@sClause)
 END
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56935,13 +64254,16 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdCronJob]
  @CronJobId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.CronJob SET NextRun = null WHERE CronJobId = @CronJobId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56952,6 +64274,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Fire on master because TableName can change when columns have no activitiy:
 CREATE PROCEDURE [dbo].[Ir_UpdDbColumn]
  @TableId	int
@@ -56962,6 +64285,8 @@ SET NOCOUNT ON
 SELECT @TableName = LEFT(@TableName, CASE WHEN CHARINDEX('(',@TableName) > 0 THEN CHARINDEX('(',@TableName) - 1 ELSE LEN(@TableName) END)
 UPDATE dbo.DbColumn SET ColumnDesc = @TableName + ' - ' + ColumnName WHERE TableId = @TableId
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -56972,6 +64297,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdIndByCol]
  @ColumnId		int
 /* WITH ENCRYPTION */
@@ -57027,7 +64354,12 @@ BEGIN
 		RETURN 1
 	END
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57038,6 +64370,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design:
 CREATE PROCEDURE [dbo].[Ir_UpdMaintMsg]
  @MaintMsgId	smallint
@@ -57047,7 +64381,12 @@ DECLARE	 @ShowOnLogin	char(1)
 SET NOCOUNT ON
 SELECT @ShowOnLogin = ShowOnLogin FROM dbo.MaintMsg WHERE MaintMsgId = @MaintMsgId
 IF @ShowOnLogin = 'Y' UPDATE dbo.MaintMsg SET ShowOnLogin = 'N' WHERE MaintMsgId <> @MaintMsgId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57058,6 +64397,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ?? Design only:
 CREATE PROCEDURE [dbo].[Ir_UpdMemberUsr]
  @MemberId	int
@@ -57069,7 +64409,11 @@ UPDATE dbo.Usr SET MemberId = @MemberId WHERE UsrId = @UserId
 UPDATE dbo.SredMebr SET MemberName = m.MemberName
 	FROM dbo.SredMebr r INNER JOIN ROCmon.dbo.Member m ON r.MemberId = m.MemberId
 	WHERE r.MemberId = @MemberId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57080,6 +64424,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Assuming 4 levels of menu but it is alright if more levels present:
 CREATE PROCEDURE [dbo].[Ir_UpdMenuIndex]
 /* WITH ENCRYPTION */
@@ -57140,7 +64486,9 @@ BEGIN
 	FETCH NEXT FROM cur1 INTO @mid1
 END
 CLOSE cur1 DEALLOCATE cur1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57151,6 +64499,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdMsg]
  @MsgId		int
 /* WITH ENCRYPTION */
@@ -57161,7 +64511,9 @@ SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 SELECT @Msg = Msg FROM dbo.MsgCenter WHERE MsgId = @MsgId AND CultureId = @DefCultureId
 UPDATE dbo.Msg SET MsgName = '{' + CONVERT(varchar(10),@MsgId) + '} ' + @Msg WHERE MsgId = @MsgId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57172,6 +64524,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[Ir_UpdPageObj]
  @PageObjId		int
@@ -57229,7 +64583,56 @@ BEGIN
 END
 ELSE
 	UPDATE dbo.PageObj SET SctGrpCol = '' WHERE PageObjId = @PageObjId
-RETURN 0 
+RETURN 0
+
+
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReactNeedRegen') AND type='P')
+DROP PROCEDURE dbo.Ir_UpdReactNeedRegen
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[Ir_UpdReactNeedRegen]
+ @ScreenId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF @ScreenId is not null UPDATE dbo.Screen SET NeedReactRegen = 'Y' WHERE ScreenId = @ScreenId
+RETURN 0
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReactRule') AND type='P')
+DROP PROCEDURE dbo.Ir_UpdReactRule
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+CREATE PROCEDURE [dbo].[Ir_UpdReactRule]
+ @RuleReactId		int
+,@CultureId		smallint
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @DefCultureId		smallint
+SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
+UPDATE dbo.RuleReact SET RuleReactDesc = isnull(b.ScreenTitle,space(0)) + ': ' + a.RuleReactName
+	FROM dbo.RuleReact a
+	LEFT OUTER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId
+	AND b.CultureId = CASE WHEN EXISTS (SELECT 1 FROM dbo.ScreenHlp x WHERE x.ScreenId = a.ScreenId AND x.CultureId = @CultureId) THEN @CultureId ELSE @DefCultureId END
+	WHERE a.RuleReactId = @RuleReactId
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57240,6 +64643,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdReportCriDesc]
  @ReportCriId		int
 /* WITH ENCRYPTION */
@@ -57249,7 +64654,13 @@ SET NOCOUNT ON
 UPDATE dbo.ReportCri SET ReportCriDesc = b.ProgramName + right(space(6) + convert(varchar,a.TabIndex),6) + ': ' + a.ColumnName
 	FROM dbo.ReportCri a INNER JOIN dbo.Report b ON a.ReportId = b.ReportId
 	WHERE ReportCriId = @ReportCriId
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57260,6 +64671,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdReportCriHlp]
  @ReportCriHlpId	int
 /* WITH ENCRYPTION */
@@ -57270,7 +64683,11 @@ UPDATE dbo.ReportCriHlp SET ReportCriHlpDesc = b.ReportCriDesc + ' (' + c.Cultur
 	INNER JOIN dbo.ReportCri b ON a.ReportCriId = b.ReportCriId
 	INNER JOIN RODesign.dbo.VwCulture c ON a.CultureId = c.CultureId
 	WHERE a.ReportCriHlpId = @ReportCriHlpId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57281,6 +64698,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdReportGrpIndex]
  @ReportId	int
 /* WITH ENCRYPTION */
@@ -57316,7 +64735,12 @@ BEGIN
 END
 CLOSE curs
 DEALLOCATE curs
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57327,6 +64751,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdReportGrpIndex1]
  @ReportId		int
 ,@ParentGrpId		int
@@ -57351,6 +64777,10 @@ CLOSE curs
 DEALLOCATE curs
 IF @MaxIndex > @TabIndex SELECT @TabIndex = @MaxIndex
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57361,6 +64791,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdReportGrpIndex2]
  @ReportId		int
 ,@ParentGrpId		int
@@ -57390,6 +64822,10 @@ END
 CLOSE curs
 DEALLOCATE curs
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57400,6 +64836,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdReportObj]
  @ReportObjId		int
 /* WITH ENCRYPTION */
@@ -57433,7 +64871,12 @@ BEGIN
 	UPDATE dbo.ReportObj SET TabIndex = TabIndex * 10 WHERE ReportId = @ReportId
 END
 UPDATE dbo.ReportObj SET ColumnDesc = @ProgramName + right(space(6) + convert(varchar,TabIndex),6) + ': ' + ColumnName WHERE ReportObjId = @ReportObjId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57444,6 +64887,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdReportObjHlp]
  @ReportObjHlpId	int
 /* WITH ENCRYPTION */
@@ -57454,7 +64899,11 @@ UPDATE dbo.ReportObjHlp SET ReportObjHlpDesc = b.ColumnDesc + ' (' + c.CultureTy
 	INNER JOIN dbo.ReportObj b ON a.ReportObjId = b.ReportObjId
 	INNER JOIN RODesign.dbo.VwCulture c ON a.CultureId = c.CultureId
 	WHERE a.ReportObjHlpId = @ReportObjHlpId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57465,6 +64914,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdRptCel]
  @RptCelId	int
 /* WITH ENCRYPTION */
@@ -57478,6 +64929,10 @@ UPDATE dbo.RptCel SET
 	INNER JOIN RODesign.dbo.CtRptTblType d ON c.RptTblTypeCd = d.RptTblTypeCd
 WHERE a.RptCelId = @RptCelId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57488,6 +64943,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdRptCha]
  @RptChaId	int
 /* WITH ENCRYPTION */
@@ -57500,6 +64957,10 @@ UPDATE dbo.RptCha SET
 	INNER JOIN RODesign.dbo.CtRptChaType c ON a.RptChaTypeCd = c.RptChaTypeCd
 WHERE a.RptChaId = @RptChaId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57510,6 +64971,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdRptCtr]
  @RptCtrId	int
 /* WITH ENCRYPTION */
@@ -57527,7 +64990,13 @@ UPDATE dbo.RptCtr SET
 	LEFT OUTER JOIN dbo.RptElm e ON a.RptElmId = e.RptElmId
 	LEFT OUTER JOIN dbo.RptCel f ON a.RptCelId = f.RptCelId
 WHERE a.RptCtrId = @RptCtrId
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57538,6 +65007,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdRptElm]
  @RptElmId	int
 /* WITH ENCRYPTION */
@@ -57549,7 +65020,13 @@ UPDATE dbo.RptElm SET
 	INNER JOIN dbo.Report b ON a.ReportId = b.ReportId
 	INNER JOIN RODesign.dbo.CtRptElmType c ON a.RptElmTypeCd = c.RptElmTypeCd
 WHERE a.RptElmId = @RptElmId
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57560,6 +65037,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdRptNeedRegen]
  @ReportId		int
 /* WITH ENCRYPTION */
@@ -57571,7 +65050,10 @@ IF @ReportId is not null
 	INNER JOIN dbo.ReportHlp b ON a.ReportId = b.ReportId
 	INNER JOIN RODesign.dbo.VwCulture c ON b.CultureId = c.CultureId
 	WHERE a.ReportId = @ReportId AND c.CultureDefault = 'Y'
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57582,6 +65064,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdRptTbl]
  @RptTblId	int
 /* WITH ENCRYPTION */
@@ -57606,6 +65090,10 @@ END
 CLOSE CelCur
 DEALLOCATE CelCur
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57616,12 +65104,18 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdRptTblWiz]
  @ReportId	int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57632,6 +65126,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdRptwizCat]
  @RptwizCatId		smallint
 /* WITH ENCRYPTION */
@@ -57642,7 +65138,12 @@ UPDATE dbo.RptwizCat
 	FROM dbo.RptwizCat a
 	INNER JOIN dbo.RptwizTyp b ON a.RptwizTypId = b.RptwizTypId
 	WHERE a.RptwizCatId = @RptwizCatId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57653,6 +65154,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdScreenCriDesc]
  @ScreenCriId		int
 /* WITH ENCRYPTION */
@@ -57690,7 +65193,9 @@ END
 CLOSE cur
 DEALLOCATE cur
 UPDATE dbo.ScreenCri SET TabIndex = TabIndex * 10 WHERE ScreenId = @ScreenId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57701,6 +65206,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdScreenCriHlp]
  @ScreenCriHlpId	int
 /* WITH ENCRYPTION */
@@ -57711,7 +65218,11 @@ UPDATE dbo.ScreenCriHlp SET ScreenCriHlpDesc = b.ScreenCriDesc + ' (' + c.Cultur
 	INNER JOIN dbo.ScreenCri b ON a.ScreenCriId = b.ScreenCriId
 	INNER JOIN RODesign.dbo.VwCulture c ON a.CultureId = c.CultureId
 	WHERE a.ScreenCriHlpId = @ScreenCriHlpId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57722,6 +65233,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdScreenFilterDesc]
  @ScreenId			int
 ,@ScreenFilterId		int
@@ -57734,7 +65250,11 @@ UPDATE dbo.ScreenFilter
 	WHERE a.ScreenFilterId = @ScreenFilterId
 UPDATE dbo.Screen SET ScreenFilter = 'AdmScreenFilter.aspx?id=181&key=' + convert(varchar,@ScreenFilterId)
 	WHERE ScreenId = @screenId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57745,6 +65265,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdScreenObj]
  @ScreenObjId		int
 /* WITH ENCRYPTION */
@@ -57804,7 +65326,9 @@ BEGIN
 END
 CLOSE run_cursor
 DEALLOCATE run_cursor
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57815,6 +65339,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdScreenObjHlp]
  @ScreenObjHlpId	int
 ,@FromScreenObj		char(1)='N'
@@ -57867,7 +65393,9 @@ UPDATE c SET ColObjective = convert(nvarchar(200),h.ToolTip)
 	INNER JOIN dbo.ScreenObj o on h.ScreenObjId = o.ScreenObjId
 	INNER JOIN dbo.DbColumn c on c.ColumnId = o.ColumnId
 	WHERE h.ScreenObjHlpId = @ScreenObjHlpId AND c.ColObjective IS NULL AND h.ToolTip IS NOT NULL
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57878,6 +65406,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdScreenObjInd]
  @ScreenId		int
 /* WITH ENCRYPTION */
@@ -57904,7 +65434,9 @@ BEGIN
 END
 CLOSE cur
 DEALLOCATE cur
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57915,6 +65447,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdScreenTab]
  @ScreenTabId		int
 /* WITH ENCRYPTION */
@@ -57942,7 +65476,8 @@ BEGIN
 END
 CLOSE cur
 DEALLOCATE cur
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57953,13 +65488,18 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdScrNeedRegen]
  @ScreenId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 IF @ScreenId is not null UPDATE dbo.Screen SET NeedRegen = 'Y' WHERE ScreenId = @ScreenId
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -57970,6 +65510,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[Ir_UpdServerRule]
  @ScreenId		int
 ,@CultureId		smallint
@@ -58016,7 +65557,12 @@ BEGIN
 END
 CLOSE cur DEALLOCATE cur
 DROP TABLE dbo.#rule
-RETURN 0 
+RETURN 0
+ 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58027,6 +65573,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdStaticPgNm]
  @StaticPgId	int
 ,@StaticPgNm	varchar(50)
@@ -58041,6 +65589,10 @@ UPDATE dbo.Label SET LabelCat = @StaticPgNm
 	INNER JOIN RODesign.dbo.VwCulture b ON a.CultureId = b.CultureId
 	WHERE LabelCat = @OStaticPgNm
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58051,6 +65603,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design Only.
 CREATE PROCEDURE [dbo].[Ir_UpdUsrImpr]
  @UsrImprId		int
@@ -58075,7 +65629,10 @@ UPDATE dbo.UsrImpr SET
 	 UsrImprDesc = @ULoginName + ' (' + @UUsrName + ') -> ' + @ILoginName + ' (' + @IUsrName + ')'
 	,UsrImprLink = 'SearchLink("AdmUsrImpr.aspx?id=185&key=' + convert(varchar,@UsrImprId) + '&typ=N&csy=3","","",""); return false;'
 WHERE UsrImprId = @UsrImprId
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58086,6 +65643,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdUtRptCel]
  @RptCelId	int
 /* WITH ENCRYPTION */
@@ -58099,6 +65658,10 @@ UPDATE dbo.UtRptCel SET
 	INNER JOIN RODesign.dbo.CtRptTblType d ON c.RptTblTypeCd = d.RptTblTypeCd
 WHERE a.RptCelId = @RptCelId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58109,6 +65672,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdUtRptCha]
  @RptChaId	int
 /* WITH ENCRYPTION */
@@ -58121,6 +65686,10 @@ UPDATE dbo.UtRptCha SET
 	INNER JOIN RODesign.dbo.CtRptChaType c ON a.RptChaTypeCd = c.RptChaTypeCd
 WHERE a.RptChaId = @RptChaId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58131,6 +65700,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdUtRptCtr]
  @RptCtrId	int
 /* WITH ENCRYPTION */
@@ -58148,7 +65719,11 @@ UPDATE dbo.UtRptCtr SET
 	LEFT OUTER JOIN dbo.UtRptElm e ON a.RptElmId = e.RptElmId
 	LEFT OUTER JOIN dbo.UtRptCel f ON a.RptCelId = f.RptCelId
 WHERE a.RptCtrId = @RptCtrId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58159,6 +65734,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdUtRptTbl]
  @RptTblId	int
 /* WITH ENCRYPTION */
@@ -58179,6 +65756,10 @@ UPDATE dbo.UtRptCel SET
 	INNER JOIN RODesign.dbo.CtRptTblType d ON c.RptTblTypeCd = d.RptTblTypeCd
 WHERE a.RptTblId = @RptTblId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58189,6 +65770,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[Ir_UpdWebRule]
  @WebRuleId		int
 ,@CultureId		smallint
@@ -58202,7 +65784,11 @@ UPDATE dbo.WebRule SET RuleDesc = isnull(b.ScreenTitle,space(0)) + ': ' + a.Rule
 	LEFT OUTER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId
 	AND b.CultureId = CASE WHEN EXISTS (SELECT 1 FROM dbo.ScreenHlp x WHERE x.ScreenId = a.ScreenId AND x.CultureId = @CultureId) THEN @CultureId ELSE @DefCultureId END
 	WHERE a.WebRuleId = @WebRuleId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58213,6 +65799,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdWizardObjColumnDesc]
  @WizardObjId		int
 /* WITH ENCRYPTION */
@@ -58221,7 +65810,13 @@ SET NOCOUNT ON
 UPDATE dbo.WizardObj SET ColumnDesc = b.ProgramName + right(space(6) + convert(varchar,a.TabIndex),6) + ': ' + c.ColumnName
 	FROM dbo.WizardObj a INNER JOIN dbo.Wizard b ON a.WizardId = b.WizardId INNER JOIN dbo.DbColumn c ON a.ColumnId = c.ColumnId
 	WHERE a.WizardObjId = @WizardObjId
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58232,6 +65827,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdWizardRule]
  @WizardId		int
 ,@WizardRuleId		int
@@ -58266,7 +65863,13 @@ END
 UPDATE dbo.WizardRule SET RuleDesc = isnull(b.WizardTitle,space(0)) + right(space(5)+convert(varchar,a.RuleOrder),5) + ': ' + a.RuleName
 	FROM dbo.WizardRule a INNER JOIN dbo.Wizard b ON a.WizardId = b.WizardId
 	WHERE a.WizardRuleId = @WizardRuleId
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58277,13 +65880,18 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[Ir_UpdWizNeedRegen]
  @WizardId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.Wizard SET NeedRegen = 'Y' WHERE WizardId = @WizardId
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58294,6 +65902,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[IrDelUsrTables]
 /* WITH ENCRYPTION */
@@ -58305,7 +65914,11 @@ DELETE FROM dbo.UsrProvider WHERE NOT EXISTS (SELECT 1 FROM dbo.Usr WHERE dbo.Us
 DELETE FROM dbo.UsrAudit WHERE NOT EXISTS (SELECT 1 FROM dbo.Usr WHERE dbo.Usr.UsrId = dbo.UsrAudit.UsrId)
 DELETE FROM dbo.UsrPwd WHERE NOT EXISTS (SELECT 1 FROM dbo.Usr WHERE dbo.Usr.UsrId = dbo.UsrPwd.UsrId)
 DELETE FROM dbo.UsrSafeIP WHERE NOT EXISTS (SELECT 1 FROM dbo.Usr WHERE dbo.Usr.UsrId = dbo.UsrSafeIP.UsrId)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58316,6 +65929,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only exists in ??Design:
 CREATE PROCEDURE [dbo].[IrUpdRelease]
  @ReleaseId		int
@@ -58337,7 +65952,11 @@ UPDATE dbo.Release SET
 	 ReleaseDate = @ReleaseDate
 	,ReleaseDesc = @EntityCode + ':' + isnull(ReleaseBuild,space(0)) + ':' + ReleaseName + ' [' + @ReleaseTypeAbbr + ']'
 	WHERE ReleaseId = @ReleaseId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58348,6 +65967,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[IrUpdReleaseDtl]
  @ReleaseDtlId	int
@@ -58377,7 +65997,11 @@ BEGIN
 	DEALLOCATE cur
 	UPDATE dbo.ReleaseDtl SET RunOrder = RunOrder * 10 WHERE ReleaseId = @ReleaseId
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58388,6 +66012,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design:
 CREATE PROCEDURE [dbo].[IsMDesignDb]
  @TblName	varchar(50)
@@ -58401,7 +66027,12 @@ if @oid is null
 	SELECT 0
 ELSE
 	EXEC ('SELECT COUNT(1) FROM dbo.DbTable WHERE TableName = ''' + @TblName + ''' AND MultiDesignDb = ''Y''')
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58412,6 +66043,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[IsNullLegacyPwd]
  @LoginName	nvarchar(32)
@@ -58419,7 +66051,11 @@ CREATE PROCEDURE [dbo].[IsNullLegacyPwd]
 AS
 SET NOCOUNT ON
 SELECT count('true') FROM dbo.Usr R WHERE R.LoginName = @LoginName and R.ExtPassword is null AND R.Active = 'Y'
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58430,6 +66066,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[IsRegenNeeded]
  @ProgramName	varchar(50)
 ,@ScreenId		int
@@ -58461,7 +66099,11 @@ BEGIN
 END
 ELSE IF EXISTS (SELECT 1 FROM dbo.CtSection WHERE LOWER(SectionName) = LOWER(@ProgramName) AND (NeedRegen = 'Y'))
 	SELECT 1 ELSE SELECT 0
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58472,6 +66114,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[IsUsrSafeIP]
  @UsrId		int
@@ -58483,7 +66126,10 @@ IF EXISTS (SELECT 1 FROM dbo.Usr WHERE UsrId = @UsrId AND IPAlert = 'N')
 	SELECT 1	/* Assume IP found */
 ELSE
 	SELECT count(1) FROM dbo.UsrSafeIP WHERE UsrId = @UsrId AND IpAddress = @IpAddress
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58494,6 +66140,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[IsValidLocalUsr]
  @LoginName		nvarchar(32)
@@ -58509,7 +66156,11 @@ IF EXISTS (SELECT 1 FROM dbo.Usr
 	SELECT 1
 ELSE
 	SELECT 0
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58520,6 +66171,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design:
 CREATE PROCEDURE [dbo].[IsValidOvride]
  @OvrideId		int
@@ -58565,7 +66218,12 @@ BEGIN
 END
 CLOSE PwdCur
 DEALLOCATE PwdCur
-SELECT 0 RETURN 0 
+SELECT 0 RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58576,6 +66234,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[LinkUsrLogin]
  @UsrId         int
@@ -58587,7 +66247,11 @@ IF NOT EXISTS (SELECT 1 FROM dbo.UsrProvider WHERE UsrId = @UsrId AND ProviderCd
 	INSERT INTO dbo.UsrProvider (UsrId, Providercd, LoginName) SELECT @UsrId, @ProviderCd, @LoginName
 ELSE
 	UPDATE dbo.UsrProvider SET LoginName = @LoginName WHERE UsrId = @UsrId AND ProviderCd = @ProviderCd
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58598,6 +66262,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[LogDelete]
  @UsrId			int
 ,@ExecDb		varchar(50)
@@ -58630,7 +66296,9 @@ ORDER BY ORDINAL_POSITION) c'
 + ' ' + REPLACE(@Where,'''''''','''''''''''')
 + ''''')'
 EXEC (@DbName + '.dbo.MkStoredProcedure ''' + @sql + '''')
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58641,6 +66309,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[LogUsage]
  @UsrId		int
 ,@UsageNote	nvarchar(200)
@@ -58657,7 +66326,16 @@ IF @ReportId = 0 SELECT @ReportId = null
 IF @WizardId = 0 SELECT @WizardId = null
 INSERT dbo.Usage (UsageDt, UsrId, UsageNote, EntityTitle, ScreenId, ReportId, WizardId, Miscellaneous)
 	SELECT getutcdate(), @UsrId, @UsageNote, @EntityTitle, @ScreenId, @ReportId, @WizardId, @Miscellaneous
-RETURN 0 
+RETURN 0
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58668,6 +66346,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptBizRule
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -58696,7 +66375,8 @@ ELSE UPDATE RODesign.dbo.RptMemCri SET
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'SystemId', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58707,6 +66387,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptDataDict
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -58739,7 +66420,8 @@ EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'SystemId', @cri
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'TableName', @TableName
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'ColumnName', @ColumnName
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58750,6 +66432,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptDbTable
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -58780,7 +66463,8 @@ EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'Id', @Id
 SELECT @cri = convert(nvarchar,convert(datetime,@ModifiedAfter),102)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'ModifiedAfter', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58791,6 +66475,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptMsg
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -58822,7 +66507,8 @@ EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'CultureId', @cri
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'SystemId', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58833,6 +66519,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptPerm
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -58868,7 +66555,8 @@ EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'CultureId', @cri
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'SystemId', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58879,6 +66567,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptPrgList
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -58910,7 +66599,8 @@ EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'CultureId', @cri
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'SystemId', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58921,6 +66611,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptSred
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -58952,7 +66643,8 @@ EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'MonthEnding', @cri
 SELECT @cri = convert(nvarchar,@NumMonths)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'NumMonths', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -58963,6 +66655,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptStat
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -58995,7 +66688,8 @@ EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'MemberId', @cri
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'MnFr', @MnFr
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'MnTo', @MnTo
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59006,6 +66700,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptTime
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -59037,7 +66732,8 @@ EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'MonthEnding', @cri
 SELECT @cri = convert(nvarchar,@NumMonths)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'NumMonths', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59048,6 +66744,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptUsage
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -59062,13 +66759,16 @@ CREATE PROCEDURE MemAdmRptUsage
 ,@FrDate DateTime
 ,@ToDate DateTime
 ,@CompanyId Int
+,@ProjectId Int
 ,@AgentId Int
 ,@BrokerId Int
 ,@VendorId Int
-,@ProjectId Int
 ,@CustomerId Int
 ,@InvestorId Int
 ,@MemberId Int
+,@BorrowerId Int
+,@GuarantorId Int
+,@LenderId Int
 ,@UsrGroupId SmallInt
 ,@UserId Int
 /* WITH ENCRYPTION */
@@ -59095,26 +66795,33 @@ SELECT @cri = convert(nvarchar,convert(datetime,@ToDate),102)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'ToDate', @cri
 SELECT @cri = convert(nvarchar,@CompanyId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'CompanyId', @cri
+SELECT @cri = convert(nvarchar,@ProjectId)
+EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'ProjectId', @cri
 SELECT @cri = convert(nvarchar,@AgentId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'AgentId', @cri
 SELECT @cri = convert(nvarchar,@BrokerId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'BrokerId', @cri
 SELECT @cri = convert(nvarchar,@VendorId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'VendorId', @cri
-SELECT @cri = convert(nvarchar,@ProjectId)
-EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'ProjectId', @cri
 SELECT @cri = convert(nvarchar,@CustomerId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'CustomerId', @cri
 SELECT @cri = convert(nvarchar,@InvestorId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'InvestorId', @cri
 SELECT @cri = convert(nvarchar,@MemberId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'MemberId', @cri
+SELECT @cri = convert(nvarchar,@BorrowerId)
+EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'BorrowerId', @cri
+SELECT @cri = convert(nvarchar,@GuarantorId)
+EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'GuarantorId', @cri
+SELECT @cri = convert(nvarchar,@LenderId)
+EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'LenderId', @cri
 SELECT @cri = convert(nvarchar,@UsrGroupId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'UsrGroupId', @cri
 SELECT @cri = convert(nvarchar,@UserId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'UserId', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59125,6 +66832,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptUsr
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -59158,7 +66866,8 @@ EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'UsrGroupId', @cri
 SELECT @cri = convert(nvarchar,@CompanyId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'CompanyId', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59169,6 +66878,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemAdmRptUsrAudit
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -59206,7 +66916,8 @@ EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'AttemptDt40', @cri
 SELECT @cri = convert(nvarchar,convert(datetime,@AttemptDt50),102)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'AttemptDt50', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59217,6 +66928,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE MemS03Rptwiz11
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -59244,7 +66956,8 @@ ELSE UPDATE RODesign.dbo.UtRptMemCri SET
 	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
 EXEC RODesign.dbo.UpdUtRptMemCri @RptMemCriId, @reportId, 'MultiDesignDb10', @MultiDesignDb10
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59255,6 +66968,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[MemS03Rptwiz14]
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -59284,7 +66998,9 @@ ELSE UPDATE RODesign.dbo.UtRptMemCri SET
 EXEC RODesign.dbo.UpdUtRptMemCri @RptMemCriId, @reportId, 'LoginSuccess10', @LoginSuccess10
 EXEC RODesign.dbo.UpdUtRptMemCri @RptMemCriId, @reportId, 'ValidUser20', @ValidUser20
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59295,6 +67011,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[MemS03Rptwiz15]
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -59322,7 +67039,9 @@ ELSE UPDATE RODesign.dbo.UtRptMemCri SET
 	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
 EXEC RODesign.dbo.UpdUtRptMemCri @RptMemCriId, @reportId, 'LoginSuccess10', @LoginSuccess10
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59333,6 +67052,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[MemS03Rptwiz5]
  @PublicAccess char(1)
 ,@RptMemCriId int
@@ -59361,7 +67081,10 @@ ELSE UPDATE RODesign.dbo.UtRptMemCri SET
 SELECT @cri = convert(nvarchar,convert(datetime,@VersionDt10),102)
 EXEC RODesign.dbo.UpdUtRptMemCri @RptMemCriId, @reportId, 'VersionDt10', @cri
 SELECT @RptMemCriId
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59372,6 +67095,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[MkGetScreenIn]
  @screenId		int
 ,@screenCriId		int
@@ -59568,7 +67292,9 @@ SELECT 	 parameter1Names='RowAuthoritys'+@parameter1Names
 	,parameter1Types='string'+@parameter1Types
 	,parameter1SByte='VarChar'+@parameter1SByte
 */
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59579,6 +67305,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkReportCha]
  @RptwizTypeCd	char(1)
 ,@RptwizId		int
@@ -59635,7 +67363,9 @@ SELECT @RptCtrId = @@IDENTITY EXEC dbo.Ir_UpdUtRptCtr @RptCtrId
 INSERT dbo.UtRptCha (RptCtrId, ReportId, RptChaTypeCd, ThreeD, CategoryGrp, ChartData, SeriesGrp)
 	SELECT @RptCtrId, @ReportId, @RptChaTypeCd, @ThreeD, @CategoryGrp, @ChartData, @SeriesGrp
 SELECT @RptChaId = @@IDENTITY EXEC dbo.Ir_UpdUtRptCha @RptChaId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59646,6 +67376,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkReportGet]
  @GenPrefix		varchar(10)
 ,@reportId		int
@@ -59698,6 +67430,9 @@ SELECT @procedureSql = 'CREATE PROCEDURE Get' + @procedureName + CHAR(13)
 + ',@Investors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@Members' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@Vendors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@currCompanyId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
 + ',@currProjectId' + CHAR(9) + CHAR(9) + 'int' + @paramClause + CHAR(13)
 + ',@bUpd char(1)' + CHAR(13) + ',@bXls char(1)' + CHAR(13) + ',@bVal char(1)=''''N''''' + CHAR(13)
@@ -59755,7 +67490,11 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedureSql + '''')
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @procedureSql + '''')
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59766,6 +67505,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[MkReportGetIn]
  @GenPrefix			varchar(10)
 ,@reportCriId		int
@@ -59816,6 +67556,9 @@ SELECT @procedureSql1 = 'CREATE PROCEDURE GetIn' + @procedureName + CHAR(13)
 + ',@Investors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@Members' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@Vendors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
++ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 + ',@currCompanyId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
 + ',@currProjectId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
 + ',@bAll' + CHAR(9) + CHAR(9) + 'char(1)=null' + CHAR(13)
@@ -59855,7 +67598,11 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedureSql + '''')
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @procedureSql1 + ''',''' + @procedureSql2 + ''',''' + @procedureSql3 + '''')
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -59866,6 +67613,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkReportLis]
  @ColGroup		smallint
 ,@RptwizId		int
@@ -60001,7 +67750,9 @@ BEGIN
 END
 CLOSE cur DEALLOCATE cur
 IF @ColGroup is not null SELECT @PIndent = round(@ColGroup * (case when @UnitCd = 'in' then 0.2 when @UnitCd = 'cm' then 0.51 else 5.08 end) /@TotWidth * @RptWidth,2)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -60012,6 +67763,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- Called by WrRptwizGen:
 CREATE PROCEDURE [dbo].[MkReportReg]
  @RptwizId		int
@@ -60194,7 +67946,9 @@ EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @ProcDel + '''')
 IF @RegCode is null BEGIN RAISERROR('Cannot create _Get stored procedure, please verify data category and try again.',18,2) WITH SETERROR RETURN 1 END
 SELECT @RegCode = replace(@RegCode,'''','''''')
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @RegCode + '''')
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -60205,6 +67959,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkReportTbl]
  @RptwizId		int
 ,@RptElmId		int
@@ -60510,7 +68266,9 @@ BEGIN
 	FETCH NEXT FROM cur2 INTO @ColGroup, @ColSelect, @ColumnId, @ColumnName, @DataType, @ReportObjId, @AggregateCd, @CtrWidth
 END
 CLOSE cur2 DEALLOCATE cur2
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -60521,6 +68279,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkReportUpd]
  @GenPrefix		varchar(10)
 ,@reportId		int
@@ -60639,7 +68399,11 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @DropMemSql + '''')
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @ProcMemSql + '''')
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -60650,6 +68414,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Called by WrRptwizGen:
 CREATE PROCEDURE [dbo].[MkReportVal]
  @RptwizId		int
@@ -60704,7 +68470,11 @@ EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @ProcDel + '''')
 IF @ValCode is null BEGIN RAISERROR('Cannot create _Get stored procedure, please verify foreign keys in data category and try again.',18,2) WITH SETERROR RETURN 1 END
 SELECT @ValCode = replace(@ValCode,'''','''''')
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @ValCode + '''')
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -60715,6 +68485,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkRptStyle]
 /* WITH ENCRYPTION */
 AS
@@ -60723,7 +68495,9 @@ INSERT dbo.RptStyle (RptStyleDesc, BorderStyleD, BorderWidthD, BgColor, FontStyl
 	, FontWeight, Format, TextAlign, PadLeft, PadRight, PadTop, PadBottom, DefaultCd)
 SELECT RptStyleDesc, BorderStyleD, BorderWidthD, BgColor, FontStyle, FontFamily, FontSize
 	, FontWeight, Format, TextAlign, PadLeft, PadRight, PadTop, PadBottom, DefaultCd FROM RODesign.dbo.RptStyle
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -60734,6 +68508,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkScrAudit]
  @CudAction		char(1)
 ,@ScreenId		int
@@ -60897,7 +68673,8 @@ BEGIN
 		,CASE WHEN @CudAction='A' THEN 'N' ELSE 'Y' END
 		FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId AND CultureId = @DefCultureId
 END
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -60908,6 +68685,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkScreenUpdIn]
  @screenId		int
 ,@procedureName		varchar(200)
@@ -60982,7 +68761,9 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedureSql + '''')
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @procedureUpdSql + '''')
 END
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -60993,6 +68774,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkStoredProcedure]
   @spString1	varchar(max)
 , @spString2	varchar(max) = ''
@@ -61010,7 +68793,12 @@ declare @nl varchar(1) select @nl = CHAR(13)
 EXEC ('SET QUOTED_IDENTIFIER ON SET ANSI_NULLS ON' + @nl)
 EXEC (@spString1 + @spString2 + @spString3 + @spString4 + @spString5 + @spString6 + @spString7 + @spString8 + @spString9)
 EXEC ('SET QUOTED_IDENTIFIER OFF')
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61021,6 +68809,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[MkWfStatus]
  @ScreenObjId	int
 ,@MasterTable	char(1)
@@ -61146,7 +68935,9 @@ INSERT dbo.ServerRule (ScreenId,RuleTypeId,MasterTable,RuleName,RuleDesc,RuleOrd
 	,@PkeyCol + CONVERT(varchar(10),@TableId) + ',' + @ColumnName + CONVERT(varchar(10),@TableId) + ',LUser.UsrId'
 	,'Y','N','N','N'
 	FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId AND CultureId = @DefCultureId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61157,6 +68948,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkWizardW1Upd]
  @wizardId		int
 ,@procedureName		varchar(200)
@@ -61228,7 +69021,12 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedureSql + '''')
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @procedureAddSql + '''')
 END
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61239,6 +69037,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
+
+
+
 -- This exists only in ??Design because only administration screen can be MultiDesignDb.
 CREATE PROCEDURE [dbo].[MultiDesignDb]
  @screenId	int
@@ -61252,7 +69056,16 @@ BEGIN
 		SELECT @MultiDb = 'Y'
 	ELSE
 		SELECT @MultiDb = 'N'
-END 
+END
+
+
+
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61263,6 +69076,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[NewMenuItem]
  @ScreenId		int
 ,@ReportId		int
@@ -61294,7 +69108,10 @@ BEGIN
 	SELECT @CultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 	INSERT dbo.MenuHlp (MenuId,CultureId,MenuText) VALUES (@MenuId,@CultureId,@ItemTitle)
 END
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61305,6 +69122,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only
 CREATE PROCEDURE [dbo].[Pop1BigInt]
  @sourceString	nvarchar(4000) OUTPUT
@@ -61315,7 +69133,12 @@ DECLARE  @firstWord	nvarchar(4000)
 SET NOCOUNT ON
 EXEC dbo.PopFirstWord @sourceString OUTPUT, @firstWord OUTPUT
 SELECT @1stNum = convert(bigint,@firstWord)
-RETURN 0 
+RETURN 0
+
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61326,6 +69149,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only
 CREATE PROCEDURE [dbo].[Pop1Int]
  @sourceString	nvarchar(4000) OUTPUT
@@ -61336,7 +69161,11 @@ DECLARE  @firstWord	nvarchar(4000)
 SET NOCOUNT ON
 EXEC dbo.PopFirstWord @sourceString OUTPUT, @firstWord OUTPUT
 SELECT @1stNum = convert(int,@firstWord)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61347,6 +69176,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only
 CREATE PROCEDURE [dbo].[Pop1SmallInt]
  @sourceString	nvarchar(4000) OUTPUT
@@ -61357,7 +69187,11 @@ DECLARE  @firstWord	nvarchar(4000)
 SET NOCOUNT ON
 EXEC dbo.PopFirstWord @sourceString OUTPUT, @firstWord OUTPUT
 SELECT @1stNum = convert(smallint,@firstWord)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61368,6 +69202,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only
 CREATE PROCEDURE [dbo].[Pop1TinyInt]
  @sourceString	nvarchar(4000) OUTPUT
@@ -61378,7 +69213,11 @@ DECLARE  @firstWord	nvarchar(4000)
 SET NOCOUNT ON
 EXEC dbo.PopFirstWord @sourceString OUTPUT, @firstWord OUTPUT
 SELECT @1stNum = convert(tinyint,@firstWord)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61389,6 +69228,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only
 -- Procedure outputs the remainder of the delimeted string in the first parameter
 -- Procedure outputs the first word in the second parameter
@@ -61413,7 +69253,11 @@ BEGIN
 		SELECT @firstWord = RTRIM(SUBSTRING(@oldword, 1, @pos -1)), @sourceString = SUBSTRING(@oldword, @pos + 1, @length - @pos)
 	IF @firstWord = '' OR @firstWord = 'Null' SELECT @firstWord = null
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61424,6 +69268,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design and for the convenience of sending email from Store-procedure:
 CREATE PROCEDURE [dbo].[pSendMail] 
  @Recipients 	nvarchar(max)
@@ -61454,6 +69300,10 @@ BEGIN
 	RETURN 1
 END
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61464,6 +69314,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[PurgeScrAudit]
  @YearOld		SmallInt
 /* WITH ENCRYPTION */
@@ -61471,7 +69322,9 @@ AS
 SET NOCOUNT ON
 DELETE FROM dbo.ScrAuditDtl WHERE EXISTS (SELECT 1 FROM dbo.ScrAudit b WHERE dbo.ScrAuditDtl.ScrAuditId = b.ScrAuditId AND b.ChangedOn < dateadd(yyyy,-@YearOld,getutcdate()))
 DELETE FROM dbo.ScrAudit WHERE ChangedOn < dateadd(yyyy,-@YearOld,getutcdate())
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61482,6 +69335,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[SetCult]
  @UsrId			int
@@ -61493,7 +69347,11 @@ SET NOCOUNT ON
 SELECT @LoginName = LoginName FROM dbo.Usr WHERE UsrId = @UsrId
 IF @LoginName <> 'Anonymous' UPDATE dbo.Usr SET CultureId = @CultureId WHERE UsrId = @UsrId
 SELECT CultureTypeName FROM RODesign.dbo.VwCulture WHERE CultureId = @CultureId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61504,6 +69362,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* Only in ??Design */
 CREATE PROCEDURE [dbo].[SetLoginStatus]
  @LoginName				nvarchar(32)
@@ -61523,7 +69383,10 @@ IF @LoginSuccess = 'Y'
 	UPDATE dbo.Usr SET FailedAttempt = 0, FailedAttemptFP = 0, LastSuccessDt = GETUTCDATE() WHERE UsrId = @UsrId
 ELSE
 	UPDATE dbo.Usr SET FailedAttempt = ISNULL(FailedAttempt,0) + 1, LastFailedDt = GETUTCDATE() WHERE UsrId = @UsrId
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61534,6 +69397,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[SetRptGrp]
 /* WITH ENCRYPTION */
 AS
@@ -61552,7 +69417,11 @@ BEGIN
 		VALUES (4, '*C&L-Vertical', '0', 'Y', 'Y', 0)
 	SET IDENTITY_INSERT dbo.ReportGrp OFF
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61563,13 +69432,19 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[SetRptNeedRegen]
  @reportId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.Report SET NeedRegen = 'N' WHERE ReportId = @reportId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61580,13 +69455,19 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[SetScrNeedRegen]
  @screenId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.Screen SET NeedRegen = 'N' WHERE ScreenId = @screenId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61597,6 +69478,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 /* Called by GenScreensRules */
 CREATE PROCEDURE [dbo].[SetScrTab]
 /* WITH ENCRYPTION */
@@ -61606,7 +69488,10 @@ IF NOT EXISTS (SELECT 1 FROM AppInfo)
 BEGIN
 	INSERT INTO dbo.AppInfo (AppInfoDesc, VersionMa, VersionMi) SELECT '1.0', 1, 0
 END
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61617,6 +69502,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design:
 CREATE PROCEDURE [dbo].[SetSctNeedRegen]
  @SectionCd		char(1)
@@ -61624,7 +69511,11 @@ CREATE PROCEDURE [dbo].[SetSctNeedRegen]
 AS
 SET NOCOUNT ON
 UPDATE dbo.CtSection SET NeedRegen = 'N' WHERE SectionCd = @SectionCd
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61635,6 +69526,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[SetUsrSafeIP]
  @UsrId		int
@@ -61644,7 +69536,10 @@ AS
 SET NOCOUNT ON
 IF NOT EXISTS (SELECT 1 FROM dbo.UsrSafeIP WHERE UsrId = @UsrId AND IpAddress = @IpAddress)
 	INSERT dbo.UsrSafeIP (UsrId, IpAddress) SELECT @UsrId, @IpAddress
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61655,13 +69550,19 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[SetWizNeedRegen]
  @wizardId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.Wizard SET NeedRegen = 'N' WHERE WizardId = @wizardId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61672,6 +69573,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 -- ShowDifferences '[172.16.0.65]','RND08','NLGSecurD'
 -- Show what is (design db only) in Server1 but not in Server2.
@@ -61737,7 +69639,9 @@ BEGIN
 END
 CLOSE DiffCursor
 DEALLOCATE DiffCursor
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61748,6 +69652,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[UnlinkUsrLogin]
  @UsrId         int
@@ -61756,7 +69663,9 @@ CREATE PROCEDURE [dbo].[UnlinkUsrLogin]
 /* WITH ENCRYPTION */
 AS
 DELETE FROM dbo.UsrProvider WHERE UsrId = @UsrId AND ProviderCd = @ProviderCd AND LoginName = @LoginName
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61767,6 +69676,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmAppInfo82In
  @screenId int
 ,@usrId int
@@ -61779,7 +69689,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,convert(datetime,@VersionDt53),102)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 53, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61790,6 +69701,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmAppItem83In
  @screenId int
 ,@usrId int
@@ -61801,7 +69713,8 @@ DECLARE @cri nvarchar(900)
 SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 44, @AppItemCode44
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61812,6 +69725,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[UpdAdmAuthCol16In]
  @screenId int
 ,@usrId int
@@ -61824,7 +69738,9 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ScreenId45)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 45, @cri
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61835,6 +69751,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmButtonHlp76In
  @screenId int
 ,@usrId int
@@ -61847,7 +69764,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@CultureId19)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 19, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61858,6 +69776,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmClientRule79In
  @screenId int
 ,@usrId int
@@ -61876,7 +69795,8 @@ SELECT @cri = convert(nvarchar,@ReportId11)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 11, @cri
 SELECT @cri = convert(nvarchar,@CultureId10)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 10, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61887,6 +69807,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmColDrg1007In
  @screenId int
 ,@usrId int
@@ -61899,7 +69820,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ScreenId1074)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 1074, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61910,6 +69832,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmCtButtonHlp81In
  @screenId int
 ,@usrId int
@@ -61922,7 +69845,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@CultureId18)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 18, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61933,6 +69857,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmCtCulture8In
  @screenId int
 ,@usrId int
@@ -61946,7 +69871,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 61, @ToTranslate61
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 1077, @EnNumberRule1077
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61957,6 +69883,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmDbTable2In
  @screenId int
 ,@usrId int
@@ -61970,7 +69897,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 25, @TableName25
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 42, @TableDesc42
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -61981,6 +69909,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmLabel112In
  @screenId int
 ,@usrId int
@@ -61999,7 +69928,8 @@ EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 48, @cri
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 49, @LabelCat49
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 51, @LabelKey51
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 50, @LabelText50
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62010,6 +69940,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmLabelVw119In
  @screenId int
 ,@usrId int
@@ -62024,7 +69955,8 @@ EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@CultureId56)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 56, @cri
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 59, @LabelCat59
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62035,6 +69967,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmMsgCenter86In
  @screenId int
 ,@usrId int
@@ -62051,7 +69984,8 @@ SELECT @cri = convert(nvarchar,@MsgId28)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 28, @cri
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 27, @MsgSource27
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 70, @MsgName70
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62062,6 +69996,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmPageObj1001In
  @screenId int
 ,@usrId int
@@ -62073,7 +70008,8 @@ DECLARE @cri nvarchar(900)
 SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 1073, @SectionCd1073
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62084,6 +70020,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRelease98In
  @screenId int
 ,@usrId int
@@ -62102,7 +70039,8 @@ SELECT @cri = convert(nvarchar,@EntityId36)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 36, @cri
 SELECT @cri = convert(nvarchar,@ReleaseTypeId37)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 37, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62113,6 +70051,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmReportCri69In
  @screenId int
 ,@usrId int
@@ -62125,7 +70064,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ReportId4)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 4, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62136,6 +70076,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmReportGrp65In
  @screenId int
 ,@usrId int
@@ -62148,7 +70089,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ReportId2)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 2, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62159,6 +70101,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmReportObj13In
  @screenId int
 ,@usrId int
@@ -62171,7 +70114,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ReportId13)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 13, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62182,6 +70126,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRowOvrd17In
  @screenId int
 ,@usrId int
@@ -62197,7 +70142,8 @@ SELECT @cri = convert(nvarchar,@ScreenId38)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 38, @cri
 SELECT @cri = convert(nvarchar,@ReportId39)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 39, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62208,6 +70154,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptBizRule
  @reportId int
 ,@usrId int
@@ -62219,7 +70166,8 @@ SET NOCOUNT ON
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'SystemId', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62230,6 +70178,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptCtr90In
  @screenId int
 ,@usrId int
@@ -62244,7 +70193,8 @@ EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ReportId29)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 29, @cri
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 67, @CtrValue67
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62255,6 +70205,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptDataDict
  @reportId int
 ,@usrId int
@@ -62270,7 +70221,8 @@ EXEC RODesign.dbo.UpdReportLstCri @reportId, 'SystemId', @usrId, @cri
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'TableName', @usrId, @TableName
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'ColumnName', @usrId, @ColumnName
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62281,6 +70233,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptDbTable
  @reportId int
 ,@usrId int
@@ -62294,7 +70247,8 @@ EXEC RODesign.dbo.UpdReportLstCri @reportId, 'Id', @usrId, @Id
 SELECT @cri = convert(nvarchar,convert(datetime,@ModifiedAfter),102)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'ModifiedAfter', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62305,6 +70259,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptElm91In
  @screenId int
 ,@usrId int
@@ -62317,7 +70272,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ReportId30)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 30, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62328,6 +70284,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptMsg
  @reportId int
 ,@usrId int
@@ -62342,7 +70299,8 @@ EXEC RODesign.dbo.UpdReportLstCri @reportId, 'CultureId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'SystemId', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62353,6 +70311,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptPerm
  @reportId int
 ,@usrId int
@@ -62371,7 +70330,8 @@ EXEC RODesign.dbo.UpdReportLstCri @reportId, 'CultureId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'SystemId', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62382,6 +70342,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptPrgList
  @reportId int
 ,@usrId int
@@ -62396,7 +70357,8 @@ EXEC RODesign.dbo.UpdReportLstCri @reportId, 'CultureId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'SystemId', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62407,6 +70369,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptSred
  @reportId int
 ,@usrId int
@@ -62421,7 +70384,8 @@ EXEC RODesign.dbo.UpdReportLstCri @reportId, 'MonthEnding', @usrId, @cri
 SELECT @cri = convert(nvarchar,@NumMonths)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'NumMonths', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62432,6 +70396,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptStat
  @reportId int
 ,@usrId int
@@ -62447,7 +70412,8 @@ EXEC RODesign.dbo.UpdReportLstCri @reportId, 'MemberId', @usrId, @cri
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'MnFr', @usrId, @MnFr
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'MnTo', @usrId, @MnTo
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62458,6 +70424,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptStyle89In
  @screenId int
 ,@usrId int
@@ -62469,7 +70436,8 @@ DECLARE @cri nvarchar(900)
 SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 32, @DefaultCd32
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62480,6 +70448,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[UpdAdmRptTbl]
  @reportId int
 ,@usrId int
@@ -62492,7 +70462,12 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'Id', @usrId, @Id
 SELECT @cri = convert(nvarchar,convert(datetime,@ModifiedAfter),102)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'ModifiedAfter', @usrId, @cri
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62503,6 +70478,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptTbl92In
  @screenId int
 ,@usrId int
@@ -62518,7 +70494,8 @@ SELECT @cri = convert(nvarchar,@ReportId34)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 34, @cri
 SELECT @cri = convert(nvarchar,@RptCtrId31)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 31, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62529,6 +70506,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptTime
  @reportId int
 ,@usrId int
@@ -62543,7 +70521,8 @@ EXEC RODesign.dbo.UpdReportLstCri @reportId, 'MonthEnding', @usrId, @cri
 SELECT @cri = convert(nvarchar,@NumMonths)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'NumMonths', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62554,6 +70533,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptUsage
  @reportId int
 ,@usrId int
@@ -62562,13 +70542,16 @@ CREATE PROCEDURE UpdAdmRptUsage
 ,@FrDate DateTime
 ,@ToDate DateTime
 ,@CompanyId Int
+,@ProjectId Int
 ,@AgentId Int
 ,@BrokerId Int
 ,@VendorId Int
-,@ProjectId Int
 ,@CustomerId Int
 ,@InvestorId Int
 ,@MemberId Int
+,@BorrowerId Int
+,@GuarantorId Int
+,@LenderId Int
 ,@UsrGroupId SmallInt
 ,@UserId Int
 /* WITH ENCRYPTION */
@@ -62584,26 +70567,33 @@ SELECT @cri = convert(nvarchar,convert(datetime,@ToDate),102)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'ToDate', @usrId, @cri
 SELECT @cri = convert(nvarchar,@CompanyId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'CompanyId', @usrId, @cri
+SELECT @cri = convert(nvarchar,@ProjectId)
+EXEC RODesign.dbo.UpdReportLstCri @reportId, 'ProjectId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@AgentId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'AgentId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@BrokerId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'BrokerId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@VendorId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'VendorId', @usrId, @cri
-SELECT @cri = convert(nvarchar,@ProjectId)
-EXEC RODesign.dbo.UpdReportLstCri @reportId, 'ProjectId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@CustomerId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'CustomerId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@InvestorId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'InvestorId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@MemberId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'MemberId', @usrId, @cri
+SELECT @cri = convert(nvarchar,@BorrowerId)
+EXEC RODesign.dbo.UpdReportLstCri @reportId, 'BorrowerId', @usrId, @cri
+SELECT @cri = convert(nvarchar,@GuarantorId)
+EXEC RODesign.dbo.UpdReportLstCri @reportId, 'GuarantorId', @usrId, @cri
+SELECT @cri = convert(nvarchar,@LenderId)
+EXEC RODesign.dbo.UpdReportLstCri @reportId, 'LenderId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@UsrGroupId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'UsrGroupId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@UserId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'UserId', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62614,6 +70604,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptUsr
  @reportId int
 ,@usrId int
@@ -62630,7 +70621,8 @@ EXEC RODesign.dbo.UpdReportLstCri @reportId, 'UsrGroupId', @usrId, @cri
 SELECT @cri = convert(nvarchar,@CompanyId)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'CompanyId', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62641,6 +70633,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmRptUsrAudit
  @reportId int
 ,@usrId int
@@ -62661,7 +70654,8 @@ EXEC RODesign.dbo.UpdReportLstCri @reportId, 'AttemptDt40', @usrId, @cri
 SELECT @cri = convert(nvarchar,convert(datetime,@AttemptDt50),102)
 EXEC RODesign.dbo.UpdReportLstCri @reportId, 'AttemptDt50', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62672,6 +70666,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmScrAudit1019In
  @screenId int
 ,@usrId int
@@ -62684,7 +70679,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ScreenId1075)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 1075, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62695,6 +70691,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmScrAuditDtl1020In
  @screenId int
 ,@usrId int
@@ -62707,7 +70704,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ScrAuditId1076)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 1076, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62718,6 +70716,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmScreen9In
  @screenId int
 ,@usrId int
@@ -62730,7 +70729,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ScreenId60)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 60, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62741,6 +70741,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmScreenCri73In
  @screenId int
 ,@usrId int
@@ -62753,7 +70754,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ScreenId3)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 3, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62764,6 +70766,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmScreenFilter59In
  @screenId int
 ,@usrId int
@@ -62776,7 +70779,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ScreenId1072)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 1072, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62787,6 +70791,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[UpdAdmScreenObj10In]
  @screenId int
 ,@usrId int
@@ -62805,7 +70810,9 @@ SELECT @cri = convert(nvarchar,@TabFolderId47)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 47, @cri
 SELECT @cri = convert(nvarchar,@GroupColId46)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 46, @cri
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62816,6 +70823,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmServerRule14In
  @screenId int
 ,@usrId int
@@ -62828,7 +70836,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ScreenId16)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 16, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62839,6 +70848,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmSredTime123In
  @screenId int
 ,@usrId int
@@ -62857,7 +70867,8 @@ SELECT @cri = convert(nvarchar,convert(datetime,@SredTimeDt65),102)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 65, @cri
 SELECT @cri = convert(nvarchar,convert(datetime,@SredTimeDt66),102)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 66, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62868,6 +70879,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmStaticPg114In
  @screenId int
 ,@usrId int
@@ -62882,7 +70894,8 @@ EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@StaticPgId1070)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 1070, @cri
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 55, @StaticMeta55
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62893,6 +70906,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmTbdRule113In
  @screenId int
 ,@usrId int
@@ -62905,7 +70919,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ScreenId52)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 52, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62916,6 +70931,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[UpdAdmUsr1]
  @usrId1		int
 ,@loginName1	nvarchar(32)
@@ -62977,7 +70993,11 @@ UPDATE RODesign.dbo.Usr SET
 	,BrokerId=@brokerId1
 	,MemberId=@memberId1
 WHERE UsrId = @UsrId1
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -62988,6 +71008,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmUsr1In
  @screenId int
 ,@usrId int
@@ -63003,7 +71024,8 @@ EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 22, @UsrEmail22
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 23, @UsrName23
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 24, @UsrGroupLs24
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63014,6 +71036,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[UpdAdmUsrGroup5In]
  @screenId int
 ,@usrId int
@@ -63027,7 +71051,12 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 20, @InternalUsr20
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 21, @TechnicalUsr21
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63038,6 +71067,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmWebRule80In
  @screenId int
 ,@usrId int
@@ -63050,7 +71080,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@ScreenId15)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 15, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63061,6 +71092,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdAdmWizardRule50In
  @screenId int
 ,@usrId int
@@ -63073,7 +71105,8 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
 SELECT @cri = convert(nvarchar,@WizardId17)
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 17, @cri
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63084,6 +71117,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[UpdCronJob]
  @cronJobId	int
 ,@lastRun	datetime
@@ -63095,6 +71129,10 @@ UPDATE CronJob
 set LastRun = @lastRun, NextRun = @nextRun
 WHERE CronJobId = @cronJobId
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63105,6 +71143,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[UpdCronJobStatus]
  @cronJobId	int
 ,@status	varchar(500)
@@ -63115,6 +71154,10 @@ UPDATE CronJob
 set LastStatus = LEFT(@status,500)
 WHERE CronJobId = @cronJobId
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63125,6 +71168,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[UpdFxRate]
  @FrCurrency		char(3)
@@ -63155,7 +71200,11 @@ BEGIN
 			SELECT @FrCurrency, @ToCurrency, @ToFxRate, @Today, @MaxDate
 	END
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63166,6 +71215,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[UpdHintQuestion]
  @UsrId			int
@@ -63176,7 +71226,11 @@ AS
 SET NOCOUNT ON
 UPDATE dbo.Usr SET HintQuestionId = @HintQuestionId, HintAnswer = rtrim(ltrim(@HintAnswer)) WHERE UsrId = @UsrId
 SELECT @@ROWCOUNT
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63187,6 +71241,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[UpdLastCriteria]
  @ScreenId	int
 ,@ReportId	int
@@ -63201,7 +71258,13 @@ IF @ScreenId is not null AND @ScreenId <> 0
 	UPDATE dbo.ScreenLstCri SET LastCriteria = @LastCriteria WHERE ScreenId = @ScreenId AND UsrId = @UsrId AND ScreenCriId = @CriId
 ELSE
 	UPDATE dbo.ReportLstCri SET LastCriteria = @LastCriteria WHERE ReportId = @ReportId AND UsrId = @UsrId AND ReportCriId = @CriId
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63212,6 +71275,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[UpdLastPageInfo]
  @ScreenId	int
 ,@UsrId		int
@@ -63221,7 +71287,13 @@ AS
 SET NOCOUNT ON
 SET XACT_ABORT ON
 UPDATE dbo.ScreenLstInf SET LastPageInfo = @LastPageInfo WHERE ScreenId = @ScreenId AND UsrId = @UsrId
-RETURN 0 
+RETURN 0
+
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63232,6 +71304,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[UpdMemFld]
  @GenPrefix		varchar(10)
 ,@PublicAccess	char(1)
@@ -63272,7 +71346,12 @@ BEGIN
 		WHERE RptMemFldId = @RptMemFldId
 END
 SELECT @RptMemFldId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63283,6 +71362,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[UpdMemViewdt]
  @GenPrefix			varchar(10)
 ,@RptMemCriId		int
@@ -63293,7 +71374,12 @@ IF @GenPrefix = 'Ut'
 	UPDATE dbo.UtRptMemCri SET ViewedOn = getdate() WHERE RptMemCriId = @RptMemCriId
 ELSE
 	UPDATE dbo.RptMemCri SET ViewedOn = getdate() WHERE RptMemCriId = @RptMemCriId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63304,6 +71390,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* This only exist in ??Design */
 CREATE PROCEDURE [dbo].[UpdReleaseBuild]
  @ReleaseId		smallint
@@ -63313,7 +71401,12 @@ AS
 SET NOCOUNT ON
 UPDATE dbo.Release SET ReleaseBuild = @ReleaseBuild, ReleaseDate = convert(datetime,convert(varchar,getdate(),102)) WHERE ReleaseId = @ReleaseId
 EXEC dbo.IrUpdRelease @ReleaseId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63324,6 +71417,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[UpdReportLstCri]
  @reportId		int
 ,@ColumnName		varchar(50)
@@ -63335,7 +71430,12 @@ DECLARE	@ReportCriId	int
 SET NOCOUNT ON
 SELECT @ReportCriId = ReportCriId FROM dbo.ReportCri WHERE ReportId = @reportId AND ColumnName = @ColumnName
 UPDATE dbo.ReportLstCri SET LastCriteria = @LastCriteria WHERE UsrId = @usrId AND ReportId = @reportId AND ReportCriId = @ReportCriId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63346,6 +71446,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[UpdRptMemCri]
  @RptMemCriId	int
 ,@ReportId		int
@@ -63360,7 +71462,12 @@ IF EXISTS (SELECT 1 FROM dbo.RptMemCriDtl WHERE RptMemCriId = @RptMemCriId AND R
 	UPDATE dbo.RptMemCriDtl SET MemCriteria = @MemCriteria WHERE RptMemCriId = @RptMemCriId AND ReportCriId = @ReportCriId
 ELSE
 	INSERT dbo.RptMemCriDtl (RptMemCriId, ReportCriId, MemCriteria) SELECT @RptMemCriId, @ReportCriId, @MemCriteria
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63371,6 +71478,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE UpdS03Rptwiz11
  @reportId int
 ,@usrId int
@@ -63381,7 +71489,8 @@ DECLARE @cri nvarchar(900)
 SET NOCOUNT ON
 EXEC RODesign.dbo.UpdUtReportLstCri @reportId, 'MultiDesignDb10', @usrId, @MultiDesignDb10
 SELECT 0
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63392,6 +71501,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[UpdS03Rptwiz14]
  @reportId int
 ,@usrId int
@@ -63404,7 +71514,9 @@ SET NOCOUNT ON
 EXEC RODesign.dbo.UpdUtReportLstCri @reportId, 'LoginSuccess10', @usrId, @LoginSuccess10
 EXEC RODesign.dbo.UpdUtReportLstCri @reportId, 'ValidUser20', @usrId, @ValidUser20
 SELECT 0
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63415,6 +71527,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[UpdS03Rptwiz15]
  @reportId int
 ,@usrId int
@@ -63425,7 +71538,9 @@ DECLARE @cri nvarchar(900)
 SET NOCOUNT ON
 EXEC RODesign.dbo.UpdUtReportLstCri @reportId, 'LoginSuccess10', @usrId, @LoginSuccess10
 SELECT 0
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63436,6 +71551,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[UpdS03Rptwiz5]
  @reportId int
 ,@usrId int
@@ -63447,7 +71563,10 @@ SET NOCOUNT ON
 SELECT @cri = convert(nvarchar,convert(datetime,@VersionDt10),102)
 EXEC RODesign.dbo.UpdUtReportLstCri @reportId, 'VersionDt10', @usrId, @cri
 SELECT 0
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63458,6 +71577,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[UpdScreenLstCri]
  @usrId			int
 ,@screenId		int
@@ -63467,7 +71588,12 @@ CREATE PROCEDURE [dbo].[UpdScreenLstCri]
 AS
 SET NOCOUNT ON
 UPDATE dbo.ScreenLstCri SET LastCriteria = @LastCriteria WHERE UsrId = @usrId AND ScreenId = @screenId AND ScreenCriId = @ScreenCriId
-RETURN 0 
+RETURN 0
+ 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63478,6 +71604,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[UpdUsrLoginInfo]
  @UsrId                 int
@@ -63506,7 +71633,11 @@ BEGIN
 END
 UPDATE dbo.Usr SET LoginName = @LoginName, UsrName = @UsrName, UsrEmail = @UsrEmail WHERE UsrId = @UsrId
 SELECT @@ROWCOUNT
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63517,6 +71648,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[UpdUsrPassword]
  @LoginName		nvarchar(32)
@@ -63590,7 +71723,10 @@ WHERE u.UsrId = @UsrId
 AND @RemoveLink = 'Y'
 
 select @rowcount
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63601,6 +71737,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[UpdUtReportLstCri]
  @reportId		int
 ,@ColumnName		varchar(50)
@@ -63612,7 +71750,11 @@ DECLARE	@ReportCriId	int
 SET NOCOUNT ON
 SELECT @ReportCriId = ReportCriId FROM dbo.UtReportCri WHERE ReportId = @reportId AND ColumnName = @ColumnName
 UPDATE dbo.UtReportLstCri SET LastCriteria = @LastCriteria WHERE UsrId = @usrId AND ReportId = @reportId AND ReportCriId = @ReportCriId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63623,6 +71765,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[UpdUtRptMemCri]
  @RptMemCriId	int
 ,@ReportId		int
@@ -63637,7 +71782,11 @@ IF EXISTS (SELECT 1 FROM dbo.UtRptMemCriDtl WHERE RptMemCriId = @RptMemCriId AND
 	UPDATE dbo.UtRptMemCriDtl SET MemCriteria = @MemCriteria WHERE RptMemCriId = @RptMemCriId AND ReportCriId = @ReportCriId
 ELSE
 	INSERT dbo.UtRptMemCriDtl (RptMemCriId, ReportCriId, MemCriteria) SELECT @RptMemCriId, @ReportCriId, @MemCriteria
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63648,7 +71797,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE WizAdmImpCulture
+
+CREATE PROCEDURE [dbo].[WizAdmImpCulture]
  @ImportFileName	nvarchar(30)
 ,@CultureTypeName8	VarChar(10)
 ,@CultureTypeDesc8	NVarChar(50)
@@ -63662,7 +71812,9 @@ AS
 SET NOCOUNT ON
 INSERT RODesign.dbo.CtCulture (CultureTypeName,CultureTypeDesc,CultureDefault,EnNumberRule,CountryCd,CurrencyCd,ToTranslate,ImportFileName)
 SELECT @CultureTypeName8,@CultureTypeDesc8,@CultureDefault8,@EnNumberRule8,@CountryCd8,@CurrencyCd8,@ToTranslate8,@ImportFileName
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63673,6 +71825,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrAddDocTbl]
  @SystemId		smallint
 ,@TableName		varchar(500)
@@ -63712,7 +71865,9 @@ BEGIN
 	END
 	SELECT ColumnId FROM dbo.DbColumn WHERE TableId = @TableId ORDER BY ColumnIndex
 END
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63723,6 +71878,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[WrAddMember]
  @screenId		int
@@ -63740,6 +71896,9 @@ CREATE PROCEDURE [dbo].[WrAddMember]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -63761,7 +71920,11 @@ SELECT @xClause = 'DECLARE @MemberId int'
 + '     SELECT MemberId = @MemberId'
 + ' END'
 EXEC (@xClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63772,6 +71935,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrAddMenu]
  @PMenuId		smallint
 ,@ParentId		int
@@ -63789,7 +71953,10 @@ SELECT @MenuId = @@IDENTITY
 EXEC dbo.Ir_UpdMenuIndex
 EXEC dbo.Ir_InitMenuHlp @MenuId
 SELECT MenuId, MenuText FROM dbo.MenuHlp WHERE MenuId = @MenuId AND CultureId = 1
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63800,6 +71967,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrAddScreenObj]
  @ScreenId			int
 ,@PScreenObjId		int
@@ -63840,6 +72009,7 @@ UPDATE dbo.Screen SET NeedRegen = 'Y' WHERE ScreenId = @ScreenId
 SELECT ScreenObjId, ColumnHeader FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId AND CultureId = 1
 
 RETURN 0 
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63850,6 +72020,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrAddScreenTab]
  @TabFolderOrder	tinyint
 ,@ScreenId			int
@@ -63862,7 +72033,9 @@ SELECT @ScreenTabId = @@IDENTITY
 EXEC dbo.Ir_UpdScreenTab @ScreenTabId
 INSERT dbo.ScreenTabHlp (ScreenTabId, CultureId, TabFolderName) SELECT @ScreenTabId, 1, 'NEW TAB'
 SELECT ScreenTabId, TabFolderName FROM dbo.ScreenTabHlp WHERE ScreenTabId = @ScreenTabId AND CultureId = 1
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63873,6 +72046,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only
 CREATE PROCEDURE [dbo].[WrAddUsr]
  @LoginName			nvarchar(32)
@@ -63930,7 +72104,9 @@ BEGIN
 END
 
 SELECT UsrId, UsrEmail FROM dbo.Usr WHERE UsrId = @NewUsrId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -63941,12 +72117,14 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrAddWfsTbl]
  @SystemId		smallint
 ,@TableName		varchar(50)
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
+-- Need to add DSearchId, DSearchIdR, DSearchDtlId, and DSearchDtlIdR later:
 DECLARE	 @MenuId			int
 		,@CultureId			smallint
 		,@SystemAbbr		varchar(4)
@@ -64090,7 +72268,8 @@ BEGIN
 
 	SELECT ColumnId FROM dbo.DbColumn WHERE TableId = @TableId ORDER BY ColumnIndex		/* Do not change ColumnIndex without changing ScreenObj webrule */
 END
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64101,10 +72280,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrCloneScreen]
  @ScreenId		int
 /* WITH ENCRYPTION */
 AS
+-- DSearchId, DSearchIdR, DSearchDtlId and DSearchDtlIdR may need to be added:
 DECLARE	 @iClause nvarchar(max), @rClause nvarchar(max), @HasRule char(1), @NewCSS nvarchar(max)
 		,@ScreenFilterId int, @ScreenCriId int, @ScreenTabId int, @ScreenObjId int
 		,@i01 int, @i02 int, @i03 int, @i04 int, @i05 int, @i06 int, @i07 int, @i08 int, @i09 int, @i10 int
@@ -64149,12 +72330,14 @@ SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* Scr
 + char(13) + char(10) + 'SELECT @ScreenId=@@IDENTITY'
 IF @i04 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* MasterTableId */' + dbo.fTable(@i04,'UPDATE dbo.Screen SET MasterTableId=@TableId WHERE ScreenId=@ScreenId')
 IF @i05 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DetailTableId */' + dbo.fTable(@i05,'UPDATE dbo.Screen SET DetailTableId=@TableId WHERE ScreenId=@ScreenId')
-IF @i06 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* SearchId */' + dbo.fColumn(@i06,'UPDATE dbo.Screen SET SearchId=@ColumnId WHERE ScreenId=@ScreenId')
+IF @i06 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* SearchId */' + dbo.fColumn(@i07,'UPDATE dbo.Screen SET SearchId=@ColumnId WHERE ScreenId=@ScreenId')
 
-SELECT @c01=DefaultHlpMsg, @c02=FootNote, @c03=ScreenTitle, @c04=AddMsg, @c05=UpdMsg, @c06=DelMsg
+SELECT @c01=DefaultHlpMsg, @c02=FootNote, @c03=ScreenTitle, @c04=AddMsg, @c05=UpdMsg, @c06=DelMsg, @c07=IncrementMsg, @c08=MasterLstTitle
+	, @c09=MasterLstSubtitle, @c10=MasterRecTitle, @c11=MasterRecSubtitle, @c12=DetailLstTitle, @c13=DetailLstSubtitle, @c14=DetailRecTitle
+	, @c15=DetailRecSubtitle, @c16=NoMasterMsg, @c17=NoDetailMsg, @c18=AddMasterMsg, @c19=AddDetailMsg, @c20=MasterFoundMsg, @c21=DetailFoundMsg
 	FROM dbo.ScreenHlp WHERE ScreenId=@ScreenId AND CultureId=1
 SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* ScreenHlp */'
-+ char(13) + char(10) + 'INSERT dbo.ScreenHlp (ScreenId,CultureId,DefaultHlpMsg,FootNote,ScreenTitle,AddMsg,UpdMsg,DelMsg)'
++ char(13) + char(10) + 'INSERT dbo.ScreenHlp (ScreenId,CultureId,DefaultHlpMsg,FootNote,ScreenTitle,AddMsg,UpdMsg,DelMsg,IncrementMsg,MasterLstTitle,MasterLstSubtitle,MasterRecTitle,MasterRecSubtitle,DetailLstTitle,DetailLstSubtitle,DetailRecTitle,DetailRecSubtitle,NoMasterMsg,NoDetailMsg,AddMasterMsg,AddDetailMsg,MasterFoundMsg,DetailFoundMsg)'
 + char(13) + char(10) + 'SELECT @ScreenId,1'
 + ',' + RODesign.dbo.fNullCha(@c01)
 + ',' + RODesign.dbo.fNullCha(@c02)
@@ -64162,6 +72345,21 @@ SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* Scr
 + ',' + RODesign.dbo.fNullCha(@c04)
 + ',' + RODesign.dbo.fNullCha(@c05)
 + ',' + RODesign.dbo.fNullCha(@c06)
++ ',' + RODesign.dbo.fNullCha(@c07)
++ ',' + RODesign.dbo.fNullCha(@c08)
++ ',' + RODesign.dbo.fNullCha(@c09)
++ ',' + RODesign.dbo.fNullCha(@c10)
++ ',' + RODesign.dbo.fNullCha(@c11)
++ ',' + RODesign.dbo.fNullCha(@c12)
++ ',' + RODesign.dbo.fNullCha(@c13)
++ ',' + RODesign.dbo.fNullCha(@c14)
++ ',' + RODesign.dbo.fNullCha(@c15)
++ ',' + RODesign.dbo.fNullCha(@c16)
++ ',' + RODesign.dbo.fNullCha(@c17)
++ ',' + RODesign.dbo.fNullCha(@c18)
++ ',' + RODesign.dbo.fNullCha(@c19)
++ ',' + RODesign.dbo.fNullCha(@c20)
++ ',' + RODesign.dbo.fNullCha(@c21)
 
 SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* ScreenFilter */'
 DECLARE cur01 CURSOR FAST_FORWARD FOR
@@ -64492,6 +72690,7 @@ SELECT @iClause = @iClause + char(13) + char(10)
 + char(13) + char(10) + '/* Check to see if Data Table has been added; if yes (ModifiedBy is null), verify SystemId and content of function/view and get ready to push to physical database; */'
 SELECT (@iClause)
 RETURN 0 
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64502,6 +72701,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrDelMenu]
  @MenuId		int
 /* WITH ENCRYPTION */
@@ -64509,7 +72709,11 @@ AS
 SET NOCOUNT ON
 EXEC dbo.Ir_DelMenuHlp @MenuId
 DELETE FROM dbo.Menu WHERE MenuId = @MenuId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64520,6 +72724,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrDelScreenObj]
  @ScreenObjId		int
 /* WITH ENCRYPTION */
@@ -64537,7 +72742,9 @@ if @result <> 0 return @result
 DELETE FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId
 DELETE FROM dbo.ScreenObj WHERE ScreenObjId = @ScreenObjId
 UPDATE dbo.Screen SET NeedRegen = 'Y' WHERE ScreenId = @ScreenId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64548,6 +72755,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrDelScreenTab]
  @ScreenTabId		int
 /* WITH ENCRYPTION */
@@ -64559,7 +72767,9 @@ if @result <> 0 return @result
 
 DELETE FROM dbo.ScreenTabHlp WHERE ScreenTabId = @ScreenTabId
 DELETE FROM dbo.ScreenTab WHERE ScreenTabId = @ScreenTabId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64570,6 +72780,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only
 CREATE PROCEDURE [dbo].[WrDelUsr]
  @UsrId				int
@@ -64586,7 +72798,9 @@ BEGIN
 	EXEC dbo.IrDelUsrTables 
 END
 
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64597,6 +72811,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design:
 CREATE PROCEDURE [dbo].[WrGetActiveEmails]
  @MaintMsgId	smallint
@@ -64605,7 +72821,11 @@ AS
 SET NOCOUNT ON
 UPDATE dbo.MaintMsg SET LastEmailDt = getdate() WHERE MaintMsgId = @MaintMsgId
 SELECT UsrEmail FROM dbo.Usr WHERE Active = 'Y' AND UsrEmail <> ''
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64616,6 +72836,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrGetAdmMenuPerm]
  @screenId		int
 ,@keyId58		Int
@@ -64692,7 +72913,11 @@ IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64703,6 +72928,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetButtonHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -64710,15 +72937,16 @@ AS
 DECLARE	 @DefCultureId	smallint
 SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
-SELECT a.ButtonHlpId, a.ButtonName, a.ButtonToolTip
+SELECT a.ButtonHlpId, a.ButtonName, a.ButtonLongNm, a.ButtonToolTip
 	FROM dbo.ButtonHlp a WHERE a.CultureId = @DefCultureId
-	AND ((a.ButtonName is not null AND a.ButtonName <> '') OR (a.ButtonToolTip is not null AND a.ButtonToolTip <> ''))
+	AND ((a.ButtonName is not null AND a.ButtonName <> '') OR (a.ButtonLongNm is not null AND a.ButtonLongNm <> '') OR (a.ButtonToolTip is not null AND a.ButtonToolTip <> ''))
 	AND NOT EXISTS (SELECT 1 FROM dbo.ButtonHlp
 	WHERE ((ScreenId is not null AND a.ScreenId is not null AND ScreenId = a.ScreenId)
 	OR (ReportId is not null AND a.ReportId is not null AND ReportId = a.ReportId)
 	OR (WizardId is not null AND a.WizardId is not null AND WizardId = a.WizardId))
 	AND ButtonTypeId = a.ButtonTypeId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64729,6 +72957,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetCatCol]
  @RptwizCatId	smallint
 /* WITH ENCRYPTION */
@@ -64745,6 +72975,10 @@ SELECT RptwizDtlId184 = null, ColumnId184 = b.ColumnId, ColumnId184Text = b.Colu
 	ORDER BY a.TableId, b.ColumnIndex
 */
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64755,6 +72989,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[WrGetCtButtonHlp]
  @CultureId	smallint
@@ -64763,10 +72999,11 @@ AS
 DECLARE	 @DefCultureId	smallint
 SET NOCOUNT ON
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
-SELECT a.ButtonHlpId, a.ButtonName, a.ButtonToolTip
+SELECT a.ButtonHlpId, a.ButtonName, a.ButtonLongNm, a.ButtonToolTip
 	FROM dbo.CtButtonHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.CtButtonHlp WHERE ButtonTypeId = a.ButtonTypeId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64777,6 +73014,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[WrGetCtCrawler]
  @CrawlerCd	Char(2)
@@ -64785,6 +73023,10 @@ AS
 SET NOCOUNT ON
 SELECT CrawlerURL, CrawlerREF, PreText, PostText, ResultRegex FROM dbo.CtCrawler WHERE CrawlerCd = @CrawlerCd
 RETURN 0 
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64795,6 +73037,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- ??Design.only:
 CREATE PROCEDURE [dbo].[WrGetCultureLbl]
  @CultureId		smallint
@@ -64806,7 +73050,11 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT a.CultureLblId, Label = a.CultureTypeLabel
 	FROM RODesign.dbo.CtCultureLbl a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM RODesign.dbo.CtCultureLbl WHERE CultureTypeId = a.CultureTypeId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64817,6 +73065,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetCustomSp]
  @CustomDtlId	int
 ,@DbId		int
@@ -64829,6 +73079,10 @@ SELECT @ProcedureName = ProgramName FROM dbo.CustomDtl WHERE CustomDtlId = @Cust
 SELECT @dbAppDatabase = dbAppDatabase FROM RODesign.dbo.Systems WHERE SystemId = @DbId
 EXEC (@dbAppDatabase + '.dbo.MkStoredProcedure '' sp_helptext ' + @ProcedureName + '''')
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64839,6 +73093,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetDbTableSys]
  @TableId	int
 ,@DbId		int
@@ -64854,6 +73110,10 @@ ELSE
 	SELECT dbProvider = dbAppProvider, dbServer = dbAppServer, dbDatabase = dbAppDatabase, dbUserId = dbAppUserId
 	FROM RODesign.dbo.Systems WHERE SystemId = @DbId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -64864,6 +73124,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrGetDdlPermId]
  @PermKeyId		int
 ,@ScreenId		int
@@ -64882,6 +73143,9 @@ CREATE PROCEDURE [dbo].[WrGetDdlPermId]
 ,@Companys			varchar(1000)
 ,@Projects			varchar(1000)
 ,@Cultures			varchar(1000)
+,@Borrowers			varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders			varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 /* WITH ENCRYPTION */
@@ -65003,7 +73267,11 @@ END
 ELSE
 	SELECT @sClause = 'SELECT PermId' + convert(varchar,@TableId) + '=null, PermId' + convert(varchar,@TableId) + 'Text=null, Active=null WHERE 1<>1'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65014,13 +73282,18 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design only:
 CREATE PROCEDURE [dbo].[WrGetDefCulture]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 SELECT CultureId, CultureTypeName FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65031,6 +73304,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetLabel]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -65041,7 +73316,11 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT a.LabelId, a.LabelText
 	FROM dbo.Label a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.Label WHERE LabelCat = a.LabelCat AND LabelKey = a.LabelKey AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65052,21 +73331,26 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Serve only as an example to handle licensing:
 CREATE PROCEDURE [dbo].[WrGetLicenseDetail]
-@ScreenId	int
-,@Usrs		varchar(4000)
+ @ScreenId			int
+,@Usrs				varchar(4000)
 ,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
+,@Customers			varchar(4000)
+,@Vendors			varchar(4000)
+,@Members			varchar(4000)
+,@Investors			varchar(4000)
+,@Agents			varchar(4000)
+,@Brokers			varchar(4000)
+,@UsrGroups			varchar(4000)
+,@Companys			varchar(4000)
+,@Projects			varchar(4000)
+,@Cultures			varchar(4000)
+,@Borrowers			varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders			varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@ParamXML		nvarchar(max) = null /* this is actually the parameters in XML string format */
@@ -65091,7 +73375,9 @@ from
 SELECT
 InstallID = @installID, AppID = @appID, Expiry = DATEADD(day,-2,GETUTCDATE()), PermLicense = NULL, Modules = NULL
 
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65102,6 +73388,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetMasterTable]
  @ScreenId		int
 ,@ColumnId		int
@@ -65128,6 +73416,8 @@ BEGIN
 END
 ELSE SELECT ''
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65138,6 +73428,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetMaxCustLabelNbr]
  @ScreenId	int
 ,@Usrs		varchar(4000)
@@ -65152,6 +73444,9 @@ CREATE PROCEDURE [dbo].[WrGetMaxCustLabelNbr]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@ParamXML			nvarchar(max) = null /* this is actually the parameters in XML string format */
@@ -65180,7 +73475,9 @@ WHERE LabelCat = @LabelCat
 AND ISNUMERIC(LabelKey) = 1  
 
 SELECT MaxKeyNumber = ISNULL(@MaxKeyNumber,0)
-RETURN 0 
+RETURN 0
+ 
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65191,6 +73488,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrGetMemTranslate]
  @InStr		nvarchar(2000)
 ,@CultureId	smallint
@@ -65198,7 +73496,11 @@ CREATE PROCEDURE [dbo].[WrGetMemTranslate]
 AS
 SET NOCOUNT ON
 SELECT OutStr FROM dbo.MemTrans WHERE Instr = @InStr AND CultureTypeId = @CultureId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65209,6 +73511,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetMenuHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -65219,7 +73523,11 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT a.MenuHlpId, a.MenuText
 	FROM dbo.MenuHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.MenuHlp WHERE MenuId = a.MenuId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65230,6 +73538,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetMsgCenter]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -65240,7 +73550,11 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT a.MsgCenterId, a.Msg
 	FROM dbo.MsgCenter a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.MsgCenter WHERE MsgId = a.MsgId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65251,6 +73565,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetReportApp]
  @DbId		int
 /* WITH ENCRYPTION */
@@ -65260,6 +73576,10 @@ SELECT dbProvider = dbAppProvider, dbServer = dbAppServer, dbDatabase = dbAppDat
 	FROM RODesign.dbo.Systems
 	WHERE SystemId = @DbId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65270,6 +73590,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetReportCriHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -65280,7 +73602,11 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT a.ReportCriHlpId, a.ColumnHeader
 	FROM dbo.ReportCriHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ReportCriHlp WHERE ReportCriId = a.ReportCriId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65291,6 +73617,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetReportHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -65301,7 +73629,11 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT a.ReportHlpId, a.DefaultHlpMsg, a.ReportTitle
 	FROM dbo.ReportHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ReportHlp WHERE ReportId = a.ReportId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65312,6 +73644,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetRptProc]
  @ProcName	varchar(50)
 ,@DbId		int
@@ -65323,6 +73657,10 @@ SELECT @dbAppDatabase = dbAppDatabase FROM RODesign.dbo.Systems WHERE SystemId =
 /* sp_helptext do not accept 'dbo.' */
 EXEC (@dbAppDatabase + '.dbo.MkStoredProcedure ''sp_helptext ' + @ProcName + '''')
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65333,6 +73671,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetScreenCriHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -65343,7 +73683,11 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT a.ScreenCriHlpId, a.ColumnHeader
 	FROM dbo.ScreenCriHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ScreenCriHlp WHERE ScreenCriId = a.ScreenCriId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65354,6 +73698,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetScreenFilterHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -65364,7 +73710,11 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT a.ScreenFilterHlpId, a.FilterName
 	FROM dbo.ScreenFilterHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ScreenFilterHlp WHERE ScreenFilterId = a.ScreenFilterId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65375,6 +73725,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetScreenHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -65385,7 +73737,11 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT a.ScreenHlpId, a.DefaultHlpMsg, a.FootNote, a.ScreenTitle, a.AddMsg, a.UpdMsg, a.DelMsg
 	FROM dbo.ScreenHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ScreenHlp WHERE ScreenId = a.ScreenId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65396,13 +73752,16 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrGetScreenId]
  @ProgramName	varchar(20)
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 SELECT ScreenId FROM dbo.Screen WHERE ProgramName = @ProgramName
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65413,6 +73772,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetScreenObj]
  @ScreenId		int
 ,@CultureId		smallint
@@ -65422,11 +73783,24 @@ AS
 SET NOCOUNT ON
 DECLARE	 @DefCultureId	smallint
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
-SELECT a.ScreenTabId, ah.TabFolderName, a.TabFolderOrder, c.GridGrpCd, c.ColumnHeight , c.ScreenObjId, c.MasterTable, c.NewGroupRow, t.ScreenTypeName, c.ColumnName, c.TabIndex, c.RequiredValid
+SELECT a.ScreenTabId, ah.TabFolderName, a.TabFolderOrder, c.GridGrpCd, c.ColumnHeight , c.ScreenObjId, c.MasterTable, c.NewGroupRow, t.ScreenTypeName
+	, c.ColumnName, c.TabIndex, c.RequiredValid, c.DefaultValue, c.ColumnId, c.DefAlways, c.SystemValue
 	, gc.ColCssClass, gr.RowCssClass
 	, ColumnHeader=ISNULL(b.ColumnHeader,'('+c.ColumnName+')')
 	, s.ProgramName
 	, DisplayMode = dt.TypeDesc
+	,e.TableId
+	,e.TableName
+	,PrimaryKey = f.ColumnName
+	,DdlAdnColumnName=x1.ColumnName
+	,DdlFtrColumnName=x2.ColumnName
+	,c.DdlFtrColumnId,DdlFtrTableId=x2.TableId
+	,DdlAdnDataType = ISNULL(d1.DataTypeSqlName,'VarChar')
+	,DdlFtrDataType = ISNULL(d2.DataTypeSqlName,'VarChar')
+	,DataTypeSByteOle = ISNULL(d3.DataTypeSByteOle,'VarChar')
+	,DataTypeDByteOle = ISNULL(d3.DataTypeDByteOle,'VarWChar')
+	,d.ColumnLength
+	,e.SystemId
 FROM dbo.ScreenTab a
 INNER JOIN dbo.ScreenTabHlp ah ON a.ScreenTabId = ah.ScreenTabId 
 AND (ah.CultureId = @CultureId
@@ -65435,6 +73809,9 @@ AND (ah.CultureId = @CultureId
 INNER JOIN dbo.Screen s ON a.ScreenId = s.ScreenId
 INNER JOIN RODesign.dbo.CtScreenType t ON s.ScreenTypeId = t.ScreenTypeId 
 LEFT OUTER JOIN dbo.ScreenObj c ON a.ScreenTabId = c.TabFolderId
+LEFT OUTER JOIN dbo.DbColumn d ON c.ColumnId = d.ColumnId
+LEFT OUTER JOIN dbo.DbTable e ON d.TableId = e.TableId
+LEFT OUTER JOIN (SELECT TableId,ColumnName FROM DbColumn WHERE PrimaryKey = 'Y') f ON e.TableId = f.TableId
 LEFT OUTER JOIN dbo.ScreenObjHlp b ON c.ScreenObjId = b.ScreenObjId 
 	AND (b.CultureId = @CultureId
 	OR (b.CultureId = @DefCultureId AND not EXISTS (SELECT 1 FROM ScreenObjHlp b2 WHERE b2.ScreenObjId = b.ScreenObjId AND b2.CultureId = @CultureId))
@@ -65442,9 +73819,14 @@ LEFT OUTER JOIN dbo.ScreenObjHlp b ON c.ScreenObjId = b.ScreenObjId
 LEFT OUTER JOIN RODesign.dbo.GroupCol gc ON c.GroupColId = gc.GroupColId
 LEFT OUTER JOIN RODesign.dbo.GroupRow gr ON c.GroupRowId = gr.GroupRowId
 LEFT OUTER JOIN RODesign.dbo.CtDisplayType dt ON c.DisplayModeId = dt.TypeId
+LEFT OUTER JOIN dbo.DbColumn x1 ON c.DdlAdnColumnId = x1.ColumnId
+LEFT OUTER JOIN dbo.DbColumn x2 ON c.DdlFtrColumnId = x2.ColumnId
+LEFT OUTER JOIN RODesign.dbo.CtDataType d1 ON x1.DataType = d1.DataTypeId
+LEFT OUTER JOIN RODesign.dbo.CtDataType d2 ON x2.DataType = d2.DataTypeId
+LEFT OUTER JOIN RODesign.dbo.CtDataType d3 ON d.DataType = d3.DataTypeId
 WHERE  (a.ScreenId = @ScreenId OR @ScreenId IS NULL) AND (@ScreenObjId = c.ScreenObjId OR @ScreenObjId IS NULL)
 ORDER BY a.TabFolderOrder, c.MasterTable DESC, c.TabIndex
-RETURN 0 
+RETURN 0  
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65455,6 +73837,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrGetScreenObjById]
  @screenId		int
 ,@keyId		nvarchar(1000)
@@ -65470,6 +73853,9 @@ CREATE PROCEDURE [dbo].[WrGetScreenObjById]
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@screenFilterId	int
 ,@currCompanyId		int
 ,@currProjectId		int
@@ -65508,7 +73894,9 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65519,6 +73907,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetScreenObjHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -65530,7 +73920,10 @@ SELECT a.ScreenObjHlpId, b.DisplayModeId, a.ColumnHeader, a.TbHint, a.ToolTip, a
 	FROM dbo.ScreenObjHlp a INNER JOIN dbo.ScreenObj b ON a.ScreenObjId = b.ScreenObjId
 	WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ScreenObjHlp WHERE ScreenObjId = a.ScreenObjId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+ 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65541,6 +73934,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetScreenTabHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -65551,7 +73946,9 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT a.ScreenTabHlpId, a.TabFolderName
 	FROM dbo.ScreenTabHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ScreenTabHlp WHERE ScreenTabId = a.ScreenTabId AND CultureId = @CultureId)
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65562,6 +73959,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrGetSvrRule]
  @ServerRuleId	int
 ,@DbId		int
@@ -65575,6 +73973,8 @@ SELECT @dbAppDatabase = dbAppDatabase FROM RODesign.dbo.Systems WHERE SystemId =
 UPDATE dbo.ServerRule SET LastGenDt = getdate() WHERE ServerRuleId = @ServerRuleId
 EXEC (@dbAppDatabase + '.dbo.MkStoredProcedure '' sp_helptext ' + @ProcedureName + '''')
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65585,6 +73985,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetSvrRuleSys]
  @ScreenId	int
 ,@DbId		int
@@ -65600,6 +74002,10 @@ ELSE
 	SELECT dbProvider = dbAppProvider, dbServer = dbAppServer, dbDatabase = dbAppDatabase, dbUserId = dbAppUserId
 	FROM RODesign.dbo.Systems WHERE SystemId = @DbId
 RETURN 0 
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65610,6 +74016,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetUageCalender]
 @screenId		int
 ,@bAll		char(1)
@@ -65626,6 +74034,9 @@ CREATE PROCEDURE [dbo].[WrGetUageCalender]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors	varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -65641,7 +74052,11 @@ SELECT UsageDt = CONVERT(varchar,UsageDt,111), Cnt=COUNT(1), Color = CASE WHEN C
 	WHERE UsrId = @keyId AND UsageDt >= dateadd(mm,-3,@day1) AND UsageDt < DATEADD(MM,1,@day1)
 	GROUP BY CONVERT(varchar,UsageDt,111)
 	ORDER BY CONVERT(varchar,UsageDt,111)
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65652,6 +74067,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Only in ??Design:
 CREATE PROCEDURE [dbo].[WrGetUsrEmail]
  @UsrId			int
@@ -65666,7 +74083,11 @@ DECLARE	 @message		nvarchar(4000)
 SET NOCOUNT ON
 SELECT a.UsrEmail, a.UsrName, b.SystemName
 	FROM dbo.Usr a INNER JOIN dbo.Systems b ON a.DefSystemId = b.SystemId WHERE a.UsrId = @UsrId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65677,6 +74098,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrGetVirtualTbl]
  @TableId	int
 ,@DbId		int
@@ -65697,6 +74120,28 @@ IF @OpenBracket > 0 SELECT @FunctionName = SUBSTRING(@FunctionName, 1, @OpenBrac
 SELECT @dbAppDatabase = dbAppDatabase FROM RODesign.dbo.Systems WHERE SystemId = @DbId
 EXEC (@dbAppDatabase + '.dbo.MkStoredProcedure '' sp_helptext ' + @FunctionName + '''')
 RETURN 0 
+
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetWebRule') AND type='P')
+DROP PROCEDURE dbo.WrGetWebRule
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[WrGetWebRule]
+ @ScreenId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+
+SELECT WebRuleId, ReactEventId, ReactRuleProg, ReduxEventId, ReduxRuleProg, ServiceEventId, ServiceRuleProg, AsmxEventId, AsmxRuleProg
+FROM dbo.WebRule WHERE ScreenId = @ScreenId
+RETURN 0  
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65707,18 +74152,21 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrInsButtonHlp]
  @ButtonHlpId	int
 ,@CultureId		smallint
 ,@ButtonName	nvarchar(50)
-,@ButtonToolTip	nvarchar(100)
+,@ButtonLongNm	nvarchar(100)
+,@ButtonToolTip	nvarchar(200)
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-INSERT INTO dbo.ButtonHlp (ScreenId, ReportId, WizardId, CultureId, ButtonTypeId, ButtonName, ButtonToolTip, ButtonVisible)
-	SELECT ScreenId, ReportId, WizardId, @CultureId, ButtonTypeId, @ButtonName, @ButtonToolTip, ButtonVisible
+INSERT INTO dbo.ButtonHlp (ScreenId, ReportId, WizardId, CultureId, ButtonTypeId, ButtonName, ButtonLongNm, ButtonToolTip, ButtonVisible, TopVisible, RowVisible, BotVisible)
+	SELECT ScreenId, ReportId, WizardId, @CultureId, ButtonTypeId, @ButtonName, @ButtonLongNm, @ButtonToolTip, ButtonVisible, TopVisible, RowVisible, BotVisible
 	FROM dbo.ButtonHlp WHERE ButtonHlpId = @ButtonHlpId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65729,18 +74177,22 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrInsCtButtonHlp]
  @ButtonHlpId	int
 ,@CultureId		smallint
 ,@ButtonName	nvarchar(50)
-,@ButtonToolTip	nvarchar(100)
+,@ButtonLongNm	nvarchar(100)
+,@ButtonToolTip	nvarchar(200)
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-INSERT INTO dbo.CtButtonHlp (ButtonTypeId, CultureId, ButtonName, ButtonToolTip)
-	SELECT ButtonTypeId, @CultureId, @ButtonName, @ButtonToolTip
+INSERT INTO dbo.CtButtonHlp (ButtonTypeId, CultureId, ButtonName, ButtonLongNm, ButtonToolTip)
+	SELECT ButtonTypeId, @CultureId, @ButtonName, @ButtonLongNm, @ButtonToolTip
 	FROM dbo.CtButtonHlp WHERE ButtonHlpId = @ButtonHlpId
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65751,6 +74203,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 -- ??Design.only:
 CREATE PROCEDURE [dbo].[WrInsCultureLbl]
  @CultureLblId	int
@@ -65761,7 +74214,11 @@ AS
 SET NOCOUNT ON
 INSERT INTO RODesign.dbo.CtCultureLbl (CultureTypeId, CultureId, CultureTypeLabel)
 	SELECT CultureTypeId, @CultureId, @Label FROM RODesign.dbo.CtCultureLbl WHERE CultureLblId = @CultureLblId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65772,6 +74229,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[WrInsLabel]
  @LabelId		int
 ,@CultureId		smallint
@@ -65783,7 +74243,11 @@ INSERT INTO dbo.Label (CultureId, LabelCat, LabelKey, LabelText, CompanyId, Sort
 	SELECT @CultureId, LabelCat, LabelKey, @LabelText, CompanyId, SortOrder
 	FROM dbo.Label WHERE LabelId = @LabelId
 EXEC dbo.Ir_InitLabel @@IDENTITY
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65794,6 +74258,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[WrInsMenuHlp]
  @MenuHlpId	int
 ,@CultureId	smallint
@@ -65802,7 +74269,11 @@ CREATE PROCEDURE [dbo].[WrInsMenuHlp]
 AS
 SET NOCOUNT ON
 INSERT INTO dbo.MenuHlp (MenuId, CultureId, MenuText) SELECT MenuId, @CultureId, @MenuText FROM dbo.MenuHlp WHERE MenuHlpId = @MenuHlpId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65813,6 +74284,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[WrInsMsgCenter]
  @MsgCenterId	int
 ,@CultureId		smallint
@@ -65821,7 +74295,11 @@ CREATE PROCEDURE [dbo].[WrInsMsgCenter]
 AS
 SET NOCOUNT ON
 INSERT INTO dbo.MsgCenter (MsgId, CultureId, Msg) SELECT MsgId, @CultureId, @Msg FROM dbo.MsgCenter WHERE MsgCenterId = @MsgCenterId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65832,6 +74310,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[WrInsReportCriHlp]
  @ReportCriHlpId	int
 ,@CultureId			smallint
@@ -65842,7 +74323,11 @@ SET NOCOUNT ON
 INSERT INTO dbo.ReportCriHlp (ReportCriId, CultureId, ColumnHeader)
 	SELECT ReportCriId, @CultureId, @ColumnHeader
 	FROM dbo.ReportCriHlp WHERE ReportCriHlpId = @ReportCriHlpId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65853,6 +74338,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[WrInsReportHlp]
  @ReportHlpId	int
 ,@CultureId		smallint
@@ -65864,7 +74352,11 @@ SET NOCOUNT ON
 INSERT INTO dbo.ReportHlp (ReportId, CultureId, DefaultHlpMsg, ReportTitle)
 	SELECT ReportId, @CultureId, @DefaultHlpMsg, @ReportTitle
 	FROM dbo.ReportHlp WHERE ReportHlpId = @ReportHlpId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65875,6 +74367,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[WrInsScreenCriHlp]
  @ScreenCriHlpId	int
 ,@CultureId			smallint
@@ -65885,7 +74380,11 @@ SET NOCOUNT ON
 INSERT INTO dbo.ScreenCriHlp (ScreenCriId, CultureId, ColumnHeader)
 	SELECT ScreenCriId, @CultureId, @ColumnHeader
 	FROM dbo.ScreenCriHlp WHERE ScreenCriHlpId = @ScreenCriHlpId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65896,6 +74395,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[WrInsScreenFilterHlp]
  @ScreenFilterHlpId	int
 ,@CultureId			smallint
@@ -65906,7 +74408,11 @@ SET NOCOUNT ON
 INSERT INTO dbo.ScreenFilterHlp (ScreenFilterId, CultureId, FilterName)
 	SELECT ScreenFilterId, @CultureId, @FilterName
 	FROM dbo.ScreenFilterHlp WHERE ScreenFilterHlpId = @ScreenFilterHlpId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65917,6 +74423,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[WrInsScreenHlp]
  @ScreenHlpId	int
 ,@CultureId		smallint
@@ -65932,7 +74441,11 @@ SET NOCOUNT ON
 INSERT INTO dbo.ScreenHlp (ScreenId, CultureId, DefaultHlpMsg, FootNote, ScreenTitle, AddMsg, UpdMsg, DelMsg)
 	SELECT ScreenId, @CultureId, @DefaultHlpMsg, @FootNote, @ScreenTitle, @AddMsg, @UpdMsg, @DelMsg
 	FROM dbo.ScreenHlp WHERE ScreenHlpId = @ScreenHlpId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65943,6 +74456,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrInsScreenObjHlp]
  @ScreenObjHlpId	int
 ,@CultureId			smallint
@@ -65956,7 +74470,11 @@ SET NOCOUNT ON
 INSERT INTO dbo.ScreenObjHlp (ScreenObjId, ScreenObjHlpDesc, CultureId, ColumnHeader, TbHint, ToolTip, ErrMessage)
 	SELECT ScreenObjId, ScreenObjHlpDesc, @CultureId, @ColumnHeader, @TbHint, @ToolTip, @ErrMessage
 	FROM dbo.ScreenObjHlp WHERE ScreenObjHlpId = @ScreenObjHlpId
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65967,6 +74485,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[WrInsScreenTabHlp]
  @ScreenTabHlpId	int
 ,@CultureId			smallint
@@ -65977,7 +74498,11 @@ SET NOCOUNT ON
 INSERT INTO dbo.ScreenTabHlp (ScreenTabId, CultureId, TabFolderName)
 	SELECT ScreenTabId, @CultureId, @TabFolderName
 	FROM dbo.ScreenTabHlp WHERE ScreenTabHlpId = @ScreenTabHlpId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -65988,6 +74513,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 -- Assuming all report criteria and columns are filled and the _R and _V s.procs are constructed (must run before Ir_InitReportObj):
 CREATE PROCEDURE [dbo].[WrRptConvSql]
  @ReportId		int
@@ -66154,7 +74681,9 @@ BEGIN
 		, 'N', 'N', '=Globals!ExecutionTime', 'N', 'N', 'N'
 	EXEC dbo.Ir_UpdRptCtr @@IDENTITY
 END
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -66165,6 +74694,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrRptRmSql]
  @ReportId		int
 /* WITH ENCRYPTION */
@@ -66176,7 +74707,11 @@ DELETE FROM dbo.RptCtr WHERE ReportId = @ReportId
 DELETE FROM dbo.RptCel WHERE EXISTS (SELECT 1 FROM dbo.RptTbl
 	WHERE dbo.RptTbl.RptTblId = dbo.RptCel.RptTblId AND dbo.RptTbl.ReportId = @ReportId)
 DELETE FROM dbo.RptTbl WHERE ReportId = @ReportId
-RETURN 0 
+RETURN 0
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -66187,6 +74722,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrRptwizDel]
  @ReportId	int
 /* WITH ENCRYPTION */
@@ -66211,7 +74748,12 @@ DELETE FROM dbo.UtRptMemCriDtl WHERE EXISTS (SELECT 1 FROM dbo.UtRptMemCri
 DELETE FROM dbo.UtRptMemCri WHERE ReportId = @ReportId
 DELETE FROM dbo.UtReportLstCri WHERE ReportId = @ReportId
 DELETE FROM dbo.UtReport WHERE ReportId = @ReportId
-RETURN 0 
+RETURN 0
+
+ 
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -66222,6 +74764,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrRptwizGen]
  @RptwizId		int
 ,@AppDatabase	varchar(50)
@@ -66576,7 +75119,9 @@ END
 ELSE
 	UPDATE dbo.UtRptMemCri SET UsrId = CASE WHEN @AccessCd = 'P' THEN NULL ELSE @UsrId END, CompanyLs = @CompanyLs WHERE ReportId = @ReportId
 SELECT @ReportId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -66587,6 +75132,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrSyncByDb]
  @UsrId		int
 ,@SystemId	tinyint
@@ -66662,6 +75209,8 @@ SELECT @sClause = @sClause + ' IF EXISTS (SELECT 1 FROM #sync WHERE len(ColumnNa
 + ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = getdate() WHERE TableId = @Tid'
 EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @dClause + ''', ''' + @sClause + '''')
 RETURN 0 
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -66672,6 +75221,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrSyncToDb]
  @SystemId	tinyint
 ,@TableId	int
@@ -66896,7 +75447,9 @@ SELECT @a5 = @a5 + ' SELECT @AppItemId = @@IDENTITY'
 + ' UPDATE ' + @DesDb + '.dbo.DbColumn SET PrevColName = null WHERE TableId = ' + convert(varchar,@TableId) + ' END'
 + ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = getdate() WHERE TableId = ' + convert(varchar,@TableId)
 EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @a1 + ''', ''' + @a2 + ''', ''' + @a3 + ''', ''' + @a4 + ''', ''' + @a5 + '''')
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -66907,6 +75460,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[WrUpdMemTranslate]
  @InStr		nvarchar(2000)
 ,@CultureId	smallint
@@ -66921,7 +75476,11 @@ BEGIN
 	ELSE
 		INSERT dbo.MemTrans (Instr, CultureTypeId, OutStr) SELECT @Instr, @CultureId, @OutStr
 END
-RETURN 0 
+RETURN 0
+
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -66932,6 +75491,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrUpdMenu]
  @MenuId		int
 ,@PMenuId		int
@@ -66953,7 +75513,10 @@ IF EXISTS (SELECT 1 FROM dbo.MenuHlp WHERE MenuId = @MenuId AND CultureId = @Cul
 	UPDATE dbo.MenuHlp SET MenuText = @MenuText WHERE MenuId = @MenuId AND CultureId = @CultureId
 ELSE
 	INSERT dbo.MenuHlp (MenuId, CultureId, MenuText) SELECT @MenuId, @CultureId, @MenuText
-RETURN 0 
+RETURN 0
+
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -66964,20 +75527,24 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrUpdScreenGridObjLayout]
-@ScreenId	int
-,@Usrs		varchar(4000)
+ @ScreenId			int
+,@Usrs				varchar(4000)
 ,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
+,@Customers			varchar(4000)
+,@Vendors			varchar(4000)
+,@Members			varchar(4000)
+,@Investors			varchar(4000)
+,@Agents			varchar(4000)
+,@Brokers			varchar(4000)
+,@UsrGroups			varchar(4000)
+,@Companys			varchar(4000)
+,@Projects			varchar(4000)
+,@Cultures			varchar(4000)
+,@Borrowers			varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders			varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@ParamXML			nvarchar(max) = null /* this is actually the parameters in XML string format */
@@ -67067,7 +75634,9 @@ INNER JOIN @ScreenObj o2 on o2.ScreenObjId = o.ScreenObjId
 --RAISERROR('stopped.',18,2) WITH SETERROR
 --RETURN 1
 	
-RETURN 0 
+RETURN 0
+ 
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -67078,20 +75647,24 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrUpdScreenGridObjSize]
-@ScreenId	int
+ @ScreenId	int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
+,@Customers			varchar(4000)
+,@Vendors			varchar(4000)
+,@Members			varchar(4000)
+,@Investors			varchar(4000)
+,@Agents			varchar(4000)
+,@Brokers			varchar(4000)
+,@UsrGroups			varchar(4000)
+,@Companys			varchar(4000)
+,@Projects			varchar(4000)
+,@Cultures			varchar(4000)
+,@Borrowers			varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders			varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@ParamXML		nvarchar(max) = null /* this is actually the parameters in XML string format */
@@ -67124,7 +75697,9 @@ FROM ScreenObj o
 INNER JOIN Screen s on o.ScreenId = s.ScreenId
 WHERE ScreenObjId = @ScreenObjId
 
-RETURN 0 
+RETURN 0
+ 
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -67135,6 +75710,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrUpdScreenObj]
  @ScreenObjId		int
 ,@PScreenObjId		int
@@ -67164,7 +75740,9 @@ BEGIN
 	EXEC dbo.Ir_UpdScreenObjHlp @ScreenObjHlpId
 END
 UPDATE dbo.Screen SET NeedRegen = 'Y' WHERE ScreenId = @ScreenId
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -67175,20 +75753,24 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE [dbo].[WrUpdScreenObjLayoutAndSize]
-@ScreenId	int
-,@Usrs		varchar(4000)
+ @ScreenId			int
+,@Usrs				varchar(4000)
 ,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
+,@Customers			varchar(4000)
+,@Vendors			varchar(4000)
+,@Members			varchar(4000)
+,@Investors			varchar(4000)
+,@Agents			varchar(4000)
+,@Brokers			varchar(4000)
+,@UsrGroups			varchar(4000)
+,@Companys			varchar(4000)
+,@Projects			varchar(4000)
+,@Cultures			varchar(4000)
+,@Borrowers			varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders			varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@ParamXML		nvarchar(max) = null /* this is actually the @ScreenObjLocationList */
@@ -67266,7 +75848,28 @@ BEGIN
 END
 update dbo.Screen set NeedRegen = 'Y' where ScreenId =  @ScreenId
 SELECT @updCount
-RETURN 0 
+RETURN 0
+
+ 
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenReactGen') AND type='P')
+DROP PROCEDURE dbo.WrUpdScreenReactGen
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[WrUpdScreenReactGen]
+ @ScreenId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.Screen SET ReactGenerated = 'Y' WHERE ScreenId = @ScreenId
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -67277,6 +75880,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
+
 CREATE PROCEDURE [dbo].[WrUpdScreenTab]
  @ScreenTabId		int
 ,@TabFolderOrder	tinyint
@@ -67301,7 +75907,9 @@ FROM ScreenTab t
 INNER JOIN Screen s on t.ScreenId = s.ScreenId
 WHERE t.ScreenTabId = @ScreenTabId
 	
-RETURN 0 
+RETURN 0
+ 
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -67312,6 +75920,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 /* Migrate a report from Report Generator to Advanced Report for further customization. Original should be deleted after this is called. */
 CREATE PROCEDURE [dbo].[WrXferRpt]
  @ReportId	int
@@ -67536,7 +76146,9 @@ DROP TABLE #tbl
 DROP TABLE #cel
 DROP TABLE #ctr
 COMMIT TRANSACTION
-RETURN 0 
+RETURN 0
+
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO

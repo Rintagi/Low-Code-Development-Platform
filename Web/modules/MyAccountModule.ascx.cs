@@ -93,7 +93,7 @@ namespace RO.Web
 
         protected void Page_Load(object sender, System.EventArgs e)
         {
-            bool hasTerms = System.IO.File.Exists(Server.MapPath("~/License.txt"));
+            bool hasTerms = System.IO.File.Exists(Server.MapPath("~/home/terms_of_service.pdf"));
 
             if ((Request.QueryString["typ"] ?? "").ToUpper() == "E")
             {
@@ -360,8 +360,7 @@ namespace RO.Web
                 cLinkWindowsPanel.Visible = NewProfilePanel.Visible;
             }
 
-            if (hasTerms) cTermsOfServiceLink.NavigateUrl = "~/License.Txt";
-            TermsPanel.Visible = hasTerms && (Request.QueryString["j"] != null); // only show when there is terms of service and this is password reset request
+            TermsPanel.Visible = hasTerms && Request.QueryString["j"] != null; // only show when there is terms of service and this is password reset request
             TranslateItems();
             // always disable the confirm dialog panel, postback or non-postback
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -1515,7 +1514,7 @@ namespace RO.Web
            
         }
 
-        protected void RememberOTP(int days = 1)
+        protected void RememberOTP(int days = 90)
         {
             Dictionary<string, string> otp = new Dictionary<string, string>();
             string secret = new LoginSystem().WrGetUsrOTPSecret(LUser.UsrId);

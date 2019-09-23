@@ -1,0 +1,84 @@
+@import 'settings/variable';  //themes' colors
+
+//vendor...
+@import './vendor';
+
+//base...
+@import 'generic/normalize.scss';
+@import 'generic/box-sizing.scss';
+@import './base/scaffolding';         // styles of base elements
+@import './base/typography';          // base styles of h1-h6, p, span
+
+//components...
+@import 'component/alert';               // components/Alert.js ('reactstrap')
+@import 'component/btn';                // Button from 'reactstrap'
+@import './component/calendar';         // components/Calendar.js  ('react-big-calendar')
+@import './component/card';             // Card, CardBody from 'reactstrap'
+@import './component/carousel';         // components/carousel/* ('react-slick')
+@import './component/catalog_item';     // components/catalog/CatalogItems.js
+@import './component/chat';             // components/chat/*
+@import './component/check-box';        // components/form/Checkbox.js and other components with checkboxes
+@import './component/collapse';         // components/Collapse.js ('reactstrap')
+@import './component/color-picker';     // components/form/*ColorPicker.js ('react-color')
+@import './component/date-picker';      // components/form/*Date*Picker.js ('react-datepicker')
+@import './component/dropdown';         //
+@import './component/dropzone';         // components/form/DropZone*.js ('react-dropzone')
+@import './component/edit-table';       // components/table/EditableTable.js ('react-data-grid')
+@import './component/form';             // <form> and all types of inputs
+@import './component/gallery';          // components/Gallery.js
+@import './component/grid';             // useless. using for grid presentation
+@import './component/html-editor';      // html-editor 
+@import './component/inbox';            // components/inbox/*
+@import './component/list';
+@import './component/map';              // GoogleMap from 'react-google-maps'
+@import './component/material-form';    // for 'material-ui'
+@import './component/modal';            // components/Modal.js ('reactstrap')
+@import './component/notification';     // components/Notification.js ('reactstrap')
+@import './component/pagination';       // components/Pagination.js ('reactstrap')
+@import './component/panel';            // components/Panel.js
+@import './component/popover';         // Popover from 'reactstrap'
+@import './component/pricing-card';
+@import './component/product-gallery';  // components/catalog/ProductGallery.js
+@import './component/progress-bar';     // ProgressBar from 'reactstrap'
+@import './component/project-member';   // components/ProjectMember.js
+@import './component/radio-btn';        // components/form/RadioButton.js
+@import './component/scroll';
+@import './component/search-result';    // components/SearchResult.js
+@import './component/select-options';   // <select> and <option>
+@import './component/sidebar';          // components/sidebar/*
+@import './component/slider';           // components/range_slider/* ('rc-slider')
+@import './component/table';            // components/Table.js ('reactstrap')
+@import './component/tabs';             // Nav, NavItem, NavLink, TabContent, TabPane from 'reactstrap'
+@import './component/text-editor';      // components/text-editor/TextEditor.js ('react-draft-wysiwyg')
+@import './component/time-picker';      // components/form/TimePicker.js ('react-times')
+@import './component/timeline';         // components/TimeLineItem.js
+@import './component/todo';             // components/ToDo.js
+@import './component/toggle-btn';       // components/form/ToggleButton.js
+@import './component/tooltip';          // Tooltip from 'reactstrap'
+@import './component/topbar';           // components/topbar/*
+@import './component/wizard';           // pages/form/wizard_form/*
+@import './component/load';
+@import './component/customizer';
+
+//pages...
+@import 'pages/account';              // pages/account/* (except profile)
+@import 'pages/cart';                 // pages/e-commerce/cart/*
+@import 'pages/dashboard';            // pages/dashboards/*
+@import 'pages/invoice';              // pages/default_page/invoice_template
+@import 'pages/not-found';            // pages/default_page/404/*
+@import 'pages/payment';              // pages/e-commerce/payment/*
+@import 'pages/product-card';         // pages/e-commerce/product-page/components/ProductCard.js
+@import 'pages/product-edit';         // pages/e-commerce/product_edit/*
+@import 'pages/products-list';        // pages/e-commerce/product_list/*
+@import 'pages/profile';              // pages/account/profile/*
+@import 'pages/project-summary';      // pages/default_pages/project_summary/*
+@import 'pages/documentation';
+@import 'pages/landing';
+
+//objects...
+@import 'objects/layout.scss';        // layout settings
+
+// NEW CUSTOM SCSS
+@import 'custom/custom.scss';        // custom SCSS
+@import '~font-awesome/css/font-awesome.min.css'; // FontAwesome
+@import '~@mdi/font/css/materialdesignicons.min.css'; // MDI

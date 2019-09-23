@@ -699,6 +699,9 @@ namespace RO.Access3
             cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
             cmd.Parameters.Add("@Projects", OleDbType.VarChar).Value = ui.Projects;
             cmd.Parameters.Add("@Cultures", OleDbType.VarChar).Value = ui.Cultures;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
             cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
             if (string.IsNullOrEmpty(FilterTxt))
@@ -844,7 +847,10 @@ namespace RO.Access3
 			cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
 			cmd.Parameters.Add("@Projects", OleDbType.VarChar).Value = ui.Projects;
 			cmd.Parameters.Add("@Cultures", OleDbType.VarChar).Value = ui.Cultures;
-			cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
+            cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
 			cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
             cmd.Parameters.Add("@RowAuthoritys", OleDbType.VarChar).Value = ui.RowAuthoritys;
             da.SelectCommand = cmd;
@@ -872,7 +878,10 @@ namespace RO.Access3
 			cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
 			cmd.Parameters.Add("@Projects", OleDbType.VarChar).Value = ui.Projects;
 			cmd.Parameters.Add("@Cultures", OleDbType.VarChar).Value = ui.Cultures;
-			cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
+            cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
 			cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
@@ -900,7 +909,10 @@ namespace RO.Access3
 			cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
 			cmd.Parameters.Add("@Projects", OleDbType.VarChar).Value = ui.Projects;
 			cmd.Parameters.Add("@Cultures", OleDbType.VarChar).Value = ui.Cultures;
-			cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
+            cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
 			cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
@@ -944,6 +956,9 @@ namespace RO.Access3
             cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
             cmd.Parameters.Add("@Projects", OleDbType.VarChar).Value = ui.Projects;
             cmd.Parameters.Add("@Cultures", OleDbType.VarChar).Value = ui.Cultures;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
             cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
             if (filterTxt == string.Empty)
@@ -984,6 +999,9 @@ namespace RO.Access3
             cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
             cmd.Parameters.Add("@Projects", OleDbType.VarChar).Value = ui.Projects;
             cmd.Parameters.Add("@Cultures", OleDbType.VarChar).Value = ui.Cultures;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
             cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
             if (parameterXML == string.Empty)
@@ -1052,6 +1070,9 @@ namespace RO.Access3
             cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
             cmd.Parameters.Add("@Projects", OleDbType.VarChar).Value = ui.Projects;
             cmd.Parameters.Add("@Cultures", OleDbType.VarChar).Value = ui.Cultures;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
             cmd.Parameters.Add("@key", OleDbType.VarWChar).Value = System.DBNull.Value;
             cmd.Parameters.Add("@FilterTxt", OleDbType.VarWChar).Value = System.DBNull.Value;
             if (dvCri != null && ds != null)
@@ -1128,6 +1149,9 @@ namespace RO.Access3
             cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
             cmd.Parameters.Add("@Projects", OleDbType.VarChar).Value = ui.Projects;
             cmd.Parameters.Add("@Cultures", OleDbType.VarChar).Value = ui.Cultures;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
             if (string.IsNullOrEmpty(key)) { cmd.Parameters.Add("@key", OleDbType.VarWChar).Value = System.DBNull.Value; } else { cmd.Parameters.Add("@key", OleDbType.VarWChar).Value = key; }
             if (string.IsNullOrEmpty(filterTxt)) { cmd.Parameters.Add("@filterTxt", OleDbType.VarWChar).Value = System.DBNull.Value; } else { cmd.Parameters.Add("@filterTxt", OleDbType.VarWChar).Value = filterTxt; }
             if (dvCri != null && ds != null)
@@ -1257,6 +1281,9 @@ namespace RO.Access3
             cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
             cmd.Parameters.Add("@Projects", OleDbType.VarChar).Value = ui.Projects;
             cmd.Parameters.Add("@Cultures", OleDbType.VarChar).Value = ui.Cultures;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
             cmd.Parameters.Add("@screenFilterId", OleDbType.Numeric).Value = screenFilterId;
             cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
@@ -1340,6 +1367,9 @@ namespace RO.Access3
                 case "limpr.agents": rtn = LImpr.Agents.ToString(); break;
                 case "limpr.brokers": rtn = LImpr.Brokers.ToString(); break;
                 case "limpr.members": rtn = LImpr.Members.ToString(); break;
+                case "limpr.borrowers": rtn = LImpr.Borrowers.ToString(); break;
+                case "limpr.guarantors": rtn = LImpr.Guarantors.ToString(); break;
+                case "limpr.lenders": rtn = LImpr.Lenders.ToString(); break;
 
                 case "config.architect": rtn = Config.Architect; break;
                 case "config.cookiehttponly": rtn = Config.CookieHttpOnly; break;
@@ -2174,6 +2204,9 @@ namespace RO.Access3
             cmd.Parameters.Add("@Investors", OleDbType.VarChar).Value = ui.Investors;
             cmd.Parameters.Add("@Members", OleDbType.VarChar).Value = ui.Members;
             cmd.Parameters.Add("@Vendors", OleDbType.VarChar).Value = ui.Vendors;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
             cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
             cmd.Parameters.Add("@bAll", OleDbType.Char).Value = bAll ? "Y" : "N";
@@ -2249,6 +2282,9 @@ namespace RO.Access3
             cmd.Parameters.Add("@Investors", OleDbType.VarChar).Value = ui.Investors;
             cmd.Parameters.Add("@Members", OleDbType.VarChar).Value = ui.Members;
             cmd.Parameters.Add("@Vendors", OleDbType.VarChar).Value = ui.Vendors;
+            cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
             cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
             if (dvCri != null && ds != null)

@@ -1,0 +1,15 @@
+{
+  "short_name": "ER - FintruX",
+  "name": "Expense Report - FintruX",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#21A79B",
+  "background_color": "#ffffff"
+}

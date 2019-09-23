@@ -236,6 +236,11 @@
 		</div></div>
     </td>
     <td>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnMobile' style='max-width:200px;text-align:left;' runat="server">
+			<asp:LinkButton id="cButtonLongNm131hl" CssClass="GrdHead" onClick="cButtonLongNm131hl_Click" runat="server" /><asp:Image id="cButtonLongNm131hi" runat="server" />
+		</div></div>
+    </td>
+    <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:500px;text-align:left;' runat="server">
 			<asp:LinkButton id="cButtonToolTip131hl" CssClass="GrdHead" onClick="cButtonToolTip131hl_Click" runat="server" /><asp:Image id="cButtonToolTip131hi" runat="server" />
 		</div></div>
@@ -262,6 +267,11 @@
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:90px;text-align:left;' runat="server">
 		    <asp:Label id="cButtonName131fl" class='GrdFoot' runat="server" />
+		</div></div>
+    </td>
+    <td>
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnMobile' style='max-width:200px;text-align:left;' runat="server">
+		    <asp:Label id="cButtonLongNm131fl" class='GrdFoot' runat="server" />
 		</div></div>
     </td>
     <td>
@@ -292,11 +302,16 @@
     </td>
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:90px;text-align:left;' visible="<%# GridColumnVisible(3) %>" onclick='GridEdit("ButtonName131")' runat="server">
-			<asp:Label id="cButtonName131l" Text='<%# DataBinder.Eval(Container.DataItem,"ButtonName131").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" runat="server" />
+			<asp:Label id="cButtonName131l" Text='<%# DataBinder.Eval(Container.DataItem,"ButtonName131").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:500px;text-align:left;' visible="<%# GridColumnVisible(4) %>" onclick='GridEdit("ButtonToolTip131")' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnMobile' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(4) %>" onclick='GridEdit("ButtonLongNm131")' runat="server">
+			<asp:Label id="cButtonLongNm131l" Text='<%# DataBinder.Eval(Container.DataItem,"ButtonLongNm131").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" runat="server" />
+		</div></div>
+    </td>
+    <td>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:500px;text-align:left;' visible="<%# GridColumnVisible(5) %>" onclick='GridEdit("ButtonToolTip131")' runat="server">
 			<asp:Label id="cButtonToolTip131l" Text='<%# DataBinder.Eval(Container.DataItem,"ButtonToolTip131").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" runat="server" />
 		</div></div>
     </td>
@@ -329,8 +344,13 @@
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:500px;text-align:left;' visible="<%# GridColumnVisible(4) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cButtonToolTip131ml" runat="server" /></div>
-		    <asp:TextBox id="cButtonToolTip131" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"ButtonToolTip131").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVButtonToolTip131" ControlToValidate="cButtonToolTip131" display="none" runat="server" />
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(4) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cButtonLongNm131ml" runat="server" /></div>
+		    <asp:TextBox id="cButtonLongNm131" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"ButtonLongNm131").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVButtonLongNm131" ControlToValidate="cButtonLongNm131" display="none" runat="server" />
+		</div></div>
+    </td>
+    <td>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:500px;text-align:left;' visible="<%# GridColumnVisible(5) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cButtonToolTip131ml" runat="server" /></div>
+		    <asp:TextBox id="cButtonToolTip131" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"ButtonToolTip131").ToString() %>' MaxLength="200" runat="server" /><asp:RequiredFieldValidator id="cRFVButtonToolTip131" ControlToValidate="cButtonToolTip131" display="none" runat="server" />
 		</div></div>
     </td>
 	<td>

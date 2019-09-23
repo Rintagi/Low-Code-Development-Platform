@@ -307,6 +307,32 @@
     	</div>
     </div></div></div>
     </div></div>
+    <div class="r-table rg-1-12"><div class="r-tr">
+    <div class="r-td rc-1-3"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cResetFromGitRepoP1" class="r-td r-labelR" runat="server"><asp:Label id="cResetFromGitRepoLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cResetFromGitRepoP2" class="r-td r-content" runat="server"><asp:Button id="cResetFromGitRepo" CssClass="small blue button" OnClick="cResetFromGitRepo_Click" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-4-6"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cCreateReactBaseP1" class="r-td r-labelR" runat="server"><asp:Label id="cCreateReactBaseLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cCreateReactBaseP2" class="r-td r-content" runat="server"><asp:Button id="cCreateReactBase" CssClass="small blue button" OnClick="cCreateReactBase_Click" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-7-9"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cRemoveReactBaseP1" class="r-td r-labelR" runat="server"><asp:Label id="cRemoveReactBaseLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cRemoveReactBaseP2" class="r-td r-content" runat="server"><asp:Button id="cRemoveReactBase" CssClass="small blue button" OnClick="cRemoveReactBase_Click" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-10-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cPublishReactToSiteP1" class="r-td r-labelR" runat="server"><asp:Label id="cPublishReactToSiteLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cPublishReactToSiteP2" class="r-td r-content" runat="server"><asp:Button id="cPublishReactToSite" CssClass="small blue button" OnClick="cPublishReactToSite_Click" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    </div></div>
 </asp:Panel>
 <asp:label id="cFootLabel" CssClass="FootText" runat="server" />
 <input id="bUseCri" type="hidden" runat="server" />

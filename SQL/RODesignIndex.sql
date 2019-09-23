@@ -1,3 +1,9 @@
+IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_CtButtonHlp')
+DROP INDEX CtButtonHlp.IU_CtButtonHlp 
+GO
+CREATE  UNIQUE INDEX IU_CtButtonHlp ON CtButtonHlp(CultureId, ButtonTypeId)
+GO
+
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_CtCulture')
 DROP INDEX CtCulture.IX_CtCulture 
 GO
@@ -128,12 +134,6 @@ IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenFilterHlp_FilterId
 DROP INDEX ScreenFilterHlp.IX_ScreenFilterHlp_FilterId 
 GO
 CREATE  UNIQUE INDEX IX_ScreenFilterHlp_FilterId ON ScreenFilterHlp(CultureId, ScreenFilterId)
-GO
-
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenHlp_ScreenId')
-DROP INDEX ScreenHlp.IX_ScreenHlp_ScreenId 
-GO
-CREATE  UNIQUE INDEX IX_ScreenHlp_ScreenId ON ScreenHlp(CultureId, ScreenId)
 GO
 
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenLstCri')

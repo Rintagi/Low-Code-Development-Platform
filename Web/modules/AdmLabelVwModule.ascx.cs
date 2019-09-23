@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -243,7 +246,7 @@ namespace RO.Web
 				base.CTar = new CurrTar(true, row);
 				if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && (new AdminSystem()).IsRegenNeeded(string.Empty,119,0,0,LcSysConnString,LcAppPw))
 				{
-					(new GenScreensSystem()).CreateProgram(119, "Label View", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
+					(new GenScreensSystem()).CreateProgram(119, "Label View ( -- no react gen -- )", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
 					Response.Redirect(Request.RawUrl);
 				}
 			}
@@ -1423,7 +1426,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					string rf = string.Empty;
 					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 0, cFindFilter.SelectedValue) + ")"; }
-					if (rf != string.Empty) { rf = "((" + rf + "  or _NewRow = 'Y' ))"; }
+					if (rf != string.Empty) { rf = "((" + rf + " or _NewRow = 'Y' ))"; }
 					dv.RowFilter = rf;
 					ViewState["_RowFilter"] = rf;
 					GotoPage(0); cAdmLabelVwGrid_DataBind(dv);
@@ -1877,6 +1880,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			// *** GridItemDataBound (before) Web Rule End *** //
 			DataTable dt = (DataTable)Session[KEY_dtAdmLabelVwGrid];
 			bool isEditItem = false;
+			bool isImage = true;
+			bool hasImageContent = false;
 			DataView dvAdmLabelVwGrid = dt != null ? dt.DefaultView : null;
 			if (cAdmLabelVwGrid.EditIndex > -1 && GetDataItemIndex(cAdmLabelVwGrid.EditIndex) == e.Item.DataItemIndex)
 			{
@@ -1906,6 +1911,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				}
 			}
 			if (cAdmLabelVwGrid.EditIndex > -1 && GetDataItemIndex(cAdmLabelVwGrid.EditIndex) == e.Item.DataItemIndex)
+			{
+			}
+			else
 			{
 			}
 			// *** GridItemDataBound (after) Web Rule End *** //

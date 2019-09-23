@@ -12,6 +12,20 @@ AgentId
 )
 )
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Borrower') AND type='U')
+DROP TABLE dbo.Borrower
+GO
+CREATE TABLE Borrower ( 
+BorrowerId int IDENTITY(1,1) NOT NULL ,
+FirmId int NOT NULL ,
+ParentId int NULL ,
+BorrowerName nvarchar (100) NOT NULL ,
+Active char (1) NOT NULL ,
+CONSTRAINT PK_Borrower PRIMARY KEY CLUSTERED (
+BorrowerId
+)
+)
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Broker') AND type='U')
 DROP TABLE dbo.Broker
 GO
@@ -124,6 +138,20 @@ FxRateId
 )
 )
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Guarantor') AND type='U')
+DROP TABLE dbo.Guarantor
+GO
+CREATE TABLE Guarantor ( 
+GuarantorId int IDENTITY(1,1) NOT NULL ,
+FirmId int NOT NULL ,
+ParentId int NULL ,
+GuarantorName nvarchar (100) NOT NULL ,
+Active char (1) NOT NULL ,
+CONSTRAINT PK_Guarantor PRIMARY KEY CLUSTERED (
+GuarantorId
+)
+)
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Investor') AND type='U')
 DROP TABLE dbo.Investor
 GO
@@ -135,6 +163,20 @@ InvestorName nvarchar (100) NOT NULL ,
 Active char (1) NOT NULL ,
 CONSTRAINT PK_Investor PRIMARY KEY CLUSTERED (
 InvestorId
+)
+)
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Lender') AND type='U')
+DROP TABLE dbo.Lender
+GO
+CREATE TABLE Lender ( 
+LenderId int IDENTITY(1,1) NOT NULL ,
+FirmId int NOT NULL ,
+ParentId int NULL ,
+LenderName nvarchar (100) NOT NULL ,
+Active char (1) NOT NULL ,
+CONSTRAINT PK_Lender PRIMARY KEY CLUSTERED (
+LenderId
 )
 )
 GO

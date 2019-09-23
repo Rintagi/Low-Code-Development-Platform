@@ -352,6 +352,7 @@ namespace RO.WebRules
 				foreach (DataRow dr in dt.Rows)
 				{
                     dr["ButtonName"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonName"].ToString().Trim(), dbConnectionString, dbPassword);
+                    dr["ButtonLongNm"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonLongNm"].ToString().Trim(), dbConnectionString, dbPassword);
                     dr["ButtonToolTip"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonToolTip"].ToString().Trim(), dbConnectionString, dbPassword);
 					using (Access3.WebAccess dac = new Access3.WebAccess())
 					{
@@ -375,6 +376,7 @@ namespace RO.WebRules
 			foreach (DataRow dr in dt.Rows)
 			{
                 dr["ButtonName"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonName"].ToString().Trim(), dbConnectionString, dbPassword);
+                dr["ButtonLongNm"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonLongNm"].ToString().Trim(), dbConnectionString, dbPassword);
                 dr["ButtonToolTip"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonToolTip"].ToString().Trim(), dbConnectionString, dbPassword);
 				using (Access3.WebAccess dac = new Access3.WebAccess())
 				{
@@ -898,6 +900,23 @@ namespace RO.WebRules
             using (Access3.WebAccess dac = new Access3.WebAccess())
             {
                 dac.PurgeScrAudit(YearOld, dbConnectionString, dbPassword);
+            }
+        }
+
+        // Set a flag to indicate reactJS screen already generated:
+        public void WrUpdScreenReactGen(string ScreenId, string dbConnectionString, string dbPassword)
+        {
+            using (Access3.WebAccess dac = new Access3.WebAccess())
+            {
+                dac.WrUpdScreenReactGen(ScreenId, dbConnectionString, dbPassword);
+            }
+        }
+
+        public DataTable WrGetWebRule(string ScreenId, string dbConnectionString, string dbPassword)
+        {
+            using (Access3.WebAccess dac = new Access3.WebAccess())
+            {
+                return dac.WrGetWebRule(ScreenId, dbConnectionString, dbPassword);
             }
         }
     }

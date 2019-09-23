@@ -1,0 +1,53 @@
+.pagination {
+
+  .pagination__link {
+    background: transparent;
+    border-color: #e0e0e0;
+    color: $color-additional;
+    height: 24px;
+    font-size: 10px;
+    padding: 5px;
+    text-align: center;
+    min-width: 24px;
+    transition: all 0.3s;
+
+    &:hover {
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+    }
+  }
+
+  .pagination__item {
+
+    &.active .pagination__link {
+      background-color: $color-blue;
+      border-color: $color-blue;
+    }
+
+    &.disabled {
+
+      .pagination__link {
+        background-color: transparent;
+      }
+    }
+  }
+
+  .pagination__link-icon {
+    width: 13px;
+    height: 13px;
+    fill: $color-additional;
+  }
+}
+
+.pagination__wrap {
+  display: flex;
+  margin-top: 15px;
+
+  .pagination-info {
+    color: $color-additional;
+    font-size: 14px;
+    margin: auto 0 auto 10px;
+  }
+}

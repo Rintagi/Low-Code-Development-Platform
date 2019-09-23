@@ -35,13 +35,16 @@ namespace RO.Common3.Data
 			columns.Add("FrDate", typeof(DateTime));
 			columns.Add("ToDate", typeof(DateTime));
 			columns.Add("CompanyId", typeof(Int32));
+			columns.Add("ProjectId", typeof(Int32));
 			columns.Add("AgentId", typeof(Int32));
 			columns.Add("BrokerId", typeof(Int32));
 			columns.Add("VendorId", typeof(Int32));
-			columns.Add("ProjectId", typeof(Int32));
 			columns.Add("CustomerId", typeof(Int32));
 			columns.Add("InvestorId", typeof(Int32));
 			columns.Add("MemberId", typeof(Int32));
+			columns.Add("BorrowerId", typeof(Int32));
+			columns.Add("GuarantorId", typeof(Int32));
+			columns.Add("LenderId", typeof(Int32));
 			columns.Add("UsrGroupId", typeof(Int16));
 			columns.Add("UserId", typeof(Int32));
 			return dt;
@@ -132,7 +135,7 @@ namespace RO.Web
 				}
 				DataTable dt;
 				DataView dv;
-				dt = (new AdminSystem()).GetLastCriteria(14,0,54,base.LUser.UsrId,LcSysConnString,LcAppPw);
+				dt = (new AdminSystem()).GetLastCriteria(17,0,54,base.LUser.UsrId,LcSysConnString,LcAppPw);
 				if ((bool)Session[KEY_bClCriVisible]) {cClearCriButton.Visible = cCriteria.Visible;} else {cClearCriButton.Visible = false;}
 				if ((bool)Session[KEY_bShCriVisible]) {cShowCriButton.Visible = !cCriteria.Visible;} else {cShowCriButton.Visible = false;}
 				DataTable dtCri = GetReportCriHlp();
@@ -208,126 +211,9 @@ namespace RO.Web
 				{
 					try {cCompanyId.SelectedIndex = 0;} catch {}
 				}
-				base.SetCriBehavior(cAgentId, cAgentIdP1, cAgentIdLabel, dtCri.Rows[5]);
-				cAgentId.AutoPostBack = false;
-				try {selectedVal = dt.Rows[5]["LastCriteria"].ToString();} catch { selectedVal = null;};
-				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54AgentId",(new SqlReportSystem()).CountRptCri("8",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
-				cAgentId.DataSource = dv;
-				if (true)
-				{
-					System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
-					context["method"] = "54AgentId";
-					context["addnew"] = "Y";
-					context["sp"] = "54AgentId";
-					context["requiredValid"] = "N";
-					context["mKey"] = cAgentId.DataValueField;
-					context["mVal"] = cAgentId.DataTextField;
-					context["mTip"] = cAgentId.DataTextField;
-					context["mImg"] = cAgentId.DataTextField;
-					context["ssd"] = Request.QueryString["ssd"];
-					context["rpt"] = "54";
-					context["reportCriId"] = "8";
-					context["csy"] = "3";
-					context["genPrefix"] = "";
-					context["filter"] = "0";
-					context["isSys"] = "N";
-					context["conn"] = null;
-					context["refColCID"] = null;
-					context["refCol"] = null;
-					cAgentId.AutoCompleteUrl = "AutoComplete.aspx/RptCriDdlSuggests";
-					cAgentId.DataContext = context;
-					cAgentId.Mode = "A";
-					cAgentId.AutoPostBack = false;
-				}
-				try
-				{
-					cAgentId.SelectByValue(dt.Rows[5]["LastCriteria"],string.Empty,false);
-				}
-				catch
-				{
-					try {cAgentId.SelectedIndex = 0;} catch {}
-				}
-				base.SetCriBehavior(cBrokerId, cBrokerIdP1, cBrokerIdLabel, dtCri.Rows[6]);
-				cBrokerId.AutoPostBack = false;
-				try {selectedVal = dt.Rows[6]["LastCriteria"].ToString();} catch { selectedVal = null;};
-				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54BrokerId",(new SqlReportSystem()).CountRptCri("11",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
-				cBrokerId.DataSource = dv;
-				if (true)
-				{
-					System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
-					context["method"] = "54BrokerId";
-					context["addnew"] = "Y";
-					context["sp"] = "54BrokerId";
-					context["requiredValid"] = "N";
-					context["mKey"] = cBrokerId.DataValueField;
-					context["mVal"] = cBrokerId.DataTextField;
-					context["mTip"] = cBrokerId.DataTextField;
-					context["mImg"] = cBrokerId.DataTextField;
-					context["ssd"] = Request.QueryString["ssd"];
-					context["rpt"] = "54";
-					context["reportCriId"] = "11";
-					context["csy"] = "3";
-					context["genPrefix"] = "";
-					context["filter"] = "0";
-					context["isSys"] = "N";
-					context["conn"] = null;
-					context["refColCID"] = null;
-					context["refCol"] = null;
-					cBrokerId.AutoCompleteUrl = "AutoComplete.aspx/RptCriDdlSuggests";
-					cBrokerId.DataContext = context;
-					cBrokerId.Mode = "A";
-					cBrokerId.AutoPostBack = false;
-				}
-				try
-				{
-					cBrokerId.SelectByValue(dt.Rows[6]["LastCriteria"],string.Empty,false);
-				}
-				catch
-				{
-					try {cBrokerId.SelectedIndex = 0;} catch {}
-				}
-				base.SetCriBehavior(cVendorId, cVendorIdP1, cVendorIdLabel, dtCri.Rows[7]);
-				cVendorId.AutoPostBack = false;
-				try {selectedVal = dt.Rows[7]["LastCriteria"].ToString();} catch { selectedVal = null;};
-				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54VendorId",(new SqlReportSystem()).CountRptCri("12",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
-				cVendorId.DataSource = dv;
-				if (true)
-				{
-					System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
-					context["method"] = "54VendorId";
-					context["addnew"] = "Y";
-					context["sp"] = "54VendorId";
-					context["requiredValid"] = "N";
-					context["mKey"] = cVendorId.DataValueField;
-					context["mVal"] = cVendorId.DataTextField;
-					context["mTip"] = cVendorId.DataTextField;
-					context["mImg"] = cVendorId.DataTextField;
-					context["ssd"] = Request.QueryString["ssd"];
-					context["rpt"] = "54";
-					context["reportCriId"] = "12";
-					context["csy"] = "3";
-					context["genPrefix"] = "";
-					context["filter"] = "0";
-					context["isSys"] = "N";
-					context["conn"] = null;
-					context["refColCID"] = null;
-					context["refCol"] = null;
-					cVendorId.AutoCompleteUrl = "AutoComplete.aspx/RptCriDdlSuggests";
-					cVendorId.DataContext = context;
-					cVendorId.Mode = "A";
-					cVendorId.AutoPostBack = false;
-				}
-				try
-				{
-					cVendorId.SelectByValue(dt.Rows[7]["LastCriteria"],string.Empty,false);
-				}
-				catch
-				{
-					try {cVendorId.SelectedIndex = 0;} catch {}
-				}
-				base.SetCriBehavior(cProjectId, cProjectIdP1, cProjectIdLabel, dtCri.Rows[8]);
+				base.SetCriBehavior(cProjectId, cProjectIdP1, cProjectIdLabel, dtCri.Rows[5]);
 				cProjectId.AutoPostBack = false;
-				try {selectedVal = dt.Rows[8]["LastCriteria"].ToString();} catch { selectedVal = null;};
+				try {selectedVal = dt.Rows[5]["LastCriteria"].ToString();} catch { selectedVal = null;};
 				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54ProjectId",(new SqlReportSystem()).CountRptCri("26",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
 				cProjectId.DataSource = dv;
 				if (true)
@@ -358,11 +244,128 @@ namespace RO.Web
 				}
 				try
 				{
-					cProjectId.SelectByValue(dt.Rows[8]["LastCriteria"],string.Empty,false);
+					cProjectId.SelectByValue(dt.Rows[5]["LastCriteria"],string.Empty,false);
 				}
 				catch
 				{
 					try {cProjectId.SelectedIndex = 0;} catch {}
+				}
+				base.SetCriBehavior(cAgentId, cAgentIdP1, cAgentIdLabel, dtCri.Rows[6]);
+				cAgentId.AutoPostBack = false;
+				try {selectedVal = dt.Rows[6]["LastCriteria"].ToString();} catch { selectedVal = null;};
+				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54AgentId",(new SqlReportSystem()).CountRptCri("8",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
+				cAgentId.DataSource = dv;
+				if (true)
+				{
+					System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+					context["method"] = "54AgentId";
+					context["addnew"] = "Y";
+					context["sp"] = "54AgentId";
+					context["requiredValid"] = "N";
+					context["mKey"] = cAgentId.DataValueField;
+					context["mVal"] = cAgentId.DataTextField;
+					context["mTip"] = cAgentId.DataTextField;
+					context["mImg"] = cAgentId.DataTextField;
+					context["ssd"] = Request.QueryString["ssd"];
+					context["rpt"] = "54";
+					context["reportCriId"] = "8";
+					context["csy"] = "3";
+					context["genPrefix"] = "";
+					context["filter"] = "0";
+					context["isSys"] = "N";
+					context["conn"] = null;
+					context["refColCID"] = null;
+					context["refCol"] = null;
+					cAgentId.AutoCompleteUrl = "AutoComplete.aspx/RptCriDdlSuggests";
+					cAgentId.DataContext = context;
+					cAgentId.Mode = "A";
+					cAgentId.AutoPostBack = false;
+				}
+				try
+				{
+					cAgentId.SelectByValue(dt.Rows[6]["LastCriteria"],string.Empty,false);
+				}
+				catch
+				{
+					try {cAgentId.SelectedIndex = 0;} catch {}
+				}
+				base.SetCriBehavior(cBrokerId, cBrokerIdP1, cBrokerIdLabel, dtCri.Rows[7]);
+				cBrokerId.AutoPostBack = false;
+				try {selectedVal = dt.Rows[7]["LastCriteria"].ToString();} catch { selectedVal = null;};
+				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54BrokerId",(new SqlReportSystem()).CountRptCri("11",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
+				cBrokerId.DataSource = dv;
+				if (true)
+				{
+					System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+					context["method"] = "54BrokerId";
+					context["addnew"] = "Y";
+					context["sp"] = "54BrokerId";
+					context["requiredValid"] = "N";
+					context["mKey"] = cBrokerId.DataValueField;
+					context["mVal"] = cBrokerId.DataTextField;
+					context["mTip"] = cBrokerId.DataTextField;
+					context["mImg"] = cBrokerId.DataTextField;
+					context["ssd"] = Request.QueryString["ssd"];
+					context["rpt"] = "54";
+					context["reportCriId"] = "11";
+					context["csy"] = "3";
+					context["genPrefix"] = "";
+					context["filter"] = "0";
+					context["isSys"] = "N";
+					context["conn"] = null;
+					context["refColCID"] = null;
+					context["refCol"] = null;
+					cBrokerId.AutoCompleteUrl = "AutoComplete.aspx/RptCriDdlSuggests";
+					cBrokerId.DataContext = context;
+					cBrokerId.Mode = "A";
+					cBrokerId.AutoPostBack = false;
+				}
+				try
+				{
+					cBrokerId.SelectByValue(dt.Rows[7]["LastCriteria"],string.Empty,false);
+				}
+				catch
+				{
+					try {cBrokerId.SelectedIndex = 0;} catch {}
+				}
+				base.SetCriBehavior(cVendorId, cVendorIdP1, cVendorIdLabel, dtCri.Rows[8]);
+				cVendorId.AutoPostBack = false;
+				try {selectedVal = dt.Rows[8]["LastCriteria"].ToString();} catch { selectedVal = null;};
+				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54VendorId",(new SqlReportSystem()).CountRptCri("12",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
+				cVendorId.DataSource = dv;
+				if (true)
+				{
+					System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+					context["method"] = "54VendorId";
+					context["addnew"] = "Y";
+					context["sp"] = "54VendorId";
+					context["requiredValid"] = "N";
+					context["mKey"] = cVendorId.DataValueField;
+					context["mVal"] = cVendorId.DataTextField;
+					context["mTip"] = cVendorId.DataTextField;
+					context["mImg"] = cVendorId.DataTextField;
+					context["ssd"] = Request.QueryString["ssd"];
+					context["rpt"] = "54";
+					context["reportCriId"] = "12";
+					context["csy"] = "3";
+					context["genPrefix"] = "";
+					context["filter"] = "0";
+					context["isSys"] = "N";
+					context["conn"] = null;
+					context["refColCID"] = null;
+					context["refCol"] = null;
+					cVendorId.AutoCompleteUrl = "AutoComplete.aspx/RptCriDdlSuggests";
+					cVendorId.DataContext = context;
+					cVendorId.Mode = "A";
+					cVendorId.AutoPostBack = false;
+				}
+				try
+				{
+					cVendorId.SelectByValue(dt.Rows[8]["LastCriteria"],string.Empty,false);
+				}
+				catch
+				{
+					try {cVendorId.SelectedIndex = 0;} catch {}
 				}
 				base.SetCriBehavior(cCustomerId, cCustomerIdP1, cCustomerIdLabel, dtCri.Rows[9]);
 				cCustomerId.AutoPostBack = false;
@@ -481,23 +484,140 @@ namespace RO.Web
 				{
 					try {cMemberId.SelectedIndex = 0;} catch {}
 				}
-				base.SetCriBehavior(cUsrGroupId, cUsrGroupIdP1, cUsrGroupIdLabel, dtCri.Rows[12]);
-				cUsrGroupId.AutoPostBack = false;
+				base.SetCriBehavior(cBorrowerId, cBorrowerIdP1, cBorrowerIdLabel, dtCri.Rows[12]);
+				cBorrowerId.AutoPostBack = false;
 				try {selectedVal = dt.Rows[12]["LastCriteria"].ToString();} catch { selectedVal = null;};
+				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54BorrowerId",(new SqlReportSystem()).CountRptCri("58",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
+				cBorrowerId.DataSource = dv;
+				if (true)
+				{
+					System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+					context["method"] = "54BorrowerId";
+					context["addnew"] = "Y";
+					context["sp"] = "54BorrowerId";
+					context["requiredValid"] = "N";
+					context["mKey"] = cBorrowerId.DataValueField;
+					context["mVal"] = cBorrowerId.DataTextField;
+					context["mTip"] = cBorrowerId.DataTextField;
+					context["mImg"] = cBorrowerId.DataTextField;
+					context["ssd"] = Request.QueryString["ssd"];
+					context["rpt"] = "54";
+					context["reportCriId"] = "58";
+					context["csy"] = "3";
+					context["genPrefix"] = "";
+					context["filter"] = "0";
+					context["isSys"] = "N";
+					context["conn"] = null;
+					context["refColCID"] = null;
+					context["refCol"] = null;
+					cBorrowerId.AutoCompleteUrl = "AutoComplete.aspx/RptCriDdlSuggests";
+					cBorrowerId.DataContext = context;
+					cBorrowerId.Mode = "A";
+					cBorrowerId.AutoPostBack = false;
+				}
+				try
+				{
+					cBorrowerId.SelectByValue(dt.Rows[12]["LastCriteria"],string.Empty,false);
+				}
+				catch
+				{
+					try {cBorrowerId.SelectedIndex = 0;} catch {}
+				}
+				base.SetCriBehavior(cGuarantorId, cGuarantorIdP1, cGuarantorIdLabel, dtCri.Rows[13]);
+				cGuarantorId.AutoPostBack = false;
+				try {selectedVal = dt.Rows[13]["LastCriteria"].ToString();} catch { selectedVal = null;};
+				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54GuarantorId",(new SqlReportSystem()).CountRptCri("59",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
+				cGuarantorId.DataSource = dv;
+				if (true)
+				{
+					System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+					context["method"] = "54GuarantorId";
+					context["addnew"] = "Y";
+					context["sp"] = "54GuarantorId";
+					context["requiredValid"] = "N";
+					context["mKey"] = cGuarantorId.DataValueField;
+					context["mVal"] = cGuarantorId.DataTextField;
+					context["mTip"] = cGuarantorId.DataTextField;
+					context["mImg"] = cGuarantorId.DataTextField;
+					context["ssd"] = Request.QueryString["ssd"];
+					context["rpt"] = "54";
+					context["reportCriId"] = "59";
+					context["csy"] = "3";
+					context["genPrefix"] = "";
+					context["filter"] = "0";
+					context["isSys"] = "N";
+					context["conn"] = null;
+					context["refColCID"] = null;
+					context["refCol"] = null;
+					cGuarantorId.AutoCompleteUrl = "AutoComplete.aspx/RptCriDdlSuggests";
+					cGuarantorId.DataContext = context;
+					cGuarantorId.Mode = "A";
+					cGuarantorId.AutoPostBack = false;
+				}
+				try
+				{
+					cGuarantorId.SelectByValue(dt.Rows[13]["LastCriteria"],string.Empty,false);
+				}
+				catch
+				{
+					try {cGuarantorId.SelectedIndex = 0;} catch {}
+				}
+				base.SetCriBehavior(cLenderId, cLenderIdP1, cLenderIdLabel, dtCri.Rows[14]);
+				cLenderId.AutoPostBack = false;
+				try {selectedVal = dt.Rows[14]["LastCriteria"].ToString();} catch { selectedVal = null;};
+				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54LenderId",(new SqlReportSystem()).CountRptCri("60",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
+				cLenderId.DataSource = dv;
+				if (true)
+				{
+					System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+					context["method"] = "54LenderId";
+					context["addnew"] = "Y";
+					context["sp"] = "54LenderId";
+					context["requiredValid"] = "N";
+					context["mKey"] = cLenderId.DataValueField;
+					context["mVal"] = cLenderId.DataTextField;
+					context["mTip"] = cLenderId.DataTextField;
+					context["mImg"] = cLenderId.DataTextField;
+					context["ssd"] = Request.QueryString["ssd"];
+					context["rpt"] = "54";
+					context["reportCriId"] = "60";
+					context["csy"] = "3";
+					context["genPrefix"] = "";
+					context["filter"] = "0";
+					context["isSys"] = "N";
+					context["conn"] = null;
+					context["refColCID"] = null;
+					context["refCol"] = null;
+					cLenderId.AutoCompleteUrl = "AutoComplete.aspx/RptCriDdlSuggests";
+					cLenderId.DataContext = context;
+					cLenderId.Mode = "A";
+					cLenderId.AutoPostBack = false;
+				}
+				try
+				{
+					cLenderId.SelectByValue(dt.Rows[14]["LastCriteria"],string.Empty,false);
+				}
+				catch
+				{
+					try {cLenderId.SelectedIndex = 0;} catch {}
+				}
+				base.SetCriBehavior(cUsrGroupId, cUsrGroupIdP1, cUsrGroupIdLabel, dtCri.Rows[15]);
+				cUsrGroupId.AutoPostBack = false;
+				try {selectedVal = dt.Rows[15]["LastCriteria"].ToString();} catch { selectedVal = null;};
 				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54UsrGroupId",(new SqlReportSystem()).CountRptCri("15",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
 				cUsrGroupId.DataSource = dv;
 				cUsrGroupId.DataBind();
 				try
 				{
-					cUsrGroupId.Items.FindByValue(dt.Rows[12]["LastCriteria"].ToString()).Selected = true;
+					cUsrGroupId.Items.FindByValue(dt.Rows[15]["LastCriteria"].ToString()).Selected = true;
 				}
 				catch
 				{
 					try {cUsrGroupId.SelectedIndex = 0;} catch {}
 				}
-				base.SetCriBehavior(cUserId, cUserIdP1, cUserIdLabel, dtCri.Rows[13]);
+				base.SetCriBehavior(cUserId, cUserIdP1, cUserIdLabel, dtCri.Rows[16]);
 				cUserId.AutoPostBack = false;
-				try {selectedVal = dt.Rows[13]["LastCriteria"].ToString();} catch { selectedVal = null;};
+				try {selectedVal = dt.Rows[16]["LastCriteria"].ToString();} catch { selectedVal = null;};
 				dv = new DataView((new AdminSystem()).GetIn(54,"GetIn54UserId",(new SqlReportSystem()).CountRptCri("16",LcSysConnString,LcAppPw),"N",base.LImpr,base.LCurr,LcAppConnString,LcAppPw));
 				cUserId.DataSource = dv;
 				if (true)
@@ -528,7 +648,7 @@ namespace RO.Web
 				}
 				try
 				{
-					cUserId.SelectByValue(dt.Rows[13]["LastCriteria"],string.Empty,false);
+					cUserId.SelectByValue(dt.Rows[16]["LastCriteria"],string.Empty,false);
 				}
 				catch
 				{
@@ -595,6 +715,12 @@ namespace RO.Web
 			ScriptManager.GetCurrent(Parent.Page).SetFocus(((RoboCoder.WebControls.ComboBox)sender).FocusID);
 		}
 
+		protected void cProjectId_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			if (!IsPostBack) return;
+			ScriptManager.GetCurrent(Parent.Page).SetFocus(((RoboCoder.WebControls.ComboBox)sender).FocusID);
+		}
+
 		protected void cAgentId_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			if (!IsPostBack) return;
@@ -613,12 +739,6 @@ namespace RO.Web
 			ScriptManager.GetCurrent(Parent.Page).SetFocus(((RoboCoder.WebControls.ComboBox)sender).FocusID);
 		}
 
-		protected void cProjectId_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			if (!IsPostBack) return;
-			ScriptManager.GetCurrent(Parent.Page).SetFocus(((RoboCoder.WebControls.ComboBox)sender).FocusID);
-		}
-
 		protected void cCustomerId_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			if (!IsPostBack) return;
@@ -632,6 +752,24 @@ namespace RO.Web
 		}
 
 		protected void cMemberId_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			if (!IsPostBack) return;
+			ScriptManager.GetCurrent(Parent.Page).SetFocus(((RoboCoder.WebControls.ComboBox)sender).FocusID);
+		}
+
+		protected void cBorrowerId_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			if (!IsPostBack) return;
+			ScriptManager.GetCurrent(Parent.Page).SetFocus(((RoboCoder.WebControls.ComboBox)sender).FocusID);
+		}
+
+		protected void cGuarantorId_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			if (!IsPostBack) return;
+			ScriptManager.GetCurrent(Parent.Page).SetFocus(((RoboCoder.WebControls.ComboBox)sender).FocusID);
+		}
+
+		protected void cLenderId_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			if (!IsPostBack) return;
 			ScriptManager.GetCurrent(Parent.Page).SetFocus(((RoboCoder.WebControls.ComboBox)sender).FocusID);
@@ -780,13 +918,16 @@ namespace RO.Web
 			if (IsPostBack && cFrDate.Text == string.Empty) { throw new ApplicationException("Criteria column: FrDate should not be empty. Please rectify and try again.");};
 			if (cToDate.Text != string.Empty) {dr["ToDate"] = base.SetDateTimeUTC(cToDate.Text, !bUpdate);}
 			if (cCompanyId.SelectedIndex >= 0 && cCompanyId.SelectedValue != string.Empty) {dr["CompanyId"] = cCompanyId.SelectedValue;}
+			if (cProjectId.SelectedIndex >= 0 && cProjectId.SelectedValue != string.Empty) {dr["ProjectId"] = cProjectId.SelectedValue;}
 			if (cAgentId.SelectedIndex >= 0 && cAgentId.SelectedValue != string.Empty) {dr["AgentId"] = cAgentId.SelectedValue;}
 			if (cBrokerId.SelectedIndex >= 0 && cBrokerId.SelectedValue != string.Empty) {dr["BrokerId"] = cBrokerId.SelectedValue;}
 			if (cVendorId.SelectedIndex >= 0 && cVendorId.SelectedValue != string.Empty) {dr["VendorId"] = cVendorId.SelectedValue;}
-			if (cProjectId.SelectedIndex >= 0 && cProjectId.SelectedValue != string.Empty) {dr["ProjectId"] = cProjectId.SelectedValue;}
 			if (cCustomerId.SelectedIndex >= 0 && cCustomerId.SelectedValue != string.Empty) {dr["CustomerId"] = cCustomerId.SelectedValue;}
 			if (cInvestorId.SelectedIndex >= 0 && cInvestorId.SelectedValue != string.Empty) {dr["InvestorId"] = cInvestorId.SelectedValue;}
 			if (cMemberId.SelectedIndex >= 0 && cMemberId.SelectedValue != string.Empty) {dr["MemberId"] = cMemberId.SelectedValue;}
+			if (cBorrowerId.SelectedIndex >= 0 && cBorrowerId.SelectedValue != string.Empty) {dr["BorrowerId"] = cBorrowerId.SelectedValue;}
+			if (cGuarantorId.SelectedIndex >= 0 && cGuarantorId.SelectedValue != string.Empty) {dr["GuarantorId"] = cGuarantorId.SelectedValue;}
+			if (cLenderId.SelectedIndex >= 0 && cLenderId.SelectedValue != string.Empty) {dr["LenderId"] = cLenderId.SelectedValue;}
 			if (cUsrGroupId.SelectedIndex >= 0 && cUsrGroupId.SelectedValue != string.Empty) {dr["UsrGroupId"] = cUsrGroupId.SelectedValue;}
 			if (cUserId.SelectedIndex >= 0 && cUserId.SelectedValue != string.Empty) {dr["UserId"] = cUserId.SelectedValue;}
 			ds.Tables["DtAdmRptUsageIn"].Rows.Add(dr);
@@ -1035,13 +1176,16 @@ namespace RO.Web
 			cFrDate.Text = "0";
 			cToDate.Text = "";
 			if (cCompanyId.Items.Count > 0) {cCompanyId.DataSource = cCompanyId.DataSource; cCompanyId.SelectByValue(cCompanyId.Items[0].Value,string.Empty,true);}
+			if (cProjectId.Items.Count > 0) {cProjectId.DataSource = cProjectId.DataSource; cProjectId.SelectByValue(cProjectId.Items[0].Value,string.Empty,true);}
 			if (cAgentId.Items.Count > 0) {cAgentId.DataSource = cAgentId.DataSource; cAgentId.SelectByValue(cAgentId.Items[0].Value,string.Empty,true);}
 			if (cBrokerId.Items.Count > 0) {cBrokerId.DataSource = cBrokerId.DataSource; cBrokerId.SelectByValue(cBrokerId.Items[0].Value,string.Empty,true);}
 			if (cVendorId.Items.Count > 0) {cVendorId.DataSource = cVendorId.DataSource; cVendorId.SelectByValue(cVendorId.Items[0].Value,string.Empty,true);}
-			if (cProjectId.Items.Count > 0) {cProjectId.DataSource = cProjectId.DataSource; cProjectId.SelectByValue(cProjectId.Items[0].Value,string.Empty,true);}
 			if (cCustomerId.Items.Count > 0) {cCustomerId.DataSource = cCustomerId.DataSource; cCustomerId.SelectByValue(cCustomerId.Items[0].Value,string.Empty,true);}
 			if (cInvestorId.Items.Count > 0) {cInvestorId.DataSource = cInvestorId.DataSource; cInvestorId.SelectByValue(cInvestorId.Items[0].Value,string.Empty,true);}
 			if (cMemberId.Items.Count > 0) {cMemberId.DataSource = cMemberId.DataSource; cMemberId.SelectByValue(cMemberId.Items[0].Value,string.Empty,true);}
+			if (cBorrowerId.Items.Count > 0) {cBorrowerId.DataSource = cBorrowerId.DataSource; cBorrowerId.SelectByValue(cBorrowerId.Items[0].Value,string.Empty,true);}
+			if (cGuarantorId.Items.Count > 0) {cGuarantorId.DataSource = cGuarantorId.DataSource; cGuarantorId.SelectByValue(cGuarantorId.Items[0].Value,string.Empty,true);}
+			if (cLenderId.Items.Count > 0) {cLenderId.DataSource = cLenderId.DataSource; cLenderId.SelectByValue(cLenderId.Items[0].Value,string.Empty,true);}
 			if (cUsrGroupId.Items.Count > 0) {cUsrGroupId.SelectedIndex = 0;}
 			if (cUserId.Items.Count > 0) {cUserId.DataSource = cUserId.DataSource; cUserId.SelectByValue(cUserId.Items[0].Value,string.Empty,true);}
 		}

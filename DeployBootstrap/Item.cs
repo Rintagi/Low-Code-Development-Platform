@@ -10,8 +10,8 @@ using System.IO;
 	{
 		private string oldNS = "RO";
 		private string iType = "NPTY";
-		private string iKey = "7cb95cef1483489fafb691107aa78b13";
-		private string roENCKey= "13467231ea794211aab756008f8500af";
+		private string iKey = "5696923b0a30471b91cc6e5304aec44b";
+		private string roENCKey= "8a47d1f5b4554f45b99078fcb6ab9645";
 		public string GetOldNS()
 		{
 			return oldNS;
@@ -34,8 +34,8 @@ using System.IO;
 		}
 		public void SetVersion(ListView lvVersion)
 		{
-			lvVersion.Items.Add("R10.62.70620   Administration");
-			lvVersion.Items.Add("V2.7.61230     Common App");
+			lvVersion.Items.Add("R10.84.90913   Administration");
+			lvVersion.Items.Add("V              Common App");
 		}
 	}
 }

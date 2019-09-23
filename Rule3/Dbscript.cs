@@ -16,15 +16,6 @@ namespace RO.Rule3
 		private string sTablesExempt = "";
 		private bool bNewApp;
 
-        private string StripEmptyLinesFromSpHelpText(DataTable dt)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach(DataRow dr in dt.Rows)
-            {
-                sb.Append(dr[0].ToString());
-            }
-            return sb.ToString().Trim().Replace("\r\n","\r").Replace("\r","\r\n");
-        }
 		public DbScript(string TablesExempt, bool NewApp)
 		{
 			sTablesExempt = TablesExempt;
@@ -314,7 +305,7 @@ namespace RO.Rule3
 				}
 				else
 				{
-					str += "IF EXIST " + outputPath + "*.txt DEL /Q /S " + outputPath + "*.txt > nul 2>&1\r\n";
+					str += "IF EXIST " + outputPath + "*.txt DEL /Q /S " + outputPath + "*.txt\r\n";
 				}
 			}
 			foreach (DataRow dr2 in dt.Rows)
@@ -422,8 +413,7 @@ namespace RO.Rule3
 				{
 					dtVw = dac.GetData("EXEC sp_helptext " + dr[0].ToString(), IsFrSource, CSrc, CTar);
 				}
-                //foreach (DataRow dr2 in dtVw.Rows) {sbView.Append(dr2[0].ToString());}
-                sbView.Append(StripEmptyLinesFromSpHelpText(dtVw));
+				foreach (DataRow dr2 in dtVw.Rows) {sbView.Append(dr2[0].ToString());}
 				if (!sbView.ToString().Equals(""))
 				{
 					sbCrea.Append("if exists (select * from dbo.sysobjects where id = object_id(N'dbo." + dr[0].ToString() + "') and OBJECTPROPERTY(id, N'IsView') = 1)\r\n");
@@ -499,9 +489,8 @@ namespace RO.Rule3
 					if (e.Message.IndexOf("hidden") < 0) {throw new Exception(e.Message);} else {dtSp = null;}
 				}
 			}
-            //if (dtSp != null) {foreach (DataRow dr2 in dtSp.Rows) {sbCrea.Append(dr2[0].ToString());}}
-            if (dtSp != null) { sbCrea.Append(StripEmptyLinesFromSpHelpText(dtSp)); }
-            return Regex.Replace(sbCrea.ToString(),@"(?i)([a-zA-Z0-9])(\.{2})([a-zA-Z])","$1.dbo.$3");
+			if (dtSp != null) {foreach (DataRow dr2 in dtSp.Rows) {sbCrea.Append(dr2[0].ToString());}}
+			return Regex.Replace(sbCrea.ToString(),@"(?i)([a-zA-Z0-9])(\.{2})([a-zA-Z])","$1.dbo.$3");
 		}
 
 		public string EncryptSProcedures(string SrcDbProviderCd, string TarDbProviderCd, string ss, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)

@@ -1,0 +1,21 @@
+.select-options {
+  margin: 0 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  background: transparent;
+
+  @include themify($themes) {
+    color: themed('colorText');
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  option {
+
+    @include themify($themes) {
+      background-color: themed('colorBackground');
+    }
+  }
+}

@@ -40,8 +40,9 @@ namespace RO
 
 
         protected void Application_Start(Object sender, EventArgs e)
-		{
-		}
+        {
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.ServicePointManager.SecurityProtocol;
+        }
  
 		protected void Session_Start(Object sender, EventArgs e)
 		{

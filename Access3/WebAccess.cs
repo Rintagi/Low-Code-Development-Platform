@@ -581,7 +581,8 @@ namespace RO.Access3
 			cmd.Parameters.Add("@ButtonHlpId", OleDbType.Numeric).Value = dr["ButtonHlpId"].ToString();
 			cmd.Parameters.Add("@CultureId", OleDbType.Numeric).Value = CultureId;
 			cmd.Parameters.Add("@ButtonName", OleDbType.VarWChar).Value = dr["ButtonName"].ToString();
-			cmd.Parameters.Add("@ButtonToolTip", OleDbType.VarWChar).Value = dr["ButtonToolTip"].ToString();
+            cmd.Parameters.Add("@ButtonLongNm", OleDbType.VarWChar).Value = dr["ButtonLongNm"].ToString();
+            cmd.Parameters.Add("@ButtonToolTip", OleDbType.VarWChar).Value = dr["ButtonToolTip"].ToString();
 			cmd.CommandTimeout = 1800;
 			try { cmd.ExecuteNonQuery(); }
 			catch (Exception e) { ApplicationAssert.CheckCondition(false, "WrInsCtButtonHlp", "", e.Message.ToString()); }
@@ -619,7 +620,15 @@ namespace RO.Access3
 			{
 				cmd.Parameters.Add("@ButtonName", OleDbType.VarWChar).Value = dr["ButtonName"].ToString();
 			}
-			if (dr["ButtonToolTip"].ToString() == string.Empty)
+            if (dr["ButtonLongNm"].ToString() == string.Empty)
+            {
+                cmd.Parameters.Add("@ButtonLongNm", OleDbType.VarWChar).Value = System.DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters.Add("@ButtonLongNm", OleDbType.VarWChar).Value = dr["ButtonLongNm"].ToString();
+            }
+            if (dr["ButtonToolTip"].ToString() == string.Empty)
 			{
 				cmd.Parameters.Add("@ButtonToolTip", OleDbType.VarWChar).Value = System.DBNull.Value;
 			}
@@ -2282,6 +2291,37 @@ namespace RO.Access3
             catch (Exception e) { ApplicationAssert.CheckCondition(false, "PurgeScrAudit", "", e.Message.ToString()); }
             finally { cn.Close(); cmd.Dispose(); cmd = null; }
             return;
+        }
+
+        public void WrUpdScreenReactGen(string ScreenId, string dbConnectionString, string dbPassword)
+        {
+            OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
+            cn.Open();
+            OleDbTransaction tr = cn.BeginTransaction();
+            OleDbCommand cmd = new OleDbCommand("WrUpdScreenReactGen", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OleDbType.Integer).Value = ScreenId;
+            cmd.CommandTimeout = 1800;
+            cmd.Transaction = tr;
+            try { cmd.ExecuteNonQuery(); tr.Commit(); }
+            catch (Exception e) { tr.Rollback(); ApplicationAssert.CheckCondition(false, "WrUpdScreenReactGen", "", e.Message.ToString()); }
+            finally { cn.Close(); cmd.Dispose(); cmd = null; }
+            return;
+        }
+
+        public DataTable WrGetWebRule(string ScreenId, string dbConnectionString, string dbPassword)
+        {
+            if (da == null)
+            {
+                throw new System.ObjectDisposedException(GetType().FullName);
+            }
+            OleDbCommand cmd = new OleDbCommand("WrGetWebRule", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OleDbType.VarChar).Value = ScreenId;
+            da.SelectCommand = cmd;
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
         }
     }
 }

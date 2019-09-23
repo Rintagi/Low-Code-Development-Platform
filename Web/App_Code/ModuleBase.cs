@@ -1452,8 +1452,10 @@ namespace RO.Web
             string ticket = PrepImpersonation();
 
             Uri myUri = Request.Url;
-            string newUrl = myUri.Scheme
-                + "://" + myUri.Host + ":" + myUri.Port
+            string newUrl =
+                //myUri.Scheme
+                //+ "://" + myUri.Host + ":" + myUri.Port
+                "http://localhost/"
                 + (Request.ApplicationPath + "/").Replace("//", "/")
                 + url + (url.Contains("?") ? "&" : "?") + "runas=" + ticket;
 
@@ -1832,17 +1834,37 @@ namespace RO.Web
                 }
                 */
                 /* new google page crawling */
-                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-                System.Text.RegularExpressions.Regex re = new Regex("^[0-9.]+\\s");
-                string url = String.Format("https://www.google.com/finance/converter?a={0}&from={1}&to={2}&meta={3}", "1", FrISOCurrencySymbol, ToISOCurrencySymbol, Guid.NewGuid().ToString());
-                System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
-                request.Referer = "http://www.checkmin.com";
-                System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
-                System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream());
-                var rate = Regex.Matches(sr.ReadToEnd(),"<span class=\"?bld\"?>([0-9.]+)(.*)</span>")[0].Groups[1].Value;
-                return rate.Trim().Replace(",", ".");
+                //System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                //System.Text.RegularExpressions.Regex re = new Regex("^[0-9.]+\\s");
+                //string url = String.Format("https://www.google.com/finance/converter?a={0}&from={1}&to={2}&meta={3}", "1", FrISOCurrencySymbol, ToISOCurrencySymbol, Guid.NewGuid().ToString());
+                //System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
+                //request.Referer = "http://www.checkmin.com";
+                //System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
+                //System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream());
+                //var rate = Regex.Matches(sr.ReadToEnd(),"<span class=\"?bld\"?>([0-9.]+)(.*)</span>")[0].Groups[1].Value;
+                //return rate.Trim().Replace(",", ".");
+                var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v1/tools/price-conversion");
+                var CmcAPIKey = System.Configuration.ConfigurationManager.AppSettings["CMCAPIKey"];
+
+                var queryString = HttpUtility.ParseQueryString(string.Empty);
+                queryString["amount"] = "1";
+                queryString["symbol"] = FrISOCurrencySymbol;
+                queryString["convert"] = ToISOCurrencySymbol;
+
+                URL.Query = queryString.ToString();
+
+                var client = new WebClient();
+                client.Headers.Add("X-CMC_PRO_API_KEY", CmcAPIKey);
+                client.Headers.Add("Accepts", "application/json");
+                string jsonString = client.DownloadString(URL.ToString());
+                var price = Newtonsoft.Json.Linq.JObject.Parse(jsonString).SelectToken("['data'].['quote'].['" + ToISOCurrencySymbol + "']['price']");
+                return price.ToString();
             }
-            catch { return string.Empty; }
+            // Cannot add "ex.Message" to the return statement; do not remove "ex"; need it here for debugging purpose.
+            catch (Exception ex)
+            {
+                return string.Empty;
+            }
         }
 
         public string fxEncryptedText(string ss)
@@ -2210,7 +2232,7 @@ namespace RO.Web
             List<string> param = new List<string>();
             foreach (string key in qs)
             {
-                if (key.ToLower() != "hash") param.Add(key.ToLower() + "=" + Request.QueryString[key]);
+                if (key.ToLower() != "hash" && key.ToLower() != "ssd") param.Add(key.ToLower() + "=" + Request.QueryString[key]);
             }
             return GetQSHash(string.Join("&", param.OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim());
         }

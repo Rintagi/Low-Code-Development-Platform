@@ -1,0 +1,55 @@
+.material-form {
+
+  .material-form__field {
+    width: 100%;
+    margin-bottom: 20px;
+
+    & > div:before {
+
+      @include themify($themes) {
+        background: themed('colorFieldsBorder');
+      }
+    }
+
+    & > div:hover:before {
+      background-color: $color-accent;
+      height: 1px;
+    }
+
+    & > div:after {
+      background-color: $color-accent;
+    }
+
+    input, textarea {
+      font-size: 14px;
+
+      @include themify($themes) {
+        color: themed('colorText');
+      }
+    }
+
+    svg {
+
+      @include themify($themes) {
+        fill: themed('colorText');
+      }
+    }
+  }
+
+  .material-form__label {
+    margin: 0;
+
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+  }
+
+  label {
+    font-size: 14px;
+  }
+}
+
+.material-form__option {
+  font-size: 13px !important;
+  height: 18px !important;
+}

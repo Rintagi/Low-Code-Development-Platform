@@ -1,0 +1,657 @@
+.inbox {
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+
+  @include themify($themes) {
+    background-color: themed('colorBackground');
+  }
+
+  .inbox__mailbox-list {
+    width: 240px;
+    min-width: 240px;
+    padding: 35px 30px;
+
+    @include themify($themes) {
+      border-right: 1px solid themed('colorBorder');
+    }
+  }
+
+  .inbox__mailbox-list-btn {
+    width: 100%;
+    margin-bottom: 15px;
+    margin-right: 0;
+  }
+
+  .inbox__mailbox, .inbox__label {
+    display: flex;
+    padding: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: 0.3s;
+
+    svg {
+      width: 14px;
+      height: 14px;
+      margin-right: 10px;
+      transition: all 0.3s;
+
+      @include themify($themes) {
+        fill: themed('colorIcon');
+      }
+    }
+
+    &.active {
+      cursor: default;
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+
+      svg {
+
+        @include themify($themes) {
+          fill: themed('colorText');
+        }
+      }
+
+      .inbox__mailbox-title {
+        font-weight: 600;
+      }
+
+      .inbox__mailbox-label {
+        background-color: $color-accent;
+        color: #ffffff;
+      }
+    }
+
+    &:hover, &.active:hover {
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+    }
+  }
+
+  .inbox__mailbox-title {
+    line-height: 14px;
+    margin: 0;
+    transition: all 0.3s;
+  }
+
+  .inbox__mailbox-label {
+    position: absolute;
+    right: 10px;
+    color: $color-additional;
+    transition: 0.3s;
+
+    @include themify($themes) {
+      background-color: themed('colorHover');
+    }
+  }
+
+  .inbox__label-color{
+    display: block;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    margin-top: 4px;
+    margin-right: 10px;
+
+    &.inbox__label-color--green{
+      background-color: $color-accent;
+    }
+
+    &.inbox__label-color--red{
+      background-color: $color-red;
+    }
+
+    &.inbox__label-color--blue{
+      background-color: $color-blue;
+    }
+
+    &.inbox__label-color--yellow{
+      background-color: $color-yellow;
+    }
+  }
+
+  .inbox__labels{
+    font-size: 13px;
+    font-weight: 700;
+    padding-left: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .inbox__container {
+    width: calc(100% - 240px);
+    padding: 35px 30px;
+  }
+
+  .inbox__files-btn {
+    margin: 0;
+  }
+
+  .inbox__compose-title {
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .inbox__email-list-item {
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+    }
+
+    svg {
+      width: 14px;
+      height: 14px;
+      margin-top: 3px;
+
+      @include themify($themes) {
+        fill: themed('colorIcon');
+      }
+    }
+
+    .inbox__favorite {
+      transition: all 0.3s;
+
+      &.active {
+        fill: $color-yellow;
+      }
+    }
+
+    .inbox__email-list-item-checkbox {
+      position: relative;
+
+      svg {
+        margin-top: 1px;
+        margin-left: 1px;
+        fill: $color-accent;
+      }
+    }
+
+    td:first-child{
+      min-width: 32px;
+    }
+  }
+
+  .inbox__email-table-preview {
+    min-width: 200px;
+  }
+
+  .inbox__email-table-date {
+    min-width: 80px;
+  }
+
+  .inbox__emails-table {
+    margin-bottom: 10px;
+
+    tr td:first-child {
+      padding-left: 0;
+    }
+
+    tr td:last-child {
+      padding-right: 0;
+      text-align: right;
+    }
+  }
+
+  .inbox__emails-controls {
+    display: flex;
+    height: 50px;
+    padding-left: 40px;
+    position: relative;
+
+    @include themify($themes) {
+      border-bottom: 1px solid themed('colorBorder');
+    }
+
+    button {
+      padding: 2px 20px 2px 25px;
+      height: 30px;
+    }
+
+    .inbox__emails-control-reload {
+      padding: 4px 8px;
+
+      svg {
+        margin: 0;
+      }
+    }
+  }
+
+  .inbox__emails-control-checkbox {
+    position: absolute;
+    left: 0;
+    top: 5px
+  }
+
+  .inbox__emails-controls-right {
+    margin-left: auto;
+  }
+
+  .inbox__emails-control-search {
+    display: flex;
+
+    input {
+      height: 30px;
+      padding-left: 10px;
+      background: transparent;
+      transition: all 0.3s;
+
+      @include themify($themes) {
+        border: 1px solid themed('colorFieldsBorder');
+        color: themed('colorText');
+      }
+
+      &:focus {
+        border-color: $color-accent;
+        outline: none;
+      }
+    }
+  }
+
+  .inbox__emails-control-search-icon {
+    width: 30px;
+    padding: 7px;
+    height: 30px;
+
+    @include themify($themes) {
+      background: themed('colorFieldsBorder');
+    }
+
+    svg {
+      height: 16px;
+      width: 16px;
+      fill: $color-additional;
+    }
+  }
+
+  .inbox__email-header {
+    display: flex;
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+
+    @include themify($themes) {
+      border-bottom: 1px solid themed('colorBorder');
+    }
+
+    .inbox__favorite {
+      transition: all 0.3s;
+
+      &.active {
+        fill: $color-yellow;
+      }
+    }
+  }
+
+  .inbox__email-back {
+    border: none;
+    background: none;
+    height: 35px;
+    padding-top: 10px;
+    width: 30px;
+    padding-left: 0;
+    cursor: pointer;
+
+    svg {
+      height: 18px;
+      width: 18px;
+      transition: all 0.3s;
+
+      @include themify($themes) {
+        fill: themed('colorText');
+      }
+    }
+
+    &:hover {
+
+      svg {
+        fill: $color-accent;
+      }
+    }
+  }
+
+  .inbox__email-ava {
+    height: 35px;
+    width: 35px;
+    overflow: hidden;
+  }
+
+  .inbox__email-info {
+    padding-left: 10px;
+  }
+
+  .inbox__email-name {
+    font-weight: 600;
+    line-height: 20px;
+
+    svg {
+      height: 14px;
+      width: 14px;
+      margin-left: 20px;
+
+      @include themify($themes) {
+        fill: themed('colorText');
+      }
+    }
+  }
+
+  .inbox__email-email {
+    margin: 0;
+    font-size: 10px;
+    line-height: 13px;
+    color: $color-additional;
+  }
+
+  .inbox__email-right {
+    margin-left: auto;
+    display: flex;
+  }
+
+  .inbox__email-left {
+    display: flex;
+  }
+
+  .inbox__email-time {
+    margin: auto 30px auto 0;
+  }
+
+  .inbox__email-btn {
+    border: none;
+    margin-right: 5px;
+    height: 32px;
+    width: 32px;
+    padding-top: 8px;
+    cursor: pointer;
+
+    @include themify($themes) {
+      background: themed('colorBackgroundBody');
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    svg {
+      height: 14px;
+      width: 14px;
+      fill: $color-additional
+    }
+  }
+
+  .inbox__email-body {
+    margin-top: 20px;
+    margin-bottom: 15px;
+  }
+
+  .inbox__email-attachment {
+    padding-top: 15px;
+    margin-bottom: 15px;
+
+    @include themify($themes) {
+      border-top: 1px solid themed('colorBorder');
+    }
+  }
+
+  .inbox__email-attachment-title {
+    font-size: 14px;
+  }
+
+  .inbox__email-attachment-link {
+    font-size: 10px;
+    margin-top: 10px;
+    display: flex;
+
+    svg {
+      fill: $color-additional;
+      height: 14px;
+      width: 14px;
+      margin-right: 5px;
+    }
+  }
+
+  .inbox__email-reply {
+    padding-top: 15px;
+    position: relative;
+  }
+
+  .inbox__email-reply-textarea {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100px;
+    padding: 10px 35px 10px 15px;
+    transition: all 0.3s;
+    background: transparent;
+
+    @include themify($themes) {
+      border: 1px solid themed('colorFieldsBorder');
+      color: themed('colorText');
+    }
+
+    &:focus, &:active {
+      outline: none;
+      border-color: $color-accent;
+    }
+  }
+
+  .inbox__email-reply-placeholder {
+    pointer-events: none;
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    color: $color-additional;
+
+    span {
+      color: $color-blue;
+    }
+  }
+
+  .inbox__email-reply-btns {
+    margin-top: 10px;
+
+    button {
+      margin-bottom: 10px;
+
+      &:last-child{
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .inbox__email-reply-btn-full {
+    border: none;
+    background: transparent;
+    color: $color-blue;
+    transition: all 0.3s;
+    cursor: pointer;
+    min-height: 32px;
+
+    &:hover {
+      color: $color-blue-hover;
+    }
+  }
+
+  .inbox__email-reply-close {
+    background: transparent;
+    border: none;
+    position: absolute;
+    right: 10px;
+    top: 28px;
+    height: 20px;
+    width: 20px;
+    padding: 0;
+    cursor: pointer;
+
+    svg {
+      height: 15px;
+      width: 15px;
+      fill: $color-additional;
+      transition: all 0.3s;
+    }
+
+    &:hover {
+
+      svg {
+        fill: $color-accent;
+      }
+    }
+  }
+
+  .inbox__topbar {
+    height: 50px;
+    display: none;
+  }
+
+  .inbox__topbar-button {
+    background-color: transparent;
+    border: none;
+    transition: all 0.3s;
+    cursor: pointer;
+    padding: 0;
+    margin-left: -2px;
+
+    &:hover {
+
+      .inbox__topbar-button-icon {
+        fill: $color-accent;
+      }
+
+    }
+  }
+
+  .inbox__topbar-button-icon {
+    transition: 0.3s;
+
+    @include themify($themes) {
+      fill: themed('colorIcon');
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+
+    .inbox__email-time {
+      margin: auto 20px auto 0;
+    }
+  }
+
+  @media screen and (max-width: 1023px) {
+
+    .inbox__topbar {
+      display: block;
+
+      &.inbox__topbar--hide {
+        display: none;
+      }
+    }
+
+    .inbox__compose-title {
+      position: absolute;
+      top: 40px;
+      left: 70px;
+    }
+
+    .inbox__mailbox-list {
+      position: absolute;
+      top: 0;
+      transform: translateX(calc(-100% - 1px));
+      transition: 0.3s;
+      z-index: 3;
+      height: 100%;
+
+      @include themify($themes) {
+        background-color: themed('colorBackground');
+      }
+    }
+
+    .inbox__container {
+      width: 100%;
+    }
+
+    .inbox__emails-control-search {
+
+      input {
+        width: 160px;
+      }
+    }
+
+    .inbox__email-time {
+      margin: auto 10px auto 0;
+    }
+
+    &:before {
+      content: '';
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.3s, z-index 0.3s 0.3s;
+
+      @include themify($themes) {
+        background-color: themed('colorBackgroundOpacity');
+      }
+    }
+
+    .inbox__emails-controls-right {
+      position: absolute;
+      top: -50px;
+      right: 0;
+    }
+
+    &.inbox--show-mailboxes {
+
+      .inbox__mailbox-list {
+        transform: translateX(0);
+      }
+
+      &:before {
+        opacity: 1;
+        z-index: 1;
+        transition: opacity 0.3s, z-index 0s;
+        pointer-events: none;
+      }
+
+      .inbox__content {
+        pointer-events: none;
+      }
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+
+    .inbox__email-left, .inbox__email-right {
+      width: 100%;
+    }
+
+    .inbox__email-right {
+      margin-top: 15px;
+    }
+
+    .inbox__email-time {
+      margin-right: auto;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+
+    .inbox__emails-control-search-icon {
+      display: none;
+    }
+
+    .inbox__emails-control-reload {
+      margin-right: 0;
+    }
+  }
+}

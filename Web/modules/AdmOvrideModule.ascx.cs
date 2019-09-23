@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -1615,7 +1618,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					string rf = string.Empty;
 					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 4, cFindFilter.SelectedValue) + ")"; }
-					if (rf != string.Empty) { rf = "((" + rf + "  or _NewRow = 'Y' ))"; }
+					if (rf != string.Empty) { rf = "((" + rf + " or _NewRow = 'Y' ))"; }
 					dv.RowFilter = rf;
 					ViewState["_RowFilter"] = rf;
 					GotoPage(0); cAdmOvrideGrid_DataBind(dv);
@@ -2089,6 +2092,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			// *** GridItemDataBound (before) Web Rule End *** //
 			DataTable dt = (DataTable)Session[KEY_dtAdmOvrideGrid];
 			bool isEditItem = false;
+			bool isImage = true;
+			bool hasImageContent = false;
 			DataView dvAdmOvrideGrid = dt != null ? dt.DefaultView : null;
 			if (cAdmOvrideGrid.EditIndex > -1 && GetDataItemIndex(cAdmOvrideGrid.EditIndex) == e.Item.DataItemIndex)
 			{
@@ -2116,6 +2121,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				}
 			}
 			if (cAdmOvrideGrid.EditIndex > -1 && GetDataItemIndex(cAdmOvrideGrid.EditIndex) == e.Item.DataItemIndex)
+			{
+			}
+			else
 			{
 			}
 			// *** GridItemDataBound (after) Web Rule End *** //

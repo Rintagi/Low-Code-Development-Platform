@@ -61,7 +61,6 @@ namespace RO.Rule3
             string ReleaseOs = rInf.Rows[0]["ReleaseOs"].ToString();
             string EntityCode = rInf.Rows[0]["EntityCode"].ToString();
             Int16 EntityId = Int16.Parse(rInf.Rows[0]["EntityId"].ToString());
-            string LicenseFilePath = "";
             // The following is necessary because somehow the create directory would fail from time to time after the deletion;
             if (Directory.Exists(PrepPath))
             {
@@ -157,7 +156,6 @@ namespace RO.Rule3
                         break;
                     case "C":	//Ms Windows for now:
                         Directory.CreateDirectory(PrepPath + "Client" + dr["ReleaseDtlId"].ToString() + "\\");
-                        LicenseFilePath = dr["SrcClnPath"].ToString() +  "\\License.txt"; // location of license file
                         if (dr["ObjectName"].ToString() == "n/a")
                         {
                             si.Append((char)13);
@@ -269,14 +267,35 @@ namespace RO.Rule3
                         }
                         else
                         {
-                            string objectExempt = dr["ObjectExempt"].ToString() + " |Deploy" + Config.AppNameSpace + "*" + " |SQL";
-                            if (dr["ObjectName"].ToString().Trim() == "*.*")
+                            string objectExempt = dr["ObjectExempt"].ToString() 
+                                + " |Deploy" + Config.AppNameSpace + "*\\*.*"
+                                + " |" + Config.AppNameSpace + "Ws\\*.*"
+                                + " |DeployBootstrap\\*.*"
+                                + " |SQL\\*.*"
+                                + " |*\\bin\\*.*"
+                                + " |*\\obj\\*.*"
+                                + " |*\\node_modules\\*.*"
+                                + " |*\\npm-cache\\*.*"
+                                + " |.npmrc"
+                                + " |*.csproj.user"
+                                + " |.vs"
+                                + " |.git\\*.*"
+                                + " |PrecompiledWeb\\*.*"
+                                + " |Web\\*.*"
+                                + " |WsXLs\\*.*"
+                                + " |*\\npm\\*.*"
+                                + " |package-lock.json";
+                            if (dr["ObjectName"].ToString().Trim() == "*.*" || true)
                             {
-                                Utils.JFileZip(dr["SrcRulePath"].ToString() + "\\", PrepPath + "Rule" + dr["ReleaseDtlId"].ToString() + ".zip", true, objectExempt, AspExt2Replace, dr["SrcClientNS"].ToString(), dr["SrcClientNS"].ToString());
+                                string objectIncluded = dr["ObjectName"].ToString().Trim();
+                                Utils.JFileZip(dr["SrcRulePath"].ToString() + "\\", PrepPath + "Rule" + dr["ReleaseDtlId"].ToString() + ".zip", true, objectIncluded, objectExempt, AspExt2Replace, dr["SrcClientNS"].ToString(), dr["SrcClientNS"].ToString());
                             }
                             else
                             {
                                 FileCopy(dr, dr["SrcRulePath"].ToString(), PrepPath + "Rule" + dr["ReleaseDtlId"].ToString() + "\\", dr["SrcRuleNS"].ToString(), dr["SrcRuleNS"].ToString(), new DirectoryInfo(dr["SrcRulePath"].ToString()), true);
+//                                var reactPath = new Regex(@"\\[^\\]+\\?$").Replace(dr["SrcRulePath"].ToString(), @"\React"); 
+//                                FileCopy(dr, reactPath, PrepPath + "Rule" + dr["ReleaseDtlId"].ToString() + "\\" + @"React\", dr["SrcRuleNS"].ToString(), dr["SrcRuleNS"].ToString(), new DirectoryInfo(reactPath), true);
+
                                 DeleteExemptFiles(dr["SrcRulePath"].ToString(), PrepPath + "Rule" + dr["ReleaseDtlId"].ToString() + "\\", new DirectoryInfo(dr["SrcRulePath"].ToString()), objectExempt.ToString());
                                 Utils.JFileZip(PrepPath + "Rule" + dr["ReleaseDtlId"].ToString() + "\\", PrepPath + "Rule" + dr["ReleaseDtlId"].ToString() + ".zip", true, true);
                             }
@@ -384,16 +403,6 @@ namespace RO.Rule3
                 sd.Append("Readme: \r\n" + drv["Readme"].ToString() + "\r\n");
             }
             Robot.WriteToFile("M", PrepDeplPath + "ReleaseNote.txt", sd.ToString());
-
-            // copy license file
-            try
-            {
-                if (!string.IsNullOrEmpty(LicenseFilePath) && File.Exists(LicenseFilePath))
-                {
-                    File.Copy(LicenseFilePath, PrepDeplPath + "License.Txt", true);
-                }
-            }
-            catch { }
             return MsgWarning.ToString();
         }
 
@@ -568,11 +577,9 @@ namespace RO.Rule3
                     {
                         Robot.WriteToFile("M", bkPath + tarDb + "SrcO.bat", ss);
                         // Script Source tables:
-                        System.Threading.Thread.Sleep(1000);
                         Utils.WinProc("\"" + bkPath + tarDb + "SrcO.bat\"", " \"" + dr["SrcDbServer"].ToString() + "\" \"" + dr["SrcDbUserId"].ToString() + "\" \"" + DecryptString(dr["SrcDbPassword"].ToString()) + "\"", false);
                         // ExecScript can handle unlimited file size:
                         //							ds.ExecScript(string.Empty, "Script Source tables", bkPath + tarDb + "SrcO.bat", string.Empty, GetSrc(dr["SrcDbProviderOle"].ToString(), dr["SrcServerName"].ToString(), dr["SrcDbServer"].ToString(), srcDb, dr["SrcDbUserId"].ToString(), dr["SrcDbPassword"].ToString()), null, dbConnectionString, dbPassword);
-                        System.Threading.Thread.Sleep(1000);
                         Utils.JFileZip(PrepDeplPath + "Data" + tarDb.Substring(EntityCode.Length, tarDb.Length - EntityCode.Length) + "\\", bkPath + "Data" + tarDb.Substring(EntityCode.Length, tarDb.Length - EntityCode.Length) + ".zip", true, true);
                         File.Delete(bkPath + tarDb + "SrcO.bat");
                     }
@@ -850,8 +857,35 @@ namespace RO.Rule3
         private void FileCopy(DataRow dr, string srcPath, string tarPath, string oldNS, string newNS, DirectoryInfo srcDi, bool bFirstCall)
         {
             DirectoryInfo tarDi = new DirectoryInfo(srcDi.FullName.Replace(srcPath, tarPath));
-            if (!tarDi.Exists) { tarDi.Create(); }
+            //if (!tarDi.Exists) { tarDi.Create(); }
             string[] ObjectName = dr["ObjectName"].ToString().Split('|');
+            string objectExempt = dr["ObjectExempt"].ToString()
+                                + " |Deploy" + Config.AppNameSpace + "*"
+                                + " |" + Config.AppNameSpace + "Ws"
+                                + " |DeployBootstrap"
+                                + " |SQL"
+                                + " |bin"
+                                + " |obj"
+                                + " |node_modules"
+                                + " |npm-cache"
+                                + " |.npmrc"
+                                + " |.vs"
+                                + " |.git"
+                                + " |PrecompiledWeb"
+                                + " |Web"
+                                + " |WsXLs"
+                                + " |npm"
+                                + " |package-lock.json";
+            string[] ObjectExempts = objectExempt.Split('|');
+            string currDir = srcDi.FullName;
+            List<System.Text.RegularExpressions.Regex> exemptRules =
+                (from o in objectExempt.Split('|').ToList<string>()
+                 where !string.IsNullOrEmpty(o.Trim())
+                 select new System.Text.RegularExpressions.Regex("^" + currDir.Replace("\\", "\\\\").Replace(".", "\\.") + (o.Contains(".") && !o.Contains("\\") ? ".*" : "") + (o.StartsWith("\\") ? @"(\\)?" : @"\\") + o.Trim().ToLower().Replace("\\", "\\\\").Replace("*.*", "*").Replace(".", "\\.").Replace("*", o.Contains("\\*.*") ? ".*" : "[^\\\\]*") + "$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToList();
+            Func<string, string, bool> fIsExempted = (f, p) => { foreach (var re in exemptRules) { if (re.IsMatch(p)) return true; } return false; };
+            Func<string, string, bool> fIsIncluded = (f, p) => true;
+
+            string[] reactLocal = new string[] { "node_modules", "npm-cache",".npmrc","npm", "package-lock.json"};
             foreach (string oo in ObjectName)
             {
                 if (bFirstCall || oo.IndexOf("\\") < 0)
@@ -859,16 +893,16 @@ namespace RO.Rule3
                     try
                     {
                         FileInfo tarFi;
-                        FileInfo[] fis = srcDi.GetFiles(oo.Trim());
+                        FileInfo[] fis = srcDi.GetFiles(oo.IndexOf("\\") < 0 ? (srcDi.FullName.ToLower().Contains(oo.Trim().ToLower()) ? "*.*" : "")  : oo.Trim());
                         foreach (FileInfo srcFi in fis)
                         {
                             tarFi = new FileInfo(srcFi.FullName.Replace(srcPath, tarPath));
-                            if (!Directory.Exists(tarFi.DirectoryName)) { Directory.CreateDirectory(tarFi.DirectoryName); }
+                            if (!Directory.Exists(tarFi.DirectoryName) && !reactLocal.Contains(srcFi.Name.ToLower().Trim())) { Directory.CreateDirectory(tarFi.DirectoryName); }
                             if (AspExt2Replace.IndexOf("," + srcFi.Extension.Substring(1, srcFi.Extension.Length - 1) + ",") < 0)
                             {
-                                if (!tarFi.Exists) { srcFi.CopyTo(tarFi.FullName); }
+                                if (!tarFi.Exists && !reactLocal.Contains(srcFi.Name.ToLower().Trim())) { srcFi.CopyTo(tarFi.FullName); }
                             }
-                            else
+                            else if (!reactLocal.Contains(srcFi.Name.ToLower().Trim()))
                             {
                                 ReplaceAndCopy(oldNS, newNS, srcFi, tarFi);
                             }
@@ -879,7 +913,9 @@ namespace RO.Rule3
             }
             foreach (DirectoryInfo di in srcDi.GetDirectories())
             {
-                if (di.Name.ToLower().Trim() != ".git")
+                if (di.Name.ToLower().Trim() != ".git"
+                    && !reactLocal.Contains(di.Name.ToLower().Trim())
+                    )
                 {
                     FileCopy(dr, srcPath, tarPath, oldNS, newNS, di, false);
                 }

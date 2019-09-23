@@ -752,9 +752,11 @@ namespace RO.Rule3
                 {
                     sb.Append("		<div class=\"DocPanel\"><table cellspacing=\"0\" cellpadding=\"0\"><tr>" + Environment.NewLine);
                     sb.Append("		    <td><asp:ImageButton id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"");
-                    sb.Append(" ImageUrl='<%# DataBinder.Eval(Container.DataItem,\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") as byte[] !=null ? \"data:application/base64;base64,\" + Convert.ToBase64String((DataBinder.Eval(Container.DataItem,\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") as byte[])??(new byte[1]))  : \"~/images/DefaultImg.png\" %>'");
-                    if (drv["ColumnSize"].ToString() != string.Empty) { sb.Append(" max-width=\"" + drv["ColumnSize"].ToString() + "px\""); }
-                    if (drv["ColumnHeight"].ToString() != string.Empty) { sb.Append(" max-height=\"" + drv["ColumnHeight"].ToString() + "px\""); }
+                    sb.Append(" ImageUrl='<%# DataBinder.Eval(Container.DataItem,\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") as byte[] !=null ? RO.Common3.Utils.BlobPlaceHolder((DataBinder.Eval(Container.DataItem,\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") as byte[])??(new byte[1]),true) : \"~/images/DefaultImg.png\" %>'");
+                    sb.Append(" style=\"");
+                    if (drv["ColumnSize"].ToString() != string.Empty) { sb.Append("max-width:" + drv["ColumnSize"].ToString() + "px;"); }
+                    if (drv["ColumnHeight"].ToString() != string.Empty) { sb.Append("max-height:" + drv["ColumnHeight"].ToString() + "px;"); }
+                    sb.Append("\"");
                     sb.Append(" runat=\"server\" /></td>" + Environment.NewLine);
                     if (drv["DdlRefColumnId"].ToString() == string.Empty)
                     {
@@ -1161,7 +1163,7 @@ namespace RO.Rule3
                     {
                         if (drv["DataTypeSqlName"].ToString().ToLower() == "varbinary")
                         {
-                            sbItem.Append(" ImageUrl='<%# DataBinder.Eval(Container.DataItem,\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\").ToString().Trim().Equals(string.Empty) ? \"../images/DefaultImg.png\" : \"data:application/base64;base64,\" + Convert.ToBase64String((DataBinder.Eval(Container.DataItem,\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") as byte[])??(new byte[1]))  %>'");
+                            sbItem.Append(" ImageUrl='<%# DataBinder.Eval(Container.DataItem,\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\").ToString().Trim().Equals(string.Empty) ? \"../images/DefaultImg.png\" : RO.Common3.Utils.BlobPlaceHolder((DataBinder.Eval(Container.DataItem,\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") as byte[])??(new byte[1]),true) %>'");
                             // Need both width and height to function properly:
                             if (drv["ColumnSize"].ToString() != string.Empty && drv["ColumnHeight"].ToString() != string.Empty)
                             {
@@ -1794,6 +1796,10 @@ namespace RO.Rule3
 			sb.Append("using System.Globalization;" + Environment.NewLine);
 			sb.Append("using System.Threading;" + Environment.NewLine);
             sb.Append("using System.Linq;" + Environment.NewLine);
+            sb.Append("using System.Diagnostics;" + Environment.NewLine);
+            sb.Append("using System.Collections.Generic;" + Environment.NewLine);
+            sb.Append("using System.Text.RegularExpressions;" + Environment.NewLine);
+
 			if (clientFrwork != "1") { sb.Append("using AjaxControlToolkit;" + Environment.NewLine); }
             sb.Append("using RO.Facade3;" + Environment.NewLine);
             sb.Append("using RO.Common3;" + Environment.NewLine);
@@ -1891,7 +1897,7 @@ namespace RO.Rule3
 					bWebRule = true;
 					sb.Append(Environment.NewLine);
 					sb.Append("		//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 				}
 			}
             if (bWebRule) { sb.Append("		// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("		// *** Custom Function/Procedure Web Rule starts here *** //" + Environment.NewLine); }
@@ -2034,7 +2040,7 @@ namespace RO.Rule3
                 {
                     bWebRule = true;
                     sb.Append("				//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                    sb.Append("	" + drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append("	" + drvr["WebRuleProg"].ToString() + Environment.NewLine);
                 }
             }
             if (bWebRule) { sb.Append("				// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("				// *** Criteria Trigger (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -2061,7 +2067,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("				//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 				}
 			}
             if (bWebRule) { sb.Append("				// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("				// *** Page Load (End of) Web Rule starts here *** //" + Environment.NewLine); }
@@ -2134,7 +2140,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 				}
 			}
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** Page Init (Front of) Web Rule starts here *** //" + Environment.NewLine); }
@@ -2146,7 +2152,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 				}
 			}
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** Page Init (End of) Web Rule starts here *** //" + Environment.NewLine); }
@@ -2918,40 +2924,47 @@ namespace RO.Rule3
                     {
                         sb.Append("			if (" + DocTs + " && " + DocFi + ".HasFile && " + DocFi + ".PostedFile.FileName != string.Empty)" + Environment.NewLine);
                         sb.Append("			{" + Environment.NewLine);
-                        sb.Append("				byte[] dc;" + Environment.NewLine);
-                        sb.Append("				if (\"image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png\".IndexOf(" + DocFi + ".PostedFile.ContentType) >= 0 && " + DocFi + ".PostedFile.ContentLength > int.Parse(Config.ImgThreshold) * 1024)" + Environment.NewLine);
+                        sb.Append("				if (c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Fi.PostedFile.FileName.Length > 100)" + Environment.NewLine);
                         sb.Append("				{" + Environment.NewLine);
-                        sb.Append("					System.Drawing.Image oBMP = System.Drawing.Image.FromStream(" + DocFi + ".PostedFile.InputStream);" + Environment.NewLine);
-                        sb.Append("					int nHeight = int.Parse((Math.Round(decimal.Parse(oBMP.Height.ToString()) * (decimal.Parse(Config.ImgThreshold) / decimal.Parse(oBMP.Width.ToString())))).ToString());" + Environment.NewLine);
-                        sb.Append("					Bitmap nBMP = new Bitmap(oBMP, int.Parse(Config.ImgThreshold), nHeight);" + Environment.NewLine);
-                        sb.Append("					using (System.IO.MemoryStream sm = new System.IO.MemoryStream())" + Environment.NewLine);
-                        sb.Append("				    {" + Environment.NewLine);
-                        sb.Append("					    nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);" + Environment.NewLine);
-                        sb.Append("					    sm.Position = 0;" + Environment.NewLine);
-                        sb.Append("					    dc = new byte[sm.Length + 1];" + Environment.NewLine);
-                        sb.Append("					    sm.Read(dc, 0, dc.Length); sm.Close();" + Environment.NewLine);
-                        sb.Append("				    }" + Environment.NewLine);
-                        sb.Append("					oBMP.Dispose(); nBMP.Dispose();" + Environment.NewLine);
+                        sb.Append("					bErrNow.Value = \"Y\"; PreMsgPopup(\"Filename exceeds a total of 100 characters. Please shorten the filename and upload again.\");" + Environment.NewLine);
                         sb.Append("				}" + Environment.NewLine);
                         sb.Append("				else" + Environment.NewLine);
                         sb.Append("				{" + Environment.NewLine);
-                        sb.Append("					dc = new byte[" + DocFi + ".PostedFile.ContentLength];" + Environment.NewLine);
-                        sb.Append("					" + DocFi + ".PostedFile.InputStream.Read(dc, 0, dc.Length);" + Environment.NewLine);
-                        sb.Append("				}" + Environment.NewLine);
-                        sb.Append("				// In case DocId has not been saved properly, always find the most recent to replace as long as it has the same file name:" + Environment.NewLine);
-                        sb.Append("				string DocId = string.Empty;" + Environment.NewLine);
+                        sb.Append("					byte[] dc;" + Environment.NewLine);
+                        sb.Append("					if (\"image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png\".IndexOf(" + DocFi + ".PostedFile.ContentType) >= 0 && " + DocFi + ".PostedFile.ContentLength > int.Parse(Config.ImgThreshold) * 1024)" + Environment.NewLine);
+                        sb.Append("					{" + Environment.NewLine);
+                        sb.Append("						System.Drawing.Image oBMP = System.Drawing.Image.FromStream(" + DocFi + ".PostedFile.InputStream);" + Environment.NewLine);
+                        sb.Append("						int nHeight = int.Parse((Math.Round(decimal.Parse(oBMP.Height.ToString()) * (decimal.Parse(Config.ImgThreshold) / decimal.Parse(oBMP.Width.ToString())))).ToString());" + Environment.NewLine);
+                        sb.Append("						Bitmap nBMP = new Bitmap(oBMP, int.Parse(Config.ImgThreshold), nHeight);" + Environment.NewLine);
+                        sb.Append("						using (System.IO.MemoryStream sm = new System.IO.MemoryStream())" + Environment.NewLine);
+                        sb.Append("				    	{" + Environment.NewLine);
+                        sb.Append("						    nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);" + Environment.NewLine);
+                        sb.Append("						    sm.Position = 0;" + Environment.NewLine);
+                        sb.Append("						    dc = new byte[sm.Length + 1];" + Environment.NewLine);
+                        sb.Append("						    sm.Read(dc, 0, dc.Length); sm.Close();" + Environment.NewLine);
+                        sb.Append("					    }" + Environment.NewLine);
+                        sb.Append("						oBMP.Dispose(); nBMP.Dispose();" + Environment.NewLine);
+                        sb.Append("					}" + Environment.NewLine);
+                        sb.Append("					else" + Environment.NewLine);
+                        sb.Append("					{" + Environment.NewLine);
+                        sb.Append("						dc = new byte[" + DocFi + ".PostedFile.ContentLength];" + Environment.NewLine);
+                        sb.Append("						" + DocFi + ".PostedFile.InputStream.Read(dc, 0, dc.Length);" + Environment.NewLine);
+                        sb.Append("					}" + Environment.NewLine);
+                        sb.Append("					// In case DocId has not been saved properly, always find the most recent to replace as long as it has the same file name:" + Environment.NewLine);
+                        sb.Append("					string DocId = string.Empty;" + Environment.NewLine);
                         string sConn = drv["MultiDesignDb"].ToString() == "N" ? "LcAppConnString" : "(string)Session[KEY_sysConnectionString]";
-                        sb.Append("				DocId = new AdminSystem().GetDocId(c" + pMKeyColumn + ".Text, \"dbo." + drv["DdlKeyTableName"].ToString() + "\", Path.GetFileName(" + DocFi + ".PostedFile.FileName), base.LUser.UsrId.ToString(), " + sConn + ", LcAppPw);" + Environment.NewLine);
-                        sb.Append("				if (DocId == string.Empty || !c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Ow.Checked)" + Environment.NewLine);
-                        sb.Append("				{" + Environment.NewLine);
-                        sb.Append("					DocId = new AdminSystem().AddDbDoc(c" + pMKeyColumn + ".Text, \"dbo." + drv["DdlKeyTableName"].ToString() + "\", Path.GetFileName(" + DocFi + ".PostedFile.FileName), " + DocFi + ".PostedFile.ContentType, dc.Length, dc, " + sConn + ", LcAppPw, base.LUser);" + Environment.NewLine);
+                        sb.Append("					DocId = new AdminSystem().GetDocId(c" + pMKeyColumn + ".Text, \"dbo." + drv["DdlKeyTableName"].ToString() + "\", Path.GetFileName(" + DocFi + ".PostedFile.FileName), base.LUser.UsrId.ToString(), " + sConn + ", LcAppPw);" + Environment.NewLine);
+                        sb.Append("					if (DocId == string.Empty || !c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Ow.Checked)" + Environment.NewLine);
+                        sb.Append("					{" + Environment.NewLine);
+                        sb.Append("						DocId = new AdminSystem().AddDbDoc(c" + pMKeyColumn + ".Text, \"dbo." + drv["DdlKeyTableName"].ToString() + "\", Path.GetFileName(" + DocFi + ".PostedFile.FileName), " + DocFi + ".PostedFile.ContentType, dc.Length, dc, " + sConn + ", LcAppPw, base.LUser);" + Environment.NewLine);
+                        sb.Append("					}" + Environment.NewLine);
+                        sb.Append("					else" + Environment.NewLine);
+                        sb.Append("					{" + Environment.NewLine);
+                        sb.Append("						new AdminSystem().UpdDbDoc(DocId, \"dbo." + drv["DdlKeyTableName"].ToString() + "\", Path.GetFileName(" + DocFi + ".PostedFile.FileName), " + DocFi + ".PostedFile.ContentType, dc.Length, dc, " + sConn + ", LcAppPw, base.LUser);" + Environment.NewLine);
+                        sb.Append("					}" + Environment.NewLine);
+                        sb.Append("					" + DocPn + ".Visible = false; c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Div.Visible = true;" + Environment.NewLine);
+                        sb.Append("					Set" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "(c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "GV, string.Empty);" + Environment.NewLine);
                         sb.Append("				}" + Environment.NewLine);
-                        sb.Append("				else" + Environment.NewLine);
-                        sb.Append("				{" + Environment.NewLine);
-                        sb.Append("					new AdminSystem().UpdDbDoc(DocId, \"dbo." + drv["DdlKeyTableName"].ToString() + "\", Path.GetFileName(" + DocFi + ".PostedFile.FileName), " + DocFi + ".PostedFile.ContentType, dc.Length, dc, " + sConn + ", LcAppPw, base.LUser);" + Environment.NewLine);
-                        sb.Append("				}" + Environment.NewLine);
-                        sb.Append("				" + DocPn + ".Visible = false; c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Div.Visible = true;" + Environment.NewLine);
-                        sb.Append("				Set" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "(c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "GV, string.Empty);" + Environment.NewLine);
                     }
                     else if (drv["DisplayMode"].ToString().ToLower() == "upload")
                     {
@@ -3352,7 +3365,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 				}
 			}
 			if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -3365,7 +3378,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3377,7 +3390,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3393,7 +3406,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 				}
 			}
 			if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -3406,7 +3419,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3418,7 +3431,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3455,7 +3468,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 				}
 			}
 			if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -3468,7 +3481,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3533,7 +3546,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3638,7 +3651,7 @@ namespace RO.Rule3
                 {
                     bWebRule = true;
                     sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                    sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                 }
             }
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** Criteria Trigger (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -4698,7 +4711,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** List Selection (End of) Web Rule starts here *** //" + Environment.NewLine); }
@@ -5161,7 +5174,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** Default Value (Folder) Web Rule starts here *** //" + Environment.NewLine); }
@@ -5361,7 +5374,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** Default Value (Folder) Web Rule starts here *** //" + Environment.NewLine); }
@@ -5475,7 +5488,7 @@ namespace RO.Rule3
                                 {
                                     sb.Append("\"~/images/DefaultImg.png\"; }");
                                 }
-                                sb.Append(" else { c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".ImageUrl = \"data:application/base64;base64,\" + Convert.ToBase64String(dr[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"] as byte[]);}");
+                                sb.Append(" else { c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".OnClientClick = \"window.open('\" + GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dr[\"" + pMKey + drv["TableId"].ToString() + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pMKey + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\") + \"'); return false;\"; c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".ImageUrl = RO.Common3.Utils.BlobPlaceHolder(dr[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"] as byte[],true);}");
                             }
                             else
                             {
@@ -5694,8 +5707,8 @@ namespace RO.Rule3
                 {
                     if (drv["DdlRefColumnId"].ToString() == string.Empty && drv["DisplayName"].ToString().ToLower() == "imagebutton" && drv["DataTypeSqlName"].ToString().ToLower() == "varbinary")
                     {
-                        sb.Append("			c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Fi.Attributes[\"onchange\"] = \"if('\" + c" + pMKeyColumn + ".Text + \"'==''){PopDialog('','Please save the record first before upload','');}else{sendFile(this.files[0],'\" + GetUrlWithQSHash(\"UpLoad.aspx?key=\" + c" + pMKeyColumn + ".Text + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pMKey + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ColumnHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ColumnHeight"].ToString()) + "&sys=\" + base.LCurr.SystemId.ToString()) + \"',refreshUploadCallback(this,'\" + c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".ClientID + \"')); return false;}\";" + Environment.NewLine);
-                        sb.Append("			c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Del.Attributes[\"onclick\"] = \"sendFile('','\" + GetUrlWithQSHash(\"UpLoad.aspx?del=true&key=\" + c" + pMKeyColumn + ".Text + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pMKey + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ColumnHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ColumnHeight"].ToString()) + "&sys=\" + base.LCurr.SystemId.ToString()) + \"',refreshUploadCallback(this,'\" + c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".ClientID + \"'));return false;\";" + Environment.NewLine);
+                        sb.Append("			c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Fi.Attributes[\"onchange\"] = \"if('\" + c" + pMKeyColumn + ".Text + \"'==''){PopDialog('','Please save the record first before upload','');}else{sendFile(this.files[0],'\" + GetUrlWithQSHash(\"UpLoad.aspx?key=\" + c" + pMKeyColumn + ".Text + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pMKey + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=\" + base.LCurr.SystemId.ToString()) + \"',refreshUploadCallback(this,'\" + c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".ClientID + \"')); return false;}\";" + Environment.NewLine);
+                        sb.Append("			c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Del.Attributes[\"onclick\"] = \"sendFile('','\" + GetUrlWithQSHash(\"UpLoad.aspx?del=true&key=\" + c" + pMKeyColumn + ".Text + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pMKey + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=\" + base.LCurr.SystemId.ToString()) + \"',refreshUploadCallback(this,'\" + c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".ClientID + \"'));return false;\";" + Environment.NewLine);
                     }
                 }
                 bWebRule = false;
@@ -5705,7 +5718,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** List Selection (End of) Web Rule starts here *** //" + Environment.NewLine); }
@@ -5803,7 +5816,7 @@ namespace RO.Rule3
 							{
 								bWebRule = true;
 								sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-								sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+								sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 							}
 						}
                         if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** On Change/ On Click Web Rule starts here *** //" + Environment.NewLine); }
@@ -6044,7 +6057,7 @@ namespace RO.Rule3
 							{
 								bWebRule = true;
 								sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-								sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+								sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 							}
 						}
                         if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** On Change/ On Click Web Rule starts here *** //" + Environment.NewLine); }
@@ -6272,7 +6285,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6285,7 +6298,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6308,7 +6321,7 @@ namespace RO.Rule3
 					sb.Append("					string rf = string.Empty;" + Environment.NewLine);
                     sb.Append("					if (cFind.Text != string.Empty) { rf = \"(\" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), " + iOffset.ToString() + ", cFindFilter.SelectedValue) + \")\"; }" + Environment.NewLine);
 					if ("I2".IndexOf(dw["ScreenTypeName"].ToString()) >= 0) { dv.RowFilter = "MasterTable <> 'Y'"; } else { dv.RowFilter = "MasterTable = 'Y'"; }
-                    sb.Append("					if (rf != string.Empty) { rf = \"((\" + rf + \"  or _NewRow = 'Y' ))\"; }" + Environment.NewLine);
+                    sb.Append("					if (rf != string.Empty) { rf = \"((\" + rf + \" or _NewRow = 'Y' ))\"; }" + Environment.NewLine);
 					sb.Append("					dv.RowFilter = rf;" + Environment.NewLine);
 					sb.Append("					ViewState[\"_RowFilter\"] = rf;" + Environment.NewLine);
                     //if ("I2".IndexOf(dw["ScreenTypeName"].ToString()) >= 0)
@@ -6333,7 +6346,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6349,7 +6362,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6362,7 +6375,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6374,7 +6387,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6390,7 +6403,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6403,7 +6416,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6415,7 +6428,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6431,7 +6444,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6444,7 +6457,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6456,7 +6469,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6472,7 +6485,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6485,7 +6498,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6497,7 +6510,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6513,7 +6526,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6526,7 +6539,7 @@ namespace RO.Rule3
                         {
                             bWebRule = true;
                             sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                            sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                            sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                         }
                     }
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6605,7 +6618,7 @@ namespace RO.Rule3
                         {
                             bWebRule = true;
                             sb.Append("				//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                            sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                            sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                         }
                     }
                     if (bWebRule) { sb.Append("				// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("				// *** Default Value (Grid) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6617,7 +6630,7 @@ namespace RO.Rule3
                         {
                             bWebRule = true;
                             sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                            sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                            sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                         }
                     }
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6665,7 +6678,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6678,7 +6691,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6690,7 +6703,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6706,7 +6719,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6719,7 +6732,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6733,7 +6746,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6749,7 +6762,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6762,7 +6775,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6786,7 +6799,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -7109,7 +7122,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -7122,7 +7135,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -7134,7 +7147,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -7184,7 +7197,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -7197,7 +7210,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -7232,7 +7245,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -7612,7 +7625,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -7625,13 +7638,15 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** GridItemDataBound (before) Web Rule End *** //" + Environment.NewLine); }
 					// Edit controls not available at event c???Grid_EditCommand().
 					sb.Append("			DataTable dt = (DataTable)Session[KEY_dt" + dw["ProgramName"].ToString() + "Grid];" + Environment.NewLine);
                     sb.Append("			bool isEditItem = false;" + Environment.NewLine);
+                    sb.Append("			bool isImage = true;" + Environment.NewLine);
+                    sb.Append("			bool hasImageContent = false;" + Environment.NewLine);
                     sb.Append("			DataView dv" + dw["ProgramName"].ToString() + "Grid = dt != null ? dt.DefaultView : null;" + Environment.NewLine);
                     sb.Append("			if (c" + dw["ProgramName"].ToString() + "Grid.EditIndex > -1 && GetDataItemIndex(c" + dw["ProgramName"].ToString() + "Grid.EditIndex) == e.Item.DataItemIndex)" + Environment.NewLine);
                     sb.Append("			{" + Environment.NewLine);
@@ -7764,15 +7779,60 @@ namespace RO.Rule3
                     sb.Append("			        if (tr != null && lb != null) { SetDefaultCtrl(tr, lb, string.Empty); }" + Environment.NewLine);
                     sb.Append("				}" + Environment.NewLine);
                     sb.Append("			}" + Environment.NewLine);
+                    bool bHasImage = false;
+                    foreach (DataRowView drv in dv)
+                    {
+                        if (drv["DisplayName"].ToString().ToLower() == "imagebutton" && drv["DataTypeSqlName"].ToString().ToLower() == "varbinary") {
+                            bHasImage = true;
+                        }
+                    }
                     sb.Append("			if (c" + dw["ProgramName"].ToString() + "Grid.EditIndex > -1 && GetDataItemIndex(c" + dw["ProgramName"].ToString() + "Grid.EditIndex) == e.Item.DataItemIndex)" + Environment.NewLine);
                     sb.Append("			{" + Environment.NewLine);
+                    if (bHasImage) { sb.Append("			    ImageButton ImageGridDisplay;" + Environment.NewLine); }
                     foreach (DataRowView drv in dv)
                     {
                         if (drv["DisplayName"].ToString().ToLower() == "imagebutton" && drv["DataTypeSqlName"].ToString().ToLower() == "varbinary")
                         {
-                            sb.Append("			    ImageButton ImageGridDisplay = e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") as ImageButton;" + Environment.NewLine);
-                            sb.Append("			    ((FileUpload)e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Fi\")).Attributes[\"onchange\"] = \"if('\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + pMKeyColumn + "\"].ToString() + \"'==''){PopDialog('','Please save the record first before upload.','');}else{sendFile(this.files[0],'\" + GetUrlWithQSHash(\"UpLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + pMKeyColumn + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pMKey + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ColumnHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ColumnHeight"].ToString()) + "&sys=\" + base.LCurr.SystemId.ToString()) + \"',refreshUploadCallback(this,'\" + ImageGridDisplay.ClientID + \"')); return false;} \";" + Environment.NewLine);
-                            sb.Append("			    ((ImageButton)e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Del\")).Attributes[\"onclick\"] = \"sendFile('','\" + GetUrlWithQSHash(\"UpLoad.aspx?del=true&key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + pMKeyColumn + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pMKey + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ColumnHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ColumnHeight"].ToString()) + "&sys=\" + base.LCurr.SystemId.ToString()) + \"',refreshUploadCallback(this,'\" + ImageGridDisplay.ClientID + \"'));return false;\";" + Environment.NewLine);
+                            sb.Append("			    try {" + Environment.NewLine);
+                            sb.Append("			        string fileContent = RO.Common3.Utils.DecodeFileStream((byte[])dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"]);" + Environment.NewLine);
+                            sb.Append("			        hasImageContent = !fileContent.Trim().Equals(string.Empty);" + Environment.NewLine);
+                            sb.Append("			        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();" + Environment.NewLine);
+                            sb.Append("			        FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);" + Environment.NewLine);
+                            sb.Append("			       string mimeType = fileInfo.mimeType;" + Environment.NewLine);
+                            sb.Append("			        isImage = \"image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png\".IndexOf(mimeType) >= 0;" + Environment.NewLine);
+                            sb.Append("			    } catch { isImage = hasImageContent; }" + Environment.NewLine);
+                            sb.Append("			    ImageGridDisplay = e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") as ImageButton;" + Environment.NewLine);
+                            sb.Append("			    ((FileUpload)e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Fi\")).Attributes[\"onchange\"] = \"if('\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"'==''){PopDialog('','Please save the record first before upload.','');}else{sendFile(this.files[0],'\" + GetUrlWithQSHash(\"UpLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\") + \"',refreshUploadCallback(this,'\" + ImageGridDisplay.ClientID + \"')); return false;} \";" + Environment.NewLine);
+                            sb.Append("			    ((ImageButton)e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Del\")).Attributes[\"onclick\"] = \"sendFile('','\" + GetUrlWithQSHash(\"UpLoad.aspx?del=true&key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) +"&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\") + \"',refreshUploadCallback(this,'\" + ImageGridDisplay.ClientID + \"'));return false;\";" + Environment.NewLine);
+                            sb.Append("			    if (!hasImageContent || (hasImageContent && isImage)) {" + Environment.NewLine);
+                            sb.Append("			        ImageGridDisplay.OnClientClick = \"PopDialog('','<img src= \\\"\" + (!hasImageContent ?\"images/DefaultImg.png\": GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\")) + \"\\\" />',''); return false;\";" + Environment.NewLine);
+                            sb.Append("			    } else {" + Environment.NewLine);
+                            sb.Append("			        ImageGridDisplay.OnClientClick = \"window.open('\" + GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\") + \"'); return false;\";" + Environment.NewLine);
+                            sb.Append("			    }" + Environment.NewLine);
+                        }
+                    }
+                    sb.Append("			}" + Environment.NewLine);
+                    sb.Append("			else" + Environment.NewLine);
+                    sb.Append("			{" + Environment.NewLine);
+                    if (bHasImage) { sb.Append("			    ImageButton ImageGridDisplay;" + Environment.NewLine); }
+                    foreach (DataRowView drv in dv)
+                    {
+                        if (drv["DisplayName"].ToString().ToLower() == "imagebutton" && drv["DataTypeSqlName"].ToString().ToLower() == "varbinary")
+                        {
+                            sb.Append("			    try {" + Environment.NewLine);
+                            sb.Append("			        string fileContent = RO.Common3.Utils.DecodeFileStream((byte[])dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"]);" + Environment.NewLine);
+                            sb.Append("			        hasImageContent = !fileContent.Trim().Equals(string.Empty);" + Environment.NewLine);
+                            sb.Append("			        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();" + Environment.NewLine);
+                            sb.Append("			        FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);" + Environment.NewLine);
+                            sb.Append("			       string mimeType = fileInfo.mimeType;" + Environment.NewLine);
+                            sb.Append("			        isImage = \"image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png\".IndexOf(mimeType) >= 0;" + Environment.NewLine);
+                            sb.Append("			    } catch { isImage = hasImageContent; }" + Environment.NewLine);
+                            sb.Append("			    ImageGridDisplay = e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "l\") as ImageButton;" + Environment.NewLine);
+                            sb.Append("			    if (!hasImageContent || (hasImageContent && isImage)) {" + Environment.NewLine);
+                            sb.Append("			        ImageGridDisplay.OnClientClick = \"PopDialog('','<img src= \\\"\" + (!hasImageContent? \"images/DefaultImg.png\": GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\")) + \"\\\" />',''); return false;\";" + Environment.NewLine);
+                            sb.Append("			    } else {" + Environment.NewLine);
+                            sb.Append("			        ImageGridDisplay.OnClientClick = \"window.open('\" + GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\") + \"'); return false;\";" + Environment.NewLine);
+                            sb.Append("			    }" + Environment.NewLine);
                         }
                     }
                     sb.Append("			}" + Environment.NewLine);
@@ -7784,7 +7844,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** GridItemDataBound (after) Web Rule End *** //" + Environment.NewLine); }
@@ -8118,11 +8178,11 @@ namespace RO.Rule3
                     if (drv["DisplayName"].ToString().ToLower() == "imagebutton" && drv["DataTypeSqlName"].ToString().ToLower() == "varbinary")
                     {
                         if (firstIb) { sb.Append("		    DataTable dtImg = null;" + Environment.NewLine); firstIb = false; }
-                        sb.Append("		    if (!string.IsNullOrEmpty(dr[\"" + pMKeyColumn + "\"].ToString()))" + Environment.NewLine);
+                        sb.Append("		    if (!string.IsNullOrEmpty(dr[\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString()))" + Environment.NewLine);
                         sb.Append("		    {" + Environment.NewLine);
                         sb.Append("		        if (lvi.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") != null)" + Environment.NewLine);
                         sb.Append("		        {" + Environment.NewLine);
-                        sb.Append("		            dtImg = (new AdminSystem()).GetDbImg(dr[\"" + pMKeyColumn + "\"].ToString(), \"dbo." + drv["TableName"].ToString() + "\", \"" + pMKey + "\", \"" + drv["ColumnName"].ToString() + "\", LcAppConnString, LcAppPw);" + Environment.NewLine);
+                        sb.Append("		            dtImg = (new AdminSystem()).GetDbImg(dr[\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString(), \"dbo." + drv["TableName"].ToString() + "\", \"" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "\", \"" + drv["ColumnName"].ToString() + "\", LcAppConnString, LcAppPw);" + Environment.NewLine);
                         sb.Append("		            if (dtImg != null && dtImg.Rows.Count > 0)" + Environment.NewLine);
                         sb.Append("		            {" + Environment.NewLine);
                         sb.Append("		                dr[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"] = dtImg.Rows[0][0] as byte[];" + Environment.NewLine);
@@ -8165,7 +8225,7 @@ namespace RO.Rule3
                     if (drv["DisplayName"].ToString().ToLower() == "imagebutton" && drv["DataTypeSqlName"].ToString().ToLower() == "varbinary")
                     {
                         if (firstIb) { sb.Append("			DataTable dtImg = null;" + Environment.NewLine); firstIb = false; }
-                        sb.Append("			dtImg = (new AdminSystem()).GetDbImg(dv[GetDataItemIndex(e.ItemIndex)].Row[\"" + pMKeyColumn + "\"].ToString(), \"dbo." + drv["TableName"].ToString() + "\", \"" + pMKey + "\", \"" + drv["ColumnName"].ToString() + "\", LcAppConnString, LcAppPw);" + Environment.NewLine);
+                        sb.Append("			dtImg = (new AdminSystem()).GetDbImg(dv[GetDataItemIndex(e.ItemIndex)].Row[\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString(), \"dbo." + drv["TableName"].ToString() + "\", \"" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "\", \"" + drv["ColumnName"].ToString() + "\", LcAppConnString, LcAppPw);" + Environment.NewLine);
                         sb.Append("			if (dtImg != null && dtImg.Rows.Count > 0)" + Environment.NewLine);
                         sb.Append("			{" + Environment.NewLine);
                         sb.Append("			    dv[GetDataItemIndex(e.ItemIndex)].Row[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"] = dtImg.Rows[0][0] as byte[];" + Environment.NewLine);
@@ -8198,7 +8258,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("				//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("				// *** WebRule End *** //" + Environment.NewLine); }
@@ -8216,7 +8276,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("				//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("				// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("				// *** Delete Grid Row (before) Web Rule End *** //" + Environment.NewLine); }
@@ -8241,7 +8301,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8254,7 +8314,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8271,7 +8331,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8287,7 +8347,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8300,7 +8360,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8318,7 +8378,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8334,7 +8394,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8347,7 +8407,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8360,7 +8420,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8376,7 +8436,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8389,7 +8449,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8403,7 +8463,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8419,7 +8479,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8432,7 +8492,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8449,7 +8509,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8466,7 +8526,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 				}
 			}
 			if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8479,7 +8539,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8499,7 +8559,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8515,7 +8575,7 @@ namespace RO.Rule3
                 {
                     bWebRule = true;
                     sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                    sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                 }
             }
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8528,7 +8588,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8539,7 +8599,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8555,7 +8615,7 @@ namespace RO.Rule3
                 {
                     bWebRule = true;
                     sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                    sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                 }
             }
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8568,7 +8628,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8592,7 +8652,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8608,7 +8668,7 @@ namespace RO.Rule3
                 {
                     bWebRule = true;
                     sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                    sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                 }
             }
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8621,7 +8681,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8640,7 +8700,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8658,7 +8718,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 				}
 			}
 			if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8671,7 +8731,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8787,7 +8847,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8815,7 +8875,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8828,7 +8888,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8861,7 +8921,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(drvr["WebRuleProg"].ToString() + Environment.NewLine);
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
