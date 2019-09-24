@@ -67,39 +67,53 @@ namespace RO
 
 		}
 
-		protected void Application_Error(Object sender, EventArgs e)
-		{
+        protected void Application_Error(Object sender, EventArgs e)
+        {
             try
             {
                 Exception objErr = Server.GetLastError().GetBaseException();
                 try
                 {
-                    string webtitle = System.Configuration.ConfigurationManager.AppSettings["WebTitle"] ?? "";
-                    string to = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"] ?? "cs@robocoder.com";
-                    string from = "cs@robocoder.com";
-                    string fromTitle = "";
-                    string replyTo = "";
-                    string smtpServer = System.Configuration.ConfigurationManager.AppSettings["SmtpServer"];
-                    string[] smtpConfig = smtpServer.Split(new char[] { '|' });
-                    bool bSsl = smtpConfig[0].Trim() == "true" ? true : false;
-                    int port = smtpConfig.Length > 1 ? int.Parse(smtpConfig[1].Trim()) : 25;
-                    string server = smtpConfig.Length > 2 ? smtpConfig[2].Trim() : null;
-                    string username = smtpConfig.Length > 3 ? smtpConfig[3].Trim() : null;
-                    string password = smtpConfig.Length > 4 ? smtpConfig[4].Trim() : null;
-                    string domain = smtpConfig.Length > 5 ? smtpConfig[5].Trim() : null;
-                    System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
-                    string[] receipients = to.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var t in receipients)
+                    if (HttpContext.Current == null
+                        || HttpContext.Current.Request == null
+                        || "GET,PUT,DELETE,POST".IndexOf(HttpContext.Current.Request.HttpMethod) >= 0)
                     {
-                        mm.To.Add(new System.Net.Mail.MailAddress(t.Trim()));
+                        string webtitle = System.Configuration.ConfigurationManager.AppSettings["WebTitle"] ?? "";
+                        string to = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"] ?? "cs@robocoder.com";
+                        string from = "cs@robocoder.com";
+                        string fromTitle = "";
+                        string replyTo = "";
+                        string LoginUsrId = null;
+                        string LoginUserName = null;
+                        string smtpServer = System.Configuration.ConfigurationManager.AppSettings["SmtpServer"];
+                        string[] smtpConfig = smtpServer.Split(new char[] { '|' });
+                        bool bSsl = smtpConfig[0].Trim() == "true" ? true : false;
+                        int port = smtpConfig.Length > 1 ? int.Parse(smtpConfig[1].Trim()) : 25;
+                        string server = smtpConfig.Length > 2 ? smtpConfig[2].Trim() : null;
+                        string username = smtpConfig.Length > 3 ? smtpConfig[3].Trim() : null;
+                        string password = smtpConfig.Length > 4 ? smtpConfig[4].Trim() : null;
+                        string domain = smtpConfig.Length > 5 ? smtpConfig[5].Trim() : null;
+                        System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
+                        string[] receipients = to.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        try
+                        {
+                            LoginUsrId = ((RO.Common3.Data.LoginUsr)Session["Cache:LUser"]).UsrId.ToString();
+                            LoginUserName = ((RO.Common3.Data.LoginUsr)Session["Cache:LUser"]).UsrName.Left(4) + "??????";
+                        }
+                        catch { }
+                        foreach (var t in receipients)
+                        {
+                            mm.To.Add(new System.Net.Mail.MailAddress(t.Trim()));
+                        }
+                        mm.Subject = webtitle + " Application Error " + Request.Url.GetLeftPart(UriPartial.Path);
+                        mm.Body = Request.Url.ToString() + "\r\n\r\n" + objErr.Message + "\r\n\r\n" + objErr.StackTrace + "\r\n"
+                                + "\r\n" + "UserId : " + (LoginUsrId ?? "") + " UserName: " + (LoginUserName ?? "") + "\r\n";
+                        mm.IsBodyHtml = false;
+                        mm.From = new System.Net.Mail.MailAddress(string.IsNullOrEmpty(username) || !(username ?? "").Contains("@") ? from : username, string.IsNullOrEmpty(fromTitle) ? from : fromTitle);    // Address must be the same as the smtp login user.
+                        mm.ReplyToList.Add(new System.Net.Mail.MailAddress(string.IsNullOrEmpty(replyTo) ? from : replyTo)); // supplied from would become reply too for the 'sending on behalf of'
+                        (new RO.WebRules.WebRule()).SendEmail(bSsl, port, server, username, password, domain, mm);
+                        mm.Dispose();   // Error is trapped and reported from the caller.
                     }
-                    mm.Subject = webtitle + " Application Error " + Request.Url.GetLeftPart(UriPartial.Path);
-                    mm.Body = Request.Url.ToString() + "\r\n\r\n" + objErr.Message + "\r\n\r\n" + objErr.StackTrace + "\r\n";
-                    mm.IsBodyHtml = false;
-                    mm.From = new System.Net.Mail.MailAddress(string.IsNullOrEmpty(username) || !(username ?? "").Contains("@") ? from : username, string.IsNullOrEmpty(fromTitle) ? from : fromTitle);    // Address must be the same as the smtp login user.
-                    mm.ReplyToList.Add(new System.Net.Mail.MailAddress(string.IsNullOrEmpty(replyTo) ? from : replyTo)); // supplied from would become reply too for the 'sending on behalf of'
-                    (new RO.WebRules.WebRule()).SendEmail(bSsl, port, server, username, password, domain, mm);
-                    mm.Dispose();   // Error is trapped and reported from the caller.
                 }
                 catch { }
                 Session["ErrMsg"] = objErr.Message.ToString();
@@ -108,9 +122,9 @@ namespace RO
                 Response.Redirect("Msg.aspx?typ=E");
             }
             catch { }
-		}
+        }
 
-		protected void Session_End(Object sender, EventArgs e)
+        protected void Session_End(Object sender, EventArgs e)
 		{
 
 		}
