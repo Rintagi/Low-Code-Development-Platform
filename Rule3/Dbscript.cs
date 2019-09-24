@@ -292,7 +292,8 @@ namespace RO.Rule3
 			string db = "";
 			string hasIdentity = "";
 			DataTable dt = GetTables(dbProviderCd, true, IsInExempt, true, CSrc, CTar);
-			if (ReleaseOs == "L")
+            bool bIntegratedSecurity = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y" && (System.Configuration.ConfigurationManager.AppSettings["SSPI"] ?? "N") == "Y";
+            if (ReleaseOs == "L")
 			{
 				str += "# !/bin/bash\n";
 			}
@@ -338,6 +339,7 @@ namespace RO.Rule3
 					{
                         if (direction == " in ") str += "\"" + bcpPath + "sqlcmd\" -Q \"TRUNCATE TABLE " + db + ".dbo." + dr2["tbName"].ToString() + "\"" + " " + " -S %1 -U %2 -P %3 " + " >> " + logpath + "..\\Install.log\r\n";
                         str += "\"" + bcpPath + "bcp\" \"" + db + ".dbo." + dr2["tbName"].ToString() + "\"" + direction + "\"" + outputPath + dr2["tbName"].ToString() + ".txt\" " + hasIdentity + " -e \"" + logpath + "..\\Error.txt\" -S %1 -U %2 -P %3 -q " + unicd + " -CRAW -t\"" + separator + "\" -r\"~#~\" >> " + logpath + "..\\Install.log\r\n";
+                        if (bIntegratedSecurity && bOut) str = str.Replace("-U %2 -P %3", " -T ");
                     }
 					str += "IF ERRORLEVEL 1 GOTO ThereIsError\r\n";
 				}
