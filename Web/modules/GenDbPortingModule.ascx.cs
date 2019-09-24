@@ -43,7 +43,13 @@ namespace RO.Web
 				Session.Remove(KEY_dtSrcSystems);
 				Session.Remove(KEY_dtTarSystems);
 				GetEntity();
-				cHelpLabel.Text = "Please select the source and target servers, then the appropriate database (empty means link-server or Design.Systems table not available) and proceed to other options. Press OK button to generate the respective scripts or execute them at the same time. Check 'Clear Respective Target First' when appropriate.";
+                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                if (singleSQLCredential)
+                {
+                    throw new Exception("Please disable shared DB credential(DesShareCred) in web.config and make sure datatier is setup probably before doing porting");
+                }
+
+                cHelpLabel.Text = "Please select the source and target servers, then the appropriate database (empty means link-server or Design.Systems table not available) and proceed to other options. Press OK button to generate the respective scripts or execute them at the same time. Check 'Clear Respective Target First' when appropriate.";
 				cTitleLabel.Text = "Database Porting";
 				cExemptText.Text = "('Printer','Printer_MemberId','Printer_UsrGroupId','ScreenLstInf','ScreenLstCri','ReportLstCri','ReportTmpl','Template','Systems','Usage','Usr','UsrGroup','UsrGroupAuth','UsrImpr','UsrPref')";
                 ScriptManager.GetCurrent(Parent.Page).SetFocus(cEntityId.ClientID);
@@ -157,90 +163,90 @@ namespace RO.Web
 			}
 		}
 
-		private void GetSrcSystems(int iSel)
-		{
-			DataTable dt = (DataTable)Session[KEY_dtSrcSystems];
-			if (dt == null)
-			{
-				DataTable dtSrc = (DataTable)Session[KEY_dtDataTier];
-				dt = (new LoginSystem()).GetSystemsList(Config.GetConnStr(dtSrc.Rows[cSrcDataTierId.SelectedIndex]["DbProviderOle"].ToString(), dtSrc.Rows[cSrcDataTierId.SelectedIndex]["DesServer"].ToString(), dtSrc.Rows[cSrcDataTierId.SelectedIndex]["DesDatabase"].ToString(), "", dtSrc.Rows[cSrcDataTierId.SelectedIndex]["DesUserId"].ToString()), dtSrc.Rows[cSrcDataTierId.SelectedIndex]["DesPassword"].ToString());
-			}
-			if (dt != null)
-			{
-				cSrcSystemIdDb.Visible = true;
-				Session[KEY_dtSrcSystems] = dt;
-				cSrcSystemId.DataSource = dt;
-				cSrcSystemId.DataBind();
-				if (cSrcSystemId.Items.Count > 0)
-				{
-					cSrcSystemId.Items[iSel].Selected = true;
-					if (dt.Rows[cSrcSystemId.SelectedIndex]["dbAppDatabase"].ToString() == dt.Rows[cSrcSystemId.SelectedIndex]["dbDesDatabase"].ToString())
-					{
-						cSrcSystemIdDb.Items[0].Value = string.Empty; cSrcSystemIdDb.Items[0].Text = string.Empty; cSrcSystemIdDb.Items[1].Selected = true;
-					}
-					else
-					{
-						cSrcSystemIdDb.Items[0].Value = dt.Rows[cSrcSystemId.SelectedIndex]["dbAppDatabase"].ToString();
-						cSrcSystemIdDb.Items[0].Text = dt.Rows[cSrcSystemId.SelectedIndex]["dbAppServer"].ToString() + ". " + dt.Rows[cSrcSystemId.SelectedIndex]["dbAppDatabase"].ToString();
-					}
-					cSrcSystemIdDb.Items[1].Value = dt.Rows[cSrcSystemId.SelectedIndex]["dbDesDatabase"].ToString();
-					cSrcSystemIdDb.Items[1].Text = dt.Rows[cSrcSystemId.SelectedIndex]["dbAppServer"].ToString() + ". " + dt.Rows[cSrcSystemId.SelectedIndex]["dbDesDatabase"].ToString();
-					base.CSrc = new CurrSrc (true, dt.Rows[cSrcSystemId.SelectedIndex]);
-					base.CSrc.SrcDbDatabase = cSrcSystemIdDb.SelectedValue;
-				}
-			}
-			else
-			{
-				cSrcSystemId.Items.Clear(); cSrcSystemIdDb.Visible = false;
-			}
-		}
+        private void GetSrcSystems(int iSel)
+        {
+            DataTable dt = (DataTable)Session[KEY_dtSrcSystems];
+            if (dt == null)
+            {
+                DataTable dtSrc = (DataTable)Session[KEY_dtDataTier];
+                dt = (new LoginSystem()).GetSystemsList(Config.GetConnStr(dtSrc.Rows[cSrcDataTierId.SelectedIndex]["DbProviderOle"].ToString(), dtSrc.Rows[cSrcDataTierId.SelectedIndex]["DesServer"].ToString(), dtSrc.Rows[cSrcDataTierId.SelectedIndex]["DesDatabase"].ToString(), "", dtSrc.Rows[cSrcDataTierId.SelectedIndex]["DesUserId"].ToString()), dtSrc.Rows[cSrcDataTierId.SelectedIndex]["DesPassword"].ToString());
+            }
+            if (dt != null)
+            {
+                cSrcSystemIdDb.Visible = true;
+                Session[KEY_dtSrcSystems] = dt;
+                cSrcSystemId.DataSource = dt;
+                cSrcSystemId.DataBind();
+                if (cSrcSystemId.Items.Count > 0)
+                {
+                    cSrcSystemId.Items[iSel].Selected = true;
+                    if (dt.Rows[cSrcSystemId.SelectedIndex]["dbAppDatabase"].ToString() == dt.Rows[cSrcSystemId.SelectedIndex]["dbDesDatabase"].ToString())
+                    {
+                        cSrcSystemIdDb.Items[0].Value = string.Empty; cSrcSystemIdDb.Items[0].Text = string.Empty; cSrcSystemIdDb.Items[1].Selected = true;
+                    }
+                    else
+                    {
+                        cSrcSystemIdDb.Items[0].Value = dt.Rows[cSrcSystemId.SelectedIndex]["dbAppDatabase"].ToString();
+                        cSrcSystemIdDb.Items[0].Text = dt.Rows[cSrcSystemId.SelectedIndex]["dbAppServer"].ToString() + ". " + dt.Rows[cSrcSystemId.SelectedIndex]["dbAppDatabase"].ToString();
+                    }
+                    cSrcSystemIdDb.Items[1].Value = dt.Rows[cSrcSystemId.SelectedIndex]["dbDesDatabase"].ToString();
+                    cSrcSystemIdDb.Items[1].Text = dt.Rows[cSrcSystemId.SelectedIndex]["dbAppServer"].ToString() + ". " + dt.Rows[cSrcSystemId.SelectedIndex]["dbDesDatabase"].ToString();
+                    base.CSrc = new CurrSrc(true, dt.Rows[cSrcSystemId.SelectedIndex]);
+                    base.CSrc.SrcDbDatabase = cSrcSystemIdDb.SelectedValue;
+                }
+            }
+            else
+            {
+                cSrcSystemId.Items.Clear(); cSrcSystemIdDb.Visible = false;
+            }
+        }
 
-		private void GetTarSystems(int iSel)
-		{
-			DataTable dt = (DataTable)Session[KEY_dtTarSystems];
-			if (dt == null)
-			{
-				DataTable dtTar = (DataTable)Session[KEY_dtDataTier];
-				dt = (new LoginSystem()).GetSystemsList(Config.GetConnStr(dtTar.Rows[cTarDataTierId.SelectedIndex]["DbProviderOle"].ToString(), dtTar.Rows[cTarDataTierId.SelectedIndex]["DesServer"].ToString(), dtTar.Rows[cTarDataTierId.SelectedIndex]["DesDatabase"].ToString(), "", dtTar.Rows[cTarDataTierId.SelectedIndex]["DesUserId"].ToString()), dtTar.Rows[cTarDataTierId.SelectedIndex]["DesPassword"].ToString());
-			}
-			if (dt != null)
-			{
-				cTarSystemIdDb.Visible = true;
-				Session[KEY_dtTarSystems] = dt;
-				cTarSystemId.DataSource = dt;
-				cTarSystemId.DataBind();
-				if (cTarSystemId.Items.Count > iSel)
-				{
-					cTarSystemId.Items[iSel].Selected = true;
-					if (dt.Rows[cTarSystemId.SelectedIndex]["dbAppDatabase"].ToString() == dt.Rows[cTarSystemId.SelectedIndex]["dbDesDatabase"].ToString())
-					{
-						cTarSystemIdDb.Items[0].Value = string.Empty; cTarSystemIdDb.Items[0].Text = string.Empty;
-					}
-					else
-					{
-						cTarSystemIdDb.Items[0].Value = dt.Rows[cTarSystemId.SelectedIndex]["dbAppDatabase"].ToString();
-						cTarSystemIdDb.Items[0].Text = dt.Rows[cTarSystemId.SelectedIndex]["dbAppServer"].ToString() + ". " + dt.Rows[cTarSystemId.SelectedIndex]["dbAppDatabase"].ToString();
-					}
-					cTarSystemIdDb.Items[1].Value = dt.Rows[cTarSystemId.SelectedIndex]["dbDesDatabase"].ToString();
-					cTarSystemIdDb.Items[1].Text = dt.Rows[cTarSystemId.SelectedIndex]["dbAppServer"].ToString() + ". " + dt.Rows[cTarSystemId.SelectedIndex]["dbDesDatabase"].ToString();
-					cTarSystemIdDb.Items[0].Selected = cSrcSystemIdDb.Items[0].Selected;
-					cTarSystemIdDb.Items[1].Selected = cSrcSystemIdDb.Items[1].Selected;
-					base.CTar = new CurrTar (true, dt.Rows[cTarSystemId.SelectedIndex]);
-					base.CTar.TarDbDatabase = cTarSystemIdDb.SelectedValue;
-				}
-				else
-				{
-					cTarSystemIdDb.Items[0].Value = string.Empty; cTarSystemIdDb.Items[1].Value = string.Empty;
-					cTarSystemIdDb.Items[0].Text = string.Empty; cTarSystemIdDb.Items[1].Text = string.Empty;
-				}
-			}
-			else
-			{
-				cTarSystemId.Items.Clear(); cTarSystemIdDb.Visible = false;
-			}
-		}
+        private void GetTarSystems(int iSel)
+        {
+            DataTable dt = (DataTable)Session[KEY_dtTarSystems];
+            if (dt == null)
+            {
+                DataTable dtTar = (DataTable)Session[KEY_dtDataTier];
+                dt = (new LoginSystem()).GetSystemsList(Config.GetConnStr(dtTar.Rows[cTarDataTierId.SelectedIndex]["DbProviderOle"].ToString(), dtTar.Rows[cTarDataTierId.SelectedIndex]["DesServer"].ToString(), dtTar.Rows[cTarDataTierId.SelectedIndex]["DesDatabase"].ToString(), "", dtTar.Rows[cTarDataTierId.SelectedIndex]["DesUserId"].ToString()), dtTar.Rows[cTarDataTierId.SelectedIndex]["DesPassword"].ToString());
+            }
+            if (dt != null)
+            {
+                cTarSystemIdDb.Visible = true;
+                Session[KEY_dtTarSystems] = dt;
+                cTarSystemId.DataSource = dt;
+                cTarSystemId.DataBind();
+                if (cTarSystemId.Items.Count > iSel)
+                {
+                    cTarSystemId.Items[iSel].Selected = true;
+                    if (dt.Rows[cTarSystemId.SelectedIndex]["dbAppDatabase"].ToString() == dt.Rows[cTarSystemId.SelectedIndex]["dbDesDatabase"].ToString())
+                    {
+                        cTarSystemIdDb.Items[0].Value = string.Empty; cTarSystemIdDb.Items[0].Text = string.Empty;
+                    }
+                    else
+                    {
+                        cTarSystemIdDb.Items[0].Value = dt.Rows[cTarSystemId.SelectedIndex]["dbAppDatabase"].ToString();
+                        cTarSystemIdDb.Items[0].Text = dt.Rows[cTarSystemId.SelectedIndex]["dbAppServer"].ToString() + ". " + dt.Rows[cTarSystemId.SelectedIndex]["dbAppDatabase"].ToString();
+                    }
+                    cTarSystemIdDb.Items[1].Value = dt.Rows[cTarSystemId.SelectedIndex]["dbDesDatabase"].ToString();
+                    cTarSystemIdDb.Items[1].Text = dt.Rows[cTarSystemId.SelectedIndex]["dbAppServer"].ToString() + ". " + dt.Rows[cTarSystemId.SelectedIndex]["dbDesDatabase"].ToString();
+                    cTarSystemIdDb.Items[0].Selected = cSrcSystemIdDb.Items[0].Selected;
+                    cTarSystemIdDb.Items[1].Selected = cSrcSystemIdDb.Items[1].Selected;
+                    base.CTar = new CurrTar(true, dt.Rows[cTarSystemId.SelectedIndex]);
+                    base.CTar.TarDbDatabase = cTarSystemIdDb.SelectedValue;
+                }
+                else
+                {
+                    cTarSystemIdDb.Items[0].Value = string.Empty; cTarSystemIdDb.Items[1].Value = string.Empty;
+                    cTarSystemIdDb.Items[0].Text = string.Empty; cTarSystemIdDb.Items[1].Text = string.Empty;
+                }
+            }
+            else
+            {
+                cTarSystemId.Items.Clear(); cTarSystemIdDb.Visible = false;
+            }
+        }
 
-		protected void cGenButton_Click(object sender, System.EventArgs e)
+        protected void cGenButton_Click(object sender, System.EventArgs e)
 		{
 			cMsgLabel.Text = string.Empty;
 			if (!(cSrcSystemId.Items.Count > 0 && cTarSystemId.Items.Count > 0))

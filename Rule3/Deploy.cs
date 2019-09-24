@@ -13,6 +13,7 @@ namespace RO.Rule3
     using RO.Common3.Data;
     using System.Linq;
     using System.Collections.Generic;
+    using Microsoft.Win32;
 
     public class Deploy : Encryption
     {
@@ -22,6 +23,74 @@ namespace RO.Rule3
         private StringBuilder si;	// InstallItem.cs for installation
         private StringBuilder MsgWarning = new StringBuilder("");
         private static string installerEncKey = Guid.NewGuid().ToString().Replace("-", "");
+
+        public static KeyValuePair<string, string> GetSQLBcpPath()
+        {
+            foreach (string ver in new string[] { "90", "100", "110", "120", "130", "140", "150", "160" })
+            {
+                try
+                {
+                    using (RegistryKey sqlServerKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\" + ver))
+                    {
+                        string basePath = (sqlServerKey.GetValue("VerSpecificRootDir") ?? "").ToString();
+                        string bcpPath = basePath + @"Tools\Binn\bcp.exe";
+                        string bcpAltPath = basePath.Replace(@"\" + ver + @"\", @"\Client SDK\ODBC\" + (ver == "120" || ver == "110" ? "110" : "130") + @"\Tools\Binn\bcp.exe");
+                        //string bcpAlt2Path = basePath.Replace(@"\" + ver + @"\", @"\Client SDK\ODBC\" + (ver == "120" ? "110" : "130") + @"\Tools\Binn\bcp.exe");
+                        if (System.IO.File.Exists(bcpPath)) return new KeyValuePair<string, string>(ver, bcpPath);
+                        else if (System.IO.File.Exists(bcpAltPath)) return new KeyValuePair<string, string>(ver, bcpAltPath);
+                    }
+                }
+                catch (Exception)
+                {
+                }
+                try
+                {
+                    using (RegistryKey sqlServerKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\" + ver + @"\Tools\ClientSetup"))
+                    {
+                        string basePath = (sqlServerKey.GetValue("ODBCToolsPath") ?? "").ToString();
+                        string altBasePath = (sqlServerKey.GetValue("Path") ?? "").ToString();
+                        string bcpPath = basePath + @"\bcp.exe";
+                        string bcpAltPath = altBasePath + @"\bcp.exe";
+                        if (System.IO.File.Exists(bcpPath)) return new KeyValuePair<string, string>(ver, bcpPath);
+                        else if (System.IO.File.Exists(bcpAltPath)) return new KeyValuePair<string, string>(ver, bcpAltPath);
+                    }
+                }
+                catch (Exception)
+                {
+                }
+                try
+                {
+                    using (RegistryKey sqlServerKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Microsoft SQL Server\" + ver))
+                    {
+                        string basePath = (sqlServerKey.GetValue("VerSpecificRootDir") ?? "").ToString();
+                        string bcpPath = basePath + @"Tools\Binn\bcp.exe";
+                        string bcpAltPath = basePath.Replace(@"\" + ver + @"\", @"\Client SDK\ODBC\" + (ver == "120" || ver == "110" ? "110" : "130") + @"\Tools\Binn\bcp.exe");
+                        //string bcpAlt2Path = basePath.Replace(@"\" + ver + @"\", @"\Client SDK\ODBC\" + (ver == "120" ? "110" : "130") + @"\Tools\Binn\bcp.exe");
+                        if (System.IO.File.Exists(bcpPath)) return new KeyValuePair<string, string>(ver, bcpPath);
+                        else if (System.IO.File.Exists(bcpAltPath)) return new KeyValuePair<string, string>(ver, bcpAltPath);
+                    }
+                }
+                catch (Exception)
+                {
+                }
+                try
+                {
+                    using (RegistryKey sqlServerKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Microsoft SQL Server\" + ver + @"\Tools\ClientSetup"))
+                    {
+                        string basePath = (sqlServerKey.GetValue("ODBCToolsPath") ?? "").ToString();
+                        string altBasePath = (sqlServerKey.GetValue("Path") ?? "").ToString();
+                        string bcpPath = basePath + @"\bcp.exe";
+                        string bcpAltPath = altBasePath + @"\bcp.exe";
+                        if (System.IO.File.Exists(bcpPath)) return new KeyValuePair<string, string>(ver, bcpPath);
+                        else if (System.IO.File.Exists(bcpAltPath)) return new KeyValuePair<string, string>(ver, bcpAltPath);
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return new KeyValuePair<string, string>();
+        }
 
         public Deploy()
         {
@@ -136,6 +205,14 @@ namespace RO.Rule3
                 switch (dr["ObjectType"].ToString())
                 {
                     case "D":
+                        bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                        if (singleSQLCredential)
+                        {
+                            dr["SrcDbServer"] = Config.DesServer;
+                            dr["SrcDbUserId"] = Config.DesUserId;
+                            dr["SrcDbPassword"] = Config.DesPassword;
+                        }
+
                         Directory.CreateDirectory(PrepPath + "Server" + dr["ReleaseDtlId"].ToString() + "\\");
                         si.Append((char)13);
                         si.Append("		public void Inst");
@@ -421,6 +498,9 @@ namespace RO.Rule3
             foreach (string odb in ObjectName)
             {
                 tarDb = odb.Trim();
+                var logFile = PrepDeplPath + "Data" + tarDb.Substring(EntityCode.Length, tarDb.Length - EntityCode.Length) + "\\..\\Install.log";
+                try { File.Delete(logFile); }
+                catch { }
                 if (ReleaseTypeAbbr.StartsWith("N") && dr["SProcOnly"].ToString() != "A")
                 {
                     si.Append("			Utils.CreateDatabase(\"" + dr["TarDbProviderCd"].ToString() + "\", Svr, Usr, Pwd, newNS + \"" + tarDb.Substring(EntityCode.Length, tarDb.Length - EntityCode.Length) + "\", dbPath, serverVer,encKey,AppUsr,AppPwd, bIntegratedSecurity);" + Environment.NewLine);
@@ -580,6 +660,29 @@ namespace RO.Rule3
                         Utils.WinProc("\"" + bkPath + tarDb + "SrcO.bat\"", " \"" + dr["SrcDbServer"].ToString() + "\" \"" + dr["SrcDbUserId"].ToString() + "\" \"" + DecryptString(dr["SrcDbPassword"].ToString()) + "\"", false);
                         // ExecScript can handle unlimited file size:
                         //							ds.ExecScript(string.Empty, "Script Source tables", bkPath + tarDb + "SrcO.bat", string.Empty, GetSrc(dr["SrcDbProviderOle"].ToString(), dr["SrcServerName"].ToString(), dr["SrcDbServer"].ToString(), srcDb, dr["SrcDbUserId"].ToString(), dr["SrcDbPassword"].ToString()), null, dbConnectionString, dbPassword);
+                        try
+                        {
+                            using (var sr = new StreamReader(logFile))
+                            {
+                                var content = sr.ReadToEnd();
+                                Regex errLine = new Regex("^Error =.+(Warning:.+)?$", RegexOptions.Multiline);
+                                foreach (Match m in errLine.Matches(content))
+                                {
+                                    if (!m.Value.Contains("Warning"))
+                                    {
+                                        throw new ApplicationException(string.Format("{0} running SRCOUT batch file {1}, check log {2}", m.Value, bkPath + tarDb + "SrcO.bat", logFile));
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex is ApplicationException)
+                            {
+                                throw;
+                            }
+                        }
+
                         Utils.JFileZip(PrepDeplPath + "Data" + tarDb.Substring(EntityCode.Length, tarDb.Length - EntityCode.Length) + "\\", bkPath + "Data" + tarDb.Substring(EntityCode.Length, tarDb.Length - EntityCode.Length) + ".zip", true, true);
                         File.Delete(bkPath + tarDb + "SrcO.bat");
                     }
@@ -1075,8 +1178,21 @@ namespace RO.Rule3
         private string GetScript(string ScriptType, string bcpPath, DbPorting pt, DbScript ds, DataRow dr, string srcDb, string tarDb, string ReleaseOs, Int16 EntityId, string dbConnectionString, string dbPassword)
         {
             string ss = string.Empty;
-            CurrSrc CSrc = GetSrc(dr["SrcDbProviderOle"].ToString(), dr["SrcServerName"].ToString(), dr["SrcDbServer"].ToString(), srcDb, dr["SrcDbUserId"].ToString(), dr["SrcDbPassword"].ToString());
-            CurrTar CTar = GetTar(dr["SrcDbProviderOle"].ToString(), dr["SrcServerName"].ToString(), dr["SrcDbServer"].ToString(), tarDb, dr["SrcDbUserId"].ToString(), dr["SrcDbPassword"].ToString());
+            bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+            CurrSrc CSrc = GetSrc(dr["SrcDbProviderOle"].ToString(), singleSQLCredential ? Config.DesServer : dr["SrcServerName"].ToString(), dr["SrcDbServer"].ToString(), srcDb, singleSQLCredential ? Config.DesUserId : dr["SrcDbUserId"].ToString(), singleSQLCredential ? Config.DesPassword : dr["SrcDbPassword"].ToString());
+            CurrTar CTar = GetTar(dr["SrcDbProviderOle"].ToString(), singleSQLCredential ? Config.DesServer : dr["SrcServerName"].ToString(), dr["SrcDbServer"].ToString(), tarDb, singleSQLCredential ? Config.DesUserId : dr["SrcDbUserId"].ToString(), singleSQLCredential ? Config.DesPassword : dr["SrcDbPassword"].ToString());
+
+            if (!File.Exists(dr["SrcPortBinPath"].ToString() + @"\bcp.exe") && ",XMTOUT,SRCOUT,".IndexOf(ScriptType) >= 0)
+            {
+                var foundBCPPath = GetSQLBcpPath();
+                throw new Exception(string.Format("Check DataTier definition for Source Port Bin Path({0}), file not exists - one found {1}", dr["SrcPortBinPath"].ToString(), foundBCPPath.Value ?? "None"));
+            }
+            if (!File.Exists(dr["TarPortBinPath"].ToString() + @"\bcp.exe") && ",XMTIN,SRCIN,".IndexOf(ScriptType) >= 0)
+            {
+                var foundBCPPath = GetSQLBcpPath();
+                throw new Exception(string.Format("Check DataTier definition for Target Port Bin Path({0}), file not exists - one found {1}", dr["TarPortBinPath"].ToString(), foundBCPPath.Value ?? "None"));
+            }
+
             if (ScriptType == "TAROUT")	// Target BCP OUT
             {
                 // Use PortBinPath instead of InstBinPath because of Deploy wizards:
