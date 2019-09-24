@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -41,6 +41,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,6 +50,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -202,43 +204,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="0084_DEV_RO\Client367.zip" />
-    <EmbeddedResource Include="0084_DEV_RO\Ws367.zip" />
-    <EmbeddedResource Include="0084_DEV_RO\Xls367.zip" />
-    <EmbeddedResource Include="0084_DEV_RO\Server364\RODesignSrcI.bat" />
-    <EmbeddedResource Include="0084_DEV_RO\Server364\RODesignIndex.sql" />
-    <EmbeddedResource Include="0084_DEV_RO\Server364\RODesignSp.sql" />
-    <EmbeddedResource Include="0084_DEV_RO\Server364\RODesignTable.sql" />
-    <EmbeddedResource Include="0084_DEV_RO\Server364\RODesignView.sql" />
-    <EmbeddedResource Include="0084_DEV_RO\Server364\DataDesign.zip" />
-    <EmbeddedResource Include="0084_DEV_RO\Server365\ROCmonDSp.sql" />
-    <EmbeddedResource Include="0084_DEV_RO\Server365\ROCmonDView.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Client393.zip" />
-    <EmbeddedResource Include="0085_NDEV_RO\Ws393.zip" />
-    <EmbeddedResource Include="0085_NDEV_RO\Xls393.zip" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server394\RODesignSrcI.bat" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server394\RODesignAft.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server394\RODesignIndex.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server394\RODesignSp.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server394\RODesignTable.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server394\RODesignView.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server394\DataDesign.zip" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server395\RODesignAft.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server396\ROCmonSrcI.bat" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server396\ROCmonAft.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server396\ROCmonIndex.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server396\ROCmonSp.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server396\ROCmonTable.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server396\DataCmon.zip" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server397\ROCmonAft.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server398\ROCmonDSrcI.bat" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server398\ROCmonDAft.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server398\ROCmonDIndex.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server398\ROCmonDSp.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server398\ROCmonDTable.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server398\ROCmonDView.sql" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server398\DataCmonD.zip" />
-    <EmbeddedResource Include="0085_NDEV_RO\Server399\ROCmonDAft.sql" />
     <EmbeddedResource Include="Resources\dep.zip" />
     <EmbeddedResource Include="Resources\dev.zip" />
     <EmbeddedResource Include="Resources\rosln.zip" />

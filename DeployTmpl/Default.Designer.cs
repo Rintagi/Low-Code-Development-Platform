@@ -646,7 +646,6 @@ namespace Install
             this.cbInstallDB.TabIndex = 14;
             this.cbInstallDB.Text = "Install DB ";
             this.cbInstallDB.UseVisualStyleBackColor = true;
-            this.cbInstallDB.Visible = false;
             this.cbInstallDB.MouseHover += new System.EventHandler(this.control_MouseHover);
             // 
             // cbNew

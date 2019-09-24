@@ -567,7 +567,7 @@ namespace Install
                 lblBkPath2.Visible = true;
                 //txtDbPath.Visible = false;
                 //lblDbPath.Visible = false;
-                cbInstallDB.Visible = false;
+                cbInstallDB.Visible = true;
                 cb32Bit.Visible = false;
                 cbOverWrite.Visible = false;
 
