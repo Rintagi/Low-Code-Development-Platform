@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<asmv1:assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<asmv3:assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v3" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <assemblyIdentity version="1.0.0.0" name="MyApplication.app"/>
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
@@ -20,14 +20,20 @@
       </requestedPrivileges>
     </security>
   </trustInfo>
-  
-  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+  <!-- <asmv3:application>
+  <asmv3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">
+  <dpiAware>true</dpiAware>
+  </asmv3:windowsSettings>
+  </asmv3:application> -->
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v">
     <application>
       <!-- A list of all Windows versions that this application is designed to work with. Windows will automatically select the most compatible environment.-->
 
       <!-- If your application is designed to work with Windows 7, uncomment the following supportedOS node-->
       <!--<supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>-->
-      
+      <!-- <windowsSettings>
+          <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">false</dpiAware>
+      </windowsSettings> -->
     </application>
   </compatibility>
   
@@ -45,4 +51,4 @@
     </dependentAssembly>
   </dependency>-->
 
-</asmv1:assembly>
+</asmv3:assembly>

@@ -111,6 +111,7 @@ namespace Install
                         {
                             Console.WriteLine(msg); Environment.Exit(99);
                         };
+                        if (kv.ContainsKey("nodata")) dataServer["serverType"] = "";
                         Utils.Backup(tiers, dataServer, kv["c"] + (kv.ContainsKey("noauto") ? "" : "\\" + kv["n"] + uniqueStr), kv["d"] + (kv.ContainsKey("noauto") ? "" : "\\" + kv["n"] + uniqueStr), progress, kv.ContainsKey("sspi"));
                     } 
                     else {

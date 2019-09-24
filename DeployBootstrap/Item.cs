@@ -10,7 +10,7 @@ using System.IO;
 	{
 		private string oldNS = "RO";
 		private string iType = "NPTY";
-		private string iKey = "5696923b0a30471b91cc6e5304aec44b";
+		private string iKey = "aa3f1ba5cd3041ce9ac487e626e1db83";
 		private string roENCKey= "8a47d1f5b4554f45b99078fcb6ab9645";
 		public string GetOldNS()
 		{

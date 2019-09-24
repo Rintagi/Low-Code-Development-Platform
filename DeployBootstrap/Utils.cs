@@ -172,6 +172,7 @@ namespace Install
 
 	public class Utils
 	{
+        private static string MSQLProvider = "Sqloledb";
 		private const string AspExt2Replace = ",rdlc,rdl,config,";
         //private const string AspExt2Replace = ",master,rdl,asmx,asax,aspx,ascx,cs,config,";
         public static Action<string> errorMsg { get; set; }
@@ -179,9 +180,11 @@ namespace Install
         public static string GetConnString(string DbProvider, string Svr, string Usr, string Pwd, bool bIntegratedSecurity)
         {
             string cs;
-            if (DbProvider == "M")
+            if (DbProvider == "M" || DbProvider != "S")
             {
-                cs = "Provider=Sqloledb;Data Source=\"" + Svr + "\";Connect Timeout=50;" + (bIntegratedSecurity ? "Integrated Security=sspi" : "User ID=\"" + Usr + "\";password=\"" + Pwd + "\"");
+                // Sqloldeb which doesn't support TLS 1.2
+                // MSOLEDBSQL supports TLS 1.2 but requires additional installed package
+                cs = "Provider=" + (DbProvider == "M" ? MSQLProvider : DbProvider) + ";Data Source=\"" + Svr + "\";Connect Timeout=50;" + (bIntegratedSecurity ? "Integrated Security=sspi" : "User ID=\"" + Usr + "\";password=\"" + Pwd + "\"");
             }
             else
             {
@@ -247,37 +250,111 @@ namespace Install
             else return false;
         }
 
-        public static KeyValuePair<string,string> GetSQLBcpPath()
+        public static KeyValuePair<string, string> GetSQLBcpPath()
         {
-            foreach (string ver in new string[]{"90","100","110","120","130"})
+            foreach (string ver in new string[] { "90", "100", "110", "120", "130", "140", "150", "160" })
             {
                 try
                 {
-                    using (RegistryKey sqlServerKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\"+ ver))
+                    using (RegistryKey sqlServerKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\" + ver))
                     {
-                        string basePath = sqlServerKey.GetValue("VerSpecificRootDir").ToString();
+                        string basePath = (sqlServerKey.GetValue("VerSpecificRootDir") ?? "").ToString();
                         string bcpPath = basePath + @"Tools\Binn\bcp.exe";
-                        string bcpAltPath = basePath.Replace(@"\" + ver + @"\", @"\Client SDK\ODBC\" + (ver == "120" ? "110" : ver) + @"\Tools\Binn\bcp.exe");
+                        string bcpAltPath = basePath.Replace(@"\" + ver + @"\", @"\Client SDK\ODBC\" + (ver == "120" || ver == "110" ? "110" : "130") + @"\Tools\Binn\bcp.exe");
+                        //string bcpAlt2Path = basePath.Replace(@"\" + ver + @"\", @"\Client SDK\ODBC\" + (ver == "120" ? "110" : "130") + @"\Tools\Binn\bcp.exe");
                         if (System.IO.File.Exists(bcpPath)) return new KeyValuePair<string, string>(ver, bcpPath);
                         else if (System.IO.File.Exists(bcpAltPath)) return new KeyValuePair<string, string>(ver, bcpAltPath);
                     }
                 }
-                catch {  }
+                catch (Exception)
+                {
+                }
+                try
+                {
+                    using (RegistryKey sqlServerKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\" + ver + @"\Tools\ClientSetup"))
+                    {
+                        string basePath = (sqlServerKey.GetValue("ODBCToolsPath") ?? "").ToString();
+                        string altBasePath = (sqlServerKey.GetValue("Path") ?? "").ToString();
+                        string bcpPath = basePath + @"\bcp.exe";
+                        string bcpAltPath = altBasePath + @"\bcp.exe";
+                        if (System.IO.File.Exists(bcpPath)) return new KeyValuePair<string, string>(ver, bcpPath);
+                        else if (System.IO.File.Exists(bcpAltPath)) return new KeyValuePair<string, string>(ver, bcpAltPath);
+                    }
+                }
+                catch (Exception)
+                {
+                }
+                try
+                {
+                    using (RegistryKey sqlServerKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Microsoft SQL Server\" + ver))
+                    {
+                        string basePath = (sqlServerKey.GetValue("VerSpecificRootDir") ?? "").ToString();
+                        string bcpPath = basePath + @"Tools\Binn\bcp.exe";
+                        string bcpAltPath = basePath.Replace(@"\" + ver + @"\", @"\Client SDK\ODBC\" + (ver == "120" || ver == "110" ? "110" : "130") + @"\Tools\Binn\bcp.exe");
+                        //string bcpAlt2Path = basePath.Replace(@"\" + ver + @"\", @"\Client SDK\ODBC\" + (ver == "120" ? "110" : "130") + @"\Tools\Binn\bcp.exe");
+                        if (System.IO.File.Exists(bcpPath)) return new KeyValuePair<string, string>(ver, bcpPath);
+                        else if (System.IO.File.Exists(bcpAltPath)) return new KeyValuePair<string, string>(ver, bcpAltPath);
+                    }
+                }
+                catch (Exception)
+                {
+                }
+                try
+                {
+                    using (RegistryKey sqlServerKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Microsoft SQL Server\" + ver + @"\Tools\ClientSetup"))
+                    {
+                        string basePath = (sqlServerKey.GetValue("ODBCToolsPath") ?? "").ToString();
+                        string altBasePath = (sqlServerKey.GetValue("Path") ?? "").ToString();
+                        string bcpPath = basePath + @"\bcp.exe";
+                        string bcpAltPath = altBasePath + @"\bcp.exe";
+                        if (System.IO.File.Exists(bcpPath)) return new KeyValuePair<string, string>(ver, bcpPath);
+                        else if (System.IO.File.Exists(bcpAltPath)) return new KeyValuePair<string, string>(ver, bcpAltPath);
+                    }
+                }
+                catch (Exception)
+                {
+                }
             }
-            return new KeyValuePair<string,string>();
+            return new KeyValuePair<string, string>();
         }
 
         public static bool TestSQL(string DbProvider, string Svr, string Usr, string Pwd, bool bIntegratedSecurity)
         {
-            string cs = GetConnString(DbProvider,Svr,Usr,Pwd,bIntegratedSecurity);
+            bool sqlOK = false;
+            string cs = GetConnString(DbProvider == "M" ? "MSOLEDBSQL" : DbProvider, Svr, Usr, Pwd, bIntegratedSecurity);
+            
             OleDbConnection cn = new OleDbConnection(cs);
             try
             {
-                cn.Open(); 
+                cn.Open();
+                sqlOK = true;
+                MSQLProvider = "MSOLEDBSQL";
             }
-            catch (Exception ex) { ReportError(ex.Message); return false; }
+            catch (Exception ex) {
+                if (!ex.Message.Contains("MSOLEDBSQL"))
+                {
+                    ReportError(ex.Message + (ex.Message.Contains("MSOLEDBSQL") ? "\r\n will use Sqloledb as fallback, please install the package if TLS 1.1 or below is disabled" : ""));
+                }
+            }
 			finally { cn.Close(); }
-            return true;
+
+            if (!sqlOK && DbProvider == "M")
+            {
+                cs = GetConnString("Sqloledb", Svr, Usr, Pwd, bIntegratedSecurity);
+                cn = new OleDbConnection(cs);
+                try
+                {
+                    cn.Open();
+                    sqlOK = true;
+                    MSQLProvider = "Sqloledb";
+                }
+                catch (Exception ex) { 
+                    ReportError(ex.Message + (!ex.Message.Contains("SSL") ? "" : "\r\nyou may need to install MSOLEDBSQL driver if TLS 1.1 or below is disabled and you have general connection problem")); 
+                }
+                finally { cn.Close(); }
+            }
+
+            return sqlOK;
         }
 		public static void ExtractBinRsc(string ResourceName, string TargetName)
 		{
@@ -311,7 +388,7 @@ namespace Install
 			string line = string.Empty;
             KeyValuePair<string, string> bcpPath = GetSQLBcpPath();
             serverVer = bcpPath.Key;
-            string bcpDir = bcpPath.Value.Contains("Client SDK") ? @"\Client SDK\ODBC\" + (serverVer == "120" ? "110" : serverVer) + @"\Tools\Binn\" : @"\" + serverVer + @"\Tools\Binn\";
+            string bcpDir = bcpPath.Value.Contains("Client SDK") ? @"\Client SDK\ODBC\" + (serverVer == "120" ? "110" : "130") + @"\Tools\Binn\" : @"\" + serverVer + @"\Tools\Binn\";
             try
 			{
 				while ((line = sr.ReadLine()) != null)
@@ -327,28 +404,14 @@ namespace Install
                         line = line.Replace(@"\Client SDK\ODBC\130\Tools\Binn\", @"\" + serverVer + @"\Tools\Binn\").Replace(@"\Client SDK\ODBC\110\Tools\Binn\", @"\" + serverVer + @"\Tools\Binn\");
 
                         // normalize case to c
-                        line = line.Replace(@"\binn\", @"\Binn\"); 
-                        if (serverVer == "90")
-                        {
-                            line = line.Replace(@"Server\80", @"Server\90").Replace(@"Server\100", @"Server\90").Replace(@"Server\110", @"Server\90").Replace(@"Server\120", @"Server\90").Replace(@"Server\130", @"Server\90"); 
-                        }
-                        else if (serverVer == "100")
-                        {
-                            line = line.Replace(@"Server\80", @"Server\100").Replace(@"Server\110", @"Server\100").Replace(@"Server\90", @"Server\100").Replace(@"Server\120", @"Server\100").Replace(@"Server\130", @"Server\100");
-                        }
-                        else if (serverVer == "110")
-                        {
-                            line = line.Replace(@"Server\80", @"Server\110").Replace(@"Server\90", @"Server\110").Replace(@"Server\100", @"Server\110").Replace(@"Server\120", @"Server\110").Replace(@"Server\130", @"Server\110");
-                        }
-                        else if (serverVer == "120")
-                        {
-                            line = line.Replace(@"Server\80", @"Server\120").Replace(@"Server\90", @"Server\120").Replace(@"Server\100", @"Server\120").Replace(@"Server\110", @"Server\120").Replace(@"Server\130", @"Server\120");
-                        }
-                        else if (serverVer == "130")
-                        {
-                            line = line.Replace(@"Server\80", @"Server\130").Replace(@"Server\90", @"Server\130").Replace(@"Server\100", @"Server\130").Replace(@"Server\110", @"Server\130").Replace(@"Server\120", @"Server\130");
-                        }
+                        line = line.Replace(@"\binn\", @"\Binn\");
+                        string[] vers = { "80", "90", "100", "110", "120", "130", "140", "150", "160" };
 
+                        // standardize
+                        foreach (var v in vers)
+                        {
+                            line = line.Replace(@"Server\" + v, @"Server\" + serverVer);
+                        }
                         /* server 2014 onward changed the whole directory structure for the location of bcp thus the generated .bat file would not work anymore just from the above simple replace
                          * must change the whole path structure
                          * basically "C:\Program Files\Microsoft SQL Server\100\Tools\Binn\" => "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\"
@@ -401,7 +464,7 @@ namespace Install
         }
         public static void ExtractSqlRsc(string DbProvider, string ResourceName, string oldNS, string newNS, string Svr, string Usr, string Pwd, string Db, List<string> modules, List<string> modulesDesign, bool isNew, string encryptKey, bool bIntegratedSecurity)
         {
-            //if (oldNS != newNS && isNew && oldNS != "RO") Db = new System.Text.RegularExpressions.Regex("^" + oldNS).Replace(Db, newNS);
+            if (oldNS != newNS && isNew && oldNS != "RO") Db = new System.Text.RegularExpressions.Regex("^" + oldNS).Replace(Db, newNS);
             if (TestConn(DbProvider, Svr, Usr, Pwd, Db,bIntegratedSecurity))
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
@@ -937,6 +1000,62 @@ namespace Install
 
             return false;
         }
+        public static bool TestLogin(string DbProvider, string Svr, string Db, string AppUsr, string AppPwd)
+        {
+            string cs = GetConnString(DbProvider, Svr, AppUsr, AppPwd, false);
+            OleDbConnection cn = new OleDbConnection(cs);
+            cn.Open();
+            cn.Close();
+            return true;
+        }
+
+        public static bool CreateLogin(string DbProvider, string Svr, string Usr, string Pwd, string AppUsr, string AppPwd, bool bIntegratedSecurity)
+        {
+            bool loginOk = false;
+            string cs = GetConnString(DbProvider, Svr, AppUsr, AppPwd, false);
+            OleDbConnection cn = new OleDbConnection(cs);
+            try
+            {
+                cs = GetConnString(DbProvider, Svr, AppUsr, AppPwd, false);
+                cn = new OleDbConnection(cs);
+                cn.Open();
+                loginOk = true;
+                cn.Close();
+            }
+            catch 
+            {
+            }
+
+            if (loginOk) return true;
+
+            cs = GetConnString(DbProvider, Svr, Usr, Pwd, bIntegratedSecurity);
+            cn = new OleDbConnection(cs);
+            OleDbCommand cmd = new OleDbCommand("", cn);
+            cn.Open();
+            if (AppUsr.ToLower().Trim() != Usr.ToLower().Trim() || bIntegratedSecurity)
+            {
+                cmd.CommandText = ""
+                + " IF NOT EXISTS (SELECT 1 FROM master.dbo.syslogins WHERE name = '" + @AppUsr.Replace("'", "''") + "')"
+                + " BEGIN"
+                + "  CREATE LOGIN [" + @AppUsr + "] WITH PASSWORD = '" + @AppPwd.Replace("'", "''") + "'"
+                + "  DECLARE @userid int "
+                + "  use master "
+                + "  SELECT @userid = USER_ID('" + @AppUsr.Replace("'", "''") + "')"
+                + "  IF @userid IS NULL BEGIN"
+                + "     CREATE USER [" + @AppUsr + "] FOR LOGIN [" + @AppUsr + "] "
+                + "     GRANT CREATE ANY DATABASE to [" + @AppUsr + "] "
+                + "  END"
+                + "  use tempdb "
+                + "  SELECT @userid = USER_ID('" + @AppUsr.Replace("'", "''") + "')"
+                + "  IF @userid IS NULL BEGIN"
+                + "     CREATE USER [" + @AppUsr + "] FOR LOGIN [" + @AppUsr + "] "
+                + "  END"
+                + " END";
+                cmd.ExecuteNonQuery();
+            }
+            cn.Close();
+            return TestSQL(DbProvider, Svr, AppUsr, AppPwd, false);
+        }
 
         public static void CreateDatabase(string DbProvider, string Svr, string Usr, string Pwd, string Db, string crPath, string serverVer, string EncKey, string AppUsr, string AppPwd, bool bIntegratedSecurity)
 		{
@@ -1027,8 +1146,9 @@ namespace Install
                 }
                 catch (Exception ex) { ReportError(ex.Message); }
             }
-            catch (Exception ex) { ReportError(ex.Message); }
+			catch (Exception ex) { ReportError(ex.Message); }
 			finally { cn.Close(); }
+
             //cn = new OleDbConnection(cs.Replace("database=master","database="+Db));
             //cn.Open();
             //cmd = new OleDbCommand(""
@@ -1120,11 +1240,21 @@ namespace Install
 		}
 
 		//grants full control to network service on the client and rule tiers; if path doesnt exist it is created
-        public static void SetupFilePermissions(string ClientTierPath, string RuleTierPath, string newNS, Action<int, string> progress)
+        public static void SetupFilePermissions(string ClientTierPath, string RuleTierPath, string newNS, Action<int, string> progress, bool isProduction)
 		{
 			if (!Directory.Exists(ClientTierPath)) { Directory.CreateDirectory(ClientTierPath); }
             progress(0, "Setting up Client Tier ACL ...");
-			Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\" " + "/E /T /C /G \"NETWORK SERVICE\":F", true);
+            if (!isProduction)
+                Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\" " + "/E /T /C /G \"NETWORK SERVICE\":F", true);
+            else
+            {
+                /* for production, web layer is read only by default, only data(file upload) is full access */
+                Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\" " + "/E /T /C /P \"NETWORK SERVICE\":R", true);
+                /* disable the users special right(authenticated user including NETWORK SERVICE) of create file/directory */
+                Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\" " + "/E /T /C /P \"USERS\":R", true);
+                Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\\data\" " + "/E /T /C /G \"NETWORK SERVICE\":F", true);
+            }
+
 
 			string CompDir = ClientTierPath.Replace(@"\Web",@"\PrecompiledWeb\") + newNS;
 			if (!Directory.Exists(CompDir)) { Directory.CreateDirectory(CompDir); }
@@ -1192,28 +1322,30 @@ namespace Install
 			xd.Load(ConfigClientPath);
 			xn = xd.DocumentElement;
 
+            Utils.TestSQL("M", Svr, AppUsr, AppPwd, false);
+
 			foreach (XmlNode node in xn.ChildNodes)
 			{
 				if (node.Name == "appSettings")
 				{
 					foreach (XmlNode setting in node.ChildNodes)
 					{
-						if (setting.Attributes != null && setting.Attributes.Count > 0)
+                        if (setting.Attributes != null && setting.Attributes.Count > 0)
                         {
                             if (setting.Attributes[0].Value == "DesProvider")
                             {
-                                if (DbProvider == "M") { setting.Attributes[1].Value = "Sqloledb"; } else { setting.Attributes[1].Value = "Sybase.ASEOLEDBProvider";}
+                                if (DbProvider == "M") { setting.Attributes[1].Value = "Sqloledb"; } else { setting.Attributes[1].Value = "Sybase.ASEOLEDBProvider"; }
                             }
                             if (setting.Attributes[0].Value == "DesServer") { setting.Attributes[1].Value = Svr; }
-                            if (setting.Attributes[0].Value == "DesUserId") { setting.Attributes[1].Value = AppUsr.Replace(".","_"); }
-                            if (setting.Attributes[0].Value == "DesPassword") { setting.Attributes[1].Value = EncryptString(AppPwd,encKey); }
-							if (setting.Attributes[0].Value == "ClientTierPath") { setting.Attributes[1].Value = ClientTierPath + "\\"; }
-							if (setting.Attributes[0].Value == "RuleTierPath") { setting.Attributes[1].Value = RuleTierPath + "\\"; }
-							//if (setting.Attributes[0].Value == "WsRptBaseUrl") { setting.Attributes[1].Value = WsRptBaseUrl; }
-						    if (setting.Attributes[0].Value == "AppNameSpace") { setting.Attributes[1].Value = newNS; }
-							if (setting.Attributes[0].Value == "WsDomain") { setting.Attributes[1].Value = WebServer; }
-							if (setting.Attributes[0].Value == "WsRptDomain") { setting.Attributes[1].Value = WebServer; }
-							if (setting.Attributes[0].Value == "WsBaseUrl") { setting.Attributes[1].Value = (WebServer.StartsWith("http") ? "" : "http://") + WebServer + "/" + newNS + "Ws"; }
+                            if (setting.Attributes[0].Value == "DesUserId") { setting.Attributes[1].Value = AppUsr.Replace(".", "_"); }
+                            if (setting.Attributes[0].Value == "DesPassword") { setting.Attributes[1].Value = EncryptString(AppPwd, encKey); }
+                            if (setting.Attributes[0].Value == "ClientTierPath") { setting.Attributes[1].Value = ClientTierPath + "\\"; }
+                            if (setting.Attributes[0].Value == "RuleTierPath") { setting.Attributes[1].Value = RuleTierPath + "\\"; }
+                            //if (setting.Attributes[0].Value == "WsRptBaseUrl") { setting.Attributes[1].Value = WsRptBaseUrl; }
+                            if (setting.Attributes[0].Value == "AppNameSpace") { setting.Attributes[1].Value = newNS; }
+                            if (setting.Attributes[0].Value == "WsDomain") { setting.Attributes[1].Value = WebServer; }
+                            if (setting.Attributes[0].Value == "WsRptDomain") { setting.Attributes[1].Value = WebServer; }
+                            if (setting.Attributes[0].Value == "WsBaseUrl") { setting.Attributes[1].Value = (WebServer.StartsWith("http") ? "" : "http://") + WebServer + "/" + newNS + "Ws"; }
                             if (setting.Attributes[0].Value == "WsPassword") { setting.Attributes[1].Value = ""; }
                             if (setting.Attributes[0].Value == "WsRptPassword") { setting.Attributes[1].Value = ""; }
                             if (setting.Attributes[0].Value == "OrdUrl" && (setting.Attributes[1].Value.ToLower().Trim().StartsWith("http"))) { setting.Attributes[1].Value = (WebServer.StartsWith("http") ? "" : "http://") + WebServer + "/" + newNS + "/" + string.Join("", new Uri(setting.Attributes[1].Value).Segments.Skip(2).ToArray()); }
@@ -1269,7 +1401,24 @@ namespace Install
                                 }
                                 catch { }
                             }
-                            if (setting.Attributes[0].Value == "RintagiLicense") { setting.Attributes[1].Value=""; }
+                            if (setting.Attributes[0].Value == "RintagiLicense") { setting.Attributes[1].Value = ""; }
+                            if (setting.Attributes[0].Value == "JWTMasterKey")
+                            {
+                                var jwtMasterKey = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(Guid.NewGuid().ToString().Replace("-", "").Substring(0, 16)));
+                                try
+                                {
+                                    byte[] randomBits = new byte[32];
+                                    using (RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider())
+                                    {
+                                        // Fill the array with a random value.
+                                        rngCsp.GetBytes(randomBits);
+                                    }
+                                    jwtMasterKey = Convert.ToBase64String(randomBits);
+
+                                }
+                                catch { }
+                                setting.Attributes[1].Value = jwtMasterKey;
+                            }
                         }
 					}
 				}
@@ -1900,13 +2049,16 @@ namespace Install
                 if (!Directory.Exists(tiers["rule"])) throw new Exception(string.Format("rule tier {0} not exist", tiers["rule"]));
                 Utils.JFileZip(tiers["rule"], clientTargetDir + "\\Rul.zip", true, false, new List<string> { "\\Deploy*\\", ".git" });
             }
-            progress(20, string.Format("Backing up data tier files {0} to {1} ...", dataServer["server"], dataTargetDir));
-            Utils.BackupServer(dataServer["serverType"], dataServer["server"], dataServer["user"], dataServer["password"], dataServer["design"], dataTargetDir + "\\Data\\", bIntegratedSecurity);
-            if (dataTargetDir.IndexOf("\\") >= 0)	// Windows path:
+            if (!string.IsNullOrEmpty(dataServer["serverType"]))
             {
-                Utils.JFileZip(dataTargetDir + "\\Data", dataTargetDir + "\\Dat.zip", true, false);
+                progress(20, string.Format("Backing up data tier files {0} to {1} ...", dataServer["server"], dataTargetDir));
+                Utils.BackupServer(dataServer["serverType"], dataServer["server"], dataServer["user"], dataServer["password"], dataServer["design"], dataTargetDir + "\\Data\\", bIntegratedSecurity);
+                if (dataTargetDir.IndexOf("\\") >= 0)	// Windows path:
+                {
+                    Utils.JFileZip(dataTargetDir + "\\Data", dataTargetDir + "\\Dat.zip", true, false);
+                }
+                Directory.Delete(dataTargetDir + "\\Data", true);
             }
-            Directory.Delete(dataTargetDir + "\\Data", true);
             progress(20, "Backup completed.");
             return true;
         }
@@ -1961,9 +2113,23 @@ namespace Install
                                     dbServer, SysUserName, SysPwd, newNS + "Design", dbPath, serverVer, bIntegratedSecurity);
                 if (!ok) return;
             }
+            else
+            {
+                if (!string.IsNullOrEmpty(appUserName) && !Utils.TestSQL("M", dbServer, appUserName, appPwd, false))
+                {
+                    return;
+                }
+            }
+
             if (isDataTier && isSQLServer && dbServer.EndsWith(@"\") || dbServer.ToUpper().EndsWith("MSSQLSERVER"))
             {
                 ReportError(@"Use '.' or just the server name WITHOUT trailing '\' if you want to specify the default MSSQLSERVER instance");
+                return;
+            }
+
+            if (!Utils.CreateLogin(isSQLServer ? "M" : "S", dbServer, SysUserName, SysPwd, appUserName, appPwd, bIntegratedSecurity))
+            {
+                ReportError(@"AppUsr/Pwd cannot be created or have no access to the server");
                 return;
             }
 
@@ -1971,7 +2137,7 @@ namespace Install
             {
                 if (isNPDT) { DeployType = "PRD"; }
                 nPDT.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
-                Utils.SetupFilePermissions(clientTier, string.Empty, newNS, progress);
+                Utils.SetupFilePermissions(clientTier, string.Empty, newNS, progress,true);
                 Utils.SetupIIS(isNet2, site, newNS, clientTier, wsTier, xlsTier, bEnable32bit);
                 if (site != "Default Web Site")
                 {
@@ -2032,7 +2198,7 @@ namespace Install
             else if (oldNS == "RO" && isDev)
             {
                 nDEV.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
-                Utils.SetupFilePermissions(clientTier, string.Empty, newNS, progress);
+                Utils.SetupFilePermissions(clientTier, string.Empty, newNS, progress,false);
                 Utils.SetupIIS(isNet2, site, newNS, clientTier, wsTier, xlsTier, bEnable32bit);
                 if (site != "Default Web Site")
                 {
@@ -2112,7 +2278,7 @@ namespace Install
                     /* change secret key */
                     item.SetROKey(Utils.SetupEncryptionKey(ruleTier));
                 }
-                Utils.SetupFilePermissions(clientTier, ruleTier, newNS, progress);
+                Utils.SetupFilePermissions(clientTier, ruleTier, newNS, progress,false);
                 Utils.SetupIIS(isNet2, site, newNS, clientTier, wsTier, xlsTier, bEnable32bit);
                 if (site != "Default Web Site")
                 {
@@ -2346,11 +2512,14 @@ namespace Install
             Utils.SetDirectorySecurity(wsTier, "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
             Utils.SetDirectorySecurity(xlsTier, "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
 
-            Utils.SetDirectorySecurity(ruleTier + @"\Deploy" + newNS + "PDT", "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
-            Utils.SetDirectorySecurity(ruleTier + @"\Deploy" + newNS + "PTY", "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+            var regex = new System.Text.RegularExpressions.Regex(@"\\Rule\\?$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            var projectRoot = regex.Replace(ruleTier, "");
+
+            Utils.SetDirectorySecurity(projectRoot + @"\Deploy" + newNS + "PDT", "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+            Utils.SetDirectorySecurity(projectRoot + @"\Deploy" + newNS + "PTY", "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
             if (newNS == "RO")
             {
-                Utils.SetDirectorySecurity(ruleTier + @"\Deploy" + newNS + "DEV", "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+                Utils.SetDirectorySecurity(projectRoot + @"\Deploy" + newNS + "DEV", "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
             }
         }
 
@@ -2360,7 +2529,7 @@ namespace Install
             Utils.ExtractBinRsc(zip, zip);
             Utils.JFileUnzip(zip, Application.StartupPath + @"\Temp");
             DirectoryInfo srcDi = new DirectoryInfo(Application.StartupPath + @"\Temp");
-            Utils.ReplFileNS(Application.StartupPath + @"\Temp", ruleTier, "ZZ", newNS, new List<string>(),new List<string>(), true, srcDi);
+            Utils.ReplFileNS(Application.StartupPath + @"\Temp" + (Directory.Exists(Application.StartupPath + @"\Temp" + @"\dev") ? @"\dev" : ""), ruleTier, "ZZ", newNS, new List<string>(), new List<string>(), true, srcDi);
             srcDi.Delete(true); Utils.DeleteFile(zip);
 
         }
@@ -2375,7 +2544,9 @@ namespace Install
             deployPath = @"E:\Deploy" + ns + deployType;
             if (Directory.Exists(deployPath)) return deployPath;
             //if (upgrade) return null;
-            return ruleTier +  @"\Deploy" + ns + deployType;
+            var regex = new System.Text.RegularExpressions.Regex(@"\\Rule\\?$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            var projectRoot = regex.Replace(ruleTier, "");
+            return projectRoot + @"\Deploy" + ns + deployType;
         }
 
         private static void MakeNewDev(bool upgrade, string newNS, string clientTier, string ruleTier)
@@ -2412,11 +2583,11 @@ namespace Install
             if (!upgrade)
             {
                 zip = newNS == "RO" ? @"Resources.rosln.zip" : @"Resources.sln.zip";
+                string sln = newNS == "RO" ? @"\rosln" : @"\sln";
                 Utils.ExtractBinRsc(zip, zip);
                 Utils.JFileUnzip(zip, Application.StartupPath + @"\Temp");
                 srcDi = new DirectoryInfo(Application.StartupPath + @"\Temp");
-                Utils.ReplFileNS(Application.StartupPath + @"\Temp", clientTier.Substring(0, clientTier.Length - 4), "ZZ", newNS, new List<string>(), new List<string>(), true, srcDi);
-
+                Utils.ReplFileNS(Application.StartupPath + @"\Temp" + (Directory.Exists(Application.StartupPath + @"\Temp" + sln) ? sln : ""), clientTier.Substring(0, clientTier.Length - 4), "ZZ", newNS, new List<string>(), new List<string>(), true, srcDi);
                 try
                 {
                     //rename generic dev.sln to say RO.SLN
@@ -2424,7 +2595,6 @@ namespace Install
                     string oldpath = c + (newNS == "RO" ? @"\ro.sln" : @"\ZZ.sln");
                     string newpath = c + @"\" + newNS + ".sln";
                     System.IO.File.Move(oldpath, newpath);
-                    System.IO.Directory.Delete(oldpath);
 
                 }
                 catch { }
