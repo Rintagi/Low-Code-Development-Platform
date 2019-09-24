@@ -26,7 +26,7 @@ namespace Install
 		{
 			InitializeComponent();
 
-            copyright.Text = "V3.1.30501 ©1999-" + DateTime.Now.Year.ToString() + " robocoder corporation. All rights reserved.";
+            copyright.Text = "V3.1.30501 ï¿½1999-" + DateTime.Now.Year.ToString() + " robocoder corporation. All rights reserved.";
             item.SetVersion(lvVersion);
 			txtOldNS.Text = item.GetOldNS();
 			txtWebServer.Text = "localhost";
@@ -150,6 +150,8 @@ namespace Install
 		{
 			if (txtOldNS.Text == "RO") { label8.Text = "Rintagi Installer"; } else { label8.Text = "Application Installer"; }
             string oldBasePath = "C:\\inetpub\\wwwroot\\";
+            NmSpace = string.IsNullOrEmpty(NmSpace) ? (txtOldNS.Text == "RO" ? "ZZ" : txtOldNS.Text) : NmSpace;
+            bool newRuleStructure = Directory.Exists("C:\\Rintagi\\" + NmSpace + "\\Rule") || cbNew.Checked || (!cbNew.Checked && (item.GetInsType().Contains("PDT") && Directory.Exists("C:\\Rintagi\\" + NmSpace + "\\Web")));
             if (Directory.Exists(oldBasePath + NmSpace) && !cbNew.Checked)
             {
                 txtClientTier.Text = oldBasePath + NmSpace + "\\Web";
@@ -160,9 +162,9 @@ namespace Install
             else
             {
                 txtClientTier.Text = "C:\\Rintagi\\" + NmSpace + "\\Web";
-                txtRuleTier.Text = "C:\\Rintagi\\" + NmSpace;
+                txtRuleTier.Text = "C:\\Rintagi\\" + NmSpace + (newRuleStructure && false ? "\\Rule" : "");
                 txtWsTier.Text = "C:\\Rintagi\\" + NmSpace + "\\" + NmSpace + "Ws";
-                txtXlsTier.Text = "C:\\Rintagi\\" + (item.GetInsType() == "PDT" ? "" : NmSpace + "\\") + "WsXls";
+                txtXlsTier.Text = "C:\\Rintagi\\" + (item.GetInsType().Contains("PDT") ? "" : NmSpace + "\\") + "WsXls";
             }
             txtWsUrl.Text = "http://" + WebServer + "/ReportServer/ReportService2005.asmx"; txtWsUrl.Visible = false;	// Obsolete Feb 21, 2011.
         }
@@ -183,7 +185,7 @@ namespace Install
 				if (MsgValid != string.Empty) { MessageBox.Show(MsgValid); }
 				else
 				{
-                    if (!Utils.TestSQL("M", txtServerName.Text, txtUserName.Text, txtPassword.Text, cbIntegratedSecurity.Checked)) return;
+                    if (cbInstallDB.Checked && !Utils.TestSQL("M", txtServerName.Text, txtUserName.Text, txtPassword.Text, cbIntegratedSecurity.Checked)) return;
 
                     btnBackup.Enabled = false;
 					lblBkPath1.Visible = false; txtBkPath1.Visible = false;
@@ -209,7 +211,7 @@ namespace Install
                         lblCurrent.Text = msg;
                         Application.DoEvents();
                     };
-      
+                    if (!cbInstallDB.Checked) dataServer["serverType"] = "";
                     bool done = Utils.Backup(tiers, dataServer, txtBkPath1.Text + "\\" + txtNewNS.Text + uniqueStr, txtBkPath2.Text + "\\" + txtNewNS.Text + uniqueStr, progress, cbIntegratedSecurity.Checked);
                     if (!done)
                     {
@@ -246,13 +248,17 @@ namespace Install
                     int ver = rbDbProvider16.Checked ? 13 : (rbDbProvider10.Checked ? 10 : ( rbDbProvider12.Checked ? 11 : 12));
                     if (cbInstallDB.Checked)
                     {
-                        if (!Utils.TestSQL("M", txtServerName.Text, txtUserName.Text, txtPassword.Text,cbIntegratedSecurity.Checked)) return;
-                        KeyValuePair<string,string> bcpPath = Utils.GetSQLBcpPath();
+                        if (!Utils.TestSQL("M", txtServerName.Text, txtUserName.Text, txtPassword.Text, cbIntegratedSecurity.Checked)) return;
+                        KeyValuePair<string, string> bcpPath = Utils.GetSQLBcpPath();
                         if (string.IsNullOrEmpty(bcpPath.Key))
                         {
                             MessageBox.Show(rbDbProvider16.Checked ? "SQL Server 2016 client is not installed on this machine" : (rbDbProvider10.Checked ? "SQL Server 2008 client is not installed on this machine" : (rbDbProvider12.Checked ? "SQL Server 2012 client is not installed on this machine" : "SQL Server 2014 client is not installed on this machine")));
                             return;
                         }
+                    }
+                    else if (cbNew.Checked)
+                    {
+                        if (!Utils.TestSQL("M", txtServerName.Text, txtUserName.Text, txtPassword.Text, cbIntegratedSecurity.Checked)) return;
                     }
                     if (btnBackup.Enabled && !cbNew.Checked)
                     {
@@ -301,7 +307,7 @@ namespace Install
             dataServer["password"] = txtPassword.Text;
             dataServer["appUser"] = txtAppUserName.Text;
             dataServer["appPwd"] = txtAppPassword.Text;
-            dataServer["dbpath"] = txtDbPath.Text;
+            dataServer["dbpath"] = cbInstallDB.Checked ? txtDbPath.Text : "";
             dataServer["design"] = txtNewNS.Text + "Design";
             dataServer["serverVer"] = rbDbProvider16.Checked ? "130" : (rbDbProvider10.Checked ? "100" : (rbDbProvider12.Checked ? "110" : "120"));
             dataServer["IntegratedSecurity"] = cbIntegratedSecurity.Checked ? "Y" : "N";
@@ -369,7 +375,7 @@ namespace Install
 			else if (cbNew.Checked && Directory.Exists(txtClientTier.Text) && !cbOverWrite.Checked) { return "Please delete client tier directory and try again to perform new installation."; }
             //else if (!cbNew.Checked && txtOldNS.Text == "RO" && txtNewNS.Text == "RO" && item.GetInsType() != "PTY" && !bBackup) { return "Please do not attempt to upgrade Rintagi itself."; }
 			else if (!cbNew.Checked && !Directory.Exists(txtClientTier.Text)) { return "Please enter a valid client tier directory and try again."; }
-            else if (!cbNew.Checked && (Directory.Exists(txtRuleTier.Text + "\\UsrRules") || Directory.Exists(txtRuleTier.Text + "\\Rule3")) && item.GetInsType().Contains("PDT") && !bBackup) { return string.Format("Rule tier {0} found though you are installing a production package.", txtRuleTier.Text); }
+            else if (!cbNew.Checked && Directory.Exists(txtRuleTier.Text) && item.GetInsType().Contains("PDT") && !bBackup) { return string.Format("Rule tier {0} found though you are installing a production package.", txtRuleTier.Text); }
             else if (gbRule.Visible && txtRuleTier.Text == string.Empty) { return "Please enter the rule tier directory and try again."; }
 			else if (gbRule.Visible && !cbNew.Checked && !Directory.Exists(txtRuleTier.Text)) { return "Please enter a valid rule tier directory and try again."; }
             else if (gbRptWs.Visible && txtWsUrl.Text == string.Empty) { return "Please enter the web service server name and try again."; }
@@ -542,7 +548,7 @@ namespace Install
                 //lblDbPath.Visible = true;
                 cbInstallDB.Visible = true;
                 cb32Bit.Visible = true;
-                cbOverWrite.Visible = item.GetInsType().Contains("PTY") && item.GetOldNS() == "RO";
+                cbOverWrite.Visible = true;
                 if (txtNewNS.Text != string.Empty) { InitializeTiers(txtNewNS.Text, txtWebServer.Text); }
             }
             else {
