@@ -736,8 +736,8 @@ namespace RO.Rule3
 				{
 					if (drv["DataTypeSysName"].ToString() == "String")
 					{
-						sb.Append("						rows[iRow][" + iCol.ToString() + "] = rows[iRow][" + iCol.ToString() + "].ToString().Replace(\"\\r\",\"\").Replace(\"\\n\",\"\");" + Environment.NewLine);
-					}
+                        sb.Append("						try {rows[iRow][" + iCol.ToString() + "] = rows[iRow][" + iCol.ToString() + "].ToString().Replace(\"\\r\",\"\").Replace(\"\\n\",\"\");} catch {};" + Environment.NewLine);
+                    }
 					iCol = iCol + 1;
 				}
 				sb.Append("					}" + Environment.NewLine);

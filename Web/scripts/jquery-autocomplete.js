@@ -81,8 +81,8 @@
                             if (searchTerm == "^") { searchTerm = input.val(); term = ""; };
 
 				            if (term in cache) {
-				                if (cache[term].data != null && originalSearchTerm != '^') {
-				                    $('span.itemTotal', $(input).closest('div.search-grp')).html('(' + (cache[term].count - (cache[term].count >= 0 ? 1 : 0)) + (cache[term].count >= cache[term].topN ? '+' : '') + ' found)');
+                                if (cache[term].data != null && originalSearchTerm != '^') {
+                                    $('span.itemTotal', $(input).closest('div.search-grp')).html('(' + (cache[term].count - (cache[term].count > 0 && !cache[term].data[0].key ? 1 : 0)) + (cache[term].count >= cache[term].topN ? '+' : '') + ' found)');
 				                    response(cache[term].data);
 				                    return;
 				                }

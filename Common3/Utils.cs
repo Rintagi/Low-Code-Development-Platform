@@ -318,7 +318,8 @@
                 // Cannot add "ex.Message" to the return statement; do not remove "ex"; need it here for debugging purpose.
                 catch (Exception ex)
                 {
-                    return Convert.ToBase64String(content);
+                    if (ex != null) return Convert.ToBase64String(content);
+                    else return Convert.ToBase64String(content);
                 }
             }
             else
@@ -1329,7 +1330,10 @@
             proc.CancelErrorRead();
             proc.CancelOutputRead();
             sem.Release();
-            if (er != string.Empty) { throw new ApplicationException(er); }
+            if (er != string.Empty)
+            {
+                throw new ApplicationException(cmd_path + "\r\n" + er);
+            }
             return ss;
         }
 

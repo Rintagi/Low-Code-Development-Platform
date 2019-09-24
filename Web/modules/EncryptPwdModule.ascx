@@ -40,6 +40,7 @@
                 <div class="r-tr">
                 <div class="r-content">
         			<asp:Button id="cEncryptButton" CssClass="medium blue button" onclick="cEncryptButton_Click" runat="server" text="Encrypt" />
+                    <asp:checkbox id="cValidate" runat="server" Checked="false" Text="test connection" />
                 </div>
                 </div>
             </div>
