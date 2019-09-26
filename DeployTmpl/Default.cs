@@ -140,7 +140,7 @@ namespace Install
 				gbWs.Visible = false;
 				gbXls.Visible = false;
 				gbRptWs.Visible = false;
-				gbRule.Visible = false;
+				gbRule.Visible = true;
 				gbData.Visible = false;
                 gbBackup.Visible = false;
 			}
@@ -186,6 +186,7 @@ namespace Install
 				else
 				{
                     if (cbInstallDB.Checked && !Utils.TestSQL("M", txtServerName.Text, txtUserName.Text, txtPassword.Text, cbIntegratedSecurity.Checked)) return;
+                    string iType = item.GetInsType();
 
                     btnBackup.Enabled = false;
 					lblBkPath1.Visible = false; txtBkPath1.Visible = false;
@@ -195,7 +196,7 @@ namespace Install
                     tiers["client"] = txtClientTier.Text;
                     tiers["ws"] = txtWsTier.Text;
                     tiers["xls"] = txtXlsTier.Text;
-                    if (gbRule.Visible) tiers["rule"] = txtRuleTier.Text;
+                    if (iType.Contains("PTY") || iType.Contains("DEV")) tiers["rule"] = txtRuleTier.Text;
                     dataServer["serverType"] = rbDbProvider16.Checked || rbDbProvider10.Checked || rbDbProvider12.Checked || rbDbProvider14.Checked || true ? "M" : "S";
                     dataServer["server"] = txtServerName.Text;
                     dataServer["user"] = txtUserName.Text;
@@ -333,8 +334,7 @@ namespace Install
             tiers["client"] = txtClientTier.Text;
             tiers["ws"] = txtWsTier.Text;
             tiers["xls"] = txtXlsTier.Text;
-            if (gbRule.Visible) tiers["rule"] = txtRuleTier.Text;
-            else tiers["rule"] = "";
+            tiers["rule"] = txtRuleTier.Text;
 
             tiers["site"] = "Default Web Site";
 
@@ -363,7 +363,7 @@ namespace Install
                 if (!string.IsNullOrEmpty(msg)) lblCurrent.Text = msg;
                 Application.DoEvents();
             };
-            Utils.NewApp(tiers, dataServer, "", "", progress, item, iPDT, iDEV, iPTY, nPDT, nDEV, nPTY,false);
+            Utils.NewApp(tiers, dataServer, "", "", progress, item, iPDT, iDEV, iPTY, nPDT, nDEV, nPTY,false,true);
 		}
 
 		private string ValidateControls(bool bBackup)
@@ -436,7 +436,7 @@ namespace Install
 			txtNewNS.Text = txtOldNS.Text; 
             //txtNewNS.Enabled = false;
 			cbNew.Checked = false; cbNew.Enabled = true;
-			gbRule.Visible = false; gbData.Visible = true;
+			gbRule.Visible = true; gbData.Visible = true;
 			if (txtOldNS.Text == "RO") 
 			{
 				ShowBackup(true);
@@ -588,6 +588,7 @@ namespace Install
                 {cb32Bit,"check this if you have 32 bit office installed and cannot install 64 bit Access Engine Runtime"},
                 {cbOverWrite,"check this ONLY IF you are running the first time bootstrap installation of Rintagi from a git download"},
                 {txtDbPath,"location where the database would be stored, this refers to the SQL Server machine, not necessary where this installer currently run in case of a two tier setup. Leaving this empty for a new installation means a client only installation for a two tier setup(i.e. it will not create any database)"},
+                {txtRuleTier,"location where auxilary data is placed, including temp import directory, user rule projects, react related projects source, deployment projects etc."},
             };
             try {
                 toolTip.SetToolTip((Control)sender, toolTipMsg[(Control)sender]);

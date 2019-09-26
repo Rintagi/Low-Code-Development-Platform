@@ -181,7 +181,7 @@ namespace Install
             this.gbRule.Size = new System.Drawing.Size(620, 60);
             this.gbRule.TabIndex = 50;
             this.gbRule.TabStop = false;
-            this.gbRule.Text = "Rule Tier";
+            this.gbRule.Text = "Rule/Project Root Tier";
             // 
             // rbRFrwork3
             // 

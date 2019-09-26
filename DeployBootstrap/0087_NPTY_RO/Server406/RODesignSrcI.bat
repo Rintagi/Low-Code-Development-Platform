@@ -507,14 +507,8 @@ IF ERRORLEVEL 1 GOTO ThereIsError
 "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\sqlcmd" -Q "TRUNCATE TABLE RODesign.dbo.UsrGroupAuth"  -S %1 -U %2 -P %3  >> DataDesign\..\Install.log
 "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\bcp" "RODesign.dbo.UsrGroupAuth" in "DataDesign\UsrGroupAuth.txt"  -E  -e "DataDesign\..\Error.txt" -S %1 -U %2 -P %3 -q -w -CRAW -t"~@~" -r"~#~" >> DataDesign\..\Install.log
 IF ERRORLEVEL 1 GOTO ThereIsError
-"C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\sqlcmd" -Q "TRUNCATE TABLE RODesign.dbo.UsrImpr"  -S %1 -U %2 -P %3  >> DataDesign\..\Install.log
-"C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\bcp" "RODesign.dbo.UsrImpr" in "DataDesign\UsrImpr.txt"  -E  -e "DataDesign\..\Error.txt" -S %1 -U %2 -P %3 -q -w -CRAW -t"~@~" -r"~#~" >> DataDesign\..\Install.log
-IF ERRORLEVEL 1 GOTO ThereIsError
 "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\sqlcmd" -Q "TRUNCATE TABLE RODesign.dbo.UsrPref"  -S %1 -U %2 -P %3  >> DataDesign\..\Install.log
 "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\bcp" "RODesign.dbo.UsrPref" in "DataDesign\UsrPref.txt"  -E  -e "DataDesign\..\Error.txt" -S %1 -U %2 -P %3 -q -w -CRAW -t"~@~" -r"~#~" >> DataDesign\..\Install.log
-IF ERRORLEVEL 1 GOTO ThereIsError
-"C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\sqlcmd" -Q "TRUNCATE TABLE RODesign.dbo.UsrProvider"  -S %1 -U %2 -P %3  >> DataDesign\..\Install.log
-"C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\bcp" "RODesign.dbo.UsrProvider" in "DataDesign\UsrProvider.txt"  -e "DataDesign\..\Error.txt" -S %1 -U %2 -P %3 -q -w -CRAW -t"~@~" -r"~#~" >> DataDesign\..\Install.log
 IF ERRORLEVEL 1 GOTO ThereIsError
 "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\sqlcmd" -Q "TRUNCATE TABLE RODesign.dbo.UtReport"  -S %1 -U %2 -P %3  >> DataDesign\..\Install.log
 "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\bcp" "RODesign.dbo.UtReport" in "DataDesign\UtReport.txt"  -E  -e "DataDesign\..\Error.txt" -S %1 -U %2 -P %3 -q -w -CRAW -t"~@~" -r"~#~" >> DataDesign\..\Install.log

@@ -12,6 +12,7 @@ namespace Install
 		private string oldNS = "RO";
 		private string iType = "DEV";
 		private string iKey = "xxxxxxxx";
+		private string oldProjectRoot = @"C:\Rintagi\RO";
         private string roENCKey = "xxxxxx";
 
 		public string GetOldNS()
@@ -25,6 +26,10 @@ namespace Install
 		}
 
 		public string GetInsKey()
+		{
+			return oldProjectRoot;
+		}
+		public string GetOldProjectRoot()
 		{
 			return iKey;
 		}

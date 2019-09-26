@@ -1240,33 +1240,33 @@ namespace Install
 		}
 
 		//grants full control to network service on the client and rule tiers; if path doesnt exist it is created
-        public static void SetupFilePermissions(string ClientTierPath, string RuleTierPath, string newNS, Action<int, string> progress, bool isProduction)
+        public static void SetupFilePermissions(string ClientTierPath, string RuleTierPath, string newNS, string WindowsServiceAccount, Action<int, string> progress, bool isProduction)
 		{
 			if (!Directory.Exists(ClientTierPath)) { Directory.CreateDirectory(ClientTierPath); }
             progress(0, "Setting up Client Tier ACL ...");
             if (!isProduction)
-                Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\" " + "/E /T /C /G \"NETWORK SERVICE\":F", true);
+                Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\" " + "/E /T /C /G \"" + WindowsServiceAccount + "\":F", true);
             else
             {
                 /* for production, web layer is read only by default, only data(file upload) is full access */
-                Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\" " + "/E /T /C /P \"NETWORK SERVICE\":R", true);
+                Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\" " + "/E /T /C /P \"" + WindowsServiceAccount + "\":R", true);
                 /* disable the users special right(authenticated user including NETWORK SERVICE) of create file/directory */
                 Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\" " + "/E /T /C /P \"USERS\":R", true);
-                Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\\data\" " + "/E /T /C /G \"NETWORK SERVICE\":F", true);
+                Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + ClientTierPath + "\\data\" " + "/E /T /C /G \"" + WindowsServiceAccount + "\":F", true);
             }
 
 
 			string CompDir = ClientTierPath.Replace(@"\Web",@"\PrecompiledWeb\") + newNS;
 			if (!Directory.Exists(CompDir)) { Directory.CreateDirectory(CompDir); }
             progress(0, "Setting up PrecompiledWeb ACL ...");
-            Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + CompDir + "\" " + "/E /T /C /G \"NETWORK SERVICE\":F", true);
+            Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + CompDir + "\" " + "/E /T /C /G \"" + WindowsServiceAccount + "\":F", true);
 
 			//only happens if we have a rule tier
 			if (RuleTierPath != string.Empty)
 			{
 				if (!Directory.Exists(RuleTierPath)) { Directory.CreateDirectory(RuleTierPath); }
                 progress(0, "Setting up Rule tier ACL ...");
-				Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + RuleTierPath + "\" " + "/E /T /C /G \"NETWORK SERVICE\":F", true);
+				Utils.ExecuteCommand("C:\\WINDOWS\\system32\\cacls.exe", " \"" + RuleTierPath + "\" " + "/E /T /C /G \"" + WindowsServiceAccount + "\":F", true);
 			}
 		}
 
@@ -1315,7 +1315,7 @@ namespace Install
             return newEncryptKey;
         }
 
-		public static void SetupConfigFile(string DbProvider, string Svr, string Usr, string Pwd, string ConfigClientPath, string ConfigWsPath, string ClientTierPath, string RuleTierPath, string WsRptBaseUrl, string newNS, string oldNS, string WebServer, string DeployType, string encKey, string AppUsr, string AppPwd)
+		public static void SetupConfigFile(string DbProvider, string Svr, string Usr, string Pwd, string ConfigClientPath, string ConfigWsPath, string ClientTierPath, string RuleTierPath,string oldProjectRoot, string WindowsServiceAccount, string WsRptBaseUrl, string newNS, string oldNS, string WebServer, string DeployType, string encKey, string AppUsr, string AppPwd)
 		{
 			XmlNode xn;
 			XmlDocument xd = new XmlDocument();
@@ -1328,7 +1328,11 @@ namespace Install
 			{
 				if (node.Name == "appSettings")
 				{
-					foreach (XmlNode setting in node.ChildNodes)
+                    var regex = new System.Text.RegularExpressions.Regex(@"\\Rule\\?$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                    var projectRoot = regex.Replace(RuleTierPath, "");
+                    oldProjectRoot = new System.Text.RegularExpressions.Regex(@"\\" + oldNS + @"\\?$").Replace(oldProjectRoot, @"\" + newNS);
+
+                    foreach (XmlNode setting in node.ChildNodes)
 					{
                         if (setting.Attributes != null && setting.Attributes.Count > 0)
                         {
@@ -1363,41 +1367,68 @@ namespace Install
                             if (setting.Attributes[0].Value == "DeployType") { setting.Attributes[1].Value = DeployType; }
                             if (setting.Attributes[0].Value == "PathTxtTemplate")
                             {
-                                setting.Attributes[1].Value = setting.Attributes[1].Value.Replace(@"\" + @oldNS + @"\", @"\" + newNS + @"\");
+                                setting.Attributes[1].Value = setting.Attributes[1].Value.Replace(@"\" + oldNS + @"\", @"\" + newNS + @"\").Replace(oldProjectRoot,projectRoot);
+                                if (!setting.Attributes[1].Value.ToLower().Contains(RuleTierPath.ToLower()))
+                                {
+                                    setting.Attributes[1].Value = new System.Text.RegularExpressions.Regex(@"^.+\\" + newNS + @"\\", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Replace(setting.Attributes[1].Value,projectRoot + "\\");
+                                }
                                 try
                                 {
                                     System.IO.Directory.CreateDirectory(setting.Attributes[1].Value);
-                                    SetDirectorySecurity(setting.Attributes[1].Value, "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+                                    if (!setting.Attributes[1].Value.ToLower().Contains(RuleTierPath.ToLower()))
+                                    {
+                                        SetDirectorySecurity(setting.Attributes[1].Value, WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+                                    }
                                 }
                                 catch { }
                             }
                             if (setting.Attributes[0].Value == "PathXlsImport")
                             {
-                                setting.Attributes[1].Value = setting.Attributes[1].Value.Replace(@"\" + @oldNS + @"\", @"\" + newNS + @"\");
+                                setting.Attributes[1].Value = setting.Attributes[1].Value.Replace(@"\" + oldNS + @"\", @"\" + newNS + @"\").Replace(oldProjectRoot, projectRoot);
+                                if (!setting.Attributes[1].Value.ToLower().Contains(RuleTierPath.ToLower()))
+                                {
+                                    setting.Attributes[1].Value = new System.Text.RegularExpressions.Regex(@"^.+\\" + newNS + @"\\", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Replace(setting.Attributes[1].Value, projectRoot + "\\");
+                                }
                                 try
                                 {
                                     System.IO.Directory.CreateDirectory(setting.Attributes[1].Value);
-                                    SetDirectorySecurity(setting.Attributes[1].Value, "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+                                    if (!setting.Attributes[1].Value.ToLower().Contains(RuleTierPath.ToLower())) {
+                                        SetDirectorySecurity(setting.Attributes[1].Value, WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+                                    }
                                 }
                                 catch { }
                             }
                             if (setting.Attributes[0].Value == "PathTmpImport")
                             {
-                                setting.Attributes[1].Value = setting.Attributes[1].Value.Replace(@"\" + @oldNS + @"\", @"\" + newNS + @"\");
+                                setting.Attributes[1].Value = setting.Attributes[1].Value.Replace(@"\" + oldNS + @"\", @"\" + newNS + @"\").Replace(oldProjectRoot, projectRoot);
+                                if (!setting.Attributes[1].Value.ToLower().Contains(RuleTierPath.ToLower()))
+                                {
+                                    setting.Attributes[1].Value = new System.Text.RegularExpressions.Regex(@"^.+\\" + newNS + @"\\", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Replace(setting.Attributes[1].Value, projectRoot + "\\");
+                                }
                                 try
                                 {
                                     System.IO.Directory.CreateDirectory(setting.Attributes[1].Value);
-                                    SetDirectorySecurity(setting.Attributes[1].Value, "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+                                    if (!setting.Attributes[1].Value.ToLower().Contains(RuleTierPath.ToLower()))
+                                    {
+                                        SetDirectorySecurity(setting.Attributes[1].Value, WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+                                    }
                                 }
                                 catch { }
                             }
                             if (setting.Attributes[0].Value == "PathRtfTemplate")
                             {
-                                setting.Attributes[1].Value = setting.Attributes[1].Value.Replace(@"\" + @oldNS + @"\", @"\" + newNS + @"\");
+                                setting.Attributes[1].Value = setting.Attributes[1].Value.Replace(@"\" + oldNS + @"\", @"\" + newNS + @"\").Replace(oldProjectRoot, projectRoot);
+                                if (!setting.Attributes[1].Value.ToLower().Contains(RuleTierPath.ToLower()))
+                                {
+                                    setting.Attributes[1].Value = new System.Text.RegularExpressions.Regex(@"^.+\\" + newNS + @"\\", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Replace(setting.Attributes[1].Value, projectRoot + "\\");
+                                }
                                 try
                                 {
                                     System.IO.Directory.CreateDirectory(setting.Attributes[1].Value);
-                                    SetDirectorySecurity(setting.Attributes[1].Value, "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+                                    if (!setting.Attributes[1].Value.ToLower().Contains(RuleTierPath.ToLower()))
+                                    {
+                                        SetDirectorySecurity(setting.Attributes[1].Value, WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+                                    }
                                 }
                                 catch { }
                             }
@@ -1614,6 +1645,49 @@ namespace Install
             }
             finally { cn.Close(); }
         }
+        public static void SetupCompanyProject(string DbProvider, string Svr, string Usr, string Pwd, string Db, string oldNS, string newNS, string AppUsr, string AppPwd, bool bIntegratedSecurity)
+        {
+            string cs = GetConnString(DbProvider, Svr, Usr, Pwd, bIntegratedSecurity) + ";database=" + Db; ;
+            OleDbConnection cn = new OleDbConnection(cs);
+            cn.Open();
+            OleDbTransaction tr = cn.BeginTransaction();
+            /* add firm/company/project to Cmon(db must be Cmon) */
+            OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON"
+            + " IF NOT EXISTS (SELECT TOP 1 1 FROM dbo.Firm)"
+            + " BEGIN"
+            + "     INSERT INTO dbo.Firm (TradeName, LegalName, Active) "
+            + "     SELECT 'ACME', 'ACME', 'Y' "
+            + " END"
+            + " IF NOT EXISTS (SELECT TOP 1 1 FROM dbo.Company)"
+            + " BEGIN"
+            + "     INSERT INTO dbo.Company (FirmId, CompanyDesc, Active) "
+            + "     SELECT TOP 1 FirmId, 'ACME', 'Y' FROM dbo.Firm ORDER BY FirmId "
+            + " END"
+            + " "
+            + " IF NOT EXISTS (SELECT TOP 1 1 FROM dbo.Project)"
+            + " BEGIN"
+            + "     INSERT INTO dbo.Project (ProjectDesc, Active) "
+            + "     SELECT 'Project 1', 'Y' "
+            + " END"
+            + " "
+            , cn);
+
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 900;
+            cmd.Transaction = tr;
+            try
+            {
+                cmd.ExecuteNonQuery();
+                tr.Commit();
+            }
+            catch (Exception e)
+            {
+                tr.Rollback();
+                ReportError(e.Message.ToString());
+            }
+            finally { cn.Close(); }
+        }
+
         public static void SetupAnonymousUsr(string DbProvider, string Svr, string Usr, string Pwd, string Db, string oldNS, string newNS, bool bIntegratedSecurity)
         {
             string cs = GetConnString(DbProvider, Svr, Usr, Pwd, bIntegratedSecurity) + ";database=" + Db; ;
@@ -1648,11 +1722,14 @@ namespace Install
             finally { cn.Close(); }
         }
 
-        public static void SetupTiers(string DbProvider, string Svr, string Usr, string Pwd, string Db, string oldNS, string newNS, string ClientTierPath, string WsTierPath, string RuleTierPath, string encKey, string AppUsr, string AppPwd, string serverVer, bool bIntegratedSecurity)
+        public static void SetupTiers(string DbProvider, string Svr, string Usr, string Pwd, string Db, string oldNS, string newNS, string oldProjectRoot, string ClientTierPath, string WsTierPath, string XlsTierPath, string RuleTierPath, string encKey, string AppUsr, string AppPwd, string serverVer, bool bIntegratedSecurity)
 		{
             KeyValuePair<string, string> bcpPath = GetSQLBcpPath();
             serverVer = bcpPath.Key;
             string bcpDir = bcpPath.Value.Replace(@"\bcp.exe", "\\");
+            var regex = new System.Text.RegularExpressions.Regex(@"\\Rule\\?$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            var projectRoot = regex.Replace(RuleTierPath, "");
+            oldProjectRoot = new System.Text.RegularExpressions.Regex(@"\\" + oldNS + @"\\?$").Replace(oldProjectRoot,@"\" + newNS);
 
             string cs = GetConnString(DbProvider, Svr, Usr, Pwd, bIntegratedSecurity) + ";database=" + Db; ;
             OleDbConnection cn = new OleDbConnection(cs);
@@ -1666,10 +1743,12 @@ namespace Install
             + ", InstBinPath = '" + bcpDir + "'"
                 // + ", PortBinPath = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(PortBinPath,'\\Client SDK\\ODBC\\110\\Tools\\Binn\\','\\" + serverVer + "\\Tools\\Binn\\'),'\\80\\','\\" + serverVer + "\\'),'\\90\\','\\" + serverVer + "\\'),'\\100\\','\\" + serverVer + "\\'),'\\110\\','\\" + serverVer + "\\')" + ",'\\120\\','\\" + serverVer + "\\')" + ",'\\130\\','\\" + serverVer + "\\')" + ",'" + @"\" + serverVer + @"\Tools\Binn\" + "','" + bcpDir + "')" + " "
            // + ", InstBinPath = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(PortBinPath,'\\Client SDK\\ODBC\\110\\Tools\\Binn\\','\\" + serverVer + "\\Tools\\Binn\\'),'\\80\\','\\" + serverVer + "\\'),'\\90\\','\\" + serverVer + "\\'),'\\100\\','\\" + serverVer + "\\'),'\\110\\','\\" + serverVer + "\\')" + ",'\\120\\','\\" + serverVer + "\\')" + ",'\\130\\','\\" + serverVer + "\\')" + ",'" + @"\" + serverVer + @"\Tools\Binn\" + "','" + bcpDir + "')" + " "
-            + " UPDATE dbo.ClientTier SET DevProgramPath = ?, DevCompilePath = replace(DevCompilePath,'\\" + oldNS + "','\\" + newNS + "'), WsProgramPath = ?, WsCompilePath = replace(WsCompilePath,'\\" + oldNS + "','\\" + newNS + "'),XlsCompilePath = replace(XlsCompilePath,'\\" + oldNS + "','\\" + newNS + "'), ClientTierName = replace(ClientTierName,'" + oldNS + "','" + newNS + "')"
+            + " UPDATE dbo.ClientTier SET DevProgramPath = ?, DevCompilePath = replace(DevCompilePath,'\\" + oldNS + "','\\" + newNS + "'), WsProgramPath = ?, WsCompilePath = replace(WsCompilePath,'\\" + oldNS + "','\\" + newNS + "'), XlsProgramPath = ?, XlsCompilePath = replace(XlsCompilePath,'\\" + oldNS + "','\\" + newNS + "'), ClientTierName = replace(ClientTierName,'" + oldNS + "','" + newNS + "')"
             + " UPDATE dbo.RuleTier SET DevProgramPath = ?, RuleTierName = replace(RuleTierName,'" + oldNS + "','" + newNS + "')"
 			+ " UPDATE dbo.Entity SET EntityCode = '" + newNS + "', DeployPath = replace(replace(DeployPath,'" + oldNS + "','" + newNS + "'),'E:\\','C:\\')"
             + " UPDATE dbo.ReleaseDtl SET ObjectName = replace(ObjectName,'" + oldNS + "','" + newNS + "')"
+            + " UPDATE dbo.ClientTier SET DevCompilePath = replace(DevCompilePath,'" + oldProjectRoot + "','" + projectRoot + "'), WsCompilePath = replace(WsCompilePath,'" + oldProjectRoot + "','" + projectRoot + "'),XlsCompilePath = replace(XlsCompilePath,'" + oldProjectRoot + "','" + projectRoot + "')"
+            + " UPDATE dbo.Entity SET DeployPath = replace(DeployPath,'" + oldProjectRoot + "','" + projectRoot + "')"
             , cn);
 			cmd.CommandType = CommandType.Text;
 			cmd.CommandTimeout = 900;
@@ -1679,7 +1758,8 @@ namespace Install
 			cmd.Parameters.Add("@Pwd", OleDbType.VarChar).Value = EncryptString(AppPwd,encKey);
 			cmd.Parameters.Add("@ClientTierPath", OleDbType.VarChar).Value = ClientTierPath + "\\";
 			cmd.Parameters.Add("@WsTierPath", OleDbType.VarChar).Value = WsTierPath + "\\";
-			cmd.Parameters.Add("@RuleTierPath", OleDbType.VarChar).Value = RuleTierPath + "\\";
+            cmd.Parameters.Add("@XlsTierPath", OleDbType.VarChar).Value = XlsTierPath + "\\";
+            cmd.Parameters.Add("@RuleTierPath", OleDbType.VarChar).Value = RuleTierPath ; // no trailing
 			try
 			{
 				cmd.ExecuteNonQuery();
@@ -1948,7 +2028,7 @@ namespace Install
         /// <param name="control">AccessControlType value (http://msdn.microsoft.com/en-us/library/w4ds5h86.aspx)</param>
         /// <returns></returns>
         /// 
-        public static bool SetDirectorySecurity(string dir, string user, FileSystemRights rights, AccessControlType control)
+        public static bool SetDirectorySecurity(string dir, string user, FileSystemRights rights, AccessControlType control, bool silent = false)
         {
             try
             {
@@ -1970,7 +2050,7 @@ namespace Install
             }
             catch (Exception ex)
             {
-                ReportError(ex.Message);
+                if (!silent) ReportError(ex.Message);
                 return false;
             }
         }
@@ -2071,7 +2151,8 @@ namespace Install
             ItemNPDT nPDT,		// New Rbt:Rintagi/App:Production.
             ItemNDEV nDEV,	// New Rbt:Developer/App:Extranet.
             ItemNPTY nPTY,		// New Rbt:Application/App:Prototype.        
-            bool noUser         // do not create users
+            bool noUser,         // do not create users
+            bool cli             // interactive or console
             )
         {
             if (Application.StartupPath.EndsWith(":\\") || Application.StartupPath.EndsWith(":") || Application.StartupPath.StartsWith("\\\\")) 
@@ -2105,7 +2186,9 @@ namespace Install
             string wsUrl = tiers["wsUrl"];
             string DeployType = "DEV";
             string site = tiers.ContainsKey("site") ? tiers["site"] : "";
-            bool isDataTier = !string.IsNullOrEmpty(dbPath);;
+            string windowsServiceAccount = tiers.ContainsKey("WindowsServiceAccount") ? tiers["WindowsServiceAccount"] : "Network Service";
+            string oldProjectRoot = item.GetOldProjectRoot();
+            bool isDataTier = !string.IsNullOrEmpty(dbPath);
             bool bIntegratedSecurity = dataServer["IntegratedSecurity"] == "Y";
             if (isDataTier)
             {
@@ -2115,7 +2198,7 @@ namespace Install
             }
             else
             {
-                if (!string.IsNullOrEmpty(appUserName) && !Utils.TestSQL("M", dbServer, appUserName, appPwd, false))
+                if (!string.IsNullOrEmpty(appUserName) && appUserName != "dummy" && !Utils.TestSQL("M", dbServer, appUserName, appPwd, false))
                 {
                     return;
                 }
@@ -2127,17 +2210,18 @@ namespace Install
                 return;
             }
 
-            if (!Utils.CreateLogin(isSQLServer ? "M" : "S", dbServer, SysUserName, SysPwd, appUserName, appPwd, bIntegratedSecurity))
+            if (appUserName != "dummy" && !Utils.CreateLogin(isSQLServer ? "M" : "S", dbServer, SysUserName, SysPwd, appUserName, appPwd, bIntegratedSecurity))
             {
                 ReportError(@"AppUsr/Pwd cannot be created or have no access to the server");
                 return;
             }
 
+            if (!string.IsNullOrEmpty(ruleTier)) SetProjectRoot(ruleTier, windowsServiceAccount, cli);
             if (isNPDT) // App:Production
             {
                 if (isNPDT) { DeployType = "PRD"; }
+                Utils.SetupFilePermissions(clientTier, string.Empty, windowsServiceAccount, newNS, progress, true);
                 nPDT.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
-                Utils.SetupFilePermissions(clientTier, string.Empty, newNS, progress,true);
                 Utils.SetupIIS(isNet2, site, newNS, clientTier, wsTier, xlsTier, bEnable32bit);
                 if (site != "Default Web Site")
                 {
@@ -2154,11 +2238,11 @@ namespace Install
                 }
                 if (isSQLServer)
                 {
-                    Utils.SetupConfigFile("M", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
+                    Utils.SetupConfigFile("M", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, oldProjectRoot, windowsServiceAccount, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
                 }
                 else
                 {
-                    Utils.SetupConfigFile("S", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
+                    Utils.SetupConfigFile("S", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, oldProjectRoot, windowsServiceAccount, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
                 }
                 if (isDataTier)
                 {
@@ -2166,7 +2250,7 @@ namespace Install
                     {
                         nPDT.InstSysM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         Utils.SetupSysUsr("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, item.GetROKey(), appUserName, appPwd, bIntegratedSecurity);
-                        Utils.SetupTiers("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, clientTier, wsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
+                        Utils.SetupTiers("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, oldProjectRoot, clientTier, wsTier, xlsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
                         nPDT.InstDesM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         nPDT.InstAppM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         if (!noUser)
@@ -2183,7 +2267,7 @@ namespace Install
                     {
                         nPDT.InstSysS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         Utils.SetupSysUsr("S", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, item.GetROKey(), appUserName, appPwd, bIntegratedSecurity);
-                        Utils.SetupTiers("S", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, clientTier, wsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
+                        Utils.SetupTiers("S", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, oldProjectRoot, clientTier, wsTier, xlsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
                         nPDT.InstDesS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         nPDT.InstAppS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         if (!noUser)
@@ -2197,8 +2281,9 @@ namespace Install
             }
             else if (oldNS == "RO" && isDev)
             {
+                Utils.SetupFilePermissions(clientTier, ruleTier, newNS, windowsServiceAccount, progress, false);
                 nDEV.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
-                Utils.SetupFilePermissions(clientTier, string.Empty, newNS, progress,false);
+                if (hasRule) { nDEV.InstRul(ruleTier, newNS, progress); }
                 Utils.SetupIIS(isNet2, site, newNS, clientTier, wsTier, xlsTier, bEnable32bit);
                 if (site != "Default Web Site")
                 {
@@ -2215,11 +2300,11 @@ namespace Install
                 }
                 if (isSQLServer)
                 {
-                    Utils.SetupConfigFile("M", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
+                    Utils.SetupConfigFile("M", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, oldProjectRoot, windowsServiceAccount, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
                 }
                 else
                 {
-                    Utils.SetupConfigFile("S", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
+                    Utils.SetupConfigFile("S", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, oldProjectRoot, windowsServiceAccount, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
                 }
                 if (isDataTier)
                 {
@@ -2227,13 +2312,14 @@ namespace Install
                     {
                         nDEV.InstSysM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         Utils.SetupSysUsr("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, item.GetROKey(), appUserName, appPwd, bIntegratedSecurity);
-                        Utils.SetupTiers("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, clientTier, wsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
+                        Utils.SetupTiers("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, oldProjectRoot, clientTier, wsTier, xlsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
                         nDEV.InstDesM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         nDEV.InstAppM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         if (!noUser)
                         {
                             Utils.SetupAnonymousUsr("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, bIntegratedSecurity);
                             Utils.SetupAdmUsr("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, appUserName, appPwd, bIntegratedSecurity);
+                            Utils.SetupCompanyProject("M", dbServer, SysUserName, SysPwd, newNS + "Cmon", oldNS, newNS, appUserName, appPwd, bIntegratedSecurity);
                         }
                         /* assuming table have all been created and View/Function would only appear in upgrade but not new, run the upgrade */
                         iDEV.InstSysM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
@@ -2249,7 +2335,7 @@ namespace Install
                     {
                         nDEV.InstSysS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         Utils.SetupSysUsr("S", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, item.GetROKey(), appUserName, appPwd, bIntegratedSecurity);
-                        Utils.SetupTiers("S", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, clientTier, wsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
+                        Utils.SetupTiers("S", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, oldProjectRoot, clientTier, wsTier, xlsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
                         nDEV.InstAppS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         if (!noUser)
                         {
@@ -2259,18 +2345,21 @@ namespace Install
                         nDEV.InstDesS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                     }
                 }
-                MakeNewApp(newNS,ruleTier); MakeNewDev(false,newNS,clientTier,ruleTier); SetFilePermission(clientTier,ruleTier,wsTier,xlsTier,newNS);
+                MakeNewApp(newNS,ruleTier); MakeNewDev(false,newNS,clientTier,ruleTier); SetFilePermission(clientTier,ruleTier,wsTier,xlsTier, windowsServiceAccount, newNS);
 
                 // we must build the app to copy the usraccess.dll and usrrule.dll to the proper bin
                 if (oldNS == "RO")
                 {
                     /* recompile as the dll containing the encryption key may not be the same */
                     string cmd_arg = "\"" + clientTier.Substring(0, clientTier.Length - 4) + "\\" + newNS + ".sln\" /p:Configuration=Release /t:Rebuild /v:minimal /nologo";
+                    progress(95, "Rebuilding new " + newNS + " installation ...");
                     Utils.ExecuteCommand("C:\\WINDOWS\\Microsoft.NET\\" + (isNet2 ? "Framework\\v3.5" : "Framework64\\v4.0.30319") + "\\msbuild.exe", cmd_arg, true);
                 }
             }
             else if ((oldNS != "RO" || item.GetInsType().Contains("PTY")) && isPty) // App:Prototype
             {
+
+                Utils.SetupFilePermissions(clientTier, ruleTier, newNS, windowsServiceAccount, progress, false);
                 nPTY.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
                 if (hasRule) { nPTY.InstRul(ruleTier, newNS, progress); }
                 if (newNS == "RO")
@@ -2278,7 +2367,6 @@ namespace Install
                     /* change secret key */
                     item.SetROKey(Utils.SetupEncryptionKey(ruleTier));
                 }
-                Utils.SetupFilePermissions(clientTier, ruleTier, newNS, progress,false);
                 Utils.SetupIIS(isNet2, site, newNS, clientTier, wsTier, xlsTier, bEnable32bit);
                 if (site != "Default Web Site")
                 {
@@ -2295,11 +2383,11 @@ namespace Install
                 }
                 if (isSQLServer)
                 {
-                    Utils.SetupConfigFile("M", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
+                    Utils.SetupConfigFile("M", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, oldProjectRoot, windowsServiceAccount, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
                 }
                 else
                 {
-                    Utils.SetupConfigFile("S", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
+                    Utils.SetupConfigFile("S", dbServer, SysUserName, SysPwd, clientTier + "\\Web.config", wsTier + "\\Web.config", clientTier, ruleTier, oldProjectRoot, windowsServiceAccount, wsUrl, newNS, oldNS, webServer, DeployType, item.GetROKey(), appUserName, appPwd);
                 }
                 if (isDataTier)
                 {
@@ -2307,13 +2395,14 @@ namespace Install
                     {
                         nPTY.InstSysM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         Utils.SetupSysUsr("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, item.GetROKey(), appUserName, appPwd, bIntegratedSecurity);
-                        Utils.SetupTiers("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, clientTier, wsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
+                        Utils.SetupTiers("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, oldProjectRoot, clientTier, wsTier, xlsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
                         nPTY.InstDesM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         nPTY.InstAppM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         if (!noUser)
                         {
                             Utils.SetupAnonymousUsr("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, bIntegratedSecurity);
                             Utils.SetupAdmUsr("M", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, appUserName, appPwd, bIntegratedSecurity);
+                            Utils.SetupCompanyProject("M", dbServer, SysUserName, SysPwd, newNS + "Cmon", oldNS, newNS, appUserName, appPwd, bIntegratedSecurity);
                         }
                         iPTY.InstSysM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         iPTY.InstDesM(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
@@ -2323,7 +2412,7 @@ namespace Install
                     {
                         nPTY.InstSysS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         Utils.SetupSysUsr("S", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, item.GetROKey(), appUserName, appPwd, bIntegratedSecurity);
-                        Utils.SetupTiers("S", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, clientTier, wsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
+                        Utils.SetupTiers("S", dbServer, SysUserName, SysPwd, newNS + "Design", oldNS, newNS, oldProjectRoot, clientTier, wsTier, xlsTier, ruleTier, item.GetROKey(), appUserName, appPwd, serverVer, bIntegratedSecurity);
                         nPTY.InstDesS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         nPTY.InstAppS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                         if (!noUser)
@@ -2334,36 +2423,52 @@ namespace Install
                         nPTY.InstDesS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                     }
                 }
-                MakeNewDev(false,newNS,clientTier,ruleTier); SetFilePermission(clientTier,ruleTier,wsTier,xlsTier,newNS);
+                MakeNewDev(false,newNS,clientTier,ruleTier); SetFilePermission(clientTier,ruleTier,wsTier,xlsTier, windowsServiceAccount, newNS);
                 if (newNS == "RO")
                 {
                     /* recompile as the dll is now invalid after the key change */
                     if (!System.IO.File.Exists(ruleTier + "\\" + "UsrRules\\UsrRule.cs"))
                     {
-                        using (StreamWriter sw = System.IO.File.CreateText(ruleTier + "\\" + "UsrRules\\UsrRule.cs"))
+                        try
                         {
-                            sw.WriteLine("namespace RO.UsrRules");
-                            sw.WriteLine("{");
-                            sw.WriteLine("	public class UsrRule {} ");
-                            sw.WriteLine("}");
+                            if (!System.IO.Directory.Exists(ruleTier + "\\" + "UsrRules")) System.IO.Directory.CreateDirectory(ruleTier + "\\" + "UsrRules");
+                            using (StreamWriter sw = System.IO.File.CreateText(ruleTier + "\\" + "UsrRules\\UsrRule.cs"))
+                            {
+                                sw.WriteLine("namespace RO.UsrRules");
+                                sw.WriteLine("{");
+                                sw.WriteLine("	public class UsrRule {} ");
+                                sw.WriteLine("}");
+                            }
+
                         }
+                        catch (Exception ex) { ReportError("Failed to create stub UsrRule.cs: " + ex.Message); }
                     }
                     if (!System.IO.File.Exists(ruleTier + "\\" + "UsrAccess\\UsrAccess.cs"))
                     {
-                        using (StreamWriter sw = System.IO.File.CreateText(ruleTier + "\\" + "UsrAccess\\UsrAccess.cs"))
+                        try
                         {
-                            sw.WriteLine("namespace RO.UsrAccess");
-                            sw.WriteLine("{");
-                            sw.WriteLine("	public class UsrAccess {} ");
-                            sw.WriteLine("}");
-                            sw.Close();
+                            if (!System.IO.Directory.Exists(ruleTier + "\\" + "UsrAccess")) System.IO.Directory.CreateDirectory(ruleTier + "\\" + "UsrAccess");
+                            using (StreamWriter sw = System.IO.File.CreateText(ruleTier + "\\" + "UsrAccess\\UsrAccess.cs"))
+                            {
+                                sw.WriteLine("namespace RO.UsrAccess");
+                                sw.WriteLine("{");
+                                sw.WriteLine("	public class UsrAccess {} ");
+                                sw.WriteLine("}");
+                                sw.Close();
+                            }
                         }
+                        catch (Exception ex)
+                        {
+                            ReportError("Failed to create stub UsrAccess.cs: " + ex.Message);
+                        }
+
                     }
                 }
                 if (newNS == "RO")
                 {
                     /* recompile as the dll containing the encryption key may not be the same */
                     string cmd_arg = "\"" + clientTier.Substring(0, clientTier.Length - 4) + "\\" + newNS + ".sln\" /p:Configuration=Release /t:Rebuild /v:minimal /nologo";
+                    progress(95, "Rebuilding new RO installation ...");
                     Utils.ExecuteCommand("C:\\WINDOWS\\Microsoft.NET\\" + (isNet2 ? "Framework\\v3.5" : "Framework64\\v4.0.30319") + "\\msbuild.exe", cmd_arg, true);
                 }
             }
@@ -2462,7 +2567,7 @@ namespace Install
                 }
 
                 iDEV.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
-
+                iDEV.InstRul(ruleTier, newNS, progress);
                 /* recompile as the dll containing the encryption key may not be the same */
                 //string cmd_arg = "\"" + clientTier.Substring(0, clientTier.Length - 4) + "\\" + newNS + ".sln\" /p:Configuration=Release /t:Rebuild /v:minimal /nologo";
                 //Utils.ExecuteCommand("C:\\WINDOWS\\Microsoft.NET\\" + (isNet2 ? "Framework\\v3.5" : "Framework64\\v4.0.30319") + "\\msbuild.exe", cmd_arg, true);
@@ -2499,27 +2604,39 @@ namespace Install
                 iPTY.InstRul(ruleTier, newNS, progress);
                 /* recompile as the dll containing the encryption key may not be the same */
                 string cmd_arg = "\"" + clientTier.Substring(0, clientTier.Length - 4) + "\\" + newNS + ".sln\" /p:Configuration=Release /t:Rebuild /v:minimal /nologo";
+                progress(95, "Rebuilding " + newNS + " after PTY upgrade ...");
                 Utils.ExecuteCommand("C:\\WINDOWS\\Microsoft.NET\\" + (isNet2 ? "Framework\\v3.5" : "Framework64\\v4.0.30319") + "\\msbuild.exe", cmd_arg, true);
                 MakeNewDev(true, newNS, clientTier, ruleTier);
             }
         }
-
-        private static void SetFilePermission(string clientTier, string ruleTier, string wsTier, string xlsTier, string newNS)
+        private static void SetProjectRoot(string ruleTier, string WindowsServiceAccount, bool cli)
         {
-            Utils.SetDirectorySecurity(clientTier, "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
-            Utils.SetDirectorySecurity(clientTier.Replace(@"\Web", @"\PrecompiledWeb\"), "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
-            Utils.SetDirectorySecurity(ruleTier, "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
-            Utils.SetDirectorySecurity(wsTier, "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
-            Utils.SetDirectorySecurity(xlsTier, "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
-
             var regex = new System.Text.RegularExpressions.Regex(@"\\Rule\\?$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             var projectRoot = regex.Replace(ruleTier, "");
+            bool directoryExists = Directory.Exists(projectRoot);
+            if (!directoryExists)
+            {
+                Directory.CreateDirectory(projectRoot);
+            }
+            Utils.SetDirectorySecurity(projectRoot, WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow, !cli);
 
-            Utils.SetDirectorySecurity(projectRoot + @"\Deploy" + newNS + "PDT", "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
-            Utils.SetDirectorySecurity(projectRoot + @"\Deploy" + newNS + "PTY", "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+        }
+        private static void SetFilePermission(string clientTier, string ruleTier, string wsTier, string xlsTier, string WindowsServiceAccount, string newNS)
+        {
+            var regex = new System.Text.RegularExpressions.Regex(@"\\Rule\\?$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            var projectRoot = regex.Replace(ruleTier, "");
+            if (!clientTier.ToLower().Contains(projectRoot.ToLower()))
+                Utils.SetDirectorySecurity(clientTier, WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+            if (!clientTier.ToLower().Contains(projectRoot.ToLower())) Utils.SetDirectorySecurity(clientTier.Replace(@"\Web", @"\PrecompiledWeb\"), WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+            if (!ruleTier.ToLower().Contains(projectRoot.ToLower())) Utils.SetDirectorySecurity(ruleTier, WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+            if (!wsTier.ToLower().Contains(projectRoot.ToLower())) Utils.SetDirectorySecurity(wsTier, WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+            if (!xlsTier.ToLower().Contains(projectRoot.ToLower())) Utils.SetDirectorySecurity(xlsTier, WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+
+            if (!projectRoot.ToLower().Contains(projectRoot.ToLower())) Utils.SetDirectorySecurity(projectRoot + @"\Deploy" + newNS + "PDT", WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+            if (!projectRoot.ToLower().Contains(projectRoot.ToLower())) Utils.SetDirectorySecurity(projectRoot + @"\Deploy" + newNS + "PTY", WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
             if (newNS == "RO")
             {
-                Utils.SetDirectorySecurity(projectRoot + @"\Deploy" + newNS + "DEV", "Network Service", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
+                if (!projectRoot.ToLower().Contains(projectRoot.ToLower())) Utils.SetDirectorySecurity(projectRoot + @"\Deploy" + newNS + "DEV", WindowsServiceAccount, System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
             }
         }
 

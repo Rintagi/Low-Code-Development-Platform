@@ -36,7 +36,7 @@ namespace Install
             }
             else
             {
-                string[] prefixes = new string[] { "/m:", "/n:", "/v:", "/dat:", "/u:", "/p:", "/c:", "/d:", "/r", "/?", "/noauto", "/cln:", "/rul:", "/xls:", "/wsv:", "/au:", "/ap:", "/debug", "/s:", "/nouser", "/url:", "/nodata", "/32bit", "/sspi" };
+                string[] prefixes = new string[] { "/m:", "/n:", "/v:", "/dat:", "/u:", "/p:", "/c:", "/d:", "/r", "/?", "/noauto", "/cln:", "/rul:", "/xls:", "/wsv:", "/au:", "/ap:", "/debug", "/s:", "/srv:", "/nouser", "/url:", "/nodata", "/32bit", "/sspi", "/run_sspi" };
                 CmdArgExtractor cae = new CmdArgExtractor(prefixes, '/', ':');
                 List<string> invalidArgs = cae.InvalidArgsPrefixes(args);
                 if (invalidArgs.Count > 0)
@@ -66,10 +66,10 @@ namespace Install
                 if (!kv.ContainsKey("n") || string.IsNullOrEmpty(kv["n"])) { Usage("must provide name space"); Environment.Exit(99); }
                 if (!kv.ContainsKey("v") || string.IsNullOrEmpty(kv["v"])) { Usage("must provide sql server version"); Environment.Exit(99); }
                 if (!kv.ContainsKey("dat") || string.IsNullOrEmpty(kv["dat"])) { Usage("must provide sql server name"); Environment.Exit(99); }
-                if (!kv.ContainsKey("u") || string.IsNullOrEmpty(kv["u"])) { Usage("must provide sql server sys login name"); Environment.Exit(99); }
-                if (!kv.ContainsKey("p") || string.IsNullOrEmpty(kv["p"])) { Usage("must provide sql server sys login password"); Environment.Exit(99); }
-                if (!kv.ContainsKey("au") || string.IsNullOrEmpty(kv["au"])) { Usage("must provide sql server app user login name"); Environment.Exit(99); }
-                if (!kv.ContainsKey("ap") || string.IsNullOrEmpty(kv["ap"])) { Usage("must provide sql server app user login password"); Environment.Exit(99); }
+                if ((!kv.ContainsKey("u") || string.IsNullOrEmpty(kv["u"])) && !kv.ContainsKey("sspi")) { Usage("must provide sql server sys login name"); Environment.Exit(99); }
+                if ((!kv.ContainsKey("p") || string.IsNullOrEmpty(kv["p"])) && !kv.ContainsKey("sspi")) { Usage("must provide sql server sys login password"); Environment.Exit(99); }
+                if ((!kv.ContainsKey("au") || string.IsNullOrEmpty(kv["au"])) && !kv.ContainsKey("run_sspi")) { Usage("must provide sql server app user login name"); Environment.Exit(99); }
+                if ((!kv.ContainsKey("ap") || string.IsNullOrEmpty(kv["ap"])) && !kv.ContainsKey("run_sspi")) { Usage("must provide sql server app user login password"); Environment.Exit(99); }
                 if (!kv.ContainsKey("c") || string.IsNullOrEmpty(kv["c"])) { Usage("must provide target backup directory for client tier files"); Environment.Exit(99); }
                 if (!kv.ContainsKey("d") || string.IsNullOrEmpty(kv["d"])) { Usage("must provide target backup directory for data tier files"); Environment.Exit(99); }
                 if (kv.ContainsKey("cln") && string.IsNullOrEmpty(kv["cln"])) { Usage("must provide valid client tier root location"); Environment.Exit(99); }
@@ -81,12 +81,17 @@ namespace Install
                 string wsvroot = kv.ContainsKey("wsv") ? kv["wsv"] : @"c:\inetpub\wwwroot" + @"\" + kv["n"] + @"Ws\";
                 string xlsroot = kv.ContainsKey("xls") ? kv["xls"] : @"c:\inetpub\wwwroot" + @"\" + @"wsxls\";
                 string rintagiroot = kv.ContainsKey("rul") ? kv["rul"] : @"c:\rintagi" + @"\" + kv["n"] + @"\";
+                string projectRoot = (kv.ContainsKey("root") ? kv["root"] : @"C:\Rintagi\") + kv["n"];
+                string serviceAccount = kv.ContainsKey("srv") ? kv["srv"] : "Network Service";
                 string site = kv.ContainsKey("s") ? kv["s"] : "Default Web Site";
+                string sspi = kv.ContainsKey("sspi") ? "Y" : "N";
                 Dictionary<string, string> tiers = new Dictionary<string, string>();
                 Dictionary<string, string> dataServer = new Dictionary<string, string>();
                 tiers["client"] = wwwroot;
                 tiers["ws"] = wsvroot;
                 tiers["xls"] = xlsroot;
+                tiers["WindowsServiceAccount"] = serviceAccount;
+
                 if (kv.ContainsKey("r")) tiers["rule"] = rintagiroot;
                 if (kv.ContainsKey("s")) tiers["site"] = site; else tiers["site"] = "Default Web Site";
                 dataServer["serverType"] = "M";
@@ -94,6 +99,8 @@ namespace Install
                 dataServer["user"] = kv["u"];
                 dataServer["password"] = kv["p"];
                 dataServer["design"] = kv["n"] + "Design";
+                dataServer["IntegratedSecurity"] = sspi;
+
                 Action<int, string> progress = (int p, string msg) =>
                 {
                     if (!string.IsNullOrEmpty(msg))
@@ -180,7 +187,7 @@ namespace Install
                 "Install [/n:GSX /v:2008 /dat:sqlserver /u:user /p:password /ap:app_user /au:appPassword /c:clientTargetDir /d:dataTargetDir [/r] [/cln:clienttier] [/rul:ruletier] [/wsv:wstier] [/xls:xlstier]] [/?] \r\n\r\n" +
                 "       /n: application name space like RO\r\n" +
                 "       /m: mode. b means backup, n means new application, u means upgrade. default(i.e. not specified) is b \r\n" +
-                "       /v: SQL server client version installed 2005 or 2008\r\n" +
+                "       /v: SQL server client version installed 2005 or 2008(obsoleted, no effect)\r\n" +
                 "       /dat: SQL server name\r\n" +
                 "       /u: SQL server sys login name such as sa\r\n" +
                 "       /p: SQL server sys login password\r\n" +
@@ -196,6 +203,9 @@ namespace Install
                 "       /wsv: root of web server tier, default to c:\\inetpub\\wwwroot\\<namespace>Ws \r\n" +
                 "       /xls: root of wsxls tier, default to c:\\inetpub\\wwwroot\\wsxls \r\n" +
                 "       /rul: root of rintagi rule tier, default to c:\\rintagi\\<namespace> \r\n" +
+                "       /srv: app Pool running identity, default to \"Network Service\" \r\n" +
+                "       /sspi use integrated Windows Security for installation SQL access\r\n" +
+                "       /run_sspi use integrated Windows Security for app pool SQL access\r\n" +
                 "       /noauto do not auto generate sub-directory(based on current time) under the specified target directory\r\n" +
                 "       /nouser do not create login users for the new system\r\n" +
                 "       /nodata do not touch data tier\r\n" +

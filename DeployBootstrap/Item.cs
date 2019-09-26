@@ -10,7 +10,8 @@ using System.IO;
 	{
 		private string oldNS = "RO";
 		private string iType = "NPTY";
-		private string iKey = "aa3f1ba5cd3041ce9ac487e626e1db83";
+		private string iKey = "32c0e89877a64b2c99fd3b37756e3c86";
+		private string oldProjectRoot = @"C:\rintagi\RO\";
 		private string roENCKey= "8a47d1f5b4554f45b99078fcb6ab9645";
 		public string GetOldNS()
 		{
@@ -23,6 +24,10 @@ using System.IO;
 		public string GetInsKey()
 		{
 			return iKey;
+		}
+		public string GetOldProjectRoot()
+		{
+			return oldProjectRoot;
 		}
 		public string GetROKey()
 		{

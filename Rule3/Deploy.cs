@@ -129,6 +129,7 @@ namespace RO.Rule3
             string InstDeplPath = rInf.Rows[0]["InstDeplPath"].ToString();	// For Bakcup restore only.
             string ReleaseOs = rInf.Rows[0]["ReleaseOs"].ToString();
             string EntityCode = rInf.Rows[0]["EntityCode"].ToString();
+            string ProjectRoot = new Regex(@"^.+\\" + EntityCode + @"\\").Match(PrepPath).Value;
             Int16 EntityId = Int16.Parse(rInf.Rows[0]["EntityId"].ToString());
             // The following is necessary because somehow the create directory would fail from time to time after the deletion;
             if (Directory.Exists(PrepPath))
@@ -422,6 +423,7 @@ namespace RO.Rule3
             sm.Append("		private string oldNS = \"" + EntityCode + "\";" + Environment.NewLine);
             sm.Append("		private string iType = \"" + ReleaseTypeAbbr + "\";" + Environment.NewLine);
             sm.Append("		private string iKey = \"" + installerEncKey + "\";" + Environment.NewLine);
+            sm.Append("		private string oldProjectRoot = @\"" + ProjectRoot + "\";" + Environment.NewLine);
             sm.Append("		private string roENCKey= \"" + base.pCurrKey + "\";" + Environment.NewLine);
             sm.Append((char)13);
             sm.Append("		public string GetOldNS()" + Environment.NewLine);
@@ -437,6 +439,11 @@ namespace RO.Rule3
             sm.Append("		public string GetInsKey()" + Environment.NewLine);
             sm.Append("		{" + Environment.NewLine);
             sm.Append("			return iKey;" + Environment.NewLine);
+            sm.Append("		}" + Environment.NewLine);
+            sm.Append((char)13);
+            sm.Append("		public string GetOldProjectRoot()" + Environment.NewLine);
+            sm.Append("		{" + Environment.NewLine);
+            sm.Append("			return oldProjectRoot;" + Environment.NewLine);
             sm.Append("		}" + Environment.NewLine);
             sm.Append((char)13);
             sm.Append("		public string GetROKey()" + Environment.NewLine);
