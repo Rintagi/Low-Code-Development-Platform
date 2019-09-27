@@ -131,6 +131,9 @@ namespace RO.Rule3
             string EntityCode = rInf.Rows[0]["EntityCode"].ToString();
             string ProjectRoot = new Regex(@"^.+\\" + EntityCode + @"\\").Match(PrepPath).Value;
             Int16 EntityId = Int16.Parse(rInf.Rows[0]["EntityId"].ToString());
+            string shadowRoot = PrepDeplPath.Replace(new Regex(@"^.+\\" + "Deploy(" +  EntityCode + ")?", RegexOptions.IgnoreCase).Match(PrepDeplPath).Value,"");
+
+            bool skipDeploy = false;
             // The following is necessary because somehow the create directory would fail from time to time after the deletion;
             if (Directory.Exists(PrepPath))
             {
@@ -363,6 +366,8 @@ namespace RO.Rule3
                                 + " |WsXLs\\*.*"
                                 + " |*\\npm\\*.*"
                                 + " |package-lock.json";
+                            if (objectExempt.Contains("Deploy.cs")) skipDeploy = true;
+
                             if (dr["ObjectName"].ToString().Trim() == "*.*" || true)
                             {
                                 string objectIncluded = dr["ObjectName"].ToString().Trim();
@@ -424,6 +429,8 @@ namespace RO.Rule3
             sm.Append("		private string iType = \"" + ReleaseTypeAbbr + "\";" + Environment.NewLine);
             sm.Append("		private string iKey = \"" + installerEncKey + "\";" + Environment.NewLine);
             sm.Append("		private string oldProjectRoot = @\"" + ProjectRoot + "\";" + Environment.NewLine);
+            sm.Append("		private string shadowRoot = @\"" + shadowRoot + "\";" + Environment.NewLine);
+            sm.Append("		private bool hasDeploy = " + (skipDeploy ? "false" : "true") + ";" + Environment.NewLine);
             sm.Append("		private string roENCKey= \"" + base.pCurrKey + "\";" + Environment.NewLine);
             sm.Append((char)13);
             sm.Append("		public string GetOldNS()" + Environment.NewLine);
@@ -444,6 +451,16 @@ namespace RO.Rule3
             sm.Append("		public string GetOldProjectRoot()" + Environment.NewLine);
             sm.Append("		{" + Environment.NewLine);
             sm.Append("			return oldProjectRoot;" + Environment.NewLine);
+            sm.Append("		}" + Environment.NewLine);
+            sm.Append((char)13);
+            sm.Append("		public string GetShadowRootName()" + Environment.NewLine);
+            sm.Append("		{" + Environment.NewLine);
+            sm.Append("			return shadowRoot;" + Environment.NewLine);
+            sm.Append("		}" + Environment.NewLine);
+            sm.Append((char)13);
+            sm.Append("		public bool GetHasDeploy()" + Environment.NewLine);
+            sm.Append("		{" + Environment.NewLine);
+            sm.Append("			return hasDeploy;" + Environment.NewLine);
             sm.Append("		}" + Environment.NewLine);
             sm.Append((char)13);
             sm.Append("		public string GetROKey()" + Environment.NewLine);

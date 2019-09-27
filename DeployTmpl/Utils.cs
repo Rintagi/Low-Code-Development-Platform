@@ -1322,7 +1322,7 @@ namespace Install
 			xd.Load(ConfigClientPath);
 			xn = xd.DocumentElement;
 
-            Utils.TestSQL("M", Svr, AppUsr, AppPwd, false);
+            if (AppUsr != "dummy") Utils.TestSQL("M", Svr, AppUsr, AppPwd, false);
 
 			foreach (XmlNode node in xn.ChildNodes)
 			{
@@ -1724,6 +1724,7 @@ namespace Install
 
         public static void SetupTiers(string DbProvider, string Svr, string Usr, string Pwd, string Db, string oldNS, string newNS, string oldProjectRoot, string ClientTierPath, string WsTierPath, string XlsTierPath, string RuleTierPath, string encKey, string AppUsr, string AppPwd, string serverVer, bool bIntegratedSecurity)
 		{
+
             KeyValuePair<string, string> bcpPath = GetSQLBcpPath();
             serverVer = bcpPath.Key;
             string bcpDir = bcpPath.Value.Replace(@"\bcp.exe", "\\");
@@ -2143,6 +2144,60 @@ namespace Install
             return true;
         }
 
+        private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs = true)
+        {
+            // Get the subdirectories for the specified directory.
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDirName);
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            // If the destination directory doesn't exist, create it.
+            if (!Directory.Exists(destDirName))
+            {
+                Directory.CreateDirectory(destDirName);
+            }
+
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string temppath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, true);
+            }
+
+            // If copying subdirectories, copy them and their contents to new location.
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string temppath = Path.Combine(destDirName, subdir.Name);
+                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
+
+        private static void InstallShadow(string ruleTierPath, string clientTierPath, string shadowRootName)
+        {
+            string shadowRoot = ruleTierPath + @"\Shadow\";
+            string shadowDirectory = shadowRoot + shadowRootName;
+            string targetRuleDirecty = ruleTierPath;
+            if (Directory.Exists(shadowDirectory) && !string.IsNullOrEmpty(shadowRootName)) {
+                DirectoryCopy(shadowDirectory, targetRuleDirecty, true);
+                try
+                {
+                    Directory.Delete(shadowRoot, true);
+                } catch (Exception ex)
+                {
+                    ReportError("Failed to remove shadow directory " + ex);
+                }
+            }
+        }
         public static void NewApp(Dictionary<string, string> tiers, Dictionary<string, string> dataServer, string clientTargetDir, string dataTargetDir, Action<int, string> progress,
             Item item,			// Version info.
             ItemPDT iPDT,		// Existing Rbt:Rintagi/App:Production.
@@ -2189,6 +2244,7 @@ namespace Install
             string windowsServiceAccount = tiers.ContainsKey("WindowsServiceAccount") ? tiers["WindowsServiceAccount"] : "Network Service";
             string oldProjectRoot = item.GetOldProjectRoot();
             bool isDataTier = !string.IsNullOrEmpty(dbPath);
+            bool hasDeploy = item.GetHasDeploy();
             bool bIntegratedSecurity = dataServer["IntegratedSecurity"] == "Y";
             if (isDataTier)
             {
@@ -2222,6 +2278,7 @@ namespace Install
                 if (isNPDT) { DeployType = "PRD"; }
                 Utils.SetupFilePermissions(clientTier, string.Empty, windowsServiceAccount, newNS, progress, true);
                 nPDT.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
+
                 Utils.SetupIIS(isNet2, site, newNS, clientTier, wsTier, xlsTier, bEnable32bit);
                 if (site != "Default Web Site")
                 {
@@ -2284,6 +2341,7 @@ namespace Install
                 Utils.SetupFilePermissions(clientTier, ruleTier, newNS, windowsServiceAccount, progress, false);
                 nDEV.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
                 if (hasRule) { nDEV.InstRul(ruleTier, newNS, progress); }
+                InstallShadow(ruleTier, clientTier, item.GetShadowRootName());
                 Utils.SetupIIS(isNet2, site, newNS, clientTier, wsTier, xlsTier, bEnable32bit);
                 if (site != "Default Web Site")
                 {
@@ -2345,7 +2403,7 @@ namespace Install
                         nDEV.InstDesS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                     }
                 }
-                MakeNewApp(newNS,ruleTier); MakeNewDev(false,newNS,clientTier,ruleTier); SetFilePermission(clientTier,ruleTier,wsTier,xlsTier, windowsServiceAccount, newNS);
+                MakeNewApp(newNS,ruleTier); MakeNewDev(false,newNS,clientTier,ruleTier, hasDeploy); SetFilePermission(clientTier,ruleTier,wsTier,xlsTier, windowsServiceAccount, newNS);
 
                 // we must build the app to copy the usraccess.dll and usrrule.dll to the proper bin
                 if (oldNS == "RO")
@@ -2362,6 +2420,8 @@ namespace Install
                 Utils.SetupFilePermissions(clientTier, ruleTier, newNS, windowsServiceAccount, progress, false);
                 nPTY.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
                 if (hasRule) { nPTY.InstRul(ruleTier, newNS, progress); }
+                InstallShadow(ruleTier, clientTier, item.GetShadowRootName());
+
                 if (newNS == "RO")
                 {
                     /* change secret key */
@@ -2423,7 +2483,7 @@ namespace Install
                         nPTY.InstDesS(dbServer, SysUserName, SysPwd, newNS, progress, serverVer, dbPath, item.GetInsKey(), appUserName, appPwd, bIntegratedSecurity);
                     }
                 }
-                MakeNewDev(false,newNS,clientTier,ruleTier); SetFilePermission(clientTier,ruleTier,wsTier,xlsTier, windowsServiceAccount, newNS);
+                MakeNewDev(false,newNS,clientTier,ruleTier, hasDeploy); SetFilePermission(clientTier,ruleTier,wsTier,xlsTier, windowsServiceAccount, newNS);
                 if (newNS == "RO")
                 {
                     /* recompile as the dll is now invalid after the key change */
@@ -2512,7 +2572,8 @@ namespace Install
             string ruleTier = tiers["rule"];
             string wsUrl = tiers["wsUrl"];
             bool isDataTier = !string.IsNullOrEmpty(dbPath); ;
-            bool bIntegratedSecurity = dataServer["IntegratedSecurity"] == "Y";;
+            bool bIntegratedSecurity = dataServer["IntegratedSecurity"] == "Y";
+            bool hasDeploy = item.GetHasDeploy();
             if (isDataTier && isSQLServer && dbServer.EndsWith(@"\") || dbServer.ToUpper().EndsWith("MSSQLSERVER"))
             {
                 ReportError(@"Use '.' or just the server name WITHOUT trailing '\' if you want to specify the default MSSQLSERVER instance");
@@ -2568,10 +2629,11 @@ namespace Install
 
                 iDEV.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
                 iDEV.InstRul(ruleTier, newNS, progress);
+                InstallShadow(ruleTier, clientTier, item.GetShadowRootName());
                 /* recompile as the dll containing the encryption key may not be the same */
                 //string cmd_arg = "\"" + clientTier.Substring(0, clientTier.Length - 4) + "\\" + newNS + ".sln\" /p:Configuration=Release /t:Rebuild /v:minimal /nologo";
                 //Utils.ExecuteCommand("C:\\WINDOWS\\Microsoft.NET\\" + (isNet2 ? "Framework\\v3.5" : "Framework64\\v4.0.30319") + "\\msbuild.exe", cmd_arg, true);
-                MakeNewDev(true,newNS,clientTier,ruleTier);
+                MakeNewDev(true,newNS,clientTier,ruleTier, hasDeploy);
             }
             else // App:Prototype
             {
@@ -2602,11 +2664,12 @@ namespace Install
                 }
                 iPTY.InstCln(dbServer, clientTier, wsTier, xlsTier, wsUrl, newNS, progress);
                 iPTY.InstRul(ruleTier, newNS, progress);
+                InstallShadow(ruleTier, clientTier, item.GetShadowRootName());
                 /* recompile as the dll containing the encryption key may not be the same */
                 string cmd_arg = "\"" + clientTier.Substring(0, clientTier.Length - 4) + "\\" + newNS + ".sln\" /p:Configuration=Release /t:Rebuild /v:minimal /nologo";
                 progress(95, "Rebuilding " + newNS + " after PTY upgrade ...");
                 Utils.ExecuteCommand("C:\\WINDOWS\\Microsoft.NET\\" + (isNet2 ? "Framework\\v3.5" : "Framework64\\v4.0.30319") + "\\msbuild.exe", cmd_arg, true);
-                MakeNewDev(true, newNS, clientTier, ruleTier);
+                MakeNewDev(true, newNS, clientTier, ruleTier, hasDeploy);
             }
         }
         private static void SetProjectRoot(string ruleTier, string WindowsServiceAccount, bool cli)
@@ -2666,44 +2729,48 @@ namespace Install
             return projectRoot + @"\Deploy" + ns + deployType;
         }
 
-        private static void MakeNewDev(bool upgrade, string newNS, string clientTier, string ruleTier)
+        private static void MakeNewDev(bool upgrade, string newNS, string clientTier, string ruleTier, bool hasDeploy)
         {
-            string zip = @"Resources.dep.zip";
-            Utils.ExtractBinRsc(zip, zip);
-            Utils.JFileUnzip(zip, Application.StartupPath + @"\Temp");
-            DirectoryInfo srcDi = new DirectoryInfo(Application.StartupPath + @"\Temp");
-            /* be very careful about ReplFileNS as it do very brute force replacement which
-             * would screw up binary files */
-            string deployPath = DeployDir(ruleTier, newNS, "PDT", upgrade);
-            if (!string.IsNullOrEmpty(deployPath))
+            if (hasDeploy)
             {
-                Utils.ReplFileNS(Application.StartupPath + @"\Temp", deployPath, "ZZZ", "ZZZ", new List<string>(),new List<string>(), true, srcDi);
-                Utils.ExtractBinRsc(zip, deployPath + @"\Resources\dep.zip");
-            }
-            deployPath = DeployDir(ruleTier, newNS, "PTY", upgrade);
-            if (!string.IsNullOrEmpty(deployPath))
-            {
-                Utils.ReplFileNS(Application.StartupPath + @"\Temp", deployPath, "ZZZ", "ZZZ", new List<string>(), new List<string>(), true, srcDi);
-                Utils.ExtractBinRsc(zip, deployPath + @"\Resources\dep.zip");
-            }
-            if (newNS == "RO")
-            {
-                deployPath = DeployDir(ruleTier, newNS, "DEV", upgrade);
+                string zip = @"Resources.dep.zip";
+                Utils.ExtractBinRsc(zip, zip);
+                Utils.JFileUnzip(zip, Application.StartupPath + @"\Temp");
+                DirectoryInfo srcDi = new DirectoryInfo(Application.StartupPath + @"\Temp");
+                /* be very careful about ReplFileNS as it do very brute force replacement which
+                 * would screw up binary files */
+                string deployPath = DeployDir(ruleTier, newNS, "PDT", upgrade);
                 if (!string.IsNullOrEmpty(deployPath))
                 {
                     Utils.ReplFileNS(Application.StartupPath + @"\Temp", deployPath, "ZZZ", "ZZZ", new List<string>(), new List<string>(), true, srcDi);
                     Utils.ExtractBinRsc(zip, deployPath + @"\Resources\dep.zip");
                 }
+                deployPath = DeployDir(ruleTier, newNS, "PTY", upgrade);
+                if (!string.IsNullOrEmpty(deployPath))
+                {
+                    Utils.ReplFileNS(Application.StartupPath + @"\Temp", deployPath, "ZZZ", "ZZZ", new List<string>(), new List<string>(), true, srcDi);
+                    Utils.ExtractBinRsc(zip, deployPath + @"\Resources\dep.zip");
+                }
+                if (newNS == "RO")
+                {
+                    deployPath = DeployDir(ruleTier, newNS, "DEV", upgrade);
+                    if (!string.IsNullOrEmpty(deployPath))
+                    {
+                        Utils.ReplFileNS(Application.StartupPath + @"\Temp", deployPath, "ZZZ", "ZZZ", new List<string>(), new List<string>(), true, srcDi);
+                        Utils.ExtractBinRsc(zip, deployPath + @"\Resources\dep.zip");
+                    }
+                }
+                srcDi.Delete(true); Utils.DeleteFile(zip);
+
             }
-            srcDi.Delete(true); Utils.DeleteFile(zip);
 
             if (!upgrade)
             {
-                zip = newNS == "RO" ? @"Resources.rosln.zip" : @"Resources.sln.zip";
+                string zip = newNS == "RO" ? @"Resources.rosln.zip" : @"Resources.sln.zip";
                 string sln = newNS == "RO" ? @"\rosln" : @"\sln";
                 Utils.ExtractBinRsc(zip, zip);
                 Utils.JFileUnzip(zip, Application.StartupPath + @"\Temp");
-                srcDi = new DirectoryInfo(Application.StartupPath + @"\Temp");
+                DirectoryInfo srcDi = new DirectoryInfo(Application.StartupPath + @"\Temp");
                 Utils.ReplFileNS(Application.StartupPath + @"\Temp" + (Directory.Exists(Application.StartupPath + @"\Temp" + sln) ? sln : ""), clientTier.Substring(0, clientTier.Length - 4), "ZZ", newNS, new List<string>(), new List<string>(), true, srcDi);
                 try
                 {

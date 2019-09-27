@@ -579,7 +579,7 @@ namespace Install
             Dictionary<Control,string> toolTipMsg = new Dictionary<Control,string>{
                 {txtServerName,"SQL Server(and instance) name in the form of 'serverName\\instanceName', skip instanceName for default instance"},
                 {txtUserName,"database login for this app, must have create database right for new installation"},
-                {txtAppUserName,"This is the additional database login exclusively for this app; it may contain letters, symbols, and numbers; it comes with CREATE DATABASE capability"},
+                {txtAppUserName,"This is the additional database login exclusively for this app; it may contain letters, symbols, and numbers; put 'dummy' if you intent to use SSPI for runtime(no DB connection test during installation) it comes with CREATE DATABASE capability"},
                 {txtAppPassword,"This is the password for the above login"},
                 {cbSingleDeveloper,"If unchecked, an additional credential is expected to be added to the database for the exclusive access of this application"},
                 {cbIntegratedSecurity,"check this if you want to use current windows login to access the database server, App Usr/Password must then be provided for new installation for the application credential to the database server(which would be created if not exists)"},

@@ -14,6 +14,8 @@ namespace Install
 		private string iKey = "xxxxxxxx";
 		private string oldProjectRoot = @"C:\Rintagi\RO";
         private string roENCKey = "xxxxxx";
+        private string shadowRoot = "";
+        private bool hasDeploy = false;
 
 		public string GetOldNS()
 		{
@@ -33,6 +35,15 @@ namespace Install
 		{
 			return iKey;
 		}
+        public string GetShadowRootName()
+        {
+            return shadowRoot;
+        }
+        
+		public bool GetHasDeploy()
+        {
+            return hasDeploy;
+        }
 
         public string GetROKey()
         {
