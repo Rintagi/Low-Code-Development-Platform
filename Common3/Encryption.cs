@@ -211,43 +211,47 @@ namespace RO.Common3
             if (EncryptString("Rintagi".ToUpper()) == "tToRcgonOIY=") return true; // internal projects
             return IsValidateLicense();
             */
-            //if (EncryptString("Rintagi".ToUpper()) == "tToRcgonOIY=") return; // internal projects
-            //if (EncryptString("Rintagi".ToUpper()) == "blciyNL5Rc4=") return; // external projects
+            if (EncryptString("Rintagi".ToUpper()) == "tToRcgonOIY=") return true; // internal projects
+            if (EncryptString("Rintagi".ToUpper()) == "blciyNL5Rc4=") return true; // external projects
+            
+            string myHost = System.Net.Dns.GetHostName();
+            bool isValidLicense = IsValidateLicense();
 
-            //string myHost = System.Net.Dns.GetHostName();
-            //bool isValidLicense = false;
+            if (isValidLicense) return isValidLicense;
 
-            //string license = DecryptString(Config.RintagiLicense);
-            //if (!string.IsNullOrEmpty(license))
-            //{
-            //    string[] licenseType = license.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            //    if (licenseType[0] == "IP")
-            //    {
-            //        foreach (System.Net.IPAddress ip in System.Net.Dns.GetHostEntry(myHost).AddressList)
-            //        {
-            //            if (EncryptString((Config.AppNameSpace + ip.ToString() + Config.AppNameSpace).ToUpper()) == licenseType[licenseType.Length - 1].Substring(1)) { isValidLicense = true; break; };
-            //        }
-            //        // for EC2 specific
-            //        try
-            //        {
-            //            System.Net.WebRequest wr = System.Net.HttpWebRequest.Create("http://169.254.169.254/latest/meta-data/public-ipv4");
-            //            System.IO.StreamReader sr = new System.IO.StreamReader(wr.GetResponse().GetResponseStream());
-            //            string ec2IP = sr.ReadToEnd();
-            //            sr.Close();
-            //            if (!string.IsNullOrEmpty(ec2IP) && EncryptString((Config.AppNameSpace + ec2IP.ToString() + Config.AppNameSpace).ToUpper()) == licenseType[licenseType.Length - 1].Substring(1)) { isValidLicense = true; };
-            //        }
-            //        catch { }
-            //    }
-            //    else
-            //    {
-            //        if (EncryptString((Config.AppNameSpace + "Rintagi".ToUpper() + Config.AppNameSpace).ToUpper()) == licenseType[licenseType.Length - 1].Substring(1)) { isValidLicense = true; };
-            //    }
-            //}
+            string license = DecryptString(Config.RintagiLicense);
+            if (!string.IsNullOrEmpty(license))
+            {
+                string[] licenseType = license.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                if (licenseType[0] == "IP")
+                {
+                    foreach (System.Net.IPAddress ip in System.Net.Dns.GetHostEntry(myHost).AddressList)
+                    {
+                        if (EncryptString((Config.AppNameSpace + ip.ToString() + Config.AppNameSpace).ToUpper()) == licenseType[licenseType.Length - 1].Substring(1)) { isValidLicense = true; break; };
+                    }
+                    // for EC2 specific
+                    try
+                    {
+                        System.Net.WebRequest wr = System.Net.HttpWebRequest.Create("http://169.254.169.254/latest/meta-data/public-ipv4");
+                        System.IO.StreamReader sr = new System.IO.StreamReader(wr.GetResponse().GetResponseStream());
+                        string ec2IP = sr.ReadToEnd();
+                        sr.Close();
+                        if (!string.IsNullOrEmpty(ec2IP) && EncryptString((Config.AppNameSpace + ec2IP.ToString() + Config.AppNameSpace).ToUpper()) == licenseType[licenseType.Length - 1].Substring(1)) { isValidLicense = true; };
+                    }
+                    catch { }
+                }
+                else
+                {
+                    if (EncryptString((Config.AppNameSpace + "Rintagi".ToUpper() + Config.AppNameSpace).ToUpper()) == licenseType[licenseType.Length - 1].Substring(1)) { isValidLicense = true; };
+                }
+            }
 
-            //if (!isValidLicense)
-            //{
-            //    throw new Exception("Please acquire proper Rintagi license for this instance to run");
-            //}
+            if (!isValidLicense)
+            {
+                throw new Exception("Please acquire proper Rintagi license for this instance to run");
+            }
+
+            return false;
         }
         public void UpdateLicense(string license,string hash)
         {
