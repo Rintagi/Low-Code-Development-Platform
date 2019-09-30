@@ -504,6 +504,20 @@ namespace RO.Rule3
                 sd.Append("Readme: \r\n" + drv["Readme"].ToString() + "\r\n");
             }
             Robot.WriteToFile("M", PrepDeplPath + "ReleaseNote.txt", sd.ToString());
+
+            // Setup Alternative License file
+            try
+            {
+                using (StreamReader sr = new StreamReader(shadowRoot + @"\License.txt",true))
+                {
+                    string licenseContent = sr.ReadToEnd();
+                    Robot.WriteToFile("M", PrepDeplPath + "License.txt", sd.ToString());
+                    sr.Close();
+                }
+            }
+            catch
+            {
+            }
             return MsgWarning.ToString();
         }
 

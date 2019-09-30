@@ -1,201 +1,78 @@
-                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
+Rintagi Software License and Terms of Service
+Version 6.0
 
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+THIS DOCUMENT IS A LEGAL AGREEMENT ("LICENSE") BETWEEN ROBOCODER CORPORATION ("ROBOCODER") AND YOU OR THE ORGANIZATION ON WHOSE BEHALF YOU ARE ACQUIRING THE LICENSE DESCRIBED BELOW ("YOU"). THIS LICENSE CONTAINS THE TERMS AND CONDITIONS BY WHICH ROBOCODER PROVIDES YOU WITH A COPY OF THE RINTAGI CODE GENERATION PLATFORM, WHICH INCLUDES WITHOUT LIMITATION THE GENERATOR MODULE IN OBJECT CODE ("GENERATOR"), THE SOURCE CODE ("SOURCE CODE") THAT MANAGES AND OPERATES THE PLATFORM AND ALL RELATED MATERIALS (COLLECTIVELY THE "PLATFORM"). THIS LICENSE ALSO APPLIES TO ALL RELATED SERVICES THAT WE MAY PROVIDE TO YOU, ("SERVICES"). BY USING THE PLATFORM, YOU ACCEPT THE TERMS AND CONDITIONS OF THIS LICENSE. IF YOU DO NOT AGREE WITH ANY OF THE TERMS OR CONDITIONS OF THIS LICENSE, DO NOT USE THE PLATFORM OR CONTRACT FOR ANY SERVICES. WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, IF YOU DO NOT AGREE, DO NOT PROCEED WITH THE DOWNLOADING, COPYING, INSTALLATION OR ANY OTHER USE OF THE PLATFORM OR ANY PORTION THEREOF. IF THE SERVICE WAS ACCESSED ELECTRONICALLY, CLICK "DISAGREE/DECLINE". THE SERVICE IS PROTECTED BY UNITED STATES PATENT 6,876314, CANADIAN COPYRIGHT LAWS AND INTERNATIONAL COPYRIGHT LAWS, AS WELL AS OTHER INTELLECTUAL PROPERTY LAWS AND TREATIES.  THE PLATFORM IS LICENSED, NOT SOLD.
 
-   1. Definitions.
+1. OWNERSHIP, LICENSE GRANT
 
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
+Robocoder Corporation hereby grants you a non-exclusive, royalty free, worldwide, non-transferable license to install, use, access, display and run one copy of the Platform on a single computer, such as a server, workstation, terminal or other device ("Computer") subject to the other terms and conditions of this License (you must download an additional copy of the Platform for each Computer that you wish to install the Platform on).
 
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
+This is a license to use the Platform and not an agreement for sale of goods. Robocoder reserves ownership of all intellectual property rights inherent in or relating to the Platform, whether applied for or not, including without limitation all copyright, patent rights, all rights in relation to registered and unregistered trademarks (including service marks), confidential information (including trade secrets and know-how) and all rights other than those expressly granted by this License to you.
 
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
+2. OWNERSHIP OF GENERATED CODE
 
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
+The Platform will in the course of your use generate source for software applications designed by you that are not related to the Platform ("Generated Code"). You may modify the Generated Code free of any restrictions. All intellectual property of whatever nature in the Generated Code, including without limitation all copyrights, patents and trade secrets, is your sole property. 
 
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
+3. DISTRIBUTION
 
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
+Without limiting the generality of the foregoing, your ownership and distribution rights in the Generated Code are unrestricted and free of any royalty claims by Robocoder. Attribution of the Generated Code must be referred to in the Generated Code's documentation and product release notes and Robocoder's copyright and intellectual property ownership in the Platform acknowledged.  
 
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
+4. PERMITTED USES, SOURCE CODE, MODIFICATIONS
 
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
+You may modify the Source Code  ("Modifications") solely for the purpose of submitting the Modifications  to Robocoder for inclusion into the Source Code and for no other purpose. All intellectual property of whatever nature in the Modifications, including without limitation all copyrights, patents and trade secrets, are the sole property of Robocoder, regardless of whether the Modifications are included in subsequent releases of the Source Code.
 
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
+5. PROHIBITED USES
 
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
+The Platform is for your own internal use and for no other purpose. You are not allowed to rent, sell, redistribute or transfer any part of the Platform. You must not remove, obscure or interfere with any copyright, acknowledgment, attribution, trademark, warning or disclaimer statement affixed to, incorporated in or otherwise applied in connection with the Platform.  You must not reverse engineer or modify or translate the Generator in any way.  You may not disassemble the Platform.
 
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
+You are strictly forbidden to use the Platform to generate software applications that resemble functionalities such as securitization, private placement, bulk financing, asset-backed securities.
 
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
+You may not use any part of the Platform or the Generated Code or your knowledge of the Platform (or any information that you learn as a result of your use of the Platform) to create a product with the same or substantially the same functionality as the Platform. UNDER NO CIRCUMSTANCES MAY YOU USE THE PLATFORM AS THE BASIS OF OR IN CONNECTION WITH A PRODUCT OR SERVICE THAT CONTAINS THE SAME, OR SUBSTANTIALLY THE SAME, FUNCTIONALITY AS THE PLATFORM, NAMELY A SOFTWARE DEVELOPMENT TOOL OR PLATFORM FOR THE GENERATION OF SOFTWARE CODE.
 
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
+6. USER SUGGESTIONS
 
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
+You agree that any material, information or other communication you transmit or post to a Robocoder website or provide to Robocoder will be considered non-confidential and non-proprietary ("Communications").  Robocoder will have no obligations with respect to the Communications and you agree that title to any such Communications will be shared with Robocoder. You agree that Robocoder and its designees are free to copy, modify, create derivative works, publicly display, disclose, distribute, license and sublicense through multiple tiers of distribution and licensees, incorporate and otherwise use the Communications and all data, images, sounds, text, and other things embodied therein, including derivative works, for any and all commercial or non-commercial purposes.
 
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
+7. TERMINATION
 
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
+Robocoder may terminate this License at any time if you violate its terms. Upon termination, you shall immediately cease using and destroy the Platform or return all copies of the Platform to Robocoder. Upon termination, you agree to immediately cease using the Platform. The provisions of sections 2, 3, 5, 6, 7, 8, 9, 10 and 15 survive the termination for any reason of this License.
 
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
+8. LIMITATION OF WARRANTIES
 
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
+THE PLATFORM IS PROVIDED ON AN "AS IS" BASIS. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, ROBOCODER CORPORATION AND ITS SUPPLIERS DISCLAIM ALL WARRANTIES AND CONDITIONS, EITHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT, WITH REGARD TO THE PLATFORM. 
 
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
+9. LIMITATION OF LIABILITY
 
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL ROBOCODER CORPORATION OR ITS SUPPLIERS BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION OR ANY OTHER PECUNIARY LAW) ARISING OUT OF THE USE OF OR INABILITY TO USE THE SERVICE, EVEN IF ROBOCODER CORPORATION HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. IN ANY CASE, ROBOCODER CORPORATION'S ENTIRE LIABILITY UNDER ANY PROVISION OF THIS LICENSE SHALL BE LIMITED TO THE GREATER OF THE AMOUNT ACTUALLY PAID BY YOU FOR THE PLATFORM AND SERVICES IN THE TWELVE MONTH PERIOD PRIOR TO THE DATE UPON WHICH YOU BECAME AWARE OF THE POSSIBILITY OF DAMAGES OR TEN ($10.00) DOLLARS. THE FOREGOING LIMITATIONS WILL APPLY EVEN IF THE ABOVE STATED REMEDIES FAIL THEIR ESSENTIAL PURPOSE.
 
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
+10.  INDEMNITY
 
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
+YOU AGREE TO INDEMNIFY AND SAVE HARMLESS ROBOCODER CORPORATION, ITS DIRECTORS, OFFICERS, EMPLOYEES, CONTRACTORS AND THOSE ACTING ON ITS BEHALF FROM ALL CLAIMS OF WHATEVER NATURE THAT MAY BE MADE AGAINST THEM WITH RESPECT TO THE GENERATED CODE, INCLUDING WITHOUT LIMITATION, CLAIMS FOR ATTORNEY'S FEES BUT ONLY TO THE EXTENT THAT SUCH CLAIMS ARE NOT CAUSED BY THE PLATFORM INFRINGING THE INTELLECUTAL PROPERTY RIGHTS OF THIRD PARTIES.
 
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
+11. THIRD PARTY SOFTWARE
 
-   END OF TERMS AND CONDITIONS
+The Platform may contain programs or software code belonging to third parties. The license terms with respect to these third party programs will be brought to your attention and apply to you. Robocoder shall use its reasonable effort to only include third party software that is licensed pursuant to the terms of the Open Source Initiative MIT license or other license containing similar terms.
 
-   APPENDIX: How to apply the Apache License to your work.
+12. PAYMENT AND TAXES
 
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "{}"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
+You agree to shall pay all taxes or levies imposed under applicable laws, regulations and tax treaties as a result of this License excluding taxes imposed on the income of Robocoder Corporation. Each party shall furnish evidence of such paid taxes as is sufficient to enable the other party to obtain any credits available to it, including original withholding tax certificates.
 
-   Copyright {yyyy} {name of copyright owner}
+13. SUPPORT AND UPDATES
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Robocoder will support prior versions of the Source Code for twelve (12) months only following the release of a newer version. You are not entitled to any upgrades to the Platform unless you have purchased the right to receive such upgrades. Rights to upgrades must be purchased for each copy of the Platform installed. For greater certainty, you may only install an upgrade once and only on the Computer on which the applicable copy of the Platform is installed. All support services must be purchased separately and are subject to the terms and conditions specified at the time of acquiring the support services. Unless agreed to in writing, all support services provided will be charged for on the basis of a pre-agreed number of hours multiplied by a pre-agreed hourly rate. Support services are provided on a reasonable efforts basis only and no representations or warranties are made with respect to deliverables or the expected outcome of the provision of support services. Notwithstanding the foregoing, Robocoder warrants that all support services will be performed in a competent and professional manner, by qualified personnel in accordance with reasonable industry standards adhered to by reputable developers performing support services of a similar nature. For greater certainty and without limiting the generality of the foregoing, Robocoder does not promise that any deliverables will be suitable for your purposes.
 
-       http://www.apache.org/licenses/LICENSE-2.0
+14. OTHER AGREEMENTS AND LICENSES BETWEEN YOU AND ROBOCODER
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+This License and Terms of Service apply only to the Platform and Services purchased in connection with the Platform. For greater certainty, all software licensed to you and services provided to you by Robocoder before or after the date of this License continue to be governed by the terms and conditions of the agreement entered in connection with such software and services, unaffected by this License.
+
+15. APPLICABLE LAWS AND GENERAL PROVISIONS
+
+This license is governed by and shall be interpreted in accordance with the laws of Canada and British Columbia, excluding its principles of conflict of laws and the United Nations Convention on Contracts for the International Sale of Goods, which is expressly excluded.  All disputes and claims of whatever nature shall be adjudicated by a court of competent jurisdiction in British Columbia.  You may not export the Software in violation of applicable export laws and regulations. Robocoder is not obligated under any other agreements unless they are in writing and signed by an authorized representative of Robocoder. This License constitutes the entire agreement between the parties with respect to the use of the Platform and supersedes all prior or contemporaneous understandings regarding such subject matter. To the extent the terms of any Robocoder policies or programs for support services conflict with the terms of this license, the terms of this license shall control. If any provision of this license is held to be void, invalid, unenforceable or illegal, the other provisions shall continue in full force and effect.  You may not assign this License without the prior written consent of Robocoder. This License enures to the benefit of the successors and assigns of Robocoder. No oral or written information given by Robocoder or on Robocoder’s behalf shall create a warranty or collateral contract, or in any way increase the scope of this License in any way. Any translation of this License is done for local requirements and in the event of a dispute between the English and any non-English versions, the English version of this License shall govern.
+
+16. GOVERNMENT AND RESTRICTED RIGHTS
+
+The Platform is provided with "RESTRICTED RIGHTS." Use, duplication, or disclosure by the United States of America Government is subject to restrictions as set forth in FAR52.227-14 and DFAR252.227-7013 et seq. or their successor’s provisions. Use of the Platform by the Government constitutes acknowledgment of Robocoder's proprietary rights therein. Contractor or Manufacturer is Robocoder Corporation, Suite 260 - 2639 Viking Way, Richmond, British Columbia V6V 3B7.
+
+17. MODIFICATION OF THIS LICENSE
+
+This License may be modified only by a written instrument signed by an authorized representative of each party.
