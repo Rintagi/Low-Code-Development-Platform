@@ -40,7 +40,7 @@ namespace RO.Web
 				cHelpLabel.Text = "Please select the appropriate project, prepare them then click 'Compile' button to compile deployment package into the appropriate installer '.exe' file.  Then click 'Download' button to retrieve the compiled '.exe' file. Please be aware each project can only be compiled by one process at any time. Make sure Network Service has full control rights to the deployment directory.";
 				cTitleLabel.Text = "Compile Installer";
 				cEntityId.Focus();
-                System.Collections.Generic.KeyValuePair<string, bool> license = RO.Common3.Utils.CheckValidLicense();
+                System.Collections.Generic.KeyValuePair<string, bool> license = RO.Common3.Utils.CheckValidLicense("Design","Deploy");
                 if (!license.Value)
                 {
                     cPrepare.Enabled = false;
