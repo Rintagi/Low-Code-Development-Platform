@@ -79,7 +79,7 @@ namespace RO.Common3
             return "";
         }
 
-        public bool CheckValidLicense()
+        public bool CheckValidLicense(string moduleName, string resourceName)
         {
             return true;
         }
@@ -87,7 +87,26 @@ namespace RO.Common3
         {
             return;
         }
-
+        public int GetLicensedCompanyCount()
+        {
+            return -1;
+        }
+        public int GetLicensedProjectCount()
+        {
+            return -1;
+        }
+        public int GetLicensedModuleCount()
+        {
+            return -1;
+        }
+        public int GetLicensedUserCount()
+        {
+            return -1;
+        }
+        public bool IsLicensedFeature(string moduleName, string resourceName)
+        {
+            return true;
+        }
         protected string DecryptString(string inStr, string inKey)
         {
             if (string.IsNullOrEmpty(inStr)) return null;
