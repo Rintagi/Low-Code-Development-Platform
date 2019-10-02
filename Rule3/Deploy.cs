@@ -100,11 +100,11 @@ namespace RO.Rule3
         }
         public bool CanDeploy()
         {
-            return CheckValidLicense();
+            return CheckValidLicense("Design","Deploy");
         }
         public string PrepInstall(int releaseId, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword)
         {
-            if (!CheckValidLicense())
+            if (!CheckValidLicense("Design", "Deploy"))
             {
                 throw new Exception("Please acquire proper Rintagi license for this feature");
             }

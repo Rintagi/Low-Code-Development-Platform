@@ -7,6 +7,7 @@ namespace RO.Common3
     using System.Security.Cryptography.X509Certificates;
     using System.Net;
     using System.IO;
+    using System.Collections.Generic;
 
     public class Encryption: Key
     {
@@ -204,9 +205,8 @@ namespace RO.Common3
             return EncryptString(RO.Common3.Utils.GetComputerSid().ToString());
         }
 
-        public bool CheckValidLicense()
+        public bool CheckValidLicense(string moduleName, string resourceName)
         {
-            return true;
             /*
             if (EncryptString("Rintagi".ToUpper()) == "tToRcgonOIY=") return true; // internal projects
             return IsValidateLicense();
@@ -252,6 +252,30 @@ namespace RO.Common3
             }
 
             return false;
+        }
+
+        public int GetLicensedCompanyCount()
+        {
+            return -1;
+        }
+        public int GetLicensedProjectCount()
+        {
+            return -1;
+        }
+        public int GetLicensedUserCount()
+        {
+            return -1;
+        }
+
+        public int GetLicensedModuleCount()
+        {
+            return -1;
+        }
+
+        public bool IsLicensedFeature(string moduleName, string resourceName)
+        {
+            Dictionary<string, Dictionary<string, string>> moduleList = new Dictionary<string, Dictionary<string, string>>();
+            return true;
         }
         public void UpdateLicense(string license,string hash)
         {
