@@ -95,7 +95,25 @@ namespace RO.Access3
             da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
-			return dt;
+
+            int licensedCount = GetLicensedModuleCount();
+            if (licensedCount > 0)
+            {
+                int ii = 0;
+                bool rowsRemoved = false;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (ii >= licensedCount && dr["SystemId"].ToString() != "3" && dr["SystemId"].ToString() != "5")
+                    {
+                        dr.Delete();
+                        rowsRemoved = true;
+                    }
+                    ii = ii + 1;
+                }
+                if (rowsRemoved) dt.AcceptChanges();
+            }
+
+            return dt;
 		}
 	}
 }

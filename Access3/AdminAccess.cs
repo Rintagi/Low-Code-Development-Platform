@@ -827,7 +827,7 @@ namespace RO.Access3
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			ApplicationAssert.CheckCondition(dt.Rows.Count == 1, "GetAuthRow", "Authorization Issue", "Authority levels have not been defined for Screen #'" + ScreenId.ToString() + "!");
-			return dt;
+            return dt;
 		}
 
 		public DataTable GetAuthCol(Int32 ScreenId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
@@ -1590,6 +1590,13 @@ namespace RO.Access3
                 dvSRule = new DataView(dac.GetServerRule(ScreenId, CPrj, CSrc));
                 dvCol = new DataView(dac.GetScreenColumns(ScreenId, CPrj, CSrc));
             }
+            string appDbName = dtScr.Rows[0]["dbAppDatabase"].ToString();
+            string screenName = dtScr.Rows[0]["ProgramName"].ToString();
+            bool licensedScreen = IsLicensedFeature(appDbName, screenName);
+            if (!licensedScreen)
+            {
+                throw new Exception("please acquire proper license to unlock this feature");
+            }
             string pMKeyCol = string.Empty; string pDKeyCol = string.Empty;
             string pMKeyOle = string.Empty; string pDKeyOle = string.Empty;
             dvCol.RowFilter = "PrimaryKey = 'Y'";
@@ -1759,6 +1766,14 @@ namespace RO.Access3
                 dvSRule = new DataView(dac.GetServerRule(ScreenId, CPrj, CSrc));
                 dvCol = new DataView(dac.GetScreenColumns(ScreenId, CPrj, CSrc));
             }
+            string appDbName = dtScr.Rows[0]["dbAppDatabase"].ToString();
+            string screenName = dtScr.Rows[0]["ProgramName"].ToString();
+            bool licensedScreen = IsLicensedFeature(appDbName, screenName);
+            if (!licensedScreen)
+            {
+                throw new Exception("please acquire proper license to unlock this feature");
+            }
+
             OleDbConnection cn;
             if (string.IsNullOrEmpty(dbConnectionString)) { cn = new OleDbConnection(GetDesConnStr()); } else { cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword)); }
             cn.Open();
@@ -2052,6 +2067,14 @@ namespace RO.Access3
                 dvSRule = new DataView(dac.GetServerRule(ScreenId, CPrj, CSrc));
                 dvCol = new DataView(dac.GetScreenColumns(ScreenId, CPrj, CSrc));
             }
+            string appDbName = dtScr.Rows[0]["dbAppDatabase"].ToString();
+            string screenName = dtScr.Rows[0]["ProgramName"].ToString();
+            bool licensedScreen = IsLicensedFeature(appDbName, screenName);
+            if (!licensedScreen)
+            {
+                throw new Exception("please acquire proper license to unlock this feature");
+            }
+
             OleDbConnection cn;
             if (string.IsNullOrEmpty(dbConnectionString)) { cn = new OleDbConnection(GetDesConnStr()); } else { cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword)); }
             cn.Open();

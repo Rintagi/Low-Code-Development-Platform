@@ -1179,10 +1179,10 @@
             return Convert.ToBase64String(csp.SignHash(hash, CryptoConfig.MapNameToOID("SHA1")));
         }
 
-        public static KeyValuePair<string, bool> CheckValidLicense()
+        public static KeyValuePair<string, bool> CheckValidLicense(string moduleName, string resourceName)
         {
             RO.Common3.Encryption e = new RO.Common3.Encryption();
-            return new KeyValuePair<string, bool>(e.GetInstallID(), e.CheckValidLicense());
+            return new KeyValuePair<string, bool>(e.GetInstallID(), e.CheckValidLicense(moduleName,resourceName));
         }
 
         public static List<DataStructure> AnalyseExcelData(DataTable dtImp, int rowsToExamine)
