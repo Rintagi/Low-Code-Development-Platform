@@ -43,4 +43,4 @@ package-lock.json
 *.refresh
 .npmrc
 npm
-*.csproj.user
+*.pfx
