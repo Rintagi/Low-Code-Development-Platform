@@ -18,13 +18,15 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Web.SessionState;
 using System.Linq;
+using System.Web.Configuration;
+using System.Configuration;
 
 // Need to run the following 3 lines to generate AdminWs.cs for C# calls at Windows SDK v6.1: CMD manually if AdminWs.asmx is changed:
 // C:\
 // CD\Rintagi\RO\Service3
 // "C:\Program Files\Microsoft SDKs\Windows\v6.1\Bin\wsdl.exe" /nologo /namespace:RO.Service3 /out:"AdminWs.cs" "http://RND08/ROWs/AdminWs.asmx"
 
-[ScriptService()] 
+[ScriptService()]
 [WebService(Namespace = "http://Rintagi.com/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 public partial class AdminWs : WebService
@@ -62,7 +64,7 @@ public partial class AdminWs : WebService
         public string status;
         public string errorMsg;
     }
-    
+
     //For menu:
     [WebMethod(EnableSession = true)]
 
@@ -72,7 +74,7 @@ public partial class AdminWs : WebService
         //Dictionary<string, string> context = jss.Deserialize<Dictionary<string, string>>(contextStr);
 
         int screenId = 121; // Hardcoded AdmMenuDrg, must change if that changed
-        
+
         HttpContext Context = HttpContext.Current;
         HttpSessionState Session = HttpContext.Current.Session;
         MenuResponse mr = new MenuResponse();
@@ -91,7 +93,7 @@ public partial class AdminWs : WebService
             mr.errorMsg = accessCheck.Value;
             return mr;
         }
-        
+
         try
         {
             DataTable dtMenu = (new RO.WebRules.WebRule()).WrAddMenu(PMenuId, ParentId, dSys[KEY_SysConnectStr], dSys[KEY_AppPwd]);
@@ -136,7 +138,7 @@ public partial class AdminWs : WebService
             mr.errorMsg = accessCheck.Value;
             return mr;
         }
-        
+
         try
         {
             (new RO.WebRules.WebRule()).WrDelMenu(MenuId, dSys[KEY_SysConnectStr], dSys[KEY_AppPwd]);
@@ -178,7 +180,7 @@ public partial class AdminWs : WebService
             mr.errorMsg = accessCheck.Value;
             return mr;
         }
-        
+
         try
         {
             (new RO.WebRules.WebRule()).WrUpdMenu(MenuId, PMenuId, ParentId, MenuText, usr.CultureId.ToString(), dSys[KEY_SysConnectStr], dSys[KEY_AppPwd]);
@@ -227,9 +229,9 @@ public partial class AdminWs : WebService
         }
         return mr;
     }
-    
+
     // For screen tabs:
-    
+
     [WebMethod(EnableSession = true)]
     public ScreenColResponse WrAddScreenTab(string TabFolderOrder, string ScreenId, byte SysId)
     {
@@ -256,7 +258,7 @@ public partial class AdminWs : WebService
             mr.errorMsg = accessCheck.Value;
             return mr;
         }
-                
+
         try
         {
             DataTable dtTab = (new RO.WebRules.WebRule()).WrAddScreenTab(TabFolderOrder, ScreenId, dSys[KEY_SysConnectStr], dSys[KEY_AppPwd]);
@@ -596,7 +598,7 @@ public partial class AdminWs : WebService
         }
         return mr;
     }
-    
+
     private string JsonToXML(string json, string rootName)
     {
         XmlDocument doc = new XmlDocument();
@@ -608,14 +610,14 @@ public partial class AdminWs : WebService
             return xml.ToString();
         }
     }
-    
+
     [WebMethod(EnableSession = true)]
     public ScreenColResponse WrResizeGridLayout(string grdObjId, string grdItemWidth, string grdItemHeight, byte SysId)
     {
         int screenId = 1007; // this is hard coded for the Screen IDE in system 3, must change if it is not the right #
-        //System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-        //Dictionary<string, string> context = jss.Deserialize<Dictionary<string, string>>(contextStr);
-        
+                             //System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                             //Dictionary<string, string> context = jss.Deserialize<Dictionary<string, string>>(contextStr);
+
         string paramXML = "<Params>"
             + "<ScreenObjId>" + grdObjId.ToString() + "</ScreenObjId>"
             + "<ColumnWidth>" + grdItemWidth.ToString() + "</ColumnWidth>"
@@ -664,7 +666,7 @@ public partial class AdminWs : WebService
         string screenObjListXML = "<ScreenObjs><ScreenObj>"
             + string.Join("</ScreenObj><ScreenObj>", (from x in screenObjs select "<id>" + x["ID"] + "</id>" + "<tabId>" + x["TABID"] + "</tabId>" + "<r>" + x["ROW"] + "</r>" + "<c>" + x["COL"] + "</c>" + "<g>" + x["NEWROWGRP"] + "</g>" + "<h>" + x["COLHEIGHT"] + "</h>").ToArray())
             + "</ScreenObj></ScreenObjs>";
-        
+
         HttpContext Context = HttpContext.Current;
         HttpSessionState Session = HttpContext.Current.Session;
         ScreenColResponse mr = new ScreenColResponse();
@@ -681,7 +683,7 @@ public partial class AdminWs : WebService
             mr.errorMsg = accessCheck.Value;
             return mr;
         }
-        
+
         try
         {
             (new AdminSystem()).RunWrRule(screenId,"WrUpdScreenObjLayoutAndSize", dSys[KEY_SysConnectStr], dSys[KEY_AppPwd], screenObjListXML, impr, uc);
@@ -710,7 +712,7 @@ public partial class AdminWs : WebService
         param["NextGridGrpCd"] = nextGridGrpCd.ToString();
         string xxJSON = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(param);
         string xxXML = JsonToXML(xxJSON,"Params");
-        
+
         string paramXML = "<Params>"
             + "<ScreenObjId>" + grdObjId.ToString() + "</ScreenObjId>"
             + "<GridGrpCd>" + gridGrpCd.ToString() + "</GridGrpCd>"
@@ -794,7 +796,7 @@ public partial class AdminWs : WebService
             return "{status:'',errorMsg:'" + err.Message.Replace("'", "\\'") + "',result:[]}";
         }
     }
-    
+
     private KeyValuePair<bool, string> HaveProperAccess(int screenId, string action, byte SysId)
     {
         HttpContext Context = HttpContext.Current;
@@ -814,8 +816,8 @@ public partial class AdminWs : WebService
         if (
             (Config.DeployType == "PRD" || (Config.AppNameSpace != "RO" && SysId == 3))
             && (screenId == 1007 && action == "U") // screen objection ide cannot be used for update on production system or admin screens when the name space is not RO
-            ) new KeyValuePair<bool, string>(false, accessDeniedMsg); 
-        
+            ) new KeyValuePair<bool, string>(false, accessDeniedMsg);
+
         DataTable dtRowAuth = (new AdminSystem()).GetAuthRow(screenId, impr.RowAuthoritys, dSys[KEY_SysConnectStr], dSys[KEY_AppPwd]);
         DataRow dr = dtRowAuth.Rows[0];
 
@@ -982,29 +984,29 @@ public partial class AdminWs : WebService
         return (new AdminSystem()).EncryptString(inStr);
     }
 
-	[WebMethod]
-	public string GetAuthRow(Int32 ScreenId, string RowAuthoritys, string dbConnectionString, string dbPassword)
-	{
-		return (new AdminSystem()).GetAuthRow(ScreenId, RowAuthoritys, dbConnectionString, dbPassword).DataTableToXml();
-	}
+    [WebMethod]
+    public string GetAuthRow(Int32 ScreenId, string RowAuthoritys, string dbConnectionString, string dbPassword)
+    {
+        return (new AdminSystem()).GetAuthRow(ScreenId, RowAuthoritys, dbConnectionString, dbPassword).DataTableToXml();
+    }
 
-	[WebMethod]
-	public string GetAuthCol(Int32 ScreenId, string ui, string uc, string dbConnectionString, string dbPassword)
-	{
-		return (new AdminSystem()).GetAuthCol(ScreenId, ui.XmlToObject<UsrImpr>(), uc.XmlToObject<UsrCurr>(), dbConnectionString, dbPassword).DataTableToXml();
-	}
+    [WebMethod]
+    public string GetAuthCol(Int32 ScreenId, string ui, string uc, string dbConnectionString, string dbPassword)
+    {
+        return (new AdminSystem()).GetAuthCol(ScreenId, ui.XmlToObject<UsrImpr>(), uc.XmlToObject<UsrCurr>(), dbConnectionString, dbPassword).DataTableToXml();
+    }
 
-	[WebMethod]
-	public string GetAuthExp(Int32 ScreenId, Int16 CultureId, string ui, string uc, string dbConnectionString, string dbPassword)
-	{
-		return (new AdminSystem()).GetAuthExp(ScreenId, CultureId, ui.XmlToObject<UsrImpr>(), uc.XmlToObject<UsrCurr>(), dbConnectionString, dbPassword).DataTableToXml();
-	}
+    [WebMethod]
+    public string GetAuthExp(Int32 ScreenId, Int16 CultureId, string ui, string uc, string dbConnectionString, string dbPassword)
+    {
+        return (new AdminSystem()).GetAuthExp(ScreenId, CultureId, ui.XmlToObject<UsrImpr>(), uc.XmlToObject<UsrCurr>(), dbConnectionString, dbPassword).DataTableToXml();
+    }
 
-	[WebMethod]
-	public string GetScreenLabel(Int32 ScreenId, Int16 CultureId, string ui, string uc, string dbConnectionString, string dbPassword)
-	{
-		return (new AdminSystem()).GetScreenLabel(ScreenId, CultureId, ui.XmlToObject<UsrImpr>(), uc.XmlToObject<UsrCurr>(), dbConnectionString, dbPassword).DataTableToXml();
-	}
+    [WebMethod]
+    public string GetScreenLabel(Int32 ScreenId, Int16 CultureId, string ui, string uc, string dbConnectionString, string dbPassword)
+    {
+        return (new AdminSystem()).GetScreenLabel(ScreenId, CultureId, ui.XmlToObject<UsrImpr>(), uc.XmlToObject<UsrCurr>(), dbConnectionString, dbPassword).DataTableToXml();
+    }
 
     // For reports:
 
@@ -1085,7 +1087,7 @@ public partial class AdminWs : WebService
                         foundTimeZone = tzInfo;
                         break;
                     }
-                    
+
                 }
             }
         }
@@ -1116,10 +1118,10 @@ public partial class AdminWs : WebService
         string dbConnectionString = Config.GetConnStr(Config.DesProvider, Config.DesServer, Config.DesDatabase, "", Config.DesUserId);
         string dbPassword = Config.DesPassword;
         return new AdminSystem().GetDesignVersion(Config.AppNameSpace, dbConnectionString, dbPassword);
-    }    
+    }
     // receive browser capability(like timezone and geolocation etc.)
     [WebMethod(EnableSession = true)]
-    [ScriptMethod(ResponseFormat = ResponseFormat.Json,XmlSerializeString=false,UseHttpGet=false)] 
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json,XmlSerializeString=false,UseHttpGet=false)]
     public string BrowserCap(string contextStr)
     {
         System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -1255,7 +1257,7 @@ public partial class AdminWs : WebService
                     if (sCompileMsg.IndexOf("failed") >= 0 || sCompileMsg.Replace("errorreport", string.Empty).Replace("warnaserror", string.Empty).IndexOf("error") >= 0)
                         return new string[]{"",
                                             sCompileMsg};
-                    else                     
+                    else
                         return new string[]{prj.DeployPath + "\\bin\\release\\Install.exe",
                                             sCompileMsg};
                 }
@@ -1271,13 +1273,20 @@ public partial class AdminWs : WebService
         }
         return new string[]{"",""};
     }
-    
+
     [WebMethod]
     public void UpdateLicense(string license, string hash)
     {
-        (new RO.Access3.AdminAccess()).UpdateLicense(license, hash);
+        Tuple<string,bool,string> _license = (new RO.Access3.AdminAccess()).UpdateLicense(license, hash);
+        if (_license.Item2)
+        {
+            Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
+            if (config.AppSettings.Settings["RintagiLicense"] != null) config.AppSettings.Settings["RintagiLicense"].Value = license;
+            else config.AppSettings.Settings.Add("RintagiLicense", license);
+            config.Save(ConfigurationSaveMode.Modified);
+        }
     }
-    
+
     [WebMethod]
     public Dictionary<string, string> GetLicenseDetail(string installID, string appID, string moduleName)
     {
@@ -1312,6 +1321,59 @@ public partial class AdminWs : WebService
         return license;
     }
 
+    [WebMethod]
+    public string GetLicense(string installID, string appID, string moduleName)
+    {
+        string SysId = System.Configuration.ConfigurationManager.AppSettings["LicenseModule"] ?? "3";
+        KeyValuePair<string, string> conn = (from dr in ((new LoginSystem()).GetSystemsList(string.Empty, string.Empty)).AsEnumerable()
+                                             where dr["SystemId"].ToString() == SysId
+                                             select new KeyValuePair<string, string>(Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", dr["dbAppUserId"].ToString()), dr["dbAppPassword"].ToString())).First();
+        UsrImpr impr = new UsrImpr("1", "11", "1", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+        Dictionary<string, string> license = new Dictionary<string, string>();
+        string installDtl = "<Params>"
+                + "<installID>" + installID + "</installID>"
+                + "<appID>" + appID + "</appID>"
+                + "<moduleName>" + moduleName + "</moduleName>"
+                + "</Params>";
+        DataTable dt = new AdminSystem().RunWrRule(1234, "WrGetLicenseDetail", conn.Key, conn.Value, installDtl, impr, new UsrCurr());
+        List<Dictionary<string, string>> result =
+            (from dr in dt.AsEnumerable()
+             select new Dictionary<string, string>
+            {
+                { "InstallID", dr["InstallID"].ToString()},
+                { "AppID", dr["AppID"].ToString()},
+                { "CompanyCount", dr["CompanyCount"].ToString()},
+                { "ProjectCount", dr["ProjectCount"].ToString()},
+                { "UserCount", dr["UserCount"].ToString()},
+                { "ModuleCount", dr["ModuleCount"].ToString()},
+                { "ModuleName", dr["ModuleName"].ToString()},
+                { "Include", dr["Include"].ToString()},
+                { "Exclude", dr["Exclude"].ToString()},
+                { "Expiry", ((DateTime)dr["Expiry"]).ToLocalTime().ToUniversalTime().ToString("O")},
+            }).ToList();
+        Dictionary<string, Dictionary<string, string>> ret = result.ToDictionary(m => m["ModuleName"], m => m);
+        string xxJSON = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ret);
+        string signerFileName = System.Configuration.ConfigurationManager.AppSettings["LicenseSignerPath"];
+        Tuple<string, string, string> encodedLicense = RO.Common3.Utils.EncodeLicenseString(xxJSON, installID, appID, true, signerFileName);
+        return Convert.ToBase64String(UTF8Encoding.UTF8.GetBytes(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(new Dictionary<string, string>()
+        {
+            { "License",encodedLicense.Item1},
+            { "LicenseSig",encodedLicense.Item2},
+            { "Encrypted",encodedLicense.Item3},
+        })));
+    }
+
+    [WebMethod]
+    public string GetInstallDetail()
+    {
+        var installDetail = RO.Common3.Utils.GetInstallDetail();
+        var _i = new Dictionary<string, string>
+        {
+            {"InstallID", installDetail.Item1 },
+            {"AppID", installDetail.Item2 },
+        };
+        return new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(_i);
+    }
     private void EmbedRsc(string DeployPath)
     {
         ArrayList ToDelete;

@@ -16,8 +16,10 @@ namespace RO.Web
 	using RO.Facade3;
 	using RO.Common3;
 	using RO.Common3.Data;
+    using System.Web.Configuration;
+    using System.Configuration;
 
-	public partial class ComInstallModule : RO.Web.ModuleBase
+    public partial class ComInstallModule : RO.Web.ModuleBase
 	{
 		private string LcSysConnString;
 		private string LcAppPw;
@@ -51,10 +53,21 @@ namespace RO.Web
                     cRegisterLink.Visible = true;
                     cInstallID.Visible = true;
                     cInstallIDLabel.Visible = true;
-
-                    // signing examples:
-                    //string sig = RO.Common3.Utils.SignData(UTF8Encoding.UTF8.GetBytes(license.Key), @"c:\inetpub\wwwroot\ro\web\modules\rintagi_signer.pfx");
-                    //Config.RintagiLicense = sig;
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(Config.RintagiLicense))
+                    {
+                        Tuple<string, bool,string> _license = (new RO.Access3.AdminAccess()).UpdateLicense(null, "");
+                        if (_license.Item2)
+                        {
+                            Config.RintagiLicense = _license.Item3;
+                            Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
+                            if (config.AppSettings.Settings["RintagiLicense"] != null) config.AppSettings.Settings["RintagiLicense"].Value = _license.Item3;
+                            else config.AppSettings.Settings.Add("RintagiLicense", _license.Item3);
+                            config.Save(ConfigurationSaveMode.Modified);
+                        }
+                    }
                 }
             }
 			else

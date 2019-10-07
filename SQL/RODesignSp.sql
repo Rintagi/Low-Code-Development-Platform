@@ -73312,7 +73312,7 @@ CREATE PROCEDURE [dbo].[WrGetLicenseDetail]
 AS
 /* this SP is called via RunWrRule
  * all the parameter has to be passed via @ParamXML as XML string
- * in this case <Params><ScreenObjId></ScreenObjId><ColumnWidth></ColumnWidth><ColumnHeight></ColumnHeight></Params>
+ * in this case <Params><installID></installID><appID></appID><moduleName></moduleName></Params>
  */
 SET NOCOUNT ON
 
@@ -73327,7 +73327,22 @@ from
 @Param.nodes('/Params') as  xx(yy)
 
 SELECT
-InstallID = @installID, AppID = @appID, Expiry = DATEADD(day,-2,GETUTCDATE()), PermLicense = NULL, Modules = NULL
+/* this is sample so we always issue 30 years, actual implementation should cater it for business requirement */
+InstallID = @installID, AppID = @appID, Expiry = DATEADD(year,30,GETUTCDATE()), PermLicense = NULL, Modules = NULL
+/* Design module must be there, no restriction other than Deployment in this example
+ * if ModuleCount = -1, full access to all modules if not defined but restriction if defined(other rows below) would be honoured
+ * if ModuleCount > 0, no access to module that is not defined(other rows below)
+ */
+,ModuleName='Design', CompanyCount = -1, ProjectCount = -1, UserCount = -1, ModuleCount=-1, Include='All',Exclude='Deploy'
+UNION
+SELECT InstallID = @installID, AppID = @appID, Expiry = DATEADD(day,-2,GETUTCDATE()), PermLicense = NULL, Modules = NULL
+/* no restriction other than CmnCompany/CmnProject Screen */
+,ModuleName='Cmon', CompanyCount = NULL, ProjectCount = NULL, UserCount = NULL, ModuleCount = NULL, Include='All',Exclude='CmnCompany,CmnProject'
+WHERE 1<>1
+SELECT InstallID = @installID, AppID = @appID, Expiry = DATEADD(day,-2,GETUTCDATE()), PermLicense = NULL, Modules = NULL
+/* only Test1/Test2 screen */
+,ModuleName='Test', CompanyCount = NULL, ProjectCount = NULL, UserCount = NULL, ModuleCount=NULL, Include='Test1,Test2',Exclude=NULL
+WHERE 1<>1
 
 RETURN 0
 
