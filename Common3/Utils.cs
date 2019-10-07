@@ -1179,18 +1179,6 @@
             return Convert.ToBase64String(csp.SignHash(hash, CryptoConfig.MapNameToOID("SHA1")));
         }
 
-        public static Tuple<string, string> GetInstallDetail()
-        {
-            RO.Common3.Encryption e = new RO.Common3.Encryption();
-            return new Tuple<string, string>(e.GetInstallID(),e.GetAppID());
-        }
-
-        public static Tuple<string,string, string> EncodeLicenseString(string licenseJSON, string installID, string appId, bool encrypt, string signerFile = null)
-        {
-            RO.Common3.Encryption e = new RO.Common3.Encryption();
-            return e.EncodeLicenseString(licenseJSON, installID, appId, encrypt, signerFile);
-        }
-
         public static KeyValuePair<string, bool> CheckValidLicense(string moduleName, string resourceName)
         {
             RO.Common3.Encryption e = new RO.Common3.Encryption();

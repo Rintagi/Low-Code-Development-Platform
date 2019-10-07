@@ -7,7 +7,7 @@
 </script>
 <div id="AjaxSpinner" class="AjaxSpinner" style="display: none;">
     <div style="padding: 10px;">
-        <img alt="" src="images/indicator.gif" />&nbsp;<asp:Label ID="AjaxSpinnerLabel" Text="This may take a moment..." runat="server" />
+        <img alt="" src="images/indicator.gif" />&nbsp;<asp:Label ID="AjaxSpinnerLabel" Text="This may take a moment ..." runat="server" />
     </div>
 </div>
 <asp:UpdatePanel UpdateMode="Conditional" runat="server">
