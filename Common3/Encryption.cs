@@ -60,7 +60,10 @@ namespace RO.Common3
         {
             return "";
         }
-
+        public string GetAppID()
+        {
+            return "";
+        }
         private System.Collections.Generic.Dictionary<string, string> GetLicense(string installID, string appID, string moduleName)
         {
             return new System.Collections.Generic.Dictionary<string, string>();
@@ -83,9 +86,9 @@ namespace RO.Common3
         {
             return true;
         }
-        public void UpdateLicense(string license,string hash)
+        public Tuple<string,bool,string> UpdateLicense(string license,string hash)
         {
-            return;
+            return new Tuple<string, bool, string>("",false,"");
         }
         public int GetLicensedCompanyCount()
         {
@@ -106,6 +109,11 @@ namespace RO.Common3
         public bool IsLicensedFeature(string moduleName, string resourceName)
         {
             return true;
+        }
+
+        public Tuple<string, string, string> EncodeLicenseString(string licenseJSON, string installID, string appId, bool encrypt, string signerFile = null)
+        {
+            return new Tuple<string, string, string>("", "", "");
         }
         protected string DecryptString(string inStr, string inKey)
         {
