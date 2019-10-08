@@ -42,17 +42,20 @@ namespace RO.Web
 				cHelpLabel.Text = "Please select the appropriate project, prepare them then click 'Compile' button to compile deployment package into the appropriate installer '.exe' file.  Then click 'Download' button to retrieve the compiled '.exe' file. Please be aware each project can only be compiled by one process at any time. Make sure Network Service has full control rights to the deployment directory.";
 				cTitleLabel.Text = "Compile Installer";
 				cEntityId.Focus();
-                System.Collections.Generic.KeyValuePair<string, bool> license = RO.Common3.Utils.CheckValidLicense("Design","Deploy");
-                if (!license.Value)
+                Tuple<string, string, bool> license = RO.Common3.Utils.CheckValidLicense("Design","Deploy");
+                if (!license.Item3)
                 {
                     cPrepare.Enabled = false;
                     cOkButton.Enabled = false;
                     cLoadButton.Enabled = false;
-                    cRegisterLink.NavigateUrl = (System.Configuration.ConfigurationManager.AppSettings["LicenseServer"] ?? "https://www.rintagi.com") + "/AcquireLicense.aspx?InstallID=" + license.Key + "&AppID=" + "RO" + "&ModuleName=" + "RO" + "&FromUrl=" + HttpUtility.UrlEncode(Request.Url.ToString());
-                    cInstallID.Text = license.Key;
+                    cRegisterLink.NavigateUrl = (System.Configuration.ConfigurationManager.AppSettings["LicenseServer"] ?? "https://www.rintagi.com") + "/AcquireLicense.aspx?InstallID=" + license.Item1 + "&AppID=" + license.Item2 + "&ModuleName=" + "Design" + "&FromUrl=" + HttpUtility.UrlEncode(Request.Url.ToString());
+                    cInstallID.Text = license.Item1;
+                    cAppID.Text = license.Item2;
                     cRegisterLink.Visible = true;
                     cInstallID.Visible = true;
                     cInstallIDLabel.Visible = true;
+                    cAppID.Visible = true;
+                    cAppIDLabel.Visible = true;
                 }
                 else
                 {

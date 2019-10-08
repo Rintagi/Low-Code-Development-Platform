@@ -1350,16 +1350,19 @@ public partial class AdminWs : WebService
                 { "Include", dr["Include"].ToString()},
                 { "Exclude", dr["Exclude"].ToString()},
                 { "Expiry", ((DateTime)dr["Expiry"]).ToLocalTime().ToUniversalTime().ToString("O")},
+                { "PerInstance", dr["PerInstance"].ToString()},
             }).ToList();
+        bool perInstance = result.Where(d => d["ModuleName"] == "Design").Select(d => d["PerInstance"] == "Y").Count() > 0;
         Dictionary<string, Dictionary<string, string>> ret = result.ToDictionary(m => m["ModuleName"], m => m);
         string xxJSON = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ret);
         string signerFileName = System.Configuration.ConfigurationManager.AppSettings["LicenseSignerPath"];
-        Tuple<string, string, string> encodedLicense = RO.Common3.Utils.EncodeLicenseString(xxJSON, installID, appID, true, signerFileName);
+        Tuple<string, string, string> encodedLicense = RO.Common3.Utils.EncodeLicenseString(xxJSON, installID, appID, perInstance, true, signerFileName);
         return Convert.ToBase64String(UTF8Encoding.UTF8.GetBytes(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(new Dictionary<string, string>()
         {
             { "License",encodedLicense.Item1},
             { "LicenseSig",encodedLicense.Item2},
             { "Encrypted",encodedLicense.Item3},
+            { "PerInstance",perInstance ? "Y" : "N"},
         })));
     }
 

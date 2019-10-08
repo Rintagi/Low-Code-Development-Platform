@@ -263,14 +263,14 @@ namespace RO.Common3
             if (EncryptString("Rintagi".ToUpper()) == "blciyNL5Rc4=") return true; // external projects
             return false;
         }
-        public Tuple<string,string,string> EncodeLicenseString(string licenseJSON, string installID, string appId, bool encrypt, string signerFile)
+        public Tuple<string,string,string> EncodeLicenseString(string licenseJSON, string installID, string appId, bool encrypt, bool perInstance, string signerFile)
         {
             //how to sign
             string signerFileName = signerFile ?? System.Configuration.ConfigurationManager.AppSettings["LicenseSignerPath"] ?? @"c:\rintagi\rintagi_signer.pfx";
             X509Certificate2 cert = new X509Certificate2(signerFile);
             RSACryptoServiceProvider csp = (RSACryptoServiceProvider)cert.PublicKey.Key;
             SHA1Managed sha1 = new SHA1Managed();
-            string installationKey = installID + appId;
+            string installationKey = installID + (perInstance ? (!string.IsNullOrEmpty(appId) ? "_" : "") + appId  : "");
             HMACSHA1 installationHash = new HMACSHA1(UTF8Encoding.UTF8.GetBytes(installationKey));
             string encrypted = encrypt ? "Y" : "N";
             string encryptContent(string instr) => encrypted == "Y" ? EncryptString(instr, installationKey) : instr;
@@ -303,7 +303,10 @@ namespace RO.Common3
                 string licenseJSONBase64 = signedLicense["License"];
                 string licenseSigBase64 = signedLicense["LicenseSig"];
                 string encrypted = signedLicense["Encrypted"];
-                string installationKey = GetInstallID() + GetAppID();
+                bool perInstance = signedLicense["PerInstance"] == "Y";
+                string appId = GetAppID();
+                string installID = GetInstallID();
+                string installationKey = installID + (perInstance ? (!string.IsNullOrEmpty(appId) ? "_" : "") + appId : "");
                 Func<bool> validSig = () => SignerCert.Any(signer => {
                     X509Certificate2 cert = new X509Certificate2(signer);
                     RSACryptoServiceProvider csp = (RSACryptoServiceProvider)cert.PublicKey.Key;
