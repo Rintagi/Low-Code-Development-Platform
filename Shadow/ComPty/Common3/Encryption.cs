@@ -111,7 +111,7 @@ namespace RO.Common3
             return true;
         }
 
-        public Tuple<string, string, string> EncodeLicenseString(string licenseJSON, string installID, string appId, bool encrypt, string signerFile = null)
+        public Tuple<string, string, string> EncodeLicenseString(string licenseJSON, string installID, string appId, bool encrypt, bool perInstance, string signerFile = null)
         {
             return new Tuple<string, string, string>("", "", "");
         }
