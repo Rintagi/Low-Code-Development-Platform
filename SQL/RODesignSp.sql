@@ -73334,14 +73334,17 @@ InstallID = @installID, AppID = @appID, Expiry = DATEADD(year,30,GETUTCDATE()), 
  * if ModuleCount > 0, no access to module that is not defined(other rows below)
  */
 ,ModuleName='Design', CompanyCount = -1, ProjectCount = -1, UserCount = -1, ModuleCount=-1, Include='All',Exclude='Deploy'
+,PerInstance='N'
 UNION
 SELECT InstallID = @installID, AppID = @appID, Expiry = DATEADD(day,-2,GETUTCDATE()), PermLicense = NULL, Modules = NULL
 /* no restriction other than CmnCompany/CmnProject Screen */
 ,ModuleName='Cmon', CompanyCount = NULL, ProjectCount = NULL, UserCount = NULL, ModuleCount = NULL, Include='All',Exclude='CmnCompany,CmnProject'
+,PerInstance='N'
 WHERE 1<>1
 SELECT InstallID = @installID, AppID = @appID, Expiry = DATEADD(day,-2,GETUTCDATE()), PermLicense = NULL, Modules = NULL
 /* only Test1/Test2 screen */
 ,ModuleName='Test', CompanyCount = NULL, ProjectCount = NULL, UserCount = NULL, ModuleCount=NULL, Include='Test1,Test2',Exclude=NULL
+,PerInstance='N'
 WHERE 1<>1
 
 RETURN 0
