@@ -1185,16 +1185,16 @@
             return new Tuple<string, string>(e.GetInstallID(),e.GetAppID());
         }
 
-        public static Tuple<string,string, string> EncodeLicenseString(string licenseJSON, string installID, string appId, bool encrypt, string signerFile = null)
+        public static Tuple<string,string, string> EncodeLicenseString(string licenseJSON, string installID, string appId, bool encrypt, bool perInstance, string signerFile = null)
         {
             RO.Common3.Encryption e = new RO.Common3.Encryption();
-            return e.EncodeLicenseString(licenseJSON, installID, appId, encrypt, signerFile);
+            return e.EncodeLicenseString(licenseJSON, installID, appId, encrypt, perInstance, signerFile);
         }
 
-        public static KeyValuePair<string, bool> CheckValidLicense(string moduleName, string resourceName)
+        public static Tuple<string, string, bool> CheckValidLicense(string moduleName, string resourceName)
         {
             RO.Common3.Encryption e = new RO.Common3.Encryption();
-            return new KeyValuePair<string, bool>(e.GetInstallID(), e.CheckValidLicense(moduleName,resourceName));
+            return new Tuple<string, string, bool>(e.GetInstallID(), e.GetAppID(), e.CheckValidLicense(moduleName,resourceName));
         }
 
         public static List<DataStructure> AnalyseExcelData(DataTable dtImp, int rowsToExamine)
