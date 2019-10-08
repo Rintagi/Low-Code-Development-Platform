@@ -115,9 +115,8 @@ $s.Settings.LoginMode = [Microsoft.SqlServer.Management.SMO.ServerLoginMode]::Mi
 # Make the changes
 $s.Alter()
 
-
-#Write-Output "choco install vscode -y"
-#choco install vscode -y
+Write-Output "choco install vscode -y"
+choco install vscode -y
 
 #Write-Output "choco install adobereader -y"
 #choco install adobereader -y
