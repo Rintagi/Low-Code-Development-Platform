@@ -29,7 +29,7 @@ namespace RO.Rule3
         }
         public string PrepInstall(int releaseId, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword)
         {
-            throw new NotImplementedException("Please acquire proper Rintagi license for this feature");
+            throw new NotImplementedException("This feature is not available in community version, please acquire proper Rintagi license for this feature");
         }
 
         private void DbCreate(string connStr, string pwd, string dbName)
