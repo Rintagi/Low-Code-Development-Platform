@@ -9,6 +9,7 @@ using RO.Common3;
 using RO.Common3.Data;
 using RO.Rule3;
 using RO.Web;
+
 using System.Xml;
 using System.Collections;
 using System.IO;
@@ -32,7 +33,7 @@ using System.Net;
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 public partial class AuthWs : AsmxBase
 {
-    byte systemId = 3;
+    const byte systemId = 3;
     const int screenId = 0;
     const string programName = "Auth";
 
@@ -73,6 +74,11 @@ public partial class AuthWs : AsmxBase
         public int challengeCount;
     }
 
+    private const String KEY_CacheLUser = "Cache:LUser";
+    private const String KEY_CacheLPref = "Cache:LPref";
+    private const String KEY_CacheLImpr = "Cache:LImpr";
+    private const String KEY_CacheLCurr = "Cache:LCurr";
+    
     public AuthWs()
         : base()
     {
@@ -133,119 +139,240 @@ public partial class AuthWs : AsmxBase
             return isLinkLocalAddress;
         }
     }
-    /* new stuff */
-    [WebMethod(EnableSession = false)]
-    public SerializableDictionary<string, string> GetToken(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret)
+
+    protected void SetJWTCookie(string refreshToken, bool includeHandle = true)
     {
-        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-        Dictionary<string, object> scopeContext = jss.Deserialize<Dictionary<string, object>>(scope);
-        byte? systemId = null;
-        int? companyId = null;
-        int? projectId = null;
-        short? cultureId = null;
-        int access_token_validity = 5 * 60; // 20 minutes
-        int refresh_token_validity = 60 * 60 * 24 * 14; // 14 days
+        var context = HttpContext.Current;
+        string appPath = context.Request.ApplicationPath;
+        string domain = context.Request.Url.GetLeftPart(UriPartial.Authority);
+        var Response = context.Response;
+        if (string.IsNullOrEmpty(refreshToken))
+        {
+            HttpCookie refreshTokenCookie = new HttpCookie("refresh_token", null);
+            HttpCookie tokenInCookie = new HttpCookie("tokenInCookie", null);
+            refreshTokenCookie.Expires = DateTime.UtcNow.AddSeconds(-999);
+            tokenInCookie.Expires = DateTime.UtcNow.AddSeconds(-999);
+            //Response.Headers.Add("Set-Cookie", "tokenInCookie=;Max-Age=-1");
+            Response.Cookies.Add(tokenInCookie);
+            Response.Cookies.Add(refreshTokenCookie);
+        }
+        else
+        {
+            HttpCookie refreshTokenCookie = new HttpCookie("refresh_token", refreshToken);
+            refreshTokenCookie.HttpOnly = true;
+            refreshTokenCookie.Path = appPath;
+            refreshTokenCookie.Domain = domain;
+            if (LUser != null && LUser.LoginName != null && includeHandle)
+            {
+                var sha256 = new SHA256Managed();
+                var handle = Convert.ToBase64String(sha256.ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(LUser.LoginName))).Replace("=", "_");
+                HttpCookie tokenInCookie = new HttpCookie("tokenInCookie", handle);
+                tokenInCookie.HttpOnly = false;
+                tokenInCookie.Path = appPath;
+                tokenInCookie.Domain = domain;
+                //Response.Headers.Add("Set-Cookie", string.Format("tokenInCookie={0};Path={1}", handle, appPath));
+                Response.Cookies.Add(tokenInCookie);
+            }
+            Response.Cookies.Add(refreshTokenCookie);
+        }
+    }
 
-        try { systemId = byte.Parse(scopeContext["SystemId"].ToString()); }
-        catch { };
-        try { companyId = int.Parse(scopeContext["CompanyId"].ToString()); }
-        catch { };
-        try { projectId = int.Parse(scopeContext["ProjectId"].ToString()); }
-        catch { };
-        try { cultureId = short.Parse(scopeContext["ProjectId"].ToString()); }
-        catch { };
-
+    [WebMethod(EnableSession = true)]
+    public SerializableDictionary<string, string> LoginWithSession(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret)
+    {
         var context = HttpContext.Current;
         string appPath = context.Request.ApplicationPath;
         string domain = context.Request.Url.GetLeftPart(UriPartial.Authority);
         HttpSessionState Session = HttpContext.Current.Session;
         System.Web.Caching.Cache cache = HttpContext.Current.Cache;
-        string storedToken;
-        RintagiLoginJWT loginJWT = new Func<RintagiLoginJWT>(() =>
+        string storedToken = (Session != null ? Session["RintagiLoginAccessCode"] as string : null) ?? cache[code] as string;
+        bool syncCookie = true;
+        string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
+        Func<string, string> getStoredToken = (accessCode) =>
         {
-            if (grant_type == "authorization_code")
-            {
-                storedToken = (Session != null ? Session["RintagiLoginAccessCode"] as string : null) ?? cache[code] as string;
-                try
-                {
-                    return GetLoginUsrInfo(storedToken) ?? new RintagiLoginJWT();
-                }
-                catch
-                {
-                };
-            }
-            else if (grant_type == "refresh_token")
-            {
-                try
-                {
-                    return GetLoginUsrInfo(code) ?? new RintagiLoginJWT();
-                }
-                catch { }
-            }
-            return new RintagiLoginJWT();
-        })();
-        var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        var currTime = DateTime.Now.ToUniversalTime().Subtract(utc0).TotalSeconds;
-        var nbf = loginJWT.nbf;
-        var expiredOn = loginJWT.exp;
-
-        if (currTime > nbf && currTime < expiredOn)
-        {
-            string signingKey = GetSessionSigningKey(loginJWT.iat.ToString(), loginJWT.loginId.ToString());
-            string encryptionKey = GetSessionEncryptionKey(loginJWT.iat.ToString(), loginJWT.loginId.ToString());
-            RintagiLoginToken loginToken = DecryptLoginToken(loginJWT.loginToken, encryptionKey);
-
-            LCurr = new UsrCurr(companyId ?? loginToken.CompanyId, projectId ?? loginToken.ProjectId, systemId ?? loginToken.SystemId, systemId ?? loginToken.SystemId);
-            LImpr = null;
-
-            LImpr = SetImpersonation(LImpr, loginToken.UsrId, systemId ?? loginToken.SystemId, companyId ?? loginToken.CompanyId, projectId ?? loginToken.ProjectId);
-            LUser = new LoginUsr();
-            LUser.UsrId = loginToken.UsrId;
-            LUser.DefCompanyId = loginToken.DefCompanyId;
-            LUser.DefProjectId = loginToken.DefProjectId;
-            LUser.DefSystemId = loginToken.DefSystemId;
-            LUser.UsrName = loginToken.UsrName;
-            LUser.InternalUsr = "Y";
-            LUser.CultureId = 1;
-            LUser.HasPic = false;
-            string refreshTag = Guid.NewGuid().ToString().Replace("-", "").ToLower();
-            string loginTag = Guid.NewGuid().ToString().Replace("-", "").ToLower();
-            if (ValidateScope(true))
-            {
-                string loginTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, access_token_validity, loginTag);
-                string refreshTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, refresh_token_validity, refreshTag);
-                string token_scope = string.Format("s{0}c{1}p{2}", LCurr.SystemId, LCurr.CompanyId, LCurr.ProjectId);
-                var Token = new SerializableDictionary<string, string> {
-                { "access_token", loginTokenJWT},
-                { "token_type", "Bearer"},
-                { "iat", currTime.ToString()},
-                { "expires_in", (access_token_validity - 1).ToString()},
-                { "scope", token_scope},
-                { "resources", appPath},
-                { "refresh_token", refreshTokenJWT},
-                };
-                if (Session != null)
-                {
-                    Session.Remove("RintagiLoginAccessCode");
-                    Session[refreshTag] = refreshTokenJWT;
-                }
-                return Token;
-            }
-            else
-            {
-                return new SerializableDictionary<string, string>() {
-                { "error", "access_denied"},
-                { "message", "cannot issue token"},
+            return storedToken;
         };
+        Func<LoginUsr, UsrCurr, UsrImpr, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, ignoreCache) =>
+        {
+            LUser = loginUsr;
+            LCurr = usrCurr;
+            LImpr = usrImpr;
+            return ValidateScope(ignoreCache);
+        };
+        if (grant_type == "refresh_token")
+        {
+            var refreshTokenInCookie = context.Request.Cookies["refresh_token"];
+            var tokenInCookie = context.Request.Cookies["tokenInCookie"];
+            if (tokenInCookie != null && tokenInCookie.Value == code && !string.IsNullOrEmpty(code))
+            {
+                grant_type = "refresh_token";
+                code = refreshTokenInCookie.Value;
+                syncCookie = true;
             }
         }
-        return new SerializableDictionary<string, string>() {
-                { "error", "invalid_token"},
-                { "message", "cannot issue token"},
+        var auth = GetAuthObject();
+        var token = auth.GetToken(client_id, scope, grant_type, code, code_verifier, redirect_url, client_secret, appPath, domain, getStoredToken, validateScope);
+        if (syncCookie && token != null)
+        {
+            if (Session != null)
+            {
+                Session[KEY_CacheLUser] = LUser;
+                Session[KEY_CacheLImpr] = LImpr;
+                Session[KEY_CacheLCurr] = LCurr;
+            }
+             
+            SetJWTCookie(token["refresh_token"]);
+        }
+        return token;
+    }
+    
+    /* new stuff */
+    [WebMethod(EnableSession = true)]
+    public SerializableDictionary<string, string> GetToken(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret)
+    {
+        var context = HttpContext.Current;
+        string appPath = context.Request.ApplicationPath;
+        string domain = context.Request.Url.GetLeftPart(UriPartial.Authority);
+        HttpSessionState Session = HttpContext.Current.Session;
+        System.Web.Caching.Cache cache = HttpContext.Current.Cache;
+        string storedToken = (Session != null ? Session["RintagiLoginAccessCode"] as string : null) ?? cache[code] as string;
+        bool syncCookie = true;
+        string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
+        Func<string,string> getStoredToken = (accessCode)=>{
+            return storedToken;
         };
+        Func<LoginUsr, UsrCurr, UsrImpr, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, ignoreCache) =>
+        {
+            LUser = loginUsr;
+            LCurr = usrCurr;
+            LImpr = usrImpr;
+            return ValidateScope(ignoreCache);
+        };
+
+        if (grant_type == "refresh_token")
+        {
+            var refreshTokenInCookie = context.Request.Cookies["refresh_token"];
+            var tokenInCookie = context.Request.Cookies["tokenInCookie"];
+            if (tokenInCookie != null && tokenInCookie.Value == code && !string.IsNullOrEmpty(code))
+            {
+                grant_type = "refresh_token";
+                code = refreshTokenInCookie.Value;
+                syncCookie = true;
+            }
+        }
+        var auth = GetAuthObject();
+        var token = auth.GetToken(client_id, scope, grant_type, code, code_verifier, redirect_url, client_secret, appPath, domain, getStoredToken, validateScope);
+        if (syncCookie && token != null)
+        {
+            SetJWTCookie(token["refresh_token"]);
+        }
+        return token;
+        
+        //System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+        //Dictionary<string, object> scopeContext = jss.Deserialize<Dictionary<string, object>>(scope);
+        //byte? systemId = null;
+        //int? companyId = null;
+        //int? projectId = null;
+        //short? cultureId = null;
+        //int access_token_validity = 5 * 60; // 20 minutes
+        //int refresh_token_validity = 60 * 60 * 24 * 14; // 14 days
+
+        //try { systemId = byte.Parse(scopeContext["SystemId"].ToString()); }
+        //catch { };
+        //try { companyId = int.Parse(scopeContext["CompanyId"].ToString()); }
+        //catch { };
+        //try { projectId = int.Parse(scopeContext["ProjectId"].ToString()); }
+        //catch { };
+        //try { cultureId = short.Parse(scopeContext["ProjectId"].ToString()); }
+        //catch { };
+
+        //RintagiLoginJWT loginJWT = new Func<RintagiLoginJWT>(() =>
+        //{
+        //    if (grant_type == "authorization_code")
+        //    {
+        //        storedToken = (Session != null ? Session["RintagiLoginAccessCode"] as string : null) ?? cache[code] as string;
+        //        try
+        //        {
+        //            return GetLoginUsrInfo(storedToken) ?? new RintagiLoginJWT();
+        //        }
+        //        catch
+        //        {
+        //        };
+        //    }
+        //    else if (grant_type == "refresh_token")
+        //    {
+        //        try
+        //        {
+        //            return GetLoginUsrInfo(code) ?? new RintagiLoginJWT();
+        //        }
+        //        catch { }
+        //    }
+        //    return new RintagiLoginJWT();
+        //})();
+        //var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        //var currTime = DateTime.Now.ToUniversalTime().Subtract(utc0).TotalSeconds;
+        //var nbf = loginJWT.nbf;
+        //var expiredOn = loginJWT.exp;
+        //int remainingSeconds = expiredOn - (int) currTime;
+        //var currentHandle = loginJWT.handle;
+        //bool keepRefreshToken = remainingSeconds > 120 && grant_type == "refresh_token";
+        //if (currTime > nbf && currTime < expiredOn && ValidateJWTHandle(currentHandle))
+        //{
+        //    string signingKey = GetSessionSigningKey(loginJWT.iat.ToString(), loginJWT.loginId.ToString());
+        //    string encryptionKey = GetSessionEncryptionKey(loginJWT.iat.ToString(), loginJWT.loginId.ToString());
+        //    RintagiLoginToken loginToken = DecryptLoginToken(loginJWT.loginToken, encryptionKey);
+
+        //    LCurr = new UsrCurr(companyId ?? loginToken.CompanyId, projectId ?? loginToken.ProjectId, systemId ?? loginToken.SystemId, systemId ?? loginToken.SystemId);
+        //    LImpr = null;
+
+        //    LImpr = SetImpersonation(LImpr, loginToken.UsrId, systemId ?? loginToken.SystemId, companyId ?? loginToken.CompanyId, projectId ?? loginToken.ProjectId);
+        //    LUser = new LoginUsr();
+        //    LUser.UsrId = loginToken.UsrId;
+        //    LUser.DefCompanyId = loginToken.DefCompanyId;
+        //    LUser.DefProjectId = loginToken.DefProjectId;
+        //    LUser.DefSystemId = loginToken.DefSystemId;
+        //    LUser.UsrName = loginToken.UsrName;
+        //    LUser.InternalUsr = "Y";
+        //    LUser.CultureId = 1;
+        //    LUser.HasPic = false;
+        //    string refreshTag = keepRefreshToken ? currentHandle : Guid.NewGuid().ToString().Replace("-", "").ToLower();
+        //    string loginTag = Guid.NewGuid().ToString().Replace("-", "").ToLower();
+        //    if (ValidateScope(true))
+        //    {
+        //        string loginTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, access_token_validity, loginTag);
+        //        string refreshTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, keepRefreshToken ? remainingSeconds : refresh_token_validity, refreshTag);
+        //        string token_scope = string.Format("s{0}c{1}p{2}", LCurr.SystemId, LCurr.CompanyId, LCurr.ProjectId);
+        //        var Token = new SerializableDictionary<string, string> {
+        //        { "access_token", loginTokenJWT},
+        //        { "token_type", "Bearer"},
+        //        { "iat", currTime.ToString()},
+        //        { "expires_in", (access_token_validity - 1).ToString()},
+        //        { "scope", token_scope},
+        //        { "resources", appPath},
+        //        { "refresh_token", refreshTokenJWT},
+        //        };
+        //        if (Session != null)
+        //        {
+        //            Session.Remove("RintagiLoginAccessCode");
+        //            Session[refreshTag] = refreshTokenJWT;
+        //        }
+        //        return Token;
+        //    }
+        //    else
+        //    {
+        //        return new SerializableDictionary<string, string>() {
+        //        { "error", "access_denied"},
+        //        { "message", "cannot issue token"},
+        //        };
+        //    }
+        //}
+        //return new SerializableDictionary<string, string>() {
+        //        { "error", "invalid_token"},
+        //        { "message", "cannot issue token"},
+        //};
     }
 
-    [WebMethod(EnableSession = false)]
+    [WebMethod(EnableSession = true)]
     public ApiResponse<SerializableDictionary<string, string>, object> Logout(string access_token, string refresh_token)
     {
         var context = HttpContext.Current;
@@ -262,14 +389,24 @@ public partial class AuthWs : AsmxBase
         {
             LoadUserSession();
             var cache = context.Cache;
-            cache.Remove(loginHandle);
+            if (loginHandle != null) cache.Remove(loginHandle);
             // global flush access token handle(if needed)
         }
         catch { }
+        try
+        {
+            if (context.Session != null)
+            {
+                context.Session.Abandon();
+            }
+
+        }
+        catch { }
+        SetJWTCookie(null, true);
         return new ApiResponse<SerializableDictionary<string, string>, object>() { status = "success", data = { } };
     }
 
-    [WebMethod(EnableSession = false)]
+    [WebMethod(EnableSession = true)]
     public LoginApiResponse Login(string client_id, string usrName, string password, string nonce, string code_challenge_method, string code_challenge)
     {
         try
@@ -305,14 +442,35 @@ public partial class AuthWs : AsmxBase
                     LUser = usr;
                     LCurr = new UsrCurr(usr.DefCompanyId, usr.DefProjectId, usr.DefSystemId, usr.DefSystemId);
                     LImpr = SetImpersonation(null, usr.UsrId, usr.DefSystemId, usr.DefCompanyId, usr.DefProjectId);
+                    
+                    if (Session != null && ((Session[KEY_CacheLUser] as LoginUsr) == null || (Session[KEY_CacheLUser] as LoginUsr).UsrId == 1))
+                    {
+                        try
+                        {
+                            // simulate Form Login
+                            System.Web.Security.FormsAuthenticationTicket Ticket = new System.Web.Security.FormsAuthenticationTicket(LUser.LoginName, false, 3600);
+                            System.Web.Security.FormsAuthentication.SetAuthCookie(LUser.LoginName, false);
+                            //HttpContext.Current.User = new System.Security.Principal.GenericPrincipal(new System.Web.Security.FormsIdentity(Ticket), null);
+                            Session[KEY_CacheLUser] = LUser;
+                            Session[KEY_CacheLImpr] = LImpr;
+                            Session[KEY_CacheLCurr] = LCurr;
+                        }
+                        catch { }
+                    }
                     string guid = Guid.NewGuid().ToString();
                     string appPath = HttpContext.Current.Request.ApplicationPath;
+                    string domain = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
+                    var referrer = HttpContext.Current.Request.UrlReferrer;                    
                     string jwtToken = CreateLoginJWT(LUser, usr.DefCompanyId, usr.DefProjectId, usr.DefSystemId, LCurr, LImpr, appPath, 10 * 60, guid);
                     HttpContext.Current.Cache.Add(guid, jwtToken, null
                         , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 1, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
                     var access_token = GetToken("", "", "authorization_code", guid, "", "", "");
                     var accessTokenJWT = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(access_token);
                     HttpContext.Current.Cache.Remove(attemptKey);
+                    if (referrer != null && referrer.PathAndQuery.StartsWith(appPath) && referrer.Host == domain)
+                    {
+                        SetJWTCookie(access_token["refresh_token"], true);
+                    }
                     return new LoginApiResponse() { message = "login successful", accessCode = guid, accessToken = access_token, refreshToken = null, status = "success" };
                 }
                 else
@@ -321,7 +479,7 @@ public partial class AuthWs : AsmxBase
                     //return false;
                     return new LoginApiResponse() { message = "account locked", status = "failed", error = "access_denied" };
                 }
-            }
+            }//
             else
             {
                 //(new LoginSystem()).SetLoginStatus(cLoginName.Text, false, GetVisitorIPAddress(), Provider, ProviderLoginName);
@@ -359,7 +517,7 @@ public partial class AuthWs : AsmxBase
     {
         Func<ApiResponse<SerializableDictionary<string, string>, object>> fn = () =>
         {
-            SwitchContext(LCurr.SystemId, LCurr.CompanyId, LCurr.ProjectId, false, false, false);
+            SwitchContext(LCurr.SystemId, LCurr.CompanyId, LCurr.ProjectId, false, false, false,true);
             ApiResponse<SerializableDictionary<string, string>, object> mr = new ApiResponse<SerializableDictionary<string, string>, object>();
             SerializableDictionary<string, string> usrInfo = new SerializableDictionary<string, string>();
             usrInfo["UsrId"] = LUser.UsrId.ToString();
@@ -368,6 +526,8 @@ public partial class AuthWs : AsmxBase
             usrInfo["UsrName"] = LUser.UsrName.ToString();
             usrInfo["MemberId"] = LImpr.Members;
             usrInfo["CustomerId"] = LImpr.Customers;
+            usrInfo["BorrowerId"] = LImpr.Borrowers;
+            usrInfo["LenderId"] = LImpr.Lenders;
             usrInfo["CompanyId"] = LCurr.CompanyId.ToString();
             usrInfo["ProjectId"] = LCurr.ProjectId.ToString();
             usrInfo["CultureId"] = LUser.CultureId.ToString();
@@ -383,27 +543,6 @@ public partial class AuthWs : AsmxBase
         return result;
     }
 
-    [WebMethod(EnableSession = false)]
-    public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetMenu(string scope)
-    {
-        Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-        {
-
-            try { systemId = byte.Parse(scope); }
-            catch { };
-            
-            SwitchContext(systemId , LCurr.CompanyId, LCurr.ProjectId);
-            DataTable dtMenu = _GetMenu(LCurr.SystemId, true);
-            ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
-            mr.data = DataTableToListOfObject(dtMenu, false, null);
-            mr.status = "success";
-            mr.errorMsg = "";
-            return mr;
-        };
-        var ret = ProtectedCall(RestrictedApiCall(fn, systemId, 0, "R", null));
-        return ret;
-    }
-    
     protected TimeZoneInfo CurrTimeZoneInfo()
     {
         //return Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
@@ -444,4 +583,108 @@ public partial class AuthWs : AsmxBase
         string hashString = BitConverter.ToString(hash);
         return hashString.Replace("-", "");
     }
+
+    [WebMethod(EnableSession = false)]
+    public ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>> ResetPwdEmail(string emailAddress, string reCaptchaRequest, string refCode)
+    {
+        Func<ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>> fn = () =>
+        {
+            SwitchContext(2, LCurr.CompanyId, LCurr.ProjectId);
+            ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>> mr = new ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>();
+            var Request = HttpContext.Current.Request;
+            string secret = System.Configuration.ConfigurationManager.AppSettings["ReCaptchaSecretKey"];
+            bool isHuman = true || ReCaptcha.Validate(secret, reCaptchaRequest);
+            DataTable dt = (new LoginSystem()).GetSaltedUserInfo(0, emailAddress, emailAddress);
+            Guid g = Guid.NewGuid();
+            string GuidString = g.ToString();
+            if (dt.Rows.Count > 0 && !string.IsNullOrEmpty(emailAddress))
+            {
+                var token = GetAuthObject().GetSignedToken(GuidString + emailAddress);
+                string emailCnt = "";
+                DataTable dtEmail = new AdminSystem().RunWrRule(0, "WrGetEmailCnt", LcAppConnString, LcAppPw, string.Format("<Params><templateId>{0}</templateId></Params>", "11"), LImpr, LCurr);
+                string emlSubject = dtEmail.Rows[0]["EmailSubject"].ToString();
+                string emlSenderTitle = dtEmail.Rows[0]["SenderName"].ToString();
+                string emlHtml = dtEmail.Rows[0]["EmailTempCnt"].ToString();
+
+                emailCnt = emlHtml.Replace("[[Token]]", token.Item1);
+                string from = "no-reply@fintrux.com";
+                base.SendEmail(emlSubject, emailCnt, emailAddress, from, from, emlSenderTitle, true);
+                mr.status = "success";
+                mr.errorMsg = "";
+                mr.data = new SerializableDictionary<string, string>() { { "nounce", GuidString + emailAddress }, { "ticketRight", token.Item2 } };
+                return mr;
+            }
+            else
+            {
+                mr.status = "failed";
+                mr.errorMsg = "Account not found.";
+                mr.data = null;
+                return mr;
+            }
+        };
+        var result = ProtectedCall(fn, true);
+        return result;
+    }
+
+    [WebMethod(EnableSession = false)]
+    public ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>> ResetPassword(string emailAddress, string password, string nounce, string ticketLeft, string ticketRight)
+    {
+        Func<ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>> fn = () =>
+        {
+            SwitchContext(2, LCurr.CompanyId, LCurr.ProjectId);
+            ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>> mr = new ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>();
+            bool isEmailVerified = GetAuthObject().VerifySignedToken(nounce, ticketLeft, ticketRight);
+            if (!isEmailVerified || string.IsNullOrEmpty(emailAddress))
+            {
+                mr.status = "failed";
+                mr.errorMsg = "email address not confirmed";
+                mr.data = null;
+                return mr;
+            }
+            var Request = HttpContext.Current.Request;
+
+            /* we use sso provider for temp refcode */
+            DataTable dt = (new LoginSystem()).GetSaltedUserInfo(0, emailAddress, emailAddress);
+            string resetLoginName = dt.Rows[0]["LoginName"].ToString();
+            
+            if (!string.IsNullOrEmpty(resetLoginName))
+            {
+                Credential cr = new Credential(resetLoginName, password);
+
+                if ((new LoginSystem()).UpdUsrPassword(cr, LUser, false))
+                {
+                    mr.status = "success";
+
+                    try
+                    {
+                        DataTable dtEmail = new AdminSystem().RunWrRule(0, "WrGetEmailCnt", LcAppConnString, LcAppPw, string.Format("<Params><templateId>{0}</templateId></Params>", "12"), LImpr, LCurr);
+                        string emlSubject = dtEmail.Rows[0]["EmailSubject"].ToString();
+                        string emlSenderTitle = dtEmail.Rows[0]["SenderName"].ToString();
+                        string emlHtml = dtEmail.Rows[0]["EmailTempCnt"].ToString();
+                        string from = "no-reply@fintrux.com";
+                        base.SendEmail(emlSubject, emlHtml, emailAddress, from, from, emlSenderTitle, true);
+                    }
+                    catch { }
+
+                    return mr;
+                }
+                else
+                {
+                    mr.status = "failed";
+                    mr.errorMsg = "Update User Password Failed";
+                    return mr;
+                }
+            }
+            else
+            {
+                mr.status = "failed";
+                mr.errorMsg = "Invalid Reset Request";
+                mr.data = null;
+                return mr;
+            }
+            
+        };
+        var result = ProtectedCall(fn, true);
+        return result;
+    }    
 }

@@ -338,7 +338,7 @@ namespace RO.Common3
             string myHost = System.Net.Dns.GetHostName();
             bool isValidLicense = IsLicensedFeature(moduleName,resourceName);
             return isValidLicense;
-
+            /*
             if (isValidLicense) return isValidLicense;
 
             string license = DecryptString(Config.RintagiLicense);
@@ -374,6 +374,7 @@ namespace RO.Common3
             }
 
             return false;
+            */
         }
 
         public int GetLicensedCompanyCount()
@@ -435,6 +436,7 @@ namespace RO.Common3
         }
         public bool IsLicensedFeature(string moduleName, string resourceName, Action<string> updateLicense = null)
         {
+            string _moduleName = moduleName.EndsWith("Design") ? "Design" : moduleName;
             Tuple<string,bool,string> license = DecodeLicenseString(null, updateLicense);
             Dictionary<string, Dictionary<string, string>> moduleList = DecodeLicenseDetail(license.Item1);
             Dictionary<string, string> admLicenseDetail = moduleList["Design"];
@@ -442,12 +444,12 @@ namespace RO.Common3
             int moduleCount = -1; int.TryParse(admLicenseDetail["ModuleCount"], out moduleCount);
 
             if (DateTime.Today.ToUniversalTime() <= systemValidUntil 
-                && (moduleCount == -1 || moduleList.ContainsKey(moduleName))
+                && (moduleCount == -1 || moduleList.ContainsKey(_moduleName))
                 )
             {
-                if (moduleList.ContainsKey(moduleName)) return true;
+                if (!moduleList.ContainsKey(_moduleName)) return true;
 
-                Dictionary<string, string> licenseDetail = moduleList[moduleName];
+                Dictionary<string, string> licenseDetail = moduleList[_moduleName];
                 DateTime validUntil = DateTime.Parse(licenseDetail["Expiry"]);
                 string include = licenseDetail["Include"] ?? "All";
                 string exclude = licenseDetail["Exclude"] ?? "";

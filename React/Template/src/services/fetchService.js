@@ -47,23 +47,28 @@ async function promiseWithTimeout(somePromise,timeoutInMS=0)
     }
 }
 async function fetchAPIResult(url, options={headers:{},requestOptions:{}}) {
-    const {access_token, renewAccessToken, tokenRenewed,timeout, SystemId, CompanyId, ProjectId, CultureId} = options;
+    const {access_token, getAccessToken, renewAccessToken, tokenRenewed,timeout, SystemId, CompanyId, ProjectId, CultureId} = options;
     const scope = '' + (SystemId > 0 ? SystemId : '') + ',' + (typeof CompanyId === "undefined" ? '' : CompanyId)  + ',' + (typeof ProjectId === "undefined" ? '' : ProjectId)  + ',' + (typeof CultureId === "undefined" ? '' : CultureId);
-    const requestOptions = {
-        method: 'post',
-        mode: 'cors',
-        //credentials: 'include',
-        headers: { 
-        'Content-Type': 'application/json', 
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ' +  (access_token || ""),
-        'X-Authorization': 'Bearer ' +  (access_token || ""),
-        ...(options.headers),
-        'X-RintagiScope': scope
-        },
-        ...(options.requestOptions)
-        };   
-    const fetchPromise = fetch(url,requestOptions)
+    const fetchPromise = 
+            (getAccessToken ? getAccessToken() : Promise.resolve({}))
+            .then(token=>{
+                const requestOptions = {
+                    method: 'post',
+                    mode: 'cors',
+                    //credentials: 'include',
+                    //credentials: 'same-origin',
+                    headers: { 
+                    'Content-Type': 'application/json', 
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' +  (token.access_token || ""),
+                    'X-Authorization': 'Bearer ' +  (token.access_token || ""),
+                    ...(options.headers),
+                    'X-RintagiScope': scope
+                    },
+                    ...(options.requestOptions)
+                    };   
+                return fetch(url,requestOptions);
+            })
             .then(response=>{
 //                JSON.parse('abc{');
                 let ret = response.text();
@@ -98,7 +103,7 @@ async function fetchAPIResult(url, options={headers:{},requestOptions:{}}) {
                         else {
                             return ({
                                 data: parsedRet,
-                                status: "fail",
+                                status: "failed",
                                 statusCode: response.status,
                                 errMsg: response.statusText,
                                 errType: (response.status === 401 || response.status === 403 || parsedRet.status === "access_denied") ? "access denied error" : "server error",
@@ -107,7 +112,9 @@ async function fetchAPIResult(url, options={headers:{},requestOptions:{}}) {
                     }
                 })},
                 err=>{
-                    if (renewAccessToken && !tokenRenewed) {
+                    const isTypeError = err.name === "TypeError"; // offline or other reason that failed at network level
+                    if (!isTypeError && renewAccessToken && !tokenRenewed) {
+                        // only renew(flush) token for non-network error to avoid re-login(network error can be transient)
                         return renewAccessToken()
                         .then(
                             newToken=>{
@@ -128,7 +135,7 @@ async function fetchAPIResult(url, options={headers:{},requestOptions:{}}) {
                     else {
                         return Promise.reject({
                         data: null,
-                        status: "fail",
+                        status: "failed",
                         errMsg: err.message || err.errMsg,
                         errType: "network error",
                         });
@@ -137,7 +144,7 @@ async function fetchAPIResult(url, options={headers:{},requestOptions:{}}) {
             .catch(err=>{
                 return Promise.reject({
                     data: null,
-                    status: "fail",
+                    status: "failed",
                     errMsg: err.message || err.errMsg,
                     errSubType: err.errSubType,
                     errType: err.errType || "fetch error",

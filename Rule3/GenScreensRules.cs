@@ -1792,7 +1792,6 @@ namespace RO.Rule3
 			sb.Append("using System.Web.UI;" + Environment.NewLine);
 			sb.Append("using System.Web.UI.WebControls;" + Environment.NewLine);
 			sb.Append("using System.Web.UI.HtmlControls;" + Environment.NewLine);
-			sb.Append("using System.Text.RegularExpressions;" + Environment.NewLine);
 			sb.Append("using System.Globalization;" + Environment.NewLine);
 			sb.Append("using System.Threading;" + Environment.NewLine);
             sb.Append("using System.Linq;" + Environment.NewLine);
