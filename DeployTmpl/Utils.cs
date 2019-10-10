@@ -1037,7 +1037,7 @@ namespace Install
                 cmd.CommandText = ""
                 + " IF NOT EXISTS (SELECT 1 FROM master.dbo.syslogins WHERE name = '" + @AppUsr.Replace("'", "''") + "')"
                 + " BEGIN"
-                + "  CREATE LOGIN [" + @AppUsr + "] WITH PASSWORD = '" + @AppPwd.Replace("'", "''") + "'"
+                + "  CREATE LOGIN [" + @AppUsr + "] WITH PASSWORD = '" + @AppPwd.Replace("'", "''") + "', CHECK_POLICY = OFF "
                 + "  DECLARE @userid int "
                 + "  use master "
                 + "  SELECT @userid = USER_ID('" + @AppUsr.Replace("'", "''") + "')"

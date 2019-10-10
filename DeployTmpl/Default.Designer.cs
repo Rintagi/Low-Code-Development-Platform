@@ -182,6 +182,7 @@ namespace Install
             this.gbRule.TabIndex = 50;
             this.gbRule.TabStop = false;
             this.gbRule.Text = "Rule/Project Root Tier";
+            this.gbRule.Visible = false;
             // 
             // rbRFrwork3
             // 

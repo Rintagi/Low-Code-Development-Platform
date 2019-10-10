@@ -36,7 +36,7 @@ namespace Install
             }
             else
             {
-                string[] prefixes = new string[] { "/m:", "/n:", "/v:", "/dat:", "/u:", "/p:", "/c:", "/d:", "/r", "/?", "/noauto", "/cln:", "/rul:", "/xls:", "/wsv:", "/au:", "/ap:", "/debug", "/s:", "/srv:", "/nouser", "/url:", "/nodata", "/32bit", "/sspi", "/run_sspi" };
+                string[] prefixes = new string[] { "/m:", "/n:", "/v:", "/dat:", "/u:", "/p:", "/c:", "/d:", "/r", "/?", "/noauto", "/cln:", "/rul:", "/xls:", "/wsv:", "/au:", "/ap:", "/debug", "/s:", "/srv:", "/nouser", "/url:", "/nodata", "/32bit", "/sspi", "/run_sspi", "/overwrite" };
                 CmdArgExtractor cae = new CmdArgExtractor(prefixes, '/', ':');
                 List<string> invalidArgs = cae.InvalidArgsPrefixes(args);
                 if (invalidArgs.Count > 0)
@@ -77,9 +77,9 @@ namespace Install
                 if (kv.ContainsKey("xls") && string.IsNullOrEmpty(kv["xls"])) { Usage("must provide valid xls tier location"); Environment.Exit(99); }
                 if (kv.ContainsKey("rul") && string.IsNullOrEmpty(kv["rul"])) { Usage("must provide valid rintagi root location"); Environment.Exit(99); }
 
-                string wwwroot = kv.ContainsKey("cln") ? kv["cln"] : @"c:\inetpub\wwwroot" + @"\" + kv["n"] + @"\Web\";
-                string wsvroot = kv.ContainsKey("wsv") ? kv["wsv"] : @"c:\inetpub\wwwroot" + @"\" + kv["n"] + @"Ws\";
-                string xlsroot = kv.ContainsKey("xls") ? kv["xls"] : @"c:\inetpub\wwwroot" + @"\" + @"wsxls\";
+                string wwwroot = kv.ContainsKey("cln") ? kv["cln"] : @"c:\Rintagi" + @"\" + kv["n"] + @"\Web\";
+                string wsvroot = kv.ContainsKey("wsv") ? kv["wsv"] : @"c:\Rintagi" + @"\" + kv["n"] + @"Ws\";
+                string xlsroot = kv.ContainsKey("xls") ? kv["xls"] : @"c:\Rintagi" + @"\" + @"wsxls\";
                 string rintagiroot = kv.ContainsKey("rul") ? kv["rul"] : @"c:\rintagi" + @"\" + kv["n"] + @"\";
                 string projectRoot = (kv.ContainsKey("root") ? kv["root"] : @"C:\Rintagi\") + kv["n"];
                 string serviceAccount = kv.ContainsKey("srv") ? kv["srv"] : "Network Service";
@@ -151,7 +151,7 @@ namespace Install
                             Console.WriteLine(msg); hasError = true;
                         };
                         if (kv["m"] == "n") {
-                            if (System.IO.Directory.Exists(tiers["client"]))
+                            if (System.IO.Directory.Exists(tiers["client"]) && !kv.ContainsKey("overwrite"))
                             {
                                 Console.WriteLine(string.Format("Client tier {0} already exists, delete and try again", tiers["client"])); Environment.Exit(99);
                             }
@@ -198,10 +198,10 @@ namespace Install
                 "       /s: IIS site name the app will be installed under, default to 'Default Web Site'\r\n" +
                 "       /r include rule tier\r\n" +
                 "       /url: base URL for the application, default to 'localhost' \r\n" +
-                "       /dbp: SQL server data location, default to c:\\sqldata \r\n" +
-                "       /cln: root of client tier, default to c:\\inetpub\\wwwroot\\<namespace>\\Web \r\n" +
-                "       /wsv: root of web server tier, default to c:\\inetpub\\wwwroot\\<namespace>Ws \r\n" +
-                "       /xls: root of wsxls tier, default to c:\\inetpub\\wwwroot\\wsxls \r\n" +
+                "       /dbp: SQL server data location(on SQL server), default to c:\\sqldata \r\n" +
+                "       /cln: root of client tier, default to c:\\Rintagi\\<namespace>\\Web \r\n" +
+                "       /wsv: root of web server tier, default to c:\\Rintagi\\<namespace>Ws \r\n" +
+                "       /xls: root of wsxls tier, default to c:\\Rintagi\\wsxls \r\n" +
                 "       /rul: root of rintagi project for temp file, deployment project, rule tier projects(c#) etc., default to c:\\rintagi\\<namespace> \r\n" +
                 "       /srv: app Pool running identity, default to \"Network Service\" \r\n" +
                 "       /sspi use integrated Windows Security for installation SQL access\r\n" +
@@ -209,6 +209,7 @@ namespace Install
                 "       /noauto do not auto generate sub-directory(based on current time) under the specified target directory\r\n" +
                 "       /nouser do not create login users for the new system\r\n" +
                 "       /nodata do not touch data tier\r\n" +
+                "       /overwrite install on top of existing files(for new installation)\r\n" +
                 "       /? This help message\r\n\r\n"
                 );
 

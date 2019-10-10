@@ -99,7 +99,8 @@ namespace Install
 				gbUpgrade.Visible = true;
 				gbNmspace.Visible = true;
 				gbClient.Visible = true;
-				gbWs.Visible = true;
+                gbRule.Visible = true;
+                gbWs.Visible = true;
 				gbXls.Visible = true;
 				gbBackup.Visible = true;
 				if (txtOldNS.Text == "RO")
@@ -140,7 +141,7 @@ namespace Install
 				gbWs.Visible = false;
 				gbXls.Visible = false;
 				gbRptWs.Visible = false;
-				gbRule.Visible = true;
+				gbRule.Visible = false;
 				gbData.Visible = false;
                 gbBackup.Visible = false;
 			}
