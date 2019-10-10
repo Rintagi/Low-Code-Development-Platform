@@ -263,7 +263,7 @@ class DtlList extends RintagiScreen {
         <div className='top-level-split'>
           <ModalDialog color={this.state.ModalColor} title={this.state.ModalTitle} onChange={this.OnModalReturn} ModalOpen={this.state.ModalOpen} message={this.state.ModalMsg} />
           <Row className='no-margin-right'>
-            <Col className='no-padding-right' lg='6'>
+            <Col className='no-padding-right' xs='6'>
               <div className='account'>
                 <div className='account__wrapper account-col'>
                   <div className='account__card rad-4'>
@@ -511,7 +511,7 @@ class DtlList extends RintagiScreen {
                 </div>
               </div>
             </Col>
-            {!useMobileView && <Col>
+            {!useMobileView && <Col xs={6}>
 
               {!activeSelectionVisible &&
                 targetDtlId !== '_' &&

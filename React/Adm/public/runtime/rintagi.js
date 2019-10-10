@@ -5,9 +5,12 @@
  * for reactjs configuration, make sure homepage is set to './' so everything generated is relative 
  */
 document.Rintagi = {
+  appNS:'/RO',
+  appDomainUrl:'http://RCPRO/RO', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
+  apiBasename: 'http://RCPRO/RO', // webservice url, can be relative or full http:// etc., no ending slash
   useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
   appBasename: 'RO/react/Adm', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
   appProxyBasename: 'RO/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
-  apiBasename: 'http://RND08/RO' // webservice url, can be relative or full http:// etc., no ending slash
+  systemId: 3                
 }
 

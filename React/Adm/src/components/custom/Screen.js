@@ -192,7 +192,7 @@ export default class RintagiScreen extends Component {
       const selectMstFn = (() => {
         this.props.SelectMst(keyId, altKeyId, idx);
         if (hasNoActionButtons) {
-          this.props.history.push(getEditMstPath(getNaviPath(naviBar, "Mst", "/"), keyId || '_'));
+          this.props.history.push(getEditMstPath(getNaviPath(naviBar, "MstRecord", "/"), keyId || '_'));
         }
       }).bind(this);
       if (!this.hasChangedContent) selectMstFn();
@@ -210,7 +210,7 @@ export default class RintagiScreen extends Component {
       e.preventDefault();
       const selectDtlFn = (() => {
         _this.props.SelectDtl(mst[mstKeyColumnName], dtl[dtlKeyColumeName], i);
-        const path = getEditDtlPath(getNaviPath(naviBar, "Dtl", "/"), dtl[dtlKeyColumeName] || '_');
+        const path = getEditDtlPath(getNaviPath(naviBar, "DtlRecord", "/"), dtl[dtlKeyColumeName] || '_');
         if (hasNoActionButtons) {
           _this.props.history.push(path);
         }
@@ -324,17 +324,17 @@ export default class RintagiScreen extends Component {
   /* screen button handlers */
   AddNewMst({ naviBar }) {
     return function (evt) {
-      const path = getNaviPath(naviBar, "Mst", "/");
+      const path = getNaviPath(naviBar, "MstRecord", "/");
       const x = getAddMstPath(path);
-      this.props.AddMst(null, "Mst", 0);
-      this.props.history.push(getAddMstPath(getNaviPath(naviBar, "Mst", "/")))
+      this.props.AddMst(null, "MstRecord", 0);
+      this.props.history.push(getAddMstPath(getNaviPath(naviBar, "MstRecord", "/")))
       evt.preventDefault();
     }.bind(this);
   };
   AddNewDtl({ naviBar, mstId }) {
     return function (evt) {
       this.props.AddDtl(mstId, null, -1);
-      this.props.history.push(getAddDtlPath(getNaviPath(naviBar, "Dtl", "/")));
+      this.props.history.push(getAddDtlPath(getNaviPath(naviBar, "DtlRecord", "/")));
       evt.preventDefault();
     }.bind(this);
   }
@@ -352,8 +352,8 @@ export default class RintagiScreen extends Component {
   EditHdr({ naviBar, mstId, useMobileView }) {
     return function (evt) {
       if (useMobileView) {
-        const path = getEditMstPath(getNaviPath(naviBar, "Mst", "/"), mstId);
-        this.props.history.push(getEditMstPath(getNaviPath(naviBar, "Mst", "/"), mstId));
+        const path = getEditMstPath(getNaviPath(naviBar, "MstRecord", "/"), mstId);
+        this.props.history.push(getEditMstPath(getNaviPath(naviBar, "MstRecord", "/"), mstId));
       }
       evt.preventDefault();
     }.bind(this);
@@ -361,7 +361,7 @@ export default class RintagiScreen extends Component {
   EditRow({ naviBar, mstId, dtlId, useMobileView }) {
     return function (evt) {
       if (useMobileView) {
-        this.props.history.push(getEditDtlPath(getNaviPath(naviBar, "Dtl", "/"), dtlId || '_'));
+        this.props.history.push(getEditDtlPath(getNaviPath(naviBar, "DtlRecord", "/"), dtlId || '_'));
       }
       evt.preventDefault();
     }.bind(this);

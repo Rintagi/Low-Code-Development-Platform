@@ -13,7 +13,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-size: 13px;
   line-height: 1.6;
-  background: #f3f4f8;
+  background: #fff;
 
   @include themify($themes) {
     color: themed('colorText');
