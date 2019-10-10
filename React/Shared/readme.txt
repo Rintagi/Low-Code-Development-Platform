@@ -1,0 +1,2 @@
+this directory contains shared functionalities for React apps. 
+mainly login related and global one, that is not user facing(either service layer or redux layer that is in tight coupling with server side)

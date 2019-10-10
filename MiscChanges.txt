@@ -1,0 +1,145 @@
+2019.10.9 Revised UrlRewrite rules for react development(proxying node.js npm start) in global(site, c:\inetpub\wwwroot) web.config
+                <rule name="RO_react_proxy_localhost" enabled="true" stopProcessing="true">
+                    <match url="reactproxy/?(.*)" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="false" />
+                    <action type="Rewrite" url="http://localhost:3000/{R:1}" />
+                </rule>
+                <rule name="RO_react_bundle_port_localhost" enabled="true" stopProcessing="true">
+                    <match url="^(static|runtime|img|helper)/(.*)" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="true">
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+                        <add input="{HTTP_HOST}" pattern=".*" />
+                        <add input="{HTTP_REFERER}" pattern="reactport/([0-9]+)/?" />
+                    </conditions>
+                    <action type="Rewrite" url="http://localhost:{C:1}/{R:1}/{R:2}" appendQueryString="false" />
+                </rule>
+                <rule name="RO_react_basefile_port_localhost" enabled="true" stopProcessing="true">
+                    <match url="^(manifest.json|service-worker.js|favicon.png|[^/]+\.png|[^/]+\.gif|[^/]+\.pdf)" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="true">
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+                        <add input="{HTTP_HOST}" pattern=".*" />
+                        <add input="{HTTP_REFERER}" pattern="reactport/([0-9]+)/?" />
+                    </conditions>
+                    <action type="Rewrite" url="http://localhost:{C:1}/{R:1}" appendQueryString="false" />
+                </rule>
+                <rule name="RO_react_bundle_localhost" enabled="true" stopProcessing="true">
+                    <match url="^(static|runtime|img|helper)/(.*)" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="true">
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+                        <add input="{HTTP_HOST}" pattern=".*" />
+                        <add input="{HTTP_REFERER}" pattern="reactproxy/?" />
+                    </conditions>
+                    <action type="Rewrite" url="http://localhost:3000/{R:1}/{R:2}" appendQueryString="false" />
+                </rule>
+                <rule name="RO_react_basefile_localhost" enabled="true" stopProcessing="true">
+                    <match url="^(manifest.json|service-worker.js|favicon.png|[^/]+\.png|[^/]+\.gif|[^/]+\.pdf)" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="true">
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+                        <add input="{HTTP_HOST}" pattern=".*" />
+                        <add input="{HTTP_REFERER}" pattern="reactproxy/?" />
+                    </conditions>
+                    <action type="Rewrite" url="http://localhost:3000/{R:1}" appendQueryString="false" />
+                </rule>
+
+                <rule name="RO_react_bundle_port_extdev" enabled="true" stopProcessing="true">
+                    <match url="^(static|runtime|img|helper)/(.*)" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="true">
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+                        <add input="{HTTP_HOST}" pattern=".*" />
+                        <add input="{HTTP_REFERER}" pattern="nikita/([0-9]+)/?" />
+                    </conditions>
+                    <action type="Rewrite" url="http://172.16.0.72:{C:1}/{R:1}/{R:2}" appendQueryString="false" />
+                </rule>
+                <rule name="RO_react_basefile_port_extdev" enabled="true" stopProcessing="true">
+                    <match url="^(manifest.json|service-worker.js|favicon.png|[^/]+\.png|[^/]+\.gif|[^/]+\.pdf)" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="true">
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+                        <add input="{HTTP_HOST}" pattern=".*" />
+                        <add input="{HTTP_REFERER}" pattern="nikita/([0-9]+)/?" />
+                    </conditions>
+                    <action type="Rewrite" url="http://172.16.0.72:{C:1}/{R:1}" appendQueryString="false" />
+                </rule>
+                <rule name="RO_react_bundle_extdev" enabled="true" stopProcessing="true">
+                    <match url="^(static|runtime|img|helper)/(.*)" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="true">
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+                        <add input="{HTTP_HOST}" pattern=".*" />
+                        <add input="{HTTP_REFERER}" pattern="nikita/?" />
+                    </conditions>
+                    <action type="Rewrite" url="http://172.16.0.72:3000/{R:1}/{R:2}" appendQueryString="false" />
+                </rule>
+                <rule name="RO_react_basefile_extdev" enabled="true" stopProcessing="true">
+                    <match url="^(manifest.json|service-worker.js|favicon.png|[^/]+\.png|[^/]+\.gif|[^/]+\.pdf)" />
+                    <conditions logicalGrouping="MatchAll" trackAllCaptures="true">
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+                        <add input="{HTTP_HOST}" pattern=".*" />
+                        <add input="{HTTP_REFERER}" pattern="nikita/?" />
+                    </conditions>
+                    <action type="Rewrite" url="http://172.16.0.72:3000/{R:1}" appendQueryString="false" />
+                </rule>
+
+2019.10.9 Revised UrlRewrite rules for react development(proxying node.js npm start) in application's web.config
+        <rule name="React_bundle_proxy" stopProcessing="true">
+          <match url="(static|runtime|img)/(.*)" />
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+          </conditions>
+          <action type="Rewrite" url="http://localhost:3000/{R:1}/{R:2}" />
+        </rule>
+        <rule name="React_loadcss_proxy" enabled="true" stopProcessing="true">
+          <match url="^(.+\.css|.+\.png|.+\.gif|.+\.jpg)" />
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+            <add input="{HTTP_REFERER}" pattern="reactproxy/?(.*)" />
+          </conditions>
+          <action type="Rewrite" url="http://localhost:3000/{R:1}" appendQueryString="false" logRewrittenUrl="true" />
+        </rule>
+        <rule name="React_loadcss_extdev" enabled="true" stopProcessing="true">
+          <match url="^(.+\.css|.+\.png|.+\.gif|.+\.jpg)" />
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+            <add input="{HTTP_REFERER}" pattern="extdev/?(.*)" />
+          </conditions>
+          <action type="Rewrite" url="http://172.16.0.72:3000/{R:1}" appendQueryString="false" logRewrittenUrl="true" />
+        </rule>
+        <rule name="RO_reactport_proxy" stopProcessing="true">
+          <match url="reactport(/([0-9]+))(/?.*)" />
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false" />
+          <action type="Rewrite" url="http://localhost:{R:2}{R:3}" />
+        </rule>
+        <rule name="RO_reactproxy" stopProcessing="true">
+          <match url="reactproxy/?(.*)" />
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false" />
+          <action type="Rewrite" url="http://localhost:3000/{R:1}" />
+        </rule>
+        <rule name="react_ending_slash" enabled="false" stopProcessing="true">
+          <match url="react/([^/#]*)(#?[^/]*)$" />
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+          </conditions>
+          <action type="Redirect" url="react/{R:1}/{R:2}" />
+        </rule>
+        <rule name="react_static_production" enabled="false" stopProcessing="true">
+          <match url="react/([^/]*/?)(.*)" />
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+          </conditions>
+          <action type="Rewrite" url="react/{R:1}/default.aspx" />
+        </rule>
+        <rule name="RO_extdev_port_proxy" stopProcessing="true">
+          <match url="extdev(/([0-9]+))(/?.*)" />
+          <action type="Rewrite" url="http://172.16.0.72:{R:2}{R:3}" logRewrittenUrl="true" />
+        </rule>
+        <rule name="RO_extdev_proxy" stopProcessing="true">
+          <match url="extdev/?(.*)" />
+          <action type="Rewrite" url="http://172.16.0.72:3000/{R:1}" logRewrittenUrl="true" />
+        </rule>
