@@ -5,6 +5,8 @@ import * as systemService from '../services/systemService'
 import { showNotification, dispatchWithNotification } from '../redux/Notification'
 import { switchLanguage, getCurrentLanguage } from '../helpers/formatter'
 import log from '../helpers/logger';
+import {setupRuntime} from '../helpers/utils';
+
 // action type
 const SCREEN_PREFIX = 'Login';
 export const LOGIN = getAsyncTypes(SCREEN_PREFIX, 'AUTH_LOGIN');
@@ -213,21 +215,18 @@ export function authReducer(state = initState, action) {
         ...state,
         page_saving: true,
         loading: true,
-        pass_success: undefined,
       }
     case CHANGE_PASSWORD.SUCCEEDED:
       return {
         ...state,
         page_saving: false,
         loading: false,
-        pass_success: true,
       }
     case CHANGE_PASSWORD.FAILED:
       return {
         ...state,
         page_saving: false,
         loading: false,
-        pass_success: false,
       }
     case RESET_PASSWORD_EMAIL.STARTED:
       return {

@@ -1,6 +1,8 @@
 import {fetchService} from './fetchService';
 import log from '../helpers/logger';
 import {delay} from '../helpers/utils';
+import {setupRuntime} from '../helpers/utils';
+
 var sjcl = require('sjcl');
 var Fingerprint2 = require('fingerprintjs2');
 var pbkdf2 = require('pbkdf2');
@@ -99,7 +101,6 @@ const appNS = runtimeConfig.appNS || (parsedUrl(appDomainUrl) || {}).pathname ||
 const baseUrl = apiBasename + "/webservices";
 const fetchAPIResult = fetchService.fetchAPIResult;
 const getAPIResult = fetchService.getAPIResult;
-
 
 function getSystemId(){
     return (document.Rintagi || {}).systemId;

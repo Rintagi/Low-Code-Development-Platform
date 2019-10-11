@@ -5,6 +5,8 @@ import * as systemService from '../services/systemService'
 import { showNotification, dispatchWithNotification } from '../redux/Notification'
 import { switchLanguage, getCurrentLanguage } from '../helpers/formatter'
 import log from '../helpers/logger';
+import {setupRuntime} from '../helpers/utils';
+
 // action type
 const SCREEN_PREFIX = 'Login';
 export const LOGIN = getAsyncTypes(SCREEN_PREFIX, 'AUTH_LOGIN');

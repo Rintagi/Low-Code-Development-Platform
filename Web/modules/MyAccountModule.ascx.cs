@@ -142,12 +142,12 @@ namespace RO.Web
             HttpCookie refreshTokenCookie = new HttpCookie((appPath ?? "/").Substring(1) + "_" + "tokenJS", access_token["refresh_token"]);
             tokenInCookie.HttpOnly = false;
             //tokenInCookie.Path = appPath;
-            tokenInCookie.Expires = DateTime.Now.AddMinutes(1);
+            tokenInCookie.Expires = DateTime.Now.AddMinutes(2);
             //tokenInCookie.Domain = domain;
             refreshTokenCookie.HttpOnly = false;
             //refreshTokenCookie.Path = appPath;
             //refreshTokenCookie.Domain = domain;
-            refreshTokenCookie.Expires = DateTime.Now.AddMinutes(1);
+            refreshTokenCookie.Expires = DateTime.Now.AddMinutes(2);
             Response.Cookies.Add(tokenInCookie);
             Response.Cookies.Add(refreshTokenCookie);
 
@@ -168,7 +168,10 @@ namespace RO.Web
             if (!IsPostBack)
             {
                 TwoFactorAuthenticationPanel.Visible = Config.EnableTwoFactorAuth == "Y";
-                string extAppDomainUrl = System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"] ?? Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+                string extAppDomainUrl = 
+                    !string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"]) 
+                        ? System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"] 
+                        : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
                 cAppDomainUrl.Text = extAppDomainUrl.EndsWith("/") ? extAppDomainUrl.Substring(0,extAppDomainUrl.Length - 1) : extAppDomainUrl ;
                 if (base.SystemsList == null) { base.SystemsDict = (new LoginSystem()).GetSystemsList(string.Empty, string.Empty); }    // Instantiate base.SystemsList.
                 if (!Request.IsLocal && Config.EnableSsl)

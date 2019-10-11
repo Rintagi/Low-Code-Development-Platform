@@ -1474,8 +1474,11 @@ namespace RO.Web
 			cViewer.ProcessingMode = ProcessingMode.Local;
 			cViewer.LocalReport.EnableHyperlinks = true;
 			cViewer.LocalReport.EnableExternalImages = true;
-            string urlBase = System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"] ?? Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], ""); 
-			System.Xml.XmlDocument rpt = new System.Xml.XmlDocument();
+            string urlBase =
+                !string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"])
+                    ? System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"]
+                    : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+            System.Xml.XmlDocument rpt = new System.Xml.XmlDocument();
             string fileName = Request.MapPath("reports\\" + GetReportHlp().Rows[0]["ProgramName"].ToString() + "Report.rdl");
             if (File.Exists(fileName + "c")) { rpt.Load(fileName + "c"); } else { rpt.Load(fileName); }     // Run custom-built report if exists.
 			System.Xml.XmlNamespaceManager ns = new System.Xml.XmlNamespaceManager(rpt.NameTable);
