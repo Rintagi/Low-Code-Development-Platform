@@ -73116,7 +73116,8 @@ InstallID = @installID, AppID = @appID, Expiry = DATEADD(year,30,GETUTCDATE()), 
  * if ModuleCount > 0, no access to module that is not defined(other rows below)
  */
 --,ModuleName='Design', CompanyCount = -1, ProjectCount = -1, UserCount = -1, ModuleCount=-1, Include='All',Exclude='Deploy'
-,ModuleName='Design', CompanyCount = -1, ProjectCount = -1, UserCount = -1, ModuleCount=-1, Include='All',Exclude='AdmRelease'
+--,ModuleName='Design', CompanyCount = -1, ProjectCount = -1, UserCount = -1, ModuleCount=-1, Include='All',Exclude='AdmRelease'
+,ModuleName='Design', CompanyCount = -1, ProjectCount = -1, UserCount = -1, ModuleCount=-1, Include='All',Exclude=''
 ,PerInstance='N'
 UNION
 SELECT InstallID = @installID, AppID = @appID, Expiry = DATEADD(day,-2,GETUTCDATE()), PermLicense = NULL, Modules = NULL
