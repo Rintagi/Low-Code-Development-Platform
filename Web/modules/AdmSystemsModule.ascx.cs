@@ -8,12 +8,12 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
-using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -1746,9 +1746,10 @@ string.Format(@"
  * for reactjs configuration, make sure homepage is set to './' so everything generated is relative 
  */
 document.Rintagi = {{
-  appNS:'{4}',
-  appDomainUrl:'http://{2}/{0}', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
-  apiBasename: 'http://{2}/{0}', // webservice url, can be relative or full http:// etc., no ending slash
+  appRelBase:['React','ReactProxy','ReactPort'],  // path this app is serving UNDER(can be multiple), implicitly assume they are actually /Name/, do not put begin/end slash 
+  appNS:'',
+  appDomainUrl:'', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
+  apiBasename: '', // webservice url, can be relative or full http:// etc., no ending slash
   useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
   appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
   appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
@@ -1848,6 +1849,7 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
+
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
 		}

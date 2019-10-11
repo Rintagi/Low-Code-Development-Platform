@@ -37,7 +37,10 @@ namespace RO.Web
                 }
                 else
                 {
-                    string extAppDomainUrl = System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"] ?? Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+                    string extAppDomainUrl =
+                        !string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"])
+                            ? System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"]
+                            : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
                     cAppDomainUrl.Text = extAppDomainUrl.EndsWith("/") ? extAppDomainUrl.Substring(0, extAppDomainUrl.Length - 1) : extAppDomainUrl;
                     cAppDomainUrl.Visible = true;
                     SignIn.Visible = false;

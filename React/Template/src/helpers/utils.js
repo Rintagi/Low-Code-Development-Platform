@@ -70,7 +70,7 @@ export function isTouchDevice() {
   }
 
 
-  export function getListDisplayContet(obj, column){
+export function getListDisplayContet(obj, column){
     const columnDef = column["ColumnName"] + column["TableId"];
     if(columnDef.length >0){
         if(column["DisplayMode"] === "AutoComplete" || column["DisplayMode"] === "DropDownList"){
@@ -83,3 +83,61 @@ export function isTouchDevice() {
         }
     }
 }
+
+export function parsedUrl(url) {
+    var parser = document.createElement("a");
+    parser.href = url;
+    var o = {};
+    // IE 8 and 9 dont load the attributes "protocol" and "host" in case the source URL
+    // is just a pathname, that is, "/example" and not "http://domain.com/example".
+    parser.href = parser.href;
+  
+    // IE 7 and 6 wont load "protocol" and "host" even with the above workaround,
+    // so we take the protocol/host from window.location and place them manually
+    if (parser.host === "") {
+        var newProtocolAndHost = window.location.protocol + "//" + window.location.host;
+        if (url.charAt(1) === "/") {
+            parser.href = newProtocolAndHost + url;
+        } else {
+            // the regex gets everything up to the last "/"
+            // /path/takesEverythingUpToAndIncludingTheLastForwardSlash/thisIsIgnored
+            // "/" is inserted before because IE takes it of from pathname
+            var currentFolder = ("/" + parser.pathname).match(/.*\//)[0];
+            parser.href = newProtocolAndHost + currentFolder + url;
+        }
+    }
+  
+    // copies all the properties to this object
+    var properties = ['host', 'hostname', 'hash', 'href', 'port', 'protocol', 'search'];
+    for (var i = 0, n = properties.length; i < n; i++) {
+        o[properties[i]] = parser[properties[i]];
+    }
+  
+    // pathname is special because IE takes the "/" of the starting of pathname
+    o.pathname = (parser.pathname.charAt(0) !== "/" ? "/" : "") + parser.pathname;
+    return o;
+  }
+  
+export function setupRuntime() {
+    const rintagi = document.Rintagi;
+    const location = window.location;
+    const href = location.href;
+    const pathName = location.pathname;
+    const origin = location.origin;
+    const reactBase = document.appRelBase || ['React','ReactProxy','ReactPort'];
+    const appBase = reactBase.reduce((a,b)=>{
+        const regex = new RegExp('.*((/)?' + b + '((/|#)|$))','i');
+        const m = pathName.match(regex);
+        if (!a && m && m.length > 0) {
+          return m[0].replace(m[1],'').replace(/\/$/,'');
+        }
+        else return a;
+    },undefined);
+    const apiBasename = origin + appBase;
+    const appDomainUrl = origin + appBase;
+    rintagi.apiBasename = rintagi.apiBasename || apiBasename;
+    rintagi.appDomainUrl = rintagi.appDomainUrl || appDomainUrl;
+    rintagi.appNS = rintagi.appNS || appDomainUrl.replace(origin,'') || '/';
+  };
+
+  setupRuntime();

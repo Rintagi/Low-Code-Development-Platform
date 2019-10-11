@@ -1,6 +1,7 @@
 import { fetchService } from './fetchService';
 import { authService } from './authService';
 import log from '../helpers/logger';
+import {setupRuntime} from '../helpers/utils';
 
 export const baseUrl = (document.Rintagi || {}).apiBasename + "/webservices";
 export const fetchAPIResult = fetchService.fetchAPIResult;
