@@ -8,9 +8,11 @@ Write-Output "Install windows features"
 
 #Install-WindowsFeature -Name NET-Framework-Features,NET-Framework-45-ASPNET,NET-WCF-HTTP-Activation45,Windows-Internal-Database,Web-Dir-Browsing,Web-Http-Errors,Web-Http-Redirect,Web-DAV-Publishing,Web-Http-Logging,Web-Custom-Logging,Web-Log-Libraries,Web-ODBC-Logging,Web-Request-Monitor,Web-Http-Tracing,Web-Stat-Compression,Web-Dyn-Compression,Web-Basic-Auth,Web-CertProvider,Web-IP-Security,Web-Client-Auth,Web-Url-Auth,Web-Windows-Auth,Web-Digest-Auth,Web-Cert-Auth,Web-Net-Ext45,Web-Asp-Net45,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Scripting-Tools,Web-Mgmt-Service,Web-Mgmt-Console,Web-Metabase,Web-Lgcy-Mgmt-Console,Web-Lgcy-Scripting,Web-WMI -computerName $env:computername
 
-$iisfeature = Get-WindowsOptionalFeature -Online | Where-Object {$_.FeatureName.StartsWith('IIS') -and !$_.FeatureName.Contains('Legacy') -and !$_.FeatureName.Contains('FTP') -and !$_.FeatureName.Contains('ODBC') -and !($_.FeatureName -eq "IIS-ASPNET") -and !($_.FeatureName -eq 'IIS-NetFxExtensibility') } | Select FeatureName | Sort FeatureName | Foreach {"$($_.FeatureName)"}
+$iisfeature = Get-WindowsOptionalFeature -Online | Where-Object {$_.FeatureName.StartsWith('IIS') -and !$_.FeatureName.Contains('Legacy') -and !$_.FeatureName.Contains('FTP') -and !$_.FeatureName.Contains('ODBC') -and !($_.FeatureName -eq "IIS-ASPNET") -and !($_.FeatureName -eq 'IIS-NetFxExtensibility') -and !($_.FeatureName -like 'IIS-NetFxExtensibility') -and !($_.FeatureName -eq 'IIS-WMICompatibility')} | Select FeatureName | Sort FeatureName | Foreach {"$($_.FeatureName)"}
 
 Write-Output $iisfeature
+
+Enable-WindowsOptionalFeature -Online -FeatureName @('NetFx4Extended-ASPNET45','IIS-WebServerRole','IIS-WebServer')
 
 Enable-WindowsOptionalFeature -Online -FeatureName $iisfeature
 
@@ -93,33 +95,7 @@ choco install urlrewrite -y
 Write-Output "choco install iis-arr -y"
 choco install iis-arr -y
 
-Write-Output "choco install sql-server-express -y"
-choco install sql-server-express
-Write-Output "choco install sql-server-management-studio -y"
-choco install sql-server-management-studio
+Write-Output "choco install sql-server-management-studio --version=14.0.17285.0 -y"
+choco install sql-server-management-studio --version=14.0.17285.0
 
-#configure mixed authentication mode
 
-Import-Module SQLPS
-
-$env:PSModulePath = [System.Environment]::GetEnvironmentVariable("PSModulePath","Machine")
-
-# Connect to the instance using SMO
-$s = new-object ('Microsoft.SqlServer.Management.Smo.Server') '.\SQLEXPRESS'
-[string]$nm = $s.Name
-[string]$mode = $s.Settings.LoginMode
-write-output "Instance Name: $nm"
-write-output "Login Mode: $mode"
-#Change to Mixed Mode
-$s.Settings.LoginMode = [Microsoft.SqlServer.Management.SMO.ServerLoginMode]::Mixed
-# Make the changes
-$s.Alter()
-
-Write-Output "choco install vscode -y"
-choco install vscode -y
-
-#Write-Output "choco install adobereader -y"
-#choco install adobereader -y
-
-#Write-Output "choco install googlechrome -y"
-#choco install googlechrome -y

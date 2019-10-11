@@ -292,7 +292,7 @@ StaticMeta20: (values.cCriStaticMeta20) ? values.cCriStaticMeta20 : '',
       <div className='top-level-split'>
         <ModalDialog color={this.state.ModalColor} title={this.state.ModalTitle} onChange={this.OnModalReturn} ModalOpen={this.state.ModalOpen} message={this.state.ModalMsg} />
         <Row className='no-margin-right'>
-          <Col className='no-padding-right' lg='6'>
+          <Col className='no-padding-right' xs='6'>
             <div className='account'>
               <div className='account__wrapper account-col'>
                 <div className='account__card rad-4'>
@@ -534,7 +534,7 @@ onBlur = {this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 
             </div>
           </Col>
           {!useMobileView &&
-            <Col>
+            <Col xs={6}>
               {!activeSelectionVisible &&
                 !this.state.ShowMst &&
                 <div className='empty-block'>

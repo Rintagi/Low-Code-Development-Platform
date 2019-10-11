@@ -900,7 +900,7 @@ mark {
   padding-left: 20px !important;
 }
 
-@media (min-width: 620px) and (max-width: 1059px) {
+@media (min-width: 576px) and (max-width: 1059px) {
   .rad-4 {
     border-radius: 4px !important;
   }
@@ -1084,7 +1084,7 @@ mark {
   //   background-color: rgba(237, 239, 244, 0.43) !important;
   // }
 
-  .top-level-split > .row > .col:only-child, {
+  .top-level-split > .row > .col:only-child {
     background: rgb(248, 249, 251);
     position: absolute;
     left: 0px;
@@ -1324,7 +1324,7 @@ mark {
     // margin-left: 20px !important;
     z-index: 1;
     // padding-top: 10px;
-    padding: 20px 0;
+    padding: 20px 0 0 10px;
   }
  //aaron changes
   .project-title-desktop:empty{
@@ -1988,10 +1988,44 @@ mark {
 }
 
 //aaron changes
-.account{background-color: #f9f9f9;}
+// .account{background-color: #f9f9f9;}
 .color-light-grey{color: #d8d8d8 !important;}
 .fs-20{font-size:20px !important;}
 .pl-10{padding-left: 10px;}
 .v-align-sub{vertical-align: sub;}
 .no_sidebar{padding-left: 0 !important;}
 .checkbox-btn{display: inline-block;}
+
+// Changes after Rintagi
+.col-6:only-child {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.col-6 ~ .col-6, .col-6 + .col-6 {
+  flex: 0 0 50% !important;
+  max-width: 50% !important;
+}
+
+.dashboard.container {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+@media (min-width: 1060px) {
+  .dashboard.container {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .col-6:first-child > .account > .account__wrapper > .account__card {
+    padding-left: 10px;
+  }
+}
+
+.empty-block {
+  max-width: 300px;
+  margin: 20px auto 0px auto;
+}

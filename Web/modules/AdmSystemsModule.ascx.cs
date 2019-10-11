@@ -14,7 +14,6 @@ using System.Threading;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -1728,6 +1727,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
             {
                 if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
                 string systemAbbr = cSystemAbbr45.Text;
+                string systemId = cSystemId45.Text;
                 string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
                 string appRoot = webAppRoot.Replace("/Web/", "");
                 string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
@@ -1746,12 +1746,15 @@ string.Format(@"
  * for reactjs configuration, make sure homepage is set to './' so everything generated is relative 
  */
 document.Rintagi = {{
+  appNS:'{4}',
+  appDomainUrl:'http://{2}/{0}', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
+  apiBasename: 'http://{2}/{0}', // webservice url, can be relative or full http:// etc., no ending slash
   useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
   appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
   appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
-  apiBasename: 'http://{2}/{0}' // webservice url, can be relative or full http:// etc., no ending slash
+  systemId: {3}                
 }}
-", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName);
+", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName,systemId, siteApplicationPath);
 
 
                 //if (homeDir.Contains("NetworkService"))

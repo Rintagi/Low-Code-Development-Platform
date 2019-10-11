@@ -12095,44 +12095,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmSystems87ById
- @KeyId1		nvarchar(1000)
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-SELECT @fClause = 'FROM RODesign.dbo.Systems b45'
-SELECT @sClause = 'SELECT SystemId45=b45.SystemId'
-+ ', ServerName45=b45.ServerName'
-+ ', SystemName45=b45.SystemName'
-+ ', SystemAbbr45=b45.SystemAbbr'
-+ ', SysProgram45=b45.SysProgram'
-+ ', Active45=b45.Active'
-+ ', dbAppProvider45=b45.dbAppProvider'
-+ ', dbAppServer45=b45.dbAppServer'
-+ ', dbAppDatabase45=b45.dbAppDatabase'
-+ ', dbDesDatabase45=b45.dbDesDatabase'
-+ ', dbAppUserId45=b45.dbAppUserId'
-+ ', dbAppPassword45=b45.dbAppPassword'
-+ ', dbX01Provider45=b45.dbX01Provider'
-+ ', dbX01Server45=b45.dbX01Server'
-+ ', dbX01Database45=b45.dbX01Database'
-+ ', dbX01UserId45=b45.dbX01UserId'
-+ ', dbX01Password45=b45.dbX01Password'
-+ ', dbX01Extra45=b45.dbX01Extra'
-+ ', AdminEmail45=b45.AdminEmail'
-+ ', AdminPhone45=b45.AdminPhone'
-+ ', CustServEmail45=b45.CustServEmail'
-+ ', CustServPhone45=b45.CustServPhone'
-+ ', CustServFax45=b45.CustServFax'
-+ ', WebAddress45=b45.WebAddress'
-SELECT @wClause = 'WHERE b45.SystemId' + isnull('='+@KeyId1,' is null')
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0
- 
+CREATE PROCEDURE GetAdmSystems87ById @KeyId1		nvarchar(1000)/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)SELECT @fClause = 'FROM RODesign.dbo.Systems b45'SELECT @sClause = 'SELECT SystemId45=b45.SystemId'+ ', ServerName45=b45.ServerName'+ ', SystemName45=b45.SystemName'+ ', SystemAbbr45=b45.SystemAbbr'+ ', SysProgram45=b45.SysProgram'+ ', Active45=b45.Active'+ ', dbAppProvider45=b45.dbAppProvider'+ ', dbAppServer45=b45.dbAppServer'+ ', dbAppDatabase45=b45.dbAppDatabase'+ ', dbDesDatabase45=b45.dbDesDatabase'+ ', dbAppUserId45=b45.dbAppUserId'+ ', dbAppPassword45=b45.dbAppPassword'+ ', dbX01Provider45=b45.dbX01Provider'+ ', dbX01Server45=b45.dbX01Server'+ ', dbX01Database45=b45.dbX01Database'+ ', dbX01UserId45=b45.dbX01UserId'+ ', dbX01Password45=b45.dbX01Password'+ ', dbX01Extra45=b45.dbX01Extra'+ ', AdminEmail45=b45.AdminEmail'+ ', AdminPhone45=b45.AdminPhone'+ ', CustServEmail45=b45.CustServEmail'+ ', CustServPhone45=b45.CustServPhone'+ ', CustServFax45=b45.CustServFax'+ ', WebAddress45=b45.WebAddress'SELECT @wClause = 'WHERE b45.SystemId' + isnull('='+@KeyId1,' is null')EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -44731,115 +44694,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmSystems87
- @useGlobalFilter	char(1)
-,@screenId		int
-,@Usrs			varchar(1000)
-,@RowAuthoritys		varchar(1000)
-,@Customers		varchar(1000)
-,@Vendors		varchar(1000)
-,@Members		varchar(1000)
-,@Investors		varchar(1000)
-,@Agents		varchar(1000)
-,@Brokers		varchar(1000)
-,@UsrGroups		varchar(1000)
-,@Companys		varchar(1000)
-,@Projects		varchar(1000)
-,@Cultures		varchar(1000)
-,@Borrowers		varchar(1000)
-,@Guarantors		varchar(1000)
-,@Lenders		varchar(1000)
-,@Key		nvarchar(500)
-,@FilterTxt		nvarchar(500)
-,@screenFilterId	int
-,@currCompanyId	int
-,@currProjectId	int
-,@topN	smallint = null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@filterClause		nvarchar(2000)
-	,@bUsr		char(1)
-	,@UsrId			int
-	,@tClause		nvarchar(max)
-	,@cc		varchar(max)
-	,@rr		varchar(1000)
-	,@pp		varchar(1000)
-	,@SelUsr		char(1)
-	,@SelUsrGroup		char(1)
-	,@SelCulture		char(1)
-	,@SelCompany		char(1)
-	,@SelAgent		char(1)
-	,@SelBroker		char(1)
-	,@SelCustomer		char(1)
-	,@SelInvestor		char(1)
-	,@SelMember		char(1)
-	,@SelVendor		char(1)
-	,@SelLender		char(1)
-	,@SelBorrower		char(1)
-	,@SelGuarantor		char(1)
-	,@SelProject		char(1)
-	,@RowAuthorityId	smallint
-SELECT @fClause='FROM RODesign.dbo.Systems b45 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SystemId45Text=b45.SystemId'
-+ ', SystemId45=b45.SystemId'
-+ ', ServerName45=b45.ServerName'
-+ ', SystemName45=b45.SystemName'
-+ ', SystemAbbr45=b45.SystemAbbr'
-+ ', SysProgram45=b45.SysProgram'
-+ ', Active45=b45.Active'
-+ ', dbAppProvider45=b45.dbAppProvider'
-+ ', dbAppServer45=b45.dbAppServer'
-+ ', dbAppDatabase45=b45.dbAppDatabase'
-+ ', dbDesDatabase45=b45.dbDesDatabase'
-+ ', dbAppUserId45=b45.dbAppUserId'
-+ ', dbAppPassword45=b45.dbAppPassword'
-+ ', dbX01Provider45=b45.dbX01Provider'
-+ ', dbX01Server45=b45.dbX01Server'
-+ ', dbX01Database45=b45.dbX01Database'
-+ ', dbX01UserId45=b45.dbX01UserId'
-+ ', dbX01Password45=b45.dbX01Password'
-+ ', dbX01Extra45=b45.dbX01Extra'
-+ ', AdminEmail45=b45.AdminEmail'
-+ ', AdminPhone45=b45.AdminPhone'
-+ ', CustServEmail45=b45.CustServEmail'
-+ ', CustServPhone45=b45.CustServPhone'
-+ ', CustServFax45=b45.CustServFax'
-+ ', WebAddress45=b45.WebAddress'
-SELECT @oClause='ORDER BY b45.SystemId'
-SELECT @wClause='WHERE 1=1', @bUsr='Y'
-SELECT @pp = @Usrs
-WHILE @pp <> '' AND datalength(@pp) > 0
-BEGIN
-	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT
-	IF @bUsr='Y'
-	BEGIN
-		SELECT @bUsr='N'
-		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
-		IF @useGlobalFilter='Y'
-		BEGIN
-			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
-			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b45.')
-			ELSE
-			BEGIN
-				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'
-				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b45.')
-			END
-		END
-	END
-END
-SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b45.SystemId = ' + @key + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0
- 
+CREATE PROCEDURE GetExpAdmSystems87 @useGlobalFilter	char(1),@screenId		int,@Usrs			varchar(1000),@RowAuthoritys		varchar(1000),@Customers		varchar(1000),@Vendors		varchar(1000),@Members		varchar(1000),@Investors		varchar(1000),@Agents		varchar(1000),@Brokers		varchar(1000),@UsrGroups		varchar(1000),@Companys		varchar(1000),@Projects		varchar(1000),@Cultures		varchar(1000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@Key		nvarchar(500),@FilterTxt		nvarchar(500),@screenFilterId	int,@currCompanyId	int,@currProjectId	int,@topN	smallint = null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@filterClause		nvarchar(2000)	,@bUsr		char(1)	,@UsrId			int	,@tClause		nvarchar(max)	,@cc		varchar(max)	,@rr		varchar(1000)	,@pp		varchar(1000)	,@SelUsr		char(1)	,@SelUsrGroup		char(1)	,@SelCulture		char(1)	,@SelCompany		char(1)	,@SelAgent		char(1)	,@SelBroker		char(1)	,@SelCustomer		char(1)	,@SelInvestor		char(1)	,@SelMember		char(1)	,@SelVendor		char(1)	,@SelLender		char(1)	,@SelBorrower		char(1)	,@SelGuarantor		char(1)	,@SelProject		char(1)	,@RowAuthorityId	smallintSELECT @fClause='FROM RODesign.dbo.Systems b45 (NOLOCK)'SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SystemId45Text=b45.SystemId'+ ', SystemId45=b45.SystemId'+ ', ServerName45=b45.ServerName'+ ', SystemName45=b45.SystemName'+ ', SystemAbbr45=b45.SystemAbbr'+ ', SysProgram45=b45.SysProgram'+ ', Active45=b45.Active'+ ', dbAppProvider45=b45.dbAppProvider'+ ', dbAppServer45=b45.dbAppServer'+ ', dbAppDatabase45=b45.dbAppDatabase'+ ', dbDesDatabase45=b45.dbDesDatabase'+ ', dbAppUserId45=b45.dbAppUserId'+ ', dbAppPassword45=b45.dbAppPassword'+ ', dbX01Provider45=b45.dbX01Provider'+ ', dbX01Server45=b45.dbX01Server'+ ', dbX01Database45=b45.dbX01Database'+ ', dbX01UserId45=b45.dbX01UserId'+ ', dbX01Password45=b45.dbX01Password'+ ', dbX01Extra45=b45.dbX01Extra'+ ', AdminEmail45=b45.AdminEmail'+ ', AdminPhone45=b45.AdminPhone'+ ', CustServEmail45=b45.CustServEmail'+ ', CustServPhone45=b45.CustServPhone'+ ', CustServFax45=b45.CustServFax'+ ', WebAddress45=b45.WebAddress'SELECT @oClause='ORDER BY b45.SystemId'SELECT @wClause='WHERE 1=1', @bUsr='Y'SELECT @pp = @UsrsWHILE @pp <> '' AND datalength(@pp) > 0BEGIN	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT	IF @bUsr='Y'	BEGIN		SELECT @bUsr='N'		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause		IF @useGlobalFilter='Y'		BEGIN			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b45.')			ELSE			BEGIN				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b45.')			END		END	ENDENDSELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'IF @key is not null SELECT @wClause = @wClause + ' AND (b45.SystemId = ' + @key + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -54732,94 +54587,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmSystems87
- @useGlobalFilter	char(1)
-,@screenId		int
-,@Usrs			varchar(1000)
-,@RowAuthoritys		varchar(1000)
-,@Customers		varchar(1000)
-,@Vendors		varchar(1000)
-,@Members		varchar(1000)
-,@Investors		varchar(1000)
-,@Agents		varchar(1000)
-,@Brokers		varchar(1000)
-,@UsrGroups		varchar(1000)
-,@Companys		varchar(1000)
-,@Projects		varchar(1000)
-,@Cultures		varchar(1000)
-,@Borrowers		varchar(1000)
-,@Guarantors		varchar(1000)
-,@Lenders		varchar(1000)
-,@Key		nvarchar(500)
-,@FilterTxt		nvarchar(500)
-,@screenFilterId	int
-,@currCompanyId	int
-,@currProjectId	int
-,@topN	smallint = null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@filterClause		nvarchar(2000)
-	,@bUsr		char(1)
-	,@UsrId			int
-	,@tClause		nvarchar(max)
-	,@cc		varchar(max)
-	,@rr		varchar(1000)
-	,@pp		varchar(1000)
-	,@SelUsr		char(1)
-	,@SelUsrGroup		char(1)
-	,@SelCulture		char(1)
-	,@SelCompany		char(1)
-	,@SelAgent		char(1)
-	,@SelBroker		char(1)
-	,@SelCustomer		char(1)
-	,@SelInvestor		char(1)
-	,@SelMember		char(1)
-	,@SelVendor		char(1)
-	,@SelLender		char(1)
-	,@SelBorrower		char(1)
-	,@SelGuarantor		char(1)
-	,@SelProject		char(1)
-	,@RowAuthorityId	smallint
-SELECT @fClause='FROM RODesign.dbo.Systems b45 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SystemId45=b45.SystemId, SystemId45Text=b45.SystemName, SystemId45Dtl=b45.SystemId, b45.Active, MatchCount=COUNT(1) OVER ()'
-SELECT @oClause='ORDER BY b45.Active DESC,b45.SystemName'
-SELECT @wClause='WHERE 1=1', @bUsr='Y'
-SELECT @pp = @Usrs
-WHILE @pp <> '' AND datalength(@pp) > 0
-BEGIN
-	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT
-	IF @bUsr='Y'
-	BEGIN
-		SELECT @bUsr='N'
-		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
-		IF @useGlobalFilter='Y'
-		BEGIN
-			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
-			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b45.')
-			ELSE
-			BEGIN
-				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'
-				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b45.')
-			END
-		END
-	END
-END
-SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b45.SystemId = ' + @key + ')'
-
-SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
-IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b45.SystemName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b45.SystemId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0
- 
+CREATE PROCEDURE GetLisAdmSystems87 @useGlobalFilter	char(1),@screenId		int,@Usrs			varchar(1000),@RowAuthoritys		varchar(1000),@Customers		varchar(1000),@Vendors		varchar(1000),@Members		varchar(1000),@Investors		varchar(1000),@Agents		varchar(1000),@Brokers		varchar(1000),@UsrGroups		varchar(1000),@Companys		varchar(1000),@Projects		varchar(1000),@Cultures		varchar(1000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@Key		nvarchar(500),@FilterTxt		nvarchar(500),@screenFilterId	int,@currCompanyId	int,@currProjectId	int,@topN	smallint = null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@filterClause		nvarchar(2000)	,@bUsr		char(1)	,@UsrId			int	,@tClause		nvarchar(max)	,@cc		varchar(max)	,@rr		varchar(1000)	,@pp		varchar(1000)	,@SelUsr		char(1)	,@SelUsrGroup		char(1)	,@SelCulture		char(1)	,@SelCompany		char(1)	,@SelAgent		char(1)	,@SelBroker		char(1)	,@SelCustomer		char(1)	,@SelInvestor		char(1)	,@SelMember		char(1)	,@SelVendor		char(1)	,@SelLender		char(1)	,@SelBorrower		char(1)	,@SelGuarantor		char(1)	,@SelProject		char(1)	,@RowAuthorityId	smallintSELECT @fClause='FROM RODesign.dbo.Systems b45 (NOLOCK)'SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SystemId45=b45.SystemId, SystemId45Text=b45.SystemName, SystemId45Dtl=b45.SystemId, b45.Active, MatchCount=COUNT(1) OVER ()'SELECT @oClause='ORDER BY b45.Active DESC,b45.SystemName'SELECT @wClause='WHERE 1=1', @bUsr='Y'SELECT @pp = @UsrsWHILE @pp <> '' AND datalength(@pp) > 0BEGIN	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT	IF @bUsr='Y'	BEGIN		SELECT @bUsr='N'		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause		IF @useGlobalFilter='Y'		BEGIN			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b45.')			ELSE			BEGIN				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b45.')			END		END	ENDENDSELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'IF @key is not null SELECT @wClause = @wClause + ' AND (b45.SystemId = ' + @key + ')'SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b45.SystemName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b45.SystemId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') 'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -55879,7 +55647,21 @@ BEGIN
 		+CONVERT(binary(4),substring(@UsrPassword,17,4)^UsrId) 
 		OR R.UsrPassword = @UsrPassword))
 		OR
-		(@ProviderCd IS NOT NULL AND EXISTS(SELECT 1 FROM dbo.UsrProvider WHERE UsrId = r.UsrId AND LoginName = @LoginName AND ProviderCd = @ProviderCd) AND (ISNULL(@SelectedLoginName,'') = '' OR LoginName = @SelectedLoginName))
+		(@ProviderCd IS NOT NULL 
+		AND 
+		(
+		(EXISTS(SELECT 1 FROM dbo.UsrProvider WHERE UsrId = r.UsrId AND LoginName = @LoginName AND ProviderCd = @ProviderCd) 
+		AND (ISNULL(@SelectedLoginName,'') = '' OR LoginName = @SelectedLoginName)
+		)
+		/* added for merge login with react and asp.net */
+		OR
+		(
+		@ProviderCd = 'S' -- SELF basically React side login of our own site
+		AND
+		@LoginName = CONVERT(nvarchar,r.UsrId) -- UsrId is the login name in this case
+		)
+		)
+		)
 		)
 		AND R.Active = 'Y'
 END
@@ -73333,7 +73115,9 @@ InstallID = @installID, AppID = @appID, Expiry = DATEADD(year,30,GETUTCDATE()), 
  * if ModuleCount = -1, full access to all modules if not defined but restriction if defined(other rows below) would be honoured
  * if ModuleCount > 0, no access to module that is not defined(other rows below)
  */
-,ModuleName='Design', CompanyCount = -1, ProjectCount = -1, UserCount = -1, ModuleCount=-1, Include='All',Exclude='Deploy'
+--,ModuleName='Design', CompanyCount = -1, ProjectCount = -1, UserCount = -1, ModuleCount=-1, Include='All',Exclude='Deploy'
+--,ModuleName='Design', CompanyCount = -1, ProjectCount = -1, UserCount = -1, ModuleCount=-1, Include='All',Exclude='AdmRelease'
+,ModuleName='Design', CompanyCount = -1, ProjectCount = -1, UserCount = -1, ModuleCount=-1, Include='All',Exclude=''
 ,PerInstance='N'
 UNION
 SELECT InstallID = @installID, AppID = @appID, Expiry = DATEADD(day,-2,GETUTCDATE()), PermLicense = NULL, Modules = NULL

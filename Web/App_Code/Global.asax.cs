@@ -33,7 +33,7 @@ namespace RO
 			{
 				foreach (string name in cookies)
 				{
-					HttpCookie cookie = cookies[name]; cookie.HttpOnly = (Config.CookieHttpOnly == "false") ? false : true;
+                    HttpCookie cookie = cookies[name]; cookie.HttpOnly = (Config.CookieHttpOnly == "false" || name.EndsWith("JS")) ? false : true;
 				}
 			}
 		}
