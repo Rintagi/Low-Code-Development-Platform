@@ -1,0 +1,26 @@
+.list{
+
+  &.list--icon {
+    list-style: none;
+    padding: 0;
+
+    span {
+      margin-right: 8px;
+    }
+
+    &.list--icon-green {
+
+      span {
+        color: $color-accent;
+      }
+    }
+  }
+
+  li{
+    margin-bottom: 10px;
+
+    &:last-child{
+      margin-bottom: 0;
+    }
+  }
+}

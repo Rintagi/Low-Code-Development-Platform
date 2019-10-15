@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<appcmd>
+
+    <CONFIG CONFIG.SECTION="system.webServer/rewrite/rules" path="MACHINE/WEBROOT/APPHOST/Default Web Site/FT" overrideMode="Inherit" locked="false">
+
+        <system.webServer-rewrite-rules>
+            <rule name="FT_react_loan_static">
+
+                <match url="react/loan/?(.*)" />
+
+                <conditions>
+
+                    <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+
+                </conditions>
+
+                <serverVariables>
+
+                </serverVariables>
+
+                <action type="Rewrite" url="react/loan/index.html" />
+
+            </rule>
+
+        </system.webServer-rewrite-rules>
+
+    </CONFIG>
+
+</appcmd>

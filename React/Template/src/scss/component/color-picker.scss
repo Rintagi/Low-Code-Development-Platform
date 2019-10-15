@@ -1,0 +1,43 @@
+.color-picker {
+
+  .color-picker__button {
+    height: 32px;
+    width: 160px;
+    display: flex;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    @include themify($themes) {
+      border: 1px solid themed('colorFieldsBorder');
+    }
+
+    &.active {
+      border-color: $color-accent;
+    }
+  }
+
+  .color-picker__color {
+    margin: auto auto auto 0;
+    padding-left: 10px;
+  }
+
+  .color-picker__color-view {
+    height: 100%;
+    width: 50px;
+  }
+}
+
+.color-picker__popover.popover {
+  width: auto;
+
+  .block-picker {
+
+    & > div:first-child {
+      display: none;
+    }
+  }
+
+  .block-picker, .chrome-picker, .sketch-picker {
+    box-shadow: none !important;
+  }
+}

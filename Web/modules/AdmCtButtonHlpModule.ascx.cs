@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -39,6 +42,7 @@ namespace RO.Common3.Data
 			columns.Add("CultureId131", typeof(string));
 			columns.Add("ButtonTypeId131", typeof(string));
 			columns.Add("ButtonName131", typeof(string));
+			columns.Add("ButtonLongNm131", typeof(string));
 			columns.Add("ButtonToolTip131", typeof(string));
 			return dt;
 		}
@@ -251,7 +255,7 @@ namespace RO.Web
 				base.CTar = new CurrTar(true, row);
 				if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && (new AdminSystem()).IsRegenNeeded(string.Empty,81,0,0,LcSysConnString,LcAppPw))
 				{
-					(new GenScreensSystem()).CreateProgram(81, "Button Default", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
+					(new GenScreensSystem()).CreateProgram(81, "Button Default ( -- no react gen -- )", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
 					Response.Redirect(Request.RawUrl);
 				}
 			}
@@ -560,6 +564,7 @@ namespace RO.Web
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[2]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[2]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[3]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[4]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[5]["ColumnHeader"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -568,7 +573,8 @@ namespace RO.Web
 						if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId131"].ToString() + (char)9 + drv["CultureId131Text"].ToString() + (char)9);}
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonTypeId131"].ToString() + (char)9 + drv["ButtonTypeId131Text"].ToString() + (char)9);}
 						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonName131"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonToolTip131"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonLongNm131"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ButtonToolTip131"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmCtButtonHlp.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
@@ -622,6 +628,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -636,6 +643,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[2]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[3]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[4]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[5]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -662,7 +670,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId131Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonTypeId131Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonName131"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonToolTip131"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonLongNm131"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonToolTip131"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1481,7 +1490,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					string rf = string.Empty;
 					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 0, cFindFilter.SelectedValue) + ")"; }
-					if (rf != string.Empty) { rf = "((" + rf + "  or _NewRow = 'Y' ))"; }
+					if (rf != string.Empty) { rf = "((" + rf + " or _NewRow = 'Y' ))"; }
 					dv.RowFilter = rf;
 					ViewState["_RowFilter"] = rf;
 					GotoPage(0); cAdmCtButtonHlpGrid_DataBind(dv);
@@ -1815,7 +1824,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				bool bHasErr = false;
 				for ( int iRow = iStart; iRow < rows.Count; iRow++ )
 				{
-					if (rows[iRow][1].ToString() == string.Empty && rows[iRow][2].ToString() == string.Empty && rows[iRow][3].ToString() == string.Empty && rows[iRow][4].ToString() == string.Empty && rows[iRow][5].ToString() == string.Empty && rows[iRow][6].ToString() == string.Empty) {idel = idel + 1;}
+					if (rows[iRow][1].ToString() == string.Empty && rows[iRow][2].ToString() == string.Empty && rows[iRow][3].ToString() == string.Empty && rows[iRow][4].ToString() == string.Empty && rows[iRow][5].ToString() == string.Empty && rows[iRow][6].ToString() == string.Empty && rows[iRow][7].ToString() == string.Empty) {idel = idel + 1;}
 					else
 					{
 						dt.Rows.Add(dt.NewRow());
@@ -1954,6 +1963,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 				cc = ((WebControl)lvi.FindControl("cButtonName131"));
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cButtonLongNm131"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 				cc = ((WebControl)lvi.FindControl("cButtonToolTip131"));
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 		}
@@ -1963,6 +1974,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			// *** GridItemDataBound (before) Web Rule End *** //
 			DataTable dt = (DataTable)Session[KEY_dtAdmCtButtonHlpGrid];
 			bool isEditItem = false;
+			bool isImage = true;
+			bool hasImageContent = false;
 			DataView dvAdmCtButtonHlpGrid = dt != null ? dt.DefaultView : null;
 			if (cAdmCtButtonHlpGrid.EditIndex > -1 && GetDataItemIndex(cAdmCtButtonHlpGrid.EditIndex) == e.Item.DataItemIndex)
 			{
@@ -1996,6 +2009,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (cAdmCtButtonHlpGrid.EditIndex > -1 && GetDataItemIndex(cAdmCtButtonHlpGrid.EditIndex) == e.Item.DataItemIndex)
 			{
 			}
+			else
+			{
+			}
 			// *** GridItemDataBound (after) Web Rule End *** //
 		}
 
@@ -2027,10 +2043,17 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cAdmCtButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ButtonName131", SortDirection.Ascending));
 		}
 
-		protected void cButtonToolTip131hl_Click(object sender, System.EventArgs e)
+		protected void cButtonLongNm131hl_Click(object sender, System.EventArgs e)
 		{
 			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "4") { Session.Remove(KEY_lastSortUrl); }
-			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "4"; Session[KEY_lastSortExp] = "ButtonToolTip131";Session[KEY_lastSortImg] = "cButtonToolTip131hi";
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "4"; Session[KEY_lastSortExp] = "ButtonLongNm131";Session[KEY_lastSortImg] = "cButtonLongNm131hi";
+			cAdmCtButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ButtonLongNm131", SortDirection.Ascending));
+		}
+
+		protected void cButtonToolTip131hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "5") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "5"; Session[KEY_lastSortExp] = "ButtonToolTip131";Session[KEY_lastSortImg] = "cButtonToolTip131hi";
 			cAdmCtButtonHlpGrid_OnSorting(sender, new ListViewSortEventArgs("ButtonToolTip131", SortDirection.Ascending));
 		}
 
@@ -2080,8 +2103,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		    if (ml != null) { ml.Text = ColumnHeaderText(2); }
 		    ml = lvi.FindControl("cButtonName131ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(3); }
-		    ml = lvi.FindControl("cButtonToolTip131ml") as Label;
+		    ml = lvi.FindControl("cButtonLongNm131ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(4); }
+		    ml = lvi.FindControl("cButtonToolTip131ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(5); }
 		}
 
 		protected void GridFill(ListViewItem lvi, DataTable dt, DataRow dr, bool bInsert)
@@ -2120,6 +2145,11 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (tb != null)
 			{
 				if (tb.Text != string.Empty) {dr["ButtonName131"] = tb.Text;} else {dr["ButtonName131"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cButtonLongNm131");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["ButtonLongNm131"] = tb.Text;} else {dr["ButtonLongNm131"] = System.DBNull.Value;}
 			}
 			tb = (TextBox)lvi.FindControl("cButtonToolTip131");
 			if (tb != null)
@@ -2309,6 +2339,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			dr["CultureId131"] = System.Data.OleDb.OleDbType.Numeric.ToString();
 			dr["ButtonTypeId131"] = System.Data.OleDb.OleDbType.Numeric.ToString();
 			dr["ButtonName131"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["ButtonLongNm131"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
 			dr["ButtonToolTip131"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
 			return dr;
 		}
@@ -2319,6 +2350,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			dr["CultureId131"] = "AutoComplete";
 			dr["ButtonTypeId131"] = "AutoComplete";
 			dr["ButtonName131"] = "TextBox";
+			dr["ButtonLongNm131"] = "TextBox";
 			dr["ButtonToolTip131"] = "TextBox";
 			return dr;
 		}
@@ -2332,6 +2364,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				dr["CultureId131"] = drv["CultureId131"];
 				dr["ButtonTypeId131"] = drv["ButtonTypeId131"];
 				dr["ButtonName131"] = drv["ButtonName131"].ToString().Trim();
+				dr["ButtonLongNm131"] = drv["ButtonLongNm131"].ToString().Trim();
 				dr["ButtonToolTip131"] = drv["ButtonToolTip131"].ToString().Trim();
 			}
 			return dr;
@@ -2353,6 +2386,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			hi = (System.Web.UI.WebControls.Image)cAdmCtButtonHlpGrid.FindControl("cCultureId131hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmCtButtonHlpGrid.FindControl("cButtonTypeId131hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmCtButtonHlpGrid.FindControl("cButtonName131hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmCtButtonHlpGrid.FindControl("cButtonLongNm131hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmCtButtonHlpGrid.FindControl("cButtonToolTip131hi"); if (hi != null) { hi.Visible = false; }
 			if (Session[KEY_lastSortImg] != null)
 			{
@@ -2363,6 +2397,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			IgnoreHeaderConfirm((LinkButton)cAdmCtButtonHlpGrid.FindControl("cCultureId131hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmCtButtonHlpGrid.FindControl("cButtonTypeId131hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmCtButtonHlpGrid.FindControl("cButtonName131hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmCtButtonHlpGrid.FindControl("cButtonLongNm131hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmCtButtonHlpGrid.FindControl("cButtonToolTip131hl"));
 		}
 
@@ -2406,8 +2441,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		    if (lb != null) { lb.Text = ColumnHeaderText(2); lb.ToolTip = ColumnToolTip(2); lb.Parent.Visible = GridColumnVisible(2); }
 		    lb = cAdmCtButtonHlpGrid.FindControl("cButtonName131hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(3); lb.ToolTip = ColumnToolTip(3); lb.Parent.Visible = GridColumnVisible(3); }
-		    lb = cAdmCtButtonHlpGrid.FindControl("cButtonToolTip131hl") as LinkButton;
+		    lb = cAdmCtButtonHlpGrid.FindControl("cButtonLongNm131hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(4); lb.ToolTip = ColumnToolTip(4); lb.Parent.Visible = GridColumnVisible(4); }
+		    lb = cAdmCtButtonHlpGrid.FindControl("cButtonToolTip131hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(5); lb.ToolTip = ColumnToolTip(5); lb.Parent.Visible = GridColumnVisible(5); }
 		    // Hide DeleteAll:
 			DataTable dtAuthRow = GetAuthRow();
 			if (dtAuthRow != null)
@@ -2428,8 +2465,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(2); }
 		    gc = cAdmCtButtonHlpGrid.FindControl("cButtonName131fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(3); }
-		    gc = cAdmCtButtonHlpGrid.FindControl("cButtonToolTip131fl") as Label;
+		    gc = cAdmCtButtonHlpGrid.FindControl("cButtonLongNm131fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(4); }
+		    gc = cAdmCtButtonHlpGrid.FindControl("cButtonToolTip131fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(5); }
 		}
 
 		protected void cbPostBack(object sender, System.EventArgs e)

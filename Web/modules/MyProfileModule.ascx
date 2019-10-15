@@ -1,5 +1,26 @@
 <%@ Control Language="c#" Inherits="RO.Web.MyProfileModule" CodeFile="MyProfileModule.ascx.cs" CodeFileBaseClass="RO.Web.ModuleBase" %>
 <script type="text/javascript" lang="javascript">
+    var myMachine = null;
+    function mkFingerprint(components) {
+        components.sort();
+        var a = JSON.stringify(components);
+        var sha256 = new sjcl.hash.sha256();
+        sha256.update(a);
+        var h = btoa(sha256.finalize());
+        myMachine = h;
+    }
+
+    if (window.requestIdleCallback) {
+        requestIdleCallback(function () {
+            Fingerprint2.get(mkFingerprint)
+        })
+    } else {
+        setTimeout(function () {
+            Fingerprint2.get(mkFingerprint)
+        }, 500)
+    }
+
+
     function slide(e) {
         var elementLeft = jQuery(e).position().left;
         var overlay = null;;
@@ -31,9 +52,42 @@
             $('#ActionPanel').dialog('close');
         }
     }
+
+    function signOut(e) {
+        var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val();
+        eraseUserHandle(appDomainUrl);
+        return true;
+    }
+
+    Sys.Application.add_load(function () {
+//        debugger;
+        var rememberToken = function () {
+            var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val();            
+            var user_handle = getCookie(makeNameFromNS(appDomainUrl,"tokenInCookieJS"));
+            var token = getCookie(makeNameFromNS(appDomainUrl,"tokenJS"));
+            if (user_handle && token) {
+                var loginName = $('#<%= cLoginName.ClientID %>').val();
+                rememberUserHandle(appDomainUrl, loginName);
+                var tokenName = getTokenName(appDomainUrl, "refresh_token");
+                var myHandle = btoa(sjcl.hash.sha256.hash(loginName)).replace(/=/g, "_");
+                //localStorage.setItem("user_handle", user_handle);
+                localStorage.setItem(tokenName, JSON.stringify({ refresh_token: token }));
+            }
+        }
+        if (window.requestIdleCallback) {
+            requestIdleCallback(function () { setTimeout(rememberToken, 1000); });
+        }
+        else {
+            setTimeout(rememberToken, 1000);
+        }
+
+    }
+    );
 </script>
 <div>
     <asp:HyperLink ID="SignIn" CssClass="SignInLink HideOnMobile" Text="Sign In" runat="server" />
+    <asp:TextBox ID="cLoginName"  Style="display: none;" runat="server" Visible="false" />
+    <asp:TextBox ID="cAppDomainUrl"  Style="display: none;" runat="server" Visible="false" />
     <asp:Panel ID="SignoutPanel" CssClass="r-table" runat="server">
         <div class="ProfileDisp r-tr">
             <div class="r-table">
@@ -54,7 +108,7 @@
                         <asp:Label ID="CurrSys" CssClass="inp-lbl ProfSys" runat="server" />
                     </div>
                     <div class="r-td">
-                        <asp:Button ID="SignoutButton2" CssClass="signOutButton small blue button" runat="server" OnClick="SignoutButton_Click" CausesValidation="false" />
+                        <asp:Button ID="SignoutButton2" CssClass="signOutButton small blue button" runat="server" OnClick="SignoutButton_Click" OnClientClick="signOut();return true;" CausesValidation="false" />
                     </div>
                 </div>
             </div>

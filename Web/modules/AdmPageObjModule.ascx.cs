@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -1979,14 +1982,15 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		protected void cBtnDefault_Click(object sender, System.EventArgs e)
 		{
 			//WebRule: Generate default content
-            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Default", 0, 0, 0, string.Empty, string.Empty))
+            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Default", 0, 0, 0, string.Empty, string.Empty))
+            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
             {
                 (new GenSectionSystem()).CreateProgram("D", base.CPrj, base.CSrc);
                 bInfoNow.Value = "Y"; PreMsgPopup("DefaultModule and its CSS generated.");
             }
             else
             {
-                bErrNow.Value = "Y"; PreMsgPopup("DefaultModule not generated. Please change content and try again.");
+                bErrNow.Value = "Y"; PreMsgPopup("DefaultModule not generated.");
             }
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
@@ -1995,14 +1999,15 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		protected void cBtnHeader_Click(object sender, System.EventArgs e)
 		{
 			//WebRule: Generate header content
-            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Header", 0, 0, 0, string.Empty, string.Empty))
+            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Header", 0, 0, 0, string.Empty, string.Empty))
+            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
             {
                 (new GenSectionSystem()).CreateProgram("H", base.CPrj, base.CSrc);
                 bInfoNow.Value = "Y"; PreMsgPopup("HeaderModule and its CSS generated.");
             }
             else
             {
-                bErrNow.Value = "Y"; PreMsgPopup("HeaderModule not generated. Please change content and try again.");
+                bErrNow.Value = "Y"; PreMsgPopup("HeaderModule not generated.");
             }
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
@@ -2011,14 +2016,15 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		protected void cBtnFooter_Click(object sender, System.EventArgs e)
 		{
 			//WebRule: Generate footer content
-            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Footer", 0, 0, 0, string.Empty, string.Empty))
+            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Footer", 0, 0, 0, string.Empty, string.Empty))
+            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
             {
                 (new GenSectionSystem()).CreateProgram("F", base.CPrj, base.CSrc);
                 bInfoNow.Value = "Y"; PreMsgPopup("FooterModule and its CSS generated.");
             }
             else
             {
-                bErrNow.Value = "Y"; PreMsgPopup("FooterModule not generated. Please change content and try again.");
+                bErrNow.Value = "Y"; PreMsgPopup("FooterModule not generated.");
             }
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
@@ -2027,14 +2033,15 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		protected void cBtnSidebar_Click(object sender, System.EventArgs e)
 		{
 			//WebRule: Generate sidebar content
-            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Sidebar", 0, 0, 0, string.Empty, string.Empty))
+            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Sidebar", 0, 0, 0, string.Empty, string.Empty))
+            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
             {
                 (new GenSectionSystem()).CreateProgram("S", base.CPrj, base.CSrc);
                 bInfoNow.Value = "Y"; PreMsgPopup("SidebarModule and its CSS generated.");
             }
             else
             {
-                bErrNow.Value = "Y"; PreMsgPopup("SidebarModule not generated. Please change content and try again.");
+                bErrNow.Value = "Y"; PreMsgPopup("SidebarModule not generated.");
             }
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
@@ -2070,7 +2077,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					string rf = string.Empty;
 					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 14, cFindFilter.SelectedValue) + ")"; }
-					if (rf != string.Empty) { rf = "((" + rf + "  or _NewRow = 'Y' ))"; }
+					if (rf != string.Empty) { rf = "((" + rf + " or _NewRow = 'Y' ))"; }
 					dv.RowFilter = rf;
 					ViewState["_RowFilter"] = rf;
 					GotoPage(0); cAdmPageObjGrid_DataBind(dv);
@@ -2545,6 +2552,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			// *** GridItemDataBound (before) Web Rule End *** //
 			DataTable dt = (DataTable)Session[KEY_dtAdmPageObjGrid];
 			bool isEditItem = false;
+			bool isImage = true;
+			bool hasImageContent = false;
 			DataView dvAdmPageObjGrid = dt != null ? dt.DefaultView : null;
 			if (cAdmPageObjGrid.EditIndex > -1 && GetDataItemIndex(cAdmPageObjGrid.EditIndex) == e.Item.DataItemIndex)
 			{
@@ -2577,6 +2586,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				}
 			}
 			if (cAdmPageObjGrid.EditIndex > -1 && GetDataItemIndex(cAdmPageObjGrid.EditIndex) == e.Item.DataItemIndex)
+			{
+			}
+			else
 			{
 			}
 			// *** GridItemDataBound (after) Web Rule End *** //

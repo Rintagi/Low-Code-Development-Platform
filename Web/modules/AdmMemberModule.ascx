@@ -330,7 +330,7 @@
     </td>
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:25px;text-align:center;' visible="<%# GridColumnVisible(2) %>" onclick='GridEdit("PicMed275")' runat="server">
-			<asp:ImageButton id="cPicMed275l" ImageUrl='<%# DataBinder.Eval(Container.DataItem,"PicMed275").ToString().Trim().Equals(string.Empty) ? "../images/DefaultImg.png" : "data:application/base64;base64," + Convert.ToBase64String((DataBinder.Eval(Container.DataItem,"PicMed275") as byte[])??(new byte[1]))  %>' style="max-width:25px; max-height:25px;" CssClass="GrdBoxLb" OnClick="cPicMed275_Click" Enabled="<%# GridColumnEnable(2) %>" CommandArgument='<%# DataBinder.Eval(Container.DataItem,"SredMebrId274").ToString() %>' runat="server" />
+			<asp:ImageButton id="cPicMed275l" ImageUrl='<%# DataBinder.Eval(Container.DataItem,"PicMed275").ToString().Trim().Equals(string.Empty) ? "../images/DefaultImg.png" : RO.Common3.Utils.BlobPlaceHolder((DataBinder.Eval(Container.DataItem,"PicMed275") as byte[])??(new byte[1]),true) %>' style="max-width:25px; max-height:25px;" CssClass="GrdBoxLb" OnClick="cPicMed275_Click" Enabled="<%# GridColumnEnable(2) %>" CommandArgument='<%# DataBinder.Eval(Container.DataItem,"SredMebrId274").ToString() %>' runat="server" />
 		</div></div>
     </td>
     <td>
@@ -389,7 +389,7 @@
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:center;' visible="<%# GridColumnVisible(2) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cPicMed275ml" runat="server" /></div>
 		<div class="DocPanel"><table cellspacing="0" cellpadding="0"><tr>
-		    <td><asp:ImageButton id="cPicMed275" ImageUrl='<%# DataBinder.Eval(Container.DataItem,"PicMed275") as byte[] !=null ? "data:application/base64;base64," + Convert.ToBase64String((DataBinder.Eval(Container.DataItem,"PicMed275") as byte[])??(new byte[1]))  : "~/images/DefaultImg.png" %>' max-width="25px" max-height="25px" runat="server" /></td>
+		    <td><asp:ImageButton id="cPicMed275" ImageUrl='<%# DataBinder.Eval(Container.DataItem,"PicMed275") as byte[] !=null ? RO.Common3.Utils.BlobPlaceHolder((DataBinder.Eval(Container.DataItem,"PicMed275") as byte[])??(new byte[1]),true) : "~/images/DefaultImg.png" %>' style="max-width:25px;max-height:25px;" runat="server" /></td>
 		</tr></table></div>
 		</div></div>
     </td>

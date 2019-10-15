@@ -1,5 +1,6 @@
 // Stock rules only. Written over by robot on each deployment.
 var today = currentDate().split("/");
+var openDatePickerId = null;
 
 function currentDate() 
 {
@@ -9,11 +10,11 @@ function currentDate()
 
 function removeLeadingZeroes(numstr)
 {
-    if (numstr == "") return "0";
+    if (numstr === "") return "0";
     var str = numstr.toString();
     var ii;
-    for (ii = 0; ii < str.length && str.charAt(ii) == "0"; ii++);
-    return (ii == str.length) ? "0" : str.substring(ii);
+    for (ii = 0; ii < str.length && str.charAt(ii) === "0"; ii++);
+    return (ii === str.length) ? "0" : str.substring(ii);
 }
 
 function normalizeDatestr(dds)
@@ -22,7 +23,7 @@ function normalizeDatestr(dds)
     var ln = ddp.length;
     var rst = "";
 
-    if (ddp[ln - 1] == "") ln = ln - 1;
+    if (ddp[ln - 1] === "") ln = ln - 1;
     if (ln >= 1)
 	{
         rst = rst + normalizeDate(ddp[0]);
@@ -53,7 +54,7 @@ function normalizeYear(numstr) {
 function ValidateDatestr(dds, err)
 {
     var ddp = dds.split("/");
-    if (ddp.length != 3) return 1; // bad date format(?)
+    if (ddp.length !== 3) return 1; // bad date format(?)
     err.Month = ddp[0];
     err.Date = ddp[1];
     if (ddp[0] >= 1 && ddp[0] <= 12)
@@ -64,19 +65,19 @@ function ValidateDatestr(dds, err)
 
 function CheckMonthAndDate(month, date, year)
 {
-    if (month == 4 || month == 6 || month == 9 || month == 11)
+    if (month === 4 || month === 6 || month === 9 || month === 11)
         if (date > 30) return 4; // bad date for month
-    if (month == 2)
+    if (month === 2)
     {
         if (date > 29) return 4;
-        if (date == 29) return (year % 4 == 0) ? ((year % 400 == 0) ? 0 : (year % 100 == 0) ? 4 : 0) : 4;
+        if (date === 29) return (year % 4 === 0) ? ((year % 400 === 0) ? 0 : (year % 100 === 0) ? 4 : 0) : 4;
     }
     return 0;
 }
 
 function checkElementDateAndAlert(element)
 {
-    if (element.value == "") return true;
+    if (element.value === "") return true;
 	if (document.selection) // IE
 	{
 		//  Directly assign to element.value would eliminate postback right away.
@@ -91,7 +92,7 @@ function checkElementDateAndAlert(element)
 	}
     var dateErrorObject = new Object();
     var rc = ValidateDatestr(element.value, dateErrorObject);
-    if (rc == 0) return true;
+    if (rc === 0) return true;
     var currentBackgroundColor = element.style.backgroundColor;
     var currentForegroundColor = element.style.color;
     element.style.backgroundColor = "red";
@@ -99,16 +100,16 @@ function checkElementDateAndAlert(element)
     var errstr = "";
     switch (rc) 
     {
-		case 1:
+        case 1:
         errstr = "Invalid date format. Please enter e.g. " + currentDate() + ".";
         break;
-	    case 2:
+        case 2:
         errstr = "Invalid month value (" + dateErrorObject.Month + "). Valid values are 01-12.";
         break;
-	    case 3:
+        case 3:
         errstr = "Invalid day of month value (" + dateErrorObject.Date + "). Valid values are 01-31.";
         break;
-	    case 4:
+        case 4:
         errstr = "Invalid date (" + dateErrorObject.Date + ") for month specified (" + dateErrorObject.Month + ").";
         break;
     }
@@ -122,7 +123,7 @@ function checkElementDateAndAlert(element)
 
 function checkElementPhnNumAndAlert(element)
 {
-    if (element.value == "") return true;
+    if (element.value === "") return true;
     if (element.value.match("^\\(\\d{3}\\) \\d{3}-\\d{4}[^\n]*$")) return true;
     var currentBackgroundColor = element.style.backgroundColor;
     var currentForegroundColor = element.style.color;
@@ -138,17 +139,18 @@ function checkElementPhnNumAndAlert(element)
 
 function isAllowableEditKey(key)
 {
-    return (key == 8)			// backspace
-            || (key == 35)		// end
-            || (key == 36)		// home
-            || (key == 37)		// left-arrow
-            || (key == 39)		// right-arrow
-            || (key == 46)		// delete
-            || (key == 38)		// up-arrow
-            || (key == 40)		// down-arrow
-            || (key == 33)		// page-up
-            || (key == 34)		// page-down
-            || (key == 27)		// Esc
+    return (key === 8)			// backspace
+        || (key === 35)		// end
+        || (key === 36)		// home
+        || (key === 37)		// left-arrow
+        || (key === 39)		// right-arrow
+        || (key === 46)		// delete
+        || (key === 38)		// up-arrow
+        || (key === 40)		// down-arrow
+        || (key === 33)		// page-up
+        || (key === 34)		// page-down
+        || (key === 27)		// Esc
+        ;
 }
 
 // All public functions start here ...
@@ -160,7 +162,7 @@ function fConfirm(Pid,Cid,aNam,aVal)
 	var cc = document.getElementById(Cid);
 	var nm = document.getElementById(aNam);
 	var va = document.getElementById(aVal);
-	if (pp != null && cc != null && nm != null && va != null && pp.value == "Y" && cc.value == "Y")
+	if (pp !== null && cc !== null && nm !== null && va !== null && pp.value === "Y" && cc.value === "Y")
 	{
 		var ctr = null;
 		var nms = document.getElementById(aNam).value.split(',');
@@ -168,19 +170,19 @@ function fConfirm(Pid,Cid,aNam,aVal)
 		for (ii = 0; ii < nms.length; ii++)
 		{
 //			ctr = document.getElementById(nms[ii]);
-//			if (ctr != null) {ctr.value = vas[ii];}
-		    var ee = $('#' + nms[ii]).val(vas[ii]);
-			try { if (ee[0].inACPostBack) ee.change(); }
-			catch (er) { }
+//			if (ctr !== null) {ctr.value = vas[ii];}
+            var ee = $('#' + nms[ii]).val(vas[ii]);
+            try { if (ee[0].inACPostBack) ee.change(); }
+            catch (er) {/**/}
 
         }
 		cc.value = "N";
 		setTimeout("document.getElementById('" + Cid + "').value='Y';", 500);
 		var confirmMsg = 'Any changes will be lost if you proceed.';
 		try {
-		    confirmMsg = CurrConfirmMsg || confirmMsg;
-		    CurrConfirmMsg = null;
-		} catch (ee) { }
+            confirmMsg = CurrConfirmMsg || confirmMsg;
+            CurrConfirmMsg = null;
+		} catch (ee) {/**/}
 		return confirmMsg;
 	}
 }
@@ -192,32 +194,32 @@ function fConfirm2(Pid,Cid,aNam,aVal)
 	var nm = document.getElementById(aNam);
 	var va = document.getElementById(aVal);
 	var x = true;
-	if (pp != null && cc != null && nm != null && va != null && pp.value == "Y" && cc.value == "Y")
+	if (pp !== null && cc !== null && nm !== null && va !== null && pp.value === "Y" && cc.value === "Y")
 	{
-	    var eventTarget = $('#__EVENTTARGET').val();
-	    var confirmMsg = 'Any changes will be lost if you proceed.';
-	    try {
-	        confirmMsg = CurrConfirmMsg || confirmMsg; 
-	        CurrConfirmMsg = null;
-	    } catch (ee) { }
-	    x = confirm(confirmMsg);
+        var eventTarget = $('#__EVENTTARGET').val();
+        var confirmMsg = 'Any changes will be lost if you proceed.';
+        try {
+            confirmMsg = CurrConfirmMsg || confirmMsg; 
+            CurrConfirmMsg = null;
+        } catch (ee) {/**/}
+        x = confirm(confirmMsg);
 		var ctr = null;
 		var nms = document.getElementById(aNam).value.split(',');
 		var vas = document.getElementById(aVal).value.split(',');
 		for (ii = 0; ii < nms.length; ii++)
 		{
-//			ctr = document.getElementById(nms[ii]);
-		    //			if (ctr != null) {ctr.value = vas[ii];}
-		    // only restore value when the user cancel something
-		    // as otherwise the change can trigger another round of postback
-		    // in the case for autopostback field(that is the case in firefox)
-		    // 2012.6.13 gary
-		    if (nms[ii] == eventTarget && !x) {
-		        var ee = $('#' + nms[ii]).val(vas[ii]);
-		        try { if (ee[0].inACPostBack) { ee.change(); } }
-		        catch (er) { }
-		        try { ee[0].inACPostBack = null; } catch (er) { };
-		    }
+            //			ctr = document.getElementById(nms[ii]);
+            //			if (ctr !== null) {ctr.value = vas[ii];}
+            // only restore value when the user cancel something
+            // as otherwise the change can trigger another round of postback
+            // in the case for autopostback field(that is the case in firefox)
+            // 2012.6.13 gary
+            if (nms[ii] === eventTarget && !x) {
+                var ee = $('#' + nms[ii]).val(vas[ii]);
+                try { if (ee[0].inACPostBack) { ee.change(); } }
+                catch (er) {/**/}
+                try { ee[0].inACPostBack = null; } catch (er) {/**/}
+            }
         }
 		if (x) {cc.value = "N";}
 	}
@@ -240,39 +242,37 @@ function stopEvent(e, evt) {
         evt.cancelBubble = true; evt.returnValue = false;
         if (evt.stopPropagation) evt.stopPropagation();
         if (evt.preventDefault) evt.preventDefault();
-    } catch (er) {
-    }
+    } catch (er) {/**/}
     return false;
 }
 // Cause next row in DataGrid to be in Edit Mode:
 function fFocusedEdit(btnId, ctrlId, evt) {
-    if (evt.type != 'blur') {
+    if (evt.type !== 'blur') {
         try {
             var src = evt.srcElement || evt.target;
-            if (src.tagName == "A" || src.tagName == "BUTTON" || (src.tagName == "INPUT" && src.type == "submit")) return;
-        } catch (er) { };
-        try { if (colNam == 'DeleteLink') { colNam = null; return; } } catch (e) { };
+            if (src.tagName === "A" || src.tagName === "BUTTON" || (src.tagName === "INPUT" && src.type === "submit")) return;
+        } catch (er) {/**/}
+        try { if (colNam === 'DeleteLink') { colNam = null; return; } } catch (e) {/**/}
     }
-    try { ctrlId = colNam || ctrlId; colNam = null; } catch (e) { }
-    if (typeof(Page_ClientValidate) == "function" && $('input.GrdTxt,select.GrdDdl,input.autocomplete-box-input').length > 0) {
+    try { ctrlId = colNam || ctrlId; colNam = null; } catch (e) {/**/}
+    if (typeof(Page_ClientValidate) === "function" && $('input.GrdTxt,select.GrdDdl,input.autocomplete-box-input').length > 0) {
         if (Page_ClientValidate('')) __doPostBack(btnId, ctrlId);
         else Page_BlockSubmit = false;
     }
     else __doPostBack(btnId, ctrlId);
     try {
         var e = evt || event || window.event || this.event;
-        e.cancelBubble = true;e.returnValue = false;
+        e.cancelBubble = true; e.returnValue = false;
         e.stopPropagation();
         e.preventDefault();
-    } catch (er) {
-    }
+    } catch (er) {/**/}
 }
 
 // Wait given number of milli-seconds to get around a response issue on datagrid:
 function fWait(ms)
 {
-	dp = new Date();
-	while (1) {dn = new Date(); if (dn - dp > ms) {break;}}
+	var dp = new Date();
+	while (dp) {dn = new Date(); if (dn - dp > ms) {break;}}
 }
 
 //For onKeyDown use only: Focus on (ctrl) upon Enter key pressed.
@@ -282,9 +282,9 @@ function AeFocusCtrl(ee, ctrl)
 	if (ee)
 	{
 		var key = (ee.charCode) ? ee.charCode : ((ee.which) ? ee.which : ee.keyCode);
-		if (key == 13) 
+		if (key === 13) 
 		{
-		    if (document.getElementById(ctrl)) {document.getElementById(ctrl).focus();}
+            if (document.getElementById(ctrl)) {document.getElementById(ctrl).focus();}
 		}
 	}
 }
@@ -305,10 +305,10 @@ function CrMMDDYY(ee)
         {
 			if (document.selection) // IE
 			{
-                if (document.selection.type == 'Text') document.selection.clear();
+                if (document.selection.type === 'Text') document.selection.clear();
                 if (curlen < 10) sel.text = ch;
-                if (curlen == 1 || curlen == 4) oElement.value += "/";
-		        window.event.returnValue = false;
+                if (curlen === 1 || curlen === 4) oElement.value += "/";
+                window.event.returnValue = false;
 			}
 			else    // Other browsers
 			{	
@@ -319,18 +319,18 @@ function CrMMDDYY(ee)
 					oElement.value = oElement.value.substring(0, startpos) + ch + oElement.value.substring(endpos, oElement.value.length);
 					oElement.selectionEnd = startpos + 1; oElement.selectionStart = startpos + 1;
 				}
-				else if (startpos != 10)
+				else if (startpos !== 10)
 				{
 					//we have reached 10 characters and should be able to replace the existing date
 					oElement.value = oElement.value.substring(0, startpos) + ch;
 				}
-				if (curlen == 1 || curlen == 4) oElement.value += "/";
+				if (curlen === 1 || curlen === 4) oElement.value += "/";
 				return false;
 			}
         }
-		else if (key == 9 || ee.ctrlKey)  // tab and enter, etc. keys
+		else if (key === 9 || ee.ctrlKey)  // tab and enter, etc. keys
 		{
-		    if (window.event) {window.event.returnValue = checkElementDateAndAlert(oElement);} else {return checkElementDateAndAlert(oElement);}
+            if (window.event) {window.event.returnValue = checkElementDateAndAlert(oElement);} else {return checkElementDateAndAlert(oElement);}
 		}
 		else {return isAllowableEditKey(key);}
 	}
@@ -342,7 +342,7 @@ function CrNAPhone(ee)
 	ee = (ee) ? ee : ((window.event) ? event : null);
 	if (ee)
 	{
-	    var str;
+        var str;
 		var oElement = (ee.target) ? ee.target : ((ee.srcElement) ? ee.srcElement : null);
 		var key = (ee.charCode) ? ee.charCode : ((ee.which) ? ee.which : ee.keyCode);
 		var sel;
@@ -359,7 +359,7 @@ function CrNAPhone(ee)
 				str = oElement.value.substring(0, selInd) + ch + oElement.value.substring(selInd, oElement.value.length - 1);
 				if (!str.match("^\\(\\d{3}\\) \\d{3}-\\d{4}[^\n]*$"))
 				{
-					window.event.returnValue = (key == 9 || ee.ctrlKey) ? checkElementPhnNumAndAlert(oElement) : isAllowableEditKey(key);
+					window.event.returnValue = (key === 9 || ee.ctrlKey) ? checkElementPhnNumAndAlert(oElement) : isAllowableEditKey(key);
 				}
 			}
 			else    // Other browsers
@@ -367,7 +367,7 @@ function CrNAPhone(ee)
 				str = oElement.value.substring(0, oElement.selectionStart) + ch + oElement.value.substring(oElement.selectionEnd, oElement.value.length-1);
 				if (!str.match("^\\(\\d{3}\\) \\d{3}-\\d{4}[^\n]*$"))
 				{
-                    return (key == 9 || ee.ctrlKey) ? checkElementPhnNumAndAlert(oElement) : isAllowableEditKey(key);
+                    return (key === 9 || ee.ctrlKey) ? checkElementPhnNumAndAlert(oElement) : isAllowableEditKey(key);
 				}
 			}
 		}
@@ -377,31 +377,31 @@ function CrNAPhone(ee)
 			{
 				if ((ch >= "0" && ch <= "9") && !window.event.shiftKey)
 				{
-					if (document.selection.type == 'Text') {document.selection.clear();}
-					if (curlen == 0) {sel.text = "(" + ch ;}
-					else if (curlen == 3) {sel.text = ch + ") ";}
-					else if (curlen == 8) {sel.text = ch + "-";}
+					if (document.selection.type === 'Text') {document.selection.clear();}
+					if (curlen === 0) {sel.text = "(" + ch ;}
+					else if (curlen === 3) {sel.text = ch + ") ";}
+					else if (curlen === 8) {sel.text = ch + "-";}
 					else {sel.text = ch;}
 					window.event.returnValue = false; 
 				}
 				else
 				{
-					window.event.returnValue = (key == 9 || ee.ctrlKey) ? checkElementPhnNumAndAlert(oElement) : isAllowableEditKey(key);
+					window.event.returnValue = (key === 9 || ee.ctrlKey) ? checkElementPhnNumAndAlert(oElement) : isAllowableEditKey(key);
 				}
 			}
 			else
 			{
 				if ((ch >= "0" && ch <= "9") && !ee.shiftKey)
 				{
-					if (curlen == 0) {oElement.value = "(" + ch;}
-					else if (curlen == 3) {oElement.value = oElement.value + ch + ") ";}
-					else if (curlen == 8) {oElement.value = oElement.value + ch + "-";}
+					if (curlen === 0) {oElement.value = "(" + ch;}
+					else if (curlen === 3) {oElement.value = oElement.value + ch + ") ";}
+					else if (curlen === 8) {oElement.value = oElement.value + ch + "-";}
 					else {oElement.value += ch;}
 					return false;
 				}
 				else
 				{
-					return (key == 9 || ee.ctrlKey) ? checkElementPhnNumAndAlert(oElement) : isAllowableEditKey(key);
+					return (key === 9 || ee.ctrlKey) ? checkElementPhnNumAndAlert(oElement) : isAllowableEditKey(key);
 				}
 			}
 		}
@@ -422,11 +422,11 @@ function CrDeciDot(ee, nn, mok)
 		var sel;
 		var str;
 		if (document.selection) {sel = document.selection.createRange();}
-		if (key == 45 && mok)	// minus sign allowed
+		if (key === 45 && mok)	// minus sign allowed
 		{
 			if (document.selection) //	IE
 			{
-				if (oElement.value.lastIndexOf("-") >= 0 && sel.text.length == 0) {window.event.returnValue = false;}	//field already in focus
+				if (oElement.value.lastIndexOf("-") >= 0 && sel.text.length === 0) {window.event.returnValue = false;}	//field already in focus
 				else if (sel.text.length > 0) {window.event.returnValue = true;}	//text field is in focus and selected
 				else
 				{
@@ -437,8 +437,8 @@ function CrDeciDot(ee, nn, mok)
 			}
 			else	// Other browsers
 			{
-				if ((oElement.value.lastIndexOf("-") >= 0) && (oElement.selectionEnd == oElement.selectionStart)) {return false;}
-				else if (oElement.selectionEnd != oElement.selectionStart) {return true;}	//some sort of selections
+				if ((oElement.value.lastIndexOf("-") >= 0) && (oElement.selectionEnd === oElement.selectionStart)) {return false;}
+				else if (oElement.selectionEnd !== oElement.selectionStart) {return true;}	//some sort of selections
 				else
 				{
 					str = oElement.value.replace(/[-]/gi,"");
@@ -447,7 +447,7 @@ function CrDeciDot(ee, nn, mok)
 				}
 			}
 		}		
-		else if (key == 46)	// period
+		else if (key === 46)	// period
 		{
 			if (document.selection)
 			{
@@ -463,7 +463,7 @@ function CrDeciDot(ee, nn, mok)
 			else if (oElement.value.indexOf('.') > -1)
 			{
 				var selection = oElement.value.substring(oElement.selectionStart,oElement.selectionEnd);
-				if (selection.indexOf('.') > -1) {return true;} else {return false}; 
+                if (selection.indexOf('.') > -1) { return true; } else { return false;} 
 			}
 			else {return true;}
 		}
@@ -479,7 +479,7 @@ function CrDeciDot(ee, nn, mok)
 					sel2.moveStart('textedit',-1);
 					textAfterCursor = sel.text;
 					textBeforeCursor = sel2.text;
-					if (textBeforeCursor.indexOf('.') == -1) {window.event.returnValue=true;}
+					if (textBeforeCursor.indexOf('.') === -1) {window.event.returnValue=true;}
 					else
 					{
 						decimalsBefore = textBeforeCursor.substr(textBeforeCursor.indexOf('.')+1).length;
@@ -490,12 +490,12 @@ function CrDeciDot(ee, nn, mok)
 			}
 			else 
 			{
-				if (oElement.selectionStart != oElement.selectionEnd) {return true;}
+				if (oElement.selectionStart !== oElement.selectionEnd) {return true;}
 				else
 				{
 					var textBeforeCursor = oElement.value.substr(0, oElement.selectionStart);
 					var textAfterCursor = oElement.value.substr(oElement.selectionStart+1);
-					if (textBeforeCursor.indexOf('.') == -1) {return true;}
+					if (textBeforeCursor.indexOf('.') === -1) {return true;}
 					else
 					{
 						decimalsBefore = oElement.value.substr(oElement.value.indexOf('.')+1).length;
@@ -504,7 +504,7 @@ function CrDeciDot(ee, nn, mok)
 				}
 			}
 		}
-		else if (key == 9 || ee.ctrlKey) {if (!window.event) {return true;}}  // tab
+		else if (key === 9 || ee.ctrlKey) {if (!window.event) {return true;}}  // tab
 		else if (window.event) {window.event.returnValue = false;} else {return isAllowableEditKey(key);}
 	}
 }
@@ -526,7 +526,7 @@ function CrMaxLength(ee, iLen)
 		}
 		else
 		{
-			if ((oElement.value.length >= iLen) && (oElement.selectionEnd == oElement.selectionStart))
+			if ((oElement.value.length >= iLen) && (oElement.selectionEnd === oElement.selectionStart))
 			{
 				return isAllowableEditKey(key);
 			}
@@ -548,11 +548,11 @@ function CrInteger(ee, nn, mok)
 		var sel;
 		var str;
 		if (document.selection) {sel = document.selection.createRange();}
-		if (key == 45 && mok)	// minus sign allowed
+		if (key === 45 && mok)	// minus sign allowed
 		{
 			if (document.selection) //	IE
 			{
-				if (oElement.value.lastIndexOf("-") >= 0 && sel.text.length == 0) {window.event.returnValue = false;}	//field already in focus
+				if (oElement.value.lastIndexOf("-") >= 0 && sel.text.length === 0) {window.event.returnValue = false;}	//field already in focus
 				else if (sel.text.length > 0) {window.event.returnValue = true;}	//text field is in focus and selected
 				else
 				{
@@ -563,8 +563,8 @@ function CrInteger(ee, nn, mok)
 			}
 			else	// Other browsers
 			{
-				if ((oElement.value.lastIndexOf("-") >= 0) && (oElement.selectionEnd == oElement.selectionStart)) {return false;}
-				else if (oElement.selectionEnd != oElement.selectionStart) {return true;}	//some sort of selections
+				if ((oElement.value.lastIndexOf("-") >= 0) && (oElement.selectionEnd === oElement.selectionStart)) {return false;}
+				else if (oElement.selectionEnd !== oElement.selectionStart) {return true;}	//some sort of selections
 				else
 				{
 					str = oElement.value.replace(/[-]/gi,"");
@@ -576,21 +576,21 @@ function CrInteger(ee, nn, mok)
 		else if (key > 47 && key < 58)	// a numeric digit
 		{
 			str = oElement.value.replace(/[-]/gi,"");
-		    if (document.selection)
-		    {
-		        if (nn != 0 && (str.length - sel.text.length) >= nn) { window.event.returnValue = false; }
-		    }
-		    else
-		    {
-		        if (nn != 0 && str.length >= nn && oElement.selectionEnd == oElement.selectionStart)
-			    {
-				    return isAllowableEditKey(key);
-			    }
-		    }
+            if (document.selection)
+            {
+                if (nn !== 0 && (str.length - sel.text.length) >= nn) { window.event.returnValue = false; }
+            }
+            else
+            {
+                if (nn !== 0 && str.length >= nn && oElement.selectionEnd === oElement.selectionStart)
+                {
+                    return isAllowableEditKey(key);
+                }
+            }
 		}
-		else if (key == 9 || ee.ctrlKey) {if (!window.event) {return true;}}  // tab and enter, etc. keys
+		else if (key === 9 || ee.ctrlKey) {if (!window.event) {return true;}}  // tab and enter, etc. keys
 		else if (window.event) {window.event.returnValue = false;}
-		else if (key == 46) {return false;}    //take care of unexplainable Delete and period
+		else if (key === 46) {return false;}    //take care of unexplainable Delete and period
 		else {return isAllowableEditKey(key);}
 	}	
 }
@@ -604,11 +604,11 @@ function AeAutoTab(ee, oPrev, oNext)
 	{
 		var oElement = (ee.target) ? ee.target : ((ee.srcElement) ? ee.srcElement : null);
 		var key = (ee.charCode) ? ee.charCode : ((ee.which) ? ee.which : ee.keyCode);
-		if (key != 37 && key != 39)	// not % or '
-	    {
-		    if (key == 8 && oElement.value.length == 0 && oPrev != null) {oPrev.focus(); oPrev.select();}   //Backspace
-		    else if (key > 31 && oElement.value.length == oElement.maxLength && oNext != null) {oNext.focus(); oNext.select();}
-	    }
+		if (key !== 37 && key !== 39)	// not % or '
+        {
+            if (key === 8 && oElement.value.length === 0 && oPrev !== null) {oPrev.focus(); oPrev.select();}   //Backspace
+            else if (key > 31 && oElement.value.length === oElement.maxLength && oNext !== null) {oNext.focus(); oNext.select();}
+        }
 	}
 }
 
@@ -622,24 +622,24 @@ function IrIfaThenb(ee,typ,opr,val,oTar,sVal)
 	if (ee)
 	{
 		var oElement = (ee.target) ? ee.target : ((ee.srcElement) ? ee.srcElement : null);
-	    if (typ == "F")
-	    {
-		    if (opr == "!=") {if (parseFloat(oElement.value) != val) oTar.value = sVal;}
-		    else if (opr == ">=") {if (parseFloat(oElement.value) >= val) oTar.value = sVal;}
-		    else if (opr == "<=") {if (parseFloat(oElement.value) <= val) oTar.value = sVal;}
-		    else if (opr == ">") {if (parseFloat(oElement.value) > val) oTar.value = sVal;}
-		    else if (opr == "<") {if (parseFloat(oElement.value) < val) oTar.value = sVal;}
-		    else {if (parseFloat(oElement.value) == val) oTar.value = sVal;}
-	    }
-	    else
-	    {
-		    if (opr == "!=") {if (oElement.value != val) oTar.value = sVal;}
-		    else if (opr == ">=") {if (oElement.value >= val) oTar.value = sVal;}
-		    else if (opr == "<=") {if (oElement.value <= val) oTar.value = sVal;}
-		    else if (opr == ">") {if (oElement.value > val) oTar.value = sVal;}
-		    else if (opr == "<") {if (oElement.value < val) oTar.value = sVal;}
-		    else {if (oElement.value == val) oTar.value = sVal;}
-	    }
+        if (typ === "F")
+        {
+            if (opr === "!=") {if (parseFloat(oElement.value) !== val) oTar.value = sVal;}
+            else if (opr === ">=") {if (parseFloat(oElement.value) >= val) oTar.value = sVal;}
+            else if (opr === "<=") {if (parseFloat(oElement.value) <= val) oTar.value = sVal;}
+            else if (opr === ">") {if (parseFloat(oElement.value) > val) oTar.value = sVal;}
+            else if (opr === "<") {if (parseFloat(oElement.value) < val) oTar.value = sVal;}
+            else {if (parseFloat(oElement.value) === val) oTar.value = sVal;}
+        }
+        else
+        {
+            if (opr === "!=") {if (oElement.value !== val) oTar.value = sVal;}
+            else if (opr === ">=") {if (oElement.value >= val) oTar.value = sVal;}
+            else if (opr === "<=") {if (oElement.value <= val) oTar.value = sVal;}
+            else if (opr === ">") {if (oElement.value > val) oTar.value = sVal;}
+            else if (opr === "<") {if (oElement.value < val) oTar.value = sVal;}
+            else {if (oElement.value === val) oTar.value = sVal;}
+        }
     }
 }
 
@@ -653,7 +653,7 @@ function CmCalc2Deci(oSrc,oCond,oRate,oTar)
 function WebForm_FindFirstFocusableChild(control) {
     if (!control || !(control.tagName)) {return null;}
     var tagName = control.tagName.toLowerCase();
-    if (tagName == "undefined") {return null;}
+    if (tagName === "undefined") {return null;}
     var children = control.childNodes;
     if (children) {
         for (var i = 0; i < children.length; i++) {
@@ -663,7 +663,7 @@ function WebForm_FindFirstFocusableChild(control) {
                     var focused = WebForm_FindFirstFocusableChild(children[i]);
                     if (WebForm_CanFocus(focused)) {return focused;}
                 }
-            } catch (e) {}
+            } catch (e) {/**/}
         }
     }
     return null;
@@ -685,7 +685,7 @@ function WebForm_AutoFocus(focusId) {
                 window.__smartNav.ae = focused.id;
             }
         }
-        catch (e) {}
+        catch (e) {/**/}
     }
 }
 
@@ -693,35 +693,35 @@ function WebForm_CanFocus(element) {
     if (!element || !(element.tagName)) return false;
     var tagName = element.tagName.toLowerCase();
     return (!(element.disabled) &&
-            (!(element.type) || element.type.toLowerCase() != "hidden") &&
+            (!(element.type) || element.type.toLowerCase() !== "hidden") &&
             WebForm_IsFocusableTag(tagName) &&
             WebForm_IsInVisibleContainer(element)
             );
 }
 
 function WebForm_IsFocusableTag(tagName) {
-    return (tagName == "input" ||
-            tagName == "textarea" ||
-            tagName == "select" ||
-            tagName == "button" ||
-            tagName == "a");
+    return (tagName === "input" ||
+            tagName === "textarea" ||
+            tagName === "select" ||
+            tagName === "button" ||
+            tagName === "a");
 }
 
 function WebForm_IsInVisibleContainer(ctrl) {
     var current = ctrl;
-    while((typeof(current) != "undefined") && (current != null)) {
+    while((typeof(current) !== "undefined") && (current !== null)) {
         if (current.disabled ||
-            ( typeof(current.style) != "undefined" &&
-            ( ( typeof(current.style.display) != "undefined" &&
-                current.style.display == "none") ||
-                ( typeof(current.style.visibility) != "undefined" &&
-                current.style.visibility == "hidden") ) ) ) {
+            ( typeof(current.style) !== "undefined" &&
+            ( ( typeof(current.style.display) !== "undefined" &&
+                current.style.display === "none") ||
+                ( typeof(current.style.visibility) !== "undefined" &&
+                current.style.visibility === "hidden") ) ) ) {
             return false;
         }
-        if (typeof(current.parentNode) != "undefined" &&
-                current.parentNode != null &&
-                current.parentNode != current &&
-                current.parentNode.tagName.toLowerCase() != "body") {current = current.parentNode;}
+        if (typeof(current.parentNode) !== "undefined" &&
+                current.parentNode !== null &&
+                current.parentNode !== current &&
+                current.parentNode.tagName.toLowerCase() !== "body") {current = current.parentNode;}
         else {return true;}
     }
     return true;
@@ -731,14 +731,14 @@ function HideProgress()
 {
     document.getElementById('AjaxSpinner').style.display = 'none';
     /* Restore the menu fly-out function */
-    if (typeof (Saved_Menu_HoverStatic) != "undefined") { Menu_HoverStatic = Saved_Menu_HoverStatic; }
+    if (typeof (Saved_Menu_HoverStatic) !== "undefined") { Menu_HoverStatic = Saved_Menu_HoverStatic; }
     $('#spinblocker').remove();
 }
 
 function ShowProgress() 
 {
 	/* Save the menu fly-out function as global variable and diable it temporary */
-    if (typeof (Menu_HoverStatic) != "undefined") { Saved_Menu_HoverStatic = Menu_HoverStatic; Menu_HoverStatic = function (o) { return; }; }
+    if (typeof (Menu_HoverStatic) !== "undefined") { Saved_Menu_HoverStatic = Menu_HoverStatic; Menu_HoverStatic = function (o) { return; }; }
     var gridArea = $('.grid-container');
     var pos = gridArea.position();
     var height = gridArea.height();
@@ -749,69 +749,66 @@ function ShowProgress()
     CenterAndShowElement(document.getElementById('AjaxSpinner'));
 }
 
-if (typeof(jQuery) != 'undefined') {
-    SetupMenuJs = function(menu) {
+if (typeof(jQuery) !== 'undefined') {
+    SetupMenuJs = function (menu) {
         var menuItems = jQuery(menu).children(":first");
-        menuItems.each(function(idx, item) {
+        menuItems.each(function (idx, item) {
             item = jQuery(item);
-            item.bind('click',RedirectToPage);
+            item.bind('click', RedirectToPage);
             item.addClass('TrMenuItem');
 
             //get sub menu if there is one..
             var sub = jQuery(item.id + 'Items');
 
-            if (sub != null) {
+            if (sub !== null) {
                 SetupMenuJs(sub.children(":first"));
             }
         });
-    }
-    
-    // jquery version
-    RedirectToPage = function(event) {
-    var menuItem = $(this);
-    var links = menuItem.find('a');
-    links.each(function(item) {
-        window.location = item.href;
-    });
-    }    
-    
-    CenterAndShowElement = function (elem) {
-    var fn = function(ele){
-    // these 3 are jQuery(1.2.6+) specific
-    var screenWidth = jQuery(window).width();
-    var screenHeight = jQuery(window).height();
-    var scrollOffsets = jQuery(ele).offset();
-    
-    ele.style.display = '';
-    var updateProgressDivBounds = Sys.UI.DomElement.getBounds(ele);
-    var x = Math.round(screenWidth / 3) - Math.round(updateProgressDivBounds.width / 2);
-    var y = Math.round(screenHeight / 3) - Math.round(updateProgressDivBounds.height / 2);
-    Sys.UI.DomElement.setLocation(ele, x + scrollOffsets.left, y + scrollOffsets.top);
     };
     
-    if (elem.each) elem.each(fn);
-    else fn(elem);
-    }    
+    // jquery version
+    RedirectToPage = function (event) {
+        var menuItem = $(this);
+        var links = menuItem.find('a');
+        links.each(function (item) {
+            window.location = item.href;
+        });
+    };    
+    
+    CenterAndShowElement = function (elem) {
+        var fn = function (ele) {
+            // these 3 are jQuery(1.2.6+) specific
+            var screenWidth = jQuery(window).width();
+            var screenHeight = jQuery(window).height();
+            var scrollOffsets = jQuery(ele).offset();
+
+            ele.style.display = '';
+            var updateProgressDivBounds = Sys.UI.DomElement.getBounds(ele);
+            var x = Math.round(screenWidth / 3) - Math.round(updateProgressDivBounds.width / 2);
+            var y = Math.round(screenHeight / 3) - Math.round(updateProgressDivBounds.height / 2);
+            Sys.UI.DomElement.setLocation(ele, x + scrollOffsets.left, y + scrollOffsets.top);
+        };
+
+        if (elem.each) elem.each(fn);
+        else fn(elem);
+    };    
     
     Event = {
-        'observe': function (object, type, fn) { jQuery(object).bind(type,fn);}
-    }
+        'observe': function (object, type, fn) { jQuery(object).bind(type, fn); }
+    };
     
-    getWidth = function(el) {
+    getWidth = function (el) {
         return $(el).width();
-    }
-    hideElement = function(el) 
-    {
+    };
+    hideElement = function (el) {
         jQuery(el).hide();
-    }
-    showElement = function(el)
-    {
+    };
+    showElement = function (el) {
         jQuery(el).show();
-    }
-    setStyle = function(el, style)
-    {
+    };
+    setStyle = function (el, style) {
         jQuery(el).css(style);
-    }
+    };
     jQuery.fn.extend({
         'getWidth': function () { 
             var x;
@@ -826,7 +823,7 @@ if (typeof(jQuery) != 'undefined') {
 
 /* Pass ssd session (which contains company and project IDs) to window.open */
 var oldOpen = window.open;
-function fnWinOpen(url, name, misc) {
+function fnWinOpen(_url, name, misc) {
     var l = window.location;
     var x = /ssd=[0-9]+/;
     var z = l.href.match(x);
@@ -851,7 +848,7 @@ window.open = fnWinOpen;
 //function adjust_height() {
 //    $(".grid-container").each(function () {
 //        var height = $(this).children(".viewport").height();
-//        if (height == 0) return false;
+//        if (height === 0) return false;
 //        var spacer = 5;
 //        var total_height = height + spacer;
 //        var min_height = 100;
@@ -866,7 +863,7 @@ window.open = fnWinOpen;
 
 /* typ: empty or 'G' means generic prefix@suffix, 'A' means pull admim email from system, 'C' means pull cs email from system; prefix and suffix are fall-back on A/C; */
 function email(prefix, suffix, typ) {
-    if (!typ || typ == 'G') {
+    if (!typ || typ === 'G') {
         window.location = "mailto:" + prefix + "@" + suffix;
     }
     else {
@@ -898,7 +895,7 @@ function ConfirmPrompt(e, msg) {
     e.ask = true;
     PopDialog("images/warning.gif", msg || "Are you sure", e.id, function (r) {
     if (r) {
-        if (e.tagName == 'A' && (/^javascript:/).test(e.href))
+        if (e.tagName === 'A' && (/^javascript:/).test(e.href))
             eval(e.href.replace('javascript:',''));
         else
             $(e).click();
@@ -980,7 +977,7 @@ function PopDialog(iconUrl, msgContent, focusOnCloseId, yesno) {
         position: mobileStyle ? { my: "center top", at: "center top+25%", of: window } : { my: "center", at: "center", of: window },
         resizable: !mobileStyle,
         draggable: !mobileStyle,
-        minWidth: mobileStyle ? 250 : 400
+        minWidth: mobileStyle ? 250 : 800
     });
     jQuery("#MsgPopup").dialog('open');
 }
@@ -990,17 +987,17 @@ function WindowsDate2DatetimePicker(val, notime) {
     var ampm = val.match(/AM|PM/);
     x = x.replace(/yyyy/, 'Y').replace(/yy/, 'Y').replace(/MM/, 'mm').replace(/M/, 'mm').replace(/mm/, 'm').replace(/dd/, 'd') + (notime ? "" : (x.match(/H:i/) ? "" : ' H:i' + (ampm ? ' A' : '')));
     return x;
-    try {
-        var format = WindowsDateFormat2DatePickerDateFormat(val);
-        var valNoTime = val.replace(/[0-9]+:[0-9]+( (A|P)M)*$/, '');
-        var valDate = new Date(valNoTime);
-        var valTime = val.match(/[0-9]+:[0-9]+( (A|P)M)*$/)[0];
-        var pm = val.match(/( PM)+$/);
-        var hour = ('0' + (parseInt(valTime.match(/^[0-9]*/)) + (pm ? 12 : 0))).slice(-2);
-        return $.datepicker.formatDate(WindowsDateFormat2DatePickerDateFormat(valNoTime), valDate) + ' ' + valTime.replace(/([0-9]+):([0-9]+)( (A|P)M)*$/, (hour == "12" && !pm ? "00" : hour) + ':$2');
-    } catch (e) {
-        return val;
-    }
+    //try {
+    //    var format = WindowsDateFormat2DatePickerDateFormat(val);
+    //    var valNoTime = val.replace(/[0-9]+:[0-9]+( (A|P)M)*$/, '');
+    //    var valDate = new Date(valNoTime);
+    //    var valTime = val.match(/[0-9]+:[0-9]+( (A|P)M)*$/)[0];
+    //    var pm = val.match(/( PM)+$/);
+    //    var hour = ('0' + (parseInt(valTime.match(/^[0-9]*/)) + (pm ? 12 : 0))).slice(-2);
+    //    return $.datepicker.formatDate(WindowsDateFormat2DatePickerDateFormat(valNoTime), valDate) + ' ' + valTime.replace(/([0-9]+):([0-9]+)( (A|P)M)*$/, (hour === "12" && !pm ? "00" : hour) + ':$2');
+    //} catch (e) {
+    //    return val;
+    //}
 
 }
 /* convert Windows DateFormat string to jquery datepicker date format */
@@ -1012,7 +1009,7 @@ function WindowsDateFormat2DatePickerDateFormat(sample, notime) {
     var longFormat = sample && sampleNoTime.match(/[^: /.\-0-9]/); // induce from content
     var isSpecialDateFormat = sample && sample.match(/[0-9]+-[a-zA-Z]{3}-[0-9]{4}/); // induce from content of the form of 01-Nov-1990 specifically
     try {
-        if (isSpecialDateFormat) result = 'd-M-yy'
+        if (isSpecialDateFormat) result = 'd-M-yy';
         else if (longFormat) {
             result = ServerDateFormat.longFormat;
             if (result.match(/MMMM/)) result = result.replace(/MMMM/, "MM");
@@ -1040,13 +1037,13 @@ function WindowsDateFormat2DatePickerDateFormat(sample, notime) {
             else if (result.match(/ddd/)) result = result.replace(/ddd/, "D");
         }
     } catch (e) {
-        result = 'yy/mm/dd'  // this would make sure it is parsable by C# as it is actually yyyy/mm/dd
+        result = 'yy/mm/dd';  // this would make sure it is parsable by C# as it is actually yyyy/mm/dd
     }
     if (sample) {
         try {
             if (!hasTime) var date = $.datepicker.parseDate(result, sample);
         } catch (e) {
-            result = 'yy/mm/dd' // if it cannot be parsed, fallback to this
+            result = 'yy/mm/dd'; // if it cannot be parsed, fallback to this
         }
     }
     return hasTime ? ((longFormat ? ServerDateFormat.shortFormat : result.replace(/yy/, 'Y').replace(/mm/, 'm').replace(/dd/, 'd')) + (notime ? '' : ' H:i' + (ampm ? ' A' : ''))) : result;
@@ -1061,52 +1058,54 @@ function ApplyJQueryWidget(aNamId, aValId) {
     var aVal = aValId ? $('#' + aValId) : null;
     var aNams = [];
     var aVals = [];
-
     $('span.starrating').stars({ inputType: "label", showTitles: true, disabled: true });
     $('span.progressbar').each(function (i, e) {
         var select = e;
         var width = $(e).width();
-        var nolabel = $(e).attr('NoLabel') != undefined;
+        var nolabel = $(e).attr('NoLabel') !== undefined;
         var l = $("<div/>").css({ float: 'left', margin: '0 0 0 20px', display: 'none' }).html($(e).val());
         var sdiv = $("<div/>")
                             .css({ width: width, float: 'left', background: $(e.element).css("background-color") })
                             .insertBefore(e);
         var slider = sdiv.slider(
-                            { disabled: true, range: "min", value: parseInt($(e).html() || 0), min: parseInt($(e).attr("Min") || 0), max: parseInt($(e).attr("Max") || $(e).height()), step: parseInt($(e).attr("Step") || 1), slide: function (event, ui) { } });
+                            { disabled: true, range: "min", value: parseInt($(e).html() || 0), min: parseInt($(e).attr("Min") || 0), max: parseInt($(e).attr("Max") || $(e).height()), step: parseInt($(e).attr("Step") || 1), slide: function (event, ui) {/**/} });
         if (!nolabel) l.insertAfter(sdiv);
         $(e).hide();
     });
     $('select,input[type=text][NeedConfirm=Y],input[type=text][Behaviour=Rating],input[type=text][Behaviour=Slider],input[type=text][Behaviour=DateTime],input[type=text][Behaviour=Date]').each(function (i, e) {
         var behaviour = $(e).attr('Behaviour');
         var tag = e.tagName;
-        var needConfirm = $(e).attr('NeedConfirm') == 'Y';
+        var needConfirm = $(e).attr('NeedConfirm') === 'Y';
         var onchangeScript = $(e).attr('onchange');
         var currVal = $(e).val();
         var changed = false;
-        if (behaviour == "Rating") $(e).stars({ inputType: "textbox", showTitles: true });
-        else if (behaviour == "DateTime") {
+        var select = undefined;
+        if (behaviour === "Rating") $(e).stars({ inputType: "textbox", showTitles: true });
+        else if (behaviour === "DateTime") {
             $(e).datetimepicker({
                 step: 15, 'closeOnDateSelect': true, 'format': WindowsDate2DatetimePicker(currVal), 'formatDate': WindowsDateFormat2DatePickerDateFormat(currVal, true),
                 'onSelectDate': function (a, b, c) { changed = true; var n = nextOnTabIndex($(this)); setTimeout(function () { $(n).focus(); }, 0); },
                 'onSelectTime': function (a, b, c) { changed = true; var n = nextOnTabIndex($(this)); setTimeout(function () { $(n).focus(); }, 0); },
-                'onChangeDateTime': function (a, b, c) { if ($(e).val() == currVal) return false; },
+                'onChangeDateTime': function (a, b, c) { if ($(e).val() === currVal) return false; },
                 //'onShow': function (a,b,c,d) {},
                 //'onClose': function (a, b, c, d) { if (!changed && currVal && false) setTimeout(function () { $(e).val(currVal); }, 0); }
             });
         }
-        else if (behaviour == "Date") {
+        else if (behaviour === "Date") {
             $(e).datepicker({
                 'beforeShow': function (ele, inst) {
+                    openDatePickerId = ele.id;
                     currVal = $(ele).val(); $(ele).attr('onchange', 'return false;');
                     return { dateFormat: WindowsDateFormat2DatePickerDateFormat($(ele).val()) };
                 }, changeMonth: true, changeYear: true,
-                'onSelect': function (el) { if (onchangeScript) { eval(onchangeScript); } else { if (this.fireEvent) this.fireEvent('onchange'); else $(this).fire('change'); }; var n = nextOnTabIndex($(this)); setTimeout(function () { $(n).focus(); }, 0); },
-                'onClose': function (dateText, instance) { if (onchangeScript) { $(this).attr('onchange', onchangeScript); if (currVal != $(this).val()) if (this.fireEvent) this.fireEvent('onchange'); else $(this).fire('change'); } }
+                'onSelect': function (el) { if (onchangeScript) { eval(onchangeScript); } else { if (this.fireEvent) this.fireEvent('onchange'); else $(this).fire('change'); } var n = nextOnTabIndex($(this)); setTimeout(function () { $(n).focus(); }, 0); },
+                'onClose': function (dateText, instance) { openDatePickerId = null; if (onchangeScript) { $(this).attr('onchange', onchangeScript); if (currVal !== $(this).val()) if (this.fireEvent) this.fireEvent('onchange'); else $(this).fire('change'); } }
             });
+            if (openDatePickerId) setTimeout(function () { $('#' + openDatePickerId).datepicker('show'); });
         }
-        else if (behaviour == "Slider") {
-            var select = e, title = e.title;
-            var nolabel = $(e).attr('NoLabel') != undefined;
+        else if (behaviour === "Slider") {
+            select = e, title = e.title;
+            var nolabel = $(e).attr('NoLabel') !== undefined;
             var l = $("<div/>").css({ float: 'left', margin: '0 0 0 20px', display: 'none' }).html($(e).val());
             var handle = null;
             var sdiv = $("<div/>")
@@ -1114,10 +1113,10 @@ function ApplyJQueryWidget(aNamId, aValId) {
                             .insertBefore(e);
             var slider = sdiv.slider(
                             {
-                                disabled: $(e).attr('disabled') != undefined, range: "min", value: $(e).val(), min: parseInt($(e).attr("Min")), max: parseInt($(e).attr("Max")), step: parseInt($(e).attr("Step")), slide: function (event, ui) {
+                                disabled: $(e).attr('disabled') !== undefined, range: "min", value: $(e).val(), min: parseInt($(e).attr("Min")), max: parseInt($(e).attr("Max")), step: parseInt($(e).attr("Step")), slide: function (event, ui) {
                                     $(select).val(ui.value); $(l).html(ui.value); handle.qtip('option', 'content.text', '' + ui.value);
-                                    try { $(select).fire('change'); } catch (e) { };
-                                    try { this.focus(); } catch (e) { }
+                                    try { $(select).fire('change'); } catch (e) {/**/}
+                                    try { this.focus(); } catch (e) {/**/}
                                 }
                             }).attr('title', title);
             if (!nolabel) l.insertAfter(sdiv);
@@ -1141,14 +1140,14 @@ function ApplyJQueryWidget(aNamId, aValId) {
         );
             $(e).hide();
         }
-        else if (tag == "SELECT") {
-            if ($(e).attr('multiple') == 'multiple') {
+        else if (tag === "SELECT") {
+            if ($(e).attr('multiple') === 'multiple') {
                 ApplyMultiSelect(e);
             }
         }
         if (needConfirm) {
             if (aNamId) {
-                var select = e;
+                select = e;
                 aNams.push(select.id);
                 aVals.push($(select).val());
                 aNam.val(aNams.join(','));
@@ -1166,7 +1165,7 @@ function ShowEmbedScript() {
     var qs = jQuery.param(hash);
     var newDiv = $(document.createElement('div'));
     var location = window.location;
-    var iframe = '<div><div style="position:relative"><iframe frameborder="0" src="' + location.protocol + "//" + location.hostname + location.port + location.pathname + '?' + qs + '" style="width:100%;height:100vh;"></iframe></div></div>'
+    var iframe = '<div><div style="position:relative"><iframe frameborder="0" src="' + location.protocol + "//" + location.hostname + location.port + location.pathname + '?' + qs + '" style="width:100%;height:100vh;"></iframe></div></div>';
     var inst = 'In order to embed this screen into your site, just copy the code snippet below and paste into your html page';
     $(newDiv).html('<div>' + inst + '</div>' + '<textarea id="snippet">' + iframe + '</textarea>');
     $(newDiv).dialog({ modal: true, width: 'auto', buttons: { 'test': function () { var testDiv = $(document.createElement('div')); $(testDiv).html($('#' + 'snippet').val()); $(testDiv).dialog({ modal:true, width:'80%' }); } } });
@@ -1187,15 +1186,15 @@ function RetrieveBrowserCap(callback, cbParm) {
     var o2 = t2.getTimezoneOffset();
     browserCap.tzOffset = now.getTimezoneOffset();
     browserCap.tzBaseOffset = t1.getTimezoneOffset();
-    browserCap.tzHasDST = o1 != o2 ? 1 : 0;
-    browserCap.tzDST = browserCap.tzOffset != o1 ? 1 : 0;
+    browserCap.tzHasDST = o1 !== o2 ? 1 : 0;
+    browserCap.tzDST = browserCap.tzOffset !== o1 ? 1 : 0;
     browserCap.tzFullDateTime = now + "";
 
     var codeLatLng = function (lat, lng) {
         var geocoder = new google.maps.Geocoder();
         var latlng = new google.maps.LatLng(lat, lng);
         geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
+            if (status === google.maps.GeocoderStatus.OK) {
                 //                console.log(results)
                 if (results[1]) {
                     //formatted address
@@ -1204,23 +1203,23 @@ function RetrieveBrowserCap(callback, cbParm) {
                     for (var i = 0; i < results[0].address_components.length; i++) {
                         for (var b = 0; b < results[0].address_components[i].types.length; b++) {
                             //there are different types that might hold a city admin_area_lvl_1 usually does in come cases looking for sublocality type will be more appropriate
-                            if (results[0].address_components[i].types[b] == "locality" || results[0].address_components[i].types[b] == "administrative_area_level_3") {
+                            if (results[0].address_components[i].types[b] === "locality" || results[0].address_components[i].types[b] === "administrative_area_level_3") {
                                 //this is the object you are looking for
                                 browserCap.myCity = results[0].address_components[i].short_name;
                             }
-                            //                                if (results[0].address_components[i].types[b] == "administrative_area_level_2") {
+                            //                                if (results[0].address_components[i].types[b] === "administrative_area_level_2") {
                             //                                    //this is the object you are looking for
                             //                                    browserCap.myCity = (browserCap.myCity || "") + " " + results[0].address_components[i].short_name;
                             //                                }
-                            if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
+                            if (results[0].address_components[i].types[b] === "administrative_area_level_1") {
                                 //this is the object you are looking for
                                 browserCap.myState = results[0].address_components[i].short_name;
                             }
-                            if (results[0].address_components[i].types[b] == "country") {
+                            if (results[0].address_components[i].types[b] === "country") {
                                 //this is the object you are looking for
                                 browserCap.myCountry = results[0].address_components[i].short_name;
                             }
-                            if (results[0].address_components[i].types[b] == "postal_code") {
+                            if (results[0].address_components[i].types[b] === "postal_code") {
                                 //this is the object you are looking for
                                 browserCap.myPostal = results[0].address_components[i].short_name;
                             }
@@ -1235,7 +1234,7 @@ function RetrieveBrowserCap(callback, cbParm) {
             }
             callback(browserCap, cbParm);
         });
-    }
+    };
 
     var geo_success = function (position) {
         var myLat = position.coords.latitude;
@@ -1253,22 +1252,22 @@ function RetrieveBrowserCap(callback, cbParm) {
         browserCap.geoFailureCode = error.code;
         switch (error.code) {
             case error.PERMISSION_DENIED:
-                browserCap.geoFailureReason = "User denied the request for Geolocation."
+                browserCap.geoFailureReason = "User denied the request for Geolocation.";
                 break;
             case error.POSITION_UNAVAILABLE:
-                browserCap.geoFailureReason = "Location information is unavailable."
+                browserCap.geoFailureReason = "Location information is unavailable.";
                 break;
             case error.TIMEOUT:
-                browserCap.geoFailureReason = "The request to get user location timed out."
+                browserCap.geoFailureReason = "The request to get user location timed out.";
                 break;
             case error.UNKNOWN_ERROR:
-                browserCap.geoFailureReason = "An unknown error occurred."
+                browserCap.geoFailureReason = "An unknown error occurred.";
                 break;
         }
         callback(browserCap, cbParm);
-    }
+    };
 
-    if (false && navigator.geolocation) {
+    if (!document && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(geo_success, geo_failure);
     } else {
         callback(browserCap, cbParm);
@@ -1286,11 +1285,11 @@ function AsyncInform(o, params) {
         error: function (xhr, textStatus, errorThrown) { if (params.error) params.error(xhr, errorThrown); },
         success: function (result, textStatus, xhr) { if (params.success) params.success(result); }
     });
-};
+}
 
 // keyCtrlID is needed for client-side communication without a postback.
 function SearchLink(url, keyCtrlID, dlgWidth, dlgHeight) {
-    if (url == '') return false;
+    if (url === '') return false;
     var canClose = [false];
     var vpWidth = $(window).width();
     var vpHeight = $(window).height();
@@ -1309,12 +1308,12 @@ function SearchLink(url, keyCtrlID, dlgWidth, dlgHeight) {
         window.location.href = url;
     }
     else {
-        iframeHeight = smallphone ? '85vh' : (mobileStyle ? '85vh' : (dlgHeight == '' ? '80vh' : dlgHeight));
+        iframeHeight = smallphone ? '85vh' : (mobileStyle ? '85vh' : (dlgHeight === '' ? '80vh' : dlgHeight));
         var content = ("<div id='searchLinkDlg'><div style='position:relative;'><iframe id='searchLinkIframe' src='" + url + key + "' style='width: 100%; height:" + iframeHeight + "' Frameborder='0' scrolling='auto'></iframe></div></div>");
         canClose[0] = false;
         var dlg = jQuery(content).dialog({
             dialogClass: 'searchDlg',
-            width: smallphone ? '100%' : (mobileStyle ? '100%' : (dlgWidth == '' ? '90%' : dlgWidth)),
+            width: smallphone ? '100%' : (mobileStyle ? '100%' : (dlgWidth === '' ? '90%' : dlgWidth)),
             autoOpen: true,
             modal: true,
             resizable: true,
@@ -1324,13 +1323,13 @@ function SearchLink(url, keyCtrlID, dlgWidth, dlgHeight) {
             maxHeight: '100%',
             buttons: [{
                 text: "Maximize",
-                click: function () { $('.ui-icon-restore').parent().show(); $('.ui-icon-maximize').parent().hide(); $(this).dialog('option', 'width', '100%'); $('#searchLinkIframe').css('height', $(window).height() - 55); $(this).dialog('option', 'position', { my: 'top', at: 'top', of: window }) },
+                click: function () { $('.ui-icon-restore').parent().show(); $('.ui-icon-maximize').parent().hide(); $(this).dialog('option', 'width', '100%'); $('#searchLinkIframe').css('height', $(window).height() - 55); $(this).dialog('option', 'position', { my: 'top', at: 'top', of: window }); },
                 icons: { primary: 'ui-icon-maximize' },
                 showText: false
             },
                 {
                     text: "Restore Down",
-                    click: function () { $('.ui-icon-maximize').parent().show(); $('.ui-icon-restore').parent().hide(); $(this).dialog('option', 'width', smallphone ? '100%' : (mobileStyle ? '100%' : (dlgWidth == '' ? '70%' : dlgWidth))); $('#searchLinkIframe').css('height', iframeHeight); $(this).dialog('option', 'position', { my: 'center', at: 'center', of: window }) },
+                    click: function () { $('.ui-icon-maximize').parent().show(); $('.ui-icon-restore').parent().hide(); $(this).dialog('option', 'width', smallphone ? '100%' : (mobileStyle ? '100%' : (dlgWidth === '' ? '70%' : dlgWidth))); $('#searchLinkIframe').css('height', iframeHeight); $(this).dialog('option', 'position', { my: 'center', at: 'center', of: window }); },
                     icons: { primary: 'ui-icon-restore' },
                     showText: false
                 }
@@ -1344,7 +1343,7 @@ function SearchLink(url, keyCtrlID, dlgWidth, dlgHeight) {
             }
             , beforeClose: function (event, ui) {
                 $(this).find('#searchLinkIframe').attr('src', 'about:blank');
-                setTimeout(function () { if ($('#searchLinkIframe').contents()[0].location == "about:blank") { canClose[0] = true; dlg.dialog('destroy'); } }, 100); return canClose[0];
+                setTimeout(function () { if ($('#searchLinkIframe').contents()[0].location === "about:blank") { canClose[0] = true; dlg.dialog('destroy'); } }, 100); return canClose[0];
             }
         });
 
@@ -1362,8 +1361,8 @@ function SearchLink(url, keyCtrlID, dlgWidth, dlgHeight) {
                 dlg.dialog('option', 'width', '100%');
                 dlg.find("#searchLinkIframe").css("height", "85vh");
             } else {
-                if (dlgWidth == '') { dlg.dialog('option', 'width', '70%'); } else { dlg.dialog('option', 'width', dlgWidth); }
-                if (dlgHeight == '') { dlg.find("#searchLinkIframe").css("height", "70vh"); } else { dlg.find("#searchLinkIframe").css("height", dlgHeight); }
+                if (dlgWidth === '') { dlg.dialog('option', 'width', '70%'); } else { dlg.dialog('option', 'width', dlgWidth); }
+                if (dlgHeight === '') { dlg.find("#searchLinkIframe").css("height", "70vh"); } else { dlg.find("#searchLinkIframe").css("height", dlgHeight); }
             }
         });
     }
@@ -1377,18 +1376,18 @@ function flagInput(element, message, child, childBtn) {
     $height = $(child).outerHeight() / 2;
     $height = $height > 16 ? 16 : $height;
     $margin = $spacer + $width;
-    if (message != "") {
+    if (message !== "") {
         $(element).prepend("<div style=\"margin-left:" + $margin + "px;margin-top:-" + $height + "px;\" class=\"flag triangle-right left\" onclick='removeFlag(this);'>" + message + "</div>");
     }
 
-    if ($(this).data("originalBorderColor") == undefined) {
+    if ($(this).data("originalBorderColor") === undefined) {
         $(element).data("originalBorderColor", $(element).css("borderColor"));
     }
 
-    if(child != null){
+    if(child !== null){
         $(child).css("border", "1px solid red");
         $(child).addClass("errMsgBorder");
-        if(childBtn != null){
+        if(childBtn !== null){
             $(childBtn).css({'border' : '1px solid red', 'border-left-width': '0px'});
             $(childBtn).addClass("acErrMsgBorder");
         }
@@ -1402,10 +1401,10 @@ function ValidateThisModule(msgObj)
     $(".flag").remove();
     $(".errMsgBorder").css("border","").removeClass("errMsgBorder");
     $(".acErrMsgBorder").css("border","").removeClass("acErrMsgBorder");
-    try { $.watermark.hideAll();} catch (e) {};
+    try { $.watermark.hideAll(); } catch (e) {/**/}
     var v = Page_Validators;
     var allValid = true;
-    if (v && v != "underfined") 
+    if (v && v !== "underfined") 
     {
         $(v).each(function(i,e){
             try { ValidatorEnable(Page_Validators[i]); }
@@ -1421,13 +1420,12 @@ function ValidateThisModule(msgObj)
                         /* signature */
                         Page_Validators[i].controltovalidate = x + '_SigId';
                         ValidatorEnable(Page_Validators[i]);
-                    } catch (er2) {
-                    }
+                    } catch (er2) {/**/}
                 }
             }
             if (!e.isvalid) 
             {
-
+                var mc = undefined;
                 try {
                     var c = e.controltovalidate;
                     try {
@@ -1437,10 +1435,10 @@ function ValidateThisModule(msgObj)
                         //var inTab = $('#__tab_' + c.replace('_' + $(c.split('_')).last()[0],''));
                         inTab.css({ 'color': 'red', 'text-decoration': 'blink' });
                         inTab.click();
-                        } catch (e) {};
+                    } catch (e) {/**/}
                     if (!/_KeyId$/.test(c)) {
                         if (/_SigId$/.test(c)) {
-                            var mc = c.replace(/_SigId$/, '');
+                            mc = c.replace(/_SigId$/, '');
                             flagInput($('#' + c).parent().parent(), msgObj[$(c.split('_')).last()[0]].msg, $('#' + c).parent(), null);
                         }
                         else if ($('select#' + c.replace(/Hidden$/, '')).length > 0 && $('select#' + c.replace(/Hidden$/, '')).attr('size') > 1 && $('select#' + c.replace(/Hidden$/, '')).parent().is(':visible') && $('ul.ui-multiselect-checkboxes', $('select#' + c.replace(/Hidden$/, '')).parent()).length > 0) {
@@ -1454,25 +1452,25 @@ function ValidateThisModule(msgObj)
                         }
                     } else {
                     
-                        var mc = c.replace(/_KeyId$/,'');
+                        mc = c.replace(/_KeyId$/,'');
                         var autocomplete = $('input.autocomplete-box-input',$('#'+c).parent());
                         var autocompleteBtn = $('button.autocomplete-box-button',$('#'+c).parent());
-                            flagInput(autocomplete.parent(),msgObj[$(mc.split('_')).last()[0]].msg, autocomplete, autocompleteBtn);
-                            }
-                    } catch (er1) {};
+                        flagInput(autocomplete.parent(),msgObj[$(mc.split('_')).last()[0]].msg, autocomplete, autocompleteBtn);
+                    }
+                } catch (er1) {/**/}
                 allValid = false;
             }
 //            ValidatorEnable(Page_Validators[i],true);
         });
     }
-    if (!allValid) try {$.watermark.showAll();} catch (e) {};
+    if (!allValid) try { $.watermark.showAll(); } catch (e) {/**/}
     return allValid;
 }
 
 function WatermarkInput(msgObj, containerId)
 {
     $.watermark.options.hideBeforeUnload = false;
-    $('input.inp-num,input.GrdNum,input.inp-txt,input.GrdTxt,textarea.inp-txt').each(function (i, e) { if ($(e).attr('type') != 'password') try { $(e).watermark(msgObj[$(e.id.split('_')).last()[0]].hint, { useNative: false }); } catch (er) { }; });
+    $('input.inp-num,input.GrdNum,input.inp-txt,input.GrdTxt,textarea.inp-txt').each(function (i, e) { if ($(e).attr('type') !== 'password') try { $(e).watermark(msgObj[$(e.id.split('_')).last()[0]].hint, { useNative: false }); } catch (er) {/**/} });
 }
 
 // Load iFrame after PageLoad to avoid flickering:
@@ -1481,12 +1479,12 @@ function WatermarkInput(msgObj, containerId)
         ref = document.getElementsByTagName('base')[0] || document.getElementsByTagName('script')[0];
     div.innerHTML = '&shy;<style> iframe { visibility: hidden; } </style>';
     ref.parentNode.insertBefore(div, ref);
-    window.onload = function () { div.parentNode.removeChild(div); }
+    window.onload = function () { div.parentNode.removeChild(div); };
 })();
 
 // Use the enter key to act:
 function EnterKeyCtrl(e, clientID) {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
         var tb = document.getElementById(clientID);
         tb.click();
         return false;
@@ -1514,7 +1512,7 @@ function GoogleSignIn(clientid, cTokenId, cPostBackBtnId) {
                 alert('google sign in failed');
             }
         }
-    }
+    };
 
     // force login popup which would close itself if already signin, only way to avoid popup blocker by browser
     gapi.auth.authorize({ client_id: clientid, scope: googleAPIScopes, immediate: false }, handleAuthResult);
@@ -1535,7 +1533,7 @@ function FacebookSignIn(appId, cTokenId, cPostBackBtnId) {
             alert('facebook sign in failed');
         }
         return false;
-    }
+    };
 
     // force login popup which would close itself if already signin, only way to avoid popup blocker by browser
     FB.login(handleAuthResult, { scope: 'email' });
@@ -1563,7 +1561,7 @@ function ShowChart(context, elementId, chartType) {
             var xLabel = context.xLabel || result.d.xLabel ;
             var yLabel = context.yLabel || result.d.yLabel ;
             var title = context.title || result.d.rptTitle ;
-            if (chartType == "line") ClientSideLineChart(points, xLabel, yLabel, title, elementId);
+            if (chartType === "line") ClientSideLineChart(points, xLabel, yLabel, title, elementId);
             else ClientSideLineChart(points, xLabel, yLabel, title, elementId);
         }
     });
@@ -1604,30 +1602,30 @@ function PopCharts(chartInfo) {
 }
 
 // Keep the following for backward compatibility only:
-function ClientSideLineChart(points, xlabel, ylabel, title, elementid) {
-    for (var i = 0; i < points.length; i++) {
-        points[i][1] = parseFloat(points[i][1]);
-    }
-    var plot2 = $.jqplot(elementid, [points], {
-        title: title,
-        axes: {
-            xaxis: {
-                renderer: $.jqplot.DateAxisRenderer,
-                label: xlabel,
-                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-                tickOptions: {
-                    angle: -40,
-                    fontSize: '9pt'
-                }
-            },
-            yaxis: {
-                label: ylabel,
-                labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-            }
-        }
-    });
-}
+//function ClientSideLineChart(points, xlabel, ylabel, title, elementid) {
+//    for (var i = 0; i < points.length; i++) {
+//        points[i][1] = parseFloat(points[i][1]);
+//    }
+//    var plot2 = $.jqplot(elementid, [points], {
+//        title: title,
+//        axes: {
+//            xaxis: {
+//                renderer: $.jqplot.DateAxisRenderer,
+//                label: xlabel,
+//                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+//                tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+//                tickOptions: {
+//                    angle: -40,
+//                    fontSize: '9pt'
+//                }
+//            },
+//            yaxis: {
+//                label: ylabel,
+//                labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+//            }
+//        }
+//    });
+//}
 
 function ClientSideLineChart(points, xlabel, ylabel, title, elementid, displayformat) {
     $.jqplot._noToImageButton = true;
@@ -1636,10 +1634,10 @@ function ClientSideLineChart(points, xlabel, ylabel, title, elementid, displayfo
         points[i][1] = parseFloat(points[i][1]);
     }
     var format = '';
-    if (displayformat == 'M') {
+    if (displayformat === 'M') {
         format = '%b-%Y';
         tickrage = '1 month';
-    } else if (displayformat == 'A') {
+    } else if (displayformat === 'A') {
         format = '%Y';
         tickrage = '1 year';
     } else {
@@ -1725,7 +1723,7 @@ function ClientSideLineChart(points, xlabel, ylabel, title, elementid, displayfo
 function jqTab(msgObj) {
     (function () {
         var resetTabs = function (currentTab) {
-            $("#content > div").each(function (i, e) { if ($(e).attr('id').split('_').pop() != currentTab) $(e).hide(); }); //Hide all content, except current
+            $("#content > div").each(function (i, e) { if ($(e).attr('id').split('_').pop() !== currentTab) $(e).hide(); }); //Hide all content, except current
             $("#tabs a").removeClass("current");
         };
 
@@ -1777,18 +1775,18 @@ function MakeMonthlyPlanner(dayList, activeMonth) {
     //    var dayList = [ {date:'2014/5/1',content:8.5},{date:'2014.5.8',content:7},{date:'2014.6.8',content:7},{date:'2014.6.18',content:7},,{date:'2014.9.8',content:7}];
 
     var makeDatePlanner = function (dayList, year, month) {
-        var dateDiff = function (startDate, endDate) { return Math.round(((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)),0); }
+        var dateDiff = function (startDate, endDate) { return Math.round(((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)), 0); };
         var daySlot = new Array(42);
         var firstDate = new Date(year, month, 1);
         var monthOf = firstDate.getMonth();
         var yearOf = firstDate.getFullYear();
         var lastDate = new Date(yearOf, monthOf, 1); lastDate.setMonth(lastDate.getMonth() + 1, 0);
         var shift = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1).getDay();
-        if (shift == 0) shift = 7;
+        if (shift === 0) shift = 7;
         var nextMonthIdx = lastDate.getDate() + shift;
         var firstDateInSlot = new Date(yearOf, monthOf, 1); firstDateInSlot.setDate(firstDateInSlot.getDate() - shift);
         var lastDateInSlot = new Date(yearOf, monthOf, 1); lastDateInSlot.setMonth(lastDateInSlot.getMonth() + 1, 0); lastDateInSlot.setDate(lastDateInSlot.getDate() + (42 - nextMonthIdx));
-        //        var dayListOf = $.grep(dayList, function (e, i) { try { var d = new Date(Date.parse(e.date.replace(/\./g, "/"))); return d.getFullYear() == year && d.getMonth() == month; } catch (er) { return false; } });
+        //        var dayListOf = $.grep(dayList, function (e, i) { try { var d = new Date(Date.parse(e.date.replace(/\./g, "/"))); return d.getFullYear() === year && d.getMonth() === month; } catch (er) { return false; } });
         var dayListOf = $.grep(dayList, function (e, i) { try { var d = new Date(Date.parse(e.date.replace(/\./g, "/"))); return d >= firstDateInSlot && d <= lastDateInSlot; } catch (er) { return false; } });
         var ii = 0;
         //        for (ii = shift - 1; ii >= 0; ii = ii - 1) {
@@ -1805,23 +1803,23 @@ function MakeMonthlyPlanner(dayList, activeMonth) {
             var date = new Date(Date.parse(dayListOf[ii].date.replace(/\./g, "/")));
             var dom = date.getDate();
             var dow = date.getDay();
-            var month = date.getMonth();
-            var year = date.getFullYear();
             var idx = dateDiff(firstDateInSlot, date);
+            month = date.getMonth();
+            year = date.getFullYear();
             daySlot[idx] = { date: date, curr: date >= firstDate && date <= lastDate, prior: date < firstDate, next: date > lastDate, obj: dayListOf[ii] };
-            //            if (year == yearOf && month == monthOf) {
+            //            if (year === yearOf && month === monthOf) {
             //                daySlot[shift + (dom - 1)] = { date: date, curr: true, obj: dayListOf[ii] };
             //            }
         }
 
         for (ii = 0; ii < 42; ii++) {
             if (!daySlot[ii]) {
-                var date = new Date(firstDateInSlot); date.setDate(date.getDate() + ii);
+                date = new Date(firstDateInSlot); date.setDate(date.getDate() + ii);
                 daySlot[ii] = { date: date, curr: ii >= shift && ii < nextMonthIdx, prior: ii < shift, next: ii >= nextMonthIdx };
             }
         }
         return daySlot;
-    }
+    };
     var makeIntendedDate = function (d) { return new Date(d.year, d.month, 1); };
     var intendedMonth = activeMonth && activeMonth.year && activeMonth.month >= 0 && activeMonth.month < 12 ? new makeIntendedDate(activeMonth) : new Date();
     var planner = makeDatePlanner(dayList ? dayList : [], intendedMonth.getFullYear(), intendedMonth.getMonth());
@@ -1850,13 +1848,13 @@ function DrawCalenderPlanner(planner, year, month, init, whereAfterId) {
     var drawCurrentPlanner = function (fullPlanner, currentIntendedMonth) {
         var planner = MakeMonthlyPlanner(fullPlanner, currentIntendedMonth);
         var dayNamesShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var firstDate = new Date(planner[0].date);
         firstDate.setMonth(firstDate.getMonth() + 1, 1);
         try {
             dayNamesShort = $.datepicker._defaults.dayNamesShort;
             monthNames = $.datepicker._defaults.monthNamesShort && $.datepicker._defaults.monthNamesShort.length > 0 && $.datepicker._defaults.monthNamesShort[0].length > 2 ? $.datepicker._defaults.monthNamesShort : $.datepicker._defaults.monthNames;
-        } catch (er) { };
+        } catch (er) {/**/}
         var mySomeFunc = function (a, c) { if (Array.prototype.some) return a.some(c); else return $.grep(a, c).length > 0; };
         var currentMonthIdx = currentIntendedMonth.month;
         var currMonth = makeIntendedDate(currentIntendedMonth);
@@ -1868,52 +1866,52 @@ function DrawCalenderPlanner(planner, year, month, init, whereAfterId) {
         var currentMonthName = monthNames[currentMonthIdx];
         var priorMonthName = hasPriorMonthData ? monthNames[priorMonth.getMonth()] : '';
         var nextMonthName = hasNextMonthData ? monthNames[nextMonth.getMonth()] : '';
-        var calendarTitle = "<div class='responsive-calendar-date'><div class='date'><input type='hidden' readonly class='curr-month'/><span class='prior-month'>" + priorMonthName + "</span><span>" + currentMonthName + " " + currMonth.getFullYear() + "</span><span class='next-month'>" + nextMonthName + "</span></div></div>"
+        var calendarTitle = "<div class='responsive-calendar-date'><div class='date'><input type='hidden' readonly class='curr-month'/><span class='prior-month'>" + priorMonthName + "</span><span>" + currentMonthName + " " + currMonth.getFullYear() + "</span><span class='next-month'>" + nextMonthName + "</span></div></div>";
         var calendarHeader = $.map(planner.slice(0, 7),
         function (e, i) {
-            return "<div class='dayname header" + (i == 0 ? " first-child" : "") + "'><span>" + dayNamesShort[e.date.getDay()] + "</span></div>"
+            return "<div class='dayname header" + (i === 0 ? " first-child" : "") + "'><span>" + dayNamesShort[e.date.getDay()] + "</span></div>";
         }
         ).join('');
-        var calendarDayHeader = "<div class='calendar-day-headers'>" + calendarHeader + "<div class='clear'></div>" + "</div>"
+        var calendarDayHeader = "<div class='calendar-day-headers'>" + calendarHeader + "<div class='clear'></div>" + "</div>";
         var calendar = $.map(planner,
-        function (e, i) {
-            var color = e && e.obj ? (colorMap[e.obj.color] || "") : "";
-            var title = e && e.obj && e.obj.content && $.trim(e.obj.content) ? escapeForEmbeddedHTML(e.obj.content) : "";
-            var url = e && e.obj && e.obj.url && $.trim(e.obj.url) ? escapeForEmbeddedHTML(e.obj.url) : "";
-            var subTitle = e && e.obj && e.obj.subTitle && $.trim(e.obj.subTitle) ? escapeForEmbeddedHTML(e.obj.subTitle) : "";
-            var imgOver = e && e.obj && e.obj.imgOver && $.trim(e.obj.imgOver) ? escapeForEmbeddedHTML(e.obj.imgOver) : "";
-            var isPopupUrl = url.match(/^file|mail|http|java/i);
-            var isJsUrl = url.match(/^javascript\:/i);
-            var entry = "<div class='day " + (i % 7 == 0 ? "first-child" : "")
-                        + (!e || e.curr ? " active " : " disabled ") + (e && e.obj ? " " + color : "")
-                        + "' style='background-image:" + (imgOver == "" ? "none" : ("url(" + imgOver + ")")) + "' >"
-                        + "<div class='day-head'>"
-                        + "<span>" + (e && e.date ? e.date.getDate() : "") + "</span>"
-                        + "</div>"
-                        + "<div class='day-head-right'>"
-                        + "<span>" + (e && e.obj ? (e.obj.subTitle && $.trim(e.obj.subTitle) ? subTitle : "") : "") + "</span>"
-                        + "</div>"
-                        + "<div class='day-text'>"
-                        + (e && e.obj && e.obj.url && $.trim(e.obj.url)
-                            ? "<a href='" + (isJsUrl ? "#" : encodeURI(url)) + "'" +
-                            (isPopupUrl && !isJsUrl
-                                ? (" target='_blank' title='" + url + "'")
-                                : (" onclick='" +
-                                    (isJsUrl
-                                        ? encodeURI(url.replace(/^javascript\:/i, ''))
-                                        : escapeForEmbeddedHTML("SearchLink('" + (url) + "', '', '','')"))
-                                        + ";return false;' "))
-                                + ">"
-                            : "")
-                            + "<span>" + (e && e.obj ? (e.obj.content && $.trim(e.obj.content) ? title : (e.obj.url && $.trim(e.obj.url) ? ".." : "")) : "") + "</span>"
-                            + (e && e.obj && e.obj.url && $.trim(e.obj.url) ? "</a>" : "")
-                        + "</div>"
-                        + "</div>";
-            return entry;
-        }
-        )
+            function (e, i) {
+                var color = e && e.obj ? (colorMap[e.obj.color] || "") : "";
+                var title = e && e.obj && e.obj.content && $.trim(e.obj.content) ? escapeForEmbeddedHTML(e.obj.content) : "";
+                var url = e && e.obj && e.obj.url && $.trim(e.obj.url) ? escapeForEmbeddedHTML(e.obj.url) : "";
+                var subTitle = e && e.obj && e.obj.subTitle && $.trim(e.obj.subTitle) ? escapeForEmbeddedHTML(e.obj.subTitle) : "";
+                var imgOver = e && e.obj && e.obj.imgOver && $.trim(e.obj.imgOver) ? escapeForEmbeddedHTML(e.obj.imgOver) : "";
+                var isPopupUrl = url.match(/^file|mail|http|java/i);
+                var isJsUrl = url.match(/^javascript\:/i);
+                var entry = "<div class='day " + (i % 7 === 0 ? "first-child" : "")
+                    + (!e || e.curr ? " active " : " disabled ") + (e && e.obj ? " " + color : "")
+                    + "' style='background-image:" + (imgOver === "" ? "none" : ("url(" + imgOver + ")")) + "' >"
+                    + "<div class='day-head'>"
+                    + "<span>" + (e && e.date ? e.date.getDate() : "") + "</span>"
+                    + "</div>"
+                    + "<div class='day-head-right'>"
+                    + "<span>" + (e && e.obj ? (e.obj.subTitle && $.trim(e.obj.subTitle) ? subTitle : "") : "") + "</span>"
+                    + "</div>"
+                    + "<div class='day-text'>"
+                    + (e && e.obj && e.obj.url && $.trim(e.obj.url)
+                        ? "<a href='" + (isJsUrl ? "#" : encodeURI(url)) + "'" +
+                        (isPopupUrl && !isJsUrl
+                            ? (" target='_blank' title='" + url + "'")
+                            : (" onclick='" +
+                                (isJsUrl
+                                    ? encodeURI(url.replace(/^javascript\:/i, ''))
+                                    : escapeForEmbeddedHTML("SearchLink('" + (url) + "', '', '','')"))
+                                + ";return false;' "))
+                        + ">"
+                        : "")
+                    + "<span>" + (e && e.obj ? (e.obj.content && $.trim(e.obj.content) ? title : (e.obj.url && $.trim(e.obj.url) ? ".." : "")) : "") + "</span>"
+                    + (e && e.obj && e.obj.url && $.trim(e.obj.url) ? "</a>" : "")
+                    + "</div>"
+                    + "</div>";
+                return entry;
+            }
+        );
         var html = calendar.join('');
-        var fullCalendar = "<div class='responsive-calendar'>" + calendarTitle + "<div class='responsive-calendar-content'>" + calendarDayHeader + "<div class='calendar-day-content'>" + html + "</div>" + "</div>"
+        var fullCalendar = "<div class='responsive-calendar'>" + calendarTitle + "<div class='responsive-calendar-content'>" + calendarDayHeader + "<div class='calendar-day-content'>" + html + "</div>" + "</div>";
         var myContainer = $('#' + whereAfterId).parent();
         $('div.responsive-calendar', $('#' + whereAfterId).parent()).remove();
         $('#' + whereAfterId).parent().append(fullCalendar);
@@ -1935,8 +1933,8 @@ function DrawCalenderPlanner(planner, year, month, init, whereAfterId) {
         else if (!isNaN(currentSelectedMonth)) {
             currentIntendedMonth.year = currentSelectedMonth.getFullYear();
             currentIntendedMonth.month = currentSelectedMonth.getMonth();
-        };
-    } catch (e) { };
+        }
+    } catch (e) {/**/}
     drawCurrentPlanner(planner.data, currentIntendedMonth);
 }
 
@@ -1988,7 +1986,7 @@ function closeParentDlg() {
 }
 
 function LayoutDashboard(dashboard, afterEleId, title) {
-    var style = "display:inline-block; padding: 5px; background-color: skyblue; margin: 5px; color: #555; font-size: 16px; vertical-align: top;"
+    var style = "display:inline-block; padding: 5px; background-color: skyblue; margin: 5px; color: #555; font-size: 16px; vertical-align: top;";
     var wrapsq = function (x) { return "'" + x + "'"; };
     var xmlEncode = function (x) { return x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'); };
     var a = "<div>"
@@ -2046,8 +2044,8 @@ function _ApplyMultiSelect(e) {
     var onchange = $(e).attr('onchange');
     var lines = $(e).attr('size');
     var disabled = $(e).attr('disabled') || $(e).hasClass('aspNetDisabled');
-    var searchable = $(e).attr('searchable') != undefined;
-    var inPlace = !searchable &&  ($(e).attr('inPlace') != undefined || lines > 1);
+    var searchable = $(e).attr('searchable') !== undefined;
+    var inPlace = !searchable &&  ($(e).attr('inPlace') !== undefined || lines > 1);
     var refColCID = $(e).attr('refColCID');
     var pMKeyColID = $(e).attr('pMKeyColID');
     var lineHeight = 13 * 2;
@@ -2065,11 +2063,11 @@ function _ApplyMultiSelect(e) {
     var allSelected = true;
     var selectedText = $(e).find('option').map(
         function (i, e) {
-            if (this.value == '') {
+            if (this.value === '') {
                 if (this.selected) initSelectEmptyEle = this;
                 /* remove empty choice(used as unselect)            
                 */
-                if (searchable || disabled || true) {
+                if (searchable || disabled || document) {
                     this.selected = false;
                 }
                 hasEmptyEle = true;
@@ -2081,13 +2079,13 @@ function _ApplyMultiSelect(e) {
                 initSelectedKey[this.value] = this.innerHTML;
                 return this.innerHTML;
             } else {
-                if (this.value != '') allSelected = false;
+                if (this.value !== '') allSelected = false;
                 return null;
             }
         }
         ).toArray().join(',');
 
-    if (disabled && selectedText == '') $(e).attr('disabled', '');
+    if (disabled && selectedText === '') $(e).attr('disabled', '');
     var recentGroup = $("<optgroup show label='" + "Recent" + "'/>");
     var searchGroup = $("<optgroup label='" + "Match" + "'/>");
 
@@ -2099,7 +2097,7 @@ function _ApplyMultiSelect(e) {
     //    return;
     //}
 
-    if (!hasEmptyEle && !disabled && false) {
+    if (!hasEmptyEle && !disabled && !document) {
         $("<option value='' />").prependTo($(e));
     }
 
@@ -2115,7 +2113,7 @@ function _ApplyMultiSelect(e) {
         var appendToEnd = true;
         $('option',g).each(function(i,e)
         {
-            if (e.value == item[0].value) return appendToEnd = false;
+            if (e.value === item[0].value) return appendToEnd = false;
             else if (e.innerHTML > item[0].innerHTML) {
                 item.insertBefore(e);
                 return appendToEnd = false;
@@ -2153,8 +2151,8 @@ function _ApplyMultiSelect(e) {
             //height: inPlace ? intendedHeight - (showHeader ? headerHeight : 0) - 11 : lines * lineHeight,
             height: inPlace ? intendedHeight - 6 - (showHeader ? headerHeight : 0) : 200,
             appendTo: inPlace ? $(e).parent() : $(e).parent(),
-            buttonWidth: $(e).css('max-width') != 'none' ? $(e).css('max-width') : '100%',
-            menuWidth: $(e).css('max-width') != 'none' ? $(e).css('max-width') : (inPlace ? '100%' : null),
+            buttonWidth: $(e).css('max-width') !== 'none' ? $(e).css('max-width') : '100%',
+            menuWidth: $(e).css('max-width') !== 'none' ? $(e).css('max-width') : (inPlace ? '100%' : null),
             autoOpen: ($(e).parent().is(':visible')) && inPlace,
             beforeopen: function (x) {
                 if (!(inPlace)) {
@@ -2185,9 +2183,9 @@ function _ApplyMultiSelect(e) {
                 if (onchange) {
                     var currentSelected = {};
                     var selectionChanged = false;
-                    $('option', original).each(function (i, e) { if (this.selected) currentSelected[this.value] = this.innerHTML;; });
-                    $.each(initSelectedKey, function (k, v) { if (k && !currentSelected[k]) { selectionChanged = true; return false; }; });
-                    $.each(currentSelected, function (k, v) { if (k && !initSelectedKey[k]) { selectionChanged = true; return false; }; });
+                    $('option', original).each(function (i, e) { if (this.selected) currentSelected[this.value] = this.innerHTML; });
+                    $.each(initSelectedKey, function (k, v) { if (k && !currentSelected[k]) { selectionChanged = true; return false; } });
+                    $.each(currentSelected, function (k, v) { if (k && !initSelectedKey[k]) { selectionChanged = true; return false; } });
                     if (selectionChanged) setTimeout(function() { eval(onchange);},0);
                 }
             },
@@ -2196,7 +2194,7 @@ function _ApplyMultiSelect(e) {
                 nothingChanged = false;
                 if (searchable) {
                     if (isTouch) $('input[type="search"]', $(e).parent()).focus();
-                    if (ui.value == '') {
+                    if (ui.value === '') {
                         ui.checked = false;
                         setTimeout(function () { $(e).multiselect().multiselectfilter('reload'); }, 0);
                         return false;
@@ -2208,9 +2206,9 @@ function _ApplyMultiSelect(e) {
                         var more = false;
                         var noMore = false;
                         $('option', searchGroup).each(function (i, e) {
-                            if (e.value == ui.value) {
-                                more = $(e).attr('isMore') != undefined;
-                                noMore = $(e).attr('isNoMore') != undefined;
+                            if (e.value === ui.value) {
+                                more = $(e).attr('isMore') !== undefined;
+                                noMore = $(e).attr('isNoMore') !== undefined;
                                 if (!more && !noMore) {
                                     setTimeout(function () {
                                         $(e).attr('selected', 'selected');
@@ -2237,16 +2235,16 @@ function _ApplyMultiSelect(e) {
                 else {
                     var needRefresh = false;
                     var changed = false;
-                    if (ui.value == '') {
+                    if (ui.value === '') {
                         $('option', original).each(function (i, e) {
-                            e.selected = e.value == '' ? ui.checked : !ui.checked;
-                            if (e.value != '') changed = true, needRefresh = true;
+                            e.selected = e.value === '' ? ui.checked : !ui.checked;
+                            if (e.value !== '') changed = true, needRefresh = true;
                         });
                     }
                     else {
                         if (ui.checked) selectedKey[ui.value] = ui.text;
                         $('option', original).each(function (i, e) {
-                            if (e.value == '' || (false && !ui.clickOnInput && e.value != ui.value)) {
+                            if (e.value === '' || (!document && !ui.clickOnInput && e.value !== ui.value)) {
                                 needRefresh = true;
                                 e.selected = false;
                             }
@@ -2257,7 +2255,7 @@ function _ApplyMultiSelect(e) {
                         setTimeout(function () { eval(onchange); }, 0);
                     }
                 }
-                if (ui.value != '') lastSelected[0] = ui.value;
+                if (ui.value !== '') lastSelected[0] = ui.value;
             },
             
             checkAll: function (x) {
@@ -2266,7 +2264,7 @@ function _ApplyMultiSelect(e) {
                 if (searchable) {
                     if (isTouch) $('input[type="search"]', $(e).parent()).focus();
                     $('option', $(e)).each(function (i, e) {
-                        if ($(e).attr('isMore') != undefined || $(e).attr('isNoMore') != undefined) {
+                        if ($(e).attr('isMore') !== undefined || $(e).attr('isNoMore') !== undefined) {
                             $(e).attr('selected', null);
                         }
                         else {
@@ -2300,15 +2298,15 @@ function _ApplyMultiSelect(e) {
             },
             beforeoptgrouptoggle: function (event, ui) {
                 var target = event.srcElement.tagName;
-                if (target == "INPUT") {
-                    if ($(recentGroup)[0].label == ui.label) {
+                if (target === "INPUT") {
+                    if ($(recentGroup)[0].label === ui.label) {
                         $('option', recentGroup).each(function (i, e) {
                             e.selected = event.srcElement.checked;
                         });
                     } else {
                         $('input[type="search"]', $(e).parent()).focus();
                         $('option', $(searchGroup)).each(function (i, e) {
-                            if ($(e).attr('isMore') != undefined || $(e).attr('isNoMore') != undefined) {
+                            if ($(e).attr('isMore') !== undefined || $(e).attr('isNoMore') !== undefined) {
                                 $(e).attr('selected', null);
                             }
                             else {
@@ -2344,7 +2342,7 @@ function _ApplyMultiSelect(e) {
                     {
                         if ($(e).is(':visible')) $(e).hide();
                         else $(e).show();
-                    };
+                    }
                 });
                 return false;
             }
@@ -2369,6 +2367,7 @@ function _ApplyMultiSelect(e) {
     });
     var cache = {};
     if (searchable) {
+        var refEle = undefined;
         $(e).multiselect().multiselectfilter({
             delay: 150,
             label: '',
@@ -2379,23 +2378,23 @@ function _ApplyMultiSelect(e) {
                 var refColValIsList = "N";
                 if (refColCID) {
                     // it is possible that the ref column is just textbox or dropdownlist
-                    var refEle = $('#' + refColCID);
-                    if (refEle.length == 0) {
+                    refEle = $('#' + refColCID);
+                    if (refEle.length === 0) {
                         refColVal = $('#' + refColCID + "_KeyId").val();
                     }
                     else {
                         refColVal = refEle.val();
                         try {
                             // handle multiple select
-                            if ($(refEle).prop("tagName") == "SELECT") refColValIsList = "Y";
-                        } catch (e) { }
+                            if ($(refEle).prop("tagName") === "SELECT") refColValIsList = "Y";
+                        } catch (e) {/**/}
                     }
                 }
                 // handle primary key field reference 2012.11.13 gary
                 if (pMKeyColID) {
                     // it is possible that the ref column is just textbox or dropdownlist
-                    var refEle = $('#' + pMKeyColID);
-                    if (refEle.length == 0) {
+                    refEle = $('#' + pMKeyColID);
+                    if (refEle.length === 0) {
                         pMKeyVal = $('#' + pMKeyColID + "_KeyId").val();
                     }
                     else {
@@ -2428,7 +2427,7 @@ function _ApplyMultiSelect(e) {
                             if (e.selected) {
                                 if ($('option', recentGroup).length > 0) {
                                     var x = $('option', recentGroup).each(function (i, e) {
-                                        if (e.value == item[0].value) return appendToRecent = false;
+                                        if (e.value === item[0].value) return appendToRecent = false;
                                         else if (e.innerHTML > item[0].innerHTML) {
                                             item.insertBefore(e);
                                             return appendToRecent = false;
@@ -2443,13 +2442,13 @@ function _ApplyMultiSelect(e) {
                             var item = $(e);
                             if (!selectedKey[e.value] && !e.selected) $(e).remove();
                         });
-                        if (term || true) {
+                        if (term || document) {
                             $(result.d.data).each(function (i, e) {
                                 var opt = $('<option />', {
                                     value: e.key,
                                     text: e.label
                                 });
-                                if ($('option[value=' + e.key + ']', recentGroup).length == 0) opt.appendTo(searchGroup);
+                                if ($('option[value=' + e.key + ']', recentGroup).length === 0) opt.appendTo(searchGroup);
                             }
                             );
                             if (result.d.total >= result.d.topN) {
@@ -2458,14 +2457,14 @@ function _ApplyMultiSelect(e) {
                                     text: '...'
                                 }).attr('isMore','').appendTo(searchGroup);
                             }
-                            if ($('option', searchGroup).length == 0) {
+                            if ($('option', searchGroup).length === 0) {
                                 $('<option />', {
                                     value: ' ',
                                     text: 'No Match'
                                 }).attr('isNoMore', '').appendTo(searchGroup);
                             }
                         }
-                        else {
+                        else {/**/
                         }
                         $(e).multiselect('refresh');
                         response([]);
@@ -2560,7 +2559,7 @@ function getCurrentUsrInfo(handler) {
         url: "AdminWs.asmx/GetCurrentUsrInfo",
         data: $.toJSON({ Scope: 'basic' }),
         error: function (xhr, textStatus, errorThrown) {
-            ;
+            /**/
         },
         success: function (mr, textStatus, xhr) {
             var ret = mr.d;
@@ -2616,7 +2615,7 @@ function sendFile(file, url, success, failure) {
         url: url,
         data: formData,
         success: function (data, txtStatus, jqXHR) {
-            if (txtStatus != 'error' && typeof (success) === "function") {
+            if (txtStatus !== 'error' && typeof (success) === "function") {
                 success(data, txtStatus, jqXHR);
             }
         },
@@ -2626,6 +2625,87 @@ function sendFile(file, url, success, failure) {
             alert("Whoops something went wrong!");
         }
     });
+}
+
+function parsedUrl(url) {
+    var parser = document.createElement("a");
+    parser.href = url;
+    var o = {};
+    // IE 8 and 9 dont load the attributes "protocol" and "host" in case the source URL
+    // is just a pathname, that is, "/example" and not "http://domain.com/example".
+    parser.href = parser.href;
+
+    // IE 7 and 6 wont load "protocol" and "host" even with the above workaround,
+    // so we take the protocol/host from window.location and place them manually
+    if (parser.host === "") {
+        var newProtocolAndHost = window.location.protocol + "//" + window.location.host;
+        if (url.charAt(1) === "/") {
+            parser.href = newProtocolAndHost + url;
+        } else {
+            // the regex gets everything up to the last "/"
+            // /path/takesEverythingUpToAndIncludingTheLastForwardSlash/thisIsIgnored
+            // "/" is inserted before because IE takes it of from pathname
+            var currentFolder = ("/" + parser.pathname).match(/.*\//)[0];
+            parser.href = newProtocolAndHost + currentFolder + url;
+        }
+    }
+
+    // copies all the properties to this object
+    var properties = ['host', 'hostname', 'hash', 'href', 'port', 'protocol', 'search'];
+    for (var i = 0, n = properties.length; i < n; i++) {
+        o[properties[i]] = parser[properties[i]];
+    }
+
+    // pathname is special because IE takes the "/" of the starting of pathname
+    o.pathname = (parser.pathname.charAt(0) !== "/" ? "/" : "") + parser.pathname;
+    return o;
+}
+
+function makeNameFromNS(appDomainUrl, name) {
+    var appNS = (parsedUrl(appDomainUrl) || {}).pathname || '/';
+    return ((appNS.toUpperCase().replace(/^\//, '') + '_') || '') + name;
+}
+
+function eraseUserHandle(appDomainUrl) {
+    localStorage.removeItem(makeNameFromNS(appDomainUrl, "user_handle"));
+}
+
+function rememberUserHandle(appDomainUrl, userIdentity) {
+    localStorage.setItem(makeNameFromNS(appDomainUrl, "user_handle"), btoa(sjcl.hash.sha256.hash(userIdentity)).replace(/=/g, "_"));
+}
+
+function getUserHandle(appDomainUrl) {
+    var x = localStorage[makeNameFromNS(appDomainUrl, "user_handle")];
+    return x;
+}
+
+function getTokenName(appDomainUrl, name) {
+    var x = btoa(sjcl.hash.sha256.hash((appDomainUrl || "").toLowerCase() + name + (getUserHandle(appDomainUrl) || "") + (myMachine || "")));
+    return x;
+}
+
+function setCookie(name, value, days, path) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    var href = window.location.href;
+    document.cookie = name + "=" + (value || "") + expires + "; path=" + (path || "/") + ";secure";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999;';
 }
 
 //function MouseOverEffect(e, i) { e.src = i; }
@@ -2686,7 +2766,7 @@ item.addClassName('TrMenuItem');
 //get sub menu if there is one..
 var sub = $(item.id + 'Items');
 
-if (sub != null) {
+if (sub !== null) {
 SetupMenuJs(sub.firstDescendant());
 }
 });

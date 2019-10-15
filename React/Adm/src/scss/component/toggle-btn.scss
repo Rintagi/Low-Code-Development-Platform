@@ -1,0 +1,56 @@
+.toggle-btn {
+  justify-content: end;
+  display: inline-flex;
+  width: 100%;
+  padding: 4px 0;
+  margin-bottom: 0;
+  cursor: pointer;
+
+  .toggle-btn__input {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+
+  .toggle-btn__input-label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 40px;
+    height: 20px;
+    display: block;
+    border-radius: 23px;
+    position: relative;
+    margin-bottom: 0;
+    margin-left: auto;
+
+    @include themify($themes) {
+      background-color: themed('colorBorder');
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      transition: 0.3s;
+      box-shadow: 0 5px 10px rgba(153,153,153,0.4);
+      background-color: #ffffff;
+
+      //@include themify($themes) {
+      //  background-color: themed('colorBackground');
+      //}
+    }
+  }
+
+  .toggle-btn__input:checked ~ .toggle-btn__input-label {
+
+    &:after {
+      background: $color-accent;
+      left: calc(100%);
+      transform: translateX(-100%);
+    }
+  }
+}

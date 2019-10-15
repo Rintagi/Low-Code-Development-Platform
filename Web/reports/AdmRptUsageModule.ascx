@@ -78,6 +78,10 @@
 						<asp:TableCell CssClass="GrpContent"><rcasp:ComboBox id="cCompanyId" CssClass="inp-ddl" DataValueField="CompanyId" DataTextField="CompanyDesc" AutoPostBack="true" OnSelectedIndexChanged="cCompanyId_SelectedIndexChanged" runat="server" /></asp:TableCell>
 					</asp:TableRow>
 					<asp:TableRow VerticalAlign="top">
+						<asp:TableCell id="cProjectIdP1" CssClass="GrpLabel100" runat="server"><div><asp:Label id="cProjectIdLabel" CssClass="inp-lbl" runat="server" /></div></asp:TableCell>
+						<asp:TableCell CssClass="GrpContent"><rcasp:ComboBox id="cProjectId" CssClass="inp-ddl" DataValueField="ProjectId" DataTextField="ProjectDesc" AutoPostBack="true" OnSelectedIndexChanged="cProjectId_SelectedIndexChanged" runat="server" /></asp:TableCell>
+					</asp:TableRow>
+					<asp:TableRow VerticalAlign="top">
 						<asp:TableCell id="cAgentIdP1" CssClass="GrpLabel100" runat="server"><div><asp:Label id="cAgentIdLabel" CssClass="inp-lbl" runat="server" /></div></asp:TableCell>
 						<asp:TableCell CssClass="GrpContent"><rcasp:ComboBox id="cAgentId" CssClass="inp-ddl" DataValueField="AgentId" DataTextField="AgentName" AutoPostBack="true" OnSelectedIndexChanged="cAgentId_SelectedIndexChanged" runat="server" /></asp:TableCell>
 					</asp:TableRow>
@@ -96,10 +100,6 @@
 					<asp:Panel id="cGrp8" runat="server" BorderWidth="0px" CssClass="group-panel">
 					<asp:Table cellspacing="0" cellpadding="0" runat="server">
 					<asp:TableRow VerticalAlign="top">
-						<asp:TableCell id="cProjectIdP1" CssClass="GrpLabel100" runat="server"><div><asp:Label id="cProjectIdLabel" CssClass="inp-lbl" runat="server" /></div></asp:TableCell>
-						<asp:TableCell CssClass="GrpContent"><rcasp:ComboBox id="cProjectId" CssClass="inp-ddl" DataValueField="ProjectId" DataTextField="ProjectDesc" AutoPostBack="true" OnSelectedIndexChanged="cProjectId_SelectedIndexChanged" runat="server" /></asp:TableCell>
-					</asp:TableRow>
-					<asp:TableRow VerticalAlign="top">
 						<asp:TableCell id="cCustomerIdP1" CssClass="GrpLabel100" runat="server"><div><asp:Label id="cCustomerIdLabel" CssClass="inp-lbl" runat="server" /></div></asp:TableCell>
 						<asp:TableCell CssClass="GrpContent"><rcasp:ComboBox id="cCustomerId" CssClass="inp-ddl" DataValueField="CustomerId" DataTextField="CustomerName" AutoPostBack="true" OnSelectedIndexChanged="cCustomerId_SelectedIndexChanged" runat="server" /></asp:TableCell>
 					</asp:TableRow>
@@ -110,6 +110,18 @@
 					<asp:TableRow VerticalAlign="top">
 						<asp:TableCell id="cMemberIdP1" CssClass="GrpLabel100" runat="server"><div><asp:Label id="cMemberIdLabel" CssClass="inp-lbl" runat="server" /></div></asp:TableCell>
 						<asp:TableCell CssClass="GrpContent"><rcasp:ComboBox id="cMemberId" CssClass="inp-ddl" DataValueField="MemberId" DataTextField="MemberName" AutoPostBack="true" OnSelectedIndexChanged="cMemberId_SelectedIndexChanged" runat="server" /></asp:TableCell>
+					</asp:TableRow>
+					<asp:TableRow VerticalAlign="top">
+						<asp:TableCell id="cBorrowerIdP1" CssClass="GrpLabel100" runat="server"><div><asp:Label id="cBorrowerIdLabel" CssClass="inp-lbl" runat="server" /></div></asp:TableCell>
+						<asp:TableCell CssClass="GrpContent"><rcasp:ComboBox id="cBorrowerId" CssClass="inp-ddl" DataValueField="BorrowerId" DataTextField="BorrowerName" AutoPostBack="true" OnSelectedIndexChanged="cBorrowerId_SelectedIndexChanged" runat="server" /></asp:TableCell>
+					</asp:TableRow>
+					<asp:TableRow VerticalAlign="top">
+						<asp:TableCell id="cGuarantorIdP1" CssClass="GrpLabel100" runat="server"><div><asp:Label id="cGuarantorIdLabel" CssClass="inp-lbl" runat="server" /></div></asp:TableCell>
+						<asp:TableCell CssClass="GrpContent"><rcasp:ComboBox id="cGuarantorId" CssClass="inp-ddl" DataValueField="GuarantorId" DataTextField="GuarantorName" AutoPostBack="true" OnSelectedIndexChanged="cGuarantorId_SelectedIndexChanged" runat="server" /></asp:TableCell>
+					</asp:TableRow>
+					<asp:TableRow VerticalAlign="top">
+						<asp:TableCell id="cLenderIdP1" CssClass="GrpLabel100" runat="server"><div><asp:Label id="cLenderIdLabel" CssClass="inp-lbl" runat="server" /></div></asp:TableCell>
+						<asp:TableCell CssClass="GrpContent"><rcasp:ComboBox id="cLenderId" CssClass="inp-ddl" DataValueField="LenderId" DataTextField="LenderName" AutoPostBack="true" OnSelectedIndexChanged="cLenderId_SelectedIndexChanged" runat="server" /></asp:TableCell>
 					</asp:TableRow>
 					</asp:Table>
 					</asp:Panel>

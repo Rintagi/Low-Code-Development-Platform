@@ -21,9 +21,7 @@ namespace RO.Web
 		private const string KEY_dtDataTier = "Cache:dtDataTier";
 		private string LcSysConnString;
 		private string LcAppConnString;
-		private string LcAppPw;
-
-
+		private string LcAppPw;
 		public GenConvSqlModule()
 		{
 			this.Init += new System.EventHandler(Page_Init);
@@ -54,9 +52,7 @@ namespace RO.Web
             if (LcSysConnString == null)
 			{
 				SetSystem(3);
-			}
-
-
+			}
 		}
 		#endregion
 
@@ -70,9 +66,7 @@ namespace RO.Web
 			LcSysConnString = base.SysConnectStr(SystemId);
 			LcAppConnString = base.AppConnectStr(SystemId);
 			LcAppPw = base.AppPwd(SystemId);
-		}
-
-
+		}
 		private void GetEntity()
 		{
 			DataTable dt = (DataTable)Session[KEY_dtEntity];

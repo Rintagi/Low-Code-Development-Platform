@@ -301,6 +301,16 @@
     		<div id="cLastFailedDt1P2" class="r-td r-content" runat="server"><asp:TextBox id="cLastFailedDt1" CssClass="inp-txt" runat="server" /></div>
     	</div>
     	<div class="r-tr">
+    		<div id="cCompanyLs1P1" class="r-td r-labelR" runat="server"><asp:Label id="cCompanyLs1Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cCompanyLs1P2" class="r-td r-content" runat="server"><asp:ListBox SelectionMode="Multiple" id="cCompanyLs1" CssClass="inp-pic" DataValueField="CompanyLs1" DataTextField="CompanyLs1Text" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cProjectLs1P1" class="r-td r-labelR" runat="server"><asp:Label id="cProjectLs1Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cProjectLs1P2" class="r-td r-content" runat="server"><asp:ListBox SelectionMode="Multiple" id="cProjectLs1" CssClass="inp-pic" DataValueField="ProjectLs1" DataTextField="ProjectLs1Text" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-5-8"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
     		<div id="cModifiedOn1P1" class="r-td r-labelR" runat="server"><asp:Label id="cModifiedOn1Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cModifiedOn1P2" class="r-td r-content" runat="server"><asp:TextBox id="cModifiedOn1" CssClass="inp-txt" runat="server" /></div>
     	</div>
@@ -312,12 +322,6 @@
     		<div id="cHintAnswer1P1" class="r-td r-labelR" runat="server"><asp:Label id="cHintAnswer1Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cHintAnswer1P2" class="r-td r-content" runat="server"><asp:TextBox id="cHintAnswer1" CssClass="inp-txt" MaxLength="50" runat="server" /></div>
     	</div>
-    	<div class="r-tr">
-    		<div id="cCompanyLs1P1" class="r-td r-labelR" runat="server"><asp:Label id="cCompanyLs1Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cCompanyLs1P2" class="r-td r-content" runat="server"><asp:ListBox SelectionMode="Multiple" id="cCompanyLs1" CssClass="inp-pic" DataValueField="CompanyLs1" DataTextField="CompanyLs1Text" runat="server" /></div>
-    	</div>
-    </div></div></div>
-    <div class="r-td rc-5-8"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cInvestorId1P1" class="r-td r-labelR" runat="server"><asp:Label id="cInvestorId1Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cInvestorId1P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cInvestorId1" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbInvestorId1" DataValueField="InvestorId1" DataTextField="InvestorId1Text" runat="server" /></div>
@@ -343,8 +347,16 @@
     		<div id="cMemberId1P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cMemberId1" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbMemberId1" DataValueField="MemberId1" DataTextField="MemberId1Text" runat="server" /></div>
     	</div>
     	<div class="r-tr">
-    		<div id="cProjectLs1P1" class="r-td r-labelR" runat="server"><asp:Label id="cProjectLs1Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cProjectLs1P2" class="r-td r-content" runat="server"><asp:ListBox SelectionMode="Multiple" id="cProjectLs1" CssClass="inp-pic" DataValueField="ProjectLs1" DataTextField="ProjectLs1Text" runat="server" /></div>
+    		<div id="cLenderId1P1" class="r-td r-labelR" runat="server"><asp:Label id="cLenderId1Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cLenderId1P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cLenderId1" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbLenderId1" DataValueField="LenderId1" DataTextField="LenderId1Text" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cBorrowerId1P1" class="r-td r-labelR" runat="server"><asp:Label id="cBorrowerId1Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cBorrowerId1P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cBorrowerId1" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbBorrowerId1" DataValueField="BorrowerId1" DataTextField="BorrowerId1Text" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cGuarantorId1P1" class="r-td r-labelR" runat="server"><asp:Label id="cGuarantorId1Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cGuarantorId1P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cGuarantorId1" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbGuarantorId1" DataValueField="GuarantorId1" DataTextField="GuarantorId1Text" runat="server" /></div>
     	</div>
     </div></div></div>
     <div class="r-td rc-9-12"><div class="screen-tabfolder" runat="server"><div class="r-table">

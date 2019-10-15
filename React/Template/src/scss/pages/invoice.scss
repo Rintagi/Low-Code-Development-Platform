@@ -1,0 +1,74 @@
+.invoice {
+  padding: 35px;
+
+
+  @include themify($themes) {
+    background-color: themed('colorBackground');
+  }
+
+  .invoice__head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+
+    p {
+      color: $color-additional;
+      margin: 0;
+    }
+  }
+
+  .invoice__logo {
+    width: 120px;
+    height: 16px;
+    margin-bottom: 10px;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: left;
+    background-size: contain;
+
+    @include themify($themes) {
+      background-image: themed('logoImg');
+    }
+  }
+
+  .invoice__head-right {
+    width: 100%;
+    margin-top: 30px;
+
+    .invoice__date {
+      margin-bottom: 10px;
+    }
+  }
+
+  .invoice__total {
+    text-align: right;
+    margin-top: 15px;
+  }
+
+  .invoice__grand-total {
+    font-weight: 600;
+    font-size: 20px;
+    margin-top: 15px;
+    margin-bottom: 30px;
+  }
+
+  .invoice__toolbar {
+    justify-content: flex-end;
+
+    button {
+      margin-left: 15px;
+      margin-right: 0;
+    }
+  }
+
+  @media screen and (min-width: 768px){
+    padding: 50px;
+
+    .invoice__head-right{
+      width: auto;
+      text-align: right;
+      margin-top: 0;
+    }
+  }
+}

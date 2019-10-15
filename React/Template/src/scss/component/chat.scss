@@ -1,0 +1,436 @@
+.chat {
+  height: 580px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+
+  @include themify($themes) {
+    background-color: themed('colorBackground');
+  }
+
+  @media screen and (max-width: 1023px) {
+
+    &:before {
+      content: '';
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      opacity: 0;
+      z-index: 0;
+      transition: opacity 0.3s, z-index 0.3s 0.3s;
+
+      @include themify($themes) {
+        background-color: themed('colorBackgroundBody');
+      }
+    }
+
+    &.chat--open {
+
+      &:before {
+        opacity: 1;
+        z-index: 1;
+        transition: opacity 0.3s, z-index 0s;
+        pointer-events: none;
+      }
+
+      .chat__scroll, .chat__text-field{
+        pointer-events: none;
+      }
+    }
+  }
+
+  .chat__contact-list {
+    width: 245px;
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.3s;
+
+    @include themify($themes) {
+      border-right: 1px solid themed('colorFieldsBorder');
+      background-color: themed('colorBackground');
+    }
+
+    @media screen and (max-width: 1023px) {
+      transform: translateX(calc(-100% - 1px));
+      position: absolute;
+      z-index: 1;
+
+      &.chat__contact-list--open {
+        transform: translateX(0);
+        border-right: none;
+      }
+    }
+  }
+
+  .chat__contacts {
+    overflow: auto;
+    height: calc(100% - 55px);
+  }
+
+  .chat__contact {
+    height: 60px;
+    display: flex;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    @include themify($themes) {
+      border-bottom: 1px solid themed('colorFieldsBorder');
+    }
+
+    &:hover {
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+    }
+
+    &.chat__contact--active {
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+
+      &:hover {
+
+        @include themify($themes) {
+          background-color: themed('colorHover');
+        }
+      }
+    }
+  }
+
+  .chat__contact-avatar {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto 10px;
+    min-width: 40px;
+
+    img {
+      height: 100%;
+    }
+  }
+
+  .chat__contact-preview {
+    margin: auto 20px auto 0;
+  }
+
+  .chat__contact-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+  }
+
+  .chat__contact-last-message {
+    margin: 4px 0 0 0;
+    font-size: 14px;
+    line-height: 12px;
+    color: $color-additional;
+  }
+
+  .chat__dialog {
+    width: calc(100% - 245px);
+    overflow: hidden;
+    position: relative;
+
+    @media screen and (max-width: 1023px) {
+      width: 100%;
+    }
+  }
+
+  .chat__scroll {
+    height: 460px;
+
+    .scrollbar-track {
+
+      &.scrollbar-track-y {
+        width: 2px;
+        margin-right: 3px;
+      }
+    }
+
+    .scrollbar-thumb {
+      opacity: 0.3;
+      width: 5px;
+    }
+  }
+
+  .chat__dialog-messages-wrap {
+    min-height: 460px;
+    width: 100%;
+    display: flex;
+  }
+
+  .chat__dialog-messages {
+    padding: 30px 40px 30px 30px;
+    margin-top: auto;
+    width: 100%;
+  }
+
+  .chat__bubble-message-wrap {
+    width: calc(100% - 50px);
+    max-width: 620px;
+    padding: 15px 20px 20px 20px;
+    position: relative;
+    border-radius: 15px;
+
+    @include themify($themes) {
+      background-color: themed('colorBubble');
+    }
+  }
+
+  .chat__bubble-avatar {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-top: 15px;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .chat__bubble-contact-name {
+    margin-top: 0;
+    margin-bottom: 2px;
+    font-size: 13px;
+    font-weight: 600;
+    color: $color-blue;
+  }
+
+  .chat__bubble-message {
+    margin: 0;
+    font-size: 14px;
+
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+
+  }
+
+  .chat__bubble-date {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    color: $color-additional;
+    font-size: 10px;
+    margin: 0;
+  }
+
+  .chat__bubble {
+    display: flex;
+    margin-bottom: 20px;
+
+    &.chat__bubble--active {
+      flex-direction: row-reverse;
+      text-align: right;
+
+      .chat__bubble-avatar {
+        margin-right: 0;
+        margin-left: 10px;
+      }
+
+      .chat__bubble-date {
+        right: auto;
+        left: 20px;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .chat__dialog-select-message, .chat__dialog-messages-empty {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    p {
+      margin: auto;
+      border-radius: 15px;
+      padding: 5px 20px;
+      color: $color-additional;
+
+      @include themify($themes) {
+        background-color: themed('colorBackgroundBody');
+      }
+    }
+  }
+
+  .chat__search {
+    height: 54px;
+    width: 100%;
+    display: flex;
+    position: relative;
+
+    @include themify($themes) {
+      border-bottom: 1px solid themed('colorFieldsBorder');
+    }
+
+    svg {
+      fill: $color-additional;
+      position: absolute;
+      right: 20px;
+      top: calc(50% - 7px);
+      height: 14px;
+      width: 14px;
+      pointer-events: none;
+    }
+  }
+
+  .chat__search-input {
+    margin: auto 10px;
+    width: 100%;
+    border-radius: 20px;
+    height: 24px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 14px;
+    transition: all 0.3s;
+    background: transparent;
+
+    @include themify($themes) {
+      border: 1px solid themed('colorFieldsBorder');
+    }
+
+    &:focus, &:active {
+      outline: none;
+      border-color: $color-blue;
+    }
+
+    &::-webkit-input-placeholder {
+      color: $color-additional;
+    }
+    &::-moz-placeholder {
+      color: $color-additional;
+    }
+    /* Firefox 19+ */
+    &:-moz-placeholder {
+      color: $color-additional;
+    }
+    /* Firefox 18- */
+    &:-ms-input-placeholder {
+      color: $color-additional;
+    }
+  }
+
+  .chat__text-field {
+    height: 120px;
+    width: 100%;
+    display: flex;
+  }
+
+  .chat__form {
+    margin: auto 40px 50px 40px;
+    width: 100%;
+    position: relative;
+    padding-top: 20px;
+  }
+
+  .chat__text-form-group {
+    width: 100%;
+    min-height: 50px;
+    margin-bottom: 0;
+    overflow: hidden;
+
+    & > div {
+      margin-top: auto;
+      width: calc(100% + 17px);
+    }
+  }
+
+  .chat__text-button {
+    width: 100px;
+    height: 38px;
+    padding-top: 8px;
+    margin-bottom: auto;
+  }
+
+  .chat__field-controls {
+    position: absolute;
+    right: 0;
+    top: 20px;
+    height: 38px;
+    display: flex;
+  }
+
+  .chat__icon-button {
+    background: transparent;
+    border: none;
+    height: 38px;
+    padding-top: 6px;
+    margin-right: 5px;
+    cursor: pointer;
+
+    svg {
+      height: 18px;
+      width: 18px;
+      fill: $color-additional;
+    }
+  }
+
+  .chat__topbar {
+    display: none;
+    height: 40px;
+
+    @include themify($themes) {
+      border-bottom: 1px solid themed('colorFieldsBorder');
+      background-color: themed('colorBackground');
+    }
+
+    @media screen and (max-width: 1023px) {
+      display: flex;
+    }
+  }
+
+  .chat__topbar-button {
+    background-color: transparent;
+    border: none;
+    transition: all 0.3s;
+    cursor: pointer;
+
+    &:hover {
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+    }
+  }
+
+  .chat__topbar-button-icon {
+
+    @include themify($themes) {
+      fill: themed('colorIcon');
+    }
+  }
+
+  .chat__topbar-contact {
+    display: flex;
+  }
+
+  .chat__topbar-contact-avatar {
+    height: 30px;
+    width: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: auto 10px;
+  }
+
+  .chat__topbar-contact-name {
+    font-weight: 600;
+  }
+}

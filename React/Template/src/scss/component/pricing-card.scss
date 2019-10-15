@@ -1,0 +1,63 @@
+.pricing-card {
+  text-align: center;
+
+  .pricing-card__body{
+    padding: 45px 40px;
+  }
+
+  &.pricing-card--primary {
+    border-top: 5px solid $color-blue;
+  }
+
+  &.pricing-card--info {
+    border-top: 5px solid $color-accent;
+  }
+
+  &.pricing-card--warning {
+    border-top: 5px solid $color-yellow;
+  }
+
+  &.pricing-card--danger {
+    border-top: 5px solid $color-red;
+  }
+
+  .pricing-card__img {
+    height: 70px;
+    margin-bottom: 20px;
+  }
+
+  .pricing-card__plan {
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  hr {
+    margin: 0;
+
+    @include themify($themes) {
+      border-top-color: themed('colorFieldsBorder');
+    }
+  }
+
+  .pricing-card__price {
+    margin-top: 20px;
+    font-weight: 300;
+    font-size: 48px;
+    line-height: 48px;
+
+    span {
+      font-size: 18px;
+    }
+  }
+
+  .pricing-card__feature--inactive {
+    color: #bbbbbb;
+  }
+
+  .pricing-card__button {
+    margin-top: 25px;
+    margin-bottom: 0;
+    max-width: 160px;
+    width: 100%;
+  }
+}

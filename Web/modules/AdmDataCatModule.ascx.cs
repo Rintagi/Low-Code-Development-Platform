@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -1861,7 +1864,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cCatDescription181.Text = dr["CatDescription181"].ToString();} catch {cCatDescription181.Text = string.Empty;}
 					SetTableId181(cTableId181,dr["TableId181"].ToString()); cTableId181_SelectedIndexChanged(cTableId181, new EventArgs());
 					cTableId181Search_Script();
-					try { if (dr["SampleImage181"].Equals(System.DBNull.Value)) { cSampleImage181.ImageUrl = "~/images/DefaultImg.png"; } else { cSampleImage181.ImageUrl = "data:application/base64;base64," + Convert.ToBase64String(dr["SampleImage181"] as byte[]);} cSampleImage181_Click(sender, new ImageClickEventArgs(0, 0)); }
+					try { if (dr["SampleImage181"].Equals(System.DBNull.Value)) { cSampleImage181.ImageUrl = "~/images/DefaultImg.png"; } else { cSampleImage181.OnClientClick = "window.open('" + GetUrlWithQSHash("DnLoad.aspx?key=" + dr["RptwizCatId181"].ToString() + "&tbl=dbo.RptwizCat&knm=RptwizCatId&col=SampleImage&hgt=135&sys=3") + "'); return false;"; cSampleImage181.ImageUrl = RO.Common3.Utils.BlobPlaceHolder(dr["SampleImage181"] as byte[],true);} cSampleImage181_Click(sender, new ImageClickEventArgs(0, 0)); }
 					catch { cSampleImage181.ImageUrl = string.Empty; }
 				}
 			}
@@ -1960,7 +1963,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					string rf = string.Empty;
 					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 6, cFindFilter.SelectedValue) + ")"; }
-					if (rf != string.Empty) { rf = "((" + rf + "  or _NewRow = 'Y' ))"; }
+					if (rf != string.Empty) { rf = "((" + rf + " or _NewRow = 'Y' ))"; }
 					dv.RowFilter = rf;
 					ViewState["_RowFilter"] = rf;
 					GotoPage(0); cAdmDataCatGrid_DataBind(dv);
@@ -2463,6 +2466,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			// *** GridItemDataBound (before) Web Rule End *** //
 			DataTable dt = (DataTable)Session[KEY_dtAdmDataCatGrid];
 			bool isEditItem = false;
+			bool isImage = true;
+			bool hasImageContent = false;
 			DataView dvAdmDataCatGrid = dt != null ? dt.DefaultView : null;
 			if (cAdmDataCatGrid.EditIndex > -1 && GetDataItemIndex(cAdmDataCatGrid.EditIndex) == e.Item.DataItemIndex)
 			{
@@ -2491,6 +2496,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				}
 			}
 			if (cAdmDataCatGrid.EditIndex > -1 && GetDataItemIndex(cAdmDataCatGrid.EditIndex) == e.Item.DataItemIndex)
+			{
+			}
+			else
 			{
 			}
 			// *** GridItemDataBound (after) Web Rule End *** //

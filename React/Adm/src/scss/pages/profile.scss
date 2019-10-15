@@ -1,0 +1,247 @@
+.profile {
+
+  .profile__card {
+    height: 100%;
+    padding: 0;
+
+    @include themify($themes) {
+      background-color: themed('colorBackground');
+    }
+
+    .nav-item {
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .tab-content {
+      padding: 0 30px 40px 30px;
+    }
+
+    .timeline__content {
+
+      @include themify($themes) {
+        background: themed('colorBackgroundBody');
+      }
+
+      &:after {
+
+        @include themify($themes) {
+          border-left-color: themed('colorBackgroundBody');
+        }
+      }
+    }
+
+    .timeline .timeline__item:nth-child(even) {
+
+      .timeline__content {
+
+        &:after {
+
+          @include themify($themes) {
+            border-right-color: themed('colorBackgroundBody');
+          }
+        }
+      }
+    }
+
+    &.profile__card--calendar {
+      padding: 30px 10px;
+    }
+  }
+
+  .profile__information {
+    padding: 30px 40px;
+    display: flex;
+
+    @include themify($themes) {
+      border-bottom: 1px solid themed('colorBorder');
+    }
+  }
+
+  .profile__avatar {
+    height: 140px;
+    width: 140px;
+    overflow: hidden;
+    border-radius: 50%;
+
+    img {
+      height: 100%;
+    }
+  }
+
+  .profile__stats {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .profile__stat {
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 15px;
+  }
+
+  .profile__stat-number {
+    color: $color-blue;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    margin: 0;
+  }
+
+  .profile__stat-title {
+    margin: 0;
+    color: $color-additional;
+    font-size: 14px;
+    line-height: 14px;
+  }
+
+  .profile__data {
+    padding-left: 25px;
+    width: calc(100% - 140px);
+  }
+
+  .profile__name {
+    font-weight: 900;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 18px;
+  }
+
+  .profile__work {
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-top: 0;
+    opacity: 0.6;
+    line-height: 18px;
+  }
+
+  .profile__contact {
+    margin-top: 0;
+    margin-bottom: 5px;
+    line-height: 18px;
+  }
+
+  .profile__btn {
+    margin-top: 10px;
+    margin-bottom: 0;
+    padding: 8px 15px;
+  }
+
+  .profile__activity {
+    display: flex;
+    border-bottom: solid 1px #e7e7e7;
+    padding: 20px 0;
+
+    &:last-child {
+      border: none;
+    }
+
+    img {
+      display: inline-block;
+      margin-right: 20px;
+      vertical-align: top;
+      margin-top: 10px;
+      width: auto;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      @media screen and (max-width: 576px){
+        width: 100%;
+      }
+    }
+  }
+
+  .profile__activity-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    min-width: 64px;
+    margin-right: 20px;
+
+    img {
+      height: 64px;
+      width: 64px;
+      margin: 0;
+    }
+  }
+
+  .profile__activity-name {
+    font-weight: 700;
+    color: $color-blue;
+  }
+
+  .profile__activity-date {
+    font-weight: 400;
+    color: $color-additional;
+    font-size: 10px;
+  }
+
+  .profile__current-tasks-title{
+    padding: 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0;
+
+    @include themify($themes) {
+      border-bottom: 1px solid themed('colorBorder');
+    }
+
+    span{
+      color: $color-additional;
+      font-size: 13px;
+    }
+  }
+
+  .profile__current-tasks{
+    position: relative;
+    padding-bottom: 40px;
+  }
+
+  .profile__current-task{
+    display: flex;
+    margin: 0 20px;
+    padding: 10px 0 10px 28px;
+    position: relative;
+
+    @include themify($themes) {
+      border-bottom: 1px solid themed('colorBorder');
+    }
+
+    &:last-of-type{
+      border-bottom: none;
+    }
+
+    .badge{
+      text-transform: uppercase;
+      font-size: 9px;
+      padding: 6px 10px;
+      display: inline-table;
+      height: 20px;
+      color: #ffffff;
+      margin-left: 5px;
+
+      &.badge-info{
+        background-color: $color-accent;
+      }
+
+      &.badge-error{
+        background-color: $color-red;
+      }
+    }
+  }
+
+  .profile__current-task-checkbox{
+    position: absolute;
+    left: 0;
+  }
+
+  .profile__see-all-tasks{
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+  }
+}

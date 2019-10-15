@@ -255,16 +255,24 @@ namespace RO.Web
 			ScriptManager.GetCurrent(Parent.Page).SetFocus(cEntityId.ClientID);
 		}
 
-		protected void cSystemId_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			DataTable dt = (DataTable)Session[KEY_dtSystem];
-			base.CSrc = new CurrSrc (true, dt.Rows[cSystemId.SelectedIndex]);
-			SetCTar(base.CPrj.TarDesConnectionString, base.CPrj.TarDesPassword);
-			PopWizardList(cSearch.Text);
-			ScriptManager.GetCurrent(Parent.Page).SetFocus(cSystemId.ClientID);
-		}
+        protected void cSystemId_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            DataTable dt = (DataTable)Session[KEY_dtSystem];
+            bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+            if (singleSQLCredential)
+            {
+                dt.Rows[cSystemId.SelectedIndex]["ServerName"] = Config.DesServer;
+                dt.Rows[cSystemId.SelectedIndex]["dbAppUserId"] = Config.DesUserId;
+                dt.Rows[cSystemId.SelectedIndex]["dbAppPassword"] = Config.DesPassword;
+            }
+            base.CSrc = new CurrSrc(true, dt.Rows[cSystemId.SelectedIndex]);
+            SetCTar(base.CPrj.TarDesConnectionString, base.CPrj.TarDesPassword);
+            PopWizardList(cSearch.Text);
+            ScriptManager.GetCurrent(Parent.Page).SetFocus(cSystemId.ClientID);
+        }
 
-		protected void cClientTierId_SelectedIndexChanged(object sender, System.EventArgs e)
+
+        protected void cClientTierId_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			if (base.CPrj != null)
 			{

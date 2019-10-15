@@ -136,6 +136,8 @@ Do not add the following unless the special scripts above has been investigated:
         <asp:HyperLink ID="cRegisterLink" runat="server" NavigateUrl="#" Visible="false">Click here to register and acquire a license to unlock this feature</asp:HyperLink>
         <asp:Label ID="cInstallIDLabel" runat="server" Text="Installation ID:" Visible="false"></asp:Label>
         <asp:Label ID="cInstallID" runat="server" Text="" Visible="false"></asp:Label>
+        <asp:Label ID="cAppIDLabel" runat="server" Text="App ID:" Visible="false"></asp:Label>
+        <asp:Label ID="cAppID" runat="server" Text="" Visible="false"></asp:Label>
     </div>
     <div class="r-td rc-7-12">
         <div class="wizard-action">

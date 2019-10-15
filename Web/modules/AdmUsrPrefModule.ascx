@@ -294,6 +294,12 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     		<div id="cProjectId93P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cProjectId93" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbProjectId93" DataValueField="ProjectId93" DataTextField="ProjectId93Text" runat="server" /></div>
     	</div>
     	<div class="r-tr">
+    		<div id="cSystemId93P1" class="r-td r-labelR" runat="server"><asp:Label id="cSystemId93Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cSystemId93P2" class="r-td r-content" runat="server"><asp:DropDownList id="cSystemId93" CssClass="inp-ddl" DataValueField="SystemId93" DataTextField="SystemId93Text" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-7-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
     		<div id="cMemberId93P1" class="r-td r-labelR" runat="server"><asp:Label id="cMemberId93Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cMemberId93P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cMemberId93" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbMemberId93" DataValueField="MemberId93" DataTextField="MemberId93Text" runat="server" /></div>
     	</div>
@@ -318,8 +324,16 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     		<div id="cVendorId93P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cVendorId93" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbVendorId93" DataValueField="VendorId93" DataTextField="VendorId93Text" runat="server" /></div>
     	</div>
     	<div class="r-tr">
-    		<div id="cSystemId93P1" class="r-td r-labelR" runat="server"><asp:Label id="cSystemId93Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cSystemId93P2" class="r-td r-content" runat="server"><asp:DropDownList id="cSystemId93" CssClass="inp-ddl" DataValueField="SystemId93" DataTextField="SystemId93Text" runat="server" /></div>
+    		<div id="cLenderId93P1" class="r-td r-labelR" runat="server"><asp:Label id="cLenderId93Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cLenderId93P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cLenderId93" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbLenderId93" DataValueField="LenderId93" DataTextField="LenderId93Text" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cBorrowerId93P1" class="r-td r-labelR" runat="server"><asp:Label id="cBorrowerId93Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cBorrowerId93P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cBorrowerId93" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbBorrowerId93" DataValueField="BorrowerId93" DataTextField="BorrowerId93Text" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cGuarantorId93P1" class="r-td r-labelR" runat="server"><asp:Label id="cGuarantorId93Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cGuarantorId93P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cGuarantorId93" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbGuarantorId93" DataValueField="GuarantorId93" DataTextField="GuarantorId93Text" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

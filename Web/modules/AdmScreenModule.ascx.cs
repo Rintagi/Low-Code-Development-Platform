@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -40,11 +43,13 @@ namespace RO.Common3.Data
 			columns.Add("ProgramName15", typeof(string));
 			columns.Add("ScreenTypeId15", typeof(string));
 			columns.Add("ViewOnly15", typeof(string));
+			columns.Add("SearchAscending15", typeof(string));
 			columns.Add("MasterTableId15", typeof(string));
 			columns.Add("SearchTableId15", typeof(string));
 			columns.Add("SearchId15", typeof(string));
-			columns.Add("SearchAscending15", typeof(string));
+			columns.Add("SearchIdR15", typeof(string));
 			columns.Add("SearchDtlId15", typeof(string));
+			columns.Add("SearchDtlIdR15", typeof(string));
 			columns.Add("SearchUrlId15", typeof(string));
 			columns.Add("SearchImgId15", typeof(string));
 			columns.Add("DetailTableId15", typeof(string));
@@ -75,6 +80,21 @@ namespace RO.Common3.Data
 			columns.Add("AddMsg16", typeof(string));
 			columns.Add("UpdMsg16", typeof(string));
 			columns.Add("DelMsg16", typeof(string));
+			columns.Add("IncrementMsg16", typeof(string));
+			columns.Add("NoMasterMsg16", typeof(string));
+			columns.Add("NoDetailMsg16", typeof(string));
+			columns.Add("AddMasterMsg16", typeof(string));
+			columns.Add("AddDetailMsg16", typeof(string));
+			columns.Add("MasterLstTitle16", typeof(string));
+			columns.Add("MasterLstSubtitle16", typeof(string));
+			columns.Add("MasterRecTitle16", typeof(string));
+			columns.Add("MasterRecSubtitle16", typeof(string));
+			columns.Add("MasterFoundMsg16", typeof(string));
+			columns.Add("DetailLstTitle16", typeof(string));
+			columns.Add("DetailLstSubtitle16", typeof(string));
+			columns.Add("DetailRecTitle16", typeof(string));
+			columns.Add("DetailRecSubtitle16", typeof(string));
+			columns.Add("DetailFoundMsg16", typeof(string));
 			return dt;
 		}
 	}
@@ -113,7 +133,9 @@ namespace RO.Web
 		private const string KEY_dtMasterTableId15 = "Cache:dtMasterTableId15";
 		private const string KEY_dtSearchTableId15 = "Cache:dtSearchTableId15";
 		private const string KEY_dtSearchId15 = "Cache:dtSearchId15";
+		private const string KEY_dtSearchIdR15 = "Cache:dtSearchIdR15";
 		private const string KEY_dtSearchDtlId15 = "Cache:dtSearchDtlId15";
+		private const string KEY_dtSearchDtlIdR15 = "Cache:dtSearchDtlIdR15";
 		private const string KEY_dtSearchUrlId15 = "Cache:dtSearchUrlId15";
 		private const string KEY_dtSearchImgId15 = "Cache:dtSearchImgId15";
 		private const string KEY_dtDetailTableId15 = "Cache:dtDetailTableId15";
@@ -188,7 +210,9 @@ namespace RO.Web
 				Session.Remove(KEY_dtMasterTableId15);
 				Session.Remove(KEY_dtSearchTableId15);
 				Session.Remove(KEY_dtSearchId15);
+				Session.Remove(KEY_dtSearchIdR15);
 				Session.Remove(KEY_dtSearchDtlId15);
+				Session.Remove(KEY_dtSearchDtlIdR15);
 				Session.Remove(KEY_dtSearchUrlId15);
 				Session.Remove(KEY_dtSearchImgId15);
 				Session.Remove(KEY_dtDetailTableId15);
@@ -244,7 +268,6 @@ namespace RO.Web
 				    cGridWksLabel.Text = dtLabel.Rows[4][1].ToString();
 				    cGridStrLabel.Text = dtLabel.Rows[5][1].ToString();
 				    cStartRow.ToolTip = dtLabel.Rows[6][1].ToString();
-				    cGridSrtLabel.Text = dtLabel.Rows[7][1].ToString();
 				}
 			}
 			else
@@ -672,16 +695,16 @@ namespace RO.Web
 						if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[1]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[2]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[2]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[3]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[3]["ColumnHeader"].ToString() + " Text" + (char)9);}
-						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[4]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[4]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[4]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[5]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[5]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[6]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[6]["ColumnHeader"].ToString() + " Text" + (char)9);}
-						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[7]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[8]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[8]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[9]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[9]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[10]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[11]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[11]["ColumnHeader"].ToString() + " Text" + (char)9);}
-						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[12]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[13]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[12]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[12]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[13]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[13]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[14]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[15]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[16]["ColumnHeader"].ToString() + (char)9);}
@@ -690,14 +713,31 @@ namespace RO.Web
 						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[19]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[20]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[21]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[24]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[25]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[25]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[22]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[23]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[26]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[27]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[27]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[27]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[28]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[29]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[30]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[31]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[33]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[34]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[35]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[36]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[37]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[38]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[38]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[39]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[39]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[40]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[40]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[41]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[41]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[42]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[42]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[43]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[43]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[44]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[44]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[45]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[45]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[46]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[46]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[47]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[47]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[48]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[48]["ColumnHeader"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -706,32 +746,49 @@ namespace RO.Web
 						if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ProgramName15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(drv["ScreenTypeId15"].ToString() + (char)9 + drv["ScreenTypeId15Text"].ToString() + (char)9);}
 						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ViewOnly15"].ToString().Replace("\"","\"\"") + "\"" + (char)9 + "\"" + drv["ViewOnly15Text"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterTableId15"].ToString() + (char)9 + drv["MasterTableId15Text"].ToString() + (char)9);}
-						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchTableId15"].ToString() + (char)9 + drv["SearchTableId15Text"].ToString() + (char)9);}
-						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchId15"].ToString() + (char)9 + drv["SearchId15Text"].ToString() + (char)9);}
-						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["SearchAscending15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchDtlId15"].ToString() + (char)9 + drv["SearchDtlId15Text"].ToString() + (char)9);}
-						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchUrlId15"].ToString() + (char)9 + drv["SearchUrlId15Text"].ToString() + (char)9);}
-						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchImgId15"].ToString() + (char)9 + drv["SearchImgId15Text"].ToString() + (char)9);}
-						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["DetailTableId15"].ToString() + (char)9 + drv["DetailTableId15Text"].ToString() + (char)9);}
-						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["GridRows15"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["HasDeleteAll15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ShowGridHead15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["GenerateSc15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["GenerateSr15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ValidateReq15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DeferError15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AuthRequired15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["GenAudit15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ScreenObj15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ScreenHlpId16"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId16"].ToString() + (char)9 + drv["CultureId16Text"].ToString() + (char)9);}
-						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ScreenTitle16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DefaultHlpMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["FootNote16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AddMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["UpdMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DelMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["SearchAscending15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterTableId15"].ToString() + (char)9 + drv["MasterTableId15Text"].ToString() + (char)9);}
+						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchTableId15"].ToString() + (char)9 + drv["SearchTableId15Text"].ToString() + (char)9);}
+						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchId15"].ToString() + (char)9 + drv["SearchId15Text"].ToString() + (char)9);}
+						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchIdR15"].ToString() + (char)9 + drv["SearchIdR15Text"].ToString() + (char)9);}
+						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchDtlId15"].ToString() + (char)9 + drv["SearchDtlId15Text"].ToString() + (char)9);}
+						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchDtlIdR15"].ToString() + (char)9 + drv["SearchDtlIdR15Text"].ToString() + (char)9);}
+						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchUrlId15"].ToString() + (char)9 + drv["SearchUrlId15Text"].ToString() + (char)9);}
+						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchImgId15"].ToString() + (char)9 + drv["SearchImgId15Text"].ToString() + (char)9);}
+						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["DetailTableId15"].ToString() + (char)9 + drv["DetailTableId15Text"].ToString() + (char)9);}
+						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["GridRows15"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["HasDeleteAll15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ShowGridHead15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["GenerateSc15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["GenerateSr15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ValidateReq15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DeferError15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AuthRequired15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["GenAudit15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ScreenObj15"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ScreenHlpId16"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId16"].ToString() + (char)9 + drv["CultureId16Text"].ToString() + (char)9);}
+						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ScreenTitle16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DefaultHlpMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["FootNote16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AddMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["UpdMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DelMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["IncrementMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["NoMasterMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["NoDetailMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AddMasterMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[38]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AddDetailMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[39]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MasterLstTitle16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[40]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MasterLstSubtitle16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[41]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MasterRecTitle16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[42]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MasterRecSubtitle16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[43]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MasterFoundMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[44]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DetailLstTitle16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[45]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DetailLstSubtitle16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[46]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DetailRecTitle16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[47]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DetailRecSubtitle16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[48]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DetailFoundMsg16"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmScreen.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
@@ -802,14 +859,31 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
-					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
-					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[38]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[39]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[40]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[41]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[42]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[43]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[44]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[45]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[46]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[47]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[48]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -841,14 +915,31 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[19]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[20]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[21]["ColumnHeader"].ToString() + @"\cell ");}
-					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[24]["ColumnHeader"].ToString() + @"\cell ");}
-					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[25]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[22]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[23]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[26]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[27]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[28]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[29]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[30]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[31]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[33]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[34]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[35]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[36]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[37]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[38]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[38]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[39]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[39]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[40]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[40]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[41]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[41]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[42]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[42]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[43]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[43]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[44]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[44]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[45]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[45]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[46]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[46]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[47]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[47]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[48]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[48]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -875,32 +966,49 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append(drv["ProgramName15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(drv["ScreenTypeId15Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(drv["ViewOnly15Text"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterTableId15Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchTableId15Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchId15Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchAscending15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchDtlId15Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchUrlId15Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchImgId15Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["DetailTableId15Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["GridRows15"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["HasDeleteAll15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(drv["ShowGridHead15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(drv["GenerateSc15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(drv["GenerateSr15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["ValidateReq15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(drv["DeferError15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["AuthRequired15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["GenAudit15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["ScreenObj15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ScreenHlpId16"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId16Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(drv["ScreenTitle16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(drv["DefaultHlpMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(drv["FootNote16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(drv["AddMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["UpdMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["DelMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchAscending15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterTableId15Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchTableId15Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchId15Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchIdR15Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchDtlId15Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchDtlIdR15Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchUrlId15Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(drv["SearchImgId15Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["DetailTableId15Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["GridRows15"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(drv["HasDeleteAll15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(drv["ShowGridHead15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["GenerateSc15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(drv["GenerateSr15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["ValidateReq15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["DeferError15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["AuthRequired15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["GenAudit15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(drv["ScreenObj15"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ScreenHlpId16"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId16Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(drv["ScreenTitle16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(drv["DefaultHlpMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["FootNote16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["AddMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["UpdMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["DelMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(drv["IncrementMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(drv["NoMasterMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(drv["NoDetailMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(drv["AddMasterMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[38]["ColExport"].ToString() == "Y") {sb.Append(drv["AddDetailMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[39]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterLstTitle16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[40]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterLstSubtitle16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[41]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterRecTitle16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[42]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterRecSubtitle16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[43]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterFoundMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[44]["ColExport"].ToString() == "Y") {sb.Append(drv["DetailLstTitle16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[45]["ColExport"].ToString() == "Y") {sb.Append(drv["DetailLstSubtitle16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[46]["ColExport"].ToString() == "Y") {sb.Append(drv["DetailRecTitle16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[47]["ColExport"].ToString() == "Y") {sb.Append(drv["DetailRecSubtitle16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[48]["ColExport"].ToString() == "Y") {sb.Append(drv["DetailFoundMsg16"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1839,6 +1947,56 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 		}
 
+		protected void cbSearchIdR15(object sender, System.EventArgs e)
+		{
+			SetSearchIdR15((RoboCoder.WebControls.ComboBox)sender,string.Empty,cSearchTableId15.SelectedValue);
+		}
+
+		private void SetSearchIdR15(RoboCoder.WebControls.ComboBox ddl, string keyId, string filtr)
+		{
+			System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+			context["method"] = "GetDdlSearchIdR3S4164";
+			context["addnew"] = "Y";
+			context["mKey"] = "SearchIdR15";
+			context["mVal"] = "SearchIdR15Text";
+			context["mTip"] = "SearchIdR15Text";
+			context["mImg"] = "SearchIdR15Text";
+			context["ssd"] = Request.QueryString["ssd"];
+			context["scr"] = "9";
+			context["csy"] = "3";
+			context["filter"] = Utils.IsInt(cFilterId.SelectedValue)? cFilterId.SelectedValue : "0";
+			context["isSys"] = "N";
+			context["conn"] = KEY_sysConnectionString;
+			context["refColCID"] = cSearchTableId15.ClientID;
+			context["refCol"] = "TableId";
+			context["refColDataType"] = "Int";
+			ddl.AutoCompleteUrl = "AutoComplete.aspx/DdlSuggests";
+			ddl.DataContext = context;
+			if (ddl != null)
+			{
+			    DataView dv = null;
+				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
+				try
+				{
+					dv = new DataView((new AdminSystem()).GetDdl(9,"GetDdlSearchIdR3S4164",true,false,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+				}
+				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("ScreenId"))
+					{
+						context["pMKeyColID"] = cAdmScreen9List.ClientID;
+						context["pMKeyCol"] = "ScreenId";
+						string ss = "(ScreenId is null";
+						if (string.IsNullOrEmpty(cAdmScreen9List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR ScreenId = " + cAdmScreen9List.SelectedValue + ")";}
+						dv.RowFilter = ss;
+					}
+					ddl.DataSource = dv; Session[KEY_dtSearchIdR15] = dv.Table;
+				    try { ddl.SelectByValue(keyId,filtr != string.Empty ? "(TableId is null OR TableId = " + filtr + ")" : string.Empty,true); } catch { try { ddl.SelectedIndex = 0; } catch { } }
+				}
+			}
+		}
+
 		protected void cbSearchDtlId15(object sender, System.EventArgs e)
 		{
 			SetSearchDtlId15((RoboCoder.WebControls.ComboBox)sender,string.Empty,cSearchTableId15.SelectedValue);
@@ -1884,6 +2042,56 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 						dv.RowFilter = ss;
 					}
 					ddl.DataSource = dv; Session[KEY_dtSearchDtlId15] = dv.Table;
+				    try { ddl.SelectByValue(keyId,filtr != string.Empty ? "(TableId is null OR TableId = " + filtr + ")" : string.Empty,true); } catch { try { ddl.SelectedIndex = 0; } catch { } }
+				}
+			}
+		}
+
+		protected void cbSearchDtlIdR15(object sender, System.EventArgs e)
+		{
+			SetSearchDtlIdR15((RoboCoder.WebControls.ComboBox)sender,string.Empty,cSearchTableId15.SelectedValue);
+		}
+
+		private void SetSearchDtlIdR15(RoboCoder.WebControls.ComboBox ddl, string keyId, string filtr)
+		{
+			System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+			context["method"] = "GetDdlSearchDtlIdR3S4165";
+			context["addnew"] = "Y";
+			context["mKey"] = "SearchDtlIdR15";
+			context["mVal"] = "SearchDtlIdR15Text";
+			context["mTip"] = "SearchDtlIdR15Text";
+			context["mImg"] = "SearchDtlIdR15Text";
+			context["ssd"] = Request.QueryString["ssd"];
+			context["scr"] = "9";
+			context["csy"] = "3";
+			context["filter"] = Utils.IsInt(cFilterId.SelectedValue)? cFilterId.SelectedValue : "0";
+			context["isSys"] = "N";
+			context["conn"] = KEY_sysConnectionString;
+			context["refColCID"] = cSearchTableId15.ClientID;
+			context["refCol"] = "TableId";
+			context["refColDataType"] = "Int";
+			ddl.AutoCompleteUrl = "AutoComplete.aspx/DdlSuggests";
+			ddl.DataContext = context;
+			if (ddl != null)
+			{
+			    DataView dv = null;
+				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
+				try
+				{
+					dv = new DataView((new AdminSystem()).GetDdl(9,"GetDdlSearchDtlIdR3S4165",true,false,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+				}
+				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("ScreenId"))
+					{
+						context["pMKeyColID"] = cAdmScreen9List.ClientID;
+						context["pMKeyCol"] = "ScreenId";
+						string ss = "(ScreenId is null";
+						if (string.IsNullOrEmpty(cAdmScreen9List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR ScreenId = " + cAdmScreen9List.SelectedValue + ")";}
+						dv.RowFilter = ss;
+					}
+					ddl.DataSource = dv; Session[KEY_dtSearchDtlIdR15] = dv.Table;
 				    try { ddl.SelectByValue(keyId,filtr != string.Empty ? "(TableId is null OR TableId = " + filtr + ")" : string.Empty,true); } catch { try { ddl.SelectedIndex = 0; } catch { } }
 				}
 			}
@@ -2155,44 +2363,50 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cProgramName15, dtAuth.Rows[1], cProgramName15P1, cProgramName15Label, cProgramName15P2, null, dtLabel.Rows[1], cRFVProgramName15, null, null);
 				base.SetFoldBehavior(cScreenTypeId15, dtAuth.Rows[2], cScreenTypeId15P1, cScreenTypeId15Label, cScreenTypeId15P2, null, dtLabel.Rows[2], cRFVScreenTypeId15, null, null);
 				base.SetFoldBehavior(cViewOnly15, dtAuth.Rows[3], cViewOnly15P1, cViewOnly15Label, cViewOnly15P2, null, dtLabel.Rows[3], cRFVViewOnly15, null, null);
-				base.SetFoldBehavior(cMasterTableId15, dtAuth.Rows[4], cMasterTableId15P1, cMasterTableId15Label, cMasterTableId15P2, null, dtLabel.Rows[4], cRFVMasterTableId15, null, null);
+				base.SetFoldBehavior(cSearchAscending15, dtAuth.Rows[4], cSearchAscending15P1, cSearchAscending15Label, cSearchAscending15P2, null, dtLabel.Rows[4], null, null, null);
+				base.SetFoldBehavior(cMasterTableId15, dtAuth.Rows[5], cMasterTableId15P1, cMasterTableId15Label, cMasterTableId15P2, null, dtLabel.Rows[5], cRFVMasterTableId15, null, null);
 				SetMasterTableId15(cMasterTableId15,string.Empty);
-				base.SetFoldBehavior(cSearchTableId15, dtAuth.Rows[5], cSearchTableId15P1, cSearchTableId15Label, cSearchTableId15P2, null, dtLabel.Rows[5], null, null, null);
+				base.SetFoldBehavior(cSearchTableId15, dtAuth.Rows[6], cSearchTableId15P1, cSearchTableId15Label, cSearchTableId15P2, null, dtLabel.Rows[6], null, null, null);
 				SetSearchTableId15(cSearchTableId15,string.Empty);
-				base.SetFoldBehavior(cSearchId15, dtAuth.Rows[6], cSearchId15P1, cSearchId15Label, cSearchId15P2, null, dtLabel.Rows[6], null, null, null);
+				base.SetFoldBehavior(cSearchId15, dtAuth.Rows[7], cSearchId15P1, cSearchId15Label, cSearchId15P2, null, dtLabel.Rows[7], null, null, null);
 				SetSearchId15(cSearchId15,string.Empty,string.Empty);
-				base.SetFoldBehavior(cSearchAscending15, dtAuth.Rows[7], cSearchAscending15P1, cSearchAscending15Label, cSearchAscending15P2, null, dtLabel.Rows[7], null, null, null);
-				base.SetFoldBehavior(cSearchDtlId15, dtAuth.Rows[8], cSearchDtlId15P1, cSearchDtlId15Label, cSearchDtlId15P2, null, dtLabel.Rows[8], null, null, null);
+				base.SetFoldBehavior(cSearchIdR15, dtAuth.Rows[8], cSearchIdR15P1, cSearchIdR15Label, cSearchIdR15P2, null, dtLabel.Rows[8], null, null, null);
+				SetSearchIdR15(cSearchIdR15,string.Empty,string.Empty);
+				base.SetFoldBehavior(cSearchDtlId15, dtAuth.Rows[9], cSearchDtlId15P1, cSearchDtlId15Label, cSearchDtlId15P2, null, dtLabel.Rows[9], null, null, null);
 				SetSearchDtlId15(cSearchDtlId15,string.Empty,string.Empty);
-				base.SetFoldBehavior(cSearchUrlId15, dtAuth.Rows[9], cSearchUrlId15P1, cSearchUrlId15Label, cSearchUrlId15P2, null, dtLabel.Rows[9], null, null, null);
+				base.SetFoldBehavior(cSearchDtlIdR15, dtAuth.Rows[10], cSearchDtlIdR15P1, cSearchDtlIdR15Label, cSearchDtlIdR15P2, null, dtLabel.Rows[10], null, null, null);
+				SetSearchDtlIdR15(cSearchDtlIdR15,string.Empty,string.Empty);
+				base.SetFoldBehavior(cSearchUrlId15, dtAuth.Rows[11], cSearchUrlId15P1, cSearchUrlId15Label, cSearchUrlId15P2, null, dtLabel.Rows[11], null, null, null);
 				SetSearchUrlId15(cSearchUrlId15,string.Empty,string.Empty);
-				base.SetFoldBehavior(cSearchImgId15, dtAuth.Rows[10], cSearchImgId15P1, cSearchImgId15Label, cSearchImgId15P2, null, dtLabel.Rows[10], null, null, null);
+				base.SetFoldBehavior(cSearchImgId15, dtAuth.Rows[12], cSearchImgId15P1, cSearchImgId15Label, cSearchImgId15P2, null, dtLabel.Rows[12], null, null, null);
 				SetSearchImgId15(cSearchImgId15,string.Empty,string.Empty);
-				base.SetFoldBehavior(cDetailTableId15, dtAuth.Rows[11], cDetailTableId15P1, cDetailTableId15Label, cDetailTableId15P2, null, dtLabel.Rows[11], null, null, null);
+				base.SetFoldBehavior(cDetailTableId15, dtAuth.Rows[13], cDetailTableId15P1, cDetailTableId15Label, cDetailTableId15P2, null, dtLabel.Rows[13], null, null, null);
 				SetDetailTableId15(cDetailTableId15,string.Empty);
-				base.SetFoldBehavior(cGridRows15, dtAuth.Rows[12], cGridRows15P1, cGridRows15Label, cGridRows15P2, null, dtLabel.Rows[12], null, null, null);
-				base.SetFoldBehavior(cHasDeleteAll15, dtAuth.Rows[13], cHasDeleteAll15P1, cHasDeleteAll15Label, cHasDeleteAll15P2, null, dtLabel.Rows[13], null, null, null);
-				base.SetFoldBehavior(cShowGridHead15, dtAuth.Rows[14], cShowGridHead15P1, cShowGridHead15Label, cShowGridHead15P2, null, dtLabel.Rows[14], null, null, null);
-				base.SetFoldBehavior(cGenerateSc15, dtAuth.Rows[15], cGenerateSc15P1, cGenerateSc15Label, cGenerateSc15P2, null, dtLabel.Rows[15], null, null, null);
-				base.SetFoldBehavior(cGenerateSr15, dtAuth.Rows[16], cGenerateSr15P1, cGenerateSr15Label, cGenerateSr15P2, null, dtLabel.Rows[16], null, null, null);
-				base.SetFoldBehavior(cValidateReq15, dtAuth.Rows[17], cValidateReq15P1, cValidateReq15Label, cValidateReq15P2, null, dtLabel.Rows[17], null, null, null);
-				base.SetFoldBehavior(cDeferError15, dtAuth.Rows[18], cDeferError15P1, cDeferError15Label, cDeferError15P2, null, dtLabel.Rows[18], null, null, null);
-				base.SetFoldBehavior(cAuthRequired15, dtAuth.Rows[19], cAuthRequired15P1, cAuthRequired15Label, cAuthRequired15P2, null, dtLabel.Rows[19], null, null, null);
-				base.SetFoldBehavior(cGenAudit15, dtAuth.Rows[20], cGenAudit15P1, cGenAudit15Label, cGenAudit15P2, null, dtLabel.Rows[20], null, null, null);
-				base.SetFoldBehavior(cScreenObj15, dtAuth.Rows[21], cScreenObj15P1, cScreenObj15Label, cScreenObj15P2, null, dtLabel.Rows[21], null, null, null);
-				base.SetFoldBehavior(cScreenFilter, dtAuth.Rows[22], cScreenFilterP1, cScreenFilterLabel, cScreenFilterP2, null, dtLabel.Rows[22], null, null, null);
-				base.SetFoldBehavior(cMoreInfo, dtAuth.Rows[23], cMoreInfoP1, cMoreInfoLabel, cMoreInfoP2, null, dtLabel.Rows[23], null, null, null);
+				base.SetFoldBehavior(cGridRows15, dtAuth.Rows[14], cGridRows15P1, cGridRows15Label, cGridRows15P2, null, dtLabel.Rows[14], null, null, null);
+				base.SetFoldBehavior(cHasDeleteAll15, dtAuth.Rows[15], cHasDeleteAll15P1, cHasDeleteAll15Label, cHasDeleteAll15P2, null, dtLabel.Rows[15], null, null, null);
+				base.SetFoldBehavior(cShowGridHead15, dtAuth.Rows[16], cShowGridHead15P1, cShowGridHead15Label, cShowGridHead15P2, null, dtLabel.Rows[16], null, null, null);
+				base.SetFoldBehavior(cGenerateSc15, dtAuth.Rows[17], cGenerateSc15P1, cGenerateSc15Label, cGenerateSc15P2, null, dtLabel.Rows[17], null, null, null);
+				base.SetFoldBehavior(cGenerateSr15, dtAuth.Rows[18], cGenerateSr15P1, cGenerateSr15Label, cGenerateSr15P2, null, dtLabel.Rows[18], null, null, null);
+				base.SetFoldBehavior(cValidateReq15, dtAuth.Rows[19], cValidateReq15P1, cValidateReq15Label, cValidateReq15P2, null, dtLabel.Rows[19], null, null, null);
+				base.SetFoldBehavior(cDeferError15, dtAuth.Rows[20], cDeferError15P1, cDeferError15Label, cDeferError15P2, null, dtLabel.Rows[20], null, null, null);
+				base.SetFoldBehavior(cAuthRequired15, dtAuth.Rows[21], cAuthRequired15P1, cAuthRequired15Label, cAuthRequired15P2, null, dtLabel.Rows[21], null, null, null);
+				base.SetFoldBehavior(cGenAudit15, dtAuth.Rows[22], cGenAudit15P1, cGenAudit15Label, cGenAudit15P2, null, dtLabel.Rows[22], null, null, null);
+				base.SetFoldBehavior(cScreenObj15, dtAuth.Rows[23], cScreenObj15P1, cScreenObj15Label, cScreenObj15P2, null, dtLabel.Rows[23], null, null, null);
+				base.SetFoldBehavior(cScreenFilter, dtAuth.Rows[24], cScreenFilterP1, cScreenFilterLabel, cScreenFilterP2, null, dtLabel.Rows[24], null, null, null);
+				base.SetFoldBehavior(cMoreInfo, dtAuth.Rows[25], cMoreInfoP1, cMoreInfoLabel, cMoreInfoP2, null, dtLabel.Rows[25], null, null, null);
 			}
 			if ((cProgramName15.Attributes["OnChange"] == null || cProgramName15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cProgramName15.Visible && !cProgramName15.ReadOnly) {cProgramName15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cScreenTypeId15.Attributes["OnChange"] == null || cScreenTypeId15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cScreenTypeId15.Visible && cScreenTypeId15.Enabled) {cScreenTypeId15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();document.getElementById('" + bConfirm.ClientID + "').value='N';";}
 			if ((cViewOnly15.Attributes["OnChange"] == null || cViewOnly15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cViewOnly15.Visible && cViewOnly15.Enabled) {cViewOnly15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cSearchAscending15.Attributes["OnClick"] == null || cSearchAscending15.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cSearchAscending15.Visible && cSearchAscending15.Enabled) {cSearchAscending15.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cMasterTableId15.Attributes["OnChange"] == null || cMasterTableId15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cMasterTableId15.Visible && cMasterTableId15.Enabled) {cMasterTableId15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if (cMasterTableId15Search.Attributes["OnClick"] == null || cMasterTableId15Search.Attributes["OnClick"].IndexOf("_bConfirm") < 0) {cMasterTableId15Search.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';";}
 			if ((cSearchTableId15.Attributes["OnChange"] == null || cSearchTableId15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSearchTableId15.Visible && cSearchTableId15.Enabled) {cSearchTableId15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();document.getElementById('" + bConfirm.ClientID + "').value='N';";}
 			if (cSearchTableId15Search.Attributes["OnClick"] == null || cSearchTableId15Search.Attributes["OnClick"].IndexOf("_bConfirm") < 0) {cSearchTableId15Search.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';";}
 			if ((cSearchId15.Attributes["OnChange"] == null || cSearchId15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSearchId15.Visible && cSearchId15.Enabled) {cSearchId15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
-			if ((cSearchAscending15.Attributes["OnClick"] == null || cSearchAscending15.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cSearchAscending15.Visible && cSearchAscending15.Enabled) {cSearchAscending15.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
+			if ((cSearchIdR15.Attributes["OnChange"] == null || cSearchIdR15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSearchIdR15.Visible && cSearchIdR15.Enabled) {cSearchIdR15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cSearchDtlId15.Attributes["OnChange"] == null || cSearchDtlId15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSearchDtlId15.Visible && cSearchDtlId15.Enabled) {cSearchDtlId15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cSearchDtlIdR15.Attributes["OnChange"] == null || cSearchDtlIdR15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSearchDtlIdR15.Visible && cSearchDtlIdR15.Enabled) {cSearchDtlIdR15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cSearchUrlId15.Attributes["OnChange"] == null || cSearchUrlId15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSearchUrlId15.Visible && cSearchUrlId15.Enabled) {cSearchUrlId15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cSearchImgId15.Attributes["OnChange"] == null || cSearchImgId15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSearchImgId15.Visible && cSearchImgId15.Enabled) {cSearchImgId15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cDetailTableId15.Attributes["OnChange"] == null || cDetailTableId15.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cDetailTableId15.Visible && cDetailTableId15.Enabled) {cDetailTableId15.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -2271,7 +2485,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				Session.Remove(KEY_dtMasterTableId15);
 				Session.Remove(KEY_dtSearchTableId15);
 				Session.Remove(KEY_dtSearchId15);
+				Session.Remove(KEY_dtSearchIdR15);
 				Session.Remove(KEY_dtSearchDtlId15);
+				Session.Remove(KEY_dtSearchDtlIdR15);
 				Session.Remove(KEY_dtSearchUrlId15);
 				Session.Remove(KEY_dtSearchImgId15);
 				Session.Remove(KEY_dtDetailTableId15);
@@ -2289,26 +2505,28 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[1]["ColVisible"].ToString() == "Y" && dt.Rows[1]["ColReadOnly"].ToString() != "Y") {cProgramName15.Text = string.Empty;}
 			if (dt.Rows[2]["ColVisible"].ToString() == "Y" && dt.Rows[2]["ColReadOnly"].ToString() != "Y") {SetScreenTypeId15(cScreenTypeId15,string.Empty); cScreenTypeId15_SelectedIndexChanged(cScreenTypeId15, new EventArgs());}
 			if (dt.Rows[3]["ColVisible"].ToString() == "Y" && dt.Rows[3]["ColReadOnly"].ToString() != "Y") {SetViewOnly15(cViewOnly15,"N");}
-			if (dt.Rows[4]["ColVisible"].ToString() == "Y" && dt.Rows[4]["ColReadOnly"].ToString() != "Y") {cMasterTableId15.ClearSearch();}
-			if (dt.Rows[5]["ColVisible"].ToString() == "Y" && dt.Rows[5]["ColReadOnly"].ToString() != "Y") {cSearchTableId15.ClearSearch();}
-			if (dt.Rows[6]["ColVisible"].ToString() == "Y" && dt.Rows[6]["ColReadOnly"].ToString() != "Y") {cSearchId15.ClearSearch();}
-			if (dt.Rows[7]["ColVisible"].ToString() == "Y" && dt.Rows[7]["ColReadOnly"].ToString() != "Y") {cSearchAscending15.Checked = base.GetBool("Y");}
-			if (dt.Rows[8]["ColVisible"].ToString() == "Y" && dt.Rows[8]["ColReadOnly"].ToString() != "Y") {cSearchDtlId15.ClearSearch();}
-			if (dt.Rows[9]["ColVisible"].ToString() == "Y" && dt.Rows[9]["ColReadOnly"].ToString() != "Y") {cSearchUrlId15.ClearSearch();}
-			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {cSearchImgId15.ClearSearch();}
-			if (dt.Rows[11]["ColVisible"].ToString() == "Y" && dt.Rows[11]["ColReadOnly"].ToString() != "Y") {cDetailTableId15.ClearSearch();}
-			if (dt.Rows[12]["ColVisible"].ToString() == "Y" && dt.Rows[12]["ColReadOnly"].ToString() != "Y") {cGridRows15.Text = "12";}
-			if (dt.Rows[13]["ColVisible"].ToString() == "Y" && dt.Rows[13]["ColReadOnly"].ToString() != "Y") {cHasDeleteAll15.Checked = base.GetBool("Y");}
-			if (dt.Rows[14]["ColVisible"].ToString() == "Y" && dt.Rows[14]["ColReadOnly"].ToString() != "Y") {cShowGridHead15.Checked = base.GetBool("Y");}
-			if (dt.Rows[15]["ColVisible"].ToString() == "Y" && dt.Rows[15]["ColReadOnly"].ToString() != "Y") {cGenerateSc15.Checked = base.GetBool("Y");}
-			if (dt.Rows[16]["ColVisible"].ToString() == "Y" && dt.Rows[16]["ColReadOnly"].ToString() != "Y") {cGenerateSr15.Checked = base.GetBool("Y");}
-			if (dt.Rows[17]["ColVisible"].ToString() == "Y" && dt.Rows[17]["ColReadOnly"].ToString() != "Y") {cValidateReq15.Checked = base.GetBool("Y");}
-			if (dt.Rows[18]["ColVisible"].ToString() == "Y" && dt.Rows[18]["ColReadOnly"].ToString() != "Y") {cDeferError15.Checked = base.GetBool("N");}
-			if (dt.Rows[19]["ColVisible"].ToString() == "Y" && dt.Rows[19]["ColReadOnly"].ToString() != "Y") {cAuthRequired15.Checked = base.GetBool("Y");}
-			if (dt.Rows[20]["ColVisible"].ToString() == "Y" && dt.Rows[20]["ColReadOnly"].ToString() != "Y") {cGenAudit15.Checked = base.GetBool("N");}
-			if (dt.Rows[21]["ColVisible"].ToString() == "Y" && dt.Rows[21]["ColReadOnly"].ToString() != "Y") {cScreenObj15.Text = string.Empty;}
-			if (dt.Rows[22]["ColVisible"].ToString() == "Y" && dt.Rows[22]["ColReadOnly"].ToString() != "Y") {cScreenFilter.ImageUrl = "~/images/custom/adm/AnalToDb.gif"; }
-			if (dt.Rows[23]["ColVisible"].ToString() == "Y" && dt.Rows[23]["ColReadOnly"].ToString() != "Y") {cMoreInfo.Text = "www.robocoder.com";}
+			if (dt.Rows[4]["ColVisible"].ToString() == "Y" && dt.Rows[4]["ColReadOnly"].ToString() != "Y") {cSearchAscending15.Checked = base.GetBool("Y");}
+			if (dt.Rows[5]["ColVisible"].ToString() == "Y" && dt.Rows[5]["ColReadOnly"].ToString() != "Y") {cMasterTableId15.ClearSearch();}
+			if (dt.Rows[6]["ColVisible"].ToString() == "Y" && dt.Rows[6]["ColReadOnly"].ToString() != "Y") {cSearchTableId15.ClearSearch();}
+			if (dt.Rows[7]["ColVisible"].ToString() == "Y" && dt.Rows[7]["ColReadOnly"].ToString() != "Y") {cSearchId15.ClearSearch();}
+			if (dt.Rows[8]["ColVisible"].ToString() == "Y" && dt.Rows[8]["ColReadOnly"].ToString() != "Y") {cSearchIdR15.ClearSearch();}
+			if (dt.Rows[9]["ColVisible"].ToString() == "Y" && dt.Rows[9]["ColReadOnly"].ToString() != "Y") {cSearchDtlId15.ClearSearch();}
+			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {cSearchDtlIdR15.ClearSearch();}
+			if (dt.Rows[11]["ColVisible"].ToString() == "Y" && dt.Rows[11]["ColReadOnly"].ToString() != "Y") {cSearchUrlId15.ClearSearch();}
+			if (dt.Rows[12]["ColVisible"].ToString() == "Y" && dt.Rows[12]["ColReadOnly"].ToString() != "Y") {cSearchImgId15.ClearSearch();}
+			if (dt.Rows[13]["ColVisible"].ToString() == "Y" && dt.Rows[13]["ColReadOnly"].ToString() != "Y") {cDetailTableId15.ClearSearch();}
+			if (dt.Rows[14]["ColVisible"].ToString() == "Y" && dt.Rows[14]["ColReadOnly"].ToString() != "Y") {cGridRows15.Text = "12";}
+			if (dt.Rows[15]["ColVisible"].ToString() == "Y" && dt.Rows[15]["ColReadOnly"].ToString() != "Y") {cHasDeleteAll15.Checked = base.GetBool("Y");}
+			if (dt.Rows[16]["ColVisible"].ToString() == "Y" && dt.Rows[16]["ColReadOnly"].ToString() != "Y") {cShowGridHead15.Checked = base.GetBool("Y");}
+			if (dt.Rows[17]["ColVisible"].ToString() == "Y" && dt.Rows[17]["ColReadOnly"].ToString() != "Y") {cGenerateSc15.Checked = base.GetBool("Y");}
+			if (dt.Rows[18]["ColVisible"].ToString() == "Y" && dt.Rows[18]["ColReadOnly"].ToString() != "Y") {cGenerateSr15.Checked = base.GetBool("Y");}
+			if (dt.Rows[19]["ColVisible"].ToString() == "Y" && dt.Rows[19]["ColReadOnly"].ToString() != "Y") {cValidateReq15.Checked = base.GetBool("Y");}
+			if (dt.Rows[20]["ColVisible"].ToString() == "Y" && dt.Rows[20]["ColReadOnly"].ToString() != "Y") {cDeferError15.Checked = base.GetBool("N");}
+			if (dt.Rows[21]["ColVisible"].ToString() == "Y" && dt.Rows[21]["ColReadOnly"].ToString() != "Y") {cAuthRequired15.Checked = base.GetBool("Y");}
+			if (dt.Rows[22]["ColVisible"].ToString() == "Y" && dt.Rows[22]["ColReadOnly"].ToString() != "Y") {cGenAudit15.Checked = base.GetBool("N");}
+			if (dt.Rows[23]["ColVisible"].ToString() == "Y" && dt.Rows[23]["ColReadOnly"].ToString() != "Y") {cScreenObj15.Text = string.Empty;}
+			if (dt.Rows[24]["ColVisible"].ToString() == "Y" && dt.Rows[24]["ColReadOnly"].ToString() != "Y") {cScreenFilter.ImageUrl = "~/images/custom/adm/AnalToDb.gif"; }
+			if (dt.Rows[25]["ColVisible"].ToString() == "Y" && dt.Rows[25]["ColReadOnly"].ToString() != "Y") {cMoreInfo.Text = "www.robocoder.com";}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -2318,11 +2536,13 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cProgramName15.Text = string.Empty;
 			SetScreenTypeId15(cScreenTypeId15,string.Empty); cScreenTypeId15_SelectedIndexChanged(cScreenTypeId15, new EventArgs());
 			SetViewOnly15(cViewOnly15,"N");
+			cSearchAscending15.Checked = base.GetBool("Y");
 			cMasterTableId15.ClearSearch();
 			cSearchTableId15.ClearSearch();
 			cSearchId15.ClearSearch();
-			cSearchAscending15.Checked = base.GetBool("Y");
+			cSearchIdR15.ClearSearch();
 			cSearchDtlId15.ClearSearch();
+			cSearchDtlIdR15.ClearSearch();
 			cSearchUrlId15.ClearSearch();
 			cSearchImgId15.ClearSearch();
 			cDetailTableId15.ClearSearch();
@@ -2370,13 +2590,15 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cProgramName15.Text = dr["ProgramName15"].ToString();} catch {cProgramName15.Text = string.Empty;}
 					SetScreenTypeId15(cScreenTypeId15,dr["ScreenTypeId15"].ToString()); cScreenTypeId15_SelectedIndexChanged(cScreenTypeId15, new EventArgs());
 					SetViewOnly15(cViewOnly15,dr["ViewOnly15"].ToString()); if (cViewOnly15.SelectedIndex <= 0 && !(cViewOnly15.Enabled && cViewOnly15.Visible)) { SetViewOnly15(cViewOnly15,"N"); }
+					try {cSearchAscending15.Checked = base.GetBool(dr["SearchAscending15"].ToString());} catch {cSearchAscending15.Checked = false;}
 					SetMasterTableId15(cMasterTableId15,dr["MasterTableId15"].ToString());
 					cMasterTableId15Search_Script();
 					SetSearchTableId15(cSearchTableId15,dr["SearchTableId15"].ToString()); cSearchTableId15_SelectedIndexChanged(cSearchTableId15, new EventArgs());
 					cSearchTableId15Search_Script();
 					SetSearchId15(cSearchId15,dr["SearchId15"].ToString(),cSearchTableId15.SelectedValue);
-					try {cSearchAscending15.Checked = base.GetBool(dr["SearchAscending15"].ToString());} catch {cSearchAscending15.Checked = false;}
+					SetSearchIdR15(cSearchIdR15,dr["SearchIdR15"].ToString(),cSearchTableId15.SelectedValue);
 					SetSearchDtlId15(cSearchDtlId15,dr["SearchDtlId15"].ToString(),cSearchTableId15.SelectedValue);
+					SetSearchDtlIdR15(cSearchDtlIdR15,dr["SearchDtlIdR15"].ToString(),cSearchTableId15.SelectedValue);
 					SetSearchUrlId15(cSearchUrlId15,dr["SearchUrlId15"].ToString(),cSearchTableId15.SelectedValue);
 					SetSearchImgId15(cSearchImgId15,dr["SearchImgId15"].ToString(),cSearchTableId15.SelectedValue);
 					SetDetailTableId15(cDetailTableId15,dr["DetailTableId15"].ToString());
@@ -2449,8 +2671,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
             {
                 cSearchTableId15P1.Visible = true; cSearchTableId15P2.Visible = true;
                 cSearchId15P1.Visible = true; cSearchId15P2.Visible = true;
+                cSearchIdR15P1.Visible = true; cSearchIdR15P2.Visible = true;
                 cSearchAscending15P1.Visible = true; cSearchAscending15P2.Visible = true;
                 cSearchDtlId15P1.Visible = true; cSearchDtlId15P2.Visible = true;
+                cSearchDtlIdR15P1.Visible = true; cSearchDtlIdR15P2.Visible = true;
                 cSearchUrlId15P1.Visible = true; cSearchUrlId15P2.Visible = true;
                 cSearchImgId15P1.Visible = true; cSearchImgId15P2.Visible = true;
                 SetDetailTableId15(cDetailTableId15, string.Empty); cDetailTableId15P1.Visible = false; cDetailTableId15P2.Visible = false;
@@ -2462,8 +2686,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
             {
                 cSearchTableId15P1.Visible = false; cSearchTableId15P2.Visible = false;
                 cSearchId15P1.Visible = false; cSearchId15P2.Visible = false;
+                cSearchIdR15P1.Visible = false; cSearchIdR15P2.Visible = false;
                 cSearchAscending15P1.Visible = false; cSearchAscending15P2.Visible = false;
                 cSearchDtlId15P1.Visible = false; cSearchDtlId15P2.Visible = false;
+                cSearchDtlIdR15P1.Visible = false; cSearchDtlIdR15P2.Visible = false;
                 cSearchUrlId15P1.Visible = false; cSearchUrlId15P2.Visible = false;
                 cSearchImgId15P1.Visible = false; cSearchImgId15P2.Visible = false;
                 SetDetailTableId15(cDetailTableId15, string.Empty); cDetailTableId15P1.Visible = false; cDetailTableId15P2.Visible = false;
@@ -2475,8 +2701,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
             {
                 cSearchTableId15P1.Visible = true; cSearchTableId15P2.Visible = true;
                 cSearchId15P1.Visible = true; cSearchId15P2.Visible = true;
+                cSearchIdR15P1.Visible = true; cSearchIdR15P2.Visible = true;
                 cSearchAscending15P1.Visible = true; cSearchAscending15P2.Visible = true;
                 cSearchDtlId15P1.Visible = true; cSearchDtlId15P2.Visible = true;
+                cSearchDtlIdR15P1.Visible = true; cSearchDtlIdR15P2.Visible = true;
                 cSearchUrlId15P1.Visible = true; cSearchUrlId15P2.Visible = true;
                 cSearchImgId15P1.Visible = true; cSearchImgId15P2.Visible = true;
                 cDetailTableId15P1.Visible = true; cDetailTableId15P2.Visible = true;
@@ -2539,7 +2767,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				DataView dv = (DataView) cSearchTableId15.DataSource; dv.RowFilter = string.Empty;
 				DataRowView dr = cSearchTableId15.DataSetIndex >= 0 && cSearchTableId15.DataSetIndex < dv.Count ? dv[cSearchTableId15.DataSetIndex] : dv[0];
 				if (cSearchId15.Mode!="A") cSearchId15.ClearSearch();				else SetSearchId15(cSearchId15,cSearchId15.SelectedValue,cSearchTableId15.SelectedValue);
+				if (cSearchIdR15.Mode!="A") cSearchIdR15.ClearSearch();				else SetSearchIdR15(cSearchIdR15,cSearchIdR15.SelectedValue,cSearchTableId15.SelectedValue);
 				if (cSearchDtlId15.Mode!="A") cSearchDtlId15.ClearSearch();				else SetSearchDtlId15(cSearchDtlId15,cSearchDtlId15.SelectedValue,cSearchTableId15.SelectedValue);
+				if (cSearchDtlIdR15.Mode!="A") cSearchDtlIdR15.ClearSearch();				else SetSearchDtlIdR15(cSearchDtlIdR15,cSearchDtlIdR15.SelectedValue,cSearchTableId15.SelectedValue);
 				if (cSearchUrlId15.Mode!="A") cSearchUrlId15.ClearSearch();				else SetSearchUrlId15(cSearchUrlId15,cSearchUrlId15.SelectedValue,cSearchTableId15.SelectedValue);
 				if (cSearchImgId15.Mode!="A") cSearchImgId15.ClearSearch();				else SetSearchImgId15(cSearchImgId15,cSearchImgId15.SelectedValue,cSearchTableId15.SelectedValue);
 				cSearchTableId15Search_Script();
@@ -2558,8 +2788,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if ((cc != null && cc.ID.Equals("cAdmScreen9List")) || cAdmScreenGrid.EditIndex < 0 || UpdateGridRow(cAdmScreenGrid, new CommandEventArgs("Save", "")))
 				{
 					string rf = string.Empty;
-					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 24, cFindFilter.SelectedValue) + ")"; }
-					if (rf != string.Empty) { rf = "((" + rf + "  or _NewRow = 'Y' ))"; }
+					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 26, cFindFilter.SelectedValue) + ")"; }
+					if (rf != string.Empty) { rf = "((" + rf + " or _NewRow = 'Y' ))"; }
 					dv.RowFilter = rf;
 					ViewState["_RowFilter"] = rf;
 					GotoPage(0); cAdmScreenGrid_DataBind(dv);
@@ -2608,6 +2838,21 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				DataRow dr = dt.NewRow();
 				int? sortorder = null;
 				dr["CultureId16"] = 1;
+				dr["IncrementMsg16"] = "View {10} more";
+				dr["NoMasterMsg16"] = "No master record selected";
+				dr["NoDetailMsg16"] = "No detail record selected";
+				dr["AddMasterMsg16"] = "Click here to enter a new master record";
+				dr["AddDetailMsg16"] = "Click here to enter a new detail record";
+				dr["MasterLstTitle16"] = "Master list";
+				dr["MasterLstSubtitle16"] = "Create or select a master record";
+				dr["MasterRecTitle16"] = "Master record";
+				dr["MasterRecSubtitle16"] = "Manage your master information";
+				dr["MasterFoundMsg16"] = "Master records found";
+				dr["DetailLstTitle16"] = "Detail list";
+				dr["DetailLstSubtitle16"] = "Add or edit a detail record";
+				dr["DetailRecTitle16"] = "Detail record";
+				dr["DetailRecSubtitle16"] = "Enter or update detail information";
+				dr["DetailFoundMsg16"] = "Detail records found";
 				if (dt.Columns.Contains("_SortOrder"))
 				{
 				    try
@@ -2898,6 +3143,21 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						dt.Rows.Add(dt.NewRow());
 						if (rows[iRow][1].ToString() == string.Empty && rows[iRow][2].ToString() == string.Empty) { rows[iRow][1] = 1;}
+						if (rows[iRow][9].ToString() == string.Empty) { rows[iRow][9] = "View {10} more";}
+						if (rows[iRow][10].ToString() == string.Empty) { rows[iRow][10] = "No master record selected";}
+						if (rows[iRow][11].ToString() == string.Empty) { rows[iRow][11] = "No detail record selected";}
+						if (rows[iRow][12].ToString() == string.Empty) { rows[iRow][12] = "Click here to enter a new master record";}
+						if (rows[iRow][13].ToString() == string.Empty) { rows[iRow][13] = "Click here to enter a new detail record";}
+						if (rows[iRow][14].ToString() == string.Empty) { rows[iRow][14] = "Master list";}
+						if (rows[iRow][15].ToString() == string.Empty) { rows[iRow][15] = "Create or select a master record";}
+						if (rows[iRow][16].ToString() == string.Empty) { rows[iRow][16] = "Master record";}
+						if (rows[iRow][17].ToString() == string.Empty) { rows[iRow][17] = "Manage your master information";}
+						if (rows[iRow][18].ToString() == string.Empty) { rows[iRow][18] = "Master records found";}
+						if (rows[iRow][19].ToString() == string.Empty) { rows[iRow][19] = "Detail list";}
+						if (rows[iRow][20].ToString() == string.Empty) { rows[iRow][20] = "Add or edit a detail record";}
+						if (rows[iRow][21].ToString() == string.Empty) { rows[iRow][21] = "Detail record";}
+						if (rows[iRow][22].ToString() == string.Empty) { rows[iRow][22] = "Enter or update detail information";}
+						if (rows[iRow][23].ToString() == string.Empty) { rows[iRow][23] = "Detail records found";}
 						for ( int iCol = 0; iCol < cols.Count; iCol++ )
 						{
 							try { ss = rows[iRow][iCol].ToString().Trim(); } catch { ss = string.Empty; }
@@ -2968,7 +3228,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				cFindFilter.Items.Add(li);
 				foreach (DataRow dr in dtLabel.Rows)
 				{
-					if (ii >= 24 && !string.IsNullOrEmpty(dr["ColumnHeader"].ToString()) && !string.IsNullOrEmpty(dr["TableId"].ToString()) && dtAuth.Rows[ii]["ColVisible"].ToString() == "Y")
+					if (ii >= 26 && !string.IsNullOrEmpty(dr["ColumnHeader"].ToString()) && !string.IsNullOrEmpty(dr["TableId"].ToString()) && dtAuth.Rows[ii]["ColVisible"].ToString() == "Y")
 					{
 						li = new ListItem();
 						li.Value = ii.ToString(); li.Text = dr["ColumnHeader"].ToString().Replace("*", string.Empty);
@@ -2977,54 +3237,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					ii = ii + 1;
 				}
 			}
-			if (cSortFilter.Items.Count <= 0)
-			{
-				DataTable dtAuth = GetAuthCol();
-				DataTable dtLabel = GetLabel();
-				int ii = 0;
-				ListItem li = new ListItem();
-				li.Value = string.Empty; li.Text = string.Empty;
-				cSortFilter.Items.Add(li);
-				foreach (DataRow dr in dtLabel.Rows)
-				{
-					if (ii >= 24 && !string.IsNullOrEmpty(dr["ColumnHeader"].ToString()) && !string.IsNullOrEmpty(dr["TableId"].ToString()) && dtAuth.Rows[ii]["ColVisible"].ToString() == "Y")
-					{
-						li = new ListItem();
-						li.Value = ii.ToString(); li.Text = dr["ColumnHeader"].ToString().Replace("*", string.Empty);
-						cSortFilter.Items.Add(li);
-					}
-					ii = ii + 1;
-				}
-			}
 		}
 
-
-        protected void cSortFilter_SelectedIndexChanged(object sender, System.EventArgs e)
-        {
-            cSortImg.Visible = true;
-            Session.Remove(KEY_lastSortUrl); Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "0";
-            if (!string.IsNullOrEmpty(cSortFilter.SelectedValue))
-            {
-                Session[KEY_lastSortExp] = ((DataTable)GetAuthCol()).Rows[int.Parse(cSortFilter.SelectedValue)]["ColName"].ToString();
-                cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs((string)Session[KEY_lastSortExp], SortDirection.Ascending));
-            }
-            else
-            {
-                Session.Remove(KEY_lastSortExp);
-                cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs(string.Empty, SortDirection.Ascending));
-            }
-        }
-
-        protected void cSortImg_Click(object sender, System.Web.UI.ImageClickEventArgs e)
-        {
-            if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "0") { Session.Remove(KEY_lastSortUrl); }
-            Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "0";
-            if (!string.IsNullOrEmpty(cSortFilter.SelectedValue))
-            {
-                Session[KEY_lastSortExp] = ((DataTable)GetAuthCol()).Rows[int.Parse(cSortFilter.SelectedValue)]["ColName"].ToString();
-                cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs((string)Session[KEY_lastSortExp], SortDirection.Ascending));
-            }
-        }
 		protected void cAdmScreenGrid_OnSorting(object sender, ListViewSortEventArgs e)
 		{
 			DataTable dt = (DataTable)Session[KEY_dtAdmScreenGrid];
@@ -3038,17 +3252,17 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dv.RowFilter != string.Empty) { ftr = dv.RowFilter; dv.RowFilter = string.Empty; }
 					if (Session[KEY_lastSortUrl] == null)   // First time.
 					{
-					    dv.Sort = "_SortOrder DESC, " + e.SortExpression; Session[KEY_lastSortUrl] = "~/images/ArrowUp.png"; cSortImg.ImageUrl = "~/images/Asce.png"; Session[KEY_lastSortTog] = "N";
+					    dv.Sort = "_SortOrder DESC, " + e.SortExpression; Session[KEY_lastSortUrl] = "~/images/ArrowUp.png"; Session[KEY_lastSortTog] = "N";
 					}
 					else if ((string)Session[KEY_lastSortTog] == "Y")
 					{
 					    if (((string)Session[KEY_lastSortUrl]).IndexOf("ArrowDn") >= 0)
 					    {
-							dv.Sort = "_SortOrder DESC, " + e.SortExpression; Session[KEY_lastSortUrl] = "~/images/ArrowUp.png"; cSortImg.ImageUrl = "~/images/Asce.png";
+							dv.Sort = "_SortOrder DESC, " + e.SortExpression; Session[KEY_lastSortUrl] = "~/images/ArrowUp.png";
 					    }
 					    else
 					    {
-							dv.Sort = "_SortOrder DESC, " + e.SortExpression + " DESC"; Session[KEY_lastSortUrl] = "~/images/ArrowDn.png"; cSortImg.ImageUrl = "~/images/Desc.png";
+							dv.Sort = "_SortOrder DESC, " + e.SortExpression + " DESC"; Session[KEY_lastSortUrl] = "~/images/ArrowDn.png";
 					    }
 					    Session[KEY_lastSortTog] = "N";
 					}
@@ -3086,6 +3300,36 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 				cc = ((WebControl)lvi.FindControl("cDelMsg16"));
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cIncrementMsg16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cNoMasterMsg16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cNoDetailMsg16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cAddMasterMsg16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cAddDetailMsg16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cMasterLstTitle16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cMasterLstSubtitle16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cMasterRecTitle16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cMasterRecSubtitle16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cMasterFoundMsg16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cDetailLstTitle16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cDetailLstSubtitle16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cDetailRecTitle16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cDetailRecSubtitle16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cDetailFoundMsg16"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 		}
 
 		protected void cAdmScreenGrid_OnItemDataBound(object sender, ListViewItemEventArgs e)
@@ -3093,11 +3337,13 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			// *** GridItemDataBound (before) Web Rule End *** //
 			DataTable dt = (DataTable)Session[KEY_dtAdmScreenGrid];
 			bool isEditItem = false;
+			bool isImage = true;
+			bool hasImageContent = false;
 			DataView dvAdmScreenGrid = dt != null ? dt.DefaultView : null;
 			if (cAdmScreenGrid.EditIndex > -1 && GetDataItemIndex(cAdmScreenGrid.EditIndex) == e.Item.DataItemIndex)
 			{
 				isEditItem = true;
-				base.SetGridEnabled(e.Item, GetAuthCol(), GetLabel(), 24);
+				base.SetGridEnabled(e.Item, GetAuthCol(), GetLabel(), 26);
 				if (dvAdmScreenGrid[e.Item.DataItemIndex]["CultureId16"].ToString() != string.Empty) {SetCultureId16((RoboCoder.WebControls.ComboBox)e.Item.FindControl("cCultureId16"),dvAdmScreenGrid[e.Item.DataItemIndex]["CultureId16"].ToString(), e.Item);} else {SetCultureId16((RoboCoder.WebControls.ComboBox)e.Item.FindControl("cCultureId16"),"1", e.Item);}
 				GridChkPgDirty(e.Item);
 			}
@@ -3120,6 +3366,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				}
 			}
 			if (cAdmScreenGrid.EditIndex > -1 && GetDataItemIndex(cAdmScreenGrid.EditIndex) == e.Item.DataItemIndex)
+			{
+			}
+			else
 			{
 			}
 			// *** GridItemDataBound (after) Web Rule End *** //
@@ -3181,6 +3430,111 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("DelMsg16", SortDirection.Ascending));
 		}
 
+		protected void cIncrementMsg16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "8") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "8"; Session[KEY_lastSortExp] = "IncrementMsg16";Session[KEY_lastSortImg] = "cIncrementMsg16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("IncrementMsg16", SortDirection.Ascending));
+		}
+
+		protected void cNoMasterMsg16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "9") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "9"; Session[KEY_lastSortExp] = "NoMasterMsg16";Session[KEY_lastSortImg] = "cNoMasterMsg16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("NoMasterMsg16", SortDirection.Ascending));
+		}
+
+		protected void cNoDetailMsg16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "10") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "10"; Session[KEY_lastSortExp] = "NoDetailMsg16";Session[KEY_lastSortImg] = "cNoDetailMsg16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("NoDetailMsg16", SortDirection.Ascending));
+		}
+
+		protected void cAddMasterMsg16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "11") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "11"; Session[KEY_lastSortExp] = "AddMasterMsg16";Session[KEY_lastSortImg] = "cAddMasterMsg16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("AddMasterMsg16", SortDirection.Ascending));
+		}
+
+		protected void cAddDetailMsg16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "12") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "12"; Session[KEY_lastSortExp] = "AddDetailMsg16";Session[KEY_lastSortImg] = "cAddDetailMsg16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("AddDetailMsg16", SortDirection.Ascending));
+		}
+
+		protected void cMasterLstTitle16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "13") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "13"; Session[KEY_lastSortExp] = "MasterLstTitle16";Session[KEY_lastSortImg] = "cMasterLstTitle16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("MasterLstTitle16", SortDirection.Ascending));
+		}
+
+		protected void cMasterLstSubtitle16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "14") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "14"; Session[KEY_lastSortExp] = "MasterLstSubtitle16";Session[KEY_lastSortImg] = "cMasterLstSubtitle16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("MasterLstSubtitle16", SortDirection.Ascending));
+		}
+
+		protected void cMasterRecTitle16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "15") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "15"; Session[KEY_lastSortExp] = "MasterRecTitle16";Session[KEY_lastSortImg] = "cMasterRecTitle16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("MasterRecTitle16", SortDirection.Ascending));
+		}
+
+		protected void cMasterRecSubtitle16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "16") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "16"; Session[KEY_lastSortExp] = "MasterRecSubtitle16";Session[KEY_lastSortImg] = "cMasterRecSubtitle16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("MasterRecSubtitle16", SortDirection.Ascending));
+		}
+
+		protected void cMasterFoundMsg16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "17") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "17"; Session[KEY_lastSortExp] = "MasterFoundMsg16";Session[KEY_lastSortImg] = "cMasterFoundMsg16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("MasterFoundMsg16", SortDirection.Ascending));
+		}
+
+		protected void cDetailLstTitle16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "18") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "18"; Session[KEY_lastSortExp] = "DetailLstTitle16";Session[KEY_lastSortImg] = "cDetailLstTitle16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("DetailLstTitle16", SortDirection.Ascending));
+		}
+
+		protected void cDetailLstSubtitle16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "19") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "19"; Session[KEY_lastSortExp] = "DetailLstSubtitle16";Session[KEY_lastSortImg] = "cDetailLstSubtitle16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("DetailLstSubtitle16", SortDirection.Ascending));
+		}
+
+		protected void cDetailRecTitle16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "20") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "20"; Session[KEY_lastSortExp] = "DetailRecTitle16";Session[KEY_lastSortImg] = "cDetailRecTitle16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("DetailRecTitle16", SortDirection.Ascending));
+		}
+
+		protected void cDetailRecSubtitle16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "21") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "21"; Session[KEY_lastSortExp] = "DetailRecSubtitle16";Session[KEY_lastSortImg] = "cDetailRecSubtitle16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("DetailRecSubtitle16", SortDirection.Ascending));
+		}
+
+		protected void cDetailFoundMsg16hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "22") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "22"; Session[KEY_lastSortExp] = "DetailFoundMsg16";Session[KEY_lastSortImg] = "cDetailFoundMsg16hi";
+			cAdmScreenGrid_OnSorting(sender, new ListViewSortEventArgs("DetailFoundMsg16", SortDirection.Ascending));
+		}
+
 		protected void cAdmScreenGrid_OnItemEditing(object sender, ListViewEditEventArgs e)
 		{
 			DataTable dt = (DataTable)Session[KEY_dtAdmScreenGrid];
@@ -3220,21 +3574,51 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		{
 		    Label ml = null;
 		    ml = lvi.FindControl("cScreenHlpId16ml") as Label;
-		    if (ml != null) { ml.Text = ColumnHeaderText(24); }
-		    ml = lvi.FindControl("cCultureId16ml") as Label;
-		    if (ml != null) { ml.Text = ColumnHeaderText(25); }
-		    ml = lvi.FindControl("cScreenTitle16ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(26); }
-		    ml = lvi.FindControl("cDefaultHlpMsg16ml") as Label;
+		    ml = lvi.FindControl("cCultureId16ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(27); }
-		    ml = lvi.FindControl("cFootNote16ml") as Label;
+		    ml = lvi.FindControl("cScreenTitle16ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(28); }
-		    ml = lvi.FindControl("cAddMsg16ml") as Label;
+		    ml = lvi.FindControl("cDefaultHlpMsg16ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(29); }
-		    ml = lvi.FindControl("cUpdMsg16ml") as Label;
+		    ml = lvi.FindControl("cFootNote16ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(30); }
-		    ml = lvi.FindControl("cDelMsg16ml") as Label;
+		    ml = lvi.FindControl("cAddMsg16ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(31); }
+		    ml = lvi.FindControl("cUpdMsg16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(32); }
+		    ml = lvi.FindControl("cDelMsg16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(33); }
+		    ml = lvi.FindControl("cIncrementMsg16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(34); }
+		    ml = lvi.FindControl("cNoMasterMsg16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(35); }
+		    ml = lvi.FindControl("cNoDetailMsg16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(36); }
+		    ml = lvi.FindControl("cAddMasterMsg16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(37); }
+		    ml = lvi.FindControl("cAddDetailMsg16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(38); }
+		    ml = lvi.FindControl("cMasterLstTitle16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(39); }
+		    ml = lvi.FindControl("cMasterLstSubtitle16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(40); }
+		    ml = lvi.FindControl("cMasterRecTitle16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(41); }
+		    ml = lvi.FindControl("cMasterRecSubtitle16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(42); }
+		    ml = lvi.FindControl("cMasterFoundMsg16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(43); }
+		    ml = lvi.FindControl("cDetailLstTitle16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(44); }
+		    ml = lvi.FindControl("cDetailLstSubtitle16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(45); }
+		    ml = lvi.FindControl("cDetailRecTitle16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(46); }
+		    ml = lvi.FindControl("cDetailRecSubtitle16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(47); }
+		    ml = lvi.FindControl("cDetailFoundMsg16ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(48); }
 		}
 
 		protected void GridFill(ListViewItem lvi, DataTable dt, DataRow dr, bool bInsert)
@@ -3284,6 +3668,81 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (tb != null)
 			{
 				if (tb.Text != string.Empty) {dr["DelMsg16"] = tb.Text;} else {dr["DelMsg16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cIncrementMsg16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["IncrementMsg16"] = tb.Text;} else {dr["IncrementMsg16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cNoMasterMsg16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["NoMasterMsg16"] = tb.Text;} else {dr["NoMasterMsg16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cNoDetailMsg16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["NoDetailMsg16"] = tb.Text;} else {dr["NoDetailMsg16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cAddMasterMsg16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["AddMasterMsg16"] = tb.Text;} else {dr["AddMasterMsg16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cAddDetailMsg16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["AddDetailMsg16"] = tb.Text;} else {dr["AddDetailMsg16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cMasterLstTitle16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["MasterLstTitle16"] = tb.Text;} else {dr["MasterLstTitle16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cMasterLstSubtitle16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["MasterLstSubtitle16"] = tb.Text;} else {dr["MasterLstSubtitle16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cMasterRecTitle16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["MasterRecTitle16"] = tb.Text;} else {dr["MasterRecTitle16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cMasterRecSubtitle16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["MasterRecSubtitle16"] = tb.Text;} else {dr["MasterRecSubtitle16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cMasterFoundMsg16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["MasterFoundMsg16"] = tb.Text;} else {dr["MasterFoundMsg16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cDetailLstTitle16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["DetailLstTitle16"] = tb.Text;} else {dr["DetailLstTitle16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cDetailLstSubtitle16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["DetailLstSubtitle16"] = tb.Text;} else {dr["DetailLstSubtitle16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cDetailRecTitle16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["DetailRecTitle16"] = tb.Text;} else {dr["DetailRecTitle16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cDetailRecSubtitle16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["DetailRecSubtitle16"] = tb.Text;} else {dr["DetailRecSubtitle16"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cDetailFoundMsg16");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["DetailFoundMsg16"] = tb.Text;} else {dr["DetailFoundMsg16"] = System.DBNull.Value;}
 			}
 		    if (bInsert) { dt.Rows.InsertAt(dr, 0); }
 			Session[KEY_dtAdmScreenGrid] = dt;
@@ -3538,16 +3997,20 @@ if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new screen
 			drType["ScreenTypeId15"] = "Numeric"; drDisp["ScreenTypeId15"] = "DropDownList";
 			try {dr["ViewOnly15"] = cViewOnly15.SelectedValue;} catch {}
 			drType["ViewOnly15"] = "Char"; drDisp["ViewOnly15"] = "DropDownList";
+			try {dr["SearchAscending15"] = base.SetBool(cSearchAscending15.Checked);} catch {}
+			drType["SearchAscending15"] = "Char"; drDisp["SearchAscending15"] = "CheckBox";
 			try {dr["MasterTableId15"] = cMasterTableId15.SelectedValue;} catch {}
 			drType["MasterTableId15"] = "Numeric"; drDisp["MasterTableId15"] = "AutoComplete";
 			try {dr["SearchTableId15"] = cSearchTableId15.SelectedValue;} catch {}
 			drType["SearchTableId15"] = "Numeric"; drDisp["SearchTableId15"] = "AutoComplete";
 			try {dr["SearchId15"] = cSearchId15.SelectedValue;} catch {}
 			drType["SearchId15"] = "Numeric"; drDisp["SearchId15"] = "AutoComplete";
-			try {dr["SearchAscending15"] = base.SetBool(cSearchAscending15.Checked);} catch {}
-			drType["SearchAscending15"] = "Char"; drDisp["SearchAscending15"] = "CheckBox";
+			try {dr["SearchIdR15"] = cSearchIdR15.SelectedValue;} catch {}
+			drType["SearchIdR15"] = "Numeric"; drDisp["SearchIdR15"] = "AutoComplete";
 			try {dr["SearchDtlId15"] = cSearchDtlId15.SelectedValue;} catch {}
 			drType["SearchDtlId15"] = "Numeric"; drDisp["SearchDtlId15"] = "AutoComplete";
+			try {dr["SearchDtlIdR15"] = cSearchDtlIdR15.SelectedValue;} catch {}
+			drType["SearchDtlIdR15"] = "Numeric"; drDisp["SearchDtlIdR15"] = "AutoComplete";
 			try {dr["SearchUrlId15"] = cSearchUrlId15.SelectedValue;} catch {}
 			drType["SearchUrlId15"] = "Numeric"; drDisp["SearchUrlId15"] = "AutoComplete";
 			try {dr["SearchImgId15"] = cSearchImgId15.SelectedValue;} catch {}
@@ -3655,6 +4118,21 @@ if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new screen
 			dr["AddMsg16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
 			dr["UpdMsg16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
 			dr["DelMsg16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["IncrementMsg16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["NoMasterMsg16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["NoDetailMsg16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["AddMasterMsg16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["AddDetailMsg16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["MasterLstTitle16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["MasterLstSubtitle16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["MasterRecTitle16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["MasterRecSubtitle16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["MasterFoundMsg16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["DetailLstTitle16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["DetailLstSubtitle16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["DetailRecTitle16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["DetailRecSubtitle16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
+			dr["DetailFoundMsg16"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
 			return dr;
 		}
 
@@ -3669,6 +4147,21 @@ if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new screen
 			dr["AddMsg16"] = "TextBox";
 			dr["UpdMsg16"] = "TextBox";
 			dr["DelMsg16"] = "TextBox";
+			dr["IncrementMsg16"] = "TextBox";
+			dr["NoMasterMsg16"] = "TextBox";
+			dr["NoDetailMsg16"] = "TextBox";
+			dr["AddMasterMsg16"] = "TextBox";
+			dr["AddDetailMsg16"] = "TextBox";
+			dr["MasterLstTitle16"] = "TextBox";
+			dr["MasterLstSubtitle16"] = "TextBox";
+			dr["MasterRecTitle16"] = "TextBox";
+			dr["MasterRecSubtitle16"] = "TextBox";
+			dr["MasterFoundMsg16"] = "TextBox";
+			dr["DetailLstTitle16"] = "TextBox";
+			dr["DetailLstSubtitle16"] = "TextBox";
+			dr["DetailRecTitle16"] = "TextBox";
+			dr["DetailRecSubtitle16"] = "TextBox";
+			dr["DetailFoundMsg16"] = "TextBox";
 			return dr;
 		}
 
@@ -3683,13 +4176,43 @@ if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new screen
 				dr["ScreenTitle16"] = drv["ScreenTitle16"].ToString().Trim();
 				dr["DefaultHlpMsg16"] = drv["DefaultHlpMsg16"].ToString().Trim();
 				dr["FootNote16"] = drv["FootNote16"].ToString().Trim();
-				if (bAdd && dtAuth.Rows[28]["ColReadOnly"].ToString() == "Y" && dr["FootNote16"].ToString() == string.Empty) {dr["FootNote16"] = System.DBNull.Value;}
+				if (bAdd && dtAuth.Rows[30]["ColReadOnly"].ToString() == "Y" && dr["FootNote16"].ToString() == string.Empty) {dr["FootNote16"] = System.DBNull.Value;}
 				dr["AddMsg16"] = drv["AddMsg16"].ToString().Trim();
-				if (bAdd && dtAuth.Rows[29]["ColReadOnly"].ToString() == "Y" && dr["AddMsg16"].ToString() == string.Empty) {dr["AddMsg16"] = System.DBNull.Value;}
+				if (bAdd && dtAuth.Rows[31]["ColReadOnly"].ToString() == "Y" && dr["AddMsg16"].ToString() == string.Empty) {dr["AddMsg16"] = System.DBNull.Value;}
 				dr["UpdMsg16"] = drv["UpdMsg16"].ToString().Trim();
-				if (bAdd && dtAuth.Rows[30]["ColReadOnly"].ToString() == "Y" && dr["UpdMsg16"].ToString() == string.Empty) {dr["UpdMsg16"] = System.DBNull.Value;}
+				if (bAdd && dtAuth.Rows[32]["ColReadOnly"].ToString() == "Y" && dr["UpdMsg16"].ToString() == string.Empty) {dr["UpdMsg16"] = System.DBNull.Value;}
 				dr["DelMsg16"] = drv["DelMsg16"].ToString().Trim();
-				if (bAdd && dtAuth.Rows[31]["ColReadOnly"].ToString() == "Y" && dr["DelMsg16"].ToString() == string.Empty) {dr["DelMsg16"] = System.DBNull.Value;}
+				if (bAdd && dtAuth.Rows[33]["ColReadOnly"].ToString() == "Y" && dr["DelMsg16"].ToString() == string.Empty) {dr["DelMsg16"] = System.DBNull.Value;}
+				dr["IncrementMsg16"] = drv["IncrementMsg16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[34]["ColReadOnly"].ToString() == "Y" && dr["IncrementMsg16"].ToString() == string.Empty) {dr["IncrementMsg16"] = System.DBNull.Value;}
+				dr["NoMasterMsg16"] = drv["NoMasterMsg16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[35]["ColReadOnly"].ToString() == "Y" && dr["NoMasterMsg16"].ToString() == string.Empty) {dr["NoMasterMsg16"] = System.DBNull.Value;}
+				dr["NoDetailMsg16"] = drv["NoDetailMsg16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[36]["ColReadOnly"].ToString() == "Y" && dr["NoDetailMsg16"].ToString() == string.Empty) {dr["NoDetailMsg16"] = System.DBNull.Value;}
+				dr["AddMasterMsg16"] = drv["AddMasterMsg16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[37]["ColReadOnly"].ToString() == "Y" && dr["AddMasterMsg16"].ToString() == string.Empty) {dr["AddMasterMsg16"] = System.DBNull.Value;}
+				dr["AddDetailMsg16"] = drv["AddDetailMsg16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[38]["ColReadOnly"].ToString() == "Y" && dr["AddDetailMsg16"].ToString() == string.Empty) {dr["AddDetailMsg16"] = System.DBNull.Value;}
+				dr["MasterLstTitle16"] = drv["MasterLstTitle16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[39]["ColReadOnly"].ToString() == "Y" && dr["MasterLstTitle16"].ToString() == string.Empty) {dr["MasterLstTitle16"] = System.DBNull.Value;}
+				dr["MasterLstSubtitle16"] = drv["MasterLstSubtitle16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[40]["ColReadOnly"].ToString() == "Y" && dr["MasterLstSubtitle16"].ToString() == string.Empty) {dr["MasterLstSubtitle16"] = System.DBNull.Value;}
+				dr["MasterRecTitle16"] = drv["MasterRecTitle16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[41]["ColReadOnly"].ToString() == "Y" && dr["MasterRecTitle16"].ToString() == string.Empty) {dr["MasterRecTitle16"] = System.DBNull.Value;}
+				dr["MasterRecSubtitle16"] = drv["MasterRecSubtitle16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[42]["ColReadOnly"].ToString() == "Y" && dr["MasterRecSubtitle16"].ToString() == string.Empty) {dr["MasterRecSubtitle16"] = System.DBNull.Value;}
+				dr["MasterFoundMsg16"] = drv["MasterFoundMsg16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[43]["ColReadOnly"].ToString() == "Y" && dr["MasterFoundMsg16"].ToString() == string.Empty) {dr["MasterFoundMsg16"] = System.DBNull.Value;}
+				dr["DetailLstTitle16"] = drv["DetailLstTitle16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[44]["ColReadOnly"].ToString() == "Y" && dr["DetailLstTitle16"].ToString() == string.Empty) {dr["DetailLstTitle16"] = System.DBNull.Value;}
+				dr["DetailLstSubtitle16"] = drv["DetailLstSubtitle16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[45]["ColReadOnly"].ToString() == "Y" && dr["DetailLstSubtitle16"].ToString() == string.Empty) {dr["DetailLstSubtitle16"] = System.DBNull.Value;}
+				dr["DetailRecTitle16"] = drv["DetailRecTitle16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[46]["ColReadOnly"].ToString() == "Y" && dr["DetailRecTitle16"].ToString() == string.Empty) {dr["DetailRecTitle16"] = System.DBNull.Value;}
+				dr["DetailRecSubtitle16"] = drv["DetailRecSubtitle16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[47]["ColReadOnly"].ToString() == "Y" && dr["DetailRecSubtitle16"].ToString() == string.Empty) {dr["DetailRecSubtitle16"] = System.DBNull.Value;}
+				dr["DetailFoundMsg16"] = drv["DetailFoundMsg16"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[48]["ColReadOnly"].ToString() == "Y" && dr["DetailFoundMsg16"].ToString() == string.Empty) {dr["DetailFoundMsg16"] = System.DBNull.Value;}
 			}
 			return dr;
 		}
@@ -3714,6 +4237,21 @@ if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new screen
 			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cAddMsg16hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cUpdMsg16hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cDelMsg16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cIncrementMsg16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cNoMasterMsg16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cNoDetailMsg16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cAddMasterMsg16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cAddDetailMsg16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cMasterLstTitle16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cMasterLstSubtitle16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cMasterRecTitle16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cMasterRecSubtitle16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cMasterFoundMsg16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cDetailLstTitle16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cDetailLstSubtitle16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cDetailRecTitle16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cDetailRecSubtitle16hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl("cDetailFoundMsg16hi"); if (hi != null) { hi.Visible = false; }
 			if (Session[KEY_lastSortImg] != null)
 			{
 				hi = (System.Web.UI.WebControls.Image)cAdmScreenGrid.FindControl((string)Session[KEY_lastSortImg]);
@@ -3727,6 +4265,21 @@ if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new screen
 			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cAddMsg16hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cUpdMsg16hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cDelMsg16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cIncrementMsg16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cNoMasterMsg16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cNoDetailMsg16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cAddMasterMsg16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cAddDetailMsg16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cMasterLstTitle16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cMasterLstSubtitle16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cMasterRecTitle16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cMasterRecSubtitle16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cMasterFoundMsg16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cDetailLstTitle16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cDetailLstSubtitle16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cDetailRecTitle16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cDetailRecSubtitle16hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmScreenGrid.FindControl("cDetailFoundMsg16hl"));
 		}
 
 		private string GetButtonId(ListViewItem lvi)
@@ -3762,21 +4315,51 @@ if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new screen
 		    // Header:
 		    LinkButton lb = null;
 		    lb = cAdmScreenGrid.FindControl("cScreenHlpId16hl") as LinkButton;
-		    if (lb != null) { lb.Text = ColumnHeaderText(24); lb.ToolTip = ColumnToolTip(24); lb.Parent.Visible = GridColumnVisible(24); }
-		    lb = cAdmScreenGrid.FindControl("cCultureId16hl") as LinkButton;
-		    if (lb != null) { lb.Text = ColumnHeaderText(25); lb.ToolTip = ColumnToolTip(25); lb.Parent.Visible = GridColumnVisible(25); }
-		    lb = cAdmScreenGrid.FindControl("cScreenTitle16hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(26); lb.ToolTip = ColumnToolTip(26); lb.Parent.Visible = GridColumnVisible(26); }
-		    lb = cAdmScreenGrid.FindControl("cDefaultHlpMsg16hl") as LinkButton;
+		    lb = cAdmScreenGrid.FindControl("cCultureId16hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(27); lb.ToolTip = ColumnToolTip(27); lb.Parent.Visible = GridColumnVisible(27); }
-		    lb = cAdmScreenGrid.FindControl("cFootNote16hl") as LinkButton;
+		    lb = cAdmScreenGrid.FindControl("cScreenTitle16hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(28); lb.ToolTip = ColumnToolTip(28); lb.Parent.Visible = GridColumnVisible(28); }
-		    lb = cAdmScreenGrid.FindControl("cAddMsg16hl") as LinkButton;
+		    lb = cAdmScreenGrid.FindControl("cDefaultHlpMsg16hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(29); lb.ToolTip = ColumnToolTip(29); lb.Parent.Visible = GridColumnVisible(29); }
-		    lb = cAdmScreenGrid.FindControl("cUpdMsg16hl") as LinkButton;
+		    lb = cAdmScreenGrid.FindControl("cFootNote16hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(30); lb.ToolTip = ColumnToolTip(30); lb.Parent.Visible = GridColumnVisible(30); }
-		    lb = cAdmScreenGrid.FindControl("cDelMsg16hl") as LinkButton;
+		    lb = cAdmScreenGrid.FindControl("cAddMsg16hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(31); lb.ToolTip = ColumnToolTip(31); lb.Parent.Visible = GridColumnVisible(31); }
+		    lb = cAdmScreenGrid.FindControl("cUpdMsg16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(32); lb.ToolTip = ColumnToolTip(32); lb.Parent.Visible = GridColumnVisible(32); }
+		    lb = cAdmScreenGrid.FindControl("cDelMsg16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(33); lb.ToolTip = ColumnToolTip(33); lb.Parent.Visible = GridColumnVisible(33); }
+		    lb = cAdmScreenGrid.FindControl("cIncrementMsg16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(34); lb.ToolTip = ColumnToolTip(34); lb.Parent.Visible = GridColumnVisible(34); }
+		    lb = cAdmScreenGrid.FindControl("cNoMasterMsg16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(35); lb.ToolTip = ColumnToolTip(35); lb.Parent.Visible = GridColumnVisible(35); }
+		    lb = cAdmScreenGrid.FindControl("cNoDetailMsg16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(36); lb.ToolTip = ColumnToolTip(36); lb.Parent.Visible = GridColumnVisible(36); }
+		    lb = cAdmScreenGrid.FindControl("cAddMasterMsg16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(37); lb.ToolTip = ColumnToolTip(37); lb.Parent.Visible = GridColumnVisible(37); }
+		    lb = cAdmScreenGrid.FindControl("cAddDetailMsg16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(38); lb.ToolTip = ColumnToolTip(38); lb.Parent.Visible = GridColumnVisible(38); }
+		    lb = cAdmScreenGrid.FindControl("cMasterLstTitle16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(39); lb.ToolTip = ColumnToolTip(39); lb.Parent.Visible = GridColumnVisible(39); }
+		    lb = cAdmScreenGrid.FindControl("cMasterLstSubtitle16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(40); lb.ToolTip = ColumnToolTip(40); lb.Parent.Visible = GridColumnVisible(40); }
+		    lb = cAdmScreenGrid.FindControl("cMasterRecTitle16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(41); lb.ToolTip = ColumnToolTip(41); lb.Parent.Visible = GridColumnVisible(41); }
+		    lb = cAdmScreenGrid.FindControl("cMasterRecSubtitle16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(42); lb.ToolTip = ColumnToolTip(42); lb.Parent.Visible = GridColumnVisible(42); }
+		    lb = cAdmScreenGrid.FindControl("cMasterFoundMsg16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(43); lb.ToolTip = ColumnToolTip(43); lb.Parent.Visible = GridColumnVisible(43); }
+		    lb = cAdmScreenGrid.FindControl("cDetailLstTitle16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(44); lb.ToolTip = ColumnToolTip(44); lb.Parent.Visible = GridColumnVisible(44); }
+		    lb = cAdmScreenGrid.FindControl("cDetailLstSubtitle16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(45); lb.ToolTip = ColumnToolTip(45); lb.Parent.Visible = GridColumnVisible(45); }
+		    lb = cAdmScreenGrid.FindControl("cDetailRecTitle16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(46); lb.ToolTip = ColumnToolTip(46); lb.Parent.Visible = GridColumnVisible(46); }
+		    lb = cAdmScreenGrid.FindControl("cDetailRecSubtitle16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(47); lb.ToolTip = ColumnToolTip(47); lb.Parent.Visible = GridColumnVisible(47); }
+		    lb = cAdmScreenGrid.FindControl("cDetailFoundMsg16hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(48); lb.ToolTip = ColumnToolTip(48); lb.Parent.Visible = GridColumnVisible(48); }
 		    // Hide DeleteAll:
 			DataTable dtAuthRow = GetAuthRow();
 			if (dtAuthRow != null)
@@ -3790,21 +4373,51 @@ if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new screen
 		    // footer:
 		    Label gc = null;
 		    gc = cAdmScreenGrid.FindControl("cScreenHlpId16fl") as Label;
-		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(24); }
-		    gc = cAdmScreenGrid.FindControl("cCultureId16fl") as Label;
-		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(25); }
-		    gc = cAdmScreenGrid.FindControl("cScreenTitle16fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(26); }
-		    gc = cAdmScreenGrid.FindControl("cDefaultHlpMsg16fl") as Label;
+		    gc = cAdmScreenGrid.FindControl("cCultureId16fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(27); }
-		    gc = cAdmScreenGrid.FindControl("cFootNote16fl") as Label;
+		    gc = cAdmScreenGrid.FindControl("cScreenTitle16fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(28); }
-		    gc = cAdmScreenGrid.FindControl("cAddMsg16fl") as Label;
+		    gc = cAdmScreenGrid.FindControl("cDefaultHlpMsg16fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(29); }
-		    gc = cAdmScreenGrid.FindControl("cUpdMsg16fl") as Label;
+		    gc = cAdmScreenGrid.FindControl("cFootNote16fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(30); }
-		    gc = cAdmScreenGrid.FindControl("cDelMsg16fl") as Label;
+		    gc = cAdmScreenGrid.FindControl("cAddMsg16fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(31); }
+		    gc = cAdmScreenGrid.FindControl("cUpdMsg16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(32); }
+		    gc = cAdmScreenGrid.FindControl("cDelMsg16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(33); }
+		    gc = cAdmScreenGrid.FindControl("cIncrementMsg16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(34); }
+		    gc = cAdmScreenGrid.FindControl("cNoMasterMsg16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(35); }
+		    gc = cAdmScreenGrid.FindControl("cNoDetailMsg16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(36); }
+		    gc = cAdmScreenGrid.FindControl("cAddMasterMsg16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(37); }
+		    gc = cAdmScreenGrid.FindControl("cAddDetailMsg16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(38); }
+		    gc = cAdmScreenGrid.FindControl("cMasterLstTitle16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(39); }
+		    gc = cAdmScreenGrid.FindControl("cMasterLstSubtitle16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(40); }
+		    gc = cAdmScreenGrid.FindControl("cMasterRecTitle16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(41); }
+		    gc = cAdmScreenGrid.FindControl("cMasterRecSubtitle16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(42); }
+		    gc = cAdmScreenGrid.FindControl("cMasterFoundMsg16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(43); }
+		    gc = cAdmScreenGrid.FindControl("cDetailLstTitle16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(44); }
+		    gc = cAdmScreenGrid.FindControl("cDetailLstSubtitle16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(45); }
+		    gc = cAdmScreenGrid.FindControl("cDetailRecTitle16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(46); }
+		    gc = cAdmScreenGrid.FindControl("cDetailRecSubtitle16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(47); }
+		    gc = cAdmScreenGrid.FindControl("cDetailFoundMsg16fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(48); }
 		}
 
 		protected void cbPostBack(object sender, System.EventArgs e)

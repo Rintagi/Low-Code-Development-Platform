@@ -1,0 +1,52 @@
+.map {
+
+  .map__marker-label-content {
+    background-color: white;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.22);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    width: 130px;
+    min-height: 40px;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: calc(50% - 4px);
+      bottom: -8px;
+      border: 4px solid transparent;
+      border-top: 4px solid white;
+    }
+  }
+
+  .map__maker-label-close {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+
+    svg {
+      width: 12px;
+      height: 12px;
+      fill: $color-additional;
+    }
+  }
+
+  .map__marker-label {
+    position: absolute;
+    top: -90px;
+    left: -65px;
+  }
+
+  .infoBox {
+    width: 130px !important;
+    overflow: visible !important;
+  }
+
+  .gm-style-pbt{
+    color: #ffffff;
+  }
+}

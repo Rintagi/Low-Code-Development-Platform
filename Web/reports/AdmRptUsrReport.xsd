@@ -25,6 +25,9 @@
               <xs:element name="AgentName" type="xs:string" minOccurs="0" />
               <xs:element name="BrokerName" type="xs:string" minOccurs="0" />
               <xs:element name="MemberName" type="xs:string" minOccurs="0" />
+              <xs:element name="BorrowerName" type="xs:string" minOccurs="0" />
+              <xs:element name="GuarantorName" type="xs:string" minOccurs="0" />
+              <xs:element name="LenderName" type="xs:string" minOccurs="0" />
               <xs:element name="iUsrName" type="xs:string" minOccurs="0" />
               <xs:element name="iCompanyDesc" type="xs:string" minOccurs="0" />
               <xs:element name="iInvestorName" type="xs:string" minOccurs="0" />
@@ -33,6 +36,9 @@
               <xs:element name="iAgentName" type="xs:string" minOccurs="0" />
               <xs:element name="iBrokerName" type="xs:string" minOccurs="0" />
               <xs:element name="iMemberName" type="xs:string" minOccurs="0" />
+              <xs:element name="iBorrowerName" type="xs:string" minOccurs="0" />
+              <xs:element name="iGuarantorName" type="xs:string" minOccurs="0" />
+              <xs:element name="iLenderName" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

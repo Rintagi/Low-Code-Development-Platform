@@ -1,0 +1,162 @@
+@import '~react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+.text-editor {
+  position: relative;
+
+  .rdw-editor-toolbar {
+    margin: 0;
+    background: transparent;
+    border-radius: 0;
+
+    @include themify($themes) {
+      border: solid 1px themed('colorFieldsBorder');
+    }
+  }
+
+  .rdw-editor-toolbar {
+    padding: 0;
+
+    & > div {
+      height: 40px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      margin: 0;
+
+      img {
+        height: 13px;
+
+        @include themify($themes) {
+          fill: themed('colorText');
+        }
+      }
+    }
+
+    .rdw-option-active {
+      box-shadow: none;
+
+      @include themify($themes) {
+        background-color: themed('colorBorder');
+      }
+    }
+  }
+
+  .DraftEditor-root {
+    width: 100%;
+    min-height: 180px;
+
+    @include themify($themes) {
+      border: solid 1px themed('colorFieldsBorder');
+    }
+
+    border-top: none;
+  }
+
+  .public-DraftEditor-content {
+    padding: 6px 10px;
+
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+
+  }
+
+  .draftJsMentionPlugin__input__1Wxng {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .public-DraftEditorPlaceholder-root {
+    position: absolute;
+    color: $color-additional;
+  }
+
+  .rdw-option-wrapper, .rdw-dropdown-wrapper {
+    border: none;
+    border-radius: 0;
+    transition: background 0.3s;
+    background: transparent;
+
+    &:hover {
+      box-shadow: none;
+
+      @include themify($themes) {
+        background: themed('colorHover');
+      }
+    }
+
+    img {
+
+      @include themify($themes) {
+        filter: themed('imgInvert');
+      }
+    }
+  }
+
+  .rdw-dropdown-wrapper {
+
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+
+    .rdw-dropdown-carettoclose {
+
+      @include themify($themes) {
+        border-bottom-color: themed('colorText');
+      }
+    }
+
+    .rdw-dropdown-carettoopen {
+
+      @include themify($themes) {
+        border-top-color: themed('colorText');
+      }
+    }
+  }
+
+  .rdw-dropdown-optionwrapper {
+    overflow: auto;
+
+    @include themify($themes) {
+      background-color: themed('colorBackground');
+      border-color: themed('colorBorder');
+    }
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
+  .rdw-dropdownoption-default {
+    transition: background-color 0.3s;
+
+    &:hover {
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+    }
+
+    &.rdw-dropdownoption-active {
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+    }
+  }
+
+  button {
+
+    &:hover {
+      box-shadow: none;
+
+      @include themify($themes) {
+        background-color: themed('colorHover');
+      }
+    }
+
+    &[disabled] {
+      pointer-events: none;
+    }
+  }
+}

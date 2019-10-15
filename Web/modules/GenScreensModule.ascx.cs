@@ -14,6 +14,7 @@ namespace RO.Web
 	using RO.Common3.Data;
     using RO.WebRules;
     using AjaxControlToolkit;
+    using RO.Rule3;
 
 	public partial class GenScreensModule : RO.Web.ModuleBase
 	{
@@ -240,6 +241,65 @@ namespace RO.Web
 			ScriptManager.GetCurrent(Parent.Page).SetFocus(cSystemId.ClientID);
 		}
 
+        protected void cGenReactButton_Click(object sender, System.EventArgs e)
+        {
+            DataTable dtp = (DataTable)Session[KEY_dtEntity];
+            DataTable dts = (DataTable)Session[KEY_dtSystem];
+            string sAbbr = dts.Rows[cSystemId.SelectedIndex]["SystemAbbr"].ToString();
+            string path = System.IO.Directory.GetParent(System.IO.Directory.GetParent(Config.ClientTierPath).ToString()).ToString() + "\\React" + "\\" + sAbbr;
+
+            if (dtp == null || dts == null)
+            {
+                cMsgLabel.Style["Color"] = "red"; cMsgLabel.Text = "Datatables dtEntity and dtSystem cannot be null. Please call administrator ASAP. Thank you."; return;
+            }
+            if (Config.DeployType != "DEV" && dts.Rows[cSystemId.SelectedIndex]["dbAppDatabase"].ToString() != dtp.Rows[cEntityId.SelectedIndex]["EntityCode"].ToString() + "View")
+            {
+                cMsgLabel.Style["Color"] = "red"; cMsgLabel.Text = "Please do not generate codes on production system. Thank you."; return;
+            }
+            if (dtp.Rows[cEntityId.SelectedIndex]["EntityCode"].ToString() != "RO" && dts.Rows[cSystemId.SelectedIndex]["SysProgram"].ToString() == "Y")
+            {
+                cMsgLabel.Style["Color"] = "red"; cMsgLabel.Text = "Please do not regenerate administration codes. Thank you."; return;
+            }
+
+            if (!System.IO.Directory.Exists(path))
+            {
+                cMsgLabel.Style["Color"] = "red"; cMsgLabel.Text = "File directory not exist. Please try it again by copying the template inside the \"React\" folder and name it to " + sAbbr; return;
+            }
+
+            cMsgLabel.Style["Color"] = "blue"; cMsgLabel.Text = string.Empty;
+            int iGen = 0;
+            int iNot = 0;
+            string sGen = string.Empty;
+            string sNot = string.Empty;
+
+            DataView dv = new DataView((DataTable)Session[KEY_dtScreenList]);
+            if (dv != null)
+            {
+                int ii = 0;
+                foreach (DataRowView drv in dv)
+                {
+                    if (cAllScreen.Checked || cScreenList.Items[ii].Selected)
+                    {
+                        if (dts != null && (drv["ScreenType"].ToString() != "I3"))
+                        {
+                            (new RO.WebRules.WebRule()).WrUpdScreenReactGen(drv["ScreenId"].ToString(), CSrc.SrcConnectionString, CSrc.SrcDbPassword);
+                        }
+
+                        if (dts != null &&
+                            (drv["GenerateSc"].ToString() == "Y" || drv["GenerateSr"].ToString() == "Y") && (drv["ScreenType"].ToString() != "I3") &&
+                            (new GenReactRules(base.LUser.CultureId, CSrc.SrcConnectionString, CSrc.SrcDbPassword, sAbbr, "C:/Rintagi/" + Config.AppNameSpace + "/React/" + sAbbr + "/", CSrc.SrcSystemId)).CreateProgram(drv["ScreenId"].ToString(), drv["ProgramName"].ToString())
+                            )
+                        { iGen = iGen + 1; }
+                        else { iNot = iNot + 1; }
+                    }
+                    ii = ii + 1;
+                }
+                if (iGen > 1) { sGen = "s"; }
+                if (iNot > 1) { sNot = "s"; }
+                cMsgLabel.Text = iGen.ToString() + " screen" + sGen + " generated successfully; " + iNot.ToString() + " selected screen" + sNot + " not generated.";
+            }
+        }
+
 		private void PopScreenList(string searchTxt)
 		{
 			DataTable dt = (new RobotSystem()).GetScreenList(searchTxt, base.CSrc.SrcConnectionString, base.CSrc.SrcDbPassword);
@@ -250,31 +310,38 @@ namespace RO.Web
 			}
 		}
 
-		protected void cEntityId_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			DataTable dt = (DataTable)Session[KEY_dtEntity];
-			if (dt != null)
-			{
-				base.CPrj = new CurrPrj(dt.Rows[cEntityId.SelectedIndex]);
-				GetClientTier(Int16.Parse(cEntityId.SelectedValue));
-				GetRuleTier(Int16.Parse(cEntityId.SelectedValue));
-				GetDataTier(Int16.Parse(cEntityId.SelectedValue));
-				Session.Remove(KEY_dtSystem);
-				GetSystem();
-			}
-			ScriptManager.GetCurrent(Parent.Page).SetFocus(cEntityId.ClientID);
-		}
+        protected void cEntityId_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            DataTable dt = (DataTable)Session[KEY_dtEntity];
+            if (dt != null)
+            {
+                base.CPrj = new CurrPrj(dt.Rows[cEntityId.SelectedIndex]);
+                GetClientTier(Int16.Parse(cEntityId.SelectedValue));
+                GetRuleTier(Int16.Parse(cEntityId.SelectedValue));
+                GetDataTier(Int16.Parse(cEntityId.SelectedValue));
+                Session.Remove(KEY_dtSystem);
+                GetSystem();
+            }
+            ScriptManager.GetCurrent(Parent.Page).SetFocus(cEntityId.ClientID);
+        }
+        protected void cSystemId_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            DataTable dt = (DataTable)Session[KEY_dtSystem];
+            bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+            if (singleSQLCredential)
+            {
+                dt.Rows[cSystemId.SelectedIndex]["ServerName"] = Config.DesServer;
+                dt.Rows[cSystemId.SelectedIndex]["dbAppUserId"] = Config.DesUserId;
+                dt.Rows[cSystemId.SelectedIndex]["dbAppPassword"] = Config.DesPassword;
+            }
+            base.CSrc = new CurrSrc(true, dt.Rows[cSystemId.SelectedIndex]);
+            SetCTar(base.CPrj.TarDesConnectionString, base.CPrj.TarDesPassword);
+            PopScreenList(cSearch.Text);
+            ScriptManager.GetCurrent(Parent.Page).SetFocus(cSystemId.ClientID);
+        }
 
-		protected void cSystemId_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			DataTable dt = (DataTable)Session[KEY_dtSystem];
-			base.CSrc = new CurrSrc (true, dt.Rows[cSystemId.SelectedIndex]);
-			SetCTar(base.CPrj.TarDesConnectionString, base.CPrj.TarDesPassword);
-			PopScreenList(cSearch.Text);
-			ScriptManager.GetCurrent(Parent.Page).SetFocus(cSystemId.ClientID);
-		}
 
-		protected void cClientTierId_SelectedIndexChanged(object sender, System.EventArgs e)
+        protected void cClientTierId_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			if (base.CPrj != null)
 			{
@@ -296,27 +363,30 @@ namespace RO.Web
 			ScriptManager.GetCurrent(Parent.Page).SetFocus(cRuleTierId.ClientID);
 		}
 
-		protected void cDataTierId_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			DataRow dr = ((DataTable)Session[KEY_dtDataTier]).Rows[cDataTierId.SelectedIndex];
-			if (base.CPrj != null && SetCTar(Config.GetConnStr(dr["DbProviderOle"].ToString(), dr["DesServer"].ToString(), dr["DesDatabase"].ToString(), "", dr["DesUserId"].ToString()), dr["DesPassword"].ToString()))
-			{
-				base.CPrj.TarDesProviderCd = dr["DbProviderCd"].ToString();
-				base.CPrj.TarDesProvider = dr["DbProviderOle"].ToString();
-				base.CPrj.TarDesServer = dr["DesServer"].ToString();
-				base.CPrj.TarDesDatabase = dr["DesDatabase"].ToString();
-				base.CPrj.TarDesUserId = dr["DesUserId"].ToString();
-				base.CPrj.TarDesPassword = dr["DesPassword"].ToString();
-				LastDataTierId = cDataTierId.SelectedIndex;
-			}
-			else
-			{
-				cDataTierId.ClearSelection(); cDataTierId.Items[LastDataTierId].Selected = true;
-			}
-			ScriptManager.GetCurrent(Parent.Page).SetFocus(cDataTierId.ClientID);
-		}
+        protected void cDataTierId_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            DataRow dr = ((DataTable)Session[KEY_dtDataTier]).Rows[cDataTierId.SelectedIndex];
+            bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
 
-		protected void cAllScreen_CheckedChanged(object sender, System.EventArgs e)
+            if (base.CPrj != null && SetCTar(Config.GetConnStr(dr["DbProviderOle"].ToString(), dr["DesServer"].ToString(), dr["DesDatabase"].ToString(), "", dr["DesUserId"].ToString()), dr["DesPassword"].ToString()))
+            {
+                base.CPrj.TarDesProviderCd = dr["DbProviderCd"].ToString();
+                base.CPrj.TarDesProvider = dr["DbProviderOle"].ToString();
+                base.CPrj.TarDesServer = singleSQLCredential ? Config.DesServer : dr["DesServer"].ToString();
+                base.CPrj.TarDesDatabase = dr["DesDatabase"].ToString();
+                base.CPrj.TarDesUserId = singleSQLCredential ? Config.DesUserId : dr["DesUserId"].ToString();
+                base.CPrj.TarDesPassword = singleSQLCredential ? Config.DesPassword : dr["DesPassword"].ToString();
+                LastDataTierId = cDataTierId.SelectedIndex;
+            }
+            else
+            {
+                cDataTierId.ClearSelection(); cDataTierId.Items[LastDataTierId].Selected = true;
+            }
+            ScriptManager.GetCurrent(Parent.Page).SetFocus(cDataTierId.ClientID);
+        }
+
+
+        protected void cAllScreen_CheckedChanged(object sender, System.EventArgs e)
 		{
 			if (cAllScreen.Checked) {cScreenList.ClearSelection();}
 		}

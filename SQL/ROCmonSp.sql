@@ -5,6 +5,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo._GetInCompanyId
  @wClause	varchar(4000)
 /* WITH ENCRYPTION */
@@ -17,7 +18,7 @@ SELECT @sClause = 'SELECT a.CompanyId, a.CompanyName'
 SELECT @fClause = 'FROM ROCmon.dbo.Company a'
 SELECT @oClause = 'ORDER BY a.CompanyName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0  
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -28,6 +29,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo._GetS05Rptwiz46R
  @wClause	nvarchar(4000)
 ,@CompanyId10	SmallInt
@@ -42,7 +44,8 @@ SELECT @fClause = 'FROM dbo.Company t1'
 IF @CompanyId10 is not null SELECT @wClause = @wClause + ' AND t1.CompanyId = ' + convert(varchar,@CompanyId10)
 SELECT @oClause = ''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -53,6 +56,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo._GetS05Rptwiz46V
  @wClause	nvarchar(4000)
 ,@CompanyId10	SmallInt
@@ -63,7 +67,8 @@ SET NOCOUNT ON
 /* It is mandatory for this procedure to return at least one row */
 SELECT @sClause = 'SELECT ReportName=''TestCompany_'''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -74,6 +79,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo._GetS05Rptwiz51R
  @wClause	nvarchar(4000)
 ,@CompanyId10	SmallInt
@@ -90,7 +96,8 @@ IF @CompanyId10 is not null SELECT @wClause = @wClause + ' AND t1.CompanyId = ' 
 IF @CompanyName20 is not null SELECT @wClause = @wClause + ' AND t1.CompanyName like ''%' + @CompanyName20 + '%'''
 SELECT @oClause = ''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -101,6 +108,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE dbo._GetS05Rptwiz51V
  @wClause	nvarchar(4000)
 ,@CompanyId10	SmallInt
@@ -112,7 +120,8 @@ SET NOCOUNT ON
 /* It is mandatory for this procedure to return at least one row */
 SELECT @sClause = 'SELECT ReportName=''Testcompany1_'''
 EXEC (@sClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -123,6 +132,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetAdmTestt2ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
@@ -155,7 +165,8 @@ SELECT @sClause = 'SELECT CompanyId1=b1.CompanyId'
 + ', Active1=b1.Active'
 SELECT @wClause = 'WHERE b1.CompanyId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -166,6 +177,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetExpAdmTestt2
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -266,7 +278,8 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC ROCmonD.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','b1.','N',null,'CompanyId',@wClause OUTPUT
 IF @key is not null SELECT @wClause = @wClause + ' AND (b1.CompanyId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -277,6 +290,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetIn12CompanyId10
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
@@ -305,7 +319,8 @@ DECLARE	 @wClause		varchar(max)
 	,@RowAuthorityId	smallint
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCompanyId @wClause
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -316,6 +331,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 CREATE PROCEDURE GetLisAdmTestt2
  @useGlobalFilter	char(1)
 ,@screenId		int
@@ -398,7 +414,8 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b1.CompanyId = ' + @key 
 SELECT @FilterTxt = REPLACE(@FilterTxt, '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1.LegalName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0 
+RETURN 0
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -409,6 +426,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
+
 CREATE PROCEDURE [dbo].[MkStoredProcedure]
   @spString1	varchar(max)
 , @spString2	varchar(max) = ''
@@ -425,7 +444,9 @@ AS
 EXEC ('SET QUOTED_IDENTIFIER ON SET ANSI_NULLS ON')
 EXEC (@spString1 + @spString2 + @spString3 + @spString4 + @spString5 + @spString6 + @spString7 + @spString8 + @spString9)
 EXEC ('SET QUOTED_IDENTIFIER OFF')
-RETURN 0 
+RETURN 0
+ 
+ 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO

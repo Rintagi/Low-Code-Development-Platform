@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Data.OleDb;
 using System.Drawing;
 using System.Web;
 using System.Web.UI.WebControls;
@@ -58,15 +59,29 @@ namespace RO.Web
 			LcAppPw = base.AppPwd(SystemId);
 		}
 
-		private void CheckAuthentication(bool pageLoad)
-		{
+        private void CheckAuthentication(bool pageLoad)
+        {
+            bool allowBroadAccess = (System.Configuration.ConfigurationManager.AppSettings["DesEncryptPwdAccess"] ?? "N") == "Y";
+            if (allowBroadAccess) return;
             CheckAuthentication(pageLoad, !Request.IsLocal);
         }
 
-		protected void cEncryptButton_Click(object sender, System.EventArgs e)
-		{
+        protected void cEncryptButton_Click(object sender, System.EventArgs e)
+        {
             CheckAuthentication(false);
+            if (cValidate.Checked)
+            {
+                OleDbDataAdapter da = new OleDbDataAdapter();
+                var dbConnectionString = Config.GetConnStr(Config.DesProvider, Config.DesServer, Config.DesDatabase, "", Config.DesUserId);
+
+                OleDbCommand cmd = new OleDbCommand("GetSystemsList", new OleDbConnection(dbConnectionString + cInstr.Text));
+                cmd.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand = cmd;
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+            }
+
             cOutstr.Text = (new AdminSystem()).EncryptString(cInstr.Text);
-		}
-	}
+        }
+    }
 }

@@ -1,0 +1,157 @@
+.alert {
+  border-radius: 0;
+  position: relative;
+  margin-bottom: 10px;
+  padding: 0;
+  display: flex;
+
+  &.fade {
+    opacity: 1;
+  }
+
+  .alert__icon {
+    padding: 18px;
+    display: flex;
+
+    svg {
+      fill: #ffffff;
+      margin: auto 0;
+    }
+  }
+
+  .alert__content {
+    padding: 10px 40px 10px 20px;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  p {
+    color: #ffffff;
+    margin-top: 0;
+  }
+
+  .close {
+    color: white;
+    opacity: 1;
+    font-weight: 100;
+    right: 20px;
+    font-size: 14px;
+    line-height: 14px;
+    position: absolute;
+    top: calc(50% - 7px);
+    text-shadow: none;
+
+    &:focus, &:active, &:active:focus {
+      outline: none;
+    }
+  }
+
+  &.alert-info {
+    background-color: $color-blue;
+    border-color: $color-blue;
+
+    &.alert--bordered .alert__icon {
+      background-color: $color-blue;
+    }
+
+    &.alert--colored .alert__icon {
+      background-color: #87c3f7;
+    }
+
+    &.alert--neutral .alert__icon svg {
+      fill: $color-blue;
+    }
+  }
+
+  &.alert-success {
+    background-color: $color-accent;
+    border-color: $color-accent;
+
+    &.alert--bordered .alert__icon {
+      background-color: $color-accent;
+    }
+
+    &.alert--colored .alert__icon {
+      background-color: #55e5bb;
+    }
+
+    &.alert--neutral .alert__icon svg {
+      fill: $color-accent;
+    }
+  }
+
+  &.alert-warning {
+    background-color: $color-yellow;
+    border-color: $color-yellow;
+
+    &.alert--bordered .alert__icon {
+      background-color: $color-yellow;
+    }
+
+    &.alert--colored .alert__icon {
+      background-color: #f4dd87;
+    }
+
+    &.alert--neutral .alert__icon svg {
+      fill: $color-yellow;
+    }
+  }
+
+  &.alert-danger {
+    background-color: $color-red;
+    border-color: $color-red;
+
+    &.alert--bordered .alert__icon {
+      background-color: $color-red;
+    }
+
+    &.alert--colored .alert__icon {
+      background-color: #f88e7d;
+    }
+
+    &.alert--neutral .alert__icon svg {
+      fill: $color-red;
+    }
+  }
+
+  &.alert--bordered {
+    background-color: transparent;
+
+    p{
+      @include themify($themes) {
+        color: themed('colorText');
+      }
+    }
+
+    .close{
+      color: $color-additional;
+    }
+  }
+
+  &.alert--neutral {
+    background-color: transparent;
+    border-color: #f2f4f7;
+
+    p {
+      @include themify($themes) {
+        color: themed('colorText');
+      }
+    }
+
+    .close{
+      color: $color-additional;
+    }
+
+    svg {
+      @include themify($themes) {
+        fill: themed('colorText');
+      }
+    }
+
+    .alert__icon {
+      border-right: 1px solid #f2f4f7;;
+    }
+  }
+}

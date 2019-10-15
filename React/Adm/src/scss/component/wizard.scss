@@ -1,0 +1,71 @@
+.wizard {
+
+  @include themify($themes) {
+    background-color: themed('colorBackground');
+  }
+
+  .wizard__steps {
+    display: flex;
+  }
+
+  .wizard__step {
+    width: 100%;
+    text-align: center;
+    height: 55px;
+    text-transform: uppercase;
+    display: flex;
+    transition: background 0.3s;
+
+    @include themify($themes) {
+      border: 1px solid themed('colorBorder');
+      background: themed('colorHover');
+    }
+
+    p {
+      font-weight: 700;
+      margin: auto;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    &.wizard__step--active {
+      background: $color-blue;
+      border-color: $color-blue;
+
+      p {
+        color: #ffffff;
+      }
+    }
+  }
+
+  .wizard__form-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .wizard__form {
+    max-width: 610px;
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 100px;
+    padding: 0 25px;
+
+    .wizard__toolbar {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  .wizard__title {
+    margin-bottom: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 600;
+  }
+
+  .wizard__description {
+    color: $color-additional;
+    margin: 0;
+    max-width: 410px;
+  }
+}

@@ -26,7 +26,7 @@
     <link type="text/css" rel="Stylesheet" href="css/sectionH.css" />
     <link type="text/css" rel="Stylesheet" href="css/sectionF.css" />
     <link type="text/css" rel="Stylesheet" href="css/sectionD.css" />
-    <link type="text/css" rel="Stylesheet" href="css/sectionS.css" />
+    <link type="text/css" rel="Stylesheet" href="css/sectionS.css" />    <link type="text/css" rel="Stylesheet" href="css/section.css" />
     <!-- application.css is user direct controlled. Users may manually change it. -->
     <link type="text/css" rel="Stylesheet" href="css/application.css" />
     <link type="text/css" rel="Stylesheet" href="GetCss.aspx" />
@@ -58,6 +58,8 @@
     <script type="text/javascript" src="scripts/charts/plugins/jqplot.barRenderer.min.js"></script>
     <script type="text/javascript" src="scripts/charts/plugins/jqplot.categoryAxisRenderer.min.js"></script>
     <script type="text/javascript" src="scripts/signature_pad.js"></script>
+    <script type="text/javascript" src="scripts/fingerprint2.min.js"></script>
+    <script type="text/javascript" src="scripts/sjcl.js"></script>    
     <script type="text/javascript" src="scripts/ClientRule.js"></script>
     <script type="text/javascript" src="scripts/dashboard.js"></script>
     <script type="text/javascript" src="scripts/UserRule.js"></script>

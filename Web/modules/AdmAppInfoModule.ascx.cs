@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -694,39 +697,46 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		{
 			if (!string.IsNullOrEmpty(cAppInfoId135.Text) && cAppZipId135Fi.HasFile && cAppZipId135Fi.PostedFile.FileName != string.Empty)
 			{
-				byte[] dc;
-				if ("image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png".IndexOf(cAppZipId135Fi.PostedFile.ContentType) >= 0 && cAppZipId135Fi.PostedFile.ContentLength > int.Parse(Config.ImgThreshold) * 1024)
+				if (cAppZipId135Fi.PostedFile.FileName.Length > 100)
 				{
-					System.Drawing.Image oBMP = System.Drawing.Image.FromStream(cAppZipId135Fi.PostedFile.InputStream);
-					int nHeight = int.Parse((Math.Round(decimal.Parse(oBMP.Height.ToString()) * (decimal.Parse(Config.ImgThreshold) / decimal.Parse(oBMP.Width.ToString())))).ToString());
-					Bitmap nBMP = new Bitmap(oBMP, int.Parse(Config.ImgThreshold), nHeight);
-					using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
-				    {
-					    nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
-					    sm.Position = 0;
-					    dc = new byte[sm.Length + 1];
-					    sm.Read(dc, 0, dc.Length); sm.Close();
-				    }
-					oBMP.Dispose(); nBMP.Dispose();
+					bErrNow.Value = "Y"; PreMsgPopup("Filename exceeds a total of 100 characters. Please shorten the filename and upload again.");
 				}
 				else
 				{
-					dc = new byte[cAppZipId135Fi.PostedFile.ContentLength];
-					cAppZipId135Fi.PostedFile.InputStream.Read(dc, 0, dc.Length);
+					byte[] dc;
+					if ("image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png".IndexOf(cAppZipId135Fi.PostedFile.ContentType) >= 0 && cAppZipId135Fi.PostedFile.ContentLength > int.Parse(Config.ImgThreshold) * 1024)
+					{
+						System.Drawing.Image oBMP = System.Drawing.Image.FromStream(cAppZipId135Fi.PostedFile.InputStream);
+						int nHeight = int.Parse((Math.Round(decimal.Parse(oBMP.Height.ToString()) * (decimal.Parse(Config.ImgThreshold) / decimal.Parse(oBMP.Width.ToString())))).ToString());
+						Bitmap nBMP = new Bitmap(oBMP, int.Parse(Config.ImgThreshold), nHeight);
+						using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
+				    	{
+						    nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
+						    sm.Position = 0;
+						    dc = new byte[sm.Length + 1];
+						    sm.Read(dc, 0, dc.Length); sm.Close();
+					    }
+						oBMP.Dispose(); nBMP.Dispose();
+					}
+					else
+					{
+						dc = new byte[cAppZipId135Fi.PostedFile.ContentLength];
+						cAppZipId135Fi.PostedFile.InputStream.Read(dc, 0, dc.Length);
+					}
+					// In case DocId has not been saved properly, always find the most recent to replace as long as it has the same file name:
+					string DocId = string.Empty;
+					DocId = new AdminSystem().GetDocId(cAppInfoId135.Text, "dbo.AppZipId", Path.GetFileName(cAppZipId135Fi.PostedFile.FileName), base.LUser.UsrId.ToString(), (string)Session[KEY_sysConnectionString], LcAppPw);
+					if (DocId == string.Empty || !cAppZipId135Ow.Checked)
+					{
+						DocId = new AdminSystem().AddDbDoc(cAppInfoId135.Text, "dbo.AppZipId", Path.GetFileName(cAppZipId135Fi.PostedFile.FileName), cAppZipId135Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], LcAppPw, base.LUser);
+					}
+					else
+					{
+						new AdminSystem().UpdDbDoc(DocId, "dbo.AppZipId", Path.GetFileName(cAppZipId135Fi.PostedFile.FileName), cAppZipId135Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], LcAppPw, base.LUser);
+					}
+					cAppZipId135Pan.Visible = false; cAppZipId135Div.Visible = true;
+					SetAppZipId135(cAppZipId135GV, string.Empty);
 				}
-				// In case DocId has not been saved properly, always find the most recent to replace as long as it has the same file name:
-				string DocId = string.Empty;
-				DocId = new AdminSystem().GetDocId(cAppInfoId135.Text, "dbo.AppZipId", Path.GetFileName(cAppZipId135Fi.PostedFile.FileName), base.LUser.UsrId.ToString(), (string)Session[KEY_sysConnectionString], LcAppPw);
-				if (DocId == string.Empty || !cAppZipId135Ow.Checked)
-				{
-					DocId = new AdminSystem().AddDbDoc(cAppInfoId135.Text, "dbo.AppZipId", Path.GetFileName(cAppZipId135Fi.PostedFile.FileName), cAppZipId135Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], LcAppPw, base.LUser);
-				}
-				else
-				{
-					new AdminSystem().UpdDbDoc(DocId, "dbo.AppZipId", Path.GetFileName(cAppZipId135Fi.PostedFile.FileName), cAppZipId135Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], LcAppPw, base.LUser);
-				}
-				cAppZipId135Pan.Visible = false; cAppZipId135Div.Visible = true;
-				SetAppZipId135(cAppZipId135GV, string.Empty);
 			}
 		}
 

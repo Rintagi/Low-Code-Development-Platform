@@ -1,0 +1,47 @@
+.load {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  background: #ffffff;
+  z-index: 1000;
+
+  .load__icon {
+    animation: linear load 2s infinite;
+    margin: auto;
+    width: 32px;
+    height: 32px;
+  }
+
+  .load__icon-wrap {
+    margin: auto;
+  }
+
+  & + div{
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  @keyframes load {
+    from {
+      transform: rotate(0deg) scale(2);
+    }
+    to {
+      transform: rotate(360deg) scale(2);
+    }
+  }
+
+  &.loaded {
+    animation: ease loaded 0.5s;
+  }
+
+  @keyframes loaded {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+}

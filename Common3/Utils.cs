@@ -16,7 +16,9 @@
     using System.Management;
     using System.Security.Cryptography.X509Certificates;
     using System.Text.RegularExpressions;
-
+    using System.Xml;
+    using System.Xml.Serialization;
+    using ExifLib;
     public static class StringExtensions
     {
         public static string Left(this string s, int left)
@@ -44,8 +46,382 @@
         public int MaxLength { get; set; }
     }
 
+    [XmlRoot("SerializableDictictory")]
+    public class SerializableDictionary<TKey, TValue>
+    : Dictionary<TKey, TValue>, IXmlSerializable
+    {
+        public static SerializableDictionary<TKey, TValue> CreateInstance(Dictionary<TKey, TValue> d)
+        {
+            var x = new SerializableDictionary<TKey, TValue>();
+            foreach (KeyValuePair<TKey, TValue> v in d)
+            {
+                x.Add(v.Key, v.Value);
+            }
+            return x;
+        }
+        #region IXmlSerializable Members
+        public System.Xml.Schema.XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(System.Xml.XmlReader reader)
+        {
+            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
+            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+
+            bool wasEmpty = reader.IsEmptyElement;
+            reader.Read();
+
+            if (wasEmpty)
+                return;
+
+            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            {
+                reader.ReadStartElement("item");
+
+                reader.ReadStartElement("key");
+                TKey key = (TKey)keySerializer.Deserialize(reader);
+                reader.ReadEndElement();
+
+                reader.ReadStartElement("value");
+                TValue value = (TValue)valueSerializer.Deserialize(reader);
+                reader.ReadEndElement();
+
+                this.Add(key, value);
+
+                reader.ReadEndElement();
+                reader.MoveToContent();
+            }
+            reader.ReadEndElement();
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer)
+        {
+            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
+            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+
+            foreach (TKey key in this.Keys)
+            {
+                writer.WriteStartElement("item");
+
+                writer.WriteStartElement("key");
+                keySerializer.Serialize(writer, key);
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("value");
+                TValue value = this[key];
+                valueSerializer.Serialize(writer, value);
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+            }
+        }
+
+        public SerializableDictionary<TKey, TValue> Clone(Dictionary<TKey, TValue> mergeWith = null)
+        {
+            var x = CreateInstance(this);
+            if (mergeWith != null) mergeWith.ToList().ForEach(v => x[v.Key] = v.Value);
+            return x;
+        }
+
+        protected virtual TValue GetValue(TKey key)
+        {
+            TValue x = base.TryGetValue(key, out x) ? x : default(TValue); return x;
+        }
+        public new TValue this[TKey key]
+        {
+            get { return GetValue(key); }
+            set { base[key] = value; }
+        }
+
+        #endregion
+
+    }
+    public class _ReactFileUploadObj
+    {
+        // this goes hand in hand with the react file upload control any change there must be reflected here
+        public string fileName;
+        public string mimeType;
+        public Int64 lastModified;
+        public string base64;
+        public float height;
+        public float width;
+        public int size;
+        public string previewUrl;
+    }
+
+    public class FileUploadObj
+    {
+        public string fileName;
+        public string mimeType;
+        public Int64 lastModified;
+        public string base64;
+        public string previewUrl;
+        public string icon;
+        public float height;
+        public float width;
+        public int size;
+    }
+
+    public class FileInStreamObj
+    {
+        public string fileName;
+        public string mimeType;
+        public Int64 lastModified;
+        public string ver;
+        public float height;
+        public float width;
+        public int size;
+        public string previewUrl;
+        public int extensionSize;
+        public bool contentIsJSON = false;
+    }
+
     public class Utils
     {
+        // Resize image into a thumnail.
+        public static string BlobPlaceHolder(byte[] content, bool blobOnly = false)
+        {
+            Func<byte[], byte[]> tryResizeImage = (ba) =>
+            {
+                try
+                {
+                    return ResizeImage(ba, 96);
+                }
+                catch
+                {
+                    return null;
+                }
+            };
+
+            try
+            {
+                string fileContent = DecodeFileStream(content);
+                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                try
+                {
+                    FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
+                    byte[] icon = tryResizeImage(Convert.FromBase64String(fileInfo.base64));
+                    if (blobOnly)
+                    {
+                        if (fileInfo.mimeType.Contains("image"))
+                        {
+                            return "data:application/base64;base64," + Convert.ToBase64String(icon);
+                        }
+                        else if (fileInfo.mimeType.Contains("pdf"))
+                        {
+                            return "../images/pdfIcon.png";
+                        }
+                        else if (fileInfo.mimeType.Contains("word"))
+                        {
+                            return "../images/wordIcon.png";
+                        }
+                        else if (fileInfo.mimeType.Contains("openxmlformats"))
+                        {
+                            return "../images/ExcelIcon.png";
+                        }
+                        else
+                        {
+                            return "../images/fileIcon.png";
+                        }
+                    }
+                    else return jss.Serialize(new FileUploadObj() { icon = icon != null ? Convert.ToBase64String(icon) : null, mimeType = fileInfo.mimeType, lastModified = fileInfo.lastModified, fileName = fileInfo.fileName });
+                }
+                catch
+                {
+                    try
+                    {
+                        List<_ReactFileUploadObj> fileList = jss.Deserialize<List<_ReactFileUploadObj>>(fileContent);
+                        List<FileUploadObj> x = new List<FileUploadObj>();
+                        foreach (var fileInfo in fileList)
+                        {
+                            byte[] icon = tryResizeImage(Convert.FromBase64String(fileInfo.base64));
+                            if (blobOnly)
+                            {
+                                if (fileInfo.mimeType.Contains("image"))
+                                {
+                                    return "data:application/base64;base64," + Convert.ToBase64String(icon);
+                                }
+                                else if (fileInfo.mimeType.Contains("pdf"))
+                                {
+                                    return "../images/pdfIcon.png";
+                                }
+                                else if (fileInfo.mimeType.Contains("word"))
+                                {
+                                    return "../images/wordIcon.png";
+                                }
+                                else if (fileInfo.mimeType.Contains("openxmlformats"))
+                                {
+                                    return "../images/ExcelIcon.png";
+                                }
+                                else
+                                {
+                                    return "../images/fileIcon.png";
+                                }
+                            }
+                            x.Add(new FileUploadObj() { icon = icon != null ? Convert.ToBase64String(icon) : null, mimeType = fileInfo.mimeType, lastModified = fileInfo.lastModified, fileName = fileInfo.fileName });
+                        }
+                        if (blobOnly && fileList.Count == 0) return null;
+                        else return jss.Serialize(x);
+                    }
+                    catch
+                    {
+                        byte[] icon = tryResizeImage(Convert.FromBase64String(fileContent));
+                        if (blobOnly) return "data:application/base64;base64," + Convert.ToBase64String(icon);
+                        else return jss.Serialize(new List<FileUploadObj>() { new FileUploadObj() { icon = icon != null ? Convert.ToBase64String(icon) : null, mimeType = "image/jpeg", fileName = "image" } });
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        protected static byte[] ResizeImage(byte[] image, int maxHeight = 360)
+        {
+
+            byte[] dc;
+
+            System.Drawing.Image oBMP = null;
+
+            using (var ms = new MemoryStream(image))
+            {
+                oBMP = System.Drawing.Image.FromStream(ms);
+                ms.Close();
+            }
+
+            UInt16 orientCode = 1;
+
+            try
+            {
+                using (var ms2 = new MemoryStream(image))
+                {
+                    var r = new ExifLib.ExifReader(ms2);
+                    r.GetTagValue(ExifLib.ExifTags.Orientation, out orientCode);
+                }
+            }
+            catch { }
+
+            int nHeight = maxHeight < oBMP.Height ? maxHeight : oBMP.Height; // This is 36x10 line:7700 GenScreen
+            int nWidth = int.Parse((Math.Round(decimal.Parse(oBMP.Width.ToString()) * (nHeight / decimal.Parse(oBMP.Height.ToString())))).ToString());
+
+            var nBMP = new System.Drawing.Bitmap(oBMP, nWidth, nHeight);
+            using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
+            {
+                // 1 = do nothing
+                if (orientCode == 3)
+                {
+                    // rotate 180
+                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
+                }
+                else if (orientCode == 6)
+                {
+                    //rotate 90
+                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate90FlipNone);
+                }
+                else if (orientCode == 8)
+                {
+                    // same as -90
+                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate270FlipNone);
+                }
+                nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
+                sm.Position = 0;
+                dc = new byte[sm.Length + 1];
+                sm.Read(dc, 0, dc.Length); sm.Close();
+            }
+            oBMP.Dispose(); nBMP.Dispose();
+
+            return dc;
+        }
+
+        public static byte[] BlobImage(byte[] content, bool bFullBLOB = false)
+        {
+            Func<byte[], byte[]> tryResizeImage = (ba) =>
+            {
+                try
+                {
+                    return ResizeImage(ba, 96);
+                }
+                catch
+                {
+                    return null;
+                }
+            };
+
+            try
+            {
+                string fileContent = DecodeFileStream(content);
+                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                try
+                {
+                    FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
+                    return bFullBLOB ? Convert.FromBase64String(fileInfo.base64) : tryResizeImage(Convert.FromBase64String(fileInfo.base64));
+                }
+                catch
+                {
+                    try
+                    {
+                        List<_ReactFileUploadObj> fileList = jss.Deserialize<List<_ReactFileUploadObj>>(fileContent);
+                        List<FileUploadObj> x = new List<FileUploadObj>();
+                        foreach (var fileInfo in fileList)
+                        {
+                            return bFullBLOB ? Convert.FromBase64String(fileInfo.base64) : tryResizeImage(Convert.FromBase64String(fileInfo.base64));
+                        }
+                        return null;
+                    }
+                    catch
+                    {
+                        return bFullBLOB ? Convert.FromBase64String(fileContent) : tryResizeImage(Convert.FromBase64String(fileContent));
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static string DecodeFileStream(byte[] content)
+        {
+            byte[] header = content.Length > 256 ? content.Take(256).ToArray() : null;
+            if (header != null)
+            {
+                try
+                {
+                    System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    string headerString = System.Text.UTF8Encoding.UTF8.GetString(header);
+                    FileInStreamObj fileInfo = jss.Deserialize<FileInStreamObj>(headerString.Substring(0, headerString.IndexOf('}') + 1));
+                    int extensionSize = fileInfo.extensionSize;
+                    if (extensionSize > 0)
+                    {
+                        header = content.Skip(256).Take(fileInfo.extensionSize).ToArray();
+                        headerString = System.Text.UTF8Encoding.UTF8.GetString(header);
+                        fileInfo = jss.Deserialize<FileInStreamObj>(headerString.Substring(0, headerString.IndexOf('}') + 1));
+                    }
+                    byte[] fileContent = content.Skip(256 + extensionSize).Take(content.Length - 256 - extensionSize).ToArray();
+                    if (fileInfo.contentIsJSON)
+                    {
+                        return System.Text.UTF8Encoding.UTF8.GetString(fileContent);
+                    }
+                    else
+                        return jss.Serialize(new FileUploadObj() { base64 = Convert.ToBase64String(fileContent), mimeType = fileInfo.mimeType, lastModified = fileInfo.lastModified, fileName = fileInfo.fileName });
+
+                }
+                // Cannot add "ex.Message" to the return statement; do not remove "ex"; need it here for debugging purpose.
+                catch (Exception ex)
+                {
+                    if (ex != null) return Convert.ToBase64String(content);
+                    else return Convert.ToBase64String(content);
+                }
+            }
+            else
+            {
+                return Convert.ToBase64String(content);
+            }
+        }
+
         // Return ~/ added if needed:
         public static string AddTilde(string instr)
         {
@@ -534,7 +910,7 @@
             List<System.Text.RegularExpressions.Regex> exemptRules =
                 (from o in exemptFiles.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>()
                  where !string.IsNullOrEmpty(o.Trim())
-                 select new System.Text.RegularExpressions.Regex("^" + zipFrNoSlash.Replace("\\", "\\\\").Replace(".", "\\.") + (o.Contains(".") && !o.Contains("\\") ? ".*" : "") + (o.StartsWith("\\") ? @"(\\)?" : @"\\") + o.Trim().ToLower().Replace("\\", "\\\\").Replace("*.*", "*").Replace(".", "\\.").Replace("*", o.Contains("\\*.*") ? ".*" : "[^\\\\]*") + "$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToList();
+                 select new System.Text.RegularExpressions.Regex("^" + zipFrNoSlash.Replace("\\", "\\\\").Replace(".", "\\.") + ((o.Contains(".") && !o.Contains("\\") || o.StartsWith("*")) ? ".*" : "") + (o.StartsWith("\\") ? @"(\\)?" : @"\\") + o.Trim().ToLower().Replace("\\", "\\\\").Replace("*.*", "*").Replace(".", "\\.").Replace("*", o.Contains("\\*.*") ? ".*" : "[^\\\\]*") + "$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToList();
             Func<string, string, bool> fIsExempted = (f, p) => { foreach (var re in exemptRules) { if (re.IsMatch(p)) return true; } return false; };
 
             List<System.Text.RegularExpressions.Regex> includeRules =
@@ -595,7 +971,7 @@
             List<System.Text.RegularExpressions.Regex> exemptRules =
                 (from o in exemptFiles.Split('|').ToList<string>()
                  where !string.IsNullOrEmpty(o.Trim())
-                 select new System.Text.RegularExpressions.Regex("^" + zipFrNoSlash.Replace("\\", "\\\\").Replace(".", "\\.") + (o.Contains(".") && !o.Contains("\\") ? ".*" : "") + (o.StartsWith("\\") ? @"(\\)?" : @"\\") + o.Trim().ToLower().Replace("\\", "\\\\").Replace("*.*", "*").Replace(".", "\\.").Replace("*", o.Contains("\\*.*") ? ".*" : "[^\\\\]*") + "$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToList();
+                 select new System.Text.RegularExpressions.Regex("^" + zipFrNoSlash.Replace("\\", "\\\\").Replace(".", "\\.") + ((o.Contains(".") && !o.Contains("\\") || o.StartsWith("*")) ? ".*" : "") + (o.StartsWith("\\") ? @"(\\)?" : @"\\") + o.Trim().ToLower().Replace("\\", "\\\\").Replace("*.*", "*").Replace(".", "\\.").Replace("*", o.Contains("\\*.*") ? ".*" : "[^\\\\]*") + "$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToList();
             Func<string, string, bool> fIsExempted = (f, p) => { foreach (var re in exemptRules) { if (re.IsMatch(p)) return true; } return false; };
             Func<string, string, bool> fIsIncluded = (f, p) => true;
             //var files = (from x in Directory.GetFiles(zipFr, "*.*", SearchOption.AllDirectories)
@@ -828,41 +1204,6 @@
             return nextTime;
         }
 
-        public static string WinProc(string cmd_path, string cmd_arg, bool bErrFirst)
-        {
-            string er = "";
-            string ss = "";
-            //Prevent more than one compilation for the same project at the same time (DotNet2.0):
-            Semaphore sem = new Semaphore(1, 1);
-            sem.WaitOne();
-            ProcessStartInfo psi = new ProcessStartInfo(cmd_path, cmd_arg);
-            psi.UseShellExecute = false;
-            psi.RedirectStandardOutput = true;
-            psi.RedirectStandardError = true;
-            System.Diagnostics.Process proc = new Process();
-            proc.StartInfo = psi;
-            proc.Start();
-            proc.ErrorDataReceived += (o, e) => er = er + (e.Data != null ? e.Data.ToString() + Environment.NewLine : string.Empty);
-            proc.OutputDataReceived += (o, e) => ss = ss + (e.Data != null ? e.Data.ToString() + Environment.NewLine : string.Empty);
-            proc.BeginErrorReadLine();
-            proc.BeginOutputReadLine();
-            //if (bErrFirst)     // Compile requires StandardError to run first or it would hang on error:
-            //{
-            //    er = proc.StandardError.r;
-            //    ss = proc.StandardOutput.ReadToEnd();    // Must ReadToEnd if RedirectStandardOutput is set to true;
-            //}
-            //else // bcp requires StandardOutput to run first or it would hang all the time:
-            //{
-            //    ss = proc.StandardOutput.ReadToEnd();    // Must ReadToEnd if RedirectStandardOutput is set to true;
-            //    er = proc.StandardError.ReadToEnd();
-            //}
-            proc.WaitForExit();
-            proc.CancelErrorRead();
-            proc.CancelOutputRead();
-            sem.Release();
-            if (er != string.Empty) { throw new ApplicationException(er); }
-            return ss;
-        }
         public static string ROEncryptString(string inStr, string inKey)
         {
             string outStr = string.Empty;
@@ -931,10 +1272,23 @@
             // Sign the hash
             return Convert.ToBase64String(csp.SignHash(hash, CryptoConfig.MapNameToOID("SHA1")));
         }
-        public static KeyValuePair<string, bool> CheckValidLicense()
+
+        public static Tuple<string, string> GetInstallDetail()
         {
             RO.Common3.Encryption e = new RO.Common3.Encryption();
-            return new KeyValuePair<string, bool>(e.GetInstallID(), e.CheckValidLicense());
+            return new Tuple<string, string>(e.GetInstallID(),e.GetAppID());
+        }
+
+        public static Tuple<string,string, string> EncodeLicenseString(string licenseJSON, string installID, string appId, bool encrypt, bool perInstance, string signerFile = null)
+        {
+            RO.Common3.Encryption e = new RO.Common3.Encryption();
+            return e.EncodeLicenseString(licenseJSON, installID, appId, encrypt, perInstance, signerFile);
+        }
+
+        public static Tuple<string, string, bool> CheckValidLicense(string moduleName, string resourceName)
+        {
+            RO.Common3.Encryption e = new RO.Common3.Encryption();
+            return new Tuple<string, string, bool>(e.GetInstallID(), e.GetAppID(), e.CheckValidLicense(moduleName,resourceName));
         }
 
         public static List<DataStructure> AnalyseExcelData(DataTable dtImp, int rowsToExamine)
@@ -1010,6 +1364,238 @@
             }
 
             return (from x in columns where !string.IsNullOrEmpty(x.ColumnName) select x).ToList();
+        }
+
+        public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        {
+            // Get the subdirectories for the specified directory.
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDirName);
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            // If the destination directory doesn't exist, create it.
+            if (!Directory.Exists(destDirName))
+            {
+                Directory.CreateDirectory(destDirName);
+            }
+
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string temppath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, false);
+            }
+
+            // If copying subdirectories, copy them and their contents to new location.
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string temppath = Path.Combine(destDirName, subdir.Name);
+                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
+
+        public static string WinProc(string cmd_path, string cmd_arg, bool bErrFirst)
+        {
+            string er = "";
+            string ss = "";
+            //Prevent more than one compilation for the same project at the same time (DotNet2.0):
+            Semaphore sem = new Semaphore(1, 1);
+            sem.WaitOne();
+            ProcessStartInfo psi = new ProcessStartInfo(cmd_path, cmd_arg);
+            psi.UseShellExecute = false;
+            psi.RedirectStandardOutput = true;
+            psi.RedirectStandardError = true;
+            System.Diagnostics.Process proc = new Process();
+            proc.StartInfo = psi;
+            proc.Start();
+            proc.ErrorDataReceived += (o, e) => er = er + (e.Data != null ? e.Data.ToString() + Environment.NewLine : string.Empty);
+            proc.OutputDataReceived += (o, e) => ss = ss + (e.Data != null ? e.Data.ToString() + Environment.NewLine : string.Empty);
+            proc.BeginErrorReadLine();
+            proc.BeginOutputReadLine();
+            //if (bErrFirst)     // Compile requires StandardError to run first or it would hang on error:
+            //{
+            //    er = proc.StandardError.r;
+            //    ss = proc.StandardOutput.ReadToEnd();    // Must ReadToEnd if RedirectStandardOutput is set to true;
+            //}
+            //else // bcp requires StandardOutput to run first or it would hang all the time:
+            //{
+            //    ss = proc.StandardOutput.ReadToEnd();    // Must ReadToEnd if RedirectStandardOutput is set to true;
+            //    er = proc.StandardError.ReadToEnd();
+            //}
+            proc.WaitForExit();
+            proc.CancelErrorRead();
+            proc.CancelOutputRead();
+            sem.Release();
+            if (er != string.Empty)
+            {
+                throw new ApplicationException(cmd_path + "\r\n" + er);
+            }
+            return ss;
+        }
+
+        public static Tuple<int, string, string> WinProc(string cmd_path, string cmd_arg, bool bErrFirst, Func<int, string, bool> stdOutProgress, Func<int, string, bool> stdErrProgress, string cmd_workingDirectory = null, string runAsDomain = null, string runAsUser = null, string password = null)
+        {
+            string er = "";
+            string ss = "";
+            // below is completely useless, the semaphore must be created at higher level, local semaphore doesn't achive the result as expected as  it is created on EVERY CALL
+            //Prevent more than one compilation for the same project at the same time (DotNet2.0):
+            Semaphore sem = new Semaphore(1, 1);
+            sem.WaitOne();
+            System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(cmd_path, cmd_arg);
+            if (!string.IsNullOrEmpty(runAsDomain) && !string.IsNullOrEmpty(runAsUser) && !string.IsNullOrEmpty(password))
+            {
+                psi.Domain = runAsDomain;
+                psi.UserName = runAsUser;
+                psi.Password = ConvertToSecureString(password);
+                psi.LoadUserProfile = false;
+            }
+            psi.UseShellExecute = false;
+            psi.RedirectStandardOutput = true;
+            psi.RedirectStandardError = true;
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            if (!string.IsNullOrEmpty(cmd_workingDirectory)) psi.WorkingDirectory = cmd_workingDirectory;
+            proc.StartInfo = psi;
+            proc.Start();
+            if (stdOutProgress != null) stdOutProgress(proc.Id, "STARTED");
+            proc.ErrorDataReceived += (o, e) =>
+            {
+                string data = (e.Data != null ? e.Data.ToString() + Environment.NewLine : string.Empty);
+                er = er + data;
+                if (stdErrProgress != null)
+                {
+                    bool cancel = stdErrProgress(proc.Id, data);
+                    if (cancel)
+                    {
+                        TaskKill(proc.Id);
+                        //KillProcessAndChildren(proc.Id);
+                        //proc.Kill();
+                    }
+                    //KillProcessAndChildren(proc.Id);
+                    //if (cancel) proc.Kill();
+                }
+            };
+            proc.OutputDataReceived += (o, e) =>
+            {
+                string data = (e.Data != null ? e.Data.ToString() + Environment.NewLine : string.Empty);
+                ss = ss + data;
+                if (stdOutProgress != null)
+                {
+                    bool cancel = stdOutProgress(proc.Id, data);
+                    if (cancel)
+                    {
+                        TaskKill(proc.Id);
+                        //KillProcessAndChildren(proc.Id);
+                        //proc.Kill();
+                    }
+                }
+            };
+            proc.BeginErrorReadLine();
+            proc.BeginOutputReadLine();
+            //if (bErrFirst)     // Compile requires StandardError to run first or it would hang on error:
+            //{
+            //    er = proc.StandardError.r;
+            //    ss = proc.StandardOutput.ReadToEnd();    // Must ReadToEnd if RedirectStandardOutput is set to true;
+            //}
+            //else // bcp requires StandardOutput to run first or it would hang all the time:
+            //{
+            //    ss = proc.StandardOutput.ReadToEnd();    // Must ReadToEnd if RedirectStandardOutput is set to true;
+            //    er = proc.StandardError.ReadToEnd();
+            //}
+            proc.WaitForExit();
+            proc.CancelErrorRead();
+            proc.CancelOutputRead();
+            sem.Release();
+            int exitCode = proc.ExitCode;
+            return new Tuple<int, string, string>(exitCode, ss, er);
+        }
+
+        public static Tuple<int, string, string> WinProc(string cmd_path, string cmd_arg, bool bErrFirst, string cmd_workingDirectory = null, string runAsDomain = null, string runAsUser = null, string password = null)
+        {
+            string er = "";
+            string ss = "";
+            //Prevent more than one compilation for the same project at the same time (DotNet2.0):
+            Semaphore sem = new Semaphore(1, 1);
+            sem.WaitOne();
+            System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(cmd_path, cmd_arg);
+            if (!string.IsNullOrEmpty(runAsDomain) && !string.IsNullOrEmpty(runAsUser) && !string.IsNullOrEmpty(password))
+            {
+                psi.Domain = runAsDomain;
+                psi.UserName = runAsUser;
+                psi.Password = ConvertToSecureString(password);
+                psi.LoadUserProfile = false;
+            }
+            psi.UseShellExecute = false;
+            psi.RedirectStandardOutput = true;
+            psi.RedirectStandardError = true;
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            if (!string.IsNullOrEmpty(cmd_workingDirectory)) psi.WorkingDirectory = cmd_workingDirectory;
+            proc.StartInfo = psi;
+            proc.Start();
+            proc.ErrorDataReceived += (o, e) => er = er + (e.Data != null ? e.Data.ToString() + Environment.NewLine : string.Empty);
+            proc.OutputDataReceived += (o, e) => ss = ss + (e.Data != null ? e.Data.ToString() + Environment.NewLine : string.Empty);
+            proc.BeginErrorReadLine();
+            proc.BeginOutputReadLine();
+            //if (bErrFirst)     // Compile requires StandardError to run first or it would hang on error:
+            //{
+            //    er = proc.StandardError.r;
+            //    ss = proc.StandardOutput.ReadToEnd();    // Must ReadToEnd if RedirectStandardOutput is set to true;
+            //}
+            //else // bcp requires StandardOutput to run first or it would hang all the time:
+            //{
+            //    ss = proc.StandardOutput.ReadToEnd();    // Must ReadToEnd if RedirectStandardOutput is set to true;
+            //    er = proc.StandardError.ReadToEnd();
+            //}
+            proc.WaitForExit();
+            proc.CancelErrorRead();
+            proc.CancelOutputRead();
+            sem.Release();
+            int exitCode = proc.ExitCode;
+            //if (er != string.Empty)
+            //{
+            //    throw new ApplicationException(cmd_path + "\r\n" + er);
+            //}
+            return new Tuple<int, string, string>(exitCode, ss, er);
+        }
+
+        public static void TaskKill(int pid)
+        {
+            try
+            {
+                ProcessStartInfo processStartInfo = new ProcessStartInfo("taskkill", string.Format("/F /T /PID {0}", pid))
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                };
+                Process.Start(processStartInfo);
+            }
+            catch { }
+        }
+
+        public static System.Security.SecureString ConvertToSecureString(string password)
+        {
+            if (password == null)
+                throw new ArgumentNullException("password");
+            var securePassword = new System.Security.SecureString();
+            foreach (char c in password)
+            {
+                securePassword.AppendChar(c);
+            }
+            securePassword.MakeReadOnly();
+            return securePassword;
         }
 
         // Should only execute this on the client tier:

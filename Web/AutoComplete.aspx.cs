@@ -253,7 +253,10 @@ namespace RO.Web
             DataTable dt = null;
             if (!string.IsNullOrEmpty(sp))
             {
-                dt = (new AdminSystem()).GetScreenIn(screenId.ToString(), sp, 0, requiredValid, topN,
+                var regex = new System.Text.RegularExpressions.Regex("C[0-9]+$");
+                var scrCriId = sp.Replace(regex.Replace(sp, ""), "").Replace("C", "");
+                int CriCnt = (new AdminSystem()).CountScrCri(scrCriId, string.IsNullOrEmpty(conn) ? "N" : "Y", dSys[KEY_SysConnectStr], dSys[KEY_AppPwd]);
+                dt = (new AdminSystem()).GetScreenIn(screenId.ToString(), sp, CriCnt, requiredValid, topN,
                 searchStr.StartsWith("**") ? "" : searchStr, !searchStr.StartsWith("**"), searchStr.StartsWith("**") ? searchStr.Substring(2) : "", ui, uc,
                 isSys != "N" ? null : (string)(string.IsNullOrEmpty(conn) ? dSys[KEY_AppConnectStr] : Session[conn]),
                 isSys != "N" ? null : dSys[KEY_AppPwd]);
@@ -927,7 +930,7 @@ namespace RO.Web
             DataTable dtAuthRow = GetAuthRow(context["ssd"], csy, screenId);
             bool allowAdd = dtAuthRow.Rows.Count == 0 || dtAuthRow.Rows[0]["AllowAdd"].ToString() != "N";
             //dtSuggest.DefaultView.Sort = valF;
-            int pos = 1;
+            //int pos = 1;
             query = System.Text.RegularExpressions.Regex.Escape(query.ToLower());
             string doublestar = System.Text.RegularExpressions.Regex.Escape(query.ToLower());
             System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(query.Replace("\\ ", ".*"));

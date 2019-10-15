@@ -1,0 +1,36 @@
+.search-result {
+  padding: 10px 0;
+  border-bottom: solid 1px #e7e7e7;
+
+  &:last-child {
+    margin-bottom: 25px;
+  }
+
+  &:first-child {
+    margin-top: 10px;
+  }
+
+  .search-result__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: $color-blue;
+  }
+
+  .search-result__link {
+    margin: 0;
+
+    a {
+      color: $color-accent;
+
+      &:hover {
+        color: $color-accent-hover;
+      }
+    }
+  }
+
+  .search-result__preview {
+    max-width: 980px;
+    margin-top: 5px;
+    color: $color-additional;
+  }
+}

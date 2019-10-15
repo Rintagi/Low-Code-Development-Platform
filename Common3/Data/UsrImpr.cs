@@ -20,10 +20,13 @@ namespace RO.Common3.Data
 		private string pAgents;
 		private string pBrokers;
 		private string pMembers;
+        private string pBorrowers;
+        private string pGuarantors;
+        private string pLenders;
 
         public UsrImpr() {}
-		
-		public UsrImpr(string usrs, string usrGroups, string cultures, string rowAuthoritys, string companys, string projects, string investors, string customers, string vendors, string agents, string brokers, string members)
+
+        public UsrImpr(string usrs, string usrGroups, string cultures, string rowAuthoritys, string companys, string projects, string investors, string customers, string vendors, string agents, string brokers, string members, string borrowers, string guarantors, string lenders)
 		{
 			pUsrs = usrs;
 			pUsrGroups = usrGroups;
@@ -37,7 +40,10 @@ namespace RO.Common3.Data
 			pAgents = agents;
 			pBrokers = brokers;
 			pMembers = members;
-		}
+            pBorrowers = borrowers;
+            pGuarantors = guarantors;
+            pLenders = lenders;
+        }
 
 		public string Usrs
 		{
@@ -110,5 +116,23 @@ namespace RO.Common3.Data
 			get {return pMembers;}
 			set { pMembers = pMembers + (string.IsNullOrEmpty(pMembers) ? string.Empty : ((char)191).ToString()) + value; }
 		}
-	}
+
+        public string Borrowers
+        {
+            get { return pBorrowers; }
+            set { pBorrowers = pBorrowers + (string.IsNullOrEmpty(pBorrowers) ? string.Empty : ((char)191).ToString()) + value; }
+        }
+
+        public string Guarantors
+        {
+            get { return pGuarantors; }
+            set { pGuarantors = pGuarantors + (string.IsNullOrEmpty(pGuarantors) ? string.Empty : ((char)191).ToString()) + value; }
+        }
+
+        public string Lenders
+        {
+            get { return pLenders; }
+            set { pLenders = pLenders + (string.IsNullOrEmpty(pLenders) ? string.Empty : ((char)191).ToString()) + value; }
+        }
+    }
 }

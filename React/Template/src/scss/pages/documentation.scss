@@ -1,0 +1,197 @@
+.documentation {
+  min-height: calc(100vh - 90px);
+  position: relative;
+  padding-bottom: 75px;
+
+  .documentation__nav-wrap {
+    width: 100%;
+  }
+
+  .documentation__main {
+    flex-direction: row-reverse;
+  }
+
+  .documentation__nav-link {
+    display: block;
+    padding: 5px 0;
+    font-weight: 400;
+    width: 100%;
+    font-size: 14px;
+
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+
+    &:hover {
+      color: $color-accent;
+    }
+
+    &.documentation__nav--active {
+      color: $color-accent;
+    }
+  }
+
+  .table-responsive {
+    margin-top: 10px;
+    margin-bottom: 30px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  pre {
+    background-color: #2a2a31 !important;
+    margin: 10px 0 30px 0 !important;
+    font-size: 14px;
+
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .card__title:not(:first-child) {
+    margin-top: 30px;
+  }
+
+  ol {
+    margin-top: 5px;
+    margin-bottom: 20px;
+    padding-left: 30px;
+
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+  }
+
+  .documentation__structure {
+    color: rgb(169, 183, 198);
+    padding: 10px 15px;
+  }
+
+  .documentation__nav-bottom {
+    width: calc(100% - 30px);
+    display: flex;
+    position: absolute;
+    bottom: 15px;
+
+    @include themify($themes) {
+      background-color: themed('colorBackground');
+    }
+  }
+
+  .documentation__nav-bottom-left, .documentation__nav-bottom-right {
+    width: 50%;
+
+    p {
+      font-weight: 600;
+      padding: 0 5px;
+      line-height: 20px;
+
+      @include themify($themes) {
+        color: themed('colorText');
+      }
+    }
+
+    svg {
+      height: 20px;
+      width: 20px;
+
+      @include themify($themes) {
+        fill: themed('colorText');
+      }
+    }
+
+    p, svg {
+      transition: 0.3s;
+      margin: auto 0;
+    }
+
+    a {
+      padding: 20px 15px;
+      display: flex;
+      text-transform: uppercase;
+
+      &:hover {
+        background-color: $color-blue;
+
+        p {
+          color: #ffffff;
+        }
+
+        svg {
+          fill: #ffffff;
+        }
+      }
+    }
+  }
+
+  .documentation__nav-bottom-left {
+
+    @include themify($themes) {
+      border-right: 1px solid themed('colorBorder');
+    }
+  }
+
+  .documentation__nav-bottom-right {
+
+    p {
+      margin-left: auto;
+    }
+  }
+
+  ul {
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+  }
+
+  .documentation__changelog{
+
+    h5{
+      text-transform: none;
+    }
+
+    ul{
+      margin-top: -15px;
+      margin-bottom: 40px;
+
+      &:last-child{
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  @media screen and (max-width: 991px) {
+
+    .documentation__nav > div > div:first-child {
+      display: none;
+    }
+
+    .documentation__nav-wrap {
+      position: relative !important;
+      top: 0 !important;
+      margin-top: 0 !important;
+      width: 100% !important;
+    }
+
+    .documentation__main {
+      flex-direction: row;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    padding-bottom: 30px;
+
+    .documentation__nav-bottom {
+      flex-wrap: wrap;
+      position: relative;
+      width: 100%;
+      bottom: 0;
+    }
+
+    .documentation__nav-bottom-left, .documentation__nav-bottom-right {
+      width: 100%;
+    }
+  }
+}

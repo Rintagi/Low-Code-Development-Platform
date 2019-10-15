@@ -1,6 +1,26 @@
 <%@ Control Language="c#" Inherits="RO.Web.MyAccountModule" CodeFile="MyAccountModule.ascx.cs" CodeFileBaseClass="RO.Web.ModuleBase" %>
 <%@ Register TagPrefix="rcasp" Namespace="RoboCoder.WebControls" Assembly="WebControls, Culture=neutral" %>
 <script type="text/javascript" lang="javascript">
+    var myMachine = null;
+    function mkFingerprint(components) {
+        components.sort();
+        var a = JSON.stringify(components);
+        var sha256 = new sjcl.hash.sha256();
+        sha256.update(a);
+        var h = btoa(sha256.finalize());
+        myMachine = h;
+    }
+
+    if (window.requestIdleCallback) {
+        requestIdleCallback(function () {
+            Fingerprint2.get(mkFingerprint)
+        })
+    } else {
+        setTimeout(function () {
+            Fingerprint2.get(mkFingerprint)
+        }, 500)
+    }
+
     $(document).ready(function () { RetrieveBrowserCap(AsyncInform, { url: 'AdminWs.asmx/BrowserCap', success: function (result) { /*alert(result.d);*/ }, error: function (xhr, er) { } }); });
     function Login() {
         //remove any current flags and red borders
@@ -269,7 +289,29 @@
     }
     Sys.Application.add_load(function () {
         var parentURL = $("#<%= cRedirectParent.ClientID %>").val();
-    if (parentURL && parentURL != "") window.top.location.href = parentURL;
+        if (parentURL && parentURL != "") window.top.location.href = parentURL;
+        var silentLogin = function () {
+            if ($('#<%= cJWTLogin.ClientID %>').length > 0) {
+                try {
+                    var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val();
+                    var user_handle = localStorage[getUserHandle(appDomainUrl)];
+                    var refresh_token = JSON.parse(localStorage[getTokenName(appDomainUrl, "refresh_token")]);
+                    if (user_handle && refresh_token) {
+                        $('#<%= cJWTToken.ClientID %>').val(refresh_token.refresh_token);
+                        $('#<%= cJWTLogin.ClientID %>').click();
+                    }
+                }
+                catch (e) {
+                }
+            }
+        }
+        if (window.requestIdleCallback) {
+            requestIdleCallback(function () { setTimeout(silentLogin, 1000); });
+        }
+        else {
+            setTimeout(silentLogin, 1000);
+        }
+        
 });
 </script>
 <div class="r-table MyPrfContent">
@@ -296,7 +338,9 @@
             <asp:Button ID="cGoogleLoginBtn" Style="display: none;" OnClick="GoogleLoginBtn_Click" runat="server" Visible="false" />
             <asp:TextBox ID="cFacebookAccessToken" Style="display: none;" runat="server" Visible="false" />
             <asp:Button ID="cFacebookLoginBtn" Style="display: none;" OnClick="FacebookLoginBtn_Click" runat="server" Visible="false" />
-
+            <asp:TextBox ID="cAppDomainUrl" Style="display: none;" runat="server" Visible="true" />
+            <asp:TextBox ID="cJWTToken" Style="display: none;" runat="server" Visible="true" />
+            <asp:Button ID="cJWTLogin" Style="display: none;" runat="server" Visible="true" />
             <asp:Panel ID="LoginPanel" CssClass="pNewPwd" DefaultButton="cLoginBtn" runat="server">
                 <div class="title-content">
                     <div>
@@ -490,7 +534,7 @@
                             <asp:CheckBox ID="cTermsOfServiceCB" CssClass="cbTermOfService" runat="server" />
                         </div>
                         <div class="cbTerm">
-                            <asp:HyperLink ID="cTermsOfServiceLink" CssClass="inp-txtln TermsOfServiceLink" Target="_blank" NavigateUrl="~/License.txt" runat="server" />
+                            <asp:HyperLink ID="cTermsOfServiceLink" CssClass="inp-txtln TermsOfServiceLink" Target="_blank" NavigateUrl="~/home/terms_of_service.pdf" runat="server" />
                         </div>
                     </asp:Panel>
                     <div class="LoginButton">

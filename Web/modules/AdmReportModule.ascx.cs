@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -933,39 +936,46 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		{
 			if (!string.IsNullOrEmpty(cReportId22.Text) && cRptTemplate22Fi.HasFile && cRptTemplate22Fi.PostedFile.FileName != string.Empty)
 			{
-				byte[] dc;
-				if ("image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png".IndexOf(cRptTemplate22Fi.PostedFile.ContentType) >= 0 && cRptTemplate22Fi.PostedFile.ContentLength > int.Parse(Config.ImgThreshold) * 1024)
+				if (cRptTemplate22Fi.PostedFile.FileName.Length > 100)
 				{
-					System.Drawing.Image oBMP = System.Drawing.Image.FromStream(cRptTemplate22Fi.PostedFile.InputStream);
-					int nHeight = int.Parse((Math.Round(decimal.Parse(oBMP.Height.ToString()) * (decimal.Parse(Config.ImgThreshold) / decimal.Parse(oBMP.Width.ToString())))).ToString());
-					Bitmap nBMP = new Bitmap(oBMP, int.Parse(Config.ImgThreshold), nHeight);
-					using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
-				    {
-					    nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
-					    sm.Position = 0;
-					    dc = new byte[sm.Length + 1];
-					    sm.Read(dc, 0, dc.Length); sm.Close();
-				    }
-					oBMP.Dispose(); nBMP.Dispose();
+					bErrNow.Value = "Y"; PreMsgPopup("Filename exceeds a total of 100 characters. Please shorten the filename and upload again.");
 				}
 				else
 				{
-					dc = new byte[cRptTemplate22Fi.PostedFile.ContentLength];
-					cRptTemplate22Fi.PostedFile.InputStream.Read(dc, 0, dc.Length);
+					byte[] dc;
+					if ("image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png".IndexOf(cRptTemplate22Fi.PostedFile.ContentType) >= 0 && cRptTemplate22Fi.PostedFile.ContentLength > int.Parse(Config.ImgThreshold) * 1024)
+					{
+						System.Drawing.Image oBMP = System.Drawing.Image.FromStream(cRptTemplate22Fi.PostedFile.InputStream);
+						int nHeight = int.Parse((Math.Round(decimal.Parse(oBMP.Height.ToString()) * (decimal.Parse(Config.ImgThreshold) / decimal.Parse(oBMP.Width.ToString())))).ToString());
+						Bitmap nBMP = new Bitmap(oBMP, int.Parse(Config.ImgThreshold), nHeight);
+						using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
+				    	{
+						    nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
+						    sm.Position = 0;
+						    dc = new byte[sm.Length + 1];
+						    sm.Read(dc, 0, dc.Length); sm.Close();
+					    }
+						oBMP.Dispose(); nBMP.Dispose();
+					}
+					else
+					{
+						dc = new byte[cRptTemplate22Fi.PostedFile.ContentLength];
+						cRptTemplate22Fi.PostedFile.InputStream.Read(dc, 0, dc.Length);
+					}
+					// In case DocId has not been saved properly, always find the most recent to replace as long as it has the same file name:
+					string DocId = string.Empty;
+					DocId = new AdminSystem().GetDocId(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), base.LUser.UsrId.ToString(), (string)Session[KEY_sysConnectionString], LcAppPw);
+					if (DocId == string.Empty || !cRptTemplate22Ow.Checked)
+					{
+						DocId = new AdminSystem().AddDbDoc(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], LcAppPw, base.LUser);
+					}
+					else
+					{
+						new AdminSystem().UpdDbDoc(DocId, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], LcAppPw, base.LUser);
+					}
+					cRptTemplate22Pan.Visible = false; cRptTemplate22Div.Visible = true;
+					SetRptTemplate22(cRptTemplate22GV, string.Empty);
 				}
-				// In case DocId has not been saved properly, always find the most recent to replace as long as it has the same file name:
-				string DocId = string.Empty;
-				DocId = new AdminSystem().GetDocId(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), base.LUser.UsrId.ToString(), (string)Session[KEY_sysConnectionString], LcAppPw);
-				if (DocId == string.Empty || !cRptTemplate22Ow.Checked)
-				{
-					DocId = new AdminSystem().AddDbDoc(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], LcAppPw, base.LUser);
-				}
-				else
-				{
-					new AdminSystem().UpdDbDoc(DocId, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], LcAppPw, base.LUser);
-				}
-				cRptTemplate22Pan.Visible = false; cRptTemplate22Div.Visible = true;
-				SetRptTemplate22(cRptTemplate22GV, string.Empty);
 			}
 		}
 
@@ -2458,7 +2468,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					string rf = string.Empty;
 					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 31, cFindFilter.SelectedValue) + ")"; }
-					if (rf != string.Empty) { rf = "((" + rf + "  or _NewRow = 'Y' ))"; }
+					if (rf != string.Empty) { rf = "((" + rf + " or _NewRow = 'Y' ))"; }
 					dv.RowFilter = rf;
 					ViewState["_RowFilter"] = rf;
 					GotoPage(0); cAdmReportGrid_DataBind(dv);
@@ -2938,6 +2948,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			// *** GridItemDataBound (before) Web Rule End *** //
 			DataTable dt = (DataTable)Session[KEY_dtAdmReportGrid];
 			bool isEditItem = false;
+			bool isImage = true;
+			bool hasImageContent = false;
 			DataView dvAdmReportGrid = dt != null ? dt.DefaultView : null;
 			if (cAdmReportGrid.EditIndex > -1 && GetDataItemIndex(cAdmReportGrid.EditIndex) == e.Item.DataItemIndex)
 			{
@@ -2965,6 +2977,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				}
 			}
 			if (cAdmReportGrid.EditIndex > -1 && GetDataItemIndex(cAdmReportGrid.EditIndex) == e.Item.DataItemIndex)
+			{
+			}
+			else
 			{
 			}
 			// *** GridItemDataBound (after) Web Rule End *** //

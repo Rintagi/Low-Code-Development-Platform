@@ -1,0 +1,213 @@
+@import '~react-big-calendar/lib/css/react-big-calendar.css';
+
+.calendar {
+  height: 600px;
+
+  .rbc-date-cell {
+    text-align: left;
+    padding-right: 0;
+
+    a {
+      display: block;
+      width: 100%;
+      padding-left: 10px;
+      padding-top: 5px;
+      font-weight: 600;
+      font-size: 13px;
+
+      @include themify($themes) {
+        color: themed('colorText');
+      }
+    }
+  }
+
+  .rbc-header {
+    height: 40px;
+    display: flex;
+    color: $color-additional;
+
+    @include themify($themes) {
+      background-color: themed('colorBackgroundBody');
+    }
+
+    span {
+      margin: auto;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+
+    a {
+      display: block;
+      margin: auto;
+    }
+  }
+
+  .rbc-time-slot {
+    display: flex;
+
+    span {
+      margin: auto 0;
+    }
+  }
+
+  .rbc-off-range-bg {
+    background-color: transparent;
+  }
+
+  .rbc-event {
+    height: 20px;
+    font-size: 10px;
+  }
+
+  .rbc-toolbar-label {
+    text-transform: uppercase;
+    font-weight: 700;
+
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+  }
+
+  .rbc-label {
+
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+  }
+
+  .rbc-show-more {
+    background-color: transparent;
+  }
+
+  .rbc-toolbar button {
+    height: 30px;
+    border-radius: 3px;
+    border: none;
+    font-size: 11px;
+    color: $color-additional;
+    transition: all 0.3s;
+    padding: 8px 14px;
+    cursor: pointer;
+
+    @include themify($themes) {
+      background-color: themed('colorHover');
+    }
+
+    &.rbc-active {
+      box-shadow: none;
+      background-color: #ededed;
+      pointer-events: none;
+
+      @include themify($themes) {
+        background-color: themed('colorFieldsBorder');
+      }
+    }
+
+    &:hover {
+
+      @include themify($themes) {
+        color: themed('colorText');
+        background-color: darken(themed('colorHover'), 2%);
+      }
+    }
+
+    &:focus, &:active {
+      outline: none;
+      box-shadow: none;
+
+      @include themify($themes) {
+        color: themed('colorText');
+      }
+    }
+
+    span {
+      font-size: 8px;
+      font-weight: 700;
+    }
+  }
+
+  .rbc-btn-group:first-child {
+
+    button {
+      margin-right: 5px;
+      padding: 8px 11px;
+
+      &:last-child:not(:first-child), &:not(:first-child):not(:last-child),
+      &:first-child:not(:last-child) {
+        border-radius: 3px;
+      }
+    }
+  }
+
+  .rbc-btn-group {
+    min-width: 156px;
+  }
+
+  .rbc-today {
+    background-color: transparent;
+    position: relative;
+
+    &:before {
+      content: "";
+      height: 3px;
+      width: 100%;
+      background-color: $color-accent;
+      top: 0;
+      position: absolute;
+    }
+  }
+
+  .rbc-current-time-indicator {
+    background-color: $color-accent;
+
+    &:before {
+      background-color: $color-accent;
+    }
+  }
+
+  &.calendar--small {
+    height: 400px;
+
+    .rbc-toolbar-label {
+      font-size: 14px;
+      padding: 0 5px;
+    }
+
+    .rbc-btn-group {
+      min-width: auto;
+
+      button {
+        padding: 4px 8px;
+      }
+    }
+  }
+
+  .rbc-overlay {
+    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
+
+    @include themify($themes) {
+      color: themed('colorText');
+      background-color: themed('colorBackground');
+    }
+  }
+}
+
+.calendar-label {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+
+  &.calendar-label--red {
+    background-color: $color-red;
+  }
+
+  &.calendar-label--green {
+    background-color: $color-accent;
+  }
+
+  &.calendar-label--blue {
+    background-color: $color-blue;
+  }
+}

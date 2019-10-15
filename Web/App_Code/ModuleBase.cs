@@ -166,44 +166,49 @@ namespace RO.Web
             return false;
         }
 
-		protected DataTable SystemsDict
-		{
-			set
-			{
-				DataTable dt = value;
+        protected DataTable SystemsDict
+        {
+            set
+            {
+                DataTable dt = value;
                 Session[KEY_SystemsList] = dt;
                 dt.PrimaryKey = new DataColumn[] { dt.Columns["SystemId"] };
+                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
                 foreach (DataRow dr in dt.Rows)
                 {
                     if (dr["Active"].ToString() == "N")
                     {
                         dr.Delete();
                     }
+                    if (singleSQLCredential)
+                    {
+                        dr["ServerName"] = Config.DesServer;
+                    }
                 }
                 dt.AcceptChanges();
                 Session[KEY_SystemsDict] = new Dictionary<byte, Dictionary<string, string>>();
-				foreach (DataRow dr in dt.Rows)
-				{
-				    Dictionary<string,string> dict = new Dictionary<string,string>();
-				    dict[KEY_SysConnectStr] = Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", dr["dbAppUserId"].ToString());
-					dict[KEY_AppConnectStr] = Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", dr["dbAppUserId"].ToString());
+                foreach (DataRow dr in dt.Rows)
+                {
+
+                    Dictionary<string, string> dict = new Dictionary<string, string>();
+                    dict[KEY_SysConnectStr] = Config.GetConnStr(dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
+                    dict[KEY_AppConnectStr] = Config.GetConnStr(dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
                     dict[KEY_SystemAbbr] = dr["SystemAbbr"].ToString();
-					dict[KEY_DesDb] = dr["dbDesDatabase"].ToString();
-					dict[KEY_AppDb] = dr["dbAppDatabase"].ToString();
-					dict[KEY_AppUsrId] = dr["dbAppUserId"].ToString();
-					dict[KEY_AppPwd] = dr["dbAppPassword"].ToString();
-                    try { dict[KEY_SysAdminEmail] = dr["AdminEmail"].ToString(); } catch { dict[KEY_SysAdminEmail] = string.Empty; } 
-                    try { dict[KEY_SysAdminPhone] = dr["AdminPhone"].ToString(); } catch { dict[KEY_SysAdminPhone] = string.Empty; } 
-                    try { dict[KEY_SysCustServEmail] = dr["CustServEmail"].ToString(); } catch { dict[KEY_SysCustServEmail] = string.Empty; } 
-                    try { dict[KEY_SysCustServPhone] = dr["CustServPhone"].ToString(); } catch { dict[KEY_SysCustServPhone] = string.Empty; } 
-                    try { dict[KEY_SysCustServFax] = dr["CustServFax"].ToString(); } catch { dict[KEY_SysCustServFax] = string.Empty; } 
-                    try { dict[KEY_SysWebAddress] = dr["WebAddress"].ToString(); } catch { dict[KEY_SysWebAddress] = string.Empty; } 
+                    dict[KEY_DesDb] = dr["dbDesDatabase"].ToString();
+                    dict[KEY_AppDb] = dr["dbAppDatabase"].ToString();
+                    dict[KEY_AppUsrId] = singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString();
+                    dict[KEY_AppPwd] = singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString();
+                    try { dict[KEY_SysAdminEmail] = dr["AdminEmail"].ToString(); } catch { dict[KEY_SysAdminEmail] = string.Empty; }
+                    try { dict[KEY_SysAdminPhone] = dr["AdminPhone"].ToString(); } catch { dict[KEY_SysAdminPhone] = string.Empty; }
+                    try { dict[KEY_SysCustServEmail] = dr["CustServEmail"].ToString(); } catch { dict[KEY_SysCustServEmail] = string.Empty; }
+                    try { dict[KEY_SysCustServPhone] = dr["CustServPhone"].ToString(); } catch { dict[KEY_SysCustServPhone] = string.Empty; }
+                    try { dict[KEY_SysCustServFax] = dr["CustServFax"].ToString(); } catch { dict[KEY_SysCustServFax] = string.Empty; }
+                    try { dict[KEY_SysWebAddress] = dr["WebAddress"].ToString(); } catch { dict[KEY_SysWebAddress] = string.Empty; }
                     ((Dictionary<byte, Dictionary<string, string>>)Session[KEY_SystemsDict])[byte.Parse(dr["SystemId"].ToString())] = dict;
                 }
-			}
-		}
-
-		protected DataTable SystemsList
+            }
+        }
+        protected DataTable SystemsList
 		{
             get { try { return (DataTable)(Session[KEY_SystemsList]); } catch { return (null); } }
             set { Session[KEY_SystemsList] = value; }
@@ -309,37 +314,77 @@ namespace RO.Web
 			}
 		}
 
-		protected CurrPrj CPrj
-		{
-			get {try {return (CurrPrj)(Session[KEY_CacheCPrj]);} 
-				 catch {return (null);}
-			}
-			set {if (null == value) {Session.Remove(KEY_CacheCPrj);} 
-				 else {Session[KEY_CacheCPrj] = value;}
-			}
-		}
+        protected CurrPrj CPrj
+        {
+            get
+            {
+                try { return (CurrPrj)(Session[KEY_CacheCPrj]); }
+                catch { return (null); }
+            }
+            set
+            {
+                if (null == value) { Session.Remove(KEY_CacheCPrj); }
+                else { Session[KEY_CacheCPrj] = value; }
+                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                if (singleSQLCredential)
+                {
+                    value.SrcDesServer = Config.DesServer;
+                    value.SrcDesUserId = Config.DesUserId;
+                    value.SrcDesPassword = Config.DesPassword;
+                    value.TarDesServer = Config.DesServer;
+                    value.TarDesUserId = Config.DesUserId;
+                    value.TarDesPassword = Config.DesPassword;
 
-		protected CurrSrc CSrc
-		{
-			get {try {return (CurrSrc)(Session[KEY_CacheCSrc]);} 
-				 catch {return (null);}
-			}
-			set {if (null == value) {Session.Remove(KEY_CacheCSrc);} 
-				 else {Session[KEY_CacheCSrc] = value;}
-			}
-		}
+                }
+            }
+        }
 
-		protected CurrTar CTar
-		{
-			get {try {return (CurrTar)(Session[KEY_CacheCTar]);} 
-				 catch {return (null);}
-			}
-			set {if (null == value) {Session.Remove(KEY_CacheCTar);} 
-				 else {Session[KEY_CacheCTar] = value;}
-			}
-		}
+        protected CurrSrc CSrc
+        {
+            get
+            {
+                try { return (CurrSrc)(Session[KEY_CacheCSrc]); }
+                catch { return (null); }
+            }
+            set
+            {
+                if (null == value) { Session.Remove(KEY_CacheCSrc); }
+                else { Session[KEY_CacheCSrc] = value; }
+                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                if (singleSQLCredential)
+                {
+                    value.SrcServerName = Config.DesServer;
+                    value.SrcDbServer = Config.DesServer;
+                    value.SrcDbUserId = Config.DesUserId;
+                    value.SrcDbPassword = Config.DesPassword;
+                }
+            }
+        }
 
-		protected DataView VMenu
+        protected CurrTar CTar
+        {
+            get
+            {
+                try { return (CurrTar)(Session[KEY_CacheCTar]); }
+                catch { return (null); }
+            }
+            set
+            {
+                if (null == value) { Session.Remove(KEY_CacheCTar); }
+                else { Session[KEY_CacheCTar] = value; }
+                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                if (singleSQLCredential)
+                {
+                    value.TarServerName = Config.DesServer;
+                    value.TarDbServer = Config.DesServer;
+                    value.TarDbUserId = Config.DesUserId;
+                    value.TarDbPassword = Config.DesPassword;
+                }
+
+            }
+        }
+
+        protected DataView VMenu
 		{
 			get
 			{
@@ -1452,8 +1497,10 @@ namespace RO.Web
             string ticket = PrepImpersonation();
 
             Uri myUri = Request.Url;
-            string newUrl = myUri.Scheme
-                + "://" + myUri.Host + ":" + myUri.Port
+            string newUrl =
+                //myUri.Scheme
+                //+ "://" + myUri.Host + ":" + myUri.Port
+                "http://localhost/"
                 + (Request.ApplicationPath + "/").Replace("//", "/")
                 + url + (url.Contains("?") ? "&" : "?") + "runas=" + ticket;
 
@@ -1832,17 +1879,38 @@ namespace RO.Web
                 }
                 */
                 /* new google page crawling */
-                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-                System.Text.RegularExpressions.Regex re = new Regex("^[0-9.]+\\s");
-                string url = String.Format("https://www.google.com/finance/converter?a={0}&from={1}&to={2}&meta={3}", "1", FrISOCurrencySymbol, ToISOCurrencySymbol, Guid.NewGuid().ToString());
-                System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
-                request.Referer = "http://www.checkmin.com";
-                System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
-                System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream());
-                var rate = Regex.Matches(sr.ReadToEnd(),"<span class=\"?bld\"?>([0-9.]+)(.*)</span>")[0].Groups[1].Value;
-                return rate.Trim().Replace(",", ".");
+                //System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                //System.Text.RegularExpressions.Regex re = new Regex("^[0-9.]+\\s");
+                //string url = String.Format("https://www.google.com/finance/converter?a={0}&from={1}&to={2}&meta={3}", "1", FrISOCurrencySymbol, ToISOCurrencySymbol, Guid.NewGuid().ToString());
+                //System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
+                //request.Referer = "http://www.checkmin.com";
+                //System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
+                //System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream());
+                //var rate = Regex.Matches(sr.ReadToEnd(),"<span class=\"?bld\"?>([0-9.]+)(.*)</span>")[0].Groups[1].Value;
+                //return rate.Trim().Replace(",", ".");
+                var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v1/tools/price-conversion");
+                var CmcAPIKey = System.Configuration.ConfigurationManager.AppSettings["CMCAPIKey"];
+
+                var queryString = HttpUtility.ParseQueryString(string.Empty);
+                queryString["amount"] = "1";
+                queryString["symbol"] = FrISOCurrencySymbol;
+                queryString["convert"] = ToISOCurrencySymbol;
+
+                URL.Query = queryString.ToString();
+
+                var client = new WebClient();
+                client.Headers.Add("X-CMC_PRO_API_KEY", CmcAPIKey);
+                client.Headers.Add("Accepts", "application/json");
+                string jsonString = client.DownloadString(URL.ToString());
+                var price = Newtonsoft.Json.Linq.JObject.Parse(jsonString).SelectToken("['data'].['quote'].['" + ToISOCurrencySymbol + "']['price']");
+                return price.ToString();
             }
-            catch { return string.Empty; }
+            // Cannot add "ex.Message" to the return statement; do not remove "ex"; need it here for debugging purpose.
+            catch (Exception ex)
+            {
+                if (ex != null) return string.Empty;
+                else return string.Empty;
+            }
         }
 
         public string fxEncryptedText(string ss)
@@ -2210,7 +2278,7 @@ namespace RO.Web
             List<string> param = new List<string>();
             foreach (string key in qs)
             {
-                if (key.ToLower() != "hash") param.Add(key.ToLower() + "=" + Request.QueryString[key]);
+                if (key.ToLower() != "hash" && key.ToLower() != "ssd") param.Add(key.ToLower() + "=" + Request.QueryString[key]);
             }
             return GetQSHash(string.Join("&", param.OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim());
         }

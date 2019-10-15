@@ -176,6 +176,17 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 </div>
 </div>
 <asp:Panel id="cTabFolder" runat="server">
+<input type="hidden" id="cCurrentTab" style="display:none" value="cTab39" runat="server"/>
+<ul id="tabs">
+    <li><a id="cTab39" href="#" class="current" name="Tab39" runat="server"></a></li>
+    <li><a id="cTab125" href="#" name="Tab125" runat="server"></a></li>
+    <li><a id="cTab126" href="#" name="Tab126" runat="server"></a></li>
+    <li><a id="cTab127" href="#" name="Tab127" runat="server"></a></li>
+    <li><a id="cTab128" href="#" name="Tab128" runat="server"></a></li>
+</ul>
+<div id="content">
+<div id="Tab39" runat="server">
+    <asp:UpdatePanel id="UpdPanel39" UpdateMode="Conditional" runat="server"><Triggers></Triggers><ContentTemplate>
     <div class="r-table rg-1-12"><div class="r-tr">
     <div class="r-td rc-1-5"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
@@ -240,6 +251,113 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     </div></div></div>
     </div></div>
+    </ContentTemplate></asp:UpdatePanel>
+</div>
+<div id="Tab125" style="display:none;" runat="server">
+    <asp:UpdatePanel id="UpdPanel125" UpdateMode="Conditional" runat="server"><Triggers></Triggers><ContentTemplate>
+    <div class="r-table rg-1-12"><div class="r-tr">
+    <div class="r-td rc-1-4"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cReactEventId128P1" class="r-td r-labelL r-labelT" runat="server"><asp:Label id="cReactEventId128Label" CssClass="inp-lbl" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cReactEventId128P2" class="r-td r-content" runat="server"><asp:DropDownList id="cReactEventId128" CssClass="inp-ddl" DataValueField="ReactEventId128" DataTextField="ReactEventId128Text" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-5-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cReactRuleProg128P1" class="r-td r-labelL r-labelT" runat="server"><asp:Label id="cReactRuleProg128Label" CssClass="inp-lbl" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cReactRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cReactRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cReactRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    </div></div>
+    </ContentTemplate></asp:UpdatePanel>
+</div>
+<div id="Tab126" style="display:none;" runat="server">
+    <asp:UpdatePanel id="UpdPanel126" UpdateMode="Conditional" runat="server"><Triggers></Triggers><ContentTemplate>
+    <div class="r-table rg-1-12"><div class="r-tr">
+    <div class="r-td rc-1-4"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cReduxEventId128P1" class="r-td r-labelL r-labelT" runat="server"><asp:Label id="cReduxEventId128Label" CssClass="inp-lbl" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cReduxEventId128P2" class="r-td r-content" runat="server"><asp:DropDownList id="cReduxEventId128" CssClass="inp-ddl" DataValueField="ReduxEventId128" DataTextField="ReduxEventId128Text" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-5-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cReduxRuleProg128P1" class="r-td r-labelL r-labelT" runat="server"><asp:Label id="cReduxRuleProg128Label" CssClass="inp-lbl" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cReduxRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cReduxRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cReduxRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    </div></div>
+    </ContentTemplate></asp:UpdatePanel>
+</div>
+<div id="Tab127" style="display:none;" runat="server">
+    <asp:UpdatePanel id="UpdPanel127" UpdateMode="Conditional" runat="server"><Triggers></Triggers><ContentTemplate>
+    <div class="r-table rg-1-12"><div class="r-tr">
+    <div class="r-td rc-1-4"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cServiceEventId128P1" class="r-td r-labelL r-labelT" runat="server"><asp:Label id="cServiceEventId128Label" CssClass="inp-lbl" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cServiceEventId128P2" class="r-td r-content" runat="server"><asp:DropDownList id="cServiceEventId128" CssClass="inp-ddl" DataValueField="ServiceEventId128" DataTextField="ServiceEventId128Text" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-5-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cServiceRuleProg128P1" class="r-td r-labelL r-labelT" runat="server"><asp:Label id="cServiceRuleProg128Label" CssClass="inp-lbl" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cServiceRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cServiceRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cServiceRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    </div></div>
+    </ContentTemplate></asp:UpdatePanel>
+</div>
+<div id="Tab128" style="display:none;" runat="server">
+    <asp:UpdatePanel id="UpdPanel128" UpdateMode="Conditional" runat="server"><Triggers></Triggers><ContentTemplate>
+    <div class="r-table rg-1-12"><div class="r-tr">
+    <div class="r-td rc-1-4"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cAsmxEventId128P1" class="r-td r-labelL r-labelT" runat="server"><asp:Label id="cAsmxEventId128Label" CssClass="inp-lbl" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cAsmxEventId128P2" class="r-td r-content" runat="server"><asp:DropDownList id="cAsmxEventId128" CssClass="inp-ddl" DataValueField="AsmxEventId128" DataTextField="AsmxEventId128Text" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-5-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cAsmxRuleProg128P1" class="r-td r-labelL r-labelT" runat="server"><asp:Label id="cAsmxRuleProg128Label" CssClass="inp-lbl" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cAsmxRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cAsmxRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cAsmxRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    </div></div>
+    </ContentTemplate></asp:UpdatePanel>
+</div>
+</div>
 </asp:Panel>
 <asp:label id="cFootLabel" CssClass="FootText" runat="server" />
 <input id="bUseCri" type="hidden" runat="server" />

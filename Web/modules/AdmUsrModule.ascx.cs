@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -54,16 +57,19 @@ namespace RO.Common3.Data
 			columns.Add("FailedAttempt1", typeof(string));
 			columns.Add("LastSuccessDt1", typeof(string));
 			columns.Add("LastFailedDt1", typeof(string));
+			columns.Add("CompanyLs1", typeof(string));
+			columns.Add("ProjectLs1", typeof(string));
 			columns.Add("HintQuestionId1", typeof(string));
 			columns.Add("HintAnswer1", typeof(string));
-			columns.Add("CompanyLs1", typeof(string));
 			columns.Add("InvestorId1", typeof(string));
 			columns.Add("CustomerId1", typeof(string));
 			columns.Add("VendorId1", typeof(string));
 			columns.Add("AgentId1", typeof(string));
 			columns.Add("BrokerId1", typeof(string));
 			columns.Add("MemberId1", typeof(string));
-			columns.Add("ProjectLs1", typeof(string));
+			columns.Add("LenderId1", typeof(string));
+			columns.Add("BorrowerId1", typeof(string));
+			columns.Add("GuarantorId1", typeof(string));
 			columns.Add("UsageStat", typeof(string));
 			return dt;
 		}
@@ -89,15 +95,18 @@ namespace RO.Web
 		private const string KEY_dtDefSystemId1 = "Cache:dtDefSystemId1";
 		private const string KEY_dtUsrGroupLs1 = "Cache:dtUsrGroupLs1";
 		private const string KEY_dtUsrImprLink1 = "Cache:dtUsrImprLink1";
-		private const string KEY_dtHintQuestionId1 = "Cache:dtHintQuestionId1";
 		private const string KEY_dtCompanyLs1 = "Cache:dtCompanyLs1";
+		private const string KEY_dtProjectLs1 = "Cache:dtProjectLs1";
+		private const string KEY_dtHintQuestionId1 = "Cache:dtHintQuestionId1";
 		private const string KEY_dtInvestorId1 = "Cache:dtInvestorId1";
 		private const string KEY_dtCustomerId1 = "Cache:dtCustomerId1";
 		private const string KEY_dtVendorId1 = "Cache:dtVendorId1";
 		private const string KEY_dtAgentId1 = "Cache:dtAgentId1";
 		private const string KEY_dtBrokerId1 = "Cache:dtBrokerId1";
 		private const string KEY_dtMemberId1 = "Cache:dtMemberId1";
-		private const string KEY_dtProjectLs1 = "Cache:dtProjectLs1";
+		private const string KEY_dtLenderId1 = "Cache:dtLenderId1";
+		private const string KEY_dtBorrowerId1 = "Cache:dtBorrowerId1";
+		private const string KEY_dtGuarantorId1 = "Cache:dtGuarantorId1";
 
 		private const string KEY_dtSystems = "Cache:dtSystems3_1";
 		private const string KEY_sysConnectionString = "Cache:sysConnectionString3_1";
@@ -161,15 +170,18 @@ namespace RO.Web
 				Session.Remove(KEY_dtDefSystemId1);
 				Session.Remove(KEY_dtUsrGroupLs1);
 				Session.Remove(KEY_dtUsrImprLink1);
-				Session.Remove(KEY_dtHintQuestionId1);
 				Session.Remove(KEY_dtCompanyLs1);
+				Session.Remove(KEY_dtProjectLs1);
+				Session.Remove(KEY_dtHintQuestionId1);
 				Session.Remove(KEY_dtInvestorId1);
 				Session.Remove(KEY_dtCustomerId1);
 				Session.Remove(KEY_dtVendorId1);
 				Session.Remove(KEY_dtAgentId1);
 				Session.Remove(KEY_dtBrokerId1);
 				Session.Remove(KEY_dtMemberId1);
-				Session.Remove(KEY_dtProjectLs1);
+				Session.Remove(KEY_dtLenderId1);
+				Session.Remove(KEY_dtBorrowerId1);
+				Session.Remove(KEY_dtGuarantorId1);
 				SetButtonHlp();
 				GetSystems();
 				SetColumnAuthority();
@@ -610,16 +622,19 @@ namespace RO.Web
 						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[22]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[23]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[24]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[25]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[25]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[25]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[26]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[27]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[28]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[28]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[27]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[27]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[28]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[29]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[29]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[30]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[30]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[31]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[31]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[32]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[33]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[33]["ColumnHeader"].ToString() + " Text" + (char)9);}
-						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[34]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[34]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[34]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[35]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[35]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[36]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[36]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[37]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[37]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -647,17 +662,20 @@ namespace RO.Web
 						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["FailedAttempt1"].ToString(),base.LUser.Culture) + (char)9);}
 						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastSuccessDt1"].ToString(),base.LUser.Culture) + (char)9);}
 						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastFailedDt1"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
-						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(drv["HintQuestionId1"].ToString() + (char)9 + drv["HintQuestionId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["HintAnswer1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CompanyLs1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId1"].ToString() + (char)9 + drv["InvestorId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId1"].ToString() + (char)9 + drv["CustomerId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId1"].ToString() + (char)9 + drv["VendorId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId1"].ToString() + (char)9 + drv["AgentId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId1"].ToString() + (char)9 + drv["BrokerId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId1"].ToString() + (char)9 + drv["MemberId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ProjectLs1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CompanyLs1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ProjectLs1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
+						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(drv["HintQuestionId1"].ToString() + (char)9 + drv["HintQuestionId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["HintAnswer1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId1"].ToString() + (char)9 + drv["InvestorId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId1"].ToString() + (char)9 + drv["CustomerId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId1"].ToString() + (char)9 + drv["VendorId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId1"].ToString() + (char)9 + drv["AgentId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId1"].ToString() + (char)9 + drv["BrokerId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId1"].ToString() + (char)9 + drv["MemberId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(drv["LenderId1"].ToString() + (char)9 + drv["LenderId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(drv["BorrowerId1"].ToString() + (char)9 + drv["BorrowerId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(drv["GuarantorId1"].ToString() + (char)9 + drv["GuarantorId1Text"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmUsr.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
@@ -740,6 +758,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -783,6 +804,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[33]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[34]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[35]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[36]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[37]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -828,17 +852,20 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["FailedAttempt1"].ToString(),base.LUser.Culture) + @"\cell ");}
 					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastSuccessDt1"].ToString(),base.LUser.Culture) + @"\cell ");}
 					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastFailedDt1"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
-					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(drv["HintQuestionId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(drv["HintAnswer1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(drv["CompanyLs1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(drv["ProjectLs1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["CompanyLs1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(drv["ProjectLs1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
+					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(drv["HintQuestionId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(drv["HintAnswer1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(drv["LenderId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(drv["BorrowerId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(drv["GuarantorId1Text"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1850,61 +1877,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 		}
 
-		private void SetHintQuestionId1(DropDownList ddl, string keyId)
-		{
-			DataTable dt = (DataTable)Session[KEY_dtHintQuestionId1];
-			DataView dv = dt != null ? dt.DefaultView : null;
-			if (ddl != null)
-			{
-				string ss = string.Empty;
-				ListItem li = null;
-				bool bFirst = false;
-				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
-				if (dv == null)
-				{
-					bFirst = true;
-					try
-					{
-						dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlHintQuestionId3S1119",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
-					}
-					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
-				}
-				if (dv != null)
-				{
-					if (dv.Table.Columns.Contains("UsrId"))
-					{
-						ss = "(UsrId is null";
-						if (string.IsNullOrEmpty(cAdmUsr1List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR UsrId = " + cAdmUsr1List.SelectedValue + ")";}
-					}
-					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "HintQuestionId1 is not NULL"; }
-					dv.RowFilter = ss;
-					ddl.DataSource = dv; ddl.DataBind();
-					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
-					else if (!bFirst)
-					{
-						try
-						{
-							dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlHintQuestionId3S1119",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
-						}
-						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
-						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
-						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
-					}
-					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
-					{
-						try
-						{
-							dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlHintQuestionId3S1119",true,true,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
-						}
-						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
-						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
-						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
-					}
-					Session[KEY_dtHintQuestionId1] = dv.Table;
-				}
-			}
-		}
-
 		private void SetCompanyLs1(ListBox ddl, string keyId)
 		{
 			DataTable dt = (DataTable)Session[KEY_dtCompanyLs1];
@@ -1967,6 +1939,127 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					}
 					if (ddl.SelectedIndex < 0 && dv.Count > 0) { ddl.Items[0].Selected = true; }
 					Session[KEY_dtCompanyLs1] = dv.Table;
+				}
+			}
+		}
+
+		private void SetProjectLs1(ListBox ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtProjectLs1];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlProjectLs3S1743",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("UsrId"))
+					{
+						ss = "(UsrId is null";
+						if (string.IsNullOrEmpty(cAdmUsr1List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR UsrId = " + cAdmUsr1List.SelectedValue + ")";}
+					}
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "ProjectLs1 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					string key = keyId;
+					if (key.StartsWith("(")) { key = key.Substring(1, key.Length - 2); }
+					if (key.IndexOf("'") >= 0) { key = key.Replace("''", char.ToString((char)191)).Replace("'", string.Empty).Replace(char.ToString((char)191), "''"); }
+					string[] arr = key.Split(',');
+					foreach (string sel in arr)
+					{
+						li = ddl.Items.FindByValue(sel); if (li != null) {li.Selected = true; bFirst = true;}
+					}
+					if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlProjectLs3S1743",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						foreach (string sel in arr)
+						{
+							li = ddl.Items.FindByValue(sel); if (li != null) {li.Selected = true;}
+						}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlProjectLs3S1743",true,true,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (ddl.SelectedIndex < 0 && dv.Count > 0) { ddl.Items[0].Selected = true; }
+					Session[KEY_dtProjectLs1] = dv.Table;
+				}
+			}
+		}
+
+		private void SetHintQuestionId1(DropDownList ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtHintQuestionId1];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlHintQuestionId3S1119",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("UsrId"))
+					{
+						ss = "(UsrId is null";
+						if (string.IsNullOrEmpty(cAdmUsr1List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR UsrId = " + cAdmUsr1List.SelectedValue + ")";}
+					}
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "HintQuestionId1 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					else if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlHintQuestionId3S1119",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlHintQuestionId3S1119",true,true,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					Session[KEY_dtHintQuestionId1] = dv.Table;
 				}
 			}
 		}
@@ -2253,68 +2346,143 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 		}
 
-		private void SetProjectLs1(ListBox ddl, string keyId)
+		protected void cbLenderId1(object sender, System.EventArgs e)
 		{
-			DataTable dt = (DataTable)Session[KEY_dtProjectLs1];
-			DataView dv = dt != null ? dt.DefaultView : null;
+			SetLenderId1((RoboCoder.WebControls.ComboBox)sender,string.Empty);
+		}
+
+		private void SetLenderId1(RoboCoder.WebControls.ComboBox ddl, string keyId)
+		{
+			System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+			context["method"] = "GetDdlLenderId3S4185";
+			context["addnew"] = "Y";
+			context["mKey"] = "LenderId1";
+			context["mVal"] = "LenderId1Text";
+			context["mTip"] = "LenderId1Text";
+			context["mImg"] = "LenderId1Text";
+			context["ssd"] = Request.QueryString["ssd"];
+			context["scr"] = "1";
+			context["csy"] = "3";
+			context["filter"] = Utils.IsInt(cFilterId.SelectedValue)? cFilterId.SelectedValue : "0";
+			context["isSys"] = "N";
+			context["conn"] = string.Empty;
+			ddl.AutoCompleteUrl = "AutoComplete.aspx/DdlSuggests";
+			ddl.DataContext = context;
 			if (ddl != null)
 			{
-				string ss = string.Empty;
-				ListItem li = null;
-				bool bFirst = false;
-				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
-				if (dv == null)
+			    DataView dv = null;
+				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
+				try
 				{
-					bFirst = true;
-					try
-					{
-						dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlProjectLs3S1743",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
-					}
-					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+					dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlLenderId3S4185",true,false,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
 				}
+				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				if (dv != null)
 				{
 					if (dv.Table.Columns.Contains("UsrId"))
 					{
-						ss = "(UsrId is null";
+						context["pMKeyColID"] = cAdmUsr1List.ClientID;
+						context["pMKeyCol"] = "UsrId";
+						string ss = "(UsrId is null";
 						if (string.IsNullOrEmpty(cAdmUsr1List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR UsrId = " + cAdmUsr1List.SelectedValue + ")";}
+						dv.RowFilter = ss;
 					}
-					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "ProjectLs1 is not NULL"; }
-					dv.RowFilter = ss;
-					ddl.DataSource = dv; ddl.DataBind();
-					string key = keyId;
-					if (key.StartsWith("(")) { key = key.Substring(1, key.Length - 2); }
-					if (key.IndexOf("'") >= 0) { key = key.Replace("''", char.ToString((char)191)).Replace("'", string.Empty).Replace(char.ToString((char)191), "''"); }
-					string[] arr = key.Split(',');
-					foreach (string sel in arr)
+					ddl.DataSource = dv; Session[KEY_dtLenderId1] = dv.Table;
+				    try { ddl.SelectByValue(keyId,string.Empty,true); } catch { try { ddl.SelectedIndex = 0; } catch { } }
+				}
+			}
+		}
+
+		protected void cbBorrowerId1(object sender, System.EventArgs e)
+		{
+			SetBorrowerId1((RoboCoder.WebControls.ComboBox)sender,string.Empty);
+		}
+
+		private void SetBorrowerId1(RoboCoder.WebControls.ComboBox ddl, string keyId)
+		{
+			System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+			context["method"] = "GetDdlBorrowerId3S4186";
+			context["addnew"] = "Y";
+			context["mKey"] = "BorrowerId1";
+			context["mVal"] = "BorrowerId1Text";
+			context["mTip"] = "BorrowerId1Text";
+			context["mImg"] = "BorrowerId1Text";
+			context["ssd"] = Request.QueryString["ssd"];
+			context["scr"] = "1";
+			context["csy"] = "3";
+			context["filter"] = Utils.IsInt(cFilterId.SelectedValue)? cFilterId.SelectedValue : "0";
+			context["isSys"] = "N";
+			context["conn"] = string.Empty;
+			ddl.AutoCompleteUrl = "AutoComplete.aspx/DdlSuggests";
+			ddl.DataContext = context;
+			if (ddl != null)
+			{
+			    DataView dv = null;
+				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
+				try
+				{
+					dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlBorrowerId3S4186",true,false,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+				}
+				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("UsrId"))
 					{
-						li = ddl.Items.FindByValue(sel); if (li != null) {li.Selected = true; bFirst = true;}
+						context["pMKeyColID"] = cAdmUsr1List.ClientID;
+						context["pMKeyCol"] = "UsrId";
+						string ss = "(UsrId is null";
+						if (string.IsNullOrEmpty(cAdmUsr1List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR UsrId = " + cAdmUsr1List.SelectedValue + ")";}
+						dv.RowFilter = ss;
 					}
-					if (!bFirst)
+					ddl.DataSource = dv; Session[KEY_dtBorrowerId1] = dv.Table;
+				    try { ddl.SelectByValue(keyId,string.Empty,true); } catch { try { ddl.SelectedIndex = 0; } catch { } }
+				}
+			}
+		}
+
+		protected void cbGuarantorId1(object sender, System.EventArgs e)
+		{
+			SetGuarantorId1((RoboCoder.WebControls.ComboBox)sender,string.Empty);
+		}
+
+		private void SetGuarantorId1(RoboCoder.WebControls.ComboBox ddl, string keyId)
+		{
+			System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+			context["method"] = "GetDdlGuarantorId3S4187";
+			context["addnew"] = "Y";
+			context["mKey"] = "GuarantorId1";
+			context["mVal"] = "GuarantorId1Text";
+			context["mTip"] = "GuarantorId1Text";
+			context["mImg"] = "GuarantorId1Text";
+			context["ssd"] = Request.QueryString["ssd"];
+			context["scr"] = "1";
+			context["csy"] = "3";
+			context["filter"] = Utils.IsInt(cFilterId.SelectedValue)? cFilterId.SelectedValue : "0";
+			context["isSys"] = "N";
+			context["conn"] = string.Empty;
+			ddl.AutoCompleteUrl = "AutoComplete.aspx/DdlSuggests";
+			ddl.DataContext = context;
+			if (ddl != null)
+			{
+			    DataView dv = null;
+				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
+				try
+				{
+					dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlGuarantorId3S4187",true,false,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
+				}
+				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("UsrId"))
 					{
-						try
-						{
-							dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlProjectLs3S1743",true,bAll,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
-						}
-						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
-						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
-						foreach (string sel in arr)
-						{
-							li = ddl.Items.FindByValue(sel); if (li != null) {li.Selected = true;}
-						}
+						context["pMKeyColID"] = cAdmUsr1List.ClientID;
+						context["pMKeyCol"] = "UsrId";
+						string ss = "(UsrId is null";
+						if (string.IsNullOrEmpty(cAdmUsr1List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR UsrId = " + cAdmUsr1List.SelectedValue + ")";}
+						dv.RowFilter = ss;
 					}
-					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
-					{
-						try
-						{
-							dv = new DataView((new AdminSystem()).GetDdl(1,"GetDdlProjectLs3S1743",true,true,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
-						}
-						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
-						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
-						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
-					}
-					if (ddl.SelectedIndex < 0 && dv.Count > 0) { ddl.Items[0].Selected = true; }
-					Session[KEY_dtProjectLs1] = dv.Table;
+					ddl.DataSource = dv; Session[KEY_dtGuarantorId1] = dv.Table;
+				    try { ddl.SelectByValue(keyId,string.Empty,true); } catch { try { ddl.SelectedIndex = 0; } catch { } }
 				}
 			}
 		}
@@ -2412,24 +2580,30 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cFailedAttempt1, dtAuth.Rows[21], cFailedAttempt1P1, cFailedAttempt1Label, cFailedAttempt1P2, null, dtLabel.Rows[21], null, null, null);
 				base.SetFoldBehavior(cLastSuccessDt1, dtAuth.Rows[22], cLastSuccessDt1P1, cLastSuccessDt1Label, cLastSuccessDt1P2, null, dtLabel.Rows[22], null, null, null);
 				base.SetFoldBehavior(cLastFailedDt1, dtAuth.Rows[23], cLastFailedDt1P1, cLastFailedDt1Label, cLastFailedDt1P2, null, dtLabel.Rows[23], null, null, null);
-				base.SetFoldBehavior(cModifiedOn1, dtAuth.Rows[24], cModifiedOn1P1, cModifiedOn1Label, cModifiedOn1P2, null, dtLabel.Rows[24], null, null, null);
-				base.SetFoldBehavior(cHintQuestionId1, dtAuth.Rows[25], cHintQuestionId1P1, cHintQuestionId1Label, cHintQuestionId1P2, null, dtLabel.Rows[25], null, null, null);
-				base.SetFoldBehavior(cHintAnswer1, dtAuth.Rows[26], cHintAnswer1P1, cHintAnswer1Label, cHintAnswer1P2, null, dtLabel.Rows[26], null, null, null);
-				base.SetFoldBehavior(cCompanyLs1, dtAuth.Rows[27], cCompanyLs1P1, cCompanyLs1Label, cCompanyLs1P2, null, dtLabel.Rows[27], null, null, null);
-				base.SetFoldBehavior(cInvestorId1, dtAuth.Rows[28], cInvestorId1P1, cInvestorId1Label, cInvestorId1P2, null, dtLabel.Rows[28], null, null, null);
+				base.SetFoldBehavior(cCompanyLs1, dtAuth.Rows[24], cCompanyLs1P1, cCompanyLs1Label, cCompanyLs1P2, null, dtLabel.Rows[24], null, null, null);
+				base.SetFoldBehavior(cProjectLs1, dtAuth.Rows[25], cProjectLs1P1, cProjectLs1Label, cProjectLs1P2, null, dtLabel.Rows[25], null, null, null);
+				base.SetFoldBehavior(cModifiedOn1, dtAuth.Rows[26], cModifiedOn1P1, cModifiedOn1Label, cModifiedOn1P2, null, dtLabel.Rows[26], null, null, null);
+				base.SetFoldBehavior(cHintQuestionId1, dtAuth.Rows[27], cHintQuestionId1P1, cHintQuestionId1Label, cHintQuestionId1P2, null, dtLabel.Rows[27], null, null, null);
+				base.SetFoldBehavior(cHintAnswer1, dtAuth.Rows[28], cHintAnswer1P1, cHintAnswer1Label, cHintAnswer1P2, null, dtLabel.Rows[28], null, null, null);
+				base.SetFoldBehavior(cInvestorId1, dtAuth.Rows[29], cInvestorId1P1, cInvestorId1Label, cInvestorId1P2, null, dtLabel.Rows[29], null, null, null);
 				SetInvestorId1(cInvestorId1,string.Empty);
-				base.SetFoldBehavior(cCustomerId1, dtAuth.Rows[29], cCustomerId1P1, cCustomerId1Label, cCustomerId1P2, null, dtLabel.Rows[29], null, null, null);
+				base.SetFoldBehavior(cCustomerId1, dtAuth.Rows[30], cCustomerId1P1, cCustomerId1Label, cCustomerId1P2, null, dtLabel.Rows[30], null, null, null);
 				SetCustomerId1(cCustomerId1,string.Empty);
-				base.SetFoldBehavior(cVendorId1, dtAuth.Rows[30], cVendorId1P1, cVendorId1Label, cVendorId1P2, null, dtLabel.Rows[30], null, null, null);
+				base.SetFoldBehavior(cVendorId1, dtAuth.Rows[31], cVendorId1P1, cVendorId1Label, cVendorId1P2, null, dtLabel.Rows[31], null, null, null);
 				SetVendorId1(cVendorId1,string.Empty);
-				base.SetFoldBehavior(cAgentId1, dtAuth.Rows[31], cAgentId1P1, cAgentId1Label, cAgentId1P2, null, dtLabel.Rows[31], null, null, null);
+				base.SetFoldBehavior(cAgentId1, dtAuth.Rows[32], cAgentId1P1, cAgentId1Label, cAgentId1P2, null, dtLabel.Rows[32], null, null, null);
 				SetAgentId1(cAgentId1,string.Empty);
-				base.SetFoldBehavior(cBrokerId1, dtAuth.Rows[32], cBrokerId1P1, cBrokerId1Label, cBrokerId1P2, null, dtLabel.Rows[32], null, null, null);
+				base.SetFoldBehavior(cBrokerId1, dtAuth.Rows[33], cBrokerId1P1, cBrokerId1Label, cBrokerId1P2, null, dtLabel.Rows[33], null, null, null);
 				SetBrokerId1(cBrokerId1,string.Empty);
-				base.SetFoldBehavior(cMemberId1, dtAuth.Rows[33], cMemberId1P1, cMemberId1Label, cMemberId1P2, null, dtLabel.Rows[33], null, null, null);
+				base.SetFoldBehavior(cMemberId1, dtAuth.Rows[34], cMemberId1P1, cMemberId1Label, cMemberId1P2, null, dtLabel.Rows[34], null, null, null);
 				SetMemberId1(cMemberId1,string.Empty);
-				base.SetFoldBehavior(cProjectLs1, dtAuth.Rows[34], cProjectLs1P1, cProjectLs1Label, cProjectLs1P2, null, dtLabel.Rows[34], null, null, null);
-				base.SetFoldBehavior(cUsageStat, dtAuth.Rows[35], null, null, null, dtLabel.Rows[35], null, null, null);
+				base.SetFoldBehavior(cLenderId1, dtAuth.Rows[35], cLenderId1P1, cLenderId1Label, cLenderId1P2, null, dtLabel.Rows[35], null, null, null);
+				SetLenderId1(cLenderId1,string.Empty);
+				base.SetFoldBehavior(cBorrowerId1, dtAuth.Rows[36], cBorrowerId1P1, cBorrowerId1Label, cBorrowerId1P2, null, dtLabel.Rows[36], null, null, null);
+				SetBorrowerId1(cBorrowerId1,string.Empty);
+				base.SetFoldBehavior(cGuarantorId1, dtAuth.Rows[37], cGuarantorId1P1, cGuarantorId1Label, cGuarantorId1P2, null, dtLabel.Rows[37], null, null, null);
+				SetGuarantorId1(cGuarantorId1,string.Empty);
+				base.SetFoldBehavior(cUsageStat, dtAuth.Rows[38], null, null, null, dtLabel.Rows[38], null, null, null);
 			}
 			if ((cLoginName1.Attributes["OnChange"] == null || cLoginName1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cLoginName1.Visible && !cLoginName1.ReadOnly) {cLoginName1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cUsrName1.Attributes["OnChange"] == null || cUsrName1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cUsrName1.Visible && !cUsrName1.ReadOnly) {cUsrName1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -2457,17 +2631,20 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if ((cFailedAttempt1.Attributes["OnChange"] == null || cFailedAttempt1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cFailedAttempt1.Visible && !cFailedAttempt1.ReadOnly) {cFailedAttempt1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cLastSuccessDt1.Attributes["OnChange"] == null || cLastSuccessDt1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cLastSuccessDt1.Visible && !cLastSuccessDt1.ReadOnly) {cLastSuccessDt1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cLastFailedDt1.Attributes["OnChange"] == null || cLastFailedDt1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cLastFailedDt1.Visible && !cLastFailedDt1.ReadOnly) {cLastFailedDt1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cCompanyLs1.Attributes["OnChange"] == null || cCompanyLs1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCompanyLs1.Visible && cCompanyLs1.Enabled) {cCompanyLs1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cProjectLs1.Attributes["OnChange"] == null || cProjectLs1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cProjectLs1.Visible && cProjectLs1.Enabled) {cProjectLs1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cModifiedOn1.Attributes["OnChange"] == null || cModifiedOn1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cModifiedOn1.Visible && !cModifiedOn1.ReadOnly) {cModifiedOn1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cHintQuestionId1.Attributes["OnChange"] == null || cHintQuestionId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cHintQuestionId1.Visible && cHintQuestionId1.Enabled) {cHintQuestionId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cHintAnswer1.Attributes["OnChange"] == null || cHintAnswer1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cHintAnswer1.Visible && !cHintAnswer1.ReadOnly) {cHintAnswer1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
-			if ((cCompanyLs1.Attributes["OnChange"] == null || cCompanyLs1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCompanyLs1.Visible && cCompanyLs1.Enabled) {cCompanyLs1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cInvestorId1.Attributes["OnChange"] == null || cInvestorId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cInvestorId1.Visible && cInvestorId1.Enabled) {cInvestorId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cCustomerId1.Attributes["OnChange"] == null || cCustomerId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCustomerId1.Visible && cCustomerId1.Enabled) {cCustomerId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cVendorId1.Attributes["OnChange"] == null || cVendorId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cVendorId1.Visible && cVendorId1.Enabled) {cVendorId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cAgentId1.Attributes["OnChange"] == null || cAgentId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cAgentId1.Visible && cAgentId1.Enabled) {cAgentId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cBrokerId1.Attributes["OnChange"] == null || cBrokerId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cBrokerId1.Visible && cBrokerId1.Enabled) {cBrokerId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cMemberId1.Attributes["OnChange"] == null || cMemberId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cMemberId1.Visible && cMemberId1.Enabled) {cMemberId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
-			if ((cProjectLs1.Attributes["OnChange"] == null || cProjectLs1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cProjectLs1.Visible && cProjectLs1.Enabled) {cProjectLs1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cLenderId1.Attributes["OnChange"] == null || cLenderId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cLenderId1.Visible && cLenderId1.Enabled) {cLenderId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cBorrowerId1.Attributes["OnChange"] == null || cBorrowerId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cBorrowerId1.Visible && cBorrowerId1.Enabled) {cBorrowerId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cGuarantorId1.Attributes["OnChange"] == null || cGuarantorId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cGuarantorId1.Visible && cGuarantorId1.Enabled) {cGuarantorId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 		}
 
 		private DataTable SetFunctionality(DataTable dt)
@@ -2522,15 +2699,18 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				Session.Remove(KEY_dtDefSystemId1);
 				Session.Remove(KEY_dtUsrGroupLs1);
 				Session.Remove(KEY_dtUsrImprLink1);
-				Session.Remove(KEY_dtHintQuestionId1);
 				Session.Remove(KEY_dtCompanyLs1);
+				Session.Remove(KEY_dtProjectLs1);
+				Session.Remove(KEY_dtHintQuestionId1);
 				Session.Remove(KEY_dtInvestorId1);
 				Session.Remove(KEY_dtCustomerId1);
 				Session.Remove(KEY_dtVendorId1);
 				Session.Remove(KEY_dtAgentId1);
 				Session.Remove(KEY_dtBrokerId1);
 				Session.Remove(KEY_dtMemberId1);
-				Session.Remove(KEY_dtProjectLs1);
+				Session.Remove(KEY_dtLenderId1);
+				Session.Remove(KEY_dtBorrowerId1);
+				Session.Remove(KEY_dtGuarantorId1);
 				GetCriteria(GetScrCriteria());
 				cFilterId_SelectedIndexChanged(sender, e);
 				cCultureId1Search_Script();
@@ -2564,17 +2744,20 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[21]["ColVisible"].ToString() == "Y" && dt.Rows[21]["ColReadOnly"].ToString() != "Y") {cFailedAttempt1.Text = string.Empty;}
 			if (dt.Rows[22]["ColVisible"].ToString() == "Y" && dt.Rows[22]["ColReadOnly"].ToString() != "Y") {cLastSuccessDt1.Text = string.Empty;}
 			if (dt.Rows[23]["ColVisible"].ToString() == "Y" && dt.Rows[23]["ColReadOnly"].ToString() != "Y") {cLastFailedDt1.Text = string.Empty;}
-			if (dt.Rows[24]["ColVisible"].ToString() == "Y" && dt.Rows[24]["ColReadOnly"].ToString() != "Y") {cModifiedOn1.Text = string.Empty;}
-			if (dt.Rows[25]["ColVisible"].ToString() == "Y" && dt.Rows[25]["ColReadOnly"].ToString() != "Y") {SetHintQuestionId1(cHintQuestionId1,string.Empty);}
-			if (dt.Rows[26]["ColVisible"].ToString() == "Y" && dt.Rows[26]["ColReadOnly"].ToString() != "Y") {cHintAnswer1.Text = string.Empty;}
-			if (dt.Rows[27]["ColVisible"].ToString() == "Y" && dt.Rows[27]["ColReadOnly"].ToString() != "Y") {SetCompanyLs1(cCompanyLs1,string.Empty);}
-			if (dt.Rows[28]["ColVisible"].ToString() == "Y" && dt.Rows[28]["ColReadOnly"].ToString() != "Y") {cInvestorId1.ClearSearch();}
-			if (dt.Rows[29]["ColVisible"].ToString() == "Y" && dt.Rows[29]["ColReadOnly"].ToString() != "Y") {cCustomerId1.ClearSearch();}
-			if (dt.Rows[30]["ColVisible"].ToString() == "Y" && dt.Rows[30]["ColReadOnly"].ToString() != "Y") {cVendorId1.ClearSearch();}
-			if (dt.Rows[31]["ColVisible"].ToString() == "Y" && dt.Rows[31]["ColReadOnly"].ToString() != "Y") {cAgentId1.ClearSearch();}
-			if (dt.Rows[32]["ColVisible"].ToString() == "Y" && dt.Rows[32]["ColReadOnly"].ToString() != "Y") {cBrokerId1.ClearSearch();}
-			if (dt.Rows[33]["ColVisible"].ToString() == "Y" && dt.Rows[33]["ColReadOnly"].ToString() != "Y") {cMemberId1.ClearSearch();}
-			if (dt.Rows[34]["ColVisible"].ToString() == "Y" && dt.Rows[34]["ColReadOnly"].ToString() != "Y") {SetProjectLs1(cProjectLs1,string.Empty);}
+			if (dt.Rows[24]["ColVisible"].ToString() == "Y" && dt.Rows[24]["ColReadOnly"].ToString() != "Y") {SetCompanyLs1(cCompanyLs1,string.Empty);}
+			if (dt.Rows[25]["ColVisible"].ToString() == "Y" && dt.Rows[25]["ColReadOnly"].ToString() != "Y") {SetProjectLs1(cProjectLs1,string.Empty);}
+			if (dt.Rows[26]["ColVisible"].ToString() == "Y" && dt.Rows[26]["ColReadOnly"].ToString() != "Y") {cModifiedOn1.Text = string.Empty;}
+			if (dt.Rows[27]["ColVisible"].ToString() == "Y" && dt.Rows[27]["ColReadOnly"].ToString() != "Y") {SetHintQuestionId1(cHintQuestionId1,string.Empty);}
+			if (dt.Rows[28]["ColVisible"].ToString() == "Y" && dt.Rows[28]["ColReadOnly"].ToString() != "Y") {cHintAnswer1.Text = string.Empty;}
+			if (dt.Rows[29]["ColVisible"].ToString() == "Y" && dt.Rows[29]["ColReadOnly"].ToString() != "Y") {cInvestorId1.ClearSearch();}
+			if (dt.Rows[30]["ColVisible"].ToString() == "Y" && dt.Rows[30]["ColReadOnly"].ToString() != "Y") {cCustomerId1.ClearSearch();}
+			if (dt.Rows[31]["ColVisible"].ToString() == "Y" && dt.Rows[31]["ColReadOnly"].ToString() != "Y") {cVendorId1.ClearSearch();}
+			if (dt.Rows[32]["ColVisible"].ToString() == "Y" && dt.Rows[32]["ColReadOnly"].ToString() != "Y") {cAgentId1.ClearSearch();}
+			if (dt.Rows[33]["ColVisible"].ToString() == "Y" && dt.Rows[33]["ColReadOnly"].ToString() != "Y") {cBrokerId1.ClearSearch();}
+			if (dt.Rows[34]["ColVisible"].ToString() == "Y" && dt.Rows[34]["ColReadOnly"].ToString() != "Y") {cMemberId1.ClearSearch();}
+			if (dt.Rows[35]["ColVisible"].ToString() == "Y" && dt.Rows[35]["ColReadOnly"].ToString() != "Y") {cLenderId1.ClearSearch();}
+			if (dt.Rows[36]["ColVisible"].ToString() == "Y" && dt.Rows[36]["ColReadOnly"].ToString() != "Y") {cBorrowerId1.ClearSearch();}
+			if (dt.Rows[37]["ColVisible"].ToString() == "Y" && dt.Rows[37]["ColReadOnly"].ToString() != "Y") {cGuarantorId1.ClearSearch();}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -2604,17 +2787,20 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cFailedAttempt1.Text = string.Empty;
 			cLastSuccessDt1.Text = string.Empty;
 			cLastFailedDt1.Text = string.Empty;
+			SetCompanyLs1(cCompanyLs1,string.Empty);
+			SetProjectLs1(cProjectLs1,string.Empty);
 			cModifiedOn1.Text = string.Empty;
 			SetHintQuestionId1(cHintQuestionId1,string.Empty);
 			cHintAnswer1.Text = string.Empty;
-			SetCompanyLs1(cCompanyLs1,string.Empty);
 			cInvestorId1.ClearSearch();
 			cCustomerId1.ClearSearch();
 			cVendorId1.ClearSearch();
 			cAgentId1.ClearSearch();
 			cBrokerId1.ClearSearch();
 			cMemberId1.ClearSearch();
-			SetProjectLs1(cProjectLs1,string.Empty);
+			cLenderId1.ClearSearch();
+			cBorrowerId1.ClearSearch();
+			cGuarantorId1.ClearSearch();
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 		protected void cAdmUsr1List_TextChanged(object sender, System.EventArgs e)
@@ -2657,7 +2843,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					SetUsrGroupLs1(cUsrGroupLs1,dr["UsrGroupLs1"].ToString());
 					cUsrGroupLs1Search_Script();
 					SetUsrImprLink1(cUsrImprLink1,string.Empty);
-					try { if (dr["PicMed1"].Equals(System.DBNull.Value)) { cPicMed1.ImageUrl = "~/images/DefaultImg.png"; } else { cPicMed1.ImageUrl = "data:application/base64;base64," + Convert.ToBase64String(dr["PicMed1"] as byte[]);} cPicMed1_Click(sender, new ImageClickEventArgs(0, 0)); }
+					try { if (dr["PicMed1"].Equals(System.DBNull.Value)) { cPicMed1.ImageUrl = "~/images/DefaultImg.png"; } else { cPicMed1.OnClientClick = "window.open('" + GetUrlWithQSHash("DnLoad.aspx?key=" + dr["UsrId1"].ToString() + "&tbl=dbo.Usr&knm=UsrId&col=PicMed&hgt=100&wth=100&sys=3") + "'); return false;"; cPicMed1.ImageUrl = RO.Common3.Utils.BlobPlaceHolder(dr["PicMed1"] as byte[],true);} cPicMed1_Click(sender, new ImageClickEventArgs(0, 0)); }
 					catch { cPicMed1.ImageUrl = string.Empty; }
 					try {cIPAlert1.Checked = base.GetBool(dr["IPAlert1"].ToString());} catch {cIPAlert1.Checked = false;}
 					try {cPwdNoRepeat1.Text = RO.Common3.Utils.fmNumeric("0",dr["PwdNoRepeat1"].ToString(),base.LUser.Culture);} catch {cPwdNoRepeat1.Text = string.Empty;}
@@ -2687,24 +2873,27 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cFailedAttempt1.Text = RO.Common3.Utils.fmNumeric("0",dr["FailedAttempt1"].ToString(),base.LUser.Culture);} catch {cFailedAttempt1.Text = string.Empty;}
 					try {cLastSuccessDt1.Text = RO.Common3.Utils.fmLongDateTime(dr["LastSuccessDt1"].ToString(),base.LUser.Culture);} catch {cLastSuccessDt1.Text = string.Empty;}
 					try {cLastFailedDt1.Text = RO.Common3.Utils.fmLongDateTime(dr["LastFailedDt1"].ToString(),base.LUser.Culture);} catch {cLastFailedDt1.Text = string.Empty;}
+					SetCompanyLs1(cCompanyLs1,dr["CompanyLs1"].ToString());
+					SetProjectLs1(cProjectLs1,dr["ProjectLs1"].ToString());
 					try {cModifiedOn1.Text = RO.Common3.Utils.fmShortDateTimeUTC(dr["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cModifiedOn1.Text = string.Empty;}
 					SetHintQuestionId1(cHintQuestionId1,dr["HintQuestionId1"].ToString());
 					try {cHintAnswer1.Text = dr["HintAnswer1"].ToString();} catch {cHintAnswer1.Text = string.Empty;}
-					SetCompanyLs1(cCompanyLs1,dr["CompanyLs1"].ToString());
 					SetInvestorId1(cInvestorId1,dr["InvestorId1"].ToString());
 					SetCustomerId1(cCustomerId1,dr["CustomerId1"].ToString());
 					SetVendorId1(cVendorId1,dr["VendorId1"].ToString());
 					SetAgentId1(cAgentId1,dr["AgentId1"].ToString());
 					SetBrokerId1(cBrokerId1,dr["BrokerId1"].ToString());
 					SetMemberId1(cMemberId1,dr["MemberId1"].ToString());
-					SetProjectLs1(cProjectLs1,dr["ProjectLs1"].ToString());
+					SetLenderId1(cLenderId1,dr["LenderId1"].ToString());
+					SetBorrowerId1(cBorrowerId1,dr["BorrowerId1"].ToString());
+					SetGuarantorId1(cGuarantorId1,dr["GuarantorId1"].ToString());
 				}
 			}
 			cButPanel.DataBind();
 			ScriptManager.GetCurrent(Parent.Page).SetFocus(cAdmUsr1List.FocusID);
 			ShowDirty(false); PanelTop.Update();
-			cPicMed1Fi.Attributes["onchange"] = "if('" + cUsrId1.Text + "'==''){PopDialog('','Please save the record first before upload','');}else{sendFile(this.files[0],'" + GetUrlWithQSHash("UpLoad.aspx?key=" + cUsrId1.Text + "&tbl=dbo.Usr&knm=UsrId&col=PicMed&hgt=100&sys=" + base.LCurr.SystemId.ToString()) + "',refreshUploadCallback(this,'" + cPicMed1.ClientID + "')); return false;}";
-			cPicMed1Del.Attributes["onclick"] = "sendFile('','" + GetUrlWithQSHash("UpLoad.aspx?del=true&key=" + cUsrId1.Text + "&tbl=dbo.Usr&knm=UsrId&col=PicMed&hgt=100&sys=" + base.LCurr.SystemId.ToString()) + "',refreshUploadCallback(this,'" + cPicMed1.ClientID + "'));return false;";
+			cPicMed1Fi.Attributes["onchange"] = "if('" + cUsrId1.Text + "'==''){PopDialog('','Please save the record first before upload','');}else{sendFile(this.files[0],'" + GetUrlWithQSHash("UpLoad.aspx?key=" + cUsrId1.Text + "&tbl=dbo.Usr&knm=UsrId&col=PicMed&hgt=100&wth=100&sys=" + base.LCurr.SystemId.ToString()) + "',refreshUploadCallback(this,'" + cPicMed1.ClientID + "')); return false;}";
+			cPicMed1Del.Attributes["onclick"] = "sendFile('','" + GetUrlWithQSHash("UpLoad.aspx?del=true&key=" + cUsrId1.Text + "&tbl=dbo.Usr&knm=UsrId&col=PicMed&hgt=100&wth=100&sys=" + base.LCurr.SystemId.ToString()) + "',refreshUploadCallback(this,'" + cPicMed1.ClientID + "'));return false;";
 			//WebRule: Usage calendar display (2 of 2)
             if (!string.IsNullOrEmpty(cUsrId1.Text))
             {
@@ -3014,10 +3203,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["LastSuccessDt1"] = "DBTimeStamp"; drDisp["LastSuccessDt1"] = "LongDateTime";
 			try {dr["LastFailedDt1"] = base.ToIntDateTime(cLastFailedDt1.Text,false,true);} catch {}
 			drType["LastFailedDt1"] = "DBTimeStamp"; drDisp["LastFailedDt1"] = "LongDateTime";
-			try {dr["HintQuestionId1"] = cHintQuestionId1.SelectedValue;} catch {}
-			drType["HintQuestionId1"] = "Numeric"; drDisp["HintQuestionId1"] = "DropDownList";
-			try {dr["HintAnswer1"] = cHintAnswer1.Text.Trim();} catch {}
-			drType["HintAnswer1"] = "VarWChar"; drDisp["HintAnswer1"] = "TextBox";
 			foreach (ListItem li in cCompanyLs1.Items)
 			{
 				if (li.Selected && li.Value != string.Empty)
@@ -3028,6 +3213,20 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 			if (dr["CompanyLs1"].ToString() != string.Empty) { dr["CompanyLs1"] = "(" + dr["CompanyLs1"].ToString() + ")"; }
 			drType["CompanyLs1"] = "VarChar"; drDisp["CompanyLs1"] = "ListBox";
+			foreach (ListItem li in cProjectLs1.Items)
+			{
+				if (li.Selected && li.Value != string.Empty)
+				{
+					if (dr["ProjectLs1"].ToString() != string.Empty) { dr["ProjectLs1"] = dr["ProjectLs1"].ToString() + ","; }
+					dr["ProjectLs1"] = dr["ProjectLs1"].ToString() + li.Value; 
+				}
+			}
+			if (dr["ProjectLs1"].ToString() != string.Empty) { dr["ProjectLs1"] = "(" + dr["ProjectLs1"].ToString() + ")"; }
+			drType["ProjectLs1"] = "VarChar"; drDisp["ProjectLs1"] = "ListBox";
+			try {dr["HintQuestionId1"] = cHintQuestionId1.SelectedValue;} catch {}
+			drType["HintQuestionId1"] = "Numeric"; drDisp["HintQuestionId1"] = "DropDownList";
+			try {dr["HintAnswer1"] = cHintAnswer1.Text.Trim();} catch {}
+			drType["HintAnswer1"] = "VarWChar"; drDisp["HintAnswer1"] = "TextBox";
 			try {dr["InvestorId1"] = cInvestorId1.SelectedValue;} catch {}
 			drType["InvestorId1"] = "Numeric"; drDisp["InvestorId1"] = "AutoComplete";
 			try {dr["CustomerId1"] = cCustomerId1.SelectedValue;} catch {}
@@ -3040,16 +3239,12 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["BrokerId1"] = "Numeric"; drDisp["BrokerId1"] = "AutoComplete";
 			try {dr["MemberId1"] = cMemberId1.SelectedValue;} catch {}
 			drType["MemberId1"] = "Numeric"; drDisp["MemberId1"] = "AutoComplete";
-			foreach (ListItem li in cProjectLs1.Items)
-			{
-				if (li.Selected && li.Value != string.Empty)
-				{
-					if (dr["ProjectLs1"].ToString() != string.Empty) { dr["ProjectLs1"] = dr["ProjectLs1"].ToString() + ","; }
-					dr["ProjectLs1"] = dr["ProjectLs1"].ToString() + li.Value; 
-				}
-			}
-			if (dr["ProjectLs1"].ToString() != string.Empty) { dr["ProjectLs1"] = "(" + dr["ProjectLs1"].ToString() + ")"; }
-			drType["ProjectLs1"] = "VarChar"; drDisp["ProjectLs1"] = "ListBox";
+			try {dr["LenderId1"] = cLenderId1.SelectedValue;} catch {}
+			drType["LenderId1"] = "Numeric"; drDisp["LenderId1"] = "AutoComplete";
+			try {dr["BorrowerId1"] = cBorrowerId1.SelectedValue;} catch {}
+			drType["BorrowerId1"] = "Numeric"; drDisp["BorrowerId1"] = "AutoComplete";
+			try {dr["GuarantorId1"] = cGuarantorId1.SelectedValue;} catch {}
+			drType["GuarantorId1"] = "Numeric"; drDisp["GuarantorId1"] = "AutoComplete";
 			try {dr["UsageStat"] = cUsageStat.Text;} catch {}
 			drType["UsageStat"] = string.Empty; drDisp["UsageStat"] = "Label";
 			if (bAdd)

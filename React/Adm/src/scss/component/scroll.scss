@@ -1,0 +1,24 @@
+.scroll {
+
+  .scrollbar-track {
+
+    @include themify($themes) {
+      background: transparent;
+    }
+
+    &.scrollbar-track-y {
+      width: 4px;
+      margin-right: 5px;
+    }
+  }
+
+  .scrollbar-thumb {
+    opacity: 0.5;
+    transition: height 0.3s;
+    cursor: pointer;
+
+    @include themify($themes) {
+      background: themed('colorScrollbar');
+    }
+  }
+}

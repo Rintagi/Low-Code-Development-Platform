@@ -19,6 +19,8 @@ namespace RO.Web
     using System.Text;
     using System.Net;
     using System.Web.Script.Serialization;
+    using System.Web.Configuration;
+    using System.Configuration;
 
     public partial class MyAccountModule : RO.Web.ModuleBase
     {
@@ -91,9 +93,68 @@ namespace RO.Web
             this.Init += new System.EventHandler(Page_Init);
         }
 
+        protected LoginUsr LoginByJWTToken(string refresh_token)
+        {
+            var context = HttpContext.Current;
+            var auth = GetAuthObject();
+            string guid = Guid.NewGuid().ToString();
+            string appPath = HttpContext.Current.Request.ApplicationPath;
+            string domain = context.Request.Url.GetLeftPart(UriPartial.Authority);
+            Func<string, string> getStoredToken = (accessCode) =>
+            {
+                return refresh_token;
+            };
+            Func<LoginUsr, UsrCurr, UsrImpr, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, ignoreCache) =>
+            {
+                LUser = loginUsr;
+                LCurr = usrCurr;
+                LImpr = usrImpr;
+                return true;
+            };
+            var access_token = auth.GetToken("", "", "refresh_token", refresh_token, "", "", "", appPath, domain, getStoredToken, validateScope);
+            if (access_token != null)
+                return LUser;
+            else return null;
+        }
+        protected void SetJWTCookie()
+        {
+            var context = HttpContext.Current;
+            var auth = GetAuthObject();
+            string guid = Guid.NewGuid().ToString();
+            string appPath = HttpContext.Current.Request.ApplicationPath;
+            string domain = context.Request.Url.GetLeftPart(UriPartial.Authority);
+            string jwtToken = auth.CreateLoginJWT(LUser, LUser.DefCompanyId, LUser.DefProjectId, LUser.DefSystemId, LCurr, LImpr, appPath, 10 * 60, guid);
+            Func<string, string> getStoredToken = (accessCode) =>
+            {
+                return jwtToken;
+            };
+            Func<LoginUsr, UsrCurr, UsrImpr, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, ignoreCache) =>
+            {
+                //LUser = loginUsr;
+                //LCurr = usrCurr;
+                //LImpr = usrImpr;
+                return true;
+            };
+            var access_token = auth.GetToken("", "", "authorization_code", guid, "", "", "", appPath, domain, getStoredToken, validateScope);
+            var sha256 = new SHA256Managed();
+            var handle = Convert.ToBase64String(sha256.ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(LUser.LoginName))).Replace("=","_");
+            HttpCookie tokenInCookie = new HttpCookie((appPath??"/").Substring(1) + "_" + "tokenInCookieJS", handle);
+            HttpCookie refreshTokenCookie = new HttpCookie((appPath ?? "/").Substring(1) + "_" + "tokenJS", access_token["refresh_token"]);
+            tokenInCookie.HttpOnly = false;
+            //tokenInCookie.Path = appPath;
+            tokenInCookie.Expires = DateTime.Now.AddMinutes(2);
+            //tokenInCookie.Domain = domain;
+            refreshTokenCookie.HttpOnly = false;
+            //refreshTokenCookie.Path = appPath;
+            //refreshTokenCookie.Domain = domain;
+            refreshTokenCookie.Expires = DateTime.Now.AddMinutes(2);
+            Response.Cookies.Add(tokenInCookie);
+            Response.Cookies.Add(refreshTokenCookie);
+
+        }
         protected void Page_Load(object sender, System.EventArgs e)
         {
-            bool hasTerms = System.IO.File.Exists(Server.MapPath("~/License.txt"));
+            bool hasTerms = System.IO.File.Exists(Server.MapPath("~/home/terms_of_service.pdf"));
 
             if ((Request.QueryString["typ"] ?? "").ToUpper() == "E")
             {
@@ -107,6 +168,11 @@ namespace RO.Web
             if (!IsPostBack)
             {
                 TwoFactorAuthenticationPanel.Visible = Config.EnableTwoFactorAuth == "Y";
+                string extAppDomainUrl = 
+                    !string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"]) 
+                        ? System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"] 
+                        : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+                cAppDomainUrl.Text = extAppDomainUrl.EndsWith("/") ? extAppDomainUrl.Substring(0,extAppDomainUrl.Length - 1) : extAppDomainUrl ;
                 if (base.SystemsList == null) { base.SystemsDict = (new LoginSystem()).GetSystemsList(string.Empty, string.Empty); }    // Instantiate base.SystemsList.
                 if (!Request.IsLocal && Config.EnableSsl)
                 {
@@ -312,7 +378,15 @@ namespace RO.Web
                     catch { }
                 }
             }
-            
+
+            /* login from JWT Token */
+            if (IsPostBack
+              && !string.IsNullOrEmpty(cJWTToken.Text))
+            {
+
+                if (!string.IsNullOrEmpty(cJWTToken.Text)) SSOLogin("", "", "SJ");
+            }
+
 
             if (LUser != null && LUser.LoginName != "Anonymous")
             {
@@ -360,8 +434,7 @@ namespace RO.Web
                 cLinkWindowsPanel.Visible = NewProfilePanel.Visible;
             }
 
-            if (hasTerms) cTermsOfServiceLink.NavigateUrl = "~/License.Txt";
-            TermsPanel.Visible = hasTerms && (Request.QueryString["j"] != null); // only show when there is terms of service and this is password reset request
+            TermsPanel.Visible = hasTerms && Request.QueryString["j"] != null; // only show when there is terms of service and this is password reset request
             TranslateItems();
             // always disable the confirm dialog panel, postback or non-postback
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -661,6 +734,10 @@ namespace RO.Web
                     if (usr.LoginName != "Anonymous") LinkedUserLogin = (new LoginSystem().GetLinkedUserLogin(LUser.UsrId).AsEnumerable()).ToList();
                     Session.Remove("ProjectList");
                     Session.Remove("CompanyList");
+                    if (Provider != "SJ")
+                    {
+                        SetJWTCookie();
+                    }
                     if (redirect)
                     {
                         if (this.Page.User.Identity.GetType() == typeof(System.Security.Principal.WindowsIdentity))
@@ -695,7 +772,7 @@ namespace RO.Web
             }
             else
             {
-                (new LoginSystem()).SetLoginStatus(cLoginName.Text, false, GetVisitorIPAddress(),Provider,ProviderLoginName);
+                if (Provider != "SJ") (new LoginSystem()).SetLoginStatus(cLoginName.Text, false, GetVisitorIPAddress(),Provider,ProviderLoginName);
                 failed();
                 return false;
             }
@@ -714,10 +791,39 @@ namespace RO.Web
             return SetLoginUser(usr, redirect, locked, failed, cr,"","");
         }
 
+        /* this is must be in-sync with AsmxBase.cs version */
+        protected RO.Facade3.Auth GetAuthObject()
+        {
+            string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
+            if (string.IsNullOrEmpty(jwtMasterKey))
+            {
+                jwtMasterKey = RO.Facade3.Auth.GenJWTMasterKey();
+                System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"] = jwtMasterKey;
+                Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
+                if (config.AppSettings.Settings["JWTMasterKey"] != null) config.AppSettings.Settings["JWTMasterKey"].Value = jwtMasterKey;
+                else config.AppSettings.Settings.Add("JWTMasterKey", jwtMasterKey);
+                // save to web.config on production, but silently failed. this would remove comments in appsettings 
+                if (Config.DeployType == "PRD") config.Save(ConfigurationSaveMode.Modified);
+            }
+
+            var auth = RO.Facade3.Auth.GetInstance(jwtMasterKey);
+            return auth;
+        }
+
+
         public void SSOLogin(string SelectedLoginName, string ProviderLoginName, string Provider)
         {
-            Credential cr = new Credential(SelectedLoginName, ProviderLoginName, new byte[32], Provider);
-            LoginUsr usr = (new LoginSystem()).GetLoginSecure(cr); if (usr != null) usr.OTPValidated = !string.IsNullOrEmpty(Provider);
+            LoginUsr intendedUser = Provider == "SJ" ? LoginByJWTToken(cJWTToken.Text) : null;
+            Credential cr = new Credential(SelectedLoginName, intendedUser != null ? intendedUser.UsrId.ToString() : ProviderLoginName, new byte[32], Provider.Left(1));
+            LoginUsr usr = (new LoginSystem()).GetLoginSecure(cr); 
+            
+            if (usr != null) usr.OTPValidated = !string.IsNullOrEmpty(Provider);
+            if (Provider == "SJ")
+            {
+                cJWTToken.Visible = false;
+                cJWTLogin.Visible = false;
+
+            }
             bool bBlocked = !string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]);
             bool success = SetLoginUser(usr, bBlocked || string.IsNullOrEmpty(Request.QueryString["typ"]),
                 () => { PreMsgPopup(TranslateItem(GetLabels().Rows, "AccountLockedMsg")); },
@@ -728,6 +834,16 @@ namespace RO.Web
                 }, cr, Provider, ProviderLoginName);
             if (!bBlocked && !string.IsNullOrEmpty(Request.QueryString["typ"]))
             {
+                string guid = Guid.NewGuid().ToString();
+                string appPath = HttpContext.Current.Request.ApplicationPath;
+                if (Provider != "SJ")
+                {
+                    string jwtToken = GetAuthObject().CreateLoginJWT(LUser, usr.DefCompanyId, usr.DefProjectId, usr.DefSystemId, LCurr, LImpr, appPath, 10 * 60, guid);
+                }
+                else
+                {
+                }
+
                 Response.Redirect(Config.SslUrl);
             }
         }

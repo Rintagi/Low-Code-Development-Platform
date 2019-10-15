@@ -1,0 +1,30 @@
+textarea.editor-html, .editor-content{
+  width: 100%;
+  border: 1px solid #ededed;
+  min-height: 300px;
+  padding: 5px 10px;
+}
+
+.editor-content{
+  border: 1px solid #ededed;
+}
+
+.htmlEdiTitle{
+  // background: #ededed;
+  padding: 6px 10px;
+  border: 1px solid #ededed;
+  margin-bottom: 5px;
+  cursor: default;
+}
+
+.editor-wrapper img{
+  width: auto;
+}
+
+.btn-active{
+  background-color: #ededed !important;
+}
+
+.rdw-editor-toolbar, .htmlEdiTitle{
+  background-color: #f8f8f8;
+}

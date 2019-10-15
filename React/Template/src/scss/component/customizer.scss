@@ -1,0 +1,111 @@
+.customizer{
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 102;
+
+  .customizer__btn{
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    bottom: 80px;
+    right: 0;
+    border: none;
+    border-radius: 3px 0 0 3px;
+    box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
+    cursor: pointer;
+    z-index: 102;
+
+    @include themify($themes) {
+      background-color: themed('colorBackground');
+    }
+  }
+
+  .customizer__btn-icon{
+    width: 18px;
+    height: 18px;
+    animation: iconOpacity linear infinite 4s;
+  }
+
+  @keyframes iconOpacity {
+    from{opacity: 1}
+    50%{opacity: 0.3}
+    to{opacity: 1}
+  }
+
+  .customizer__wrap{
+    height: 100vh;
+    width: 240px;
+    box-shadow: none;
+    padding: 20px;
+    transform: translateX(100%);
+    transition: transform 0.3s;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 102;
+
+    @include themify($themes) {
+      background-color: themed('colorBackground');
+    }
+
+    &.customizer__wrap--open{
+      transform: translateX(0);
+      box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
+    }
+  }
+
+  .customizer__title-wrap{
+    padding-bottom: 20px;
+    position: relative;
+
+    @include themify($themes) {
+      border-bottom: 1px solid themed('colorBorder');
+    }
+  }
+
+  .customizer__caption{
+    color: $color-additional;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .customizer__toggle{
+
+    label{
+      margin-left: 0;
+      margin-right: 10px;
+    }
+
+    span{
+
+      @include themify($themes) {
+        color: themed('colorText');
+      }
+    }
+  }
+
+  .customizer__close-btn{
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    svg{
+      fill: $color-additional;
+      width: 14px;
+      height: 14px;
+      transition: 0.3s;
+    }
+
+    &:hover{
+
+      svg{
+        fill: $color-accent;
+      }
+    }
+  }
+}

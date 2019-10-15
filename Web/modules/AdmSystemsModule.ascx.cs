@@ -8,10 +8,12 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
-using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -57,6 +59,10 @@ namespace RO.Common3.Data
 			columns.Add("CustServPhone45", typeof(string));
 			columns.Add("CustServFax45", typeof(string));
 			columns.Add("WebAddress45", typeof(string));
+			columns.Add("ResetFromGitRepo", typeof(string));
+			columns.Add("CreateReactBase", typeof(string));
+			columns.Add("RemoveReactBase", typeof(string));
+			columns.Add("PublishReactToSite", typeof(string));
 			return dt;
 		}
 	}
@@ -1435,6 +1441,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cCustServPhone45, dtAuth.Rows[22], cCustServPhone45P1, cCustServPhone45Label, cCustServPhone45P2, null, dtLabel.Rows[22], null, null, null);
 				base.SetFoldBehavior(cCustServFax45, dtAuth.Rows[23], cCustServFax45P1, cCustServFax45Label, cCustServFax45P2, null, dtLabel.Rows[23], null, null, null);
 				base.SetFoldBehavior(cWebAddress45, dtAuth.Rows[24], cWebAddress45P1, cWebAddress45Label, cWebAddress45P2, null, dtLabel.Rows[24], null, null, null);
+				base.SetFoldBehavior(cResetFromGitRepo, dtAuth.Rows[25], null, null, null, dtLabel.Rows[25], null, null, null);
+				base.SetFoldBehavior(cCreateReactBase, dtAuth.Rows[26], null, null, null, dtLabel.Rows[26], null, null, null);
+				base.SetFoldBehavior(cRemoveReactBase, dtAuth.Rows[27], null, null, null, dtLabel.Rows[27], null, null, null);
+				base.SetFoldBehavior(cPublishReactToSite, dtAuth.Rows[28], null, null, null, dtLabel.Rows[28], null, null, null);
 			}
 			if ((cSystemId45.Attributes["OnChange"] == null || cSystemId45.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSystemId45.Visible && !cSystemId45.ReadOnly) {cSystemId45.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cServerName45.Attributes["OnChange"] == null || cServerName45.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cServerName45.Visible && !cServerName45.ReadOnly) {cServerName45.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -1644,6 +1654,421 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
             else
             {
                 bErrNow.Value = "Y"; PreMsgPopup("Application database and design database cannot be empty, please try again.");
+            }
+			// *** WebRule End *** //
+			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
+		}
+
+		protected void cResetFromGitRepo_Click(object sender, System.EventArgs e)
+		{
+			//WebRule: Reset from Git Repo
+            try
+            {
+                string webRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+                string appRoot = webRoot.Replace("/Web/", "");
+
+                var changedFilesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "status -s -uno", true, appRoot);
+                var lastXcommitLog = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("--no-pager log -n 10 --pretty=\"%an %ci %H %s\" -n{0}", 10), true, appRoot);
+                System.Collections.Generic.List<string> ruleTierProjects = new System.Collections.Generic.List<string>() { "UsrRules", "UsrAccess" };
+                bool needMSBuild = ruleTierProjects.Where(m => new Regex(string.Format("/{0}/", m), RegexOptions.IgnoreCase).IsMatch(changedFilesRet.Item2)).Count() > 0;
+                bool noWebSiteBuild = true;
+                var revertChangesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "checkout HEAD -- .", true, appRoot);
+                if (revertChangesRet.Item1 != 0)
+                {
+                    throw new Exception(revertChangesRet.Item3);
+                }
+                System.Collections.Generic.List<string> stdOut = new System.Collections.Generic.List<string>();
+                System.Collections.Generic.List<string> stdErr = new System.Collections.Generic.List<string>();
+                //bool webSiteBuildSkipped = false;
+                if (needMSBuild)
+                {
+
+                    int? _runningPid = null;
+                    Func<int, string, bool> stdOutHandler = (pid, data) =>
+                    {
+                        _runningPid = pid;
+                        stdOut.Add(data);
+                        if (data.Contains("aspnet_compiler.exe") && noWebSiteBuild)
+                        {
+                            stdOut.Add("Skip website rebuild\r\n");
+                            //webSiteBuildSkipped = true;
+                            return true;
+                        }
+                        return false;
+                    };
+                    Func<int, string, bool> stdErrHandler = (pid, data) =>
+                    {
+                        _runningPid = pid;
+                        stdErr.Add(data);
+                        return false;
+                    };
+                    var publishRet = Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format(""), true, stdOutHandler, stdErrHandler, appRoot);
+
+                }
+                else
+                {
+                    stdOut.Add("No rebuild needed\r\n");
+                }
+
+                PreMsgPopup("Changed Files\r\n" + changedFilesRet.Item2 + "Last 10 commits\r\n" + lastXcommitLog.Item2 + "\r\n\r\n Build Result\r\n" + string.Join("", stdOut.ToArray()));
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(ex.Message);
+            }
+			// *** WebRule End *** //
+			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
+		}
+
+		protected void cCreateReactBase_Click(object sender, System.EventArgs e)
+		{
+			//WebRule: Create React Code Base
+            try
+            {
+                if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
+                string systemAbbr = cSystemAbbr45.Text;
+                string systemId = cSystemId45.Text;
+                string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+                string appRoot = webAppRoot.Replace("/Web/", "");
+                string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
+                string reactTemplateDir = reactRootDir + "/Template";
+                string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
+                string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
+                string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string siteApplicationPath = Context.Request.ApplicationPath;
+                string machineName = Environment.MachineName;
+                string rintagiJSContent =
+string.Format(@"
+/* this is runtime loading script for actual installation(production) configuration override say putting app to deep directory structure or
+ * web service end point not the same as the app loading source
+ * typically for situation where the apps are hosted in CDN and/or not at root level of the domain
+ * for reactjs configuration, make sure homepage is set to './' so everything generated is relative 
+ */
+document.Rintagi = {{
+  localDev:{{
+    // these setup is only effective when served via app is served via http://localhost:3000 type, for local npm start development. ignored in production build or proxying to localhost
+    appNS:{4},
+    appDomainUrl:'http://{2}/{0}', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
+    apiBasename: 'http://{2}/{0}', // webservice url for local development via npm start, i.e. localhost:3000 etc. must be full url in the form of http:// pointing to the site serving , no ending slash
+  }},
+  appRelBase:['React','ReactProxy','ReactPort'],  // path this app is serving UNDER(can be multiple), implicitly assume they are actually /Name/, do not put begin/end slash 
+  appNS:'', // used for login token sync(shared login when served under the same domain) between apps and asp.net site
+  appDomainUrl:'', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
+  apiBasename: '', // webservice url, can be relative or full http:// etc., no ending slash
+  useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
+  appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
+  appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
+  systemId: {3}                
+}}
+", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName,systemId, siteApplicationPath);
+
+
+                //if (homeDir.Contains("NetworkService"))
+                //{
+                //    // above from Windows are not the same npm is seeing in case it is run under Network Service
+                //    homeDir = Environment.GetFolderPath(Environment.SpecialFolder.System) + "/config/systemprofile";
+                //    appDataDir = homeDir + "/AppData";
+                //}
+                //if (!Directory.Exists(homeDir + "/.config"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user",homeDir + "/.config"));
+                //}
+                //if (!Directory.Exists(appDataDir + "/Roaming/npm"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user", appDataDir + "/Roaming/npm"));
+                //}
+                //if (!Directory.Exists(appDataDir + "/Roaming/npm-cache"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user", appDataDir + "/Roaming/npm-cache"));
+                //}
+
+                if (!System.IO.Directory.Exists(reactTemplateDir)) throw new Exception(string.Format("no react template directory found({0})", reactTemplateDir));
+                if (System.IO.Directory.Exists(reactModuleDir))
+                {
+                    //throw new Exception(string.Format("react module already exists ({0})", reactModuleDir));
+                }
+                else
+                {
+                    ////DirectoryCopy(reactTemplateDir, reactModuleDir, true, true);
+                    var copyRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /E /S /COPY:DATS /SECFIX /TIMFIX", reactTemplateDir, reactModuleDir), true, appRoot);
+                    var runtimeJS = string.Format("{0}/runtime/rintagi.js", reactModuleDir);
+                    using (var sr = new StreamWriter(reactModuleDir + "/public/runtime/rintagi.js", false, System.Text.UTF8Encoding.UTF8))
+                    {
+                        sr.WriteLine(rintagiJSContent);
+                        sr.Close();
+                    }
+                }
+                if (!File.Exists(reactModuleDir + "/.npmrc"))
+                {
+                    using (var sr = new StreamWriter(reactModuleDir + "/.npmrc", false, System.Text.UTF8Encoding.UTF8))
+                    {
+                        sr.WriteLine(string.Format("prefix={0}npm", reactRootDir.Replace("/", @"\")));
+                        sr.WriteLine(string.Format("cache={0}npm-cache", reactRootDir.Replace("/", @"\")));
+                        sr.WriteLine(string.Format("update-notifier=false", reactRootDir.Replace("/", @"\")));
+                        sr.Flush();
+                        sr.Close();
+                    }
+                }
+                //System.Threading.Thread.Sleep(5000);
+                string npmPath = @"C:\Program Files\nodejs\npm.cmd";
+                //var ret = new Tuple<int,string,string>(0, "", "");
+                //var ret1 = WinProc(npmPath, "cache clean --force", true, reactModuleDir);
+                var installRet = Utils.WinProc(npmPath, @"install  --no-optional --no-update-notifier", true, reactModuleDir);
+                if (installRet.Item1 != 0 || installRet.Item3.Contains("ERR"))
+                {
+                    bErrNow.Value = "Y";
+                    bInfoNow.Value = "N";
+                    PreMsgPopup(installRet.Item3);
+                }
+                else
+                {
+
+                    bInfoNow.Value = "Y";
+                    bErrNow.Value = "N";
+                    bool testPublish = false;
+                    if (testPublish)
+                    {
+                        var buildRet = Utils.WinProc(npmPath, "run build", true, reactModuleDir);
+                        var buildDir = reactModuleDir + "/build";
+                        var webSiteTargetDir = webAppRoot + "/React/" + systemAbbr;
+                        bool isReady = buildRet.Item2.Contains("The build folder is ready to be deployed");
+
+                        var webSiteRuntimeJS = string.Format("{0}/runtime/rintagi.js", webSiteTargetDir);
+                        var publishRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /MIR /XF rintagi.js", buildDir, webSiteTargetDir), true, appRoot);
+                        if (!File.Exists(webSiteRuntimeJS))
+                        {
+                            using (var sr = new StreamWriter(webSiteRuntimeJS, false, System.Text.UTF8Encoding.UTF8))
+                            {
+                                sr.WriteLine(rintagiJSContent);
+                                sr.Close();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        PreMsgPopup("React base initialized\r\n\r\n" + installRet.Item2);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(ex.Message);
+            }
+
+			// *** WebRule End *** //
+			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
+		}
+
+		protected void cRemoveReactBase_Click(object sender, System.EventArgs e)
+		{
+			//WebRule: Remove React Code Base
+            try
+            {
+                if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
+                string systemAbbr = cSystemAbbr45.Text;
+                string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+                string appRoot = webAppRoot.Replace("/Web/", "");
+                string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
+                string reactTemplateDir = reactRootDir + "/Template";
+                string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
+                string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
+
+                if (System.IO.Directory.Exists(reactModuleDir))
+                {
+                    System.IO.Directory.Delete(reactModuleDir, true);
+                }
+
+                PreMsgPopup(string.Format(string.Format("React Source Directory {0} removed", reactModuleDir)));
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(ex.Message);
+            }
+			// *** WebRule End *** //
+			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
+		}
+
+		protected void cPublishReactToSite_Click(object sender, System.EventArgs e)
+		{
+			//WebRule: Publish React to Site
+            try
+            {
+                if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
+                string systemAbbr = cSystemAbbr45.Text;
+                /* FIXME. someone need to give me the proper System prefix, we are doing heuristic GUESS fro CSrc!!!*/
+                //Dictionary<int, string> abbr = new Dictionary<int, string>() { { 2, "Loan" }, { 3, "Adm" }, { 5, "Cmn" } };
+                //string systemAbbr = abbr[CSrc.SrcSystemId];
+                if (string.IsNullOrEmpty(systemAbbr)) throw new Exception("pick the module first and make sure the Abbr is not empty");
+                string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+                string appRoot = webAppRoot.Replace("/Web/", "");
+                string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
+                string reactTemplateDir = reactRootDir + "/Template";
+                string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
+                string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
+                string siteApplicationPath = Context.Request.ApplicationPath;
+                string machineName = Environment.MachineName;
+                string rintagiJSContent =
+string.Format(@"
+/* this is runtime loading script for actual installation(production) configuration override say putting app to deep directory structure or
+ * web service end point not the same as the app loading source
+ * typically for situation where the apps are hosted in CDN and/or not at root level of the domain
+ * for reactjs configuration, make sure homepage is set to './' so everything generated is relative 
+ */
+document.Rintagi = {{
+  useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
+  appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
+  appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
+  apiBasename: 'http://{2}/{0}' // webservice url, can be relative or full http:// etc., no ending slash
+}}
+", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName);
+
+                if (System.Configuration.ConfigurationManager.AppSettings["AdvanceReactBuildVersion"] != "N")
+                {
+                    using (var sr = new System.IO.StreamReader(reactModuleDir + "/package.json", System.Text.UTF8Encoding.UTF8))
+                    {
+                        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                        dynamic packageJson = jss.DeserializeObject(sr.ReadToEnd());
+                        var ver = ((string)((IDictionary<string, object>)packageJson)["version"]).Split(new char[] { '.' });
+                        var _x = ver.Select((v, i) => int.Parse(v) + (i == ver.Length - 1 ? 1 : 0)).Select(v => v.ToString()).ToArray();
+                        var newVer = string.Join(".", _x);
+                        ((IDictionary<string, object>)packageJson)["version"] = newVer;
+
+                        sr.Close();
+
+                        using (var sw = new System.IO.StreamWriter(reactModuleDir + "/src/app/Version.js", false, System.Text.UTF8Encoding.UTF8))
+                        {
+                            sw.WriteLine(string.Format("export const Version = '{0}';", newVer));
+                            sw.Close();
+                        }
+                        using (var sw = new System.IO.StreamWriter(reactModuleDir + "/package.json", false, new System.Text.UTF8Encoding(false)))
+                        {
+                            sw.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(packageJson, Newtonsoft.Json.Formatting.Indented).Replace(@"\u003c", "<").Replace(@"\u003e", ">"));
+                            //sw.Write(jss.Serialize(packageJson).Replace(@"\u003c", "<").Replace(@"\u003e", ">"));
+                            sw.Close();
+                        }
+                        try
+                        {
+                            var aa = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("add {0} {1}", string.Format("package.json"), string.Format("src/app/Version.js")), true, reactModuleDir);
+                            var bb = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("commit -m \"{0}\"", string.Format("advance UI to version {0}", newVer)), true, reactModuleDir);
+                        }
+                        catch (Exception ex)
+                        {
+                            // no git is fine
+                            PreMsgPopup(ex.Message);
+                        }
+
+                    };
+                }
+
+                System.Collections.Generic.List<string> stdIn = new System.Collections.Generic.List<string>();
+                System.Collections.Generic.List<string> stdOut = new System.Collections.Generic.List<string>();
+                int? _runningPid = null;
+                Func<int, string, bool> stdInHandler = (pid, output) =>
+                {
+                    _runningPid = pid;
+                    return false;
+                };
+                Func<int, string, bool> stdErrHandler = (pid, output) =>
+                {
+                    _runningPid = pid;
+                    return false;
+                };
+
+                //string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                //string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                //if (homeDir.Contains("NetworkService"))
+                //{
+                //    // above from Windows are not the same npm is seeing in case it is run under Network Service
+                //    homeDir = Environment.GetFolderPath(Environment.SpecialFolder.System) + "/config/systemprofile";
+                //    appDataDir = homeDir + "/AppData";
+                //}
+                //if (!Directory.Exists(homeDir + "/.config"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user",homeDir + "/.config"));
+                //}
+                //if (!Directory.Exists(appDataDir + "/Roaming/npm"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user", appDataDir + "/Roaming/npm"));
+                //}
+                //if (!Directory.Exists(appDataDir + "/Roaming/npm-cache"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user", appDataDir + "/Roaming/npm-cache"));
+                //}
+                //if (!System.IO.Directory.Exists(reactTemplateDir)) throw new Exception(string.Format("no react template directory found({0})", reactTemplateDir));
+                //if (System.IO.Directory.Exists(reactModuleDir)) throw new Exception(string.Format("react module already exists ({0})", reactModuleDir));
+                //if (System.IO.Directory.Exists(reactModuleDir))
+                //{
+                //    System.IO.Directory.Delete(reactModuleDir, true);
+                //}
+                ////DirectoryCopy(reactTemplateDir, reactModuleDir, true, true);
+                //var copyRet = WinProc("robocopy.exe", string.Format("{0} {1} /E /S /COPY:DATS /SECFIX /TIMFIX", reactTemplateDir, reactModuleDir), true, reactRootDir);
+                //if (System.IO.Directory.Exists(reactModuleNodeModuleDir))
+                //{
+                //    System.IO.Directory.Delete(reactModuleNodeModuleDir, true);
+                //}
+                //if (!File.Exists(reactModuleDir + ".npmrc"))
+                //{
+                //    using (var sr = new StreamWriter(reactModuleDir + "/.npmrc",false,System.Text.UTF8Encoding.UTF8))
+                //    {
+                //        sr.WriteLine(string.Format("prefix={0}/npm", reactRootDir));
+                //        sr.WriteLine(string.Format("cache={0}/npm-cache", reactRootDir));
+                //        sr.WriteLine(string.Format("update-notifier=false", reactRootDir));
+                //        sr.Close();
+                //    }
+                //}
+                string npmPath = @"C:\Program Files\nodejs\npm.cmd";
+                if (!System.IO.File.Exists(reactModuleDir + "/.npmrc"))
+                {
+                    using (var sr = new System.IO.StreamWriter(reactModuleDir + "/.npmrc", false, System.Text.UTF8Encoding.UTF8))
+                    {
+                        sr.WriteLine(string.Format("prefix={0}npm", reactRootDir.Replace("/", @"\")));
+                        sr.WriteLine(string.Format("cache={0}npm-cache", reactRootDir.Replace("/", @"\")));
+                        sr.WriteLine(string.Format("update-notifier=false", reactRootDir.Replace("/", @"\")));
+                        sr.Flush();
+                        sr.Close();
+                    }
+                }
+                //var ret1 = WinProc(npmPath, "cache clean --force", true, reactModuleDir);
+                var npmInstallRet = Utils.WinProc(npmPath, @"install  --no-optional --no-update-notifier", true, stdInHandler, stdErrHandler, reactModuleDir);
+                var npmRunBuildRet = Utils.WinProc(npmPath, "run build", true, stdInHandler, stdErrHandler, reactModuleDir);
+                var buildDir = reactModuleDir + "/build";
+                var webSiteTargetDir = webAppRoot + "/React/" + systemAbbr;
+                bool isReady = npmRunBuildRet.Item2.Contains("The build folder is ready to be deployed");
+
+                if ((npmRunBuildRet.Item1 != 0 || npmRunBuildRet.Item3.Contains("ERR")))
+                {
+                    bErrNow.Value = "Y";
+                    bInfoNow.Value = "N";
+                    PreMsgPopup(npmRunBuildRet.Item3);
+                }
+                else
+                {
+
+                    var webSiteRuntimeJS = string.Format("{0}/runtime/rintagi.js", webSiteTargetDir);
+                    var publishRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /MIR /XF rintagi.js", buildDir, webSiteTargetDir), true, appRoot);
+                    if (publishRet.Item1 >= 8)
+                    {
+                        // weird robocopy return code for error
+                        PreMsgPopup(publishRet.Item3 + "\r\n" + publishRet.Item2);
+                    }
+                    else
+                    {
+                        if (!System.IO.File.Exists(webSiteRuntimeJS))
+                        {
+                            using (var sr = new System.IO.StreamWriter(webSiteRuntimeJS, false, System.Text.UTF8Encoding.UTF8))
+                            {
+                                sr.WriteLine(rintagiJSContent);
+                                sr.Close();
+                            }
+                        }
+                        PreMsgPopup(string.Format("React app for {0} deployed to {1}", systemAbbr, webSiteTargetDir));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(ex.Message);
             }
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.

@@ -6,6 +6,7 @@ namespace RO.Access3
 	using RO.Common3;
     using RO.Common3.Data;
 	using RO.SystemFramewk;
+    using System.Linq;
 
 	public class LoginAccess : Encryption, IDisposable
 	{
@@ -223,7 +224,32 @@ namespace RO.Access3
 			}
 			else
 			{
-				DataRow dr = dt.Rows[0];
+                DataRow dr = dt.Rows[0];
+                int usrId = Int32.Parse(dr[0].ToString());
+
+                int licensedCount = GetLicensedUserCount();
+                if (licensedCount > 0)
+                {
+                    OleDbConnection cn = new OleDbConnection(GetDesConnStr());
+                    DataTable dtUsr = new DataTable();
+                    cn.Open();
+                    cmd = new OleDbCommand("SET NOCOUNT ON SELECT TOP " + licensedCount.ToString() + " u.UsrId FROM dbo.Usr u WHERE u.Active = 'Y' ORDER BY u.UsrId ", cn);
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandTimeout = 1800;
+                    try
+                    {
+                        da.SelectCommand = cmd;
+                        da.Fill(dtUsr);
+                    }
+                    catch { throw; }
+                    finally { cn.Close(); }
+                    if (dt.AsEnumerable().Where(drUsr=> drUsr["UsrId"].ToString() == usrId.ToString()).Count() == 0)
+                    {
+                        throw new Exception(string.Format("Please get more user login licenses(current purchased license {0}) or decactivate some inactive users", licensedCount));
+                    }
+                }
+
+
                 LoginUsr usr = new LoginUsr(dr[14].ToString()
                     ,Int32.Parse(dr[0].ToString())
 					,dr[1].ToString()
@@ -437,7 +463,8 @@ namespace RO.Access3
 			{
 				DataRow dr = dt.Rows[0];
 				UsrImpr impr = new UsrImpr(dr[0].ToString(),dr[1].ToString(),dr[2].ToString(),dr[3].ToString(),dr[4].ToString()
-					,dr[5].ToString(),dr[6].ToString(),dr[7].ToString(),dr[8].ToString(),dr[9].ToString(),dr[10].ToString(),dr[11].ToString());
+					,dr[5].ToString(),dr[6].ToString(),dr[7].ToString(),dr[8].ToString(),dr[9].ToString(),dr[10].ToString(),dr[11].ToString()
+                    ,dr[12].ToString(),dr[13].ToString(),dr[14].ToString());
 				return impr;
 			}
 		}
@@ -471,7 +498,23 @@ namespace RO.Access3
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
-			return dt;
+            int licensedCount = GetLicensedCompanyCount();
+            if (licensedCount > 0)
+            {
+                int ii = 0;
+                bool rowsRemoved = false;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (ii >= licensedCount)
+                    {
+                        dr.Delete();
+                        rowsRemoved = true;
+                    }
+                    ii = ii + 1;
+                }
+                if (rowsRemoved) dt.AcceptChanges();
+            }
+            return dt;
 		}
 
 		public DataTable GetProjectList(string Usrs, string RowAuthoritys, string Projects, string currCompanyId)
@@ -496,7 +539,25 @@ namespace RO.Access3
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
-			return dt;
+
+            int licensedCount = GetLicensedProjectCount();
+            if (licensedCount > 0)
+            {
+                int ii = 0;
+                bool rowsRemoved = false;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (ii >= licensedCount)
+                    {
+                        dr.Delete();
+                        rowsRemoved = true;
+                    }
+                    ii = ii + 1;
+                }
+                if (rowsRemoved) dt.AcceptChanges();
+            }
+
+            return dt;
 		}
 
 		public DataTable GetSystemsList(string dbConnectionString, string dbPassword)
@@ -515,7 +576,25 @@ namespace RO.Access3
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
-			return dt;
+
+            int licensedCount = GetLicensedModuleCount();
+            if (licensedCount > 0)
+            {
+                int ii = 0;
+                bool rowsRemoved = false;
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (ii >= licensedCount && dr["SystemId"].ToString() != "3" && dr["SystemId"].ToString() != "5")
+                    {
+                        dr.Delete();
+                        rowsRemoved = true;
+                    }
+                    ii = ii + 1;
+                }
+                if (rowsRemoved) dt.AcceptChanges();
+            }
+
+            return dt;
 		}
 
         public bool UpdUsrPassword(Credential cr, LoginUsr LUser, bool RemoveLink)

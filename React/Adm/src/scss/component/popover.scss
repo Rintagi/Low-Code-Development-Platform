@@ -1,0 +1,25 @@
+.popover {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
+  border: solid 1px #e8ebef;
+  border-radius: 4px;
+  width: 220px;
+  z-index: 99;
+
+  @include themify($themes) {
+    background-color: themed('colorBackground');
+  }
+
+  .popover-header {
+    border: none;
+    background-color: #f2f4f7;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 5px 10px;
+    line-height: normal;
+  }
+
+  .popover-body {
+    font-size: 10px;
+    padding: 10px 15px 10px 10px;
+  }
+}

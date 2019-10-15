@@ -14,9 +14,8 @@ using RO.Facade3;
 using RO.Common3;
 using RO.Common3.Data;
 using RO.SystemFramewk;
-//new change
 using System.IO;
-//end new change
+using System.Linq;
 
 // Used by data\home\demo\Guarded\web.config and BatchRptSetup:
 namespace RO.Web
@@ -24,6 +23,14 @@ namespace RO.Web
     public partial class UpLoadModule : RO.Web.ModuleBase
     {
         private byte sid;
+
+        public class FileUploadObj
+        {
+            public string fileName;
+            public string mimeType;
+            public Int64 lastModified;
+            public string base64;
+        }
 
         public UpLoadModule()
         {
@@ -49,37 +56,71 @@ namespace RO.Web
 
         private void SaveUpload(string dbConnectionString, byte sid)
         {
-            if (Request.Files.Count > 0 && Request.Files[0].FileName != string.Empty && "image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png".IndexOf(Request.Files[0].ContentType) >= 0)
+            if (Request.Files.Count > 0 && Request.Files[0].FileName != string.Empty
+                //&& "image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png".IndexOf(Request.Files[0].ContentType) >= 0
+                )
             {
                 byte[] dc;
-                System.Drawing.Image oBMP = System.Drawing.Image.FromStream(Request.Files[0].InputStream);
-                int nHeight = 150;
-                if (Request.QueryString["hgt"] != null && !string.IsNullOrEmpty(Request.QueryString["hgt"].ToString()))
+                using (System.IO.BinaryReader sm = new BinaryReader(Request.Files[0].InputStream))
                 {
-                    nHeight = int.Parse(Request.QueryString["hgt"].ToString());
-                }
-                int nWidth = int.Parse((Math.Round(decimal.Parse(oBMP.Width.ToString()) * (nHeight / decimal.Parse(oBMP.Height.ToString())))).ToString());
-               
-                Bitmap nBMP = new Bitmap(oBMP, nWidth, nHeight);
-                using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
-                {
-                    nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    sm.Position = 0;
-                    dc = new byte[sm.Length + 1];
+                    dc = new byte[Request.Files[0].InputStream.Length];
                     sm.Read(dc, 0, dc.Length); sm.Close();
                 }
-                oBMP.Dispose(); nBMP.Dispose();
-                new AdminSystem().UpdDbImg(Request.QueryString["key"], Request.QueryString["tbl"], Request.QueryString["knm"], Request.QueryString["col"].ToString(), dc, dbConnectionString, base.AppPwd(sid));
+
+                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                FileUploadObj fileObj = new FileUploadObj()
+                {
+                    fileName = Request.Files[0].FileName,
+                    mimeType = Request.Files[0].ContentType,
+                    lastModified = 0,
+                    base64 = Convert.ToBase64String(dc),
+                };
+
+                string docJson = jss.Serialize(fileObj);
+                string docId = Request.QueryString["key"];
+                string tableName = Request.QueryString["tbl"];
+                string keyColumnName = Request.QueryString["knm"];
+                string columnName = Request.QueryString["col"].ToString();
+
+                byte[] savedContent = AddDoc(docJson, docId, tableName, keyColumnName, columnName, dbConnectionString, base.AppPwd(sid), Request.QueryString["hgt"], true);
+
+                //byte[] dc;
+                //System.Drawing.Image oBMP = System.Drawing.Image.FromStream(Request.Files[0].InputStream);
+                //int nHeight = int.Parse(oBMP.Height.ToString());
+                //int nWidth = int.Parse(oBMP.Width.ToString());
+                //if (!string.IsNullOrEmpty(Request.QueryString["hgt"].ToString()))
+                //{
+                //    nHeight = int.Parse(Request.QueryString["hgt"].ToString());
+                //    nWidth = int.Parse((Math.Round(decimal.Parse(oBMP.Width.ToString()) * (nHeight / decimal.Parse(oBMP.Height.ToString())))).ToString());
+                //}
+                //else if (!string.IsNullOrEmpty(Request.QueryString["wth"].ToString()))
+                //{
+                //    nWidth = int.Parse(Request.QueryString["wth"].ToString());
+                //    nHeight = int.Parse((Math.Round(decimal.Parse(oBMP.Height.ToString()) * (nWidth / decimal.Parse(oBMP.Width.ToString())))).ToString());
+                //}
+
+                //Bitmap nBMP = new Bitmap(oBMP, nWidth, nHeight);
+                //using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
+                //{
+                //    nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
+                //    sm.Position = 0;
+                //    dc = new byte[sm.Length + 1];
+                //    sm.Read(dc, 0, dc.Length); sm.Close();
+                //}
+                //oBMP.Dispose(); nBMP.Dispose();
+                //new AdminSystem().UpdDbImg(Request.QueryString["key"], Request.QueryString["tbl"], Request.QueryString["knm"], Request.QueryString["col"].ToString(), dc, dbConnectionString, base.AppPwd(sid));
                 Response.Buffer = true; Response.ClearHeaders(); Response.ClearContent();
-                string imgEmbedded = "data:application/base64;base64," + Convert.ToBase64String(dc);
+                //string imgEmbedded = "data:application/base64;base64," + Convert.ToBase64String(dc);
+
+                string imgEmbedded = savedContent != null ? (RO.Common3.Utils.BlobPlaceHolder(savedContent,true) ?? "").Replace("../", "") : "images/DefaultImg.png";
                 string json = "{\"imgUrl\":\"" + imgEmbedded + "\"}";
                 Response.Clear();
                 Response.ContentType = "application/json; charset=utf-8";
                 Response.Write(json);
                 Response.End();
             }
-            else if (Request.QueryString["del"] != null)
-            { //delete image
+            else if (Request.QueryString["del"] != null) {
+                //delete image
                 new AdminSystem().UpdDbImg(Request.QueryString["key"], Request.QueryString["tbl"], Request.QueryString["knm"], Request.QueryString["col"].ToString(), null, dbConnectionString, base.AppPwd(sid));
                 Response.Buffer = true; Response.ClearHeaders(); Response.ClearContent();
                 string json = "{\"imgUrl\":\"" + "images/DefaultImg.png" + "\"}";
@@ -88,7 +129,6 @@ namespace RO.Web
                 Response.Write(json);
                 Response.End();
             }
-
         }
 
         private void SaveMultiDocUpload(string dbConnectionString, string dbPwd, byte sid, bool overwrite)
@@ -126,7 +166,6 @@ namespace RO.Web
         {
             if (!IsPostBack)
             {
-
                 StringBuilder sb = new StringBuilder();
                 if (Request.QueryString["tbl"] != null && Request.QueryString["key"] != null)
                 {
@@ -158,6 +197,7 @@ namespace RO.Web
                         SaveUpload(dbConnectionString, sid);
                     return;
 
+                    /* To be Deleted:
                     DataTable dt = null;
                     try
                     {
@@ -181,6 +221,7 @@ namespace RO.Web
                         }
                     }
                     catch (Exception err) { ApplicationAssert.CheckCondition(false, "DnLoadModule", "", err.Message); }
+                    */
                 }
                 else if (Request.QueryString["file"] != null)
                 {
@@ -248,6 +289,132 @@ namespace RO.Web
             InitializeComponent();
         }
 
+
+        protected byte[] AddDoc(string docJson, string docId, string tableName, string keyColumnName, string columnName, string dbConnectionString, string dbPwd, string height, bool resizeToIcon = false)
+        {
+            byte[] storedContent = null;
+            bool dummyImage = false;
+            int maxHeght = 360;
+            int.TryParse(height, out maxHeght);
+            try
+            {
+                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                FileUploadObj fileObj = jss.Deserialize<FileUploadObj>(docJson);
+                if (!string.IsNullOrEmpty(fileObj.base64))
+                {
+                    byte[] content = Convert.FromBase64String(fileObj.base64);
+                    dummyImage = fileObj.base64 == "iVBORw0KGgoAAAANSUhEUgAAAhwAAAABCAQAAAA/IL+bAAAAFElEQVR42mN89p9hFIyCUTAKSAIABgMB58aXfLgAAAAASUVORK5CYII=";
+                    if (resizeToIcon && fileObj.base64.Length > 0 && fileObj.mimeType.StartsWith("image/"))
+                    {
+                        try
+                        {
+                            content = ResizeImage(Convert.FromBase64String(fileObj.base64), maxHeght);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    /* store as 256 byte UTF8 json header + actual binary file content 
+                     * if header info > 256 bytes use compact header(256 bytes) + actual header + actual binary file content
+                     */
+                    string contentHeader = jss.Serialize(new FileInStreamObj() { fileName = fileObj.fileName, lastModified = fileObj.lastModified, mimeType = fileObj.mimeType, ver = "0100", extensionSize = 0 });
+                    byte[] streamHeader = Enumerable.Repeat((byte)0x20, 256).ToArray();
+                    int headerLength = System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader).Length;
+                    string compactHeader = jss.Serialize(new FileInStreamObj() { fileName = "", lastModified = fileObj.lastModified, mimeType = fileObj.mimeType, ver = "0100", extensionSize = headerLength });
+                    int compactHeaderLength = System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader).Length;
+                    if (headerLength <= 256)
+                        Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader), streamHeader, headerLength);
+                    else
+                    {
+                        Array.Resize(ref streamHeader, 256 + contentHeader.Length);
+                        Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), streamHeader, compactHeaderLength);
+                        Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), 0, streamHeader, 256, headerLength);
+                    }
+                    if (content.Length == 0 || dummyImage)
+                    {
+                        storedContent = null;
+                    }
+                    else if (fileObj.mimeType.StartsWith("image/") && false)
+                    {
+                        // backward compatability with asp.net side, only store image and not fileinfo
+                        storedContent = content;
+                    }
+                    else
+                    {
+                        storedContent = new byte[content.Length + streamHeader.Length];
+                        Array.Copy(streamHeader, storedContent, streamHeader.Length);
+                        Array.Copy(content, 0, storedContent, streamHeader.Length, content.Length);
+                    }
+                    byte[] savedContent = content.Length == 0 || dummyImage ? null : storedContent;
+                    new AdminSystem().UpdDbImg(docId, tableName, keyColumnName, columnName, savedContent, dbConnectionString, dbPwd);
+                    return savedContent;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex) { throw new Exception("invalid attachment format: " + Server.HtmlEncode(ex.Message)); }
+        }
+
+        protected byte[] ResizeImage(byte[] image, int maxHeight = 360)
+        {
+
+            byte[] dc;
+
+            System.Drawing.Image oBMP = null;
+
+            using (var ms = new MemoryStream(image))
+            {
+                oBMP = System.Drawing.Image.FromStream(ms);
+                ms.Close();
+            }
+
+            UInt16 orientCode = 1;
+
+            try
+            {
+                using (var ms2 = new MemoryStream(image))
+                {
+                    var r = new ExifLib.ExifReader(ms2);
+                    r.GetTagValue(ExifLib.ExifTags.Orientation, out orientCode);
+                }
+            }
+            catch { }
+
+            int nHeight = maxHeight; // This is 36x10 line:7700 GenScreen
+            int nWidth = int.Parse((Math.Round(decimal.Parse(oBMP.Width.ToString()) * (nHeight / decimal.Parse(oBMP.Height.ToString())))).ToString());
+
+            var nBMP = new System.Drawing.Bitmap(oBMP, nWidth, nHeight);
+            using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
+            {
+                // 1 = do nothing
+                if (orientCode == 3)
+                {
+                    // rotate 180
+                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
+                }
+                else if (orientCode == 6)
+                {
+                    //rotate 90
+                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate90FlipNone);
+                }
+                else if (orientCode == 8)
+                {
+                    // same as -90
+                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate270FlipNone);
+                }
+                nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
+                sm.Position = 0;
+                dc = new byte[sm.Length + 1];
+                sm.Read(dc, 0, dc.Length); sm.Close();
+            }
+            oBMP.Dispose(); nBMP.Dispose();
+
+            return dc;
+        }
+
+
         #region Web Form Designer generated code
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -261,10 +428,8 @@ namespace RO.Web
 
     }
 
-    //new change
     public class fileUploader : IHttpHandler
     {
-
         public void ProcessRequest(HttpContext context)
         {
             context.Response.ContentType = "text/plain";
@@ -292,14 +457,9 @@ namespace RO.Web
                         file.SaveAs(pathToSave_100);
                     }
                 }
-                //  database record update logic here  ()
-
                 context.Response.Write(str_image);
             }
-            catch (Exception ac)
-            {
-
-            }
+            catch {}
         }
 
         public bool IsReusable
@@ -311,5 +471,4 @@ namespace RO.Web
         }
 
     }
-    //end new change
 }

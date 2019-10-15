@@ -12,6 +12,8 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
 using AjaxControlToolkit;
 using RO.Facade3;
 using RO.Common3;
@@ -45,6 +47,14 @@ namespace RO.Common3.Data
 			columns.Add("Snippet4", typeof(string));
 			columns.Add("Snippet2", typeof(string));
 			columns.Add("Snippet3", typeof(string));
+			columns.Add("ReactEventId128", typeof(string));
+			columns.Add("ReactRuleProg128", typeof(string));
+			columns.Add("ReduxEventId128", typeof(string));
+			columns.Add("ReduxRuleProg128", typeof(string));
+			columns.Add("ServiceEventId128", typeof(string));
+			columns.Add("ServiceRuleProg128", typeof(string));
+			columns.Add("AsmxEventId128", typeof(string));
+			columns.Add("AsmxRuleProg128", typeof(string));
 			return dt;
 		}
 	}
@@ -68,6 +78,10 @@ namespace RO.Web
 		private const string KEY_dtScreenObjId128 = "Cache:dtScreenObjId128";
 		private const string KEY_dtButtonTypeId128 = "Cache:dtButtonTypeId128";
 		private const string KEY_dtEventId128 = "Cache:dtEventId128";
+		private const string KEY_dtReactEventId128 = "Cache:dtReactEventId128";
+		private const string KEY_dtReduxEventId128 = "Cache:dtReduxEventId128";
+		private const string KEY_dtServiceEventId128 = "Cache:dtServiceEventId128";
+		private const string KEY_dtAsmxEventId128 = "Cache:dtAsmxEventId128";
 
 		private const string KEY_dtSystems = "Cache:dtSystems3_80";
 		private const string KEY_sysConnectionString = "Cache:sysConnectionString3_80";
@@ -130,6 +144,10 @@ namespace RO.Web
 				Session.Remove(KEY_dtScreenObjId128);
 				Session.Remove(KEY_dtButtonTypeId128);
 				Session.Remove(KEY_dtEventId128);
+				Session.Remove(KEY_dtReactEventId128);
+				Session.Remove(KEY_dtReduxEventId128);
+				Session.Remove(KEY_dtServiceEventId128);
+				Session.Remove(KEY_dtAsmxEventId128);
 				SetButtonHlp();
 				GetSystems();
 				SetColumnAuthority();
@@ -141,6 +159,12 @@ namespace RO.Web
 				cFootLabel.Text = dtHlp.Rows[0]["FootNote"].ToString();
 				if (cFootLabel.Text == string.Empty) { cFootLabel.Visible = false; }
 				cTitleLabel.Text = dtHlp.Rows[0]["ScreenTitle"].ToString();
+				DataTable dt = GetScreenTab();
+				cTab39.InnerText = dt.Rows[0]["TabFolderName"].ToString();
+				cTab125.InnerText = dt.Rows[1]["TabFolderName"].ToString();
+				cTab126.InnerText = dt.Rows[2]["TabFolderName"].ToString();
+				cTab127.InnerText = dt.Rows[3]["TabFolderName"].ToString();
+				cTab128.InnerText = dt.Rows[4]["TabFolderName"].ToString();
 				SetClientRule(null,false);
 				IgnoreConfirm(); InitPreserve();
 				try
@@ -169,6 +193,11 @@ namespace RO.Web
 			else if (string.IsNullOrEmpty(bViewState.Text))		// Viewstate is lost.
 			{
 				Session["Idle:" + Request.Url.PathAndQuery] = "Y"; Response.Redirect(Request.Url.PathAndQuery);
+			}
+			if (!string.IsNullOrEmpty(cCurrentTab.Value))
+			{
+				HtmlControl wcTab = this.FindControl(cCurrentTab.Value.Substring(1)) as HtmlControl;
+				wcTab.Style["display"] = "block";
 			}
 			ScriptManager.RegisterStartupScript(this, this.GetType(), "ScreenLabel", this.ClientID + "={" + string.Join(",", (from dr in GetLabel().AsEnumerable() select string.Format("{0}: {{msg:'{1}',hint:'{2}'}}", "c" + dr.Field<string>("ColumnName") + (dr.Field<int?>("TableId").ToString()), (dr.Field<string>("ErrMessage") ?? string.Empty).Replace("'", "\\'").Replace("\r", "\\r").Replace("\n", "\\n"), (dr.Field<string>("TbHint") ?? string.Empty).Replace("'", "\\'").Replace("\r", "\\r").Replace("\n", "\\n"))).ToArray()) + "};", true);
 		}
@@ -547,6 +576,14 @@ if (LImpr.UsrGroups == "1") { throw new Exception("This function is intentionall
 						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[6]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[6]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[7]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[8]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[13]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[13]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[14]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[15]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[15]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[16]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[17]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[17]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[18]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[19]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[19]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[20]["ColumnHeader"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -560,6 +597,14 @@ if (LImpr.UsrGroups == "1") { throw new Exception("This function is intentionall
 						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonTypeId128"].ToString() + (char)9 + drv["ButtonTypeId128Text"].ToString() + (char)9);}
 						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["EventId128"].ToString() + (char)9 + drv["EventId128Text"].ToString() + (char)9);}
 						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["WebRuleProg128"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["ReactEventId128"].ToString() + (char)9 + drv["ReactEventId128Text"].ToString() + (char)9);}
+						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ReactRuleProg128"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(drv["ReduxEventId128"].ToString() + (char)9 + drv["ReduxEventId128Text"].ToString() + (char)9);}
+						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ReduxRuleProg128"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["ServiceEventId128"].ToString() + (char)9 + drv["ServiceEventId128Text"].ToString() + (char)9);}
+						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ServiceRuleProg128"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["AsmxEventId128"].ToString() + (char)9 + drv["AsmxEventId128Text"].ToString() + (char)9);}
+						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AsmxRuleProg128"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmWebRule.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
@@ -617,6 +662,14 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -635,6 +688,14 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[6]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[8]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[13]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[14]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[15]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[16]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[17]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[18]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[19]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[20]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -666,6 +727,14 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["ButtonTypeId128Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["EventId128Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(drv["WebRuleProg128"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["ReactEventId128Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(drv["ReactRuleProg128"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(drv["ReduxEventId128Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(drv["ReduxRuleProg128"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["ServiceEventId128Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(drv["ServiceRuleProg128"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["AsmxEventId128Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["AsmxRuleProg128"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1323,6 +1392,18 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			return ds;
 		}
 
+		private DataTable GetScreenTab()
+		{
+			CheckAuthentication(false);
+			DataTable dtScreenTab = null;
+			try
+			{
+				dtScreenTab = (new AdminSystem()).GetScreenTab(80,base.LUser.CultureId,LcSysConnString,LcAppPw);
+			}
+			catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
+			return dtScreenTab;
+		}
+
 		private void SetRuleTypeId128(DropDownList ddl, string keyId)
 		{
 			DataTable dt = (DataTable)Session[KEY_dtRuleTypeId128];
@@ -1585,6 +1666,226 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 		}
 
+		private void SetReactEventId128(DropDownList ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtReactEventId128];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlReactEventId3S4207",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("WebRuleId"))
+					{
+						ss = "(WebRuleId is null";
+						if (string.IsNullOrEmpty(cAdmWebRule80List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR WebRuleId = " + cAdmWebRule80List.SelectedValue + ")";}
+					}
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "ReactEventId128 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					else if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlReactEventId3S4207",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlReactEventId3S4207",true,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					Session[KEY_dtReactEventId128] = dv.Table;
+				}
+			}
+		}
+
+		private void SetReduxEventId128(DropDownList ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtReduxEventId128];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlReduxEventId3S4210",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("WebRuleId"))
+					{
+						ss = "(WebRuleId is null";
+						if (string.IsNullOrEmpty(cAdmWebRule80List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR WebRuleId = " + cAdmWebRule80List.SelectedValue + ")";}
+					}
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "ReduxEventId128 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					else if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlReduxEventId3S4210",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlReduxEventId3S4210",true,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					Session[KEY_dtReduxEventId128] = dv.Table;
+				}
+			}
+		}
+
+		private void SetServiceEventId128(DropDownList ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtServiceEventId128];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlServiceEventId3S4212",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("WebRuleId"))
+					{
+						ss = "(WebRuleId is null";
+						if (string.IsNullOrEmpty(cAdmWebRule80List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR WebRuleId = " + cAdmWebRule80List.SelectedValue + ")";}
+					}
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "ServiceEventId128 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					else if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlServiceEventId3S4212",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlServiceEventId3S4212",true,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					Session[KEY_dtServiceEventId128] = dv.Table;
+				}
+			}
+		}
+
+		private void SetAsmxEventId128(DropDownList ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtAsmxEventId128];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlAsmxEventId3S4214",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("WebRuleId"))
+					{
+						ss = "(WebRuleId is null";
+						if (string.IsNullOrEmpty(cAdmWebRule80List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR WebRuleId = " + cAdmWebRule80List.SelectedValue + ")";}
+					}
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "AsmxEventId128 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					else if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlAsmxEventId3S4214",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(80,"GetDdlAsmxEventId3S4214",true,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					Session[KEY_dtAsmxEventId128] = dv.Table;
+				}
+			}
+		}
+
 		private DataView GetAdmWebRule80List()
 		{
 			DataTable dt = (DataTable)Session[KEY_dtAdmWebRule80List];
@@ -1670,6 +1971,18 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cSnippet4, dtAuth.Rows[10], cSnippet4P1, cSnippet4Label, cSnippet4P2, null, dtLabel.Rows[10], null, null, null);
 				base.SetFoldBehavior(cSnippet2, dtAuth.Rows[11], cSnippet2P1, cSnippet2Label, cSnippet2P2, null, dtLabel.Rows[11], null, null, null);
 				base.SetFoldBehavior(cSnippet3, dtAuth.Rows[12], cSnippet3P1, cSnippet3Label, cSnippet3P2, null, dtLabel.Rows[12], null, null, null);
+				base.SetFoldBehavior(cReactEventId128, dtAuth.Rows[13], cReactEventId128P1, cReactEventId128Label, cReactEventId128P2, null, dtLabel.Rows[13], null, null, null);
+				base.SetFoldBehavior(cReactRuleProg128, dtAuth.Rows[14], cReactRuleProg128P1, cReactRuleProg128Label, cReactRuleProg128P2, cReactRuleProg128E, null, dtLabel.Rows[14], null, null, null);
+				cReactRuleProg128E.Attributes["label_id"] = cReactRuleProg128Label.ClientID; cReactRuleProg128E.Attributes["target_id"] = cReactRuleProg128.ClientID;
+				base.SetFoldBehavior(cReduxEventId128, dtAuth.Rows[15], cReduxEventId128P1, cReduxEventId128Label, cReduxEventId128P2, null, dtLabel.Rows[15], null, null, null);
+				base.SetFoldBehavior(cReduxRuleProg128, dtAuth.Rows[16], cReduxRuleProg128P1, cReduxRuleProg128Label, cReduxRuleProg128P2, cReduxRuleProg128E, null, dtLabel.Rows[16], null, null, null);
+				cReduxRuleProg128E.Attributes["label_id"] = cReduxRuleProg128Label.ClientID; cReduxRuleProg128E.Attributes["target_id"] = cReduxRuleProg128.ClientID;
+				base.SetFoldBehavior(cServiceEventId128, dtAuth.Rows[17], cServiceEventId128P1, cServiceEventId128Label, cServiceEventId128P2, null, dtLabel.Rows[17], null, null, null);
+				base.SetFoldBehavior(cServiceRuleProg128, dtAuth.Rows[18], cServiceRuleProg128P1, cServiceRuleProg128Label, cServiceRuleProg128P2, cServiceRuleProg128E, null, dtLabel.Rows[18], null, null, null);
+				cServiceRuleProg128E.Attributes["label_id"] = cServiceRuleProg128Label.ClientID; cServiceRuleProg128E.Attributes["target_id"] = cServiceRuleProg128.ClientID;
+				base.SetFoldBehavior(cAsmxEventId128, dtAuth.Rows[19], cAsmxEventId128P1, cAsmxEventId128Label, cAsmxEventId128P2, null, dtLabel.Rows[19], null, null, null);
+				base.SetFoldBehavior(cAsmxRuleProg128, dtAuth.Rows[20], cAsmxRuleProg128P1, cAsmxRuleProg128Label, cAsmxRuleProg128P2, cAsmxRuleProg128E, null, dtLabel.Rows[20], null, null, null);
+				cAsmxRuleProg128E.Attributes["label_id"] = cAsmxRuleProg128Label.ClientID; cAsmxRuleProg128E.Attributes["target_id"] = cAsmxRuleProg128.ClientID;
 			}
 			if ((cRuleName128.Attributes["OnChange"] == null || cRuleName128.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cRuleName128.Visible && !cRuleName128.ReadOnly) {cRuleName128.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cRuleDescription128.Attributes["OnChange"] == null || cRuleDescription128.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cRuleDescription128.Visible && !cRuleDescription128.ReadOnly) {cRuleDescription128.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -1685,6 +1998,14 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if ((cSnippet4.Attributes["OnChange"] == null || cSnippet4.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSnippet4.Visible && cSnippet4.Enabled) {cSnippet4.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();document.getElementById('" + bConfirm.ClientID + "').value='N';";}
 			if ((cSnippet2.Attributes["OnChange"] == null || cSnippet2.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSnippet2.Visible && cSnippet2.Enabled) {cSnippet2.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();document.getElementById('" + bConfirm.ClientID + "').value='N';";}
 			if ((cSnippet3.Attributes["OnChange"] == null || cSnippet3.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSnippet3.Visible && cSnippet3.Enabled) {cSnippet3.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();document.getElementById('" + bConfirm.ClientID + "').value='N';";}
+			if ((cReactEventId128.Attributes["OnChange"] == null || cReactEventId128.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cReactEventId128.Visible && cReactEventId128.Enabled) {cReactEventId128.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cReactRuleProg128.Attributes["OnChange"] == null || cReactRuleProg128.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cReactRuleProg128.Visible && !cReactRuleProg128.ReadOnly) {cReactRuleProg128.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cReduxEventId128.Attributes["OnChange"] == null || cReduxEventId128.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cReduxEventId128.Visible && cReduxEventId128.Enabled) {cReduxEventId128.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cReduxRuleProg128.Attributes["OnChange"] == null || cReduxRuleProg128.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cReduxRuleProg128.Visible && !cReduxRuleProg128.ReadOnly) {cReduxRuleProg128.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cServiceEventId128.Attributes["OnChange"] == null || cServiceEventId128.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cServiceEventId128.Visible && cServiceEventId128.Enabled) {cServiceEventId128.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cServiceRuleProg128.Attributes["OnChange"] == null || cServiceRuleProg128.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cServiceRuleProg128.Visible && !cServiceRuleProg128.ReadOnly) {cServiceRuleProg128.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cAsmxEventId128.Attributes["OnChange"] == null || cAsmxEventId128.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cAsmxEventId128.Visible && cAsmxEventId128.Enabled) {cAsmxEventId128.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cAsmxRuleProg128.Attributes["OnChange"] == null || cAsmxRuleProg128.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cAsmxRuleProg128.Visible && !cAsmxRuleProg128.ReadOnly) {cAsmxRuleProg128.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 		}
 
 		private DataTable SetFunctionality(DataTable dt)
@@ -1738,6 +2059,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				Session.Remove(KEY_dtScreenObjId128);
 				Session.Remove(KEY_dtButtonTypeId128);
 				Session.Remove(KEY_dtEventId128);
+				Session.Remove(KEY_dtReactEventId128);
+				Session.Remove(KEY_dtReduxEventId128);
+				Session.Remove(KEY_dtServiceEventId128);
+				Session.Remove(KEY_dtAsmxEventId128);
 				GetCriteria(GetScrCriteria());
 				cFilterId_SelectedIndexChanged(sender, e);
 				cScreenId128Search_Script();
@@ -1759,6 +2084,14 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {cSnippet4.ImageUrl = "~/images/code_popup.png"; }
 			if (dt.Rows[11]["ColVisible"].ToString() == "Y" && dt.Rows[11]["ColReadOnly"].ToString() != "Y") {cSnippet2.ImageUrl = "~/images/code_email.png"; }
 			if (dt.Rows[12]["ColVisible"].ToString() == "Y" && dt.Rows[12]["ColReadOnly"].ToString() != "Y") {cSnippet3.ImageUrl = "~/images/code_check.png"; }
+			if (dt.Rows[13]["ColVisible"].ToString() == "Y" && dt.Rows[13]["ColReadOnly"].ToString() != "Y") {SetReactEventId128(cReactEventId128,string.Empty);}
+			if (dt.Rows[14]["ColVisible"].ToString() == "Y" && dt.Rows[14]["ColReadOnly"].ToString() != "Y") {cReactRuleProg128.Text = string.Empty;}
+			if (dt.Rows[15]["ColVisible"].ToString() == "Y" && dt.Rows[15]["ColReadOnly"].ToString() != "Y") {SetReduxEventId128(cReduxEventId128,string.Empty);}
+			if (dt.Rows[16]["ColVisible"].ToString() == "Y" && dt.Rows[16]["ColReadOnly"].ToString() != "Y") {cReduxRuleProg128.Text = string.Empty;}
+			if (dt.Rows[17]["ColVisible"].ToString() == "Y" && dt.Rows[17]["ColReadOnly"].ToString() != "Y") {SetServiceEventId128(cServiceEventId128,string.Empty);}
+			if (dt.Rows[18]["ColVisible"].ToString() == "Y" && dt.Rows[18]["ColReadOnly"].ToString() != "Y") {cServiceRuleProg128.Text = string.Empty;}
+			if (dt.Rows[19]["ColVisible"].ToString() == "Y" && dt.Rows[19]["ColReadOnly"].ToString() != "Y") {SetAsmxEventId128(cAsmxEventId128,string.Empty);}
+			if (dt.Rows[20]["ColVisible"].ToString() == "Y" && dt.Rows[20]["ColReadOnly"].ToString() != "Y") {cAsmxRuleProg128.Text = string.Empty;}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -1777,6 +2110,14 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cSnippet4.ImageUrl = "~/images/code_popup.png";
 			cSnippet2.ImageUrl = "~/images/code_email.png";
 			cSnippet3.ImageUrl = "~/images/code_check.png";
+			SetReactEventId128(cReactEventId128,string.Empty);
+			cReactRuleProg128.Text = string.Empty;
+			SetReduxEventId128(cReduxEventId128,string.Empty);
+			cReduxRuleProg128.Text = string.Empty;
+			SetServiceEventId128(cServiceEventId128,string.Empty);
+			cServiceRuleProg128.Text = string.Empty;
+			SetAsmxEventId128(cAsmxEventId128,string.Empty);
+			cAsmxRuleProg128.Text = string.Empty;
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 		protected void cAdmWebRule80List_TextChanged(object sender, System.EventArgs e)
@@ -1820,6 +2161,14 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					cSnippet4.ImageUrl = "~/images/code_popup.png";
 					cSnippet2.ImageUrl = "~/images/code_email.png";
 					cSnippet3.ImageUrl = "~/images/code_check.png";
+					SetReactEventId128(cReactEventId128,dr["ReactEventId128"].ToString());
+					try {cReactRuleProg128.Text = dr["ReactRuleProg128"].ToString();} catch {cReactRuleProg128.Text = string.Empty;}
+					SetReduxEventId128(cReduxEventId128,dr["ReduxEventId128"].ToString());
+					try {cReduxRuleProg128.Text = dr["ReduxRuleProg128"].ToString();} catch {cReduxRuleProg128.Text = string.Empty;}
+					SetServiceEventId128(cServiceEventId128,dr["ServiceEventId128"].ToString());
+					try {cServiceRuleProg128.Text = dr["ServiceRuleProg128"].ToString();} catch {cServiceRuleProg128.Text = string.Empty;}
+					SetAsmxEventId128(cAsmxEventId128,dr["AsmxEventId128"].ToString());
+					try {cAsmxRuleProg128.Text = dr["AsmxRuleProg128"].ToString();} catch {cAsmxRuleProg128.Text = string.Empty;}
 				}
 			}
 			cButPanel.DataBind();
@@ -2149,6 +2498,22 @@ if ("1".IndexOf(cEventId128.SelectedValue) < 0) {SetEventId128(cEventId128,"1");
 			drType["EventId128"] = "Numeric"; drDisp["EventId128"] = "DropDownList";
 			try {dr["WebRuleProg128"] = cWebRuleProg128.Text;} catch {}
 			drType["WebRuleProg128"] = "VarWChar"; drDisp["WebRuleProg128"] = "MultiLine";
+			try {dr["ReactEventId128"] = cReactEventId128.SelectedValue;} catch {}
+			drType["ReactEventId128"] = "Numeric"; drDisp["ReactEventId128"] = "DropDownList";
+			try {dr["ReactRuleProg128"] = cReactRuleProg128.Text;} catch {}
+			drType["ReactRuleProg128"] = "VarWChar"; drDisp["ReactRuleProg128"] = "MultiLine";
+			try {dr["ReduxEventId128"] = cReduxEventId128.SelectedValue;} catch {}
+			drType["ReduxEventId128"] = "Numeric"; drDisp["ReduxEventId128"] = "DropDownList";
+			try {dr["ReduxRuleProg128"] = cReduxRuleProg128.Text;} catch {}
+			drType["ReduxRuleProg128"] = "VarWChar"; drDisp["ReduxRuleProg128"] = "MultiLine";
+			try {dr["ServiceEventId128"] = cServiceEventId128.SelectedValue;} catch {}
+			drType["ServiceEventId128"] = "Numeric"; drDisp["ServiceEventId128"] = "DropDownList";
+			try {dr["ServiceRuleProg128"] = cServiceRuleProg128.Text;} catch {}
+			drType["ServiceRuleProg128"] = "VarWChar"; drDisp["ServiceRuleProg128"] = "MultiLine";
+			try {dr["AsmxEventId128"] = cAsmxEventId128.SelectedValue;} catch {}
+			drType["AsmxEventId128"] = "Numeric"; drDisp["AsmxEventId128"] = "DropDownList";
+			try {dr["AsmxRuleProg128"] = cAsmxRuleProg128.Text;} catch {}
+			drType["AsmxRuleProg128"] = "VarWChar"; drDisp["AsmxRuleProg128"] = "MultiLine";
 			if (bAdd)
 			{
 			}

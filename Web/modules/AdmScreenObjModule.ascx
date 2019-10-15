@@ -231,6 +231,14 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     		<div id="cColumnHeight14P2" class="r-td r-content" runat="server"><asp:TextBox id="cColumnHeight14" CssClass="inp-num" runat="server" /></div>
     	</div>
     	<div class="r-tr">
+    		<div id="cResizeWidth14P1" class="r-td r-labelR" runat="server"><asp:Label id="cResizeWidth14Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cResizeWidth14P2" class="r-td r-content" runat="server"><asp:TextBox id="cResizeWidth14" CssClass="inp-num" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cResizeHeight14P1" class="r-td r-labelR" runat="server"><asp:Label id="cResizeHeight14Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cResizeHeight14P2" class="r-td r-content" runat="server"><asp:TextBox id="cResizeHeight14" CssClass="inp-num" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
     		<div id="cSortOrder14P1" class="r-td r-labelR" runat="server"><asp:Label id="cSortOrder14Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cSortOrder14P2" class="r-td r-content" runat="server"><asp:TextBox id="cSortOrder14" CssClass="inp-num" runat="server" /><asp:RegularExpressionValidator id="cREVSortOrder14" ControlToValidate="cSortOrder14" display="none" ValidationExpression="-?[1-9]?" runat="server" /></div>
     	</div>
@@ -287,6 +295,10 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	<div class="r-tr">
     		<div id="cColumnLink14P1" class="r-td r-labelR" runat="server"><asp:Label id="cColumnLink14Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cColumnLink14P2" class="r-td r-content" runat="server"><asp:TextBox id="cColumnLink14" CssClass="inp-txt" MaxLength="1000" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cDtlLstPosId14P1" class="r-td r-labelR" runat="server"><asp:Label id="cDtlLstPosId14Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cDtlLstPosId14P2" class="r-td r-content" runat="server"><asp:DropDownList id="cDtlLstPosId14" CssClass="inp-ddl" DataValueField="DtlLstPosId14" DataTextField="DtlLstPosId14Text" runat="server" /></div>
     	</div>
     </div></div></div>
     <div class="r-td rc-9-12"><div class="screen-tabfolder" runat="server"><div class="r-table">

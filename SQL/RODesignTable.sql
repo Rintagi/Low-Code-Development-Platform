@@ -181,10 +181,15 @@ WizardId int NULL ,
 CultureId smallint NOT NULL ,
 ButtonTypeId tinyint NOT NULL ,
 ButtonName nvarchar (200) NULL ,
+ButtonLongNm nvarchar (400) NULL ,
 ButtonToolTip nvarchar (400) NULL ,
 ButtonVisible char (1) NOT NULL ,
+TopVisible char (1) NOT NULL CONSTRAINT DF_ButtonHlp_TopVisible DEFAULT ('N'),
+RowVisible char (1) NOT NULL CONSTRAINT DF_ButtonHlp_RowVisible DEFAULT ('N'),
+BotVisible char (1) NOT NULL CONSTRAINT DF_ButtonHlp_BotVisible DEFAULT ('N'),
 CONSTRAINT PK_ButtonHlp PRIMARY KEY CLUSTERED (
-ButtonHlpId
+ButtonHlpId,
+CultureId
 )
 )
 GO
@@ -351,6 +356,9 @@ BorderStyleId
 )
 )
 GO
+IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_CtButtonHlp')
+DROP INDEX CtButtonHlp.IU_CtButtonHlp 
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtButtonHlp') AND type='U')
 DROP TABLE dbo.CtButtonHlp
 GO
@@ -359,10 +367,22 @@ ButtonHlpId int IDENTITY(1,1) NOT NULL ,
 CultureId smallint NOT NULL ,
 ButtonTypeId tinyint NOT NULL ,
 ButtonName nvarchar (50) NOT NULL ,
-ButtonToolTip nvarchar (100) NOT NULL ,
+ButtonLongNm nvarchar (100) NOT NULL CONSTRAINT DF_CtButtonHlp_ButtonLongNm DEFAULT ('.'),
+ButtonToolTip nvarchar (200) NOT NULL ,
 CONSTRAINT PK_CtButtonHlp PRIMARY KEY CLUSTERED (
 ButtonHlpId,
 CultureId
+)
+)
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtButtonStyle') AND type='U')
+DROP TABLE dbo.CtButtonStyle
+GO
+CREATE TABLE CtButtonStyle ( 
+ButtonStyleCd char (1) NOT NULL ,
+ButtonStyleDesc nvarchar (100) NOT NULL ,
+CONSTRAINT PK_CtButtonStyle PRIMARY KEY CLUSTERED (
+ButtonStyleCd
 )
 )
 GO
@@ -376,6 +396,9 @@ ButtonTypeName varchar (20) NOT NULL ,
 ButtonTypeDesc nvarchar (50) NOT NULL ,
 ButtonVisible char (1) NOT NULL ,
 ViewOnlyVisible char (1) NOT NULL CONSTRAINT DF_CtButtonType_ViewOnlyVisible DEFAULT ('Y'),
+TopVisible char (1) NOT NULL CONSTRAINT DF_CtButtonType_TopVisible DEFAULT ('N'),
+RowVisible char (1) NOT NULL CONSTRAINT DF_CtButtonType_RowVisible DEFAULT ('N'),
+BotVisible char (1) NOT NULL CONSTRAINT DF_CtButtonType_BotVisible DEFAULT ('N'),
 CONSTRAINT PK_CtButtonType PRIMARY KEY CLUSTERED (
 ButtonTypeId
 )
@@ -551,6 +574,17 @@ DisplayDesc nvarchar (1000) NULL ,
 DisplayDefault char (1) NOT NULL ,
 CONSTRAINT PK_CtDisplayType PRIMARY KEY CLUSTERED (
 TypeId
+)
+)
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtDtlLstPos') AND type='U')
+DROP TABLE dbo.CtDtlLstPos
+GO
+CREATE TABLE CtDtlLstPos ( 
+DtlLstPosId tinyint NOT NULL ,
+DtlLstPosNm nvarchar (20) NOT NULL ,
+CONSTRAINT PK_CtDtlLstPos PRIMARY KEY CLUSTERED (
+DtlLstPosId
 )
 )
 GO
@@ -940,6 +974,17 @@ RptTblTypeCd
 )
 )
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleAsmxType') AND type='U')
+DROP TABLE dbo.CtRuleAsmxType
+GO
+CREATE TABLE CtRuleAsmxType ( 
+RuleAsmxTypeId tinyint NOT NULL ,
+RuleAsmxTypeDesc nvarchar (50) NOT NULL ,
+CONSTRAINT PK_CtRuleAsmxType PRIMARY KEY CLUSTERED (
+RuleAsmxTypeId
+)
+)
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleCntType') AND type='U')
 DROP TABLE dbo.CtRuleCntType
 GO
@@ -973,6 +1018,39 @@ RuleMethodName nvarchar (50) NOT NULL ,
 RuleMethodDesc nvarchar (1000) NOT NULL ,
 CONSTRAINT PK_CtRuleMethod PRIMARY KEY CLUSTERED (
 RuleMethodId
+)
+)
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleReactType') AND type='U')
+DROP TABLE dbo.CtRuleReactType
+GO
+CREATE TABLE CtRuleReactType ( 
+RuleReactTypeId tinyint NOT NULL ,
+RuleReactTypeDesc nvarchar (50) NOT NULL ,
+CONSTRAINT PK_CtRuleReactType PRIMARY KEY CLUSTERED (
+RuleReactTypeId
+)
+)
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleReduxType') AND type='U')
+DROP TABLE dbo.CtRuleReduxType
+GO
+CREATE TABLE CtRuleReduxType ( 
+RuleReduxTypeId tinyint NOT NULL ,
+RuleReduxTypeDesc nvarchar (50) NOT NULL ,
+CONSTRAINT PK_CtRuleReduxType PRIMARY KEY CLUSTERED (
+RuleReduxTypeId
+)
+)
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleServiceType') AND type='U')
+DROP TABLE dbo.CtRuleServiceType
+GO
+CREATE TABLE CtRuleServiceType ( 
+RuleServiceTypeId tinyint NOT NULL ,
+RuleServiceTypeDesc nvarchar (50) NOT NULL ,
+CONSTRAINT PK_CtRuleServiceType PRIMARY KEY CLUSTERED (
+RuleServiceTypeId
 )
 )
 GO
@@ -2215,6 +2293,39 @@ RptwizTypId
 )
 )
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RuleAsmx') AND type='U')
+DROP TABLE dbo.RuleAsmx
+GO
+CREATE TABLE RuleAsmx ( 
+RuleAsmxId int IDENTITY(1,1) NOT NULL ,
+RuleAsmxTypeId tinyint NOT NULL ,
+RuleAsmxName nvarchar (100) NOT NULL ,
+RuleAsmxDesc nvarchar (150) NULL ,
+RuleDescription nvarchar (500) NULL ,
+ScreenId int NOT NULL ,
+RuleAsmxProg nvarchar (max) NOT NULL ,
+CONSTRAINT PK_RuleAsmx PRIMARY KEY CLUSTERED (
+RuleAsmxId
+)
+)
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RuleReact') AND type='U')
+DROP TABLE dbo.RuleReact
+GO
+CREATE TABLE RuleReact ( 
+RuleReactId int IDENTITY(1,1) NOT NULL ,
+RuleReactTypeId tinyint NOT NULL ,
+RuleReactName nvarchar (100) NOT NULL ,
+RuleReactDesc nvarchar (150) NULL ,
+RuleDescription nvarchar (500) NULL ,
+ScreenId int NOT NULL ,
+ScreenObjId int NULL ,
+RuleReactProg nvarchar (max) NOT NULL ,
+CONSTRAINT PK_RuleReact PRIMARY KEY CLUSTERED (
+RuleReactId
+)
+)
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RuleTier') AND type='U')
 DROP TABLE dbo.RuleTier
 GO
@@ -2285,7 +2396,9 @@ DetailTableId int NULL ,
 SearchTableId int NULL ,
 SearchId int NULL ,
 SearchAscending char (1) NOT NULL ,
+SearchIdR int NULL ,
 SearchDtlId int NULL ,
+SearchDtlIdR int NULL ,
 SearchUrlId int NULL ,
 SearchImgId int NULL ,
 GridRows tinyint NULL ,
@@ -2293,6 +2406,7 @@ ScreenObj varchar (100) NULL ,
 ScreenFilter varchar (100) NULL ,
 GenerateSc char (1) NOT NULL CONSTRAINT DF_Screen_GenerateSc DEFAULT ('Y'),
 GenerateSr char (1) NOT NULL CONSTRAINT DF_Screen_GenerateSr DEFAULT ('Y'),
+ReactGenerated char (1) NOT NULL CONSTRAINT DF_Screen_ReactGenerated DEFAULT ('N'),
 HasDeleteAll char (1) NOT NULL ,
 ShowGridHead char (1) NOT NULL CONSTRAINT DF_Screen_ShowGridHead DEFAULT ('Y'),
 ValidateReq char (1) NOT NULL ,
@@ -2301,6 +2415,7 @@ AuthRequired char (1) NOT NULL CONSTRAINT DF_Screen_AuthRequired DEFAULT ('Y'),
 ViewOnly char (1) NOT NULL CONSTRAINT DF_Screen_ViewOnly DEFAULT ('N'),
 GenAudit char (1) NOT NULL CONSTRAINT DF_Screen_GenAudit DEFAULT ('N'),
 NeedRegen char (1) NOT NULL CONSTRAINT DF_Screen_NeedRegen DEFAULT ('N'),
+NeedReactRegen char (1) NOT NULL CONSTRAINT DF_Screen_NeedReactRegen DEFAULT ('N'),
 CONSTRAINT PK_Screen PRIMARY KEY CLUSTERED (
 ScreenId
 )
@@ -2397,9 +2512,6 @@ ScreenFilterHlpId
 )
 )
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenHlp_ScreenId')
-DROP INDEX ScreenHlp.IX_ScreenHlp_ScreenId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenHlp') AND type='U')
 DROP TABLE dbo.ScreenHlp
 GO
@@ -2413,8 +2525,24 @@ ScreenTitle nvarchar (50) NOT NULL ,
 AddMsg nvarchar (100) NULL ,
 UpdMsg nvarchar (100) NULL ,
 DelMsg nvarchar (100) NULL ,
+IncrementMsg nvarchar (100) NULL ,
+MasterLstTitle nvarchar (100) NULL ,
+MasterLstSubtitle nvarchar (100) NULL ,
+MasterRecTitle nvarchar (100) NULL ,
+MasterRecSubtitle nvarchar (100) NULL ,
+DetailLstTitle nvarchar (100) NULL ,
+DetailLstSubtitle nvarchar (100) NULL ,
+DetailRecTitle nvarchar (100) NULL ,
+DetailRecSubtitle nvarchar (100) NULL ,
+NoMasterMsg nvarchar (100) NULL ,
+NoDetailMsg nvarchar (100) NULL ,
+AddMasterMsg nvarchar (100) NULL ,
+AddDetailMsg nvarchar (100) NULL ,
+MasterFoundMsg nvarchar (100) NULL ,
+DetailFoundMsg nvarchar (100) NULL ,
 CONSTRAINT PK_ScreenHlp PRIMARY KEY CLUSTERED (
-ScreenHlpId
+ScreenHlpId,
+CultureId
 )
 )
 GO
@@ -2478,7 +2606,9 @@ HideOnTablet char (1) NOT NULL CONSTRAINT DF_ScreenObj_HideOnTablet DEFAULT ('N'
 HideOnMobile char (1) NOT NULL CONSTRAINT DF_ScreenObj_HideOnMobile DEFAULT ('N'),
 ColumnJustify char (1) NULL ,
 ColumnSize smallint NULL ,
+ResizeWidth smallint NULL ,
 ColumnHeight smallint NULL ,
+ResizeHeight smallint NULL ,
 DisplayModeId tinyint NOT NULL ,
 DdlKeyColumnId int NULL ,
 DdlRefColumnId int NULL ,
@@ -2490,6 +2620,7 @@ GenerateSp char (1) NOT NULL ,
 TabFolderId int NOT NULL ,
 TabIndex smallint NOT NULL ,
 SortOrder smallint NULL ,
+DtlLstPosId tinyint NULL ,
 RequiredValid char (1) NOT NULL ,
 MaskValid varchar (100) NULL ,
 RangeValidType varchar (50) NULL ,
@@ -2862,6 +2993,9 @@ VendorId int NULL ,
 AgentId int NULL ,
 BrokerId int NULL ,
 MemberId int NULL ,
+LenderId int NULL ,
+BorrowerId int NULL ,
+GuarantorId int NULL ,
 DefSystemId tinyint NOT NULL ,
 DefProjectId int NULL ,
 DefCompanyId int NULL ,
@@ -2974,6 +3108,9 @@ BrokerId int NULL ,
 CustomerId int NULL ,
 InvestorId int NULL ,
 VendorId int NULL ,
+LenderId int NULL ,
+BorrowerId int NULL ,
+GuarantorId int NULL ,
 ProjectId int NULL ,
 SystemId tinyint NULL ,
 PrefDefault char (1) NOT NULL ,
@@ -3366,6 +3503,14 @@ ScreenObjId int NULL ,
 ButtonTypeId tinyint NULL ,
 EventId tinyint NOT NULL ,
 WebRuleProg nvarchar (max) NOT NULL ,
+ReactEventId tinyint NULL ,
+ReactRuleProg nvarchar (max) NULL ,
+ReduxEventId tinyint NULL ,
+ReduxRuleProg nvarchar (max) NULL ,
+ServiceEventId tinyint NULL ,
+ServiceRuleProg nvarchar (max) NULL ,
+AsmxEventId tinyint NULL ,
+AsmxRuleProg nvarchar (max) NULL ,
 CONSTRAINT PK_WebRule PRIMARY KEY CLUSTERED (
 WebRuleId
 )
