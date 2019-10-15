@@ -142,32 +142,32 @@ if (isEmptyId((values.cMasterTableId15 || {}).value)) { errors.cMasterTableId15 
       this.props.SavePage(
         this.props.AdmScreen,
         {
-ScreenId15: values.cScreenId15|| '',
-ProgramName15: values.cProgramName15|| '',
-ScreenTypeId15: (values.cScreenTypeId15|| {}).value || '',
-ViewOnly15: (values.cViewOnly15|| {}).value || '',
-SearchAscending15: values.cSearchAscending15 ? 'Y' : 'N',
-MasterTableId15: (values.cMasterTableId15|| {}).value || '',
-SearchTableId15: (values.cSearchTableId15|| {}).value || '',
-SearchId15: (values.cSearchId15|| {}).value || '',
-SearchIdR15: (values.cSearchIdR15|| {}).value || '',
-SearchDtlId15: (values.cSearchDtlId15|| {}).value || '',
-SearchDtlIdR15: (values.cSearchDtlIdR15|| {}).value || '',
-SearchUrlId15: (values.cSearchUrlId15|| {}).value || '',
-SearchImgId15: (values.cSearchImgId15|| {}).value || '',
-DetailTableId15: (values.cDetailTableId15|| {}).value || '',
-GridRows15: values.cGridRows15|| '',
-HasDeleteAll15: values.cHasDeleteAll15 ? 'Y' : 'N',
-ShowGridHead15: values.cShowGridHead15 ? 'Y' : 'N',
-GenerateSc15: values.cGenerateSc15 ? 'Y' : 'N',
-GenerateSr15: values.cGenerateSr15 ? 'Y' : 'N',
-ValidateReq15: values.cValidateReq15 ? 'Y' : 'N',
-DeferError15: values.cDeferError15 ? 'Y' : 'N',
-AuthRequired15: values.cAuthRequired15 ? 'Y' : 'N',
-GenAudit15: values.cGenAudit15 ? 'Y' : 'N',
-ScreenObj15: values.cScreenObj15|| '',
-ScreenFilter: values.cScreenFilter|| '',
-MoreInfo: values.cMoreInfo|| '',
+          ScreenId15: values.cScreenId15|| '',
+          ProgramName15: values.cProgramName15|| '',
+          ScreenTypeId15: (values.cScreenTypeId15|| {}).value || '',
+          ViewOnly15: (values.cViewOnly15|| {}).value || '',
+          SearchAscending15: values.cSearchAscending15 ? 'Y' : 'N',
+          MasterTableId15: (values.cMasterTableId15|| {}).value || '',
+          SearchTableId15: (values.cSearchTableId15|| {}).value || '',
+          SearchId15: (values.cSearchId15|| {}).value || '',
+          SearchIdR15: (values.cSearchIdR15|| {}).value || '',
+          SearchDtlId15: (values.cSearchDtlId15|| {}).value || '',
+          SearchDtlIdR15: (values.cSearchDtlIdR15|| {}).value || '',
+          SearchUrlId15: (values.cSearchUrlId15|| {}).value || '',
+          SearchImgId15: (values.cSearchImgId15|| {}).value || '',
+          DetailTableId15: (values.cDetailTableId15|| {}).value || '',
+          GridRows15: values.cGridRows15|| '',
+          HasDeleteAll15: values.cHasDeleteAll15 ? 'Y' : 'N',
+          ShowGridHead15: values.cShowGridHead15 ? 'Y' : 'N',
+          GenerateSc15: values.cGenerateSc15 ? 'Y' : 'N',
+          GenerateSr15: values.cGenerateSr15 ? 'Y' : 'N',
+          ValidateReq15: values.cValidateReq15 ? 'Y' : 'N',
+          DeferError15: values.cDeferError15 ? 'Y' : 'N',
+          AuthRequired15: values.cAuthRequired15 ? 'Y' : 'N',
+          GenAudit15: values.cGenAudit15 ? 'Y' : 'N',
+          ScreenObj15: values.cScreenObj15|| '',
+          ScreenFilter: values.cScreenFilter|| '',
+          MoreInfo: values.cMoreInfo|| '',
         },
         [],
         {
@@ -423,32 +423,32 @@ const MoreInfo = currMst.MoreInfo;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cScreenId15: ScreenId15 || '',
-cProgramName15: ProgramName15 || '',
-cScreenTypeId15: ScreenTypeId15List.filter(obj => { return obj.key === ScreenTypeId15 })[0],
-cViewOnly15: ViewOnly15List.filter(obj => { return obj.key === ViewOnly15 })[0],
-cSearchAscending15: SearchAscending15 === 'Y',
-cMasterTableId15: MasterTableId15List.filter(obj => { return obj.key === MasterTableId15 })[0],
-cSearchTableId15: SearchTableId15List.filter(obj => { return obj.key === SearchTableId15 })[0],
-cSearchId15: SearchId15List.filter(obj => { return obj.key === SearchId15 })[0],
-cSearchIdR15: SearchIdR15List.filter(obj => { return obj.key === SearchIdR15 })[0],
-cSearchDtlId15: SearchDtlId15List.filter(obj => { return obj.key === SearchDtlId15 })[0],
-cSearchDtlIdR15: SearchDtlIdR15List.filter(obj => { return obj.key === SearchDtlIdR15 })[0],
-cSearchUrlId15: SearchUrlId15List.filter(obj => { return obj.key === SearchUrlId15 })[0],
-cSearchImgId15: SearchImgId15List.filter(obj => { return obj.key === SearchImgId15 })[0],
-cDetailTableId15: DetailTableId15List.filter(obj => { return obj.key === DetailTableId15 })[0],
-cGridRows15: GridRows15 || '',
-cHasDeleteAll15: HasDeleteAll15 === 'Y',
-cShowGridHead15: ShowGridHead15 === 'Y',
-cGenerateSc15: GenerateSc15 === 'Y',
-cGenerateSr15: GenerateSr15 === 'Y',
-cValidateReq15: ValidateReq15 === 'Y',
-cDeferError15: DeferError15 === 'Y',
-cAuthRequired15: AuthRequired15 === 'Y',
-cGenAudit15: GenAudit15 === 'Y',
-cScreenObj15: ScreenObj15 || '',
-cScreenFilter: ScreenFilter || '',
-cMoreInfo: MoreInfo || '',
+                  cScreenId15: ScreenId15 || '',
+                  cProgramName15: ProgramName15 || '',
+                  cScreenTypeId15: ScreenTypeId15List.filter(obj => { return obj.key === ScreenTypeId15 })[0],
+                  cViewOnly15: ViewOnly15List.filter(obj => { return obj.key === ViewOnly15 })[0],
+                  cSearchAscending15: SearchAscending15 === 'Y',
+                  cMasterTableId15: MasterTableId15List.filter(obj => { return obj.key === MasterTableId15 })[0],
+                  cSearchTableId15: SearchTableId15List.filter(obj => { return obj.key === SearchTableId15 })[0],
+                  cSearchId15: SearchId15List.filter(obj => { return obj.key === SearchId15 })[0],
+                  cSearchIdR15: SearchIdR15List.filter(obj => { return obj.key === SearchIdR15 })[0],
+                  cSearchDtlId15: SearchDtlId15List.filter(obj => { return obj.key === SearchDtlId15 })[0],
+                  cSearchDtlIdR15: SearchDtlIdR15List.filter(obj => { return obj.key === SearchDtlIdR15 })[0],
+                  cSearchUrlId15: SearchUrlId15List.filter(obj => { return obj.key === SearchUrlId15 })[0],
+                  cSearchImgId15: SearchImgId15List.filter(obj => { return obj.key === SearchImgId15 })[0],
+                  cDetailTableId15: DetailTableId15List.filter(obj => { return obj.key === DetailTableId15 })[0],
+                  cGridRows15: GridRows15 || '',
+                  cHasDeleteAll15: HasDeleteAll15 === 'Y',
+                  cShowGridHead15: ShowGridHead15 === 'Y',
+                  cGenerateSc15: GenerateSc15 === 'Y',
+                  cGenerateSr15: GenerateSr15 === 'Y',
+                  cValidateReq15: ValidateReq15 === 'Y',
+                  cDeferError15: DeferError15 === 'Y',
+                  cAuthRequired15: AuthRequired15 === 'Y',
+                  cGenAudit15: GenAudit15 === 'Y',
+                  cScreenObj15: ScreenObj15 || '',
+                  cScreenFilter: ScreenFilter || '',
+                  cMoreInfo: MoreInfo || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -479,7 +479,7 @@ cMoreInfo: MoreInfo || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmScreenState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmScreenState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -516,13 +516,13 @@ cMoreInfo: MoreInfo || '',
             {(authCol.ScreenId15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenId15 || {}).ColumnHeader} {(columnLabel.ScreenId15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenId15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenId15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -537,13 +537,13 @@ disabled = {(authCol.ScreenId15 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ProgramName15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ProgramName15 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ProgramName15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ProgramName15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ProgramName15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -558,13 +558,13 @@ disabled = {(authCol.ProgramName15 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ScreenTypeId15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenTypeId15 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScreenTypeId15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenTypeId15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenTypeId15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cScreenTypeId15'
@@ -582,13 +582,13 @@ disabled = {(authCol.ScreenTypeId15 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ViewOnly15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ViewOnly15 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ViewOnly15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ViewOnly15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ViewOnly15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cViewOnly15'
@@ -627,13 +627,13 @@ disabled={(authCol.SearchAscending15 || {}).readonly || !(authCol.SearchAscendin
 {(authCol.MasterTableId15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MasterTableId15 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MasterTableId15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MasterTableId15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MasterTableId15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cMasterTableId15'
@@ -654,13 +654,13 @@ disabled = {(authCol.MasterTableId15 || {}).readonly ? true: false }/>
 {(authCol.SearchTableId15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SearchTableId15 || {}).ColumnHeader} {(columnLabel.SearchTableId15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SearchTableId15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SearchTableId15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cSearchTableId15'
@@ -681,13 +681,13 @@ disabled = {(authCol.SearchTableId15 || {}).readonly ? true: false }/>
 {(authCol.SearchId15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SearchId15 || {}).ColumnHeader} {(columnLabel.SearchId15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SearchId15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SearchId15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cSearchId15'
@@ -708,13 +708,13 @@ disabled = {(authCol.SearchId15 || {}).readonly ? true: false }/>
 {(authCol.SearchIdR15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SearchIdR15 || {}).ColumnHeader} {(columnLabel.SearchIdR15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SearchIdR15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SearchIdR15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cSearchIdR15'
@@ -735,13 +735,13 @@ disabled = {(authCol.SearchIdR15 || {}).readonly ? true: false }/>
 {(authCol.SearchDtlId15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SearchDtlId15 || {}).ColumnHeader} {(columnLabel.SearchDtlId15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SearchDtlId15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SearchDtlId15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cSearchDtlId15'
@@ -762,13 +762,13 @@ disabled = {(authCol.SearchDtlId15 || {}).readonly ? true: false }/>
 {(authCol.SearchDtlIdR15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SearchDtlIdR15 || {}).ColumnHeader} {(columnLabel.SearchDtlIdR15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SearchDtlIdR15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SearchDtlIdR15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cSearchDtlIdR15'
@@ -789,13 +789,13 @@ disabled = {(authCol.SearchDtlIdR15 || {}).readonly ? true: false }/>
 {(authCol.SearchUrlId15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SearchUrlId15 || {}).ColumnHeader} {(columnLabel.SearchUrlId15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SearchUrlId15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SearchUrlId15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cSearchUrlId15'
@@ -816,13 +816,13 @@ disabled = {(authCol.SearchUrlId15 || {}).readonly ? true: false }/>
 {(authCol.SearchImgId15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SearchImgId15 || {}).ColumnHeader} {(columnLabel.SearchImgId15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SearchImgId15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SearchImgId15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cSearchImgId15'
@@ -843,13 +843,13 @@ disabled = {(authCol.SearchImgId15 || {}).readonly ? true: false }/>
 {(authCol.DetailTableId15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DetailTableId15 || {}).ColumnHeader} {(columnLabel.DetailTableId15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DetailTableId15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DetailTableId15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cDetailTableId15'
@@ -870,13 +870,13 @@ disabled = {(authCol.DetailTableId15 || {}).readonly ? true: false }/>
 {(authCol.GridRows15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.GridRows15 || {}).ColumnHeader} {(columnLabel.GridRows15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.GridRows15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.GridRows15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -1059,13 +1059,13 @@ disabled={(authCol.GenAudit15 || {}).readonly || !(authCol.GenAudit15 || {}).vis
 {(authCol.ScreenObj15 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenObj15 || {}).ColumnHeader} {(columnLabel.ScreenObj15 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenObj15 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenObj15 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -1080,13 +1080,13 @@ disabled = {(authCol.ScreenObj15 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ScreenFilter || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenFilter || {}).ColumnHeader} {(columnLabel.ScreenFilter || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenFilter || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenFilter || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -1101,13 +1101,13 @@ disabled = {(authCol.ScreenFilter || {}).readonly ? 'disabled': '' }/>
 {(authCol.MoreInfo || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MoreInfo || {}).ColumnHeader} {(columnLabel.MoreInfo || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MoreInfo || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MoreInfo || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -1141,7 +1141,7 @@ disabled = {(authCol.MoreInfo || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmScreenState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmScreenState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

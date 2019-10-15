@@ -106,9 +106,8 @@ if (!values.cTabFolderName80) { errors.cTabFolderName80 = (columnLabel.TabFolder
       [
         {
           ScreenTabHlpId80: values.cScreenTabHlpId80 || null,
-ScreenTabHlpId80: values.cScreenTabHlpId80|| '',
-CultureId80: (values.cCultureId80|| {}).value || '',
-TabFolderName80: values.cTabFolderName80|| '',
+          CultureId80: (values.cCultureId80|| {}).value || '',
+          TabFolderName80: values.cTabFolderName80|| '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cScreenTabHlpId80 ? 'upd' : 'add'),
         }
       ],
@@ -333,7 +332,6 @@ TabFolderName80: values.cTabFolderName80|| '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const ScreenTabHlpId80 = currDtl.ScreenTabHlpId80;
 const CultureId80List = AdmScreenTabReduxObj.ScreenDdlSelectors.CultureId80(AdmScreenTabState);
 const CultureId80 = currDtl.CultureId80;
 const TabFolderName80 = currDtl.TabFolderName80;
@@ -370,9 +368,8 @@ const TabFolderName80 = currDtl.TabFolderName80;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cScreenTabHlpId80: currDtl.ScreenTabHlpId80 || '',
-cCultureId80: CultureId80List.filter(obj => { return obj.key === currDtl.CultureId80 })[0],
-cTabFolderName80: currDtl.TabFolderName80 || '',
+                  cCultureId80: CultureId80List.filter(obj => { return obj.key === currDtl.CultureId80 })[0],
+                  cTabFolderName80: currDtl.TabFolderName80 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -437,37 +434,16 @@ cTabFolderName80: currDtl.TabFolderName80 || '',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.ScreenTabHlpId80 || {}).visible &&
+            {(authCol.CultureId80 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.ScreenTabHlpId80 || {}).ColumnHeader} {(columnLabel.ScreenTabHlpId80 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ScreenTabHlpId80 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenTabHlpId80 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cScreenTabHlpId80'
-disabled = {(authCol.ScreenTabHlpId80 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cScreenTabHlpId80 && touched.cScreenTabHlpId80 && <span className='form__form-group-error'>{errors.cScreenTabHlpId80}</span>}
-</div>
-</Col>
-}
-{(authCol.CultureId80 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CultureId80 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureId80 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CultureId80 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureId80 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cCultureId80'
@@ -488,13 +464,13 @@ disabled = {(authCol.CultureId80 || {}).readonly ? true: false }/>
 {(authCol.TabFolderName80 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TabFolderName80 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TabFolderName80 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TabFolderName80 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TabFolderName80 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -523,7 +499,7 @@ disabled = {(authCol.TabFolderName80 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ScreenTabId19,currDtl.ScreenTabHlpId80)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

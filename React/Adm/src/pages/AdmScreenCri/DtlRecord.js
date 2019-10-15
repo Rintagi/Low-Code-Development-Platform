@@ -105,9 +105,8 @@ if (isEmptyId((values.cCultureId105 || {}).value)) { errors.cCultureId105 = (col
       [
         {
           ScreenCriHlpId105: values.cScreenCriHlpId105 || null,
-ScreenCriHlpId105: values.cScreenCriHlpId105|| '',
-CultureId105: (values.cCultureId105|| {}).value || '',
-ColumnHeader105: values.cColumnHeader105|| '',
+          CultureId105: (values.cCultureId105|| {}).value || '',
+          ColumnHeader105: values.cColumnHeader105|| '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cScreenCriHlpId105 ? 'upd' : 'add'),
         }
       ],
@@ -332,7 +331,6 @@ ColumnHeader105: values.cColumnHeader105|| '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const ScreenCriHlpId105 = currDtl.ScreenCriHlpId105;
 const CultureId105List = AdmScreenCriReduxObj.ScreenDdlSelectors.CultureId105(AdmScreenCriState);
 const CultureId105 = currDtl.CultureId105;
 const ColumnHeader105 = currDtl.ColumnHeader105;
@@ -369,9 +367,8 @@ const ColumnHeader105 = currDtl.ColumnHeader105;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cScreenCriHlpId105: currDtl.ScreenCriHlpId105 || '',
-cCultureId105: CultureId105List.filter(obj => { return obj.key === currDtl.CultureId105 })[0],
-cColumnHeader105: currDtl.ColumnHeader105 || '',
+                  cCultureId105: CultureId105List.filter(obj => { return obj.key === currDtl.CultureId105 })[0],
+                  cColumnHeader105: currDtl.ColumnHeader105 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -436,37 +433,16 @@ cColumnHeader105: currDtl.ColumnHeader105 || '',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.ScreenCriHlpId105 || {}).visible &&
+            {(authCol.CultureId105 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenCriState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.ScreenCriHlpId105 || {}).ColumnHeader} {(columnLabel.ScreenCriHlpId105 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ScreenCriHlpId105 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenCriHlpId105 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmScreenCriState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cScreenCriHlpId105'
-disabled = {(authCol.ScreenCriHlpId105 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cScreenCriHlpId105 && touched.cScreenCriHlpId105 && <span className='form__form-group-error'>{errors.cScreenCriHlpId105}</span>}
-</div>
-</Col>
-}
-{(authCol.CultureId105 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenCriState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenCriState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CultureId105 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureId105 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CultureId105 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureId105 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenCriState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenCriState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cCultureId105'
@@ -487,13 +463,13 @@ disabled = {(authCol.CultureId105 || {}).readonly ? true: false }/>
 {(authCol.ColumnHeader105 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenCriState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenCriState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnHeader105 || {}).ColumnHeader} {(columnLabel.ColumnHeader105 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnHeader105 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnHeader105 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenCriState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenCriState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -522,7 +498,7 @@ disabled = {(authCol.ColumnHeader105 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ScreenCriId104,currDtl.ScreenCriHlpId105)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

@@ -121,18 +121,18 @@ class FileInputField extends Component {
             ctx.drawImage(img, 0, 0);
 
             var options = _this.props.options || {};
-            var width = img.width;
-            var height = img.height;
+            var _width = img.width;
+            var _height = img.height;
 
             var MAX_WIDTH = (options.MaxImageSize || {}).Width;
             var MAX_HEIGHT = (options.MaxImageSize || {}).Height;
 
-            var { width, height } = calcSize(width, height, MAX_WIDTH, MAX_HEIGHT);
+            var { width, height } = calcSize(_width, _height, MAX_WIDTH, MAX_HEIGHT);
 
             canvas.width = width;
             canvas.height = height;
 
-            var ctx = canvas.getContext("2d");
+            ctx = canvas.getContext("2d");
 
             ctx.drawImage(img, 0, 0, width, height);
 
@@ -296,11 +296,11 @@ class FileInputField extends Component {
           <Col>
             {
               (fileInfo.base64 || '').length > 0 && inPlaceImg && (mimeType === 'image/jpeg' || mimeType === 'image/png' || mimeType === 'image/gif') &&
-              <img width={storedIconImageSize.width} height={storedIconImageSize.height} className={`img-upload pointer ${deleteIconClass}`} onClick={this.previewServerFile(fileContent, mimeType)} src={fileContent} />
+              <img alt='' width={storedIconImageSize.width} height={storedIconImageSize.height} className={`img-upload pointer ${deleteIconClass}`} onClick={this.previewServerFile(fileContent, mimeType)} src={fileContent} />
             }
             {
               (mimeType === 'image/jpeg' || mimeType === 'image/png' || mimeType === 'image/gif') &&
-              <img width={uploadIconImageSize.width || 200} height={uploadIconImageSize.height || 150} className={`img-upload pointer ${previewIconClass}`} src={this.state.previewUrl} onClick={this.previewSelectedFile} />
+              <img alt='' width={uploadIconImageSize.width || 200} height={uploadIconImageSize.height || 150} className={`img-upload pointer ${previewIconClass}`} src={this.state.previewUrl} onClick={this.previewSelectedFile} />
             }
           </Col>
         </Row>

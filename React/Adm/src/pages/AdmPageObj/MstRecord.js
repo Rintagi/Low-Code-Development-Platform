@@ -135,16 +135,16 @@ if (!values.cPageObjOrd1277) { errors.cPageObjOrd1277 = (columnLabel.PageObjOrd1
       this.props.SavePage(
         this.props.AdmPageObj,
         {
-PageObjId1277: values.cPageObjId1277|| '',
-SectionCd1277: (values.cSectionCd1277|| {}).value || '',
-GroupRowId1277: (values.cGroupRowId1277|| {}).value || '',
-GroupColId1277: (values.cGroupColId1277|| {}).value || '',
-LinkTypeCd1277: (values.cLinkTypeCd1277|| {}).value || '',
-PageObjOrd1277: values.cPageObjOrd1277|| '',
-SctGrpRow1277: values.cSctGrpRow1277|| '',
-SctGrpCol1277: values.cSctGrpCol1277|| '',
-PageObjCss1277: values.cPageObjCss1277|| '',
-PageObjSrp1277: values.cPageObjSrp1277|| '',
+          PageObjId1277: values.cPageObjId1277|| '',
+          SectionCd1277: (values.cSectionCd1277|| {}).value || '',
+          GroupRowId1277: (values.cGroupRowId1277|| {}).value || '',
+          GroupColId1277: (values.cGroupColId1277|| {}).value || '',
+          LinkTypeCd1277: (values.cLinkTypeCd1277|| {}).value || '',
+          PageObjOrd1277: values.cPageObjOrd1277|| '',
+          SctGrpRow1277: values.cSctGrpRow1277|| '',
+          SctGrpCol1277: values.cSctGrpCol1277|| '',
+          PageObjCss1277: values.cPageObjCss1277|| '',
+          PageObjSrp1277: values.cPageObjSrp1277|| '',
         },
         [],
         {
@@ -377,16 +377,16 @@ const PageObjSrp1277 = currMst.PageObjSrp1277;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cPageObjId1277: PageObjId1277 || '',
-cSectionCd1277: SectionCd1277List.filter(obj => { return obj.key === SectionCd1277 })[0],
-cGroupRowId1277: GroupRowId1277List.filter(obj => { return obj.key === GroupRowId1277 })[0],
-cGroupColId1277: GroupColId1277List.filter(obj => { return obj.key === GroupColId1277 })[0],
-cLinkTypeCd1277: LinkTypeCd1277List.filter(obj => { return obj.key === LinkTypeCd1277 })[0],
-cPageObjOrd1277: PageObjOrd1277 || '',
-cSctGrpRow1277: SctGrpRow1277 || '',
-cSctGrpCol1277: SctGrpCol1277 || '',
-cPageObjCss1277: PageObjCss1277 || '',
-cPageObjSrp1277: PageObjSrp1277 || '',
+                  cPageObjId1277: PageObjId1277 || '',
+                  cSectionCd1277: SectionCd1277List.filter(obj => { return obj.key === SectionCd1277 })[0],
+                  cGroupRowId1277: GroupRowId1277List.filter(obj => { return obj.key === GroupRowId1277 })[0],
+                  cGroupColId1277: GroupColId1277List.filter(obj => { return obj.key === GroupColId1277 })[0],
+                  cLinkTypeCd1277: LinkTypeCd1277List.filter(obj => { return obj.key === LinkTypeCd1277 })[0],
+                  cPageObjOrd1277: PageObjOrd1277 || '',
+                  cSctGrpRow1277: SctGrpRow1277 || '',
+                  cSctGrpCol1277: SctGrpCol1277 || '',
+                  cPageObjCss1277: PageObjCss1277 || '',
+                  cPageObjSrp1277: PageObjSrp1277 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -417,7 +417,7 @@ cPageObjSrp1277: PageObjSrp1277 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmPageObjState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmPageObjState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -454,13 +454,13 @@ cPageObjSrp1277: PageObjSrp1277 || '',
             {(authCol.PageObjId1277 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PageObjId1277 || {}).ColumnHeader} {(columnLabel.PageObjId1277 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PageObjId1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PageObjId1277 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -475,13 +475,13 @@ disabled = {(authCol.PageObjId1277 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SectionCd1277 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SectionCd1277 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.SectionCd1277 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SectionCd1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SectionCd1277 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSectionCd1277'
@@ -499,13 +499,13 @@ disabled = {(authCol.SectionCd1277 || {}).readonly ? 'disabled': '' }/>
 {(authCol.GroupRowId1277 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.GroupRowId1277 || {}).ColumnHeader} {(columnLabel.GroupRowId1277 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.GroupRowId1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.GroupRowId1277 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cGroupRowId1277'
@@ -526,13 +526,13 @@ disabled = {(authCol.GroupRowId1277 || {}).readonly ? true: false }/>
 {(authCol.GroupColId1277 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.GroupColId1277 || {}).ColumnHeader} {(columnLabel.GroupColId1277 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.GroupColId1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.GroupColId1277 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cGroupColId1277'
@@ -553,13 +553,13 @@ disabled = {(authCol.GroupColId1277 || {}).readonly ? true: false }/>
 {(authCol.LinkTypeCd1277 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.LinkTypeCd1277 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.LinkTypeCd1277 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.LinkTypeCd1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LinkTypeCd1277 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cLinkTypeCd1277'
@@ -580,13 +580,13 @@ disabled = {(authCol.LinkTypeCd1277 || {}).readonly ? true: false }/>
 {(authCol.PageObjOrd1277 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PageObjOrd1277 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PageObjOrd1277 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PageObjOrd1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PageObjOrd1277 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -601,13 +601,13 @@ disabled = {(authCol.PageObjOrd1277 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SctGrpRow1277 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SctGrpRow1277 || {}).ColumnHeader} {(columnLabel.SctGrpRow1277 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SctGrpRow1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SctGrpRow1277 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -622,13 +622,13 @@ disabled = {(authCol.SctGrpRow1277 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SctGrpCol1277 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SctGrpCol1277 || {}).ColumnHeader} {(columnLabel.SctGrpCol1277 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SctGrpCol1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SctGrpCol1277 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -643,13 +643,13 @@ disabled = {(authCol.SctGrpCol1277 || {}).readonly ? 'disabled': '' }/>
 {(authCol.PageObjCss1277 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PageObjCss1277 || {}).ColumnHeader} {(columnLabel.PageObjCss1277 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PageObjCss1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PageObjCss1277 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -664,13 +664,13 @@ disabled = {(authCol.PageObjCss1277 || {}).readonly ? 'disabled': '' }/>
 {(authCol.PageObjSrp1277 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PageObjSrp1277 || {}).ColumnHeader} {(columnLabel.PageObjSrp1277 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PageObjSrp1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PageObjSrp1277 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -685,7 +685,7 @@ disabled = {(authCol.PageObjSrp1277 || {}).readonly ? 'disabled': '' }/>
 {(authCol.BtnDefault || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.BtnDefault || {}).ColumnHeader} {(columnLabel.BtnDefault || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.BtnDefault || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.BtnDefault || {}).ToolTip} />
 )}
@@ -697,7 +697,7 @@ disabled = {(authCol.PageObjSrp1277 || {}).readonly ? 'disabled': '' }/>
 {(authCol.BtnHeader || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.BtnHeader || {}).ColumnHeader} {(columnLabel.BtnHeader || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.BtnHeader || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.BtnHeader || {}).ToolTip} />
 )}
@@ -709,7 +709,7 @@ disabled = {(authCol.PageObjSrp1277 || {}).readonly ? 'disabled': '' }/>
 {(authCol.BtnFooter || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.BtnFooter || {}).ColumnHeader} {(columnLabel.BtnFooter || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.BtnFooter || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.BtnFooter || {}).ToolTip} />
 )}
@@ -721,7 +721,7 @@ disabled = {(authCol.PageObjSrp1277 || {}).readonly ? 'disabled': '' }/>
 {(authCol.BtnSidebar || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.BtnSidebar || {}).ColumnHeader} {(columnLabel.BtnSidebar || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.BtnSidebar || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.BtnSidebar || {}).ToolTip} />
 )}
@@ -752,7 +752,7 @@ disabled = {(authCol.PageObjSrp1277 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmPageObjState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmPageObjState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

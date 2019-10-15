@@ -132,11 +132,11 @@ if (!values.cMaintMessage233) { errors.cMaintMessage233 = (columnLabel.MaintMess
       this.props.SavePage(
         this.props.AdmMaintMsg,
         {
-MaintMsgId233: values.cMaintMsgId233|| '',
-MaintMsgName233: values.cMaintMsgName233|| '',
-MaintMessage233: values.cMaintMessage233|| '',
-ShowOnLogin233: values.cShowOnLogin233 ? 'Y' : 'N',
-LastEmailDt233: values.cLastEmailDt233|| '',
+          MaintMsgId233: values.cMaintMsgId233|| '',
+          MaintMsgName233: values.cMaintMsgName233|| '',
+          MaintMessage233: values.cMaintMessage233|| '',
+          ShowOnLogin233: values.cShowOnLogin233 ? 'Y' : 'N',
+          LastEmailDt233: values.cLastEmailDt233|| '',
         },
         [],
         {
@@ -360,11 +360,11 @@ const LastEmailDt233 = currMst.LastEmailDt233;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cMaintMsgId233: MaintMsgId233 || '',
-cMaintMsgName233: MaintMsgName233 || '',
-cMaintMessage233: MaintMessage233 || '',
-cShowOnLogin233: ShowOnLogin233 === 'Y',
-cLastEmailDt233: LastEmailDt233 || new Date(),
+                  cMaintMsgId233: MaintMsgId233 || '',
+                  cMaintMsgName233: MaintMsgName233 || '',
+                  cMaintMessage233: MaintMessage233 || '',
+                  cShowOnLogin233: ShowOnLogin233 === 'Y',
+                  cLastEmailDt233: LastEmailDt233 || new Date(),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -395,7 +395,7 @@ cLastEmailDt233: LastEmailDt233 || new Date(),
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmMaintMsgState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmMaintMsgState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -432,13 +432,13 @@ cLastEmailDt233: LastEmailDt233 || new Date(),
             {(authCol.MaintMsgId233 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MaintMsgId233 || {}).ColumnHeader} {(columnLabel.MaintMsgId233 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MaintMsgId233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MaintMsgId233 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -453,13 +453,13 @@ disabled = {(authCol.MaintMsgId233 || {}).readonly ? 'disabled': '' }/>
 {(authCol.MaintMsgName233 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MaintMsgName233 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MaintMsgName233 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MaintMsgName233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MaintMsgName233 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -474,13 +474,13 @@ disabled = {(authCol.MaintMsgName233 || {}).readonly ? 'disabled': '' }/>
 {(authCol.MaintMessage233 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MaintMessage233 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MaintMessage233 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MaintMessage233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MaintMessage233 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -516,13 +516,13 @@ disabled={(authCol.ShowOnLogin233 || {}).readonly || !(authCol.ShowOnLogin233 ||
 {(authCol.LastEmailDt233 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.LastEmailDt233 || {}).ColumnHeader} {(columnLabel.LastEmailDt233 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.LastEmailDt233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LastEmailDt233 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DatePicker
 name='cLastEmailDt233'
@@ -540,7 +540,7 @@ disabled = {(authCol.LastEmailDt233 || {}).readonly ? true: false }/>
 {(authCol.EmailUsers || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.EmailUsers || {}).ColumnHeader} {(columnLabel.EmailUsers || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.EmailUsers || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.EmailUsers || {}).ToolTip} />
 )}
@@ -571,7 +571,7 @@ disabled = {(authCol.LastEmailDt233 || {}).readonly ? true: false }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmMaintMsgState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmMaintMsgState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

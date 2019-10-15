@@ -132,11 +132,11 @@ if (!values.cConfirmPwd1) { errors.cConfirmPwd1 = (columnLabel.ConfirmPwd1 || {}
       this.props.SavePage(
         this.props.AdmChgPwd,
         {
-UsrId1: values.cUsrId1|| '',
-UsrPassword1: values.cUsrPassword1|| '',
-ConfirmPwd1: values.cConfirmPwd1|| '',
-SendMail: values.cSendMail ? 'Y' : 'N',
-ForcePwdChg: values.cForcePwdChg ? 'Y' : 'N',
+          UsrId1: values.cUsrId1|| '',
+          UsrPassword1: values.cUsrPassword1|| '',
+          ConfirmPwd1: values.cConfirmPwd1|| '',
+          SendMail: values.cSendMail ? 'Y' : 'N',
+          ForcePwdChg: values.cForcePwdChg ? 'Y' : 'N',
         },
         [],
         {
@@ -360,11 +360,11 @@ const ForcePwdChg = currMst.ForcePwdChg;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cUsrId1: UsrId1 || '',
-cUsrPassword1: UsrPassword1 || '',
-cConfirmPwd1: ConfirmPwd1 || '',
-cSendMail: SendMail === 'Y',
-cForcePwdChg: ForcePwdChg === 'Y',
+                  cUsrId1: UsrId1 || '',
+                  cUsrPassword1: UsrPassword1 || '',
+                  cConfirmPwd1: ConfirmPwd1 || '',
+                  cSendMail: SendMail === 'Y',
+                  cForcePwdChg: ForcePwdChg === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -395,7 +395,7 @@ cForcePwdChg: ForcePwdChg === 'Y',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmChgPwdState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmChgPwdState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -432,13 +432,13 @@ cForcePwdChg: ForcePwdChg === 'Y',
             {(authCol.UsrId1 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.UsrId1 || {}).ColumnHeader} {(columnLabel.UsrId1 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.UsrId1 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrId1 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -453,13 +453,13 @@ disabled = {(authCol.UsrId1 || {}).readonly ? 'disabled': '' }/>
 {(authCol.UsrPassword1 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.UsrPassword1 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.UsrPassword1 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.UsrPassword1 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrPassword1 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -474,13 +474,13 @@ disabled = {(authCol.UsrPassword1 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ConfirmPwd1 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ConfirmPwd1 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ConfirmPwd1 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ConfirmPwd1 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ConfirmPwd1 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmChgPwdState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -556,7 +556,7 @@ disabled={(authCol.ForcePwdChg || {}).readonly || !(authCol.ForcePwdChg || {}).v
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmChgPwdState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmChgPwdState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

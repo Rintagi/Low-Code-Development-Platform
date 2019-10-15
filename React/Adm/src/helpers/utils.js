@@ -119,7 +119,7 @@ export function parsedUrl(url) {
   }
   
 export function setupRuntime() {
-    const rintagi = document.Rintagi;
+    const rintagi = document.Rintagi || {};
     const location = window.location;
     const href = location.href;
     const pathName = location.pathname;
@@ -138,6 +138,10 @@ export function setupRuntime() {
     rintagi.apiBasename = rintagi.apiBasename || apiBasename;
     rintagi.appDomainUrl = rintagi.appDomainUrl || appDomainUrl;
     rintagi.appNS = rintagi.appNS || appDomainUrl.replace(origin,'') || '/';
+    if (location.pathname === "/" && location.protocol === "http:" && location.port >= 3000 && location.port <= 3100) {
+        rintagi.apiBasename = (rintagi.localDev || {}).apiBasename || rintagi.apiBasename;
+    }
+    document.Rintagi = rintagi;
   };
 
   setupRuntime();

@@ -43,7 +43,7 @@ export default class ProgressBar extends PureComponent {
       if (score > 100) score = 100;
 
       this.setState({
-        score: parseInt(score)
+        score: parseInt(score, 10)
       });
     }
   }

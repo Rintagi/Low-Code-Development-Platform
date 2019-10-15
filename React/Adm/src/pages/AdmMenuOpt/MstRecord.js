@@ -131,21 +131,21 @@ if (!values.cMenuOptName248) { errors.cMenuOptName248 = (columnLabel.MenuOptName
       this.props.SavePage(
         this.props.AdmMenuOpt,
         {
-MenuOptId248: values.cMenuOptId248|| '',
-MenuOptName248: values.cMenuOptName248|| '',
-MenuOptDesc248: values.cMenuOptDesc248|| '',
-MenuOptIco248: values.cMenuOptIco248|| '',
-MenuOptImg248: values.cMenuOptImg248|| '',
-ProjectId248: (values.cProjectId248|| {}).value || '',
-OvaRating248: values.cOvaRating248|| '',
-InputBy248: (values.cInputBy248|| {}).value || '',
-InputOn248: values.cInputOn248|| '',
-TopMenuCss248: values.cTopMenuCss248|| '',
-SidMenuCss248: values.cSidMenuCss248|| '',
-TopMenuJs248: values.cTopMenuJs248|| '',
-SidMenuJs248: values.cSidMenuJs248|| '',
-TopMenuIvk248: values.cTopMenuIvk248|| '',
-SidMenuIvk248: values.cSidMenuIvk248|| '',
+          MenuOptId248: values.cMenuOptId248|| '',
+          MenuOptName248: values.cMenuOptName248|| '',
+          MenuOptDesc248: values.cMenuOptDesc248|| '',
+          MenuOptIco248: values.cMenuOptIco248|| '',
+          MenuOptImg248: values.cMenuOptImg248|| '',
+          ProjectId248: (values.cProjectId248|| {}).value || '',
+          OvaRating248: values.cOvaRating248|| '',
+          InputBy248: (values.cInputBy248|| {}).value || '',
+          InputOn248: values.cInputOn248|| '',
+          TopMenuCss248: values.cTopMenuCss248|| '',
+          SidMenuCss248: values.cSidMenuCss248|| '',
+          TopMenuJs248: values.cTopMenuJs248|| '',
+          SidMenuJs248: values.cSidMenuJs248|| '',
+          TopMenuIvk248: values.cTopMenuIvk248|| '',
+          SidMenuIvk248: values.cSidMenuIvk248|| '',
         },
         [],
         {
@@ -381,21 +381,21 @@ const SidMenuIvk248 = currMst.SidMenuIvk248;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cMenuOptId248: MenuOptId248 || '',
-cMenuOptName248: MenuOptName248 || '',
-cMenuOptDesc248: MenuOptDesc248 || '',
-cMenuOptIco248: MenuOptIco248 || '',
-cMenuOptImg248: MenuOptImg248 || '',
-cProjectId248: ProjectId248List.filter(obj => { return obj.key === ProjectId248 })[0],
-cOvaRating248: OvaRating248 || '',
-cInputBy248: InputBy248List.filter(obj => { return obj.key === InputBy248 })[0],
-cInputOn248: InputOn248 || new Date(),
-cTopMenuCss248: TopMenuCss248 || '',
-cSidMenuCss248: SidMenuCss248 || '',
-cTopMenuJs248: TopMenuJs248 || '',
-cSidMenuJs248: SidMenuJs248 || '',
-cTopMenuIvk248: TopMenuIvk248 || '',
-cSidMenuIvk248: SidMenuIvk248 || '',
+                  cMenuOptId248: MenuOptId248 || '',
+                  cMenuOptName248: MenuOptName248 || '',
+                  cMenuOptDesc248: MenuOptDesc248 || '',
+                  cMenuOptIco248: MenuOptIco248 || '',
+                  cMenuOptImg248: MenuOptImg248 || '',
+                  cProjectId248: ProjectId248List.filter(obj => { return obj.key === ProjectId248 })[0],
+                  cOvaRating248: OvaRating248 || '',
+                  cInputBy248: InputBy248List.filter(obj => { return obj.key === InputBy248 })[0],
+                  cInputOn248: InputOn248 || new Date(),
+                  cTopMenuCss248: TopMenuCss248 || '',
+                  cSidMenuCss248: SidMenuCss248 || '',
+                  cTopMenuJs248: TopMenuJs248 || '',
+                  cSidMenuJs248: SidMenuJs248 || '',
+                  cTopMenuIvk248: TopMenuIvk248 || '',
+                  cSidMenuIvk248: SidMenuIvk248 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -426,7 +426,7 @@ cSidMenuIvk248: SidMenuIvk248 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmMenuOptState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmMenuOptState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -463,13 +463,13 @@ cSidMenuIvk248: SidMenuIvk248 || '',
             {(authCol.MenuOptId248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MenuOptId248 || {}).ColumnHeader} {(columnLabel.MenuOptId248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MenuOptId248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MenuOptId248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -484,13 +484,13 @@ disabled = {(authCol.MenuOptId248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.MenuOptName248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MenuOptName248 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MenuOptName248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MenuOptName248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MenuOptName248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -505,13 +505,13 @@ disabled = {(authCol.MenuOptName248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.MenuOptDesc248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MenuOptDesc248 || {}).ColumnHeader} {(columnLabel.MenuOptDesc248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MenuOptDesc248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MenuOptDesc248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -526,13 +526,13 @@ disabled = {(authCol.MenuOptDesc248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.MenuOptIco248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MenuOptIco248 || {}).ColumnHeader} {(columnLabel.MenuOptIco248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MenuOptIco248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MenuOptIco248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -547,13 +547,13 @@ disabled = {(authCol.MenuOptIco248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.MenuOptImg248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MenuOptImg248 || {}).ColumnHeader} {(columnLabel.MenuOptImg248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MenuOptImg248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MenuOptImg248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -568,13 +568,13 @@ disabled = {(authCol.MenuOptImg248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ProjectId248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ProjectId248 || {}).ColumnHeader} {(columnLabel.ProjectId248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ProjectId248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ProjectId248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cProjectId248'
@@ -592,13 +592,13 @@ disabled = {(authCol.ProjectId248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.OvaRating248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.OvaRating248 || {}).ColumnHeader} {(columnLabel.OvaRating248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.OvaRating248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.OvaRating248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -613,13 +613,13 @@ disabled = {(authCol.OvaRating248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.InputBy248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.InputBy248 || {}).ColumnHeader} {(columnLabel.InputBy248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.InputBy248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.InputBy248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cInputBy248'
@@ -637,13 +637,13 @@ disabled = {(authCol.InputBy248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.InputOn248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.InputOn248 || {}).ColumnHeader} {(columnLabel.InputOn248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.InputOn248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.InputOn248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DatePicker
 name='cInputOn248'
@@ -661,13 +661,13 @@ disabled = {(authCol.InputOn248 || {}).readonly ? true: false }/>
 {(authCol.TopMenuCss248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TopMenuCss248 || {}).ColumnHeader} {(columnLabel.TopMenuCss248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TopMenuCss248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TopMenuCss248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -682,13 +682,13 @@ disabled = {(authCol.TopMenuCss248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SidMenuCss248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SidMenuCss248 || {}).ColumnHeader} {(columnLabel.SidMenuCss248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SidMenuCss248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SidMenuCss248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -703,13 +703,13 @@ disabled = {(authCol.SidMenuCss248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TopMenuJs248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TopMenuJs248 || {}).ColumnHeader} {(columnLabel.TopMenuJs248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TopMenuJs248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TopMenuJs248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -724,13 +724,13 @@ disabled = {(authCol.TopMenuJs248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SidMenuJs248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SidMenuJs248 || {}).ColumnHeader} {(columnLabel.SidMenuJs248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SidMenuJs248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SidMenuJs248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -745,13 +745,13 @@ disabled = {(authCol.SidMenuJs248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TopMenuIvk248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TopMenuIvk248 || {}).ColumnHeader} {(columnLabel.TopMenuIvk248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TopMenuIvk248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TopMenuIvk248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -766,13 +766,13 @@ disabled = {(authCol.TopMenuIvk248 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SidMenuIvk248 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SidMenuIvk248 || {}).ColumnHeader} {(columnLabel.SidMenuIvk248 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SidMenuIvk248 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SidMenuIvk248 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -806,7 +806,7 @@ disabled = {(authCol.SidMenuIvk248 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmMenuOptState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmMenuOptState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

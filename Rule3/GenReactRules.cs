@@ -1004,7 +1004,7 @@ class MstList extends RintagiScreen {
                                         .map((v, i, a) => {
                                           if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]])) return null;
                                           const buttonCount = a.length;
-                                          const colWidth = parseInt(12 / buttonCount);
+                                          const colWidth = parseInt(12 / buttonCount, 10);
                                           const lastBtn = i === a.length - 1;
                                           const outlineProperty = lastBtn ? false : true;
                                           return (
@@ -1031,7 +1031,7 @@ class MstList extends RintagiScreen {
               {!activeSelectionVisible &&
                 !this.state.ShowMst &&
                 <div className='empty-block'>
-                  <img className='folder-img' src={require('../../img/folder.png')} />
+                  <img className='folder-img' alt='' src={require('../../img/folder.png')} />
                   <p className='create-new-message'>{NoMasterMsg}. <span className='link-imitation' onClick={this.AddNewMst({ naviBar: naviSelectBar, useMobileView })}>{AddMasterMsg}</span></p>
                 </div>
               }
@@ -1190,14 +1190,14 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                                 + " <Col lg={6} xl={6}>" + Environment.NewLine
                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                       + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                       + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                       + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                       + ")}" + Environment.NewLine
                                       + "</label>" + Environment.NewLine
                                       + "}" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                         + "<div className='form__form-group-field'>" + Environment.NewLine
                                           + "<Field" + Environment.NewLine
                                             + "type='text'" + Environment.NewLine
@@ -1242,14 +1242,14 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                               + " <Col lg={6} xl={6}>" + Environment.NewLine
                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                         + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                         + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                         + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                         + ")}" + Environment.NewLine
                                         + "</label>" + Environment.NewLine
                                       + "}" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                         + "<div className='form__form-group-field'>" + Environment.NewLine
                                           + "<AutoCompleteField" + Environment.NewLine
                                             + "name='c" + columnId + "'" + Environment.NewLine
@@ -1301,14 +1301,14 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                               + " <Col lg={6} xl={6}>" + Environment.NewLine
                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                         + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                         + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                         + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                         + ")}" + Environment.NewLine
                                         + "</label>" + Environment.NewLine
                                       + "}" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                         + "<div className='form__form-group-field'>" + Environment.NewLine
                                           + "<DropdownField" + Environment.NewLine
                                             + "name='c" + columnId + "'" + Environment.NewLine
@@ -1352,14 +1352,14 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                               + " <Col lg={6} xl={6}>" + Environment.NewLine
                                      + "<div className='form__form-group'>" + Environment.NewLine
-                                       + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                       + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                          + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                          + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                          + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                          + ")}" + Environment.NewLine
                                          + "</label>" + Environment.NewLine
                                        + "}" + Environment.NewLine
-                                       + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                       + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                        + "<div className='form__form-group-field'>" + Environment.NewLine
                                           + "<DatePicker" + Environment.NewLine
                                              + "name='c" + columnId + "'" + Environment.NewLine
@@ -1444,7 +1444,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                               + " <Col lg={6} xl={6}>" + Environment.NewLine
                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                         + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                         + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                         + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
@@ -1481,14 +1481,14 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                               + " <Col lg={6} xl={6}>" + Environment.NewLine
                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                         + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                         + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                         + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                         + ")}" + Environment.NewLine
                                         + "</label>" + Environment.NewLine
                                       + "}" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                         + "<div className='form__form-group-field'>" + Environment.NewLine
                                           + "<Field" + Environment.NewLine
                                             + "type='text'" + Environment.NewLine
@@ -1508,9 +1508,9 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
             }
             string functionCnt = string.Join(Environment.NewLine, functionResults);
             string validatorCnt = string.Join(Environment.NewLine, validatorResults);
-            string saveBtnCnt = string.Join(Environment.NewLine, saveBtnResults);
+            string saveBtnCnt = string.Join(Environment.NewLine, saveBtnResults.Select(s => addIndent(s, 10)));
             string renderLabelCnt = string.Join(Environment.NewLine, renderLabelResults);
-            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults);
+            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Select(s => addIndent(s, 18)));
             string formikControlCnt = string.Join(Environment.NewLine, formikControlResults);
             string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults);
 
@@ -1918,7 +1918,7 @@ class MstRecord extends RintagiScreen {
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner([[---ScreenName---]]State) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner([[---ScreenName---]]State) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -1977,7 +1977,7 @@ class MstRecord extends RintagiScreen {
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner([[---ScreenName---]]State) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner([[---ScreenName---]]State) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>
@@ -2545,7 +2545,7 @@ class DtlList extends RintagiScreen {
                                             .map((v, i, a) => {
                                               if ((!activeSelectionVisible && v.buttonType !== 'InsRow') || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]])) return null;
                                               const buttonCount = a.length;
-                                              const colWidth = parseInt(12 / buttonCount);
+                                              const colWidth = parseInt(12 / buttonCount, 10);
                                               const lastBtn = i === a.length - 1;
                                               const outlineProperty = lastBtn ? false : true;
 
@@ -2575,7 +2575,7 @@ class DtlList extends RintagiScreen {
                 targetDtlId !== '_' &&
                 !this.state.ShowDtl &&
                 <div className='empty-block'>
-                  <img className='folder-img' src={require('../../img/folder.png')} />
+                  <img className='folder-img' alt='' src={require('../../img/folder.png')} />
                   <p className='create-new-message'>{NoDetailMsg}. <span className='link-imitation' onClick={this.AddNewDtl({ naviBar, mstId: currMst.[[---ScreenPrimaryKey---]] })}>{AddDetailMsg}</span></p>
                 </div>}
 
@@ -2658,6 +2658,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
 
             foreach (DataRowView drv in dvReactRule)
             {
+
                 if (drv["ReactEventId"].ToString() == "5") //Detail Record Custom Function
                 {
                     string DetailCustomFunctionValue = drv["ReactRuleProg"].ToString();
@@ -2699,6 +2700,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                     string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
                     string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
 
+                    if (columnId == screenDetailKey) continue; // skip key column as it is produced else where
+
                     if (drv["DisplayMode"].ToString() == "TextBox") //---------Textbox
                     {
                         //validator
@@ -2724,14 +2727,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                                 + " <Col lg={12} xl={12}>" + Environment.NewLine
                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                         + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                          + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                         + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                         + ")}" + Environment.NewLine
                                         + "</label>" + Environment.NewLine
                                       + "}" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                         + "<div className='form__form-group-field'>" + Environment.NewLine
                                           + "<Field" + Environment.NewLine
                                             + "type='text'" + Environment.NewLine
@@ -2776,14 +2779,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                               + " <Col lg={12} xl={12}>" + Environment.NewLine
                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                         + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                          + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                         + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                         + ")}" + Environment.NewLine
                                         + "</label>" + Environment.NewLine
                                       + "}" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                         + "<div className='form__form-group-field'>" + Environment.NewLine
                                           + "<AutoCompleteField" + Environment.NewLine
                                             + "name='c" + columnId + "'" + Environment.NewLine
@@ -2835,14 +2838,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                              + " <Col lg={12} xl={12}>" + Environment.NewLine
                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                         + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                          + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                         + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                         + ")}" + Environment.NewLine
                                         + "</label>" + Environment.NewLine
                                       + "}" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                         + "<div className='form__form-group-field'>" + Environment.NewLine
                                           + "<DropdownField" + Environment.NewLine
                                             + "name='c" + columnId + "'" + Environment.NewLine
@@ -2886,14 +2889,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                              + " <Col lg={12} xl={12}>" + Environment.NewLine
                                      + "<div className='form__form-group'>" + Environment.NewLine
-                                       + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                       + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                          + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                           + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                         + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                         + ")}" + Environment.NewLine
                                          + "</label>" + Environment.NewLine
                                        + "}" + Environment.NewLine
-                                       + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                       + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                        + "<div className='form__form-group-field'>" + Environment.NewLine
                                           + "<DatePicker" + Environment.NewLine
                                              + "name='c" + columnId + "'" + Environment.NewLine
@@ -3007,14 +3010,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                             string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                                   + " <Col lg={12} xl={12}>" + Environment.NewLine
                                         + "<div className='form__form-group'>" + Environment.NewLine
-                                          + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                          + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                             + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                              + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                             + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                             + ")}" + Environment.NewLine
                                             + "</label>" + Environment.NewLine
                                           + "}" + Environment.NewLine
-                                          + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                          + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                             + "<div className='form__form-group-field'>" + Environment.NewLine
                                               + "<FileInputField" + Environment.NewLine
                                                 + "name='c" + columnId + "'" + Environment.NewLine
@@ -3040,7 +3043,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                             + " <Col lg={12} xl={12}>" + Environment.NewLine
                                   + "<div className='form__form-group'>" + Environment.NewLine
-                                    + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                    + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                       + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                        + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                       + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
@@ -3077,14 +3080,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
                               + " <Col lg={12} xl={12}>" + Environment.NewLine
                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
                                         + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
                                          + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
                                         + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
                                         + ")}" + Environment.NewLine
                                         + "</label>" + Environment.NewLine
                                       + "}" + Environment.NewLine
-                                      + "{(" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' /> ||" + Environment.NewLine
+                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
                                         + "<div className='form__form-group-field'>" + Environment.NewLine
                                           + "<Field" + Environment.NewLine
                                             + "type='text'" + Environment.NewLine
@@ -3104,9 +3107,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
             }
             string functionCnt = string.Join(Environment.NewLine, functionResults);
             string validatorCnt = string.Join(Environment.NewLine, validatorResults);
-            string saveBtnCnt = string.Join(Environment.NewLine, saveBtnResults);
+            string saveBtnCnt = string.Join(Environment.NewLine, saveBtnResults.Select(s=>addIndent(s,10)));
             string renderLabelCnt = string.Join(Environment.NewLine, renderLabelResults);
-            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults);
+            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Select(s => addIndent(s, 18)));
             string formikControlCnt = string.Join(Environment.NewLine, formikControlResults);
             string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults);
 
@@ -3579,7 +3582,7 @@ class DtlRecord extends RintagiScreen {
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]],currDtl.[[---ScreenDetailKey---]])) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

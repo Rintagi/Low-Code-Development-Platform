@@ -137,12 +137,12 @@ if (isEmptyId((values.cRefColumnId20 || {}).value)) { errors.cRefColumnId20 = (c
       this.props.SavePage(
         this.props.AdmDbKey,
         {
-KeyId20: values.cKeyId20|| '',
-KeyName20: values.cKeyName20|| '',
-TableId20: (values.cTableId20|| {}).value || '',
-ColumnId20: (values.cColumnId20|| {}).value || '',
-RefTableId20: (values.cRefTableId20|| {}).value || '',
-RefColumnId20: (values.cRefColumnId20|| {}).value || '',
+          KeyId20: values.cKeyId20|| '',
+          KeyName20: values.cKeyName20|| '',
+          TableId20: (values.cTableId20|| {}).value || '',
+          ColumnId20: (values.cColumnId20|| {}).value || '',
+          RefTableId20: (values.cRefTableId20|| {}).value || '',
+          RefColumnId20: (values.cRefColumnId20|| {}).value || '',
         },
         [],
         {
@@ -371,12 +371,12 @@ const RefColumnId20 = currMst.RefColumnId20;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cKeyId20: KeyId20 || '',
-cKeyName20: KeyName20 || '',
-cTableId20: TableId20List.filter(obj => { return obj.key === TableId20 })[0],
-cColumnId20: ColumnId20List.filter(obj => { return obj.key === ColumnId20 })[0],
-cRefTableId20: RefTableId20List.filter(obj => { return obj.key === RefTableId20 })[0],
-cRefColumnId20: RefColumnId20List.filter(obj => { return obj.key === RefColumnId20 })[0],
+                  cKeyId20: KeyId20 || '',
+                  cKeyName20: KeyName20 || '',
+                  cTableId20: TableId20List.filter(obj => { return obj.key === TableId20 })[0],
+                  cColumnId20: ColumnId20List.filter(obj => { return obj.key === ColumnId20 })[0],
+                  cRefTableId20: RefTableId20List.filter(obj => { return obj.key === RefTableId20 })[0],
+                  cRefColumnId20: RefColumnId20List.filter(obj => { return obj.key === RefColumnId20 })[0],
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -407,7 +407,7 @@ cRefColumnId20: RefColumnId20List.filter(obj => { return obj.key === RefColumnId
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmDbKeyState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmDbKeyState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -444,13 +444,13 @@ cRefColumnId20: RefColumnId20List.filter(obj => { return obj.key === RefColumnId
             {(authCol.KeyId20 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.KeyId20 || {}).ColumnHeader} {(columnLabel.KeyId20 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.KeyId20 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.KeyId20 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -465,13 +465,13 @@ disabled = {(authCol.KeyId20 || {}).readonly ? 'disabled': '' }/>
 {(authCol.KeyName20 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.KeyName20 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.KeyName20 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.KeyName20 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.KeyName20 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -486,13 +486,13 @@ disabled = {(authCol.KeyName20 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TableId20 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TableId20 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TableId20 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TableId20 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TableId20 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cTableId20'
@@ -513,13 +513,13 @@ disabled = {(authCol.TableId20 || {}).readonly ? true: false }/>
 {(authCol.ColumnId20 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnId20 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ColumnId20 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnId20 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnId20 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cColumnId20'
@@ -540,13 +540,13 @@ disabled = {(authCol.ColumnId20 || {}).readonly ? true: false }/>
 {(authCol.RefTableId20 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RefTableId20 || {}).ColumnHeader} {(columnLabel.RefTableId20 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RefTableId20 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RefTableId20 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cRefTableId20'
@@ -567,13 +567,13 @@ disabled = {(authCol.RefTableId20 || {}).readonly ? true: false }/>
 {(authCol.RefColumnId20 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RefColumnId20 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RefColumnId20 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RefColumnId20 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RefColumnId20 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbKeyState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cRefColumnId20'
@@ -613,7 +613,7 @@ disabled = {(authCol.RefColumnId20 || {}).readonly ? true: false }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmDbKeyState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmDbKeyState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

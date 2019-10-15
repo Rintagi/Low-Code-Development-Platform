@@ -132,10 +132,10 @@ if (!values.cTbdRuleName254) { errors.cTbdRuleName254 = (columnLabel.TbdRuleName
       this.props.SavePage(
         this.props.AdmTbdRule,
         {
-TbdRuleId254: values.cTbdRuleId254|| '',
-ScreenId254: (values.cScreenId254|| {}).value || '',
-TbdRuleName254: values.cTbdRuleName254|| '',
-TbdRuleDesc254: values.cTbdRuleDesc254|| '',
+          TbdRuleId254: values.cTbdRuleId254|| '',
+          ScreenId254: (values.cScreenId254|| {}).value || '',
+          TbdRuleName254: values.cTbdRuleName254|| '',
+          TbdRuleDesc254: values.cTbdRuleDesc254|| '',
         },
         [],
         {
@@ -359,10 +359,10 @@ const TbdRuleDesc254 = currMst.TbdRuleDesc254;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cTbdRuleId254: TbdRuleId254 || '',
-cScreenId254: ScreenId254List.filter(obj => { return obj.key === ScreenId254 })[0],
-cTbdRuleName254: TbdRuleName254 || '',
-cTbdRuleDesc254: TbdRuleDesc254 || '',
+                  cTbdRuleId254: TbdRuleId254 || '',
+                  cScreenId254: ScreenId254List.filter(obj => { return obj.key === ScreenId254 })[0],
+                  cTbdRuleName254: TbdRuleName254 || '',
+                  cTbdRuleDesc254: TbdRuleDesc254 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -393,7 +393,7 @@ cTbdRuleDesc254: TbdRuleDesc254 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmTbdRuleState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmTbdRuleState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -430,13 +430,13 @@ cTbdRuleDesc254: TbdRuleDesc254 || '',
             {(authCol.TbdRuleId254 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TbdRuleId254 || {}).ColumnHeader} {(columnLabel.TbdRuleId254 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TbdRuleId254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TbdRuleId254 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -451,13 +451,13 @@ disabled = {(authCol.TbdRuleId254 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ScreenId254 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenId254 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScreenId254 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenId254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenId254 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cScreenId254'
@@ -478,13 +478,13 @@ disabled = {(authCol.ScreenId254 || {}).readonly ? true: false }/>
 {(authCol.TbdRuleName254 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TbdRuleName254 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TbdRuleName254 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TbdRuleName254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TbdRuleName254 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -499,13 +499,13 @@ disabled = {(authCol.TbdRuleName254 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TbdRuleDesc254 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TbdRuleDesc254 || {}).ColumnHeader} {(columnLabel.TbdRuleDesc254 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TbdRuleDesc254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TbdRuleDesc254 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -539,7 +539,7 @@ disabled = {(authCol.TbdRuleDesc254 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmTbdRuleState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmTbdRuleState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

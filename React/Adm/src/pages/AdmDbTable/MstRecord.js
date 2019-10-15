@@ -160,20 +160,20 @@ if (!values.cTableDesc3) { errors.cTableDesc3 = (columnLabel.TableDesc3 || {}).E
       this.props.SavePage(
         this.props.AdmDbTable,
         {
-TableId3: values.cTableId3|| '',
-SystemId3: (values.cSystemId3|| {}).value || '',
-TableName3: values.cTableName3|| '',
-TableDesc3: values.cTableDesc3|| '',
-TblObjective3: values.cTblObjective3|| '',
-VirtualTbl3: values.cVirtualTbl3 ? 'Y' : 'N',
-MultiDesignDb3: values.cMultiDesignDb3 ? 'Y' : 'N',
-UploadSheet: values.cUploadSheet|| '',
-SheetNameList: (values.cSheetNameList|| {}).value || '',
-RowsToExamine: values.cRowsToExamine|| '',
-ModifiedBy3: (values.cModifiedBy3|| {}).value || '',
-ModifiedOn3: values.cModifiedOn3|| '',
-LastSyncDt3: values.cLastSyncDt3|| '',
-VirtualSql3: values.cVirtualSql3|| '',
+          TableId3: values.cTableId3|| '',
+          SystemId3: (values.cSystemId3|| {}).value || '',
+          TableName3: values.cTableName3|| '',
+          TableDesc3: values.cTableDesc3|| '',
+          TblObjective3: values.cTblObjective3|| '',
+          VirtualTbl3: values.cVirtualTbl3 ? 'Y' : 'N',
+          MultiDesignDb3: values.cMultiDesignDb3 ? 'Y' : 'N',
+          UploadSheet: values.cUploadSheet|| '',
+          SheetNameList: (values.cSheetNameList|| {}).value || '',
+          RowsToExamine: values.cRowsToExamine|| '',
+          ModifiedBy3: (values.cModifiedBy3|| {}).value || '',
+          ModifiedOn3: values.cModifiedOn3|| '',
+          LastSyncDt3: values.cLastSyncDt3|| '',
+          VirtualSql3: values.cVirtualSql3|| '',
         },
         [],
         {
@@ -409,20 +409,20 @@ const VirtualSql3 = currMst.VirtualSql3;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cTableId3: TableId3 || '',
-cSystemId3: SystemId3List.filter(obj => { return obj.key === SystemId3 })[0],
-cTableName3: TableName3 || '',
-cTableDesc3: TableDesc3 || '',
-cTblObjective3: TblObjective3 || '',
-cVirtualTbl3: VirtualTbl3 === 'Y',
-cMultiDesignDb3: MultiDesignDb3 === 'Y',
-cUploadSheet: UploadSheet || '',
-cSheetNameList: SheetNameListList.filter(obj => { return obj.key === SheetNameList })[0],
-cRowsToExamine: RowsToExamine || '',
-cModifiedBy3: ModifiedBy3List.filter(obj => { return obj.key === ModifiedBy3 })[0],
-cModifiedOn3: ModifiedOn3 || new Date(),
-cLastSyncDt3: LastSyncDt3 || '',
-cVirtualSql3: VirtualSql3 || '',
+                  cTableId3: TableId3 || '',
+                  cSystemId3: SystemId3List.filter(obj => { return obj.key === SystemId3 })[0],
+                  cTableName3: TableName3 || '',
+                  cTableDesc3: TableDesc3 || '',
+                  cTblObjective3: TblObjective3 || '',
+                  cVirtualTbl3: VirtualTbl3 === 'Y',
+                  cMultiDesignDb3: MultiDesignDb3 === 'Y',
+                  cUploadSheet: UploadSheet || '',
+                  cSheetNameList: SheetNameListList.filter(obj => { return obj.key === SheetNameList })[0],
+                  cRowsToExamine: RowsToExamine || '',
+                  cModifiedBy3: ModifiedBy3List.filter(obj => { return obj.key === ModifiedBy3 })[0],
+                  cModifiedOn3: ModifiedOn3 || new Date(),
+                  cLastSyncDt3: LastSyncDt3 || '',
+                  cVirtualSql3: VirtualSql3 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -453,7 +453,7 @@ cVirtualSql3: VirtualSql3 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmDbTableState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmDbTableState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -490,13 +490,13 @@ cVirtualSql3: VirtualSql3 || '',
             {(authCol.TableId3 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TableId3 || {}).ColumnHeader} {(columnLabel.TableId3 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TableId3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TableId3 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -511,13 +511,13 @@ disabled = {(authCol.TableId3 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SystemId3 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SystemId3 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.SystemId3 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SystemId3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SystemId3 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSystemId3'
@@ -535,13 +535,13 @@ disabled = {(authCol.SystemId3 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TableName3 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TableName3 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TableName3 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TableName3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TableName3 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -556,13 +556,13 @@ disabled = {(authCol.TableName3 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TableDesc3 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TableDesc3 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TableDesc3 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TableDesc3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TableDesc3 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -577,13 +577,13 @@ disabled = {(authCol.TableDesc3 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TblObjective3 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TblObjective3 || {}).ColumnHeader} {(columnLabel.TblObjective3 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TblObjective3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TblObjective3 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -668,13 +668,13 @@ disabled={(authCol.MultiDesignDb3 || {}).readonly || !(authCol.MultiDesignDb3 ||
 {(authCol.UploadSheet || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.UploadSheet || {}).ColumnHeader} {(columnLabel.UploadSheet || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.UploadSheet || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UploadSheet || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -689,13 +689,13 @@ disabled = {(authCol.UploadSheet || {}).readonly ? 'disabled': '' }/>
 {(authCol.SheetNameList || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SheetNameList || {}).ColumnHeader} {(columnLabel.SheetNameList || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SheetNameList || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SheetNameList || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSheetNameList'
@@ -713,13 +713,13 @@ disabled = {(authCol.SheetNameList || {}).readonly ? 'disabled': '' }/>
 {(authCol.RowsToExamine || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RowsToExamine || {}).ColumnHeader} {(columnLabel.RowsToExamine || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RowsToExamine || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowsToExamine || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -734,7 +734,7 @@ disabled = {(authCol.RowsToExamine || {}).readonly ? 'disabled': '' }/>
 {(authCol.BtnScan || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.BtnScan || {}).ColumnHeader} {(columnLabel.BtnScan || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.BtnScan || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.BtnScan || {}).ToolTip} />
 )}
@@ -746,13 +746,13 @@ disabled = {(authCol.RowsToExamine || {}).readonly ? 'disabled': '' }/>
 {(authCol.ModifiedBy3 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ModifiedBy3 || {}).ColumnHeader} {(columnLabel.ModifiedBy3 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ModifiedBy3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ModifiedBy3 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cModifiedBy3'
@@ -770,13 +770,13 @@ disabled = {(authCol.ModifiedBy3 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ModifiedOn3 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ModifiedOn3 || {}).ColumnHeader} {(columnLabel.ModifiedOn3 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ModifiedOn3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ModifiedOn3 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DatePicker
 name='cModifiedOn3'
@@ -794,13 +794,13 @@ disabled = {(authCol.ModifiedOn3 || {}).readonly ? true: false }/>
 {(authCol.LastSyncDt3 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.LastSyncDt3 || {}).ColumnHeader} {(columnLabel.LastSyncDt3 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.LastSyncDt3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LastSyncDt3 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -815,13 +815,13 @@ disabled = {(authCol.LastSyncDt3 || {}).readonly ? 'disabled': '' }/>
 {(authCol.VirtualSql3 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.VirtualSql3 || {}).ColumnHeader} {(columnLabel.VirtualSql3 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.VirtualSql3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.VirtualSql3 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -855,7 +855,7 @@ disabled = {(authCol.VirtualSql3 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmDbTableState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmDbTableState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

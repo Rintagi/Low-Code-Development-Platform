@@ -163,23 +163,23 @@ if (isEmptyId((values.cEventId128 || {}).value)) { errors.cEventId128 = (columnL
       this.props.SavePage(
         this.props.AdmWebRule,
         {
-WebRuleId128: values.cWebRuleId128|| '',
-RuleName128: values.cRuleName128|| '',
-RuleDescription128: values.cRuleDescription128|| '',
-RuleTypeId128: (values.cRuleTypeId128|| {}).value || '',
-ScreenId128: (values.cScreenId128|| {}).value || '',
-ScreenObjId128: (values.cScreenObjId128|| {}).value || '',
-ButtonTypeId128: (values.cButtonTypeId128|| {}).value || '',
-EventId128: (values.cEventId128|| {}).value || '',
-WebRuleProg128: values.cWebRuleProg128|| '',
-ReactEventId128: (values.cReactEventId128|| {}).value || '',
-ReactRuleProg128: values.cReactRuleProg128|| '',
-ReduxEventId128: (values.cReduxEventId128|| {}).value || '',
-ReduxRuleProg128: values.cReduxRuleProg128|| '',
-ServiceEventId128: (values.cServiceEventId128|| {}).value || '',
-ServiceRuleProg128: values.cServiceRuleProg128|| '',
-AsmxEventId128: (values.cAsmxEventId128|| {}).value || '',
-AsmxRuleProg128: values.cAsmxRuleProg128|| '',
+          WebRuleId128: values.cWebRuleId128|| '',
+          RuleName128: values.cRuleName128|| '',
+          RuleDescription128: values.cRuleDescription128|| '',
+          RuleTypeId128: (values.cRuleTypeId128|| {}).value || '',
+          ScreenId128: (values.cScreenId128|| {}).value || '',
+          ScreenObjId128: (values.cScreenObjId128|| {}).value || '',
+          ButtonTypeId128: (values.cButtonTypeId128|| {}).value || '',
+          EventId128: (values.cEventId128|| {}).value || '',
+          WebRuleProg128: values.cWebRuleProg128|| '',
+          ReactEventId128: (values.cReactEventId128|| {}).value || '',
+          ReactRuleProg128: values.cReactRuleProg128|| '',
+          ReduxEventId128: (values.cReduxEventId128|| {}).value || '',
+          ReduxRuleProg128: values.cReduxRuleProg128|| '',
+          ServiceEventId128: (values.cServiceEventId128|| {}).value || '',
+          ServiceRuleProg128: values.cServiceRuleProg128|| '',
+          AsmxEventId128: (values.cAsmxEventId128|| {}).value || '',
+          AsmxRuleProg128: values.cAsmxRuleProg128|| '',
         },
         [],
         {
@@ -424,23 +424,23 @@ const AsmxRuleProg128 = currMst.AsmxRuleProg128;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cWebRuleId128: WebRuleId128 || '',
-cRuleName128: RuleName128 || '',
-cRuleDescription128: RuleDescription128 || '',
-cRuleTypeId128: RuleTypeId128List.filter(obj => { return obj.key === RuleTypeId128 })[0],
-cScreenId128: ScreenId128List.filter(obj => { return obj.key === ScreenId128 })[0],
-cScreenObjId128: ScreenObjId128List.filter(obj => { return obj.key === ScreenObjId128 })[0],
-cButtonTypeId128: ButtonTypeId128List.filter(obj => { return obj.key === ButtonTypeId128 })[0],
-cEventId128: EventId128List.filter(obj => { return obj.key === EventId128 })[0],
-cWebRuleProg128: WebRuleProg128 || '',
-cReactEventId128: ReactEventId128List.filter(obj => { return obj.key === ReactEventId128 })[0],
-cReactRuleProg128: ReactRuleProg128 || '',
-cReduxEventId128: ReduxEventId128List.filter(obj => { return obj.key === ReduxEventId128 })[0],
-cReduxRuleProg128: ReduxRuleProg128 || '',
-cServiceEventId128: ServiceEventId128List.filter(obj => { return obj.key === ServiceEventId128 })[0],
-cServiceRuleProg128: ServiceRuleProg128 || '',
-cAsmxEventId128: AsmxEventId128List.filter(obj => { return obj.key === AsmxEventId128 })[0],
-cAsmxRuleProg128: AsmxRuleProg128 || '',
+                  cWebRuleId128: WebRuleId128 || '',
+                  cRuleName128: RuleName128 || '',
+                  cRuleDescription128: RuleDescription128 || '',
+                  cRuleTypeId128: RuleTypeId128List.filter(obj => { return obj.key === RuleTypeId128 })[0],
+                  cScreenId128: ScreenId128List.filter(obj => { return obj.key === ScreenId128 })[0],
+                  cScreenObjId128: ScreenObjId128List.filter(obj => { return obj.key === ScreenObjId128 })[0],
+                  cButtonTypeId128: ButtonTypeId128List.filter(obj => { return obj.key === ButtonTypeId128 })[0],
+                  cEventId128: EventId128List.filter(obj => { return obj.key === EventId128 })[0],
+                  cWebRuleProg128: WebRuleProg128 || '',
+                  cReactEventId128: ReactEventId128List.filter(obj => { return obj.key === ReactEventId128 })[0],
+                  cReactRuleProg128: ReactRuleProg128 || '',
+                  cReduxEventId128: ReduxEventId128List.filter(obj => { return obj.key === ReduxEventId128 })[0],
+                  cReduxRuleProg128: ReduxRuleProg128 || '',
+                  cServiceEventId128: ServiceEventId128List.filter(obj => { return obj.key === ServiceEventId128 })[0],
+                  cServiceRuleProg128: ServiceRuleProg128 || '',
+                  cAsmxEventId128: AsmxEventId128List.filter(obj => { return obj.key === AsmxEventId128 })[0],
+                  cAsmxRuleProg128: AsmxRuleProg128 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -471,7 +471,7 @@ cAsmxRuleProg128: AsmxRuleProg128 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmWebRuleState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmWebRuleState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -508,13 +508,13 @@ cAsmxRuleProg128: AsmxRuleProg128 || '',
             {(authCol.WebRuleId128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.WebRuleId128 || {}).ColumnHeader} {(columnLabel.WebRuleId128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.WebRuleId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WebRuleId128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -529,13 +529,13 @@ disabled = {(authCol.WebRuleId128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RuleName128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RuleName128 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RuleName128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RuleName128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RuleName128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -550,13 +550,13 @@ disabled = {(authCol.RuleName128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RuleDescription128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RuleDescription128 || {}).ColumnHeader} {(columnLabel.RuleDescription128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RuleDescription128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RuleDescription128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -571,13 +571,13 @@ disabled = {(authCol.RuleDescription128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RuleTypeId128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RuleTypeId128 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RuleTypeId128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RuleTypeId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RuleTypeId128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cRuleTypeId128'
@@ -595,13 +595,13 @@ disabled = {(authCol.RuleTypeId128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ScreenId128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenId128 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScreenId128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenId128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cScreenId128'
@@ -622,13 +622,13 @@ disabled = {(authCol.ScreenId128 || {}).readonly ? true: false }/>
 {(authCol.ScreenObjId128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenObjId128 || {}).ColumnHeader} {(columnLabel.ScreenObjId128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenObjId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenObjId128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cScreenObjId128'
@@ -649,13 +649,13 @@ disabled = {(authCol.ScreenObjId128 || {}).readonly ? true: false }/>
 {(authCol.ButtonTypeId128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ButtonTypeId128 || {}).ColumnHeader} {(columnLabel.ButtonTypeId128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ButtonTypeId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ButtonTypeId128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cButtonTypeId128'
@@ -673,13 +673,13 @@ disabled = {(authCol.ButtonTypeId128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.EventId128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.EventId128 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.EventId128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.EventId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.EventId128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cEventId128'
@@ -697,13 +697,13 @@ disabled = {(authCol.EventId128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.WebRuleProg128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.WebRuleProg128 || {}).ColumnHeader} {(columnLabel.WebRuleProg128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.WebRuleProg128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WebRuleProg128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -746,13 +746,13 @@ disabled = {(authCol.WebRuleProg128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ReactEventId128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReactEventId128 || {}).ColumnHeader} {(columnLabel.ReactEventId128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReactEventId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReactEventId128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cReactEventId128'
@@ -770,13 +770,13 @@ disabled = {(authCol.ReactEventId128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ReactRuleProg128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReactRuleProg128 || {}).ColumnHeader} {(columnLabel.ReactRuleProg128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReactRuleProg128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReactRuleProg128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -791,13 +791,13 @@ disabled = {(authCol.ReactRuleProg128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ReduxEventId128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReduxEventId128 || {}).ColumnHeader} {(columnLabel.ReduxEventId128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReduxEventId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReduxEventId128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cReduxEventId128'
@@ -815,13 +815,13 @@ disabled = {(authCol.ReduxEventId128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ReduxRuleProg128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReduxRuleProg128 || {}).ColumnHeader} {(columnLabel.ReduxRuleProg128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReduxRuleProg128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReduxRuleProg128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -836,13 +836,13 @@ disabled = {(authCol.ReduxRuleProg128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ServiceEventId128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ServiceEventId128 || {}).ColumnHeader} {(columnLabel.ServiceEventId128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ServiceEventId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ServiceEventId128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cServiceEventId128'
@@ -860,13 +860,13 @@ disabled = {(authCol.ServiceEventId128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ServiceRuleProg128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ServiceRuleProg128 || {}).ColumnHeader} {(columnLabel.ServiceRuleProg128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ServiceRuleProg128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ServiceRuleProg128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -881,13 +881,13 @@ disabled = {(authCol.ServiceRuleProg128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.AsmxEventId128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.AsmxEventId128 || {}).ColumnHeader} {(columnLabel.AsmxEventId128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.AsmxEventId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AsmxEventId128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cAsmxEventId128'
@@ -905,13 +905,13 @@ disabled = {(authCol.AsmxEventId128 || {}).readonly ? 'disabled': '' }/>
 {(authCol.AsmxRuleProg128 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.AsmxRuleProg128 || {}).ColumnHeader} {(columnLabel.AsmxRuleProg128 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.AsmxRuleProg128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AsmxRuleProg128 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -945,7 +945,7 @@ disabled = {(authCol.AsmxRuleProg128 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmWebRuleState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmWebRuleState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

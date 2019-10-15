@@ -105,15 +105,14 @@ ColumnId182InputChange() { const _this = this; return function (name, v) {const 
       [
         {
           RptwizCatDtlId182: values.cRptwizCatDtlId182 || null,
-RptwizCatDtlId182: values.cRptwizCatDtlId182|| '',
-ColumnId182: (values.cColumnId182|| {}).value || '',
-DisplayModeId182: (values.cDisplayModeId182|| {}).value || '',
-ColumnSize182: values.cColumnSize182|| '',
-RowSize182: values.cRowSize182|| '',
-DdlKeyColNm182: values.cDdlKeyColNm182|| '',
-DdlRefColNm182: values.cDdlRefColNm182|| '',
-RegClause182: values.cRegClause182 || '',
-StoredProc182: values.cStoredProc182 || '',
+          ColumnId182: (values.cColumnId182|| {}).value || '',
+          DisplayModeId182: (values.cDisplayModeId182|| {}).value || '',
+          ColumnSize182: values.cColumnSize182|| '',
+          RowSize182: values.cRowSize182|| '',
+          DdlKeyColNm182: values.cDdlKeyColNm182|| '',
+          DdlRefColNm182: values.cDdlRefColNm182|| '',
+          RegClause182: values.cRegClause182 || '',
+          StoredProc182: values.cStoredProc182 || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cRptwizCatDtlId182 ? 'upd' : 'add'),
         }
       ],
@@ -338,7 +337,6 @@ StoredProc182: values.cStoredProc182 || '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const RptwizCatDtlId182 = currDtl.RptwizCatDtlId182;
 const ColumnId182List = AdmDataCatReduxObj.ScreenDdlSelectors.ColumnId182(AdmDataCatState);
 const ColumnId182 = currDtl.ColumnId182;
 const DisplayModeId182List = AdmDataCatReduxObj.ScreenDdlSelectors.DisplayModeId182(AdmDataCatState);
@@ -382,15 +380,14 @@ const StoredProc182 = currDtl.StoredProc182;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cRptwizCatDtlId182: currDtl.RptwizCatDtlId182 || '',
-cColumnId182: ColumnId182List.filter(obj => { return obj.key === currDtl.ColumnId182 })[0],
-cDisplayModeId182: DisplayModeId182List.filter(obj => { return obj.key === currDtl.DisplayModeId182 })[0],
-cColumnSize182: currDtl.ColumnSize182 || '',
-cRowSize182: currDtl.RowSize182 || '',
-cDdlKeyColNm182: currDtl.DdlKeyColNm182 || '',
-cDdlRefColNm182: currDtl.DdlRefColNm182 || '',
-cRegClause182: currDtl.RegClause182 || '',
-cStoredProc182: currDtl.StoredProc182 || '',
+                  cColumnId182: ColumnId182List.filter(obj => { return obj.key === currDtl.ColumnId182 })[0],
+                  cDisplayModeId182: DisplayModeId182List.filter(obj => { return obj.key === currDtl.DisplayModeId182 })[0],
+                  cColumnSize182: currDtl.ColumnSize182 || '',
+                  cRowSize182: currDtl.RowSize182 || '',
+                  cDdlKeyColNm182: currDtl.DdlKeyColNm182 || '',
+                  cDdlRefColNm182: currDtl.DdlRefColNm182 || '',
+                  cRegClause182: currDtl.RegClause182 || '',
+                  cStoredProc182: currDtl.StoredProc182 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -455,37 +452,16 @@ cStoredProc182: currDtl.StoredProc182 || '',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.RptwizCatDtlId182 || {}).visible &&
+            {(authCol.ColumnId182 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.RptwizCatDtlId182 || {}).ColumnHeader} {(columnLabel.RptwizCatDtlId182 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RptwizCatDtlId182 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RptwizCatDtlId182 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cRptwizCatDtlId182'
-disabled = {(authCol.RptwizCatDtlId182 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRptwizCatDtlId182 && touched.cRptwizCatDtlId182 && <span className='form__form-group-error'>{errors.cRptwizCatDtlId182}</span>}
-</div>
-</Col>
-}
-{(authCol.ColumnId182 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnId182 || {}).ColumnHeader} {(columnLabel.ColumnId182 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnId182 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnId182 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cColumnId182'
@@ -506,13 +482,13 @@ disabled = {(authCol.ColumnId182 || {}).readonly ? true: false }/>
 {(authCol.DisplayModeId182 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DisplayModeId182 || {}).ColumnHeader} {(columnLabel.DisplayModeId182 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DisplayModeId182 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DisplayModeId182 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cDisplayModeId182'
@@ -530,13 +506,13 @@ disabled = {(authCol.DisplayModeId182 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ColumnSize182 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnSize182 || {}).ColumnHeader} {(columnLabel.ColumnSize182 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnSize182 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnSize182 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -551,13 +527,13 @@ disabled = {(authCol.ColumnSize182 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RowSize182 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RowSize182 || {}).ColumnHeader} {(columnLabel.RowSize182 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RowSize182 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowSize182 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -572,13 +548,13 @@ disabled = {(authCol.RowSize182 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DdlKeyColNm182 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DdlKeyColNm182 || {}).ColumnHeader} {(columnLabel.DdlKeyColNm182 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DdlKeyColNm182 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DdlKeyColNm182 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -593,13 +569,13 @@ disabled = {(authCol.DdlKeyColNm182 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DdlRefColNm182 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DdlRefColNm182 || {}).ColumnHeader} {(columnLabel.DdlRefColNm182 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DdlRefColNm182 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DdlRefColNm182 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -614,13 +590,13 @@ disabled = {(authCol.DdlRefColNm182 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RegClause182 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RegClause182 || {}).ColumnHeader} {(columnLabel.RegClause182 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RegClause182 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RegClause182 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -635,13 +611,13 @@ disabled = {(authCol.RegClause182 || {}).readonly ? 'disabled': '' }/>
 {(authCol.StoredProc182 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.StoredProc182 || {}).ColumnHeader} {(columnLabel.StoredProc182 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.StoredProc182 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.StoredProc182 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -670,7 +646,7 @@ disabled = {(authCol.StoredProc182 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RptwizCatId181,currDtl.RptwizCatDtlId182)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

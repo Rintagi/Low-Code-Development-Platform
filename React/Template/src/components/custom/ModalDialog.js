@@ -42,6 +42,7 @@ class ModalDialog extends Component {
         break;
       case 'danger':
         Icon = <span className='lnr lnr-warning modal__title-icon'/>;
+        break;
       default:
         break;
     }

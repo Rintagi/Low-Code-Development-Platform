@@ -136,16 +136,16 @@ if (!values.cDefStartRow71) { errors.cDefStartRow71 = (columnLabel.DefStartRow71
       this.props.SavePage(
         this.props.AdmWizardObj,
         {
-WizardId71: values.cWizardId71|| '',
-WizardTypeId71: (values.cWizardTypeId71|| {}).value || '',
-MasterTableId71: (values.cMasterTableId71|| {}).value || '',
-WizardTitle71: values.cWizardTitle71|| '',
-ProgramName71: values.cProgramName71|| '',
-DefWorkSheet71: values.cDefWorkSheet71|| '',
-DefStartRow71: values.cDefStartRow71|| '',
-DefOverwrite71: values.cDefOverwrite71 ? 'Y' : 'N',
-OvwrReadonly71: values.cOvwrReadonly71 ? 'Y' : 'N',
-AuthRequired71: values.cAuthRequired71 ? 'Y' : 'N',
+          WizardId71: values.cWizardId71|| '',
+          WizardTypeId71: (values.cWizardTypeId71|| {}).value || '',
+          MasterTableId71: (values.cMasterTableId71|| {}).value || '',
+          WizardTitle71: values.cWizardTitle71|| '',
+          ProgramName71: values.cProgramName71|| '',
+          DefWorkSheet71: values.cDefWorkSheet71|| '',
+          DefStartRow71: values.cDefStartRow71|| '',
+          DefOverwrite71: values.cDefOverwrite71 ? 'Y' : 'N',
+          OvwrReadonly71: values.cOvwrReadonly71 ? 'Y' : 'N',
+          AuthRequired71: values.cAuthRequired71 ? 'Y' : 'N',
         },
         [],
         {
@@ -376,16 +376,16 @@ const AuthRequired71 = currMst.AuthRequired71;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cWizardId71: WizardId71 || '',
-cWizardTypeId71: WizardTypeId71List.filter(obj => { return obj.key === WizardTypeId71 })[0],
-cMasterTableId71: MasterTableId71List.filter(obj => { return obj.key === MasterTableId71 })[0],
-cWizardTitle71: WizardTitle71 || '',
-cProgramName71: ProgramName71 || '',
-cDefWorkSheet71: DefWorkSheet71 || '',
-cDefStartRow71: DefStartRow71 || '',
-cDefOverwrite71: DefOverwrite71 === 'Y',
-cOvwrReadonly71: OvwrReadonly71 === 'Y',
-cAuthRequired71: AuthRequired71 === 'Y',
+                  cWizardId71: WizardId71 || '',
+                  cWizardTypeId71: WizardTypeId71List.filter(obj => { return obj.key === WizardTypeId71 })[0],
+                  cMasterTableId71: MasterTableId71List.filter(obj => { return obj.key === MasterTableId71 })[0],
+                  cWizardTitle71: WizardTitle71 || '',
+                  cProgramName71: ProgramName71 || '',
+                  cDefWorkSheet71: DefWorkSheet71 || '',
+                  cDefStartRow71: DefStartRow71 || '',
+                  cDefOverwrite71: DefOverwrite71 === 'Y',
+                  cOvwrReadonly71: OvwrReadonly71 === 'Y',
+                  cAuthRequired71: AuthRequired71 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -416,7 +416,7 @@ cAuthRequired71: AuthRequired71 === 'Y',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmWizardObjState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmWizardObjState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -453,13 +453,13 @@ cAuthRequired71: AuthRequired71 === 'Y',
             {(authCol.WizardId71 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.WizardId71 || {}).ColumnHeader} {(columnLabel.WizardId71 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.WizardId71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WizardId71 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -474,13 +474,13 @@ disabled = {(authCol.WizardId71 || {}).readonly ? 'disabled': '' }/>
 {(authCol.WizardTypeId71 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.WizardTypeId71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.WizardTypeId71 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.WizardTypeId71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WizardTypeId71 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cWizardTypeId71'
@@ -498,13 +498,13 @@ disabled = {(authCol.WizardTypeId71 || {}).readonly ? 'disabled': '' }/>
 {(authCol.MasterTableId71 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MasterTableId71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MasterTableId71 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MasterTableId71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MasterTableId71 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cMasterTableId71'
@@ -522,13 +522,13 @@ disabled = {(authCol.MasterTableId71 || {}).readonly ? 'disabled': '' }/>
 {(authCol.WizardTitle71 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.WizardTitle71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.WizardTitle71 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.WizardTitle71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WizardTitle71 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -543,13 +543,13 @@ disabled = {(authCol.WizardTitle71 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ProgramName71 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ProgramName71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ProgramName71 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ProgramName71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ProgramName71 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -564,13 +564,13 @@ disabled = {(authCol.ProgramName71 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DefWorkSheet71 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DefWorkSheet71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DefWorkSheet71 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DefWorkSheet71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DefWorkSheet71 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -585,13 +585,13 @@ disabled = {(authCol.DefWorkSheet71 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DefStartRow71 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DefStartRow71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DefStartRow71 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DefStartRow71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DefStartRow71 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -688,7 +688,7 @@ disabled={(authCol.AuthRequired71 || {}).readonly || !(authCol.AuthRequired71 ||
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmWizardObjState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmWizardObjState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

@@ -131,11 +131,11 @@ class MstRecord extends RintagiScreen {
       this.props.SavePage(
         this.props.AdmSctGrpCol,
         {
-SctGrpColId1284: values.cSctGrpColId1284|| '',
-SectionCd1284: (values.cSectionCd1284|| {}).value || '',
-GroupColId1284: (values.cGroupColId1284|| {}).value || '',
-SctGrpColCss1284: values.cSctGrpColCss1284|| '',
-SctGrpColDiv1284: values.cSctGrpColDiv1284|| '',
+          SctGrpColId1284: values.cSctGrpColId1284|| '',
+          SectionCd1284: (values.cSectionCd1284|| {}).value || '',
+          GroupColId1284: (values.cGroupColId1284|| {}).value || '',
+          SctGrpColCss1284: values.cSctGrpColCss1284|| '',
+          SctGrpColDiv1284: values.cSctGrpColDiv1284|| '',
         },
         [],
         {
@@ -361,11 +361,11 @@ const SctGrpColDiv1284 = currMst.SctGrpColDiv1284;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cSctGrpColId1284: SctGrpColId1284 || '',
-cSectionCd1284: SectionCd1284List.filter(obj => { return obj.key === SectionCd1284 })[0],
-cGroupColId1284: GroupColId1284List.filter(obj => { return obj.key === GroupColId1284 })[0],
-cSctGrpColCss1284: SctGrpColCss1284 || '',
-cSctGrpColDiv1284: SctGrpColDiv1284 || '',
+                  cSctGrpColId1284: SctGrpColId1284 || '',
+                  cSectionCd1284: SectionCd1284List.filter(obj => { return obj.key === SectionCd1284 })[0],
+                  cGroupColId1284: GroupColId1284List.filter(obj => { return obj.key === GroupColId1284 })[0],
+                  cSctGrpColCss1284: SctGrpColCss1284 || '',
+                  cSctGrpColDiv1284: SctGrpColDiv1284 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -396,7 +396,7 @@ cSctGrpColDiv1284: SctGrpColDiv1284 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmSctGrpColState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmSctGrpColState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -433,13 +433,13 @@ cSctGrpColDiv1284: SctGrpColDiv1284 || '',
             {(authCol.SctGrpColId1284 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SctGrpColId1284 || {}).ColumnHeader} {(columnLabel.SctGrpColId1284 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SctGrpColId1284 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SctGrpColId1284 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -454,13 +454,13 @@ disabled = {(authCol.SctGrpColId1284 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SectionCd1284 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SectionCd1284 || {}).ColumnHeader} {(columnLabel.SectionCd1284 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SectionCd1284 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SectionCd1284 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSectionCd1284'
@@ -478,13 +478,13 @@ disabled = {(authCol.SectionCd1284 || {}).readonly ? 'disabled': '' }/>
 {(authCol.GroupColId1284 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.GroupColId1284 || {}).ColumnHeader} {(columnLabel.GroupColId1284 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.GroupColId1284 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.GroupColId1284 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cGroupColId1284'
@@ -502,13 +502,13 @@ disabled = {(authCol.GroupColId1284 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SctGrpColCss1284 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SctGrpColCss1284 || {}).ColumnHeader} {(columnLabel.SctGrpColCss1284 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SctGrpColCss1284 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SctGrpColCss1284 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -523,13 +523,13 @@ disabled = {(authCol.SctGrpColCss1284 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SctGrpColDiv1284 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SctGrpColDiv1284 || {}).ColumnHeader} {(columnLabel.SctGrpColDiv1284 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SctGrpColDiv1284 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SctGrpColDiv1284 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpColState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -563,7 +563,7 @@ disabled = {(authCol.SctGrpColDiv1284 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmSctGrpColState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmSctGrpColState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

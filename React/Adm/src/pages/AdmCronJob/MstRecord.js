@@ -132,18 +132,18 @@ if (!values.cJobLink264) { errors.cJobLink264 = (columnLabel.JobLink264 || {}).E
       this.props.SavePage(
         this.props.AdmCronJob,
         {
-CronJobId264: values.cCronJobId264|| '',
-CronJobName264: values.cCronJobName264|| '',
-LastRun264: values.cLastRun264|| '',
-NextRun264: values.cNextRun264|| '',
-JobLink264: values.cJobLink264|| '',
-LastStatus264: values.cLastStatus264|| '',
-Year264: values.cYear264|| '',
-Month264: values.cMonth264|| '',
-Day264: values.cDay264|| '',
-Hour264: values.cHour264|| '',
-Minute264: values.cMinute264|| '',
-DayOfWeek264: values.cDayOfWeek264|| '',
+          CronJobId264: values.cCronJobId264|| '',
+          CronJobName264: values.cCronJobName264|| '',
+          LastRun264: values.cLastRun264|| '',
+          NextRun264: values.cNextRun264|| '',
+          JobLink264: values.cJobLink264|| '',
+          LastStatus264: values.cLastStatus264|| '',
+          Year264: values.cYear264|| '',
+          Month264: values.cMonth264|| '',
+          Day264: values.cDay264|| '',
+          Hour264: values.cHour264|| '',
+          Minute264: values.cMinute264|| '',
+          DayOfWeek264: values.cDayOfWeek264|| '',
         },
         [],
         {
@@ -374,18 +374,18 @@ const DayOfWeek264 = currMst.DayOfWeek264;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cCronJobId264: CronJobId264 || '',
-cCronJobName264: CronJobName264 || '',
-cLastRun264: LastRun264 || new Date(),
-cNextRun264: NextRun264 || new Date(),
-cJobLink264: JobLink264 || '',
-cLastStatus264: LastStatus264 || '',
-cYear264: Year264 || '',
-cMonth264: Month264 || '',
-cDay264: Day264 || '',
-cHour264: Hour264 || '',
-cMinute264: Minute264 || '',
-cDayOfWeek264: DayOfWeek264 || '',
+                  cCronJobId264: CronJobId264 || '',
+                  cCronJobName264: CronJobName264 || '',
+                  cLastRun264: LastRun264 || new Date(),
+                  cNextRun264: NextRun264 || new Date(),
+                  cJobLink264: JobLink264 || '',
+                  cLastStatus264: LastStatus264 || '',
+                  cYear264: Year264 || '',
+                  cMonth264: Month264 || '',
+                  cDay264: Day264 || '',
+                  cHour264: Hour264 || '',
+                  cMinute264: Minute264 || '',
+                  cDayOfWeek264: DayOfWeek264 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -416,7 +416,7 @@ cDayOfWeek264: DayOfWeek264 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmCronJobState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmCronJobState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -453,13 +453,13 @@ cDayOfWeek264: DayOfWeek264 || '',
             {(authCol.CronJobId264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CronJobId264 || {}).ColumnHeader} {(columnLabel.CronJobId264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CronJobId264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CronJobId264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -474,13 +474,13 @@ disabled = {(authCol.CronJobId264 || {}).readonly ? 'disabled': '' }/>
 {(authCol.CronJobName264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CronJobName264 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CronJobName264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CronJobName264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CronJobName264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -495,13 +495,13 @@ disabled = {(authCol.CronJobName264 || {}).readonly ? 'disabled': '' }/>
 {(authCol.LastRun264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.LastRun264 || {}).ColumnHeader} {(columnLabel.LastRun264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.LastRun264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LastRun264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DatePicker
 name='cLastRun264'
@@ -519,13 +519,13 @@ disabled = {(authCol.LastRun264 || {}).readonly ? true: false }/>
 {(authCol.NextRun264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.NextRun264 || {}).ColumnHeader} {(columnLabel.NextRun264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.NextRun264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.NextRun264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DatePicker
 name='cNextRun264'
@@ -543,13 +543,13 @@ disabled = {(authCol.NextRun264 || {}).readonly ? true: false }/>
 {(authCol.JobLink264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.JobLink264 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.JobLink264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.JobLink264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.JobLink264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -564,13 +564,13 @@ disabled = {(authCol.JobLink264 || {}).readonly ? 'disabled': '' }/>
 {(authCol.LastStatus264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.LastStatus264 || {}).ColumnHeader} {(columnLabel.LastStatus264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.LastStatus264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LastStatus264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -585,13 +585,13 @@ disabled = {(authCol.LastStatus264 || {}).readonly ? 'disabled': '' }/>
 {(authCol.Year264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.Year264 || {}).ColumnHeader} {(columnLabel.Year264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.Year264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Year264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -606,13 +606,13 @@ disabled = {(authCol.Year264 || {}).readonly ? 'disabled': '' }/>
 {(authCol.Month264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.Month264 || {}).ColumnHeader} {(columnLabel.Month264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.Month264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Month264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -627,13 +627,13 @@ disabled = {(authCol.Month264 || {}).readonly ? 'disabled': '' }/>
 {(authCol.Day264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.Day264 || {}).ColumnHeader} {(columnLabel.Day264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.Day264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Day264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -648,13 +648,13 @@ disabled = {(authCol.Day264 || {}).readonly ? 'disabled': '' }/>
 {(authCol.Hour264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.Hour264 || {}).ColumnHeader} {(columnLabel.Hour264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.Hour264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Hour264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -669,13 +669,13 @@ disabled = {(authCol.Hour264 || {}).readonly ? 'disabled': '' }/>
 {(authCol.Minute264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.Minute264 || {}).ColumnHeader} {(columnLabel.Minute264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.Minute264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Minute264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -690,13 +690,13 @@ disabled = {(authCol.Minute264 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DayOfWeek264 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DayOfWeek264 || {}).ColumnHeader} {(columnLabel.DayOfWeek264 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DayOfWeek264 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DayOfWeek264 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -711,7 +711,7 @@ disabled = {(authCol.DayOfWeek264 || {}).readonly ? 'disabled': '' }/>
 {(authCol.CronJobMsg || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCronJobState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CronJobMsg || {}).ColumnHeader} {(columnLabel.CronJobMsg || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CronJobMsg || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CronJobMsg || {}).ToolTip} />
 )}
@@ -742,7 +742,7 @@ disabled = {(authCol.DayOfWeek264 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmCronJobState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmCronJobState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

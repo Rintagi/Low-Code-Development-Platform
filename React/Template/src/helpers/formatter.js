@@ -52,7 +52,7 @@ export function toLocalDateFormat(value) {
         var localDate = moment(x).format('L');
 
         if (localDate === 'Invalid date') {
-            var localDate = moment(value).format('L');
+            localDate = moment(value).format('L');
         }
 
         // Replaces slash (/) and dash (-) with a dot (.) in date format

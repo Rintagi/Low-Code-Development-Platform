@@ -105,12 +105,11 @@ if (isEmptyId((values.cCultureId21 || {}).value)) { errors.cCultureId21 = (colum
       [
         {
           ScreenObjHlpId21: values.cScreenObjHlpId21 || null,
-ScreenObjHlpId21: values.cScreenObjHlpId21|| '',
-CultureId21: (values.cCultureId21|| {}).value || '',
-ColumnHeader21: values.cColumnHeader21 || '',
-ToolTip21: values.cToolTip21|| '',
-ErrMessage21: values.cErrMessage21|| '',
-TbHint21: values.cTbHint21 || '',
+          CultureId21: (values.cCultureId21|| {}).value || '',
+          ColumnHeader21: values.cColumnHeader21 || '',
+          ToolTip21: values.cToolTip21|| '',
+          ErrMessage21: values.cErrMessage21|| '',
+          TbHint21: values.cTbHint21 || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cScreenObjHlpId21 ? 'upd' : 'add'),
         }
       ],
@@ -335,7 +334,6 @@ TbHint21: values.cTbHint21 || '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const ScreenObjHlpId21 = currDtl.ScreenObjHlpId21;
 const CultureId21List = AdmColHlpReduxObj.ScreenDdlSelectors.CultureId21(AdmColHlpState);
 const CultureId21 = currDtl.CultureId21;
 const ColumnHeader21 = currDtl.ColumnHeader21;
@@ -375,12 +373,11 @@ const TbHint21 = currDtl.TbHint21;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cScreenObjHlpId21: currDtl.ScreenObjHlpId21 || '',
-cCultureId21: CultureId21List.filter(obj => { return obj.key === currDtl.CultureId21 })[0],
-cColumnHeader21: currDtl.ColumnHeader21 || '',
-cToolTip21: currDtl.ToolTip21 || '',
-cErrMessage21: currDtl.ErrMessage21 || '',
-cTbHint21: currDtl.TbHint21 || '',
+                  cCultureId21: CultureId21List.filter(obj => { return obj.key === currDtl.CultureId21 })[0],
+                  cColumnHeader21: currDtl.ColumnHeader21 || '',
+                  cToolTip21: currDtl.ToolTip21 || '',
+                  cErrMessage21: currDtl.ErrMessage21 || '',
+                  cTbHint21: currDtl.TbHint21 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -445,37 +442,16 @@ cTbHint21: currDtl.TbHint21 || '',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.ScreenObjHlpId21 || {}).visible &&
+            {(authCol.CultureId21 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.ScreenObjHlpId21 || {}).ColumnHeader} {(columnLabel.ScreenObjHlpId21 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ScreenObjHlpId21 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenObjHlpId21 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cScreenObjHlpId21'
-disabled = {(authCol.ScreenObjHlpId21 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cScreenObjHlpId21 && touched.cScreenObjHlpId21 && <span className='form__form-group-error'>{errors.cScreenObjHlpId21}</span>}
-</div>
-</Col>
-}
-{(authCol.CultureId21 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CultureId21 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureId21 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CultureId21 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureId21 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cCultureId21'
@@ -496,13 +472,13 @@ disabled = {(authCol.CultureId21 || {}).readonly ? true: false }/>
 {(authCol.ColumnHeader21 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnHeader21 || {}).ColumnHeader} {(columnLabel.ColumnHeader21 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnHeader21 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnHeader21 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -517,13 +493,13 @@ disabled = {(authCol.ColumnHeader21 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ToolTip21 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ToolTip21 || {}).ColumnHeader} {(columnLabel.ToolTip21 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ToolTip21 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ToolTip21 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -538,13 +514,13 @@ disabled = {(authCol.ToolTip21 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ErrMessage21 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ErrMessage21 || {}).ColumnHeader} {(columnLabel.ErrMessage21 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ErrMessage21 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ErrMessage21 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -559,13 +535,13 @@ disabled = {(authCol.ErrMessage21 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TbHint21 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TbHint21 || {}).ColumnHeader} {(columnLabel.TbHint21 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TbHint21 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TbHint21 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -594,7 +570,7 @@ disabled = {(authCol.TbHint21 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ScreenObjId14,currDtl.ScreenObjHlpId21)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

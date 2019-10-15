@@ -106,9 +106,8 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
       [
         {
           CultureLblId242: values.cCultureLblId242 || null,
-CultureLblId242: values.cCultureLblId242|| '',
-CultureId242: (values.cCultureId242|| {}).value || '',
-CultureTypeLabel242: values.cCultureTypeLabel242|| '',
+          CultureId242: (values.cCultureId242|| {}).value || '',
+          CultureTypeLabel242: values.cCultureTypeLabel242|| '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cCultureLblId242 ? 'upd' : 'add'),
         }
       ],
@@ -333,7 +332,6 @@ CultureTypeLabel242: values.cCultureTypeLabel242|| '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const CultureLblId242 = currDtl.CultureLblId242;
 const CultureId242List = AdmCtCultureReduxObj.ScreenDdlSelectors.CultureId242(AdmCtCultureState);
 const CultureId242 = currDtl.CultureId242;
 const CultureTypeLabel242 = currDtl.CultureTypeLabel242;
@@ -370,9 +368,8 @@ const CultureTypeLabel242 = currDtl.CultureTypeLabel242;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cCultureLblId242: currDtl.CultureLblId242 || '',
-cCultureId242: CultureId242List.filter(obj => { return obj.key === currDtl.CultureId242 })[0],
-cCultureTypeLabel242: currDtl.CultureTypeLabel242 || '',
+                  cCultureId242: CultureId242List.filter(obj => { return obj.key === currDtl.CultureId242 })[0],
+                  cCultureTypeLabel242: currDtl.CultureTypeLabel242 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -437,37 +434,16 @@ cCultureTypeLabel242: currDtl.CultureTypeLabel242 || '',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.CultureLblId242 || {}).visible &&
+            {(authCol.CultureId242 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.CultureLblId242 || {}).ColumnHeader} {(columnLabel.CultureLblId242 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.CultureLblId242 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureLblId242 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cCultureLblId242'
-disabled = {(authCol.CultureLblId242 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cCultureLblId242 && touched.cCultureLblId242 && <span className='form__form-group-error'>{errors.cCultureLblId242}</span>}
-</div>
-</Col>
-}
-{(authCol.CultureId242 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CultureId242 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureId242 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CultureId242 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureId242 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cCultureId242'
@@ -488,13 +464,13 @@ disabled = {(authCol.CultureId242 || {}).readonly ? true: false }/>
 {(authCol.CultureTypeLabel242 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CultureTypeLabel242 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureTypeLabel242 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CultureTypeLabel242 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureTypeLabel242 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -523,7 +499,7 @@ disabled = {(authCol.CultureTypeLabel242 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).CultureTypeId8,currDtl.CultureLblId242)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

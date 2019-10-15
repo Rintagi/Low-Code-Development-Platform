@@ -135,14 +135,14 @@ if (!values.cProcedureName73) { errors.cProcedureName73 = (columnLabel.Procedure
       this.props.SavePage(
         this.props.AdmWizardRule,
         {
-WizardRuleId73: values.cWizardRuleId73|| '',
-RuleName73: values.cRuleName73|| '',
-RuleDescription73: values.cRuleDescription73|| '',
-RuleTypeId73: (values.cRuleTypeId73|| {}).value || '',
-WizardId73: (values.cWizardId73|| {}).value || '',
-RuleOrder73: values.cRuleOrder73|| '',
-ProcedureName73: values.cProcedureName73|| '',
-BeforeCRUD73: values.cBeforeCRUD73 ? 'Y' : 'N',
+          WizardRuleId73: values.cWizardRuleId73|| '',
+          RuleName73: values.cRuleName73|| '',
+          RuleDescription73: values.cRuleDescription73|| '',
+          RuleTypeId73: (values.cRuleTypeId73|| {}).value || '',
+          WizardId73: (values.cWizardId73|| {}).value || '',
+          RuleOrder73: values.cRuleOrder73|| '',
+          ProcedureName73: values.cProcedureName73|| '',
+          BeforeCRUD73: values.cBeforeCRUD73 ? 'Y' : 'N',
         },
         [],
         {
@@ -371,14 +371,14 @@ const BeforeCRUD73 = currMst.BeforeCRUD73;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cWizardRuleId73: WizardRuleId73 || '',
-cRuleName73: RuleName73 || '',
-cRuleDescription73: RuleDescription73 || '',
-cRuleTypeId73: RuleTypeId73List.filter(obj => { return obj.key === RuleTypeId73 })[0],
-cWizardId73: WizardId73List.filter(obj => { return obj.key === WizardId73 })[0],
-cRuleOrder73: RuleOrder73 || '',
-cProcedureName73: ProcedureName73 || '',
-cBeforeCRUD73: BeforeCRUD73 === 'Y',
+                  cWizardRuleId73: WizardRuleId73 || '',
+                  cRuleName73: RuleName73 || '',
+                  cRuleDescription73: RuleDescription73 || '',
+                  cRuleTypeId73: RuleTypeId73List.filter(obj => { return obj.key === RuleTypeId73 })[0],
+                  cWizardId73: WizardId73List.filter(obj => { return obj.key === WizardId73 })[0],
+                  cRuleOrder73: RuleOrder73 || '',
+                  cProcedureName73: ProcedureName73 || '',
+                  cBeforeCRUD73: BeforeCRUD73 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -409,7 +409,7 @@ cBeforeCRUD73: BeforeCRUD73 === 'Y',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmWizardRuleState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmWizardRuleState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -446,13 +446,13 @@ cBeforeCRUD73: BeforeCRUD73 === 'Y',
             {(authCol.WizardRuleId73 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.WizardRuleId73 || {}).ColumnHeader} {(columnLabel.WizardRuleId73 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.WizardRuleId73 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WizardRuleId73 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -467,13 +467,13 @@ disabled = {(authCol.WizardRuleId73 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RuleName73 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RuleName73 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RuleName73 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RuleName73 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RuleName73 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -488,13 +488,13 @@ disabled = {(authCol.RuleName73 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RuleDescription73 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RuleDescription73 || {}).ColumnHeader} {(columnLabel.RuleDescription73 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RuleDescription73 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RuleDescription73 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -509,13 +509,13 @@ disabled = {(authCol.RuleDescription73 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RuleTypeId73 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RuleTypeId73 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RuleTypeId73 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RuleTypeId73 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RuleTypeId73 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cRuleTypeId73'
@@ -533,13 +533,13 @@ disabled = {(authCol.RuleTypeId73 || {}).readonly ? 'disabled': '' }/>
 {(authCol.WizardId73 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.WizardId73 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.WizardId73 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.WizardId73 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WizardId73 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cWizardId73'
@@ -557,13 +557,13 @@ disabled = {(authCol.WizardId73 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RuleOrder73 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RuleOrder73 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RuleOrder73 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RuleOrder73 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RuleOrder73 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -578,13 +578,13 @@ disabled = {(authCol.RuleOrder73 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ProcedureName73 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ProcedureName73 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ProcedureName73 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ProcedureName73 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ProcedureName73 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardRuleState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -639,7 +639,7 @@ disabled={(authCol.BeforeCRUD73 || {}).readonly || !(authCol.BeforeCRUD73 || {})
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmWizardRuleState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmWizardRuleState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

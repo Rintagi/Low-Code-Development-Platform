@@ -132,14 +132,14 @@ if (!values.cCultureTypeName8) { errors.cCultureTypeName8 = (columnLabel.Culture
       this.props.SavePage(
         this.props.AdmCtCulture,
         {
-CultureTypeId8: values.cCultureTypeId8|| '',
-CultureTypeDesc8: values.cCultureTypeDesc8|| '',
-CultureTypeName8: values.cCultureTypeName8|| '',
-CurrencyCd8: values.cCurrencyCd8|| '',
-CountryCd8: (values.cCountryCd8|| {}).value || '',
-CultureDefault8: values.cCultureDefault8 ? 'Y' : 'N',
-EnNumberRule8: values.cEnNumberRule8 ? 'Y' : 'N',
-ToTranslate8: values.cToTranslate8 ? 'Y' : 'N',
+          CultureTypeId8: values.cCultureTypeId8|| '',
+          CultureTypeDesc8: values.cCultureTypeDesc8|| '',
+          CultureTypeName8: values.cCultureTypeName8|| '',
+          CurrencyCd8: values.cCurrencyCd8|| '',
+          CountryCd8: (values.cCountryCd8|| {}).value || '',
+          CultureDefault8: values.cCultureDefault8 ? 'Y' : 'N',
+          EnNumberRule8: values.cEnNumberRule8 ? 'Y' : 'N',
+          ToTranslate8: values.cToTranslate8 ? 'Y' : 'N',
         },
         [],
         {
@@ -367,14 +367,14 @@ const ToTranslate8 = currMst.ToTranslate8;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cCultureTypeId8: CultureTypeId8 || '',
-cCultureTypeDesc8: CultureTypeDesc8 || '',
-cCultureTypeName8: CultureTypeName8 || '',
-cCurrencyCd8: CurrencyCd8 || '',
-cCountryCd8: CountryCd8List.filter(obj => { return obj.key === CountryCd8 })[0],
-cCultureDefault8: CultureDefault8 === 'Y',
-cEnNumberRule8: EnNumberRule8 === 'Y',
-cToTranslate8: ToTranslate8 === 'Y',
+                  cCultureTypeId8: CultureTypeId8 || '',
+                  cCultureTypeDesc8: CultureTypeDesc8 || '',
+                  cCultureTypeName8: CultureTypeName8 || '',
+                  cCurrencyCd8: CurrencyCd8 || '',
+                  cCountryCd8: CountryCd8List.filter(obj => { return obj.key === CountryCd8 })[0],
+                  cCultureDefault8: CultureDefault8 === 'Y',
+                  cEnNumberRule8: EnNumberRule8 === 'Y',
+                  cToTranslate8: ToTranslate8 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -405,7 +405,7 @@ cToTranslate8: ToTranslate8 === 'Y',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmCtCultureState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmCtCultureState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -442,13 +442,13 @@ cToTranslate8: ToTranslate8 === 'Y',
             {(authCol.CultureTypeId8 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CultureTypeId8 || {}).ColumnHeader} {(columnLabel.CultureTypeId8 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CultureTypeId8 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureTypeId8 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -463,13 +463,13 @@ disabled = {(authCol.CultureTypeId8 || {}).readonly ? 'disabled': '' }/>
 {(authCol.CultureTypeDesc8 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CultureTypeDesc8 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureTypeDesc8 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CultureTypeDesc8 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureTypeDesc8 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -484,13 +484,13 @@ disabled = {(authCol.CultureTypeDesc8 || {}).readonly ? 'disabled': '' }/>
 {(authCol.CultureTypeName8 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CultureTypeName8 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureTypeName8 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CultureTypeName8 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureTypeName8 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -505,13 +505,13 @@ disabled = {(authCol.CultureTypeName8 || {}).readonly ? 'disabled': '' }/>
 {(authCol.CurrencyCd8 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CurrencyCd8 || {}).ColumnHeader} {(columnLabel.CurrencyCd8 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CurrencyCd8 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CurrencyCd8 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -526,13 +526,13 @@ disabled = {(authCol.CurrencyCd8 || {}).readonly ? 'disabled': '' }/>
 {(authCol.CountryCd8 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CountryCd8 || {}).ColumnHeader} {(columnLabel.CountryCd8 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CountryCd8 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CountryCd8 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cCountryCd8'
@@ -635,7 +635,7 @@ disabled={(authCol.ToTranslate8 || {}).readonly || !(authCol.ToTranslate8 || {})
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmCtCultureState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmCtCultureState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

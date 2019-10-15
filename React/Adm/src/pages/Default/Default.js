@@ -27,7 +27,7 @@ class Default extends Component {
               <h3 className='account__subhead subhead text-center'>Please select menu items on the left to get started.</h3>
             </div>
             <div className='empty-block'>
-              <img src={require('../../img/default.png')} />
+              <img alt='' src={require('../../img/default.png')} />
             </div>
           </div>
         </div>

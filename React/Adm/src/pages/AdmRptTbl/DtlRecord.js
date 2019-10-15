@@ -107,12 +107,11 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
       [
         {
           RptCelId164: values.cRptCelId164 || null,
-RptCelId164: values.cRptCelId164|| '',
-RowNum164: values.cRowNum164|| '',
-RowHeight164: values.cRowHeight164|| '',
-RowVisibility164: values.cRowVisibility164|| '',
-CelNum164: (values.cCelNum164|| {}).value || '',
-CelColSpan164: values.cCelColSpan164|| '',
+          RowNum164: values.cRowNum164|| '',
+          RowHeight164: values.cRowHeight164|| '',
+          RowVisibility164: values.cRowVisibility164|| '',
+          CelNum164: (values.cCelNum164|| {}).value || '',
+          CelColSpan164: values.cCelColSpan164|| '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cRptCelId164 ? 'upd' : 'add'),
         }
       ],
@@ -337,7 +336,6 @@ CelColSpan164: values.cCelColSpan164|| '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const RptCelId164 = currDtl.RptCelId164;
 const RowNum164 = currDtl.RowNum164;
 const RowHeight164 = currDtl.RowHeight164;
 const RowVisibility164 = currDtl.RowVisibility164;
@@ -377,12 +375,11 @@ const CelColSpan164 = currDtl.CelColSpan164;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cRptCelId164: currDtl.RptCelId164 || '',
-cRowNum164: currDtl.RowNum164 || '',
-cRowHeight164: currDtl.RowHeight164 || '',
-cRowVisibility164: currDtl.RowVisibility164 || '',
-cCelNum164: CelNum164List.filter(obj => { return obj.key === currDtl.CelNum164 })[0],
-cCelColSpan164: currDtl.CelColSpan164 || '',
+                  cRowNum164: currDtl.RowNum164 || '',
+                  cRowHeight164: currDtl.RowHeight164 || '',
+                  cRowVisibility164: currDtl.RowVisibility164 || '',
+                  cCelNum164: CelNum164List.filter(obj => { return obj.key === currDtl.CelNum164 })[0],
+                  cCelColSpan164: currDtl.CelColSpan164 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -447,37 +444,16 @@ cCelColSpan164: currDtl.CelColSpan164 || '',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.RptCelId164 || {}).visible &&
+            {(authCol.RowNum164 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.RptCelId164 || {}).ColumnHeader} {(columnLabel.RptCelId164 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RptCelId164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RptCelId164 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cRptCelId164'
-disabled = {(authCol.RptCelId164 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRptCelId164 && touched.cRptCelId164 && <span className='form__form-group-error'>{errors.cRptCelId164}</span>}
-</div>
-</Col>
-}
-{(authCol.RowNum164 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RowNum164 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RowNum164 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RowNum164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowNum164 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -492,13 +468,13 @@ disabled = {(authCol.RowNum164 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RowHeight164 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RowHeight164 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RowHeight164 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RowHeight164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowHeight164 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -513,13 +489,13 @@ disabled = {(authCol.RowHeight164 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RowVisibility164 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RowVisibility164 || {}).ColumnHeader} {(columnLabel.RowVisibility164 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RowVisibility164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowVisibility164 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -534,13 +510,13 @@ disabled = {(authCol.RowVisibility164 || {}).readonly ? 'disabled': '' }/>
 {(authCol.CelNum164 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CelNum164 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CelNum164 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CelNum164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CelNum164 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cCelNum164'
@@ -561,13 +537,13 @@ disabled = {(authCol.CelNum164 || {}).readonly ? true: false }/>
 {(authCol.CelColSpan164 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CelColSpan164 || {}).ColumnHeader} {(columnLabel.CelColSpan164 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CelColSpan164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CelColSpan164 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -596,7 +572,7 @@ disabled = {(authCol.CelColSpan164 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RptTblId162,currDtl.RptCelId164)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 
