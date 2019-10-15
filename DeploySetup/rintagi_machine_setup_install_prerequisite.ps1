@@ -79,6 +79,9 @@ Write-Output "Installing software"
 Write-Output "choco install access2016runtime -y"
 choco install access2016runtime -y
 
+Write-Output "choco install msoledbsql -y"
+choco install msoledbsql -y
+
 # microsoft access database engine 2016 with custom package
 #choco install made2016runtime -s="C:\ChocoPackages\made2016runtime" -y
 Write-Output "choco install made2010 -y"
