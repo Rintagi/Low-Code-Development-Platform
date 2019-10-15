@@ -105,9 +105,8 @@ if (!values.cTabIndex72) { errors.cTabIndex72 = (columnLabel.TabIndex72 || {}).E
       [
         {
           WizardObjId72: values.cWizardObjId72 || null,
-WizardObjId72: values.cWizardObjId72|| '',
-ColumnId72: (values.cColumnId72|| {}).value || '',
-TabIndex72: values.cTabIndex72|| '',
+          ColumnId72: (values.cColumnId72|| {}).value || '',
+          TabIndex72: values.cTabIndex72|| '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cWizardObjId72 ? 'upd' : 'add'),
         }
       ],
@@ -332,7 +331,6 @@ TabIndex72: values.cTabIndex72|| '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const WizardObjId72 = currDtl.WizardObjId72;
 const ColumnId72List = AdmWizardObjReduxObj.ScreenDdlSelectors.ColumnId72(AdmWizardObjState);
 const ColumnId72 = currDtl.ColumnId72;
 const TabIndex72 = currDtl.TabIndex72;
@@ -369,9 +367,8 @@ const TabIndex72 = currDtl.TabIndex72;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cWizardObjId72: currDtl.WizardObjId72 || '',
-cColumnId72: ColumnId72List.filter(obj => { return obj.key === currDtl.ColumnId72 })[0],
-cTabIndex72: currDtl.TabIndex72 || '',
+                  cColumnId72: ColumnId72List.filter(obj => { return obj.key === currDtl.ColumnId72 })[0],
+                  cTabIndex72: currDtl.TabIndex72 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -436,37 +433,16 @@ cTabIndex72: currDtl.TabIndex72 || '',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.WizardObjId72 || {}).visible &&
+            {(authCol.ColumnId72 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.WizardObjId72 || {}).ColumnHeader} {(columnLabel.WizardObjId72 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.WizardObjId72 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WizardObjId72 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cWizardObjId72'
-disabled = {(authCol.WizardObjId72 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cWizardObjId72 && touched.cWizardObjId72 && <span className='form__form-group-error'>{errors.cWizardObjId72}</span>}
-</div>
-</Col>
-}
-{(authCol.ColumnId72 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnId72 || {}).ColumnHeader} {(columnLabel.ColumnId72 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnId72 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnId72 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cColumnId72'
@@ -487,13 +463,13 @@ disabled = {(authCol.ColumnId72 || {}).readonly ? true: false }/>
 {(authCol.TabIndex72 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TabIndex72 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TabIndex72 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TabIndex72 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TabIndex72 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -522,7 +498,7 @@ disabled = {(authCol.TabIndex72 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).WizardId71,currDtl.WizardObjId72)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

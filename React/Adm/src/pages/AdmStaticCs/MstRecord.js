@@ -131,9 +131,9 @@ if (!values.cStaticCsNm260) { errors.cStaticCsNm260 = (columnLabel.StaticCsNm260
       this.props.SavePage(
         this.props.AdmStaticCs,
         {
-StaticCsId260: values.cStaticCsId260|| '',
-StaticCsNm260: values.cStaticCsNm260|| '',
-StyleDef260: values.cStyleDef260|| '',
+          StaticCsId260: values.cStaticCsId260|| '',
+          StaticCsNm260: values.cStaticCsNm260|| '',
+          StyleDef260: values.cStyleDef260|| '',
         },
         [],
         {
@@ -355,9 +355,9 @@ const StyleDef260 = currMst.StyleDef260;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cStaticCsId260: StaticCsId260 || '',
-cStaticCsNm260: StaticCsNm260 || '',
-cStyleDef260: StyleDef260 || '',
+                  cStaticCsId260: StaticCsId260 || '',
+                  cStaticCsNm260: StaticCsNm260 || '',
+                  cStyleDef260: StyleDef260 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -388,7 +388,7 @@ cStyleDef260: StyleDef260 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmStaticCsState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmStaticCsState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -425,13 +425,13 @@ cStyleDef260: StyleDef260 || '',
             {(authCol.StaticCsId260 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.StaticCsId260 || {}).ColumnHeader} {(columnLabel.StaticCsId260 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.StaticCsId260 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.StaticCsId260 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -446,13 +446,13 @@ disabled = {(authCol.StaticCsId260 || {}).readonly ? 'disabled': '' }/>
 {(authCol.StaticCsNm260 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.StaticCsNm260 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.StaticCsNm260 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.StaticCsNm260 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.StaticCsNm260 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -467,13 +467,13 @@ disabled = {(authCol.StaticCsNm260 || {}).readonly ? 'disabled': '' }/>
 {(authCol.StyleDef260 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.StyleDef260 || {}).ColumnHeader} {(columnLabel.StyleDef260 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.StyleDef260 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.StyleDef260 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmStaticCsState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -507,7 +507,7 @@ disabled = {(authCol.StyleDef260 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmStaticCsState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmStaticCsState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

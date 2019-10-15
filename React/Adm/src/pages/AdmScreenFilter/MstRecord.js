@@ -134,12 +134,12 @@ if (!values.cFilterOrder86) { errors.cFilterOrder86 = (columnLabel.FilterOrder86
       this.props.SavePage(
         this.props.AdmScreenFilter,
         {
-ScreenFilterId86: values.cScreenFilterId86|| '',
-ScreenId86: (values.cScreenId86|| {}).value || '',
-ScreenFilterName86: values.cScreenFilterName86|| '',
-FilterClause86: values.cFilterClause86|| '',
-FilterOrder86: values.cFilterOrder86|| '',
-ApplyToMst86: values.cApplyToMst86 ? 'Y' : 'N',
+          ScreenFilterId86: values.cScreenFilterId86|| '',
+          ScreenId86: (values.cScreenId86|| {}).value || '',
+          ScreenFilterName86: values.cScreenFilterName86|| '',
+          FilterClause86: values.cFilterClause86|| '',
+          FilterOrder86: values.cFilterOrder86|| '',
+          ApplyToMst86: values.cApplyToMst86 ? 'Y' : 'N',
         },
         [],
         {
@@ -365,12 +365,12 @@ const ApplyToMst86 = currMst.ApplyToMst86;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cScreenFilterId86: ScreenFilterId86 || '',
-cScreenId86: ScreenId86List.filter(obj => { return obj.key === ScreenId86 })[0],
-cScreenFilterName86: ScreenFilterName86 || '',
-cFilterClause86: FilterClause86 || '',
-cFilterOrder86: FilterOrder86 || '',
-cApplyToMst86: ApplyToMst86 === 'Y',
+                  cScreenFilterId86: ScreenFilterId86 || '',
+                  cScreenId86: ScreenId86List.filter(obj => { return obj.key === ScreenId86 })[0],
+                  cScreenFilterName86: ScreenFilterName86 || '',
+                  cFilterClause86: FilterClause86 || '',
+                  cFilterOrder86: FilterOrder86 || '',
+                  cApplyToMst86: ApplyToMst86 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -401,7 +401,7 @@ cApplyToMst86: ApplyToMst86 === 'Y',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmScreenFilterState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmScreenFilterState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -438,13 +438,13 @@ cApplyToMst86: ApplyToMst86 === 'Y',
             {(authCol.ScreenFilterId86 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenFilterId86 || {}).ColumnHeader} {(columnLabel.ScreenFilterId86 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenFilterId86 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenFilterId86 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -459,13 +459,13 @@ disabled = {(authCol.ScreenFilterId86 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ScreenId86 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenId86 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScreenId86 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenId86 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenId86 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cScreenId86'
@@ -486,13 +486,13 @@ disabled = {(authCol.ScreenId86 || {}).readonly ? true: false }/>
 {(authCol.ScreenFilterName86 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenFilterName86 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScreenFilterName86 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenFilterName86 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenFilterName86 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -507,13 +507,13 @@ disabled = {(authCol.ScreenFilterName86 || {}).readonly ? 'disabled': '' }/>
 {(authCol.FilterClause86 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.FilterClause86 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.FilterClause86 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.FilterClause86 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.FilterClause86 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -528,13 +528,13 @@ disabled = {(authCol.FilterClause86 || {}).readonly ? 'disabled': '' }/>
 {(authCol.FilterOrder86 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.FilterOrder86 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.FilterOrder86 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.FilterOrder86 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.FilterOrder86 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenFilterState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -589,7 +589,7 @@ disabled={(authCol.ApplyToMst86 || {}).readonly || !(authCol.ApplyToMst86 || {})
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmScreenFilterState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmScreenFilterState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

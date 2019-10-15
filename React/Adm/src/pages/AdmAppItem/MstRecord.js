@@ -136,22 +136,22 @@ if (!values.cAppItemName136) { errors.cAppItemName136 = (columnLabel.AppItemName
       this.props.SavePage(
         this.props.AdmAppItem,
         {
-AppItemId136: values.cAppItemId136|| '',
-AppInfoId136: (values.cAppInfoId136|| {}).value || '',
-LanguageCd136: (values.cLanguageCd136|| {}).value || '',
-ItemOrder136: values.cItemOrder136|| '',
-FrameworkCd136: (values.cFrameworkCd136|| {}).value || '',
-ObjectTypeCd136: (values.cObjectTypeCd136|| {}).value || '',
-DbProviderCd136: (values.cDbProviderCd136|| {}).value || '',
-RelativePath136: values.cRelativePath136|| '',
-AppItemName136: values.cAppItemName136|| '',
-MultiDesignDb136: values.cMultiDesignDb136 ? 'Y' : 'N',
-RemoveItem136: values.cRemoveItem136 ? 'Y' : 'N',
-AppItemCode136: values.cAppItemCode136|| '',
-ScreenId136: (values.cScreenId136|| {}).value || '',
-ReportId136: (values.cReportId136|| {}).value || '',
-WizardId136: (values.cWizardId136|| {}).value || '',
-CustomId136: values.cCustomId136|| '',
+          AppItemId136: values.cAppItemId136|| '',
+          AppInfoId136: (values.cAppInfoId136|| {}).value || '',
+          LanguageCd136: (values.cLanguageCd136|| {}).value || '',
+          ItemOrder136: values.cItemOrder136|| '',
+          FrameworkCd136: (values.cFrameworkCd136|| {}).value || '',
+          ObjectTypeCd136: (values.cObjectTypeCd136|| {}).value || '',
+          DbProviderCd136: (values.cDbProviderCd136|| {}).value || '',
+          RelativePath136: values.cRelativePath136|| '',
+          AppItemName136: values.cAppItemName136|| '',
+          MultiDesignDb136: values.cMultiDesignDb136 ? 'Y' : 'N',
+          RemoveItem136: values.cRemoveItem136 ? 'Y' : 'N',
+          AppItemCode136: values.cAppItemCode136|| '',
+          ScreenId136: (values.cScreenId136|| {}).value || '',
+          ReportId136: (values.cReportId136|| {}).value || '',
+          WizardId136: (values.cWizardId136|| {}).value || '',
+          CustomId136: values.cCustomId136|| '',
         },
         [],
         {
@@ -394,22 +394,22 @@ const CustomId136 = currMst.CustomId136;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cAppItemId136: AppItemId136 || '',
-cAppInfoId136: AppInfoId136List.filter(obj => { return obj.key === AppInfoId136 })[0],
-cLanguageCd136: LanguageCd136List.filter(obj => { return obj.key === LanguageCd136 })[0],
-cItemOrder136: ItemOrder136 || '',
-cFrameworkCd136: FrameworkCd136List.filter(obj => { return obj.key === FrameworkCd136 })[0],
-cObjectTypeCd136: ObjectTypeCd136List.filter(obj => { return obj.key === ObjectTypeCd136 })[0],
-cDbProviderCd136: DbProviderCd136List.filter(obj => { return obj.key === DbProviderCd136 })[0],
-cRelativePath136: RelativePath136 || '',
-cAppItemName136: AppItemName136 || '',
-cMultiDesignDb136: MultiDesignDb136 === 'Y',
-cRemoveItem136: RemoveItem136 === 'Y',
-cAppItemCode136: AppItemCode136 || '',
-cScreenId136: ScreenId136List.filter(obj => { return obj.key === ScreenId136 })[0],
-cReportId136: ReportId136List.filter(obj => { return obj.key === ReportId136 })[0],
-cWizardId136: WizardId136List.filter(obj => { return obj.key === WizardId136 })[0],
-cCustomId136: CustomId136 || '',
+                  cAppItemId136: AppItemId136 || '',
+                  cAppInfoId136: AppInfoId136List.filter(obj => { return obj.key === AppInfoId136 })[0],
+                  cLanguageCd136: LanguageCd136List.filter(obj => { return obj.key === LanguageCd136 })[0],
+                  cItemOrder136: ItemOrder136 || '',
+                  cFrameworkCd136: FrameworkCd136List.filter(obj => { return obj.key === FrameworkCd136 })[0],
+                  cObjectTypeCd136: ObjectTypeCd136List.filter(obj => { return obj.key === ObjectTypeCd136 })[0],
+                  cDbProviderCd136: DbProviderCd136List.filter(obj => { return obj.key === DbProviderCd136 })[0],
+                  cRelativePath136: RelativePath136 || '',
+                  cAppItemName136: AppItemName136 || '',
+                  cMultiDesignDb136: MultiDesignDb136 === 'Y',
+                  cRemoveItem136: RemoveItem136 === 'Y',
+                  cAppItemCode136: AppItemCode136 || '',
+                  cScreenId136: ScreenId136List.filter(obj => { return obj.key === ScreenId136 })[0],
+                  cReportId136: ReportId136List.filter(obj => { return obj.key === ReportId136 })[0],
+                  cWizardId136: WizardId136List.filter(obj => { return obj.key === WizardId136 })[0],
+                  cCustomId136: CustomId136 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -440,7 +440,7 @@ cCustomId136: CustomId136 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmAppItemState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmAppItemState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -477,13 +477,13 @@ cCustomId136: CustomId136 || '',
             {(authCol.AppItemId136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.AppItemId136 || {}).ColumnHeader} {(columnLabel.AppItemId136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.AppItemId136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AppItemId136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -498,13 +498,13 @@ disabled = {(authCol.AppItemId136 || {}).readonly ? 'disabled': '' }/>
 {(authCol.AppInfoId136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.AppInfoId136 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.AppInfoId136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.AppInfoId136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AppInfoId136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cAppInfoId136'
@@ -525,13 +525,13 @@ disabled = {(authCol.AppInfoId136 || {}).readonly ? true: false }/>
 {(authCol.LanguageCd136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.LanguageCd136 || {}).ColumnHeader} {(columnLabel.LanguageCd136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.LanguageCd136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LanguageCd136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cLanguageCd136'
@@ -549,13 +549,13 @@ disabled = {(authCol.LanguageCd136 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ItemOrder136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ItemOrder136 || {}).ColumnHeader} {(columnLabel.ItemOrder136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ItemOrder136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ItemOrder136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -570,13 +570,13 @@ disabled = {(authCol.ItemOrder136 || {}).readonly ? 'disabled': '' }/>
 {(authCol.FrameworkCd136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.FrameworkCd136 || {}).ColumnHeader} {(columnLabel.FrameworkCd136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.FrameworkCd136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.FrameworkCd136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cFrameworkCd136'
@@ -594,13 +594,13 @@ disabled = {(authCol.FrameworkCd136 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ObjectTypeCd136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ObjectTypeCd136 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ObjectTypeCd136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ObjectTypeCd136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ObjectTypeCd136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cObjectTypeCd136'
@@ -618,13 +618,13 @@ disabled = {(authCol.ObjectTypeCd136 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DbProviderCd136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DbProviderCd136 || {}).ColumnHeader} {(columnLabel.DbProviderCd136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DbProviderCd136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DbProviderCd136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cDbProviderCd136'
@@ -642,13 +642,13 @@ disabled = {(authCol.DbProviderCd136 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RelativePath136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RelativePath136 || {}).ColumnHeader} {(columnLabel.RelativePath136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RelativePath136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RelativePath136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -663,13 +663,13 @@ disabled = {(authCol.RelativePath136 || {}).readonly ? 'disabled': '' }/>
 {(authCol.AppItemName136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.AppItemName136 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.AppItemName136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.AppItemName136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AppItemName136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -726,13 +726,13 @@ disabled={(authCol.RemoveItem136 || {}).readonly || !(authCol.RemoveItem136 || {
 {(authCol.AppItemCode136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.AppItemCode136 || {}).ColumnHeader} {(columnLabel.AppItemCode136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.AppItemCode136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AppItemCode136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -747,13 +747,13 @@ disabled = {(authCol.AppItemCode136 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ScreenId136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenId136 || {}).ColumnHeader} {(columnLabel.ScreenId136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenId136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenId136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cScreenId136'
@@ -774,13 +774,13 @@ disabled = {(authCol.ScreenId136 || {}).readonly ? true: false }/>
 {(authCol.ReportId136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReportId136 || {}).ColumnHeader} {(columnLabel.ReportId136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReportId136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReportId136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cReportId136'
@@ -801,13 +801,13 @@ disabled = {(authCol.ReportId136 || {}).readonly ? true: false }/>
 {(authCol.WizardId136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.WizardId136 || {}).ColumnHeader} {(columnLabel.WizardId136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.WizardId136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WizardId136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cWizardId136'
@@ -828,13 +828,13 @@ disabled = {(authCol.WizardId136 || {}).readonly ? true: false }/>
 {(authCol.CustomId136 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CustomId136 || {}).ColumnHeader} {(columnLabel.CustomId136 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CustomId136 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CustomId136 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -868,7 +868,7 @@ disabled = {(authCol.CustomId136 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmAppItemState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmAppItemState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

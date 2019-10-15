@@ -484,7 +484,7 @@ class MstList extends RintagiScreen {
                                         .map((v, i, a) => {
                                           if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RowAuthId236)) return null;
                                           const buttonCount = a.length;
-                                          const colWidth = parseInt(12 / buttonCount);
+                                          const colWidth = parseInt(12 / buttonCount, 10);
                                           const lastBtn = i === a.length - 1;
                                           const outlineProperty = lastBtn ? false : true;
                                           return (
@@ -511,7 +511,7 @@ class MstList extends RintagiScreen {
               {!activeSelectionVisible &&
                 !this.state.ShowMst &&
                 <div className='empty-block'>
-                  <img className='folder-img' src={require('../../img/folder.png')} />
+                  <img className='folder-img' alt='' src={require('../../img/folder.png')} />
                   <p className='create-new-message'>{NoMasterMsg}. <span className='link-imitation' onClick={this.AddNewMst({ naviBar: naviSelectBar, useMobileView })}>{AddMasterMsg}</span></p>
                 </div>
               }

@@ -136,14 +136,14 @@ if (!values.cChartData206) { errors.cChartData206 = (columnLabel.ChartData206 ||
       this.props.SavePage(
         this.props.AdmRptCha,
         {
-RptChaId206: values.cRptChaId206|| '',
-RptCtrId206: (values.cRptCtrId206|| {}).value || '',
-ReportId206: (values.cReportId206|| {}).value || '',
-RptChaTypeCd206: (values.cRptChaTypeCd206|| {}).value || '',
-ThreeD206: values.cThreeD206 ? 'Y' : 'N',
-CategoryGrp206: (values.cCategoryGrp206|| {}).value || '',
-ChartData206: values.cChartData206|| '',
-SeriesGrp206: (values.cSeriesGrp206|| {}).value || '',
+          RptChaId206: values.cRptChaId206|| '',
+          RptCtrId206: (values.cRptCtrId206|| {}).value || '',
+          ReportId206: (values.cReportId206|| {}).value || '',
+          RptChaTypeCd206: (values.cRptChaTypeCd206|| {}).value || '',
+          ThreeD206: values.cThreeD206 ? 'Y' : 'N',
+          CategoryGrp206: (values.cCategoryGrp206|| {}).value || '',
+          ChartData206: values.cChartData206|| '',
+          SeriesGrp206: (values.cSeriesGrp206|| {}).value || '',
         },
         [],
         {
@@ -375,14 +375,14 @@ const SeriesGrp206 = currMst.SeriesGrp206;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cRptChaId206: RptChaId206 || '',
-cRptCtrId206: RptCtrId206List.filter(obj => { return obj.key === RptCtrId206 })[0],
-cReportId206: ReportId206List.filter(obj => { return obj.key === ReportId206 })[0],
-cRptChaTypeCd206: RptChaTypeCd206List.filter(obj => { return obj.key === RptChaTypeCd206 })[0],
-cThreeD206: ThreeD206 === 'Y',
-cCategoryGrp206: CategoryGrp206List.filter(obj => { return obj.key === CategoryGrp206 })[0],
-cChartData206: ChartData206 || '',
-cSeriesGrp206: SeriesGrp206List.filter(obj => { return obj.key === SeriesGrp206 })[0],
+                  cRptChaId206: RptChaId206 || '',
+                  cRptCtrId206: RptCtrId206List.filter(obj => { return obj.key === RptCtrId206 })[0],
+                  cReportId206: ReportId206List.filter(obj => { return obj.key === ReportId206 })[0],
+                  cRptChaTypeCd206: RptChaTypeCd206List.filter(obj => { return obj.key === RptChaTypeCd206 })[0],
+                  cThreeD206: ThreeD206 === 'Y',
+                  cCategoryGrp206: CategoryGrp206List.filter(obj => { return obj.key === CategoryGrp206 })[0],
+                  cChartData206: ChartData206 || '',
+                  cSeriesGrp206: SeriesGrp206List.filter(obj => { return obj.key === SeriesGrp206 })[0],
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -413,7 +413,7 @@ cSeriesGrp206: SeriesGrp206List.filter(obj => { return obj.key === SeriesGrp206 
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmRptChaState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmRptChaState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -450,13 +450,13 @@ cSeriesGrp206: SeriesGrp206List.filter(obj => { return obj.key === SeriesGrp206 
             {(authCol.RptChaId206 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RptChaId206 || {}).ColumnHeader} {(columnLabel.RptChaId206 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RptChaId206 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RptChaId206 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -471,13 +471,13 @@ disabled = {(authCol.RptChaId206 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RptCtrId206 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RptCtrId206 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RptCtrId206 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RptCtrId206 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RptCtrId206 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cRptCtrId206'
@@ -498,13 +498,13 @@ disabled = {(authCol.RptCtrId206 || {}).readonly ? true: false }/>
 {(authCol.ReportId206 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReportId206 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ReportId206 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReportId206 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReportId206 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cReportId206'
@@ -525,13 +525,13 @@ disabled = {(authCol.ReportId206 || {}).readonly ? true: false }/>
 {(authCol.RptChaTypeCd206 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RptChaTypeCd206 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RptChaTypeCd206 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RptChaTypeCd206 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RptChaTypeCd206 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cRptChaTypeCd206'
@@ -570,13 +570,13 @@ disabled={(authCol.ThreeD206 || {}).readonly || !(authCol.ThreeD206 || {}).visib
 {(authCol.CategoryGrp206 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CategoryGrp206 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CategoryGrp206 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CategoryGrp206 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CategoryGrp206 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cCategoryGrp206'
@@ -594,13 +594,13 @@ disabled = {(authCol.CategoryGrp206 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ChartData206 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ChartData206 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ChartData206 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ChartData206 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ChartData206 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -615,13 +615,13 @@ disabled = {(authCol.ChartData206 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SeriesGrp206 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SeriesGrp206 || {}).ColumnHeader} {(columnLabel.SeriesGrp206 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SeriesGrp206 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SeriesGrp206 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRptChaState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSeriesGrp206'
@@ -658,7 +658,7 @@ disabled = {(authCol.SeriesGrp206 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmRptChaState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmRptChaState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

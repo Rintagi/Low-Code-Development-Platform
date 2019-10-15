@@ -132,14 +132,14 @@ if (isEmptyId((values.cAllowSel236 || {}).value)) { errors.cAllowSel236 = (colum
       this.props.SavePage(
         this.props.AdmAtRowAuth,
         {
-RowAuthId236: values.cRowAuthId236|| '',
-RowAuthName236: values.cRowAuthName236|| '',
-OvrideId236: (values.cOvrideId236|| {}).value || '',
-AllowSel236: (values.cAllowSel236|| {}).value || '',
-AllowAdd236: values.cAllowAdd236 ? 'Y' : 'N',
-AllowUpd236: values.cAllowUpd236 ? 'Y' : 'N',
-AllowDel236: values.cAllowDel236 ? 'Y' : 'N',
-SysAdmin236: values.cSysAdmin236 ? 'Y' : 'N',
+          RowAuthId236: values.cRowAuthId236|| '',
+          RowAuthName236: values.cRowAuthName236|| '',
+          OvrideId236: (values.cOvrideId236|| {}).value || '',
+          AllowSel236: (values.cAllowSel236|| {}).value || '',
+          AllowAdd236: values.cAllowAdd236 ? 'Y' : 'N',
+          AllowUpd236: values.cAllowUpd236 ? 'Y' : 'N',
+          AllowDel236: values.cAllowDel236 ? 'Y' : 'N',
+          SysAdmin236: values.cSysAdmin236 ? 'Y' : 'N',
         },
         [],
         {
@@ -368,14 +368,14 @@ const SysAdmin236 = currMst.SysAdmin236;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cRowAuthId236: RowAuthId236 || '',
-cRowAuthName236: RowAuthName236 || '',
-cOvrideId236: OvrideId236List.filter(obj => { return obj.key === OvrideId236 })[0],
-cAllowSel236: AllowSel236List.filter(obj => { return obj.key === AllowSel236 })[0],
-cAllowAdd236: AllowAdd236 === 'Y',
-cAllowUpd236: AllowUpd236 === 'Y',
-cAllowDel236: AllowDel236 === 'Y',
-cSysAdmin236: SysAdmin236 === 'Y',
+                  cRowAuthId236: RowAuthId236 || '',
+                  cRowAuthName236: RowAuthName236 || '',
+                  cOvrideId236: OvrideId236List.filter(obj => { return obj.key === OvrideId236 })[0],
+                  cAllowSel236: AllowSel236List.filter(obj => { return obj.key === AllowSel236 })[0],
+                  cAllowAdd236: AllowAdd236 === 'Y',
+                  cAllowUpd236: AllowUpd236 === 'Y',
+                  cAllowDel236: AllowDel236 === 'Y',
+                  cSysAdmin236: SysAdmin236 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -406,7 +406,7 @@ cSysAdmin236: SysAdmin236 === 'Y',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmAtRowAuthState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmAtRowAuthState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -443,13 +443,13 @@ cSysAdmin236: SysAdmin236 === 'Y',
             {(authCol.RowAuthId236 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RowAuthId236 || {}).ColumnHeader} {(columnLabel.RowAuthId236 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RowAuthId236 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowAuthId236 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -464,13 +464,13 @@ disabled = {(authCol.RowAuthId236 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RowAuthName236 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RowAuthName236 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RowAuthName236 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RowAuthName236 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowAuthName236 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -485,13 +485,13 @@ disabled = {(authCol.RowAuthName236 || {}).readonly ? 'disabled': '' }/>
 {(authCol.OvrideId236 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.OvrideId236 || {}).ColumnHeader} {(columnLabel.OvrideId236 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.OvrideId236 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.OvrideId236 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cOvrideId236'
@@ -509,13 +509,13 @@ disabled = {(authCol.OvrideId236 || {}).readonly ? 'disabled': '' }/>
 {(authCol.AllowSel236 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.AllowSel236 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.AllowSel236 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.AllowSel236 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AllowSel236 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmAtRowAuthState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cAllowSel236'
@@ -636,7 +636,7 @@ disabled={(authCol.SysAdmin236 || {}).readonly || !(authCol.SysAdmin236 || {}).v
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmAtRowAuthState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmAtRowAuthState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

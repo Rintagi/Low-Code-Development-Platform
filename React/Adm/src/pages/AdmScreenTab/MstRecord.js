@@ -133,10 +133,10 @@ if (!values.cTabFolderOrder19) { errors.cTabFolderOrder19 = (columnLabel.TabFold
       this.props.SavePage(
         this.props.AdmScreenTab,
         {
-ScreenTabId19: values.cScreenTabId19|| '',
-ScreenId19: (values.cScreenId19|| {}).value || '',
-TabFolderName19: values.cTabFolderName19|| '',
-TabFolderOrder19: values.cTabFolderOrder19|| '',
+          ScreenTabId19: values.cScreenTabId19|| '',
+          ScreenId19: (values.cScreenId19|| {}).value || '',
+          TabFolderName19: values.cTabFolderName19|| '',
+          TabFolderOrder19: values.cTabFolderOrder19|| '',
         },
         [],
         {
@@ -360,10 +360,10 @@ const TabFolderOrder19 = currMst.TabFolderOrder19;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cScreenTabId19: ScreenTabId19 || '',
-cScreenId19: ScreenId19List.filter(obj => { return obj.key === ScreenId19 })[0],
-cTabFolderName19: TabFolderName19 || '',
-cTabFolderOrder19: TabFolderOrder19 || '',
+                  cScreenTabId19: ScreenTabId19 || '',
+                  cScreenId19: ScreenId19List.filter(obj => { return obj.key === ScreenId19 })[0],
+                  cTabFolderName19: TabFolderName19 || '',
+                  cTabFolderOrder19: TabFolderOrder19 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -394,7 +394,7 @@ cTabFolderOrder19: TabFolderOrder19 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmScreenTabState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmScreenTabState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -431,13 +431,13 @@ cTabFolderOrder19: TabFolderOrder19 || '',
             {(authCol.ScreenTabId19 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenTabId19 || {}).ColumnHeader} {(columnLabel.ScreenTabId19 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenTabId19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenTabId19 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -452,13 +452,13 @@ disabled = {(authCol.ScreenTabId19 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ScreenId19 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenId19 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScreenId19 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenId19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenId19 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cScreenId19'
@@ -479,13 +479,13 @@ disabled = {(authCol.ScreenId19 || {}).readonly ? true: false }/>
 {(authCol.TabFolderName19 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TabFolderName19 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TabFolderName19 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TabFolderName19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TabFolderName19 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -500,13 +500,13 @@ disabled = {(authCol.TabFolderName19 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TabFolderOrder19 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TabFolderOrder19 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TabFolderOrder19 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TabFolderOrder19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TabFolderOrder19 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -521,7 +521,7 @@ disabled = {(authCol.TabFolderOrder19 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TabFolderLabel || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TabFolderLabel || {}).ColumnHeader} {(columnLabel.TabFolderLabel || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TabFolderLabel || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TabFolderLabel || {}).ToolTip} />
 )}
@@ -552,7 +552,7 @@ disabled = {(authCol.TabFolderOrder19 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmScreenTabState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmScreenTabState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

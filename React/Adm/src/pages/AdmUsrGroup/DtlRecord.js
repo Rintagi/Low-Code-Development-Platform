@@ -105,13 +105,12 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
       [
         {
           UsrGroupAuthId58: values.cUsrGroupAuthId58 || null,
-UsrGroupAuthId58: values.cUsrGroupAuthId58|| '',
-CompanyId58: (values.cCompanyId58|| {}).value || '',
-ProjectId58: (values.cProjectId58|| {}).value || '',
-Filler: values.cFiller|| '',
-MoreInfo: values.cMoreInfo || '',
-SystemId58: (values.cSystemId58|| {}).value || '',
-SysRowAuthorityId58: (values.cSysRowAuthorityId58|| {}).value || '',
+          CompanyId58: (values.cCompanyId58|| {}).value || '',
+          ProjectId58: (values.cProjectId58|| {}).value || '',
+          Filler: values.cFiller|| '',
+          MoreInfo: values.cMoreInfo || '',
+          SystemId58: (values.cSystemId58|| {}).value || '',
+          SysRowAuthorityId58: (values.cSysRowAuthorityId58|| {}).value || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cUsrGroupAuthId58 ? 'upd' : 'add'),
         }
       ],
@@ -336,7 +335,6 @@ SysRowAuthorityId58: (values.cSysRowAuthorityId58|| {}).value || '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const UsrGroupAuthId58 = currDtl.UsrGroupAuthId58;
 const CompanyId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.CompanyId58(AdmUsrGroupState);
 const CompanyId58 = currDtl.CompanyId58;
 const ProjectId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.ProjectId58(AdmUsrGroupState);
@@ -380,13 +378,12 @@ const SysRowAuthorityId58 = currDtl.SysRowAuthorityId58;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cUsrGroupAuthId58: currDtl.UsrGroupAuthId58 || '',
-cCompanyId58: CompanyId58List.filter(obj => { return obj.key === currDtl.CompanyId58 })[0],
-cProjectId58: ProjectId58List.filter(obj => { return obj.key === currDtl.ProjectId58 })[0],
-cFiller: currDtl.Filler || '',
-cMoreInfo: currDtl.MoreInfo || '',
-cSystemId58: SystemId58List.filter(obj => { return obj.key === currDtl.SystemId58 })[0],
-cSysRowAuthorityId58: SysRowAuthorityId58List.filter(obj => { return obj.key === currDtl.SysRowAuthorityId58 })[0],
+                  cCompanyId58: CompanyId58List.filter(obj => { return obj.key === currDtl.CompanyId58 })[0],
+                  cProjectId58: ProjectId58List.filter(obj => { return obj.key === currDtl.ProjectId58 })[0],
+                  cFiller: currDtl.Filler || '',
+                  cMoreInfo: currDtl.MoreInfo || '',
+                  cSystemId58: SystemId58List.filter(obj => { return obj.key === currDtl.SystemId58 })[0],
+                  cSysRowAuthorityId58: SysRowAuthorityId58List.filter(obj => { return obj.key === currDtl.SysRowAuthorityId58 })[0],
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -451,37 +448,16 @@ cSysRowAuthorityId58: SysRowAuthorityId58List.filter(obj => { return obj.key ===
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.UsrGroupAuthId58 || {}).visible &&
+            {(authCol.CompanyId58 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.UsrGroupAuthId58 || {}).ColumnHeader} {(columnLabel.UsrGroupAuthId58 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.UsrGroupAuthId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrGroupAuthId58 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cUsrGroupAuthId58'
-disabled = {(authCol.UsrGroupAuthId58 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cUsrGroupAuthId58 && touched.cUsrGroupAuthId58 && <span className='form__form-group-error'>{errors.cUsrGroupAuthId58}</span>}
-</div>
-</Col>
-}
-{(authCol.CompanyId58 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CompanyId58 || {}).ColumnHeader} {(columnLabel.CompanyId58 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CompanyId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CompanyId58 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cCompanyId58'
@@ -499,13 +475,13 @@ disabled = {(authCol.CompanyId58 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ProjectId58 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ProjectId58 || {}).ColumnHeader} {(columnLabel.ProjectId58 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ProjectId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ProjectId58 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cProjectId58'
@@ -523,13 +499,13 @@ disabled = {(authCol.ProjectId58 || {}).readonly ? 'disabled': '' }/>
 {(authCol.Filler || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.Filler || {}).ColumnHeader} {(columnLabel.Filler || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.Filler || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Filler || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -544,7 +520,7 @@ disabled = {(authCol.Filler || {}).readonly ? 'disabled': '' }/>
 {(authCol.FillerBtn || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.FillerBtn || {}).ColumnHeader} {(columnLabel.FillerBtn || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.FillerBtn || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.FillerBtn || {}).ToolTip} />
 )}
@@ -556,13 +532,13 @@ disabled = {(authCol.Filler || {}).readonly ? 'disabled': '' }/>
 {(authCol.MoreInfo || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MoreInfo || {}).ColumnHeader} {(columnLabel.MoreInfo || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MoreInfo || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MoreInfo || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -577,13 +553,13 @@ disabled = {(authCol.MoreInfo || {}).readonly ? 'disabled': '' }/>
 {(authCol.SystemId58 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SystemId58 || {}).ColumnHeader} {(columnLabel.SystemId58 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SystemId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SystemId58 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSystemId58'
@@ -601,13 +577,13 @@ disabled = {(authCol.SystemId58 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SysRowAuthorityId58 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SysRowAuthorityId58 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.SysRowAuthorityId58 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SysRowAuthorityId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SysRowAuthorityId58 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSysRowAuthorityId58'
@@ -639,7 +615,7 @@ disabled = {(authCol.SysRowAuthorityId58 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).UsrGroupId7,currDtl.UsrGroupAuthId58)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

@@ -140,19 +140,19 @@ if (!values.cXlsCompilePath194) { errors.cXlsCompilePath194 = (columnLabel.XlsCo
       this.props.SavePage(
         this.props.AdmClnTier,
         {
-ClientTierId194: values.cClientTierId194|| '',
-ClientTierName194: values.cClientTierName194|| '',
-EntityId194: (values.cEntityId194|| {}).value || '',
-LanguageCd194: (values.cLanguageCd194|| {}).value || '',
-FrameworkCd194: (values.cFrameworkCd194|| {}).value || '',
-DevProgramPath194: values.cDevProgramPath194|| '',
-WsProgramPath194: values.cWsProgramPath194|| '',
-XlsProgramPath194: values.cXlsProgramPath194|| '',
-DevCompilePath194: values.cDevCompilePath194|| '',
-WsCompilePath194: values.cWsCompilePath194|| '',
-XlsCompilePath194: values.cXlsCompilePath194|| '',
-CombineAsm194: values.cCombineAsm194 ? 'Y' : 'N',
-IsDefault194: values.cIsDefault194 ? 'Y' : 'N',
+          ClientTierId194: values.cClientTierId194|| '',
+          ClientTierName194: values.cClientTierName194|| '',
+          EntityId194: (values.cEntityId194|| {}).value || '',
+          LanguageCd194: (values.cLanguageCd194|| {}).value || '',
+          FrameworkCd194: (values.cFrameworkCd194|| {}).value || '',
+          DevProgramPath194: values.cDevProgramPath194|| '',
+          WsProgramPath194: values.cWsProgramPath194|| '',
+          XlsProgramPath194: values.cXlsProgramPath194|| '',
+          DevCompilePath194: values.cDevCompilePath194|| '',
+          WsCompilePath194: values.cWsCompilePath194|| '',
+          XlsCompilePath194: values.cXlsCompilePath194|| '',
+          CombineAsm194: values.cCombineAsm194 ? 'Y' : 'N',
+          IsDefault194: values.cIsDefault194 ? 'Y' : 'N',
         },
         [],
         {
@@ -387,19 +387,19 @@ const IsDefault194 = currMst.IsDefault194;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cClientTierId194: ClientTierId194 || '',
-cClientTierName194: ClientTierName194 || '',
-cEntityId194: EntityId194List.filter(obj => { return obj.key === EntityId194 })[0],
-cLanguageCd194: LanguageCd194List.filter(obj => { return obj.key === LanguageCd194 })[0],
-cFrameworkCd194: FrameworkCd194List.filter(obj => { return obj.key === FrameworkCd194 })[0],
-cDevProgramPath194: DevProgramPath194 || '',
-cWsProgramPath194: WsProgramPath194 || '',
-cXlsProgramPath194: XlsProgramPath194 || '',
-cDevCompilePath194: DevCompilePath194 || '',
-cWsCompilePath194: WsCompilePath194 || '',
-cXlsCompilePath194: XlsCompilePath194 || '',
-cCombineAsm194: CombineAsm194 === 'Y',
-cIsDefault194: IsDefault194 === 'Y',
+                  cClientTierId194: ClientTierId194 || '',
+                  cClientTierName194: ClientTierName194 || '',
+                  cEntityId194: EntityId194List.filter(obj => { return obj.key === EntityId194 })[0],
+                  cLanguageCd194: LanguageCd194List.filter(obj => { return obj.key === LanguageCd194 })[0],
+                  cFrameworkCd194: FrameworkCd194List.filter(obj => { return obj.key === FrameworkCd194 })[0],
+                  cDevProgramPath194: DevProgramPath194 || '',
+                  cWsProgramPath194: WsProgramPath194 || '',
+                  cXlsProgramPath194: XlsProgramPath194 || '',
+                  cDevCompilePath194: DevCompilePath194 || '',
+                  cWsCompilePath194: WsCompilePath194 || '',
+                  cXlsCompilePath194: XlsCompilePath194 || '',
+                  cCombineAsm194: CombineAsm194 === 'Y',
+                  cIsDefault194: IsDefault194 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -430,7 +430,7 @@ cIsDefault194: IsDefault194 === 'Y',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmClnTierState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmClnTierState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -467,13 +467,13 @@ cIsDefault194: IsDefault194 === 'Y',
             {(authCol.ClientTierId194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ClientTierId194 || {}).ColumnHeader} {(columnLabel.ClientTierId194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ClientTierId194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ClientTierId194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -488,13 +488,13 @@ disabled = {(authCol.ClientTierId194 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ClientTierName194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ClientTierName194 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ClientTierName194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ClientTierName194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ClientTierName194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -509,13 +509,13 @@ disabled = {(authCol.ClientTierName194 || {}).readonly ? 'disabled': '' }/>
 {(authCol.EntityId194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.EntityId194 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.EntityId194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.EntityId194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.EntityId194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cEntityId194'
@@ -533,13 +533,13 @@ disabled = {(authCol.EntityId194 || {}).readonly ? 'disabled': '' }/>
 {(authCol.LanguageCd194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.LanguageCd194 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.LanguageCd194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.LanguageCd194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LanguageCd194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cLanguageCd194'
@@ -557,13 +557,13 @@ disabled = {(authCol.LanguageCd194 || {}).readonly ? 'disabled': '' }/>
 {(authCol.FrameworkCd194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.FrameworkCd194 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.FrameworkCd194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.FrameworkCd194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.FrameworkCd194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cFrameworkCd194'
@@ -581,13 +581,13 @@ disabled = {(authCol.FrameworkCd194 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DevProgramPath194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DevProgramPath194 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DevProgramPath194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DevProgramPath194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DevProgramPath194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -602,13 +602,13 @@ disabled = {(authCol.DevProgramPath194 || {}).readonly ? 'disabled': '' }/>
 {(authCol.WsProgramPath194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.WsProgramPath194 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.WsProgramPath194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.WsProgramPath194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WsProgramPath194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -623,13 +623,13 @@ disabled = {(authCol.WsProgramPath194 || {}).readonly ? 'disabled': '' }/>
 {(authCol.XlsProgramPath194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.XlsProgramPath194 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.XlsProgramPath194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.XlsProgramPath194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.XlsProgramPath194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -644,13 +644,13 @@ disabled = {(authCol.XlsProgramPath194 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DevCompilePath194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DevCompilePath194 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DevCompilePath194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DevCompilePath194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DevCompilePath194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -665,13 +665,13 @@ disabled = {(authCol.DevCompilePath194 || {}).readonly ? 'disabled': '' }/>
 {(authCol.WsCompilePath194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.WsCompilePath194 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.WsCompilePath194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.WsCompilePath194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WsCompilePath194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -686,13 +686,13 @@ disabled = {(authCol.WsCompilePath194 || {}).readonly ? 'disabled': '' }/>
 {(authCol.XlsCompilePath194 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.XlsCompilePath194 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.XlsCompilePath194 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.XlsCompilePath194 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.XlsCompilePath194 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmClnTierState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -768,7 +768,7 @@ disabled={(authCol.IsDefault194 || {}).readonly || !(authCol.IsDefault194 || {})
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmClnTierState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmClnTierState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

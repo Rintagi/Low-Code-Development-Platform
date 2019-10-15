@@ -105,10 +105,9 @@ if (isEmptyId((values.cCultureId99 || {}).value)) { errors.cCultureId99 = (colum
       [
         {
           ReportObjHlpId99: values.cReportObjHlpId99 || null,
-ReportObjHlpId99: values.cReportObjHlpId99|| '',
-CultureId99: (values.cCultureId99|| {}).value || '',
-ColumnHeader99: values.cColumnHeader99|| '',
-HeaderWidth99: values.cHeaderWidth99|| '',
+          CultureId99: (values.cCultureId99|| {}).value || '',
+          ColumnHeader99: values.cColumnHeader99|| '',
+          HeaderWidth99: values.cHeaderWidth99|| '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cReportObjHlpId99 ? 'upd' : 'add'),
         }
       ],
@@ -333,7 +332,6 @@ HeaderWidth99: values.cHeaderWidth99|| '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const ReportObjHlpId99 = currDtl.ReportObjHlpId99;
 const CultureId99List = AdmReportObjReduxObj.ScreenDdlSelectors.CultureId99(AdmReportObjState);
 const CultureId99 = currDtl.CultureId99;
 const ColumnHeader99 = currDtl.ColumnHeader99;
@@ -371,10 +369,9 @@ const HeaderWidth99 = currDtl.HeaderWidth99;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cReportObjHlpId99: currDtl.ReportObjHlpId99 || '',
-cCultureId99: CultureId99List.filter(obj => { return obj.key === currDtl.CultureId99 })[0],
-cColumnHeader99: currDtl.ColumnHeader99 || '',
-cHeaderWidth99: currDtl.HeaderWidth99 || '',
+                  cCultureId99: CultureId99List.filter(obj => { return obj.key === currDtl.CultureId99 })[0],
+                  cColumnHeader99: currDtl.ColumnHeader99 || '',
+                  cHeaderWidth99: currDtl.HeaderWidth99 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -439,37 +436,16 @@ cHeaderWidth99: currDtl.HeaderWidth99 || '',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.ReportObjHlpId99 || {}).visible &&
+            {(authCol.CultureId99 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.ReportObjHlpId99 || {}).ColumnHeader} {(columnLabel.ReportObjHlpId99 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ReportObjHlpId99 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReportObjHlpId99 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cReportObjHlpId99'
-disabled = {(authCol.ReportObjHlpId99 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cReportObjHlpId99 && touched.cReportObjHlpId99 && <span className='form__form-group-error'>{errors.cReportObjHlpId99}</span>}
-</div>
-</Col>
-}
-{(authCol.CultureId99 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CultureId99 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureId99 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CultureId99 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureId99 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cCultureId99'
@@ -487,13 +463,13 @@ disabled = {(authCol.CultureId99 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ColumnHeader99 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnHeader99 || {}).ColumnHeader} {(columnLabel.ColumnHeader99 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnHeader99 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnHeader99 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -508,13 +484,13 @@ disabled = {(authCol.ColumnHeader99 || {}).readonly ? 'disabled': '' }/>
 {(authCol.HeaderWidth99 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.HeaderWidth99 || {}).ColumnHeader} {(columnLabel.HeaderWidth99 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.HeaderWidth99 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.HeaderWidth99 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReportObjState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -543,7 +519,7 @@ disabled = {(authCol.HeaderWidth99 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ReportObjId23,currDtl.ReportObjHlpId99)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

@@ -148,17 +148,17 @@ if (isEmptyId((values.cImprUsrId95 || {}).value)) { errors.cImprUsrId95 = (colum
       this.props.SavePage(
         this.props.AdmUsrImpr,
         {
-UsrImprId95: values.cUsrImprId95|| '',
-UsrId95: (values.cUsrId95|| {}).value || '',
-ImprUsrId95: (values.cImprUsrId95|| {}).value || '',
-FailedAttempt1: values.cFailedAttempt1|| '',
-InputBy95: (values.cInputBy95|| {}).value || '',
-InputOn95: values.cInputOn95|| '',
-ModifiedBy95: (values.cModifiedBy95|| {}).value || '',
-ModifiedOn95: values.cModifiedOn95|| '',
-TestCulture95: (values.cTestCulture95|| {}).value || '',
-TestCurrency95: values.cTestCurrency95|| '',
-SignOff95: values.cSignOff95|| '',
+          UsrImprId95: values.cUsrImprId95|| '',
+          UsrId95: (values.cUsrId95|| {}).value || '',
+          ImprUsrId95: (values.cImprUsrId95|| {}).value || '',
+          FailedAttempt1: values.cFailedAttempt1|| '',
+          InputBy95: (values.cInputBy95|| {}).value || '',
+          InputOn95: values.cInputOn95|| '',
+          ModifiedBy95: (values.cModifiedBy95|| {}).value || '',
+          ModifiedOn95: values.cModifiedOn95|| '',
+          TestCulture95: (values.cTestCulture95|| {}).value || '',
+          TestCurrency95: values.cTestCurrency95|| '',
+          SignOff95: values.cSignOff95|| '',
         },
         [],
         {
@@ -393,17 +393,17 @@ const SignOff95 = currMst.SignOff95;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cUsrImprId95: UsrImprId95 || '',
-cUsrId95: UsrId95List.filter(obj => { return obj.key === UsrId95 })[0],
-cImprUsrId95: ImprUsrId95List.filter(obj => { return obj.key === ImprUsrId95 })[0],
-cFailedAttempt1: FailedAttempt1 || '',
-cInputBy95: InputBy95List.filter(obj => { return obj.key === InputBy95 })[0],
-cInputOn95: InputOn95 || new Date(),
-cModifiedBy95: ModifiedBy95List.filter(obj => { return obj.key === ModifiedBy95 })[0],
-cModifiedOn95: ModifiedOn95 || new Date(),
-cTestCulture95: TestCulture95List.filter(obj => { return obj.key === TestCulture95 })[0],
-cTestCurrency95: TestCurrency95 || '',
-cSignOff95: SignOff95 || '',
+                  cUsrImprId95: UsrImprId95 || '',
+                  cUsrId95: UsrId95List.filter(obj => { return obj.key === UsrId95 })[0],
+                  cImprUsrId95: ImprUsrId95List.filter(obj => { return obj.key === ImprUsrId95 })[0],
+                  cFailedAttempt1: FailedAttempt1 || '',
+                  cInputBy95: InputBy95List.filter(obj => { return obj.key === InputBy95 })[0],
+                  cInputOn95: InputOn95 || new Date(),
+                  cModifiedBy95: ModifiedBy95List.filter(obj => { return obj.key === ModifiedBy95 })[0],
+                  cModifiedOn95: ModifiedOn95 || new Date(),
+                  cTestCulture95: TestCulture95List.filter(obj => { return obj.key === TestCulture95 })[0],
+                  cTestCurrency95: TestCurrency95 || '',
+                  cSignOff95: SignOff95 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -434,7 +434,7 @@ cSignOff95: SignOff95 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmUsrImprState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmUsrImprState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -471,13 +471,13 @@ cSignOff95: SignOff95 || '',
             {(authCol.UsrImprId95 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.UsrImprId95 || {}).ColumnHeader} {(columnLabel.UsrImprId95 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.UsrImprId95 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrImprId95 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -492,13 +492,13 @@ disabled = {(authCol.UsrImprId95 || {}).readonly ? 'disabled': '' }/>
 {(authCol.UsrId95 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.UsrId95 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.UsrId95 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.UsrId95 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrId95 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cUsrId95'
@@ -526,13 +526,13 @@ disabled = {(authCol.UsrId95 || {}).readonly ? true: false }/>
 {(authCol.ImprUsrId95 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ImprUsrId95 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ImprUsrId95 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ImprUsrId95 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ImprUsrId95 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cImprUsrId95'
@@ -560,13 +560,13 @@ disabled = {(authCol.ImprUsrId95 || {}).readonly ? true: false }/>
 {(authCol.FailedAttempt1 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.FailedAttempt1 || {}).ColumnHeader} {(columnLabel.FailedAttempt1 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.FailedAttempt1 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.FailedAttempt1 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -581,13 +581,13 @@ disabled = {(authCol.FailedAttempt1 || {}).readonly ? 'disabled': '' }/>
 {(authCol.InputBy95 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.InputBy95 || {}).ColumnHeader} {(columnLabel.InputBy95 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.InputBy95 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.InputBy95 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cInputBy95'
@@ -605,13 +605,13 @@ disabled = {(authCol.InputBy95 || {}).readonly ? 'disabled': '' }/>
 {(authCol.InputOn95 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.InputOn95 || {}).ColumnHeader} {(columnLabel.InputOn95 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.InputOn95 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.InputOn95 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DatePicker
 name='cInputOn95'
@@ -629,13 +629,13 @@ disabled = {(authCol.InputOn95 || {}).readonly ? true: false }/>
 {(authCol.ModifiedBy95 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ModifiedBy95 || {}).ColumnHeader} {(columnLabel.ModifiedBy95 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ModifiedBy95 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ModifiedBy95 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cModifiedBy95'
@@ -653,13 +653,13 @@ disabled = {(authCol.ModifiedBy95 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ModifiedOn95 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ModifiedOn95 || {}).ColumnHeader} {(columnLabel.ModifiedOn95 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ModifiedOn95 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ModifiedOn95 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DatePicker
 name='cModifiedOn95'
@@ -677,13 +677,13 @@ disabled = {(authCol.ModifiedOn95 || {}).readonly ? true: false }/>
 {(authCol.TestCulture95 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TestCulture95 || {}).ColumnHeader} {(columnLabel.TestCulture95 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TestCulture95 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TestCulture95 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cTestCulture95'
@@ -704,13 +704,13 @@ disabled = {(authCol.TestCulture95 || {}).readonly ? true: false }/>
 {(authCol.TestCurrency95 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TestCurrency95 || {}).ColumnHeader} {(columnLabel.TestCurrency95 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TestCurrency95 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TestCurrency95 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -725,13 +725,13 @@ disabled = {(authCol.TestCurrency95 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SignOff95 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SignOff95 || {}).ColumnHeader} {(columnLabel.SignOff95 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SignOff95 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SignOff95 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -765,7 +765,7 @@ disabled = {(authCol.SignOff95 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmUsrImprState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmUsrImprState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

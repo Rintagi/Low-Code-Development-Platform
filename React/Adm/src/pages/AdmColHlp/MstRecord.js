@@ -131,7 +131,7 @@ class MstRecord extends RintagiScreen {
       this.props.SavePage(
         this.props.AdmColHlp,
         {
-ScreenObjId14: values.cScreenObjId14|| '',
+          ScreenObjId14: values.cScreenObjId14|| '',
         },
         [],
         {
@@ -351,7 +351,7 @@ const ScreenObjId14 = currMst.ScreenObjId14;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cScreenObjId14: ScreenObjId14 || '',
+                  cScreenObjId14: ScreenObjId14 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -382,7 +382,7 @@ cScreenObjId14: ScreenObjId14 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmColHlpState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmColHlpState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -419,13 +419,13 @@ cScreenObjId14: ScreenObjId14 || '',
             {(authCol.ScreenObjId14 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ScreenObjId14 || {}).ColumnHeader} {(columnLabel.ScreenObjId14 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ScreenObjId14 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenObjId14 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -459,7 +459,7 @@ disabled = {(authCol.ScreenObjId14 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmColHlpState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmColHlpState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

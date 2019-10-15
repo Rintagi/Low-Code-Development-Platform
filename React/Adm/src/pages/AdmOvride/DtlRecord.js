@@ -105,8 +105,7 @@ if (isEmptyId((values.cUsrGroupId123 || {}).value)) { errors.cUsrGroupId123 = (c
       [
         {
           OvrideGrpId123: values.cOvrideGrpId123 || null,
-OvrideGrpId123: values.cOvrideGrpId123|| '',
-UsrGroupId123: (values.cUsrGroupId123|| {}).value || '',
+          UsrGroupId123: (values.cUsrGroupId123|| {}).value || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cOvrideGrpId123 ? 'upd' : 'add'),
         }
       ],
@@ -331,7 +330,6 @@ UsrGroupId123: (values.cUsrGroupId123|| {}).value || '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const OvrideGrpId123 = currDtl.OvrideGrpId123;
 const UsrGroupId123List = AdmOvrideReduxObj.ScreenDdlSelectors.UsrGroupId123(AdmOvrideState);
 const UsrGroupId123 = currDtl.UsrGroupId123;
 // custome image upload code
@@ -367,8 +365,7 @@ const UsrGroupId123 = currDtl.UsrGroupId123;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cOvrideGrpId123: currDtl.OvrideGrpId123 || '',
-cUsrGroupId123: UsrGroupId123List.filter(obj => { return obj.key === currDtl.UsrGroupId123 })[0],
+                  cUsrGroupId123: UsrGroupId123List.filter(obj => { return obj.key === currDtl.UsrGroupId123 })[0],
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -433,37 +430,16 @@ cUsrGroupId123: UsrGroupId123List.filter(obj => { return obj.key === currDtl.Usr
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.OvrideGrpId123 || {}).visible &&
+            {(authCol.UsrGroupId123 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.OvrideGrpId123 || {}).ColumnHeader} {(columnLabel.OvrideGrpId123 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.OvrideGrpId123 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.OvrideGrpId123 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cOvrideGrpId123'
-disabled = {(authCol.OvrideGrpId123 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cOvrideGrpId123 && touched.cOvrideGrpId123 && <span className='form__form-group-error'>{errors.cOvrideGrpId123}</span>}
-</div>
-</Col>
-}
-{(authCol.UsrGroupId123 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.UsrGroupId123 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.UsrGroupId123 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.UsrGroupId123 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrGroupId123 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cUsrGroupId123'
@@ -495,7 +471,7 @@ disabled = {(authCol.UsrGroupId123 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).OvrideId122,currDtl.OvrideGrpId123)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

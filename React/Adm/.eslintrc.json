@@ -1,0 +1,15 @@
+{
+    "rules": {
+        "no-unused-vars" : "off",
+        "no-useless-escape" : "off",
+        "no-unreachable" : "off",
+        "eqeqeq" : "off",
+        "no-mixed-operators" : "warn",
+        "no-extra-bind" : "off",
+        "no-useless-constructor": "off",
+        "no-useless-concat": "off",
+        "no-useless-rename":"off",
+        "no-lone-blocks":"off"
+    },
+    "extends": "react-app"
+}

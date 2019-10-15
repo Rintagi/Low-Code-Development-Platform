@@ -52,7 +52,7 @@ class TopbarWithNavigation extends PureComponent {
           <div className='topbar__left'>
             <TopbarSidebarButton />
             <Link className='topbar__logo' to='/login'>
-              <img src={require('../../../img/logo.png')} />
+              <img alt='' src={require('../../../img/logo.png')} />
             </Link>
           </div>
           <div className='topbar__right'>

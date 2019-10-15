@@ -132,10 +132,10 @@ if (isEmptyId((values.cRowAuthorityId7 || {}).value)) { errors.cRowAuthorityId7 
       this.props.SavePage(
         this.props.AdmUsrGroup,
         {
-UsrGroupId7: values.cUsrGroupId7|| '',
-UsrGroupName7: values.cUsrGroupName7|| '',
-RowAuthorityId7: (values.cRowAuthorityId7|| {}).value || '',
-CompanyId7: (values.cCompanyId7|| {}).value || '',
+          UsrGroupId7: values.cUsrGroupId7|| '',
+          UsrGroupName7: values.cUsrGroupName7|| '',
+          RowAuthorityId7: (values.cRowAuthorityId7|| {}).value || '',
+          CompanyId7: (values.cCompanyId7|| {}).value || '',
         },
         [],
         {
@@ -360,10 +360,10 @@ const CompanyId7 = currMst.CompanyId7;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cUsrGroupId7: UsrGroupId7 || '',
-cUsrGroupName7: UsrGroupName7 || '',
-cRowAuthorityId7: RowAuthorityId7List.filter(obj => { return obj.key === RowAuthorityId7 })[0],
-cCompanyId7: CompanyId7List.filter(obj => { return obj.key === CompanyId7 })[0],
+                  cUsrGroupId7: UsrGroupId7 || '',
+                  cUsrGroupName7: UsrGroupName7 || '',
+                  cRowAuthorityId7: RowAuthorityId7List.filter(obj => { return obj.key === RowAuthorityId7 })[0],
+                  cCompanyId7: CompanyId7List.filter(obj => { return obj.key === CompanyId7 })[0],
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -394,7 +394,7 @@ cCompanyId7: CompanyId7List.filter(obj => { return obj.key === CompanyId7 })[0],
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmUsrGroupState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmUsrGroupState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -431,13 +431,13 @@ cCompanyId7: CompanyId7List.filter(obj => { return obj.key === CompanyId7 })[0],
             {(authCol.UsrGroupId7 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.UsrGroupId7 || {}).ColumnHeader} {(columnLabel.UsrGroupId7 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.UsrGroupId7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrGroupId7 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -452,13 +452,13 @@ disabled = {(authCol.UsrGroupId7 || {}).readonly ? 'disabled': '' }/>
 {(authCol.UsrGroupName7 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.UsrGroupName7 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.UsrGroupName7 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.UsrGroupName7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrGroupName7 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -473,13 +473,13 @@ disabled = {(authCol.UsrGroupName7 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RowAuthorityId7 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RowAuthorityId7 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RowAuthorityId7 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RowAuthorityId7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowAuthorityId7 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cRowAuthorityId7'
@@ -497,13 +497,13 @@ disabled = {(authCol.RowAuthorityId7 || {}).readonly ? 'disabled': '' }/>
 {(authCol.CompanyId7 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CompanyId7 || {}).ColumnHeader} {(columnLabel.CompanyId7 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CompanyId7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CompanyId7 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cCompanyId7'
@@ -540,7 +540,7 @@ disabled = {(authCol.CompanyId7 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmUsrGroupState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmUsrGroupState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

@@ -257,13 +257,6 @@ export default class RintagiScreen extends Component {
       else setFieldValue(name, value[0]);
     }
   }
-  FieldChange(setFieldValue, setFieldTouched, name, blur) {
-    const _this = this;
-    return function (name, value) {
-      if (blur) setFieldTouched(name, true);
-      else setFieldValue(name, value[0]);
-    }
-  }
 
   DateChange(setFieldValue, setFieldTouched, name, blur) {
     const _this = this;

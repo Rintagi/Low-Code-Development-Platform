@@ -5,6 +5,9 @@
  * for reactjs configuration, make sure homepage is set to './' so everything generated is relative 
  */
 document.Rintagi = {
+  localDev:{
+    apiBasename:'http://rcpro/ro',
+  },
   appRelBase:['React','ReactProxy','ReactPort'],  // path this app is serving UNDER(can be multiple), implicitly assume they are actually /Name/, do not put begin/end slash 
   appNS:'', // application hosting namespace, must match hosting 
   appDomainUrl:'', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)

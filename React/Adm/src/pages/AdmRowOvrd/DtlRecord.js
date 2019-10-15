@@ -107,10 +107,9 @@ if (isEmptyId((values.cSelLevel239 || {}).value)) { errors.cSelLevel239 = (colum
       [
         {
           RowOvrdPrmId239: values.cRowOvrdPrmId239 || null,
-RowOvrdPrmId239: values.cRowOvrdPrmId239|| '',
-AndCondition239: (values.cAndCondition239|| {}).value || '',
-PermKeyId239: (values.cPermKeyId239|| {}).value || '',
-SelLevel239: (values.cSelLevel239|| {}).value || '',
+          AndCondition239: (values.cAndCondition239|| {}).value || '',
+          PermKeyId239: (values.cPermKeyId239|| {}).value || '',
+          SelLevel239: (values.cSelLevel239|| {}).value || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cRowOvrdPrmId239 ? 'upd' : 'add'),
         }
       ],
@@ -335,7 +334,6 @@ SelLevel239: (values.cSelLevel239|| {}).value || '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const RowOvrdPrmId239 = currDtl.RowOvrdPrmId239;
 const AndCondition239List = AdmRowOvrdReduxObj.ScreenDdlSelectors.AndCondition239(AdmRowOvrdState);
 const AndCondition239 = currDtl.AndCondition239;
 const PermKeyId239List = AdmRowOvrdReduxObj.ScreenDdlSelectors.PermKeyId239(AdmRowOvrdState);
@@ -375,10 +373,9 @@ const SelLevel239 = currDtl.SelLevel239;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cRowOvrdPrmId239: currDtl.RowOvrdPrmId239 || '',
-cAndCondition239: AndCondition239List.filter(obj => { return obj.key === currDtl.AndCondition239 })[0],
-cPermKeyId239: PermKeyId239List.filter(obj => { return obj.key === currDtl.PermKeyId239 })[0],
-cSelLevel239: SelLevel239List.filter(obj => { return obj.key === currDtl.SelLevel239 })[0],
+                  cAndCondition239: AndCondition239List.filter(obj => { return obj.key === currDtl.AndCondition239 })[0],
+                  cPermKeyId239: PermKeyId239List.filter(obj => { return obj.key === currDtl.PermKeyId239 })[0],
+                  cSelLevel239: SelLevel239List.filter(obj => { return obj.key === currDtl.SelLevel239 })[0],
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -443,37 +440,16 @@ cSelLevel239: SelLevel239List.filter(obj => { return obj.key === currDtl.SelLeve
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.RowOvrdPrmId239 || {}).visible &&
+            {(authCol.AndCondition239 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.RowOvrdPrmId239 || {}).ColumnHeader} {(columnLabel.RowOvrdPrmId239 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RowOvrdPrmId239 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowOvrdPrmId239 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cRowOvrdPrmId239'
-disabled = {(authCol.RowOvrdPrmId239 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRowOvrdPrmId239 && touched.cRowOvrdPrmId239 && <span className='form__form-group-error'>{errors.cRowOvrdPrmId239}</span>}
-</div>
-</Col>
-}
-{(authCol.AndCondition239 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.AndCondition239 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.AndCondition239 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.AndCondition239 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AndCondition239 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cAndCondition239'
@@ -491,13 +467,13 @@ disabled = {(authCol.AndCondition239 || {}).readonly ? 'disabled': '' }/>
 {(authCol.PermKeyId239 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PermKeyId239 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PermKeyId239 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PermKeyId239 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PermKeyId239 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cPermKeyId239'
@@ -515,13 +491,13 @@ disabled = {(authCol.PermKeyId239 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SelLevel239 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SelLevel239 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.SelLevel239 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SelLevel239 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SelLevel239 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmRowOvrdState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSelLevel239'
@@ -553,7 +529,7 @@ disabled = {(authCol.SelLevel239 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RowOvrdId238,currDtl.RowOvrdPrmId239)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

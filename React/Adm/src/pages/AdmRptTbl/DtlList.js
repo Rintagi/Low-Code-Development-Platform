@@ -487,7 +487,7 @@ class DtlList extends RintagiScreen {
                                             .map((v, i, a) => {
                                               if ((!activeSelectionVisible && v.buttonType !== 'InsRow') || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RptTblId162)) return null;
                                               const buttonCount = a.length;
-                                              const colWidth = parseInt(12 / buttonCount);
+                                              const colWidth = parseInt(12 / buttonCount, 10);
                                               const lastBtn = i === a.length - 1;
                                               const outlineProperty = lastBtn ? false : true;
 
@@ -517,7 +517,7 @@ class DtlList extends RintagiScreen {
                 targetDtlId !== '_' &&
                 !this.state.ShowDtl &&
                 <div className='empty-block'>
-                  <img className='folder-img' src={require('../../img/folder.png')} />
+                  <img className='folder-img' alt='' src={require('../../img/folder.png')} />
                   <p className='create-new-message'>{NoDetailMsg}. <span className='link-imitation' onClick={this.AddNewDtl({ naviBar, mstId: currMst.RptTblId162 })}>{AddDetailMsg}</span></p>
                 </div>}
 

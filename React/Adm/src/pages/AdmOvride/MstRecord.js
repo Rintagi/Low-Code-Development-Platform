@@ -131,10 +131,10 @@ if (!values.cOvrideName122) { errors.cOvrideName122 = (columnLabel.OvrideName122
       this.props.SavePage(
         this.props.AdmOvride,
         {
-OvrideId122: values.cOvrideId122|| '',
-OvrideName122: values.cOvrideName122|| '',
-PromptAlways122: values.cPromptAlways122 ? 'Y' : 'N',
-PromptModal122: values.cPromptModal122 ? 'Y' : 'N',
+          OvrideId122: values.cOvrideId122|| '',
+          OvrideName122: values.cOvrideName122|| '',
+          PromptAlways122: values.cPromptAlways122 ? 'Y' : 'N',
+          PromptModal122: values.cPromptModal122 ? 'Y' : 'N',
         },
         [],
         {
@@ -357,10 +357,10 @@ const PromptModal122 = currMst.PromptModal122;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cOvrideId122: OvrideId122 || '',
-cOvrideName122: OvrideName122 || '',
-cPromptAlways122: PromptAlways122 === 'Y',
-cPromptModal122: PromptModal122 === 'Y',
+                  cOvrideId122: OvrideId122 || '',
+                  cOvrideName122: OvrideName122 || '',
+                  cPromptAlways122: PromptAlways122 === 'Y',
+                  cPromptModal122: PromptModal122 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -391,7 +391,7 @@ cPromptModal122: PromptModal122 === 'Y',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmOvrideState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmOvrideState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -428,13 +428,13 @@ cPromptModal122: PromptModal122 === 'Y',
             {(authCol.OvrideId122 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.OvrideId122 || {}).ColumnHeader} {(columnLabel.OvrideId122 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.OvrideId122 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.OvrideId122 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -449,13 +449,13 @@ disabled = {(authCol.OvrideId122 || {}).readonly ? 'disabled': '' }/>
 {(authCol.OvrideName122 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.OvrideName122 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.OvrideName122 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.OvrideName122 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.OvrideName122 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -531,7 +531,7 @@ disabled={(authCol.PromptModal122 || {}).readonly || !(authCol.PromptModal122 ||
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmOvrideState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmOvrideState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

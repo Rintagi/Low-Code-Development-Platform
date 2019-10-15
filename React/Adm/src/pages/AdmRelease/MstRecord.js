@@ -134,16 +134,16 @@ if (isEmptyId((values.cReleaseTypeId191 || {}).value)) { errors.cReleaseTypeId19
       this.props.SavePage(
         this.props.AdmRelease,
         {
-ReleaseId191: values.cReleaseId191|| '',
-ReleaseName191: values.cReleaseName191|| '',
-ReleaseBuild191: values.cReleaseBuild191|| '',
-ReleaseDate191: values.cReleaseDate191|| '',
-ReleaseOs191: (values.cReleaseOs191|| {}).value || '',
-EntityId191: (values.cEntityId191|| {}).value || '',
-ReleaseTypeId191: (values.cReleaseTypeId191|| {}).value || '',
-DeployPath199: values.cDeployPath199|| '',
-TarScriptAft191: values.cTarScriptAft191|| '',
-ReadMe191: values.cReadMe191|| '',
+          ReleaseId191: values.cReleaseId191|| '',
+          ReleaseName191: values.cReleaseName191|| '',
+          ReleaseBuild191: values.cReleaseBuild191|| '',
+          ReleaseDate191: values.cReleaseDate191|| '',
+          ReleaseOs191: (values.cReleaseOs191|| {}).value || '',
+          EntityId191: (values.cEntityId191|| {}).value || '',
+          ReleaseTypeId191: (values.cReleaseTypeId191|| {}).value || '',
+          DeployPath199: values.cDeployPath199|| '',
+          TarScriptAft191: values.cTarScriptAft191|| '',
+          ReadMe191: values.cReadMe191|| '',
         },
         [],
         {
@@ -375,16 +375,16 @@ const ReadMe191 = currMst.ReadMe191;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cReleaseId191: ReleaseId191 || '',
-cReleaseName191: ReleaseName191 || '',
-cReleaseBuild191: ReleaseBuild191 || '',
-cReleaseDate191: ReleaseDate191 || new Date(),
-cReleaseOs191: ReleaseOs191List.filter(obj => { return obj.key === ReleaseOs191 })[0],
-cEntityId191: EntityId191List.filter(obj => { return obj.key === EntityId191 })[0],
-cReleaseTypeId191: ReleaseTypeId191List.filter(obj => { return obj.key === ReleaseTypeId191 })[0],
-cDeployPath199: DeployPath199 || '',
-cTarScriptAft191: TarScriptAft191 || '',
-cReadMe191: ReadMe191 || '',
+                  cReleaseId191: ReleaseId191 || '',
+                  cReleaseName191: ReleaseName191 || '',
+                  cReleaseBuild191: ReleaseBuild191 || '',
+                  cReleaseDate191: ReleaseDate191 || new Date(),
+                  cReleaseOs191: ReleaseOs191List.filter(obj => { return obj.key === ReleaseOs191 })[0],
+                  cEntityId191: EntityId191List.filter(obj => { return obj.key === EntityId191 })[0],
+                  cReleaseTypeId191: ReleaseTypeId191List.filter(obj => { return obj.key === ReleaseTypeId191 })[0],
+                  cDeployPath199: DeployPath199 || '',
+                  cTarScriptAft191: TarScriptAft191 || '',
+                  cReadMe191: ReadMe191 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -415,7 +415,7 @@ cReadMe191: ReadMe191 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmReleaseState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmReleaseState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -452,13 +452,13 @@ cReadMe191: ReadMe191 || '',
             {(authCol.ReleaseId191 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReleaseId191 || {}).ColumnHeader} {(columnLabel.ReleaseId191 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReleaseId191 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReleaseId191 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -473,13 +473,13 @@ disabled = {(authCol.ReleaseId191 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ReleaseName191 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReleaseName191 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ReleaseName191 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReleaseName191 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReleaseName191 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -494,13 +494,13 @@ disabled = {(authCol.ReleaseName191 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ReleaseBuild191 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReleaseBuild191 || {}).ColumnHeader} {(columnLabel.ReleaseBuild191 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReleaseBuild191 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReleaseBuild191 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -515,13 +515,13 @@ disabled = {(authCol.ReleaseBuild191 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ReleaseDate191 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReleaseDate191 || {}).ColumnHeader} {(columnLabel.ReleaseDate191 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReleaseDate191 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReleaseDate191 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DatePicker
 name='cReleaseDate191'
@@ -539,13 +539,13 @@ disabled = {(authCol.ReleaseDate191 || {}).readonly ? true: false }/>
 {(authCol.ReleaseOs191 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReleaseOs191 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ReleaseOs191 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReleaseOs191 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReleaseOs191 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cReleaseOs191'
@@ -563,13 +563,13 @@ disabled = {(authCol.ReleaseOs191 || {}).readonly ? 'disabled': '' }/>
 {(authCol.EntityId191 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.EntityId191 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.EntityId191 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.EntityId191 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.EntityId191 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cEntityId191'
@@ -587,13 +587,13 @@ disabled = {(authCol.EntityId191 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ReleaseTypeId191 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReleaseTypeId191 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ReleaseTypeId191 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReleaseTypeId191 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReleaseTypeId191 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cReleaseTypeId191'
@@ -611,13 +611,13 @@ disabled = {(authCol.ReleaseTypeId191 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DeployPath199 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DeployPath199 || {}).ColumnHeader} {(columnLabel.DeployPath199 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DeployPath199 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DeployPath199 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -632,13 +632,13 @@ disabled = {(authCol.DeployPath199 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TarScriptAft191 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TarScriptAft191 || {}).ColumnHeader} {(columnLabel.TarScriptAft191 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TarScriptAft191 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TarScriptAft191 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -653,13 +653,13 @@ disabled = {(authCol.TarScriptAft191 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ReadMe191 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ReadMe191 || {}).ColumnHeader} {(columnLabel.ReadMe191 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ReadMe191 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReadMe191 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -693,7 +693,7 @@ disabled = {(authCol.ReadMe191 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmReleaseState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmReleaseState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

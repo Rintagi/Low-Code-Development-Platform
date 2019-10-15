@@ -107,10 +107,9 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
       [
         {
           MenuPrmId231: values.cMenuPrmId231 || null,
-MenuPrmId231: values.cMenuPrmId231|| '',
-GrantDeny231: (values.cGrantDeny231|| {}).value || '',
-PermKeyId231: (values.cPermKeyId231|| {}).value || '',
-PermId231: (values.cPermId231|| {}).value || '',
+          GrantDeny231: (values.cGrantDeny231|| {}).value || '',
+          PermKeyId231: (values.cPermKeyId231|| {}).value || '',
+          PermId231: (values.cPermId231|| {}).value || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cMenuPrmId231 ? 'upd' : 'add'),
         }
       ],
@@ -335,7 +334,6 @@ PermId231: (values.cPermId231|| {}).value || '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const MenuPrmId231 = currDtl.MenuPrmId231;
 const GrantDeny231List = AdmMenuPermReduxObj.ScreenDdlSelectors.GrantDeny231(AdmMenuPermState);
 const GrantDeny231 = currDtl.GrantDeny231;
 const PermKeyId231List = AdmMenuPermReduxObj.ScreenDdlSelectors.PermKeyId231(AdmMenuPermState);
@@ -375,10 +373,9 @@ const PermId231 = currDtl.PermId231;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cMenuPrmId231: currDtl.MenuPrmId231 || '',
-cGrantDeny231: GrantDeny231List.filter(obj => { return obj.key === currDtl.GrantDeny231 })[0],
-cPermKeyId231: PermKeyId231List.filter(obj => { return obj.key === currDtl.PermKeyId231 })[0],
-cPermId231: PermId231List.filter(obj => { return obj.key === currDtl.PermId231 })[0],
+                  cGrantDeny231: GrantDeny231List.filter(obj => { return obj.key === currDtl.GrantDeny231 })[0],
+                  cPermKeyId231: PermKeyId231List.filter(obj => { return obj.key === currDtl.PermKeyId231 })[0],
+                  cPermId231: PermId231List.filter(obj => { return obj.key === currDtl.PermId231 })[0],
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -443,37 +440,16 @@ cPermId231: PermId231List.filter(obj => { return obj.key === currDtl.PermId231 }
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.MenuPrmId231 || {}).visible &&
+            {(authCol.GrantDeny231 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.MenuPrmId231 || {}).ColumnHeader} {(columnLabel.MenuPrmId231 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.MenuPrmId231 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MenuPrmId231 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cMenuPrmId231'
-disabled = {(authCol.MenuPrmId231 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cMenuPrmId231 && touched.cMenuPrmId231 && <span className='form__form-group-error'>{errors.cMenuPrmId231}</span>}
-</div>
-</Col>
-}
-{(authCol.GrantDeny231 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.GrantDeny231 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.GrantDeny231 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.GrantDeny231 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.GrantDeny231 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cGrantDeny231'
@@ -491,13 +467,13 @@ disabled = {(authCol.GrantDeny231 || {}).readonly ? 'disabled': '' }/>
 {(authCol.PermKeyId231 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PermKeyId231 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PermKeyId231 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PermKeyId231 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PermKeyId231 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cPermKeyId231'
@@ -515,13 +491,13 @@ disabled = {(authCol.PermKeyId231 || {}).readonly ? 'disabled': '' }/>
 {(authCol.PermId231 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PermId231 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PermId231 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PermId231 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PermId231 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cPermId231'
@@ -556,7 +532,7 @@ disabled = {(authCol.PermId231 || {}).readonly ? true: false }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).MenuId39,currDtl.MenuPrmId231)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

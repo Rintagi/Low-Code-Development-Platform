@@ -141,20 +141,20 @@ if (!values.cPayTo) { errors.cPayTo = (columnLabel.PayTo || {}).ErrMessage;}
       this.props.SavePage(
         this.props.AdmPayment,
         {
-UsrId1: values.cUsrId1|| '',
-LoginName1: values.cLoginName1|| '',
-Description: values.cDescription|| '',
-ItemDescription: values.cItemDescription|| '',
-Currency: values.cCurrency|| '',
-Amt: values.cAmt|| '',
-TaxAmt: values.cTaxAmt|| '',
-PayTo: values.cPayTo|| '',
-PayFrom: values.cPayFrom|| '',
-CCNbr: values.cCCNbr|| '',
-CCExpiryMonth: values.cCCExpiryMonth|| '',
-CCType: values.cCCType|| '',
-CCExpiryYear: values.cCCExpiryYear|| '',
-CCCVV: values.cCCCVV|| '',
+          UsrId1: values.cUsrId1|| '',
+          LoginName1: values.cLoginName1|| '',
+          Description: values.cDescription|| '',
+          ItemDescription: values.cItemDescription|| '',
+          Currency: values.cCurrency|| '',
+          Amt: values.cAmt|| '',
+          TaxAmt: values.cTaxAmt|| '',
+          PayTo: values.cPayTo|| '',
+          PayFrom: values.cPayFrom|| '',
+          CCNbr: values.cCCNbr|| '',
+          CCExpiryMonth: values.cCCExpiryMonth|| '',
+          CCType: values.cCCType|| '',
+          CCExpiryYear: values.cCCExpiryYear|| '',
+          CCCVV: values.cCCCVV|| '',
         },
         [],
         {
@@ -387,20 +387,20 @@ const CCCVV = currMst.CCCVV;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cUsrId1: UsrId1 || '',
-cLoginName1: LoginName1 || '',
-cDescription: Description || '',
-cItemDescription: ItemDescription || '',
-cCurrency: Currency || '',
-cAmt: Amt || '',
-cTaxAmt: TaxAmt || '',
-cPayTo: PayTo || '',
-cPayFrom: PayFrom || '',
-cCCNbr: CCNbr || '',
-cCCExpiryMonth: CCExpiryMonth || '',
-cCCType: CCType || '',
-cCCExpiryYear: CCExpiryYear || '',
-cCCCVV: CCCVV || '',
+                  cUsrId1: UsrId1 || '',
+                  cLoginName1: LoginName1 || '',
+                  cDescription: Description || '',
+                  cItemDescription: ItemDescription || '',
+                  cCurrency: Currency || '',
+                  cAmt: Amt || '',
+                  cTaxAmt: TaxAmt || '',
+                  cPayTo: PayTo || '',
+                  cPayFrom: PayFrom || '',
+                  cCCNbr: CCNbr || '',
+                  cCCExpiryMonth: CCExpiryMonth || '',
+                  cCCType: CCType || '',
+                  cCCExpiryYear: CCExpiryYear || '',
+                  cCCCVV: CCCVV || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -431,7 +431,7 @@ cCCCVV: CCCVV || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmPaymentState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmPaymentState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -468,13 +468,13 @@ cCCCVV: CCCVV || '',
             {(authCol.UsrId1 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.UsrId1 || {}).ColumnHeader} {(columnLabel.UsrId1 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.UsrId1 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrId1 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -489,13 +489,13 @@ disabled = {(authCol.UsrId1 || {}).readonly ? 'disabled': '' }/>
 {(authCol.LoginName1 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.LoginName1 || {}).ColumnHeader} {(columnLabel.LoginName1 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.LoginName1 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LoginName1 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -510,13 +510,13 @@ disabled = {(authCol.LoginName1 || {}).readonly ? 'disabled': '' }/>
 {(authCol.Description || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.Description || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.Description || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.Description || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Description || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -531,13 +531,13 @@ disabled = {(authCol.Description || {}).readonly ? 'disabled': '' }/>
 {(authCol.ItemDescription || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ItemDescription || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ItemDescription || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ItemDescription || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ItemDescription || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -552,13 +552,13 @@ disabled = {(authCol.ItemDescription || {}).readonly ? 'disabled': '' }/>
 {(authCol.Currency || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.Currency || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.Currency || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.Currency || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Currency || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -573,13 +573,13 @@ disabled = {(authCol.Currency || {}).readonly ? 'disabled': '' }/>
 {(authCol.Amt || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.Amt || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.Amt || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.Amt || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Amt || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -594,13 +594,13 @@ disabled = {(authCol.Amt || {}).readonly ? 'disabled': '' }/>
 {(authCol.TaxAmt || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TaxAmt || {}).ColumnHeader} {(columnLabel.TaxAmt || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TaxAmt || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TaxAmt || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -615,13 +615,13 @@ disabled = {(authCol.TaxAmt || {}).readonly ? 'disabled': '' }/>
 {(authCol.PayTo || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PayTo || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PayTo || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PayTo || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PayTo || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -636,13 +636,13 @@ disabled = {(authCol.PayTo || {}).readonly ? 'disabled': '' }/>
 {(authCol.PayFrom || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PayFrom || {}).ColumnHeader} {(columnLabel.PayFrom || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PayFrom || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PayFrom || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -664,7 +664,7 @@ disabled = {(authCol.PayFrom || {}).readonly ? 'disabled': '' }/>
 {(authCol.PaypalPayoutBtn || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PaypalPayoutBtn || {}).ColumnHeader} {(columnLabel.PaypalPayoutBtn || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PaypalPayoutBtn || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PaypalPayoutBtn || {}).ToolTip} />
 )}
@@ -676,13 +676,13 @@ disabled = {(authCol.PayFrom || {}).readonly ? 'disabled': '' }/>
 {(authCol.CCNbr || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CCNbr || {}).ColumnHeader} {(columnLabel.CCNbr || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CCNbr || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CCNbr || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -697,13 +697,13 @@ disabled = {(authCol.CCNbr || {}).readonly ? 'disabled': '' }/>
 {(authCol.CCExpiryMonth || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CCExpiryMonth || {}).ColumnHeader} {(columnLabel.CCExpiryMonth || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CCExpiryMonth || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CCExpiryMonth || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -718,7 +718,7 @@ disabled = {(authCol.CCExpiryMonth || {}).readonly ? 'disabled': '' }/>
 {(authCol.PaypalCCBtn || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.PaypalCCBtn || {}).ColumnHeader} {(columnLabel.PaypalCCBtn || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.PaypalCCBtn || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PaypalCCBtn || {}).ToolTip} />
 )}
@@ -730,13 +730,13 @@ disabled = {(authCol.CCExpiryMonth || {}).readonly ? 'disabled': '' }/>
 {(authCol.CCType || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CCType || {}).ColumnHeader} {(columnLabel.CCType || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CCType || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CCType || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -751,13 +751,13 @@ disabled = {(authCol.CCType || {}).readonly ? 'disabled': '' }/>
 {(authCol.CCExpiryYear || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CCExpiryYear || {}).ColumnHeader} {(columnLabel.CCExpiryYear || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CCExpiryYear || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CCExpiryYear || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -772,13 +772,13 @@ disabled = {(authCol.CCExpiryYear || {}).readonly ? 'disabled': '' }/>
 {(authCol.CCCVV || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CCCVV || {}).ColumnHeader} {(columnLabel.CCCVV || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CCCVV || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CCCVV || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmPaymentState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -812,7 +812,7 @@ disabled = {(authCol.CCCVV || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmPaymentState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmPaymentState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

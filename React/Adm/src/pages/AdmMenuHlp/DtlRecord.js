@@ -106,9 +106,8 @@ if (!values.cMenuText40) { errors.cMenuText40 = (columnLabel.MenuText40 || {}).E
       [
         {
           MenuHlpId40: values.cMenuHlpId40 || null,
-MenuHlpId40: values.cMenuHlpId40|| '',
-CultureId40: (values.cCultureId40|| {}).value || '',
-MenuText40: values.cMenuText40|| '',
+          CultureId40: (values.cCultureId40|| {}).value || '',
+          MenuText40: values.cMenuText40|| '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cMenuHlpId40 ? 'upd' : 'add'),
         }
       ],
@@ -333,7 +332,6 @@ MenuText40: values.cMenuText40|| '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const MenuHlpId40 = currDtl.MenuHlpId40;
 const CultureId40List = AdmMenuHlpReduxObj.ScreenDdlSelectors.CultureId40(AdmMenuHlpState);
 const CultureId40 = currDtl.CultureId40;
 const MenuText40 = currDtl.MenuText40;
@@ -370,9 +368,8 @@ const MenuText40 = currDtl.MenuText40;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cMenuHlpId40: currDtl.MenuHlpId40 || '',
-cCultureId40: CultureId40List.filter(obj => { return obj.key === currDtl.CultureId40 })[0],
-cMenuText40: currDtl.MenuText40 || '',
+                  cCultureId40: CultureId40List.filter(obj => { return obj.key === currDtl.CultureId40 })[0],
+                  cMenuText40: currDtl.MenuText40 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -437,37 +434,16 @@ cMenuText40: currDtl.MenuText40 || '',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.MenuHlpId40 || {}).visible &&
+            {(authCol.CultureId40 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuHlpState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.MenuHlpId40 || {}).ColumnHeader} {(columnLabel.MenuHlpId40 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.MenuHlpId40 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MenuHlpId40 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmMenuHlpState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cMenuHlpId40'
-disabled = {(authCol.MenuHlpId40 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cMenuHlpId40 && touched.cMenuHlpId40 && <span className='form__form-group-error'>{errors.cMenuHlpId40}</span>}
-</div>
-</Col>
-}
-{(authCol.CultureId40 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuHlpState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuHlpState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.CultureId40 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureId40 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.CultureId40 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureId40 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuHlpState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuHlpState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <AutoCompleteField
 name='cCultureId40'
@@ -488,13 +464,13 @@ disabled = {(authCol.CultureId40 || {}).readonly ? true: false }/>
 {(authCol.MenuText40 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmMenuHlpState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuHlpState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.MenuText40 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MenuText40 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.MenuText40 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MenuText40 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmMenuHlpState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmMenuHlpState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -523,7 +499,7 @@ disabled = {(authCol.MenuText40 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).MenuId39,currDtl.MenuHlpId40)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

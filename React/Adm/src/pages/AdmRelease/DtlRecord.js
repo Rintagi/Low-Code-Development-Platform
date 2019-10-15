@@ -107,18 +107,17 @@ if (!values.cObjectName192) { errors.cObjectName192 = (columnLabel.ObjectName192
       [
         {
           ReleaseDtlId192: values.cReleaseDtlId192 || null,
-ReleaseDtlId192: values.cReleaseDtlId192|| '',
-ObjectType192: (values.cObjectType192|| {}).value || '',
-RunOrder192: values.cRunOrder192|| '',
-SrcObject192: values.cSrcObject192|| '',
-SProcOnly192: (values.cSProcOnly192|| {}).value || '',
-ObjectName192: values.cObjectName192 || '',
-ObjectExempt192: values.cObjectExempt192 || '',
-SrcClientTierId192: (values.cSrcClientTierId192|| {}).value || '',
-SrcRuleTierId192: (values.cSrcRuleTierId192|| {}).value || '',
-SrcDataTierId192: (values.cSrcDataTierId192|| {}).value || '',
-TarDataTierId192: (values.cTarDataTierId192|| {}).value || '',
-DoSpEncrypt192: values.cDoSpEncrypt192 ? 'Y' : 'N',
+          ObjectType192: (values.cObjectType192|| {}).value || '',
+          RunOrder192: values.cRunOrder192|| '',
+          SrcObject192: values.cSrcObject192|| '',
+          SProcOnly192: (values.cSProcOnly192|| {}).value || '',
+          ObjectName192: values.cObjectName192 || '',
+          ObjectExempt192: values.cObjectExempt192 || '',
+          SrcClientTierId192: (values.cSrcClientTierId192|| {}).value || '',
+          SrcRuleTierId192: (values.cSrcRuleTierId192|| {}).value || '',
+          SrcDataTierId192: (values.cSrcDataTierId192|| {}).value || '',
+          TarDataTierId192: (values.cTarDataTierId192|| {}).value || '',
+          DoSpEncrypt192: values.cDoSpEncrypt192 ? 'Y' : 'N',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cReleaseDtlId192 ? 'upd' : 'add'),
         }
       ],
@@ -343,7 +342,6 @@ DoSpEncrypt192: values.cDoSpEncrypt192 ? 'Y' : 'N',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const ReleaseDtlId192 = currDtl.ReleaseDtlId192;
 const ObjectType192List = AdmReleaseReduxObj.ScreenDdlSelectors.ObjectType192(AdmReleaseState);
 const ObjectType192 = currDtl.ObjectType192;
 const RunOrder192 = currDtl.RunOrder192;
@@ -394,18 +392,17 @@ const DoSpEncrypt192 = currDtl.DoSpEncrypt192;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cReleaseDtlId192: currDtl.ReleaseDtlId192 || '',
-cObjectType192: ObjectType192List.filter(obj => { return obj.key === currDtl.ObjectType192 })[0],
-cRunOrder192: currDtl.RunOrder192 || '',
-cSrcObject192: currDtl.SrcObject192 || '',
-cSProcOnly192: SProcOnly192List.filter(obj => { return obj.key === currDtl.SProcOnly192 })[0],
-cObjectName192: currDtl.ObjectName192 || '',
-cObjectExempt192: currDtl.ObjectExempt192 || '',
-cSrcClientTierId192: SrcClientTierId192List.filter(obj => { return obj.key === currDtl.SrcClientTierId192 })[0],
-cSrcRuleTierId192: SrcRuleTierId192List.filter(obj => { return obj.key === currDtl.SrcRuleTierId192 })[0],
-cSrcDataTierId192: SrcDataTierId192List.filter(obj => { return obj.key === currDtl.SrcDataTierId192 })[0],
-cTarDataTierId192: TarDataTierId192List.filter(obj => { return obj.key === currDtl.TarDataTierId192 })[0],
-cDoSpEncrypt192: currDtl.DoSpEncrypt192 === 'Y',
+                  cObjectType192: ObjectType192List.filter(obj => { return obj.key === currDtl.ObjectType192 })[0],
+                  cRunOrder192: currDtl.RunOrder192 || '',
+                  cSrcObject192: currDtl.SrcObject192 || '',
+                  cSProcOnly192: SProcOnly192List.filter(obj => { return obj.key === currDtl.SProcOnly192 })[0],
+                  cObjectName192: currDtl.ObjectName192 || '',
+                  cObjectExempt192: currDtl.ObjectExempt192 || '',
+                  cSrcClientTierId192: SrcClientTierId192List.filter(obj => { return obj.key === currDtl.SrcClientTierId192 })[0],
+                  cSrcRuleTierId192: SrcRuleTierId192List.filter(obj => { return obj.key === currDtl.SrcRuleTierId192 })[0],
+                  cSrcDataTierId192: SrcDataTierId192List.filter(obj => { return obj.key === currDtl.SrcDataTierId192 })[0],
+                  cTarDataTierId192: TarDataTierId192List.filter(obj => { return obj.key === currDtl.TarDataTierId192 })[0],
+                  cDoSpEncrypt192: currDtl.DoSpEncrypt192 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -470,37 +467,16 @@ cDoSpEncrypt192: currDtl.DoSpEncrypt192 === 'Y',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.ReleaseDtlId192 || {}).visible &&
+            {(authCol.ObjectType192 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.ReleaseDtlId192 || {}).ColumnHeader} {(columnLabel.ReleaseDtlId192 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ReleaseDtlId192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ReleaseDtlId192 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cReleaseDtlId192'
-disabled = {(authCol.ReleaseDtlId192 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cReleaseDtlId192 && touched.cReleaseDtlId192 && <span className='form__form-group-error'>{errors.cReleaseDtlId192}</span>}
-</div>
-</Col>
-}
-{(authCol.ObjectType192 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ObjectType192 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ObjectType192 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ObjectType192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ObjectType192 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cObjectType192'
@@ -518,13 +494,13 @@ disabled = {(authCol.ObjectType192 || {}).readonly ? 'disabled': '' }/>
 {(authCol.RunOrder192 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.RunOrder192 || {}).ColumnHeader} {(columnLabel.RunOrder192 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.RunOrder192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RunOrder192 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -539,13 +515,13 @@ disabled = {(authCol.RunOrder192 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SrcObject192 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SrcObject192 || {}).ColumnHeader} {(columnLabel.SrcObject192 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SrcObject192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SrcObject192 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -560,13 +536,13 @@ disabled = {(authCol.SrcObject192 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SProcOnly192 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SProcOnly192 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.SProcOnly192 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SProcOnly192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SProcOnly192 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSProcOnly192'
@@ -584,13 +560,13 @@ disabled = {(authCol.SProcOnly192 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ObjectName192 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ObjectName192 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ObjectName192 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ObjectName192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ObjectName192 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -605,13 +581,13 @@ disabled = {(authCol.ObjectName192 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ObjectExempt192 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ObjectExempt192 || {}).ColumnHeader} {(columnLabel.ObjectExempt192 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ObjectExempt192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ObjectExempt192 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -626,13 +602,13 @@ disabled = {(authCol.ObjectExempt192 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SrcClientTierId192 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SrcClientTierId192 || {}).ColumnHeader} {(columnLabel.SrcClientTierId192 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SrcClientTierId192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SrcClientTierId192 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSrcClientTierId192'
@@ -650,13 +626,13 @@ disabled = {(authCol.SrcClientTierId192 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SrcRuleTierId192 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SrcRuleTierId192 || {}).ColumnHeader} {(columnLabel.SrcRuleTierId192 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SrcRuleTierId192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SrcRuleTierId192 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSrcRuleTierId192'
@@ -674,13 +650,13 @@ disabled = {(authCol.SrcRuleTierId192 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SrcDataTierId192 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SrcDataTierId192 || {}).ColumnHeader} {(columnLabel.SrcDataTierId192 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SrcDataTierId192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SrcDataTierId192 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSrcDataTierId192'
@@ -698,13 +674,13 @@ disabled = {(authCol.SrcDataTierId192 || {}).readonly ? 'disabled': '' }/>
 {(authCol.TarDataTierId192 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.TarDataTierId192 || {}).ColumnHeader} {(columnLabel.TarDataTierId192 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.TarDataTierId192 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TarDataTierId192 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cTarDataTierId192'
@@ -757,7 +733,7 @@ disabled={(authCol.DoSpEncrypt192 || {}).readonly || !(authCol.DoSpEncrypt192 ||
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ReleaseId191,currDtl.ReleaseDtlId192)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 

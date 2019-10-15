@@ -131,10 +131,10 @@ class MstRecord extends RintagiScreen {
       this.props.SavePage(
         this.props.AdmSctGrpRow,
         {
-SctGrpRowId1283: values.cSctGrpRowId1283|| '',
-SectionCd1283: (values.cSectionCd1283|| {}).value || '',
-GroupRowId1283: (values.cGroupRowId1283|| {}).value || '',
-SctGrpRowCss1283: values.cSctGrpRowCss1283|| '',
+          SctGrpRowId1283: values.cSctGrpRowId1283|| '',
+          SectionCd1283: (values.cSectionCd1283|| {}).value || '',
+          GroupRowId1283: (values.cGroupRowId1283|| {}).value || '',
+          SctGrpRowCss1283: values.cSctGrpRowCss1283|| '',
         },
         [],
         {
@@ -359,10 +359,10 @@ const SctGrpRowCss1283 = currMst.SctGrpRowCss1283;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cSctGrpRowId1283: SctGrpRowId1283 || '',
-cSectionCd1283: SectionCd1283List.filter(obj => { return obj.key === SectionCd1283 })[0],
-cGroupRowId1283: GroupRowId1283List.filter(obj => { return obj.key === GroupRowId1283 })[0],
-cSctGrpRowCss1283: SctGrpRowCss1283 || '',
+                  cSctGrpRowId1283: SctGrpRowId1283 || '',
+                  cSectionCd1283: SectionCd1283List.filter(obj => { return obj.key === SectionCd1283 })[0],
+                  cGroupRowId1283: GroupRowId1283List.filter(obj => { return obj.key === GroupRowId1283 })[0],
+                  cSctGrpRowCss1283: SctGrpRowCss1283 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -393,7 +393,7 @@ cSctGrpRowCss1283: SctGrpRowCss1283 || '',
                             </Col>
                             <Col xs={useMobileView ? 3 : 4}>
                               <ButtonToolbar className='f-right'>
-                                {this.constructor.ShowSpinner(AdmSctGrpRowState) && <Skeleton height='40px' /> ||
+                                {(this.constructor.ShowSpinner(AdmSctGrpRowState) && <Skeleton height='40px' />) ||
                                   <UncontrolledDropdown>
                                     <ButtonGroup className='btn-group--icons'>
                                       <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
@@ -430,13 +430,13 @@ cSctGrpRowCss1283: SctGrpRowCss1283 || '',
             {(authCol.SctGrpRowId1283 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SctGrpRowId1283 || {}).ColumnHeader} {(columnLabel.SctGrpRowId1283 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SctGrpRowId1283 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SctGrpRowId1283 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -451,13 +451,13 @@ disabled = {(authCol.SctGrpRowId1283 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SectionCd1283 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SectionCd1283 || {}).ColumnHeader} {(columnLabel.SectionCd1283 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SectionCd1283 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SectionCd1283 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cSectionCd1283'
@@ -475,13 +475,13 @@ disabled = {(authCol.SectionCd1283 || {}).readonly ? 'disabled': '' }/>
 {(authCol.GroupRowId1283 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.GroupRowId1283 || {}).ColumnHeader} {(columnLabel.GroupRowId1283 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.GroupRowId1283 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.GroupRowId1283 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cGroupRowId1283'
@@ -499,13 +499,13 @@ disabled = {(authCol.GroupRowId1283 || {}).readonly ? 'disabled': '' }/>
 {(authCol.SctGrpRowCss1283 || {}).visible &&
  <Col lg={6} xl={6}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.SctGrpRowCss1283 || {}).ColumnHeader} {(columnLabel.SctGrpRowCss1283 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.SctGrpRowCss1283 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SctGrpRowCss1283 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmSctGrpRowState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -539,7 +539,7 @@ disabled = {(authCol.SctGrpRowCss1283 || {}).readonly ? 'disabled': '' }/>
                                         const outlineProperty = lastBtn ? false : true;
                                         return (
                                           <Col key={v.tid || v.order} xs={colWidth} sm={colWidth} className='btn-bottom-column' >
-                                            {this.constructor.ShowSpinner(AdmSctGrpRowState) && <Skeleton height='43px' /> ||
+                                            {(this.constructor.ShowSpinner(AdmSctGrpRowState) && <Skeleton height='43px' />) ||
                                               <Button color='success' type='button' outline={outlineProperty} className='account__btn' disabled={isSubmitting} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, submitForm, ScreenButton: v, mst: currMst, useMobileView })}>{v.label}</Button>
                                             }
                                           </Col>

@@ -107,20 +107,19 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
       [
         {
           ColumnId5: values.cColumnId5 || null,
-ColumnId5: values.cColumnId5|| '',
-ColumnIndex5: values.cColumnIndex5|| '',
-ExternalTable5: values.cExternalTable5|| '',
-ColumnName5: values.cColumnName5|| '',
-DataType5: (values.cDataType5|| {}).value || '',
-ColumnLength5: values.cColumnLength5|| '',
-ColumnScale5: values.cColumnScale5|| '',
-DefaultValue5: values.cDefaultValue5|| '',
-AllowNulls5: values.cAllowNulls5 || '',
-ColumnIdentity5: values.cColumnIdentity5 ? 'Y' : 'N',
-PrimaryKey5: values.cPrimaryKey5 ? 'Y' : 'N',
-IsIndexU5: values.cIsIndexU5 ? 'Y' : 'N',
-IsIndex5: values.cIsIndex5 ? 'Y' : 'N',
-ColObjective5: values.cColObjective5|| '',
+          ColumnIndex5: values.cColumnIndex5|| '',
+          ExternalTable5: values.cExternalTable5|| '',
+          ColumnName5: values.cColumnName5|| '',
+          DataType5: (values.cDataType5|| {}).value || '',
+          ColumnLength5: values.cColumnLength5|| '',
+          ColumnScale5: values.cColumnScale5|| '',
+          DefaultValue5: values.cDefaultValue5|| '',
+          AllowNulls5: values.cAllowNulls5 || '',
+          ColumnIdentity5: values.cColumnIdentity5 ? 'Y' : 'N',
+          PrimaryKey5: values.cPrimaryKey5 ? 'Y' : 'N',
+          IsIndexU5: values.cIsIndexU5 ? 'Y' : 'N',
+          IsIndex5: values.cIsIndex5 ? 'Y' : 'N',
+          ColObjective5: values.cColObjective5|| '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cColumnId5 ? 'upd' : 'add'),
         }
       ],
@@ -345,7 +344,6 @@ ColObjective5: values.cColObjective5|| '',
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const ColumnId5 = currDtl.ColumnId5;
 const ColumnIndex5 = currDtl.ColumnIndex5;
 const ExternalTable5 = currDtl.ExternalTable5;
 const ColumnName5 = currDtl.ColumnName5;
@@ -393,20 +391,19 @@ const ColObjective5 = currDtl.ColObjective5;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-cColumnId5: currDtl.ColumnId5 || '',
-cColumnIndex5: currDtl.ColumnIndex5 || '',
-cExternalTable5: currDtl.ExternalTable5 || '',
-cColumnName5: currDtl.ColumnName5 || '',
-cDataType5: DataType5List.filter(obj => { return obj.key === currDtl.DataType5 })[0],
-cColumnLength5: currDtl.ColumnLength5 || '',
-cColumnScale5: currDtl.ColumnScale5 || '',
-cDefaultValue5: currDtl.DefaultValue5 || '',
-cAllowNulls5: currDtl.AllowNulls5 || '',
-cColumnIdentity5: currDtl.ColumnIdentity5 === 'Y',
-cPrimaryKey5: currDtl.PrimaryKey5 === 'Y',
-cIsIndexU5: currDtl.IsIndexU5 === 'Y',
-cIsIndex5: currDtl.IsIndex5 === 'Y',
-cColObjective5: currDtl.ColObjective5 || '',
+                  cColumnIndex5: currDtl.ColumnIndex5 || '',
+                  cExternalTable5: currDtl.ExternalTable5 || '',
+                  cColumnName5: currDtl.ColumnName5 || '',
+                  cDataType5: DataType5List.filter(obj => { return obj.key === currDtl.DataType5 })[0],
+                  cColumnLength5: currDtl.ColumnLength5 || '',
+                  cColumnScale5: currDtl.ColumnScale5 || '',
+                  cDefaultValue5: currDtl.DefaultValue5 || '',
+                  cAllowNulls5: currDtl.AllowNulls5 || '',
+                  cColumnIdentity5: currDtl.ColumnIdentity5 === 'Y',
+                  cPrimaryKey5: currDtl.PrimaryKey5 === 'Y',
+                  cIsIndexU5: currDtl.IsIndexU5 === 'Y',
+                  cIsIndex5: currDtl.IsIndex5 === 'Y',
+                  cColObjective5: currDtl.ColObjective5 || '',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -471,37 +468,16 @@ cColObjective5: currDtl.ColObjective5 || '',
 
                           <div className='w-100'>
                             <Row>
-            {(authCol.ColumnId5 || {}).visible &&
+            {(authCol.ColumnIndex5 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
-<label className='form__form-group-label'>{(columnLabel.ColumnId5 || {}).ColumnHeader} {(columnLabel.ColumnId5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ColumnId5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnId5 || {}).ToolTip} />
-)}
-</label>
-}
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cColumnId5'
-disabled = {(authCol.ColumnId5 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cColumnId5 && touched.cColumnId5 && <span className='form__form-group-error'>{errors.cColumnId5}</span>}
-</div>
-</Col>
-}
-{(authCol.ColumnIndex5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnIndex5 || {}).ColumnHeader} {(columnLabel.ColumnIndex5 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnIndex5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnIndex5 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -516,13 +492,13 @@ disabled = {(authCol.ColumnIndex5 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ExternalTable5 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ExternalTable5 || {}).ColumnHeader} {(columnLabel.ExternalTable5 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ExternalTable5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ExternalTable5 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -537,13 +513,13 @@ disabled = {(authCol.ExternalTable5 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ColumnName5 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnName5 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ColumnName5 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnName5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnName5 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -558,13 +534,13 @@ disabled = {(authCol.ColumnName5 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DataType5 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DataType5 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DataType5 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DataType5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DataType5 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <DropdownField
 name='cDataType5'
@@ -582,13 +558,13 @@ disabled = {(authCol.DataType5 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ColumnLength5 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnLength5 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ColumnLength5 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnLength5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnLength5 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -603,13 +579,13 @@ disabled = {(authCol.ColumnLength5 || {}).readonly ? 'disabled': '' }/>
 {(authCol.ColumnScale5 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColumnScale5 || {}).ColumnHeader} {(columnLabel.ColumnScale5 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColumnScale5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnScale5 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -624,13 +600,13 @@ disabled = {(authCol.ColumnScale5 || {}).readonly ? 'disabled': '' }/>
 {(authCol.DefaultValue5 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.DefaultValue5 || {}).ColumnHeader} {(columnLabel.DefaultValue5 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.DefaultValue5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DefaultValue5 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -645,13 +621,13 @@ disabled = {(authCol.DefaultValue5 || {}).readonly ? 'disabled': '' }/>
 {(authCol.AllowNulls5 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.AllowNulls5 || {}).ColumnHeader} {(columnLabel.AllowNulls5 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.AllowNulls5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AllowNulls5 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -750,13 +726,13 @@ disabled={(authCol.IsIndex5 || {}).readonly || !(authCol.IsIndex5 || {}).visible
 {(authCol.ColObjective5 || {}).visible &&
  <Col lg={12} xl={12}>
 <div className='form__form-group'>
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
 <label className='form__form-group-label'>{(columnLabel.ColObjective5 || {}).ColumnHeader} {(columnLabel.ColObjective5 || {}).ToolTip && 
  (<ControlledPopover id={(columnLabel.ColObjective5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColObjective5 || {}).ToolTip} />
 )}
 </label>
 }
-{(true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' /> ||
+{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
 <div className='form__form-group-field'>
 <Field
 type='text'
@@ -785,7 +761,7 @@ disabled = {(authCol.ColObjective5 || {}).readonly ? 'disabled': '' }/>
                                       .map((v, i, a) => {
                                         if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3,currDtl.ColumnId5)) return null;
                                         const buttonCount = a.length;
-                                        const colWidth = parseInt(12 / buttonCount);
+                                        const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
                                         const outlineProperty = lastBtn ? false : true;
 
