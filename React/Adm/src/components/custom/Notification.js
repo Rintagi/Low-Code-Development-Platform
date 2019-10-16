@@ -5,7 +5,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { clearNotification } from '../../redux/Notification'
 import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
+import 'react-s-alert/dist/s-alert-css-effects/scale.css';
+import 'react-s-alert/dist/s-alert-css-effects/flip.css';
 import 'react-s-alert/dist/s-alert-css-effects/jelly.css';
+import 'react-s-alert/dist/s-alert-css-effects/stackslide.css';
+import 'react-s-alert/dist/s-alert-css-effects/genie.css';
+import 'react-s-alert/dist/s-alert-css-effects/bouncyflip.css';
 import log from '../../helpers/logger';
 
 
@@ -20,6 +26,7 @@ class Notification extends Component {
     if ((this.props.notification || {}).message) {
       // alert(this.props.notification.message);
       if (this.props.notification.msgType === "E") {
+        log.debug(this.props.notification.message);
         Alert.error(this.props.notification.message);
         // Alert.error(this.props.notification.message,{
         //   timeout: this.props.notification.timeout || "none"
@@ -36,8 +43,9 @@ class Notification extends Component {
         stack={{ limit: 1 }}
         html={true}
         position="bottom"
-        effect='jelly'
-        // timeout={3000}
+        effect='stackslide'
+        timeout={5000}
+        offset={0}
       />
     )
   }

@@ -4,7 +4,7 @@ p, h1, h2, h3, h4, h5, h6 {
   margin-bottom: 0;
 
   @include themify($themes) {
-    color: themed('colorText');
+    color: #333;
   }
 }
 
@@ -44,7 +44,7 @@ h3 {
 
   &.subhead {
     font-size: 18px;
-    color: $color-additional;
+    color: #333;
     line-height: 24px;
   }
 }
@@ -55,7 +55,7 @@ h4 {
 
   &.subhead {
     font-size: 14px;
-    color: $color-additional;
+    color: #333;
     line-height: 16px;
   }
 }

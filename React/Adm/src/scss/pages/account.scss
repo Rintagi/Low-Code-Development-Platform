@@ -82,9 +82,9 @@
       padding: 20px 20px;
     }
 
-    @media screen and (max-width: 576px) {
+    // @media screen and (max-width: 576px) {
       margin-bottom: 84px;
-    }
+    // }
   }
 
   .account__profile {
@@ -233,8 +233,8 @@
 
   .account__head {
     margin-bottom: 30px;
-    padding-left: 10px;
-    border-left: 4px solid $color-fintrux;
+    // padding-left: 10px;
+    // border-left: 4px solid $color-fintrux;
   }
 
   .account__logo {

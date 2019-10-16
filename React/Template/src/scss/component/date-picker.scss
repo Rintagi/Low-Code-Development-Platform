@@ -32,8 +32,8 @@
   }
 
   .react-datepicker__header {
-    background-color: $color-blue;
-    border-color: $color-blue;
+    background-color: $color-fintrux;
+    border-color: $color-fintrux;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
   }
@@ -50,7 +50,7 @@
       border-left-color: #ffffff;
     }
   }
-
+  .react-datepicker__navigation
   .react-datepicker__navigation--previous {
     border-right-color: #ffffff;
 
@@ -60,23 +60,27 @@
   }
 
   .react-datepicker__day--keyboard-selected {
-    background-color: $color-blue;
+    background-color: $color-fintrux;
     transition: all 0.3s;
 
     &:hover {
-      background-color: $color-blue-hover;
+      background-color: $color-fintrux-hover;
     }
   }
 
   .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle {
-    border-bottom-color: $color-blue;
+    border-bottom-color: $color-fintrux;
     margin-top: -7px;
+  }
+
+  .react-datepicker-popper {
+    z-index: 3;
   }
 
   .react-datepicker {
     box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
-    // border: none;
-    border: 1px solid #e6e6e6;
+    border: none;
+    // border: olid $color-fintrux;
     border-radius: 4px;
   }
 
@@ -88,6 +92,6 @@
   }
 
   .react-datepicker__day--selected, .react-datepicker__day--in-range, .react-datepicker__time-list-item--selected{
-    background-color: $color-blue-hover !important;
+    background-color: $color-fintrux-hover !important;
   }
 }
