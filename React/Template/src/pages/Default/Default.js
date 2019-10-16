@@ -4,13 +4,13 @@ import { bindActionCreators } from 'redux';
 import { Redirect, withRouter } from 'react-router-dom';
 import LoadingIcon from 'mdi-react/LoadingIcon';
 import { login, logout, getCurrentUser, saveProfile, ShowSpinner } from '../../redux/Auth';
-import { setTitle, setSpinner } from '../../redux/Global';
+import { setTitle } from '../../redux/Global';
 
 
 class Default extends Component {
   constructor(props) {
     super(props);
-    this.props.setSpinner(false);
+    
   }
 
   render() {
@@ -27,7 +27,7 @@ class Default extends Component {
               <h3 className='account__subhead subhead text-center'>Please select menu items on the left to get started.</h3>
             </div>
             <div className='empty-block'>
-              <img src={require('../../img/default.png')} />
+              <img alt='' src={require('../../img/default.png')} />
             </div>
           </div>
         </div>
@@ -50,7 +50,6 @@ const mapDispatchToProps = (dispatch) => (
     { getCurrentUser: getCurrentUser },
     { saveProfile: saveProfile },
     { setTitle: setTitle },
-    { setSpinner: setSpinner },
   ), dispatch)
 )
 

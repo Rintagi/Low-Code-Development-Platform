@@ -27,6 +27,9 @@
 
   .sidebar__link-active {
 
+    color: #247BA0 !important;
+    font-weight: 700 !important;
+
     .sidebar__link {
 
       &:before {
@@ -36,7 +39,8 @@
   }
 
   @include themify($themes) {
-    background: $color-fintrux;
+    // background: $color-fintrux;
+    background: #fff;
   }
 
   a {
@@ -115,7 +119,7 @@
       left: 0;
       top: 0;
       height: 100%;
-      width: 2px;
+      // width: 2px;
       background: #fff;
       opacity: 0;
       transition: all 0.3s;
@@ -123,7 +127,7 @@
 
     p {
       position: absolute;
-      left: 43px;
+      left: 53px;
       width: 160px;
       transition: left 0.3s;
     }
@@ -148,20 +152,20 @@
     line-height: 16px;
     position: relative;
     display: flex;
-    color: #fff;
+    color: #333;
   }
 
   .sidebar__link-icon {
     margin-right: 10px;
-    font-size: 15px;
-    line-height: 17px;
-    color: #eee;
-    fill: #eee;
+    font-size: 21px;
+    line-height: 15px;
+    color: #333;
+    fill: #333;
     width: 16px;
     height: 16px;
 
     @include themify($themes) {
-      color: #eee;
+      color: #333;
     }
   }
 
@@ -292,12 +296,12 @@
     }
 
     &.sidebar--collapse {
-      width: 55px;
-      overflow: visible;
+      width: 0px;
+      overflow: hidden;
 
       .sidebar__scroll, .sidebar__content {
-        width: 55px;
-        overflow: visible !important;
+        width: 0px;
+        overflow: hidden !important;
         transition: width 0.3s;
       }
 
