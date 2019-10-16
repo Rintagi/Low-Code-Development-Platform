@@ -4,13 +4,13 @@ import { bindActionCreators } from 'redux';
 import { Redirect, withRouter } from 'react-router-dom';
 import LoadingIcon from 'mdi-react/LoadingIcon';
 import { login, logout, getCurrentUser, saveProfile, ShowSpinner } from '../../redux/Auth';
-import { setTitle, setSpinner } from '../../redux/Global';
+import { setTitle } from '../../redux/Global';
 
 
 class Default extends Component {
   constructor(props) {
     super(props);
-    this.props.setSpinner(false);
+    
   }
 
   render() {
@@ -50,7 +50,6 @@ const mapDispatchToProps = (dispatch) => (
     { getCurrentUser: getCurrentUser },
     { saveProfile: saveProfile },
     { setTitle: setTitle },
-    { setSpinner: setSpinner },
   ), dispatch)
 )
 

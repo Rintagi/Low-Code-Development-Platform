@@ -35,8 +35,8 @@ class SidebarContent extends PureComponent {
                 dl = <SidebarLink key={i} title={obj.MenuText} route={obj.reactPath ? getDefaultPath(obj.reactPath) : null} />;
                 return (dl);
             }
-          }
-          return '';    
+          }    
+          return ''
     })
   }
 
@@ -56,7 +56,6 @@ class SidebarContent extends PureComponent {
     // log.debug("fullList2", myFullList);
 
     const myFullList = this.props.myFullList;
-
     return (
       <div className='sidebar__content'>
         <ul className='sidebar__block'>

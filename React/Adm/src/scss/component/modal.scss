@@ -14,7 +14,7 @@
   }
 
   .modal-content {
-    border-radius: 4px;
+    border-radius: 5px;
     border: none;
     box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
     position: relative;
@@ -180,26 +180,26 @@
 
     &.modal-dialog--primary .modal__header {
       background-color: $color-blue;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
     }
 
     &.modal-dialog--success .modal__header {
       background-color: $color-accent;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
     }
 
     &.modal-dialog--warning .modal__header {
       background-color: $color-yellow;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
     }
 
     &.modal-dialog--danger .modal__header {
       background-color: $color-red;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
     }
   }
 }

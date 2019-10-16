@@ -8,7 +8,15 @@
   box-shadow: none;
 
   @include themify($themes) {
-    background: transparent;
+    background: #247BA0;
+  }
+
+  .topbar__wrapper-centered {
+    position: relative;
+    display: flex;
+    height: 60px;
+    // max-width: 1060px;
+    margin: auto;
   }
 
   .topbar__wrapper {
@@ -20,7 +28,8 @@
   }
 
   .topbar__button {
-    width: 60px;
+    // width: 60px;
+    padding-left: 20px;
     height: 60px;
     display: flex;
     background: transparent;
@@ -84,7 +93,20 @@
     right: 0;
     display: flex;
     height: 100%;
+    z-index: 1;
     // margin-right: 15px;
+  }
+
+  .topbar__center {
+    position: absolute;
+    // left: 0;
+    justify-content: center;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 18px;
   }
 
   .topbar__left {
@@ -93,6 +115,7 @@
     display: flex;
     height: 100%;
     width: 60%;
+    z-index: 1;
   }
 
   .topbar__avatar {
@@ -162,10 +185,11 @@
   .topbar__menu {
     width: 100%;
     min-width: 190px;
-    border-radius: 4px !important;
-    border: 1px solid #e6e6e6 !important;
+    border-radius: 5px !important;
+    // border: 1px solid transparent !important;
+    border: none !important;
     padding: 5px 0 !important;
-    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.15);
     margin-top: 0;
     top: 10px !important;
     right: auto !important;
@@ -211,14 +235,14 @@
       top: 0;
       height: 100%;
       width: 2px;
-      background: $color-accent;
+      background: transparent;
       opacity: 0;
       transition: all 0.3s;
     }
 
     &:hover {
       @include themify($themes) {
-        background-color: themed('colorHover');
+        background-color: #f0f1f6;
       }
 
       &:before {
