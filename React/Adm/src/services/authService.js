@@ -110,8 +110,50 @@ function makeNameFromNS(name) {
     return ((appNS.toUpperCase().replace(/^\//,'') + '_') || '') + name;
 }
 
+function wordToByteArray(word, length) {
+    var ba = [], i, xFF = 0xFF;
+    if (length > 0)
+        ba.push(word >>> 24);
+    if (length > 1)
+        ba.push((word >>> 16) & xFF);
+    if (length > 2)
+        ba.push((word >>> 8) & xFF);
+    if (length > 3)
+        ba.push(word & xFF);
+    return ba;
+}
+
+function wordArrayToByteArray(wordArray, length) {
+    if (wordArray.hasOwnProperty("sigBytes") && wordArray.hasOwnProperty("words")) {
+        length = wordArray.sigBytes;
+        wordArray = wordArray.words;
+    }
+
+    var result = [],
+        bytes,
+        i = 0;
+    while (length > 0) {
+        bytes = wordToByteArray(wordArray[i], Math.min(4, length));
+        length -= bytes.length;
+        result.push(bytes);
+        i++;
+    }
+    return [].concat.apply([], result);
+}
+
+function arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+}
+
 function rememberUserHandle(userIdentity) {
-    const handle = btoa(sjcl.hash.sha256.hash(userIdentity)).replace(/=/g,'_');
+    const h = sjcl.hash.sha256.hash(userIdentity);
+    const handle = arrayBufferToBase64(wordArrayToByteArray(h,h.length)).replace(/=/g,'_');
     localStorage.setItem(makeNameFromNS("user_handle"), handle); 
     setCookie(makeNameFromNS("tokenInCookieJS"),handle,null,appNS);
 }
@@ -128,10 +170,27 @@ function getUserHandle(){
     return x;
 }
 
+function getLoginFromCookie()
+{
+    try {
+        var user_handle = getCookie(makeNameFromNS(appDomainUrl,"tokenInCookieJS"));
+        var token = getCookie(makeNameFromNS(appDomainUrl,"tokenJS"));
+        if (user_handle && token) {
+            localStorage.setItem(makeNameFromNS(appDomainUrl, "user_handle"), user_handle);
+            var tokenName = getTokenName(appDomainUrl, "refresh_token");
+            localStorage.setItem(tokenName, JSON.stringify({ refresh_token: token }));
+            eraseCookie(makeNameFromNS(appDomainUrl,"tokenInCookieJS"));
+            eraseCookie(makeNameFromNS(appDomainUrl,"tokenJS"));
+        }
+    } catch (e) {/**/}
+
+}
+
 function getAccessToken(){ 
     return getMyMachine
         .then(()=>{
         try { 
+            getLoginFromCookie();
             if (!getUserHandle()) return {};
             return JSON.parse(
                 sessionStorage[getTokenName("access_token")] || 

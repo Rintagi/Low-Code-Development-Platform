@@ -70,18 +70,18 @@
   }
 
   // &.radio-btn--button {
-  //   border-top-left-radius: 4px;
-  //   border-top-right-radius: 4px;
+  //   border-top-left-radius: 5px;
+  //   border-top-right-radius: 5px;
   // }
 
   &.radio-btn--button {
     // background: $color-fintrux;
-    background: #efefef;
+    background: #f0f1f6;
     min-width: 150px;
     // color: #ffffff;
     color: #555555;
     height: 50px;
-    // border-radius: 4px;
+    // border-radius: 5px;
     // transition: all 0.3s;
     display: flex;
     padding: 12px 12px 0px 10px;
@@ -90,7 +90,7 @@
 
     .radio-btn__label-svg {
       // margin: auto 4px auto auto;
-      margin: 7px 7px 0px 0px;
+      margin: 7px 10px 0px 0px;
       height: 14px;
       width: 14px;
       z-index: 0;
@@ -112,7 +112,7 @@
 
       .radio-btn__label-check {
         display: block;
-        fill: $color-blue;
+        fill: #9064d0;
       }
 
       .radio-btn__label-uncheck {
@@ -144,7 +144,7 @@
 
     // .radio-btn__radio:not(checked) ~ .radio-bg-solver {
     //   background: #efefef !important;
-    //   // background: #637097 !important;
+    //   // background: #247BA0 !important;
     //   width: 100%;
     //   position: absolute !important;
     //   /* display: inline; */
@@ -166,7 +166,7 @@
     }
 
     .radio-bg-solver {
-      background: #efefef;
+      background: #f0f1f6;
       width: 100%;
       position: absolute;
       // z-index: 1;
@@ -178,7 +178,7 @@
 
     .radio-btn__radio:checked ~ .radio-bg-solver {
       // background: #21A79B !important;
-      background: #637097 !important;
+      background: #9064d0 !important;
       width: 100%;
       position: absolute !important;
       /* display: inline; */
@@ -195,7 +195,7 @@
       border-bottom-right-radius: 0px !important;
       border-top-right-radius: 0px !important;
       // background: #21A79B !important;
-      background: #637097 !important;
+      background: #9064d0 !important;
       width: calc(100% - 37px);
       position: absolute !important;
       /* display: inline; */
@@ -209,8 +209,8 @@
     }
 
     .radio-btn__radio:not(checked) ~ .radio-bg-solver-report {
-      background: #efefef !important;
-      // background: #637097 !important;
+      background: #fff !important;
+      // background: #247BA0 !important;
       width: 100%;
       position: absolute !important;
       /* display: inline; */
@@ -240,7 +240,7 @@
 
     .radio-btn__radio:checked ~ .radio-bg-solver-expense-single {
       // background: #21A79B !important;
-      background: #637097 !important;
+      background: #9064d0 !important;
       width: 100%;
       position: absolute !important;
       /* display: inline; */

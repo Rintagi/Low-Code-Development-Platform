@@ -60,18 +60,20 @@
     }
 
     Sys.Application.add_load(function () {
-//        debugger;
         var rememberToken = function () {
             var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val();            
             var user_handle = getCookie(makeNameFromNS(appDomainUrl,"tokenInCookieJS"));
-            var token = getCookie(makeNameFromNS(appDomainUrl,"tokenJS"));
+            var token = getCookie(makeNameFromNS(appDomainUrl, "tokenJS"));
             if (user_handle && token) {
                 var loginName = $('#<%= cLoginName.ClientID %>').val();
-                rememberUserHandle(appDomainUrl, loginName);
+                localStorage.setItem(makeNameFromNS(appDomainUrl, "user_handle"), user_handle);
+                //rememberUserHandle(appDomainUrl, loginName);
                 var tokenName = getTokenName(appDomainUrl, "refresh_token");
-                var myHandle = btoa(sjcl.hash.sha256.hash(loginName)).replace(/=/g, "_");
-                //localStorage.setItem("user_handle", user_handle);
                 localStorage.setItem(tokenName, JSON.stringify({ refresh_token: token }));
+                try {
+                    eraseCookie(makeNameFromNS(appDomainUrl, "tokenInCookieJS"));
+                    eraseCookie(makeNameFromNS(appDomainUrl, "tokenJS"));
+                } catch (e) {/**/}
             }
         }
         if (window.requestIdleCallback) {

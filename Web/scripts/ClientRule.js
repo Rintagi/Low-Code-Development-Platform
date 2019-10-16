@@ -2661,6 +2661,47 @@ function parsedUrl(url) {
     return o;
 }
 
+function wordToByteArray(word, length) {
+    var ba = [], i, xFF = 0xFF;
+    if (length > 0)
+        ba.push(word >>> 24);
+    if (length > 1)
+        ba.push((word >>> 16) & xFF);
+    if (length > 2)
+        ba.push((word >>> 8) & xFF);
+    if (length > 3)
+        ba.push(word & xFF);
+    return ba;
+}
+
+function wordArrayToByteArray(wordArray, length) {
+    if (wordArray.hasOwnProperty("sigBytes") && wordArray.hasOwnProperty("words")) {
+        length = wordArray.sigBytes;
+        wordArray = wordArray.words;
+    }
+
+    var result = [],
+        bytes,
+        i = 0;
+    while (length > 0) {
+        bytes = wordToByteArray(wordArray[i], Math.min(4, length));
+        length -= bytes.length;
+        result.push(bytes);
+        i++;
+    }
+    return [].concat.apply([], result);
+}
+
+function arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+}
+
 function makeNameFromNS(appDomainUrl, name) {
     var appNS = (parsedUrl(appDomainUrl) || {}).pathname || '/';
     return ((appNS.toUpperCase().replace(/^\//, '') + '_') || '') + name;
@@ -2671,7 +2712,9 @@ function eraseUserHandle(appDomainUrl) {
 }
 
 function rememberUserHandle(appDomainUrl, userIdentity) {
-    localStorage.setItem(makeNameFromNS(appDomainUrl, "user_handle"), btoa(sjcl.hash.sha256.hash(userIdentity)).replace(/=/g, "_"));
+    var h = sjcl.hash.sha256.hash(userIdentity);
+    var v = arrayBufferToBase64(wordArrayToByteArray(h,h.length*4)).replace(/=/g, "_");
+    localStorage.setItem(makeNameFromNS(appDomainUrl, "user_handle"), v.replace(/=/g, "_"));
 }
 
 function getUserHandle(appDomainUrl) {

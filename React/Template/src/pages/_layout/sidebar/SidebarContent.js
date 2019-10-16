@@ -35,7 +35,8 @@ class SidebarContent extends PureComponent {
                 dl = <SidebarLink key={i} title={obj.MenuText} route={obj.reactPath ? getDefaultPath(obj.reactPath) : null} />;
                 return (dl);
             }
-          }    
+          } 
+          return ''   
     })
   }
 

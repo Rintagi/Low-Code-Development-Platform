@@ -88,7 +88,7 @@
     font-size: 14px;
     line-height: 20px;
     transition: border 0.3s;
-    background: transparent;
+    background: #f0f1f6;
     font-family: 'Open Sans', sans-serif;
     height: 36px;
 
@@ -108,15 +108,15 @@
     }
 
     @include themify($themes) {
-      border: 1px solid themed('colorFieldsBorder');
-      border-radius: 0px;
+      border: 1px solid transparent;
+      border-radius: 5px;
       color: themed('colorText');
     }
 
     &[disabled] {
 
       @include themify($themes) {
-        background: themed('colorBackgroundBody');
+        background: #ccc
       }
 
       &:focus, &:active {
@@ -129,7 +129,8 @@
 
     &:focus, &:active {
       outline: none;
-      border-color: $color-fintrux;
+      border-color: transparent;
+      background: #f0f1f6;
     }
   }
 
@@ -140,7 +141,8 @@
   .form__form-group-label {
 
     @include themify($themes) {
-      color: themed('colorText');
+      // color: themed('colorText');
+      color: #0a090c;
     }
 
     span {
@@ -157,12 +159,16 @@
     transition: all 0.3s;
 
     @include themify($themes) {
-      background: themed('colorFieldsBorder');
-      border: 1px solid themed('colorFieldsBorder');
+      background: #247BA0;
+      border: 1px solid #247BA0;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      position: absolute;
+      right: 0;
     }
 
     svg {
-      fill: $color-additional;
+      fill: #fff;
       width: 18px;
       height: 18px;
       transition: all 0.3s;
@@ -248,12 +254,12 @@
 
     .Select-control, .Dropdown-control {
       height: 32px;
-      border-radius: 0;
+      border-radius: 5px;
       transition: all 0.3s;
-      background: transparent;
+      background: #f0f1f6;
 
       @include themify($themes) {
-        border: 1px solid themed('colorFieldsBorder');
+        border: 1px solid transparent;
       }
     }
 
@@ -318,18 +324,19 @@
 
     .Select-menu-outer, .Dropdown-menu {
       top: calc(100% + 3px);
-      border-radius: 0;
-      box-shadow: none;
+      border-radius: 5px;
+      border: none;
+      box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.15) !important;
       font-size: 14px;
       animation: open 0.3s ease-in-out;
       overflow: hidden;
 
       @include themify($themes) {
-        border-top: none;
-        border-bottom: 1px solid $color-fintrux;
-        border-left: 1px solid $color-fintrux;
-        border-right: 1px solid $color-fintrux;
-        background:  themed('colorBackground');
+        // border-top: none;
+        // border-bottom: 1px solid $color-fintrux;
+        // border-left: 1px solid $color-fintrux;
+        // border-right: 1px solid $color-fintrux;
+        // background:  themed('colorBackground');
       }
     }
 
@@ -369,9 +376,9 @@
     &.is-focused, &.is-focused:not(.is-open), &.is-open {
 
       .Select-control, .Dropdown-control {
-        border-color: $color-fintrux;
+        border-color: transparent;
         box-shadow: none;
-        background: transparent;
+        background: #f0f1f6;
       }
     }
 
