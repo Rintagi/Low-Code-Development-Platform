@@ -143,3 +143,235 @@
           <match url="extdev/?(.*)" />
           <action type="Rewrite" url="http://172.16.0.72:3000/{R:1}" logRewrittenUrl="true" />
         </rule>
+
+Summary of changes from 8/2017 to 9/2019
+
+System: Administration
+Version: R10.84.90913
+Prerequisite: 
+1. Add " |rintagi.js" to Objects Exempted in Configure Installer's PDT;
+2. Install https://www.iis.net/downloads/microsoft/url-rewrite;
+3. Add the following line to <DefaultDocument>:
+        <add value="index.html"/>
+4. Add the following lines to after <DefaultDocument>:
+    <!-- this is for custom mime type, for fontawesome in this case -->
+    <staticContent>
+      <remove fileExtension=".woff2"/>
+      <mimeMap fileExtension=".woff2" mimeType="font/woff2"/>
+    </staticContent>
+    <httpProtocol>
+      <customHeaders>
+        <remove name="X-Powered-By"/>
+        <add name="X-Frame-Options" value="SAMEORIGIN"/>
+        <add name="Access-Control-Allow-Credentials" value="true"/>
+        <add name="Access-Control-Allow-Methods" value="GET, HEAD, POST, OPTIONS"/>
+        <add name="Access-Control-Allow-Origin" value="*"/>
+        <add name="Access-Control-Allow-Credential" value="true"/>
+        <add name="Access-Control-Allow-Headers" value="Origin, Access-Control-Allow-Origin, Content-Type,Accept-Encoding, Accept,Authorization,X-RintagiScope,X-Authorization"/>
+        <add name="Access-Control-Max-Age" value="86400"/>
+      </customHeaders>
+    </httpProtocol>
+    <httpCompression>
+      <dynamicTypes>
+        <!-- on IIS 8.5, system32\inetsrv\config\applicationhost.config needs to be changed manually to handle this, IIS 10 onward is fine overriding here -->
+        <add mimeType="application/json" enabled="true"/>
+        <add mimeType="application/json; charset=UTF-8" enabled="true"/>
+      </dynamicTypes>
+    </httpCompression>
+    <rewrite>
+      <rules>
+        <clear/>
+        <rule name="React_bundle_proxy" stopProcessing="true">
+          <match url="(static|runtime|img)/(.*)"/>
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true"/>
+            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true"/>
+          </conditions>
+          <action type="Rewrite" url="http://localhost:3000/{R:1}/{R:2}"/>
+        </rule>
+        <rule name="React_loadcss_proxy" enabled="true" stopProcessing="true">
+          <match url="^load.css"/>
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true"/>
+          </conditions>
+          <action type="Rewrite" url="http://localhost:3000/{R:0}" appendQueryString="false" logRewrittenUrl="true"/>
+        </rule>
+        <rule name="FT_dev_reactproxy" stopProcessing="true">
+          <match url="reactproxy/?(.*)"/>
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false"/>
+          <action type="Rewrite" url="http://localhost:3000/{R:1}"/>
+        </rule>
+        <rule name="react_ending_slash" enabled="false" stopProcessing="true">
+          <match url="react/([^/#]*)(#?[^/]*)$"/>
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true"/>
+          </conditions>
+          <action type="Redirect" url="react/{R:1}/{R:2}"/>
+        </rule>
+        <rule name="react_static_production" enabled="false" stopProcessing="true">
+          <match url="react/([^/]*/?)(.*)"/>
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true"/>
+          </conditions>
+          <action type="Rewrite" url="react/{R:1}/index.html"/>
+        </rule>
+      </rules>
+    </rewrite>
+Readme: 
+
+
+System: Administration
+Version: R10.83.90829
+Prerequisite: 
+
+Readme: 
+1. Expand Webrule screen to capture 4 more rules for mobile-first.
+
+System: Administration
+Version: R10.82.90820
+Prerequisite: 
+
+Readme: 
+1. Preparation for React code gen;
+
+System: Administration
+Version: R10.81.90709
+Prerequisite: 
+
+Readme: 
+1. Miscellaneous changes on image related code;
+
+System: Administration
+Version: R10.80.90627
+Prerequisite: 
+
+Readme: 
+Miscellaneous enhancements including FX rates from NewtonSoft;
+
+System: Administration
+Version: R10.79.90531
+Prerequisite: 
+
+Readme: 
+1. Add column length and data type to GetScreenLabel SP;
+2. Add LenderId, BorrowerId & GuarantorId to VwPermKey view table and GetCallParam function call;
+3. Allow uploading all doc types to grid;
+4. Multiple Image/Document uploads to grid;
+5. New Adm Screens (ReactRule & AsmxRule);
+
+System: Administration
+Version: R10.78.90513
+Prerequisite: 
+
+Readme: 
+1. Add preliminary reactJS code generation resources;
+
+System: Administration
+Version: R10.77.90308
+Prerequisite: 
+
+Readme: 
+1. Improved performance on grid images.
+
+System: Administration
+Version: R10.76.90115
+Prerequisite: 
+
+Readme: 
+1. Add Borrowers, Guarantors and Lenders to GetCallParam in AdminAccess.
+
+System: Administration
+Version: R10.75.81024
+Prerequisite: 
+Need to regenerate all screens and all reports.
+Readme: 
+1. Add three permission fields: Borrower, Guarantor, Lender to Usr and UsrPref.
+
+System: Administration
+Version: R10.74.81022
+Prerequisite: 
+
+Readme: 
+1. Resize applied to UploadModule.ascx.cs and generated code;
+
+System: Administration
+Version: R10.73.81018
+Prerequisite: 
+
+Readme: 
+1. Add more global custom labels;
+
+System: Administration
+Version: R10.72.81017
+Prerequisite: 
+
+Readme: 
+1. Minor bug fixes;
+
+System: Administration
+Version: R10.71.81014
+Prerequisite: 
+
+Readme: 
+1. Move six fields (NoMasterMsg, NoDetailMsg, AddMasterMsg, AddDetailMsg, MasterFoundMsg, DetailFoundMsg) from custom labels to ScreenHlp; also changed GetScreenHlp;
+2. Add ResizeWidth and ResizeHeight to GetScreenColumns;
+
+
+System: Administration
+Version: R10.70.81013
+Prerequisite: 
+
+Readme: 
+1. Add buttons for Mobile first design; generic custom labels, columns for Screen Object, etc.
+
+System: Administration
+Version: R10.69.81011
+Prerequisite: 
+
+Readme: 
+Add columns SearchIdR and SearchDtlIdR to table Screen.
+
+System: Administration
+Version: R10.68.81002
+Prerequisite: 
+
+Readme: 
+1. Make total count more efficient by changing GetScreenLisI1ById, and GetScreenLisI2ById.
+2. Fix an error on WrInsButtonHlp;
+
+System: Administration
+Version: R10.67.80921
+Prerequisite: 
+
+Readme: 
+1. Add mobile first button positioning and styles.
+
+System: Administration
+Version: R10.66.80704
+Prerequisite: 
+
+Readme: 
+1. Image upload should be independent of where is it being called;
+
+System: Administration
+Version: R10.65.80501
+Prerequisite: 
+
+Readme: 
+1. Enhance image button UX on grid for both grid-only and tab-folder plus grid;
+
+System: Administration
+Version: R10.64.80328
+Prerequisite: 
+
+Readme: 
+1. Add error notification on upload of filename over 100 characters;
+
+System: Administration
+Version: R10.63.80312
+Prerequisite: 
+
+Readme: 
+1. Enable regeneration of section objects regardless whether there are changes;
+
+
