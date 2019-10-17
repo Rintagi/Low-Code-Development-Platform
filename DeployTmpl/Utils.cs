@@ -2128,7 +2128,7 @@ namespace Install
             if (tiers.ContainsKey("rule"))
             {
                 if (!Directory.Exists(tiers["rule"])) throw new Exception(string.Format("rule tier {0} not exist", tiers["rule"]));
-                Utils.JFileZip(tiers["rule"], clientTargetDir + "\\Rul.zip", true, false, new List<string> { "\\Deploy*\\", ".git" });
+                Utils.JFileZip(tiers["rule"], clientTargetDir + "\\Rul.zip", true, false, new List<string> { "\\Deploy*\\", ".git", "\\node_modules\\", "\\npm\\", "\\npm_cache\\", ".vs", "Import", "PrecompiledWeb", "Web", "WsXls", "\\*Ws\\" });
             }
             if (!string.IsNullOrEmpty(dataServer["serverType"]))
             {
