@@ -4693,7 +4693,7 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                                 }
                                 else if (DisplayMode.Contains("Date")) //---------Date (Any type)
                                 {
-                                    string InitMasterValue = "{\"" + ColumnId + "\", converDefaultValue(" + DefaultValue.Replace('"', '\"') + ")},";
+                                    string InitMasterValue = "{\"" + ColumnId + "\", convertDefaultValue(" + DefaultValue.Replace('"', '\"') + ")},";
                                     InitMasterResults.Add(InitMasterValue);
                                 }
                                 else if (DisplayMode == "Label" || DisplayMode == "Action Button" || DisplayMode == "ImageButton" ||

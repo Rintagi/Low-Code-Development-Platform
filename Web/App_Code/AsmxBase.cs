@@ -3258,6 +3258,18 @@ namespace RO.Web
             }
         }
 
+        /* helper functions for ASP.NET inline definition(like default value) conversion */
+        protected string converDefaultValue(object val)
+        {
+            if (val is DateTime) return ((DateTime)val).ToString("o");
+            else return val == null ? "" : val.ToString();
+        }
+
+        protected string convertDefaultValue(object val)
+        {
+            if (val is DateTime) return ((DateTime)val).ToString("o");
+            else return val == null ? "" : val.ToString();
+        }
         #region visible extern service endpoint
         [WebMethod(EnableSession = false)]
         public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetAuthRow()
