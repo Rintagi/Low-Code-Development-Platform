@@ -57,10 +57,10 @@ Please read CONTRIBUTING.md for details on our code of conduct, and share comple
 
 ### License
 
-All demos and examples, whether in a code project’s repository or displayed on [rintagi.com](https://www.rintagi.com), are released under the terms of [Apache 2.0 license](https://github.com/Rintagi/Low-Code-Development-Platform/blob/master/LICENSE).
+All demos and examples, whether in a code project’s repository or displayed on [rintagi.com](https://www.rintagi.com), are released under the terms of [Rintagi Community Version Software License](https://github.com/Rintagi/Low-Code-Development-Platform/blob/master/LICENSE).
 
 ### Useful-Links 
-
+* [Easy Setup for New Machines Running Rintagi](https://github.com/Rintagi/Low-Code-Development-Platform/tree/master/DeploySetup)
 * [Cross-Functional Training Videos](https://www.rintagi.com/video.aspx)
 * [Rintagi Development User Guide](https://www.rintagi.com/docs/site/index.html)
 * [Operating System Requirements](https://www.rintagi.com/docs/site/Initial-Setup/index.html#operating-system-requirements)
