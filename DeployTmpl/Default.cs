@@ -214,7 +214,7 @@ namespace Install
                         Application.DoEvents();
                     };
                     if (!cbInstallDB.Checked) dataServer["serverType"] = "";
-                    bool done = Utils.Backup(tiers, dataServer, txtBkPath1.Text + "\\" + txtNewNS.Text + uniqueStr, txtBkPath2.Text + "\\" + txtNewNS.Text + uniqueStr, progress, cbIntegratedSecurity.Checked);
+                    bool done = Utils.Backup(tiers, dataServer, string.IsNullOrWhiteSpace(txtBkPath1.Text) ? "" :  txtBkPath1.Text + "\\" + txtNewNS.Text + uniqueStr, string.IsNullOrWhiteSpace(txtBkPath2.Text) ? "" : txtBkPath2.Text + "\\" + txtNewNS.Text + uniqueStr, progress, cbIntegratedSecurity.Checked);
                     if (!done)
                     {
                         btnBackup.Enabled = true;

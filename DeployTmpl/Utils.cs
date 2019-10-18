@@ -2097,9 +2097,10 @@ namespace Install
         }
         public static bool Backup(Dictionary<string,string> tiers, Dictionary<string,string> dataServer, string clientTargetDir, string dataTargetDir, Action<int,string> progress, bool bIntegratedSecurity)
         {
+            bool dataTargetAccessible = false;
             try
             {
-                if (!Directory.Exists(clientTargetDir)) { Directory.CreateDirectory(clientTargetDir); }
+                if (!string.IsNullOrEmpty(clientTargetDir) && !Directory.Exists(clientTargetDir)) { Directory.CreateDirectory(clientTargetDir); }
             }
             catch (Exception ex)
             {
@@ -2108,37 +2109,108 @@ namespace Install
             }
             try
             {
-                if (!Directory.Exists(dataTargetDir + "\\Data")) { Directory.CreateDirectory(dataTargetDir + "\\Data"); }
+
+                if (!string.IsNullOrEmpty(dataTargetDir) && (!string.IsNullOrWhiteSpace(clientTargetDir)))
+                {
+                    if (!Directory.Exists(dataTargetDir + "\\Data"))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(dataTargetDir + "\\Data");
+                            dataTargetAccessible = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            ReportError(string.Format("Fail to create data tier backup directory {0} due to {1}", dataTargetDir, ex.Message));
+                        }
+                    }
+                    else dataTargetAccessible = true;
+                }
             }
             catch (Exception ex)
             {
                 ReportError(string.Format("Fail to access  data tier backup directory {0} due to {1}", dataTargetDir, ex.Message));
-                return false;
+                //if (!string.IsNullOrWhiteSpace(clientTargetDir)) return false;
             }
-            if (!Directory.Exists(tiers["client"])) throw new Exception(string.Format("client tier {0} not exist", tiers["client"]));
-            if (!Directory.Exists(tiers["ws"])) throw new Exception(string.Format("web service tier {0} not exist", tiers["ws"]));
-            if (!Directory.Exists(tiers["xls"])) throw new Exception(string.Format("xls tier {0} not exist", tiers["xls"]));
-            progress(20, string.Format("Backing up client tier files {0} ...", tiers["client"]));
-            Utils.JFileZip(tiers["client"], clientTargetDir + "\\Cln.zip", true, false);
-            progress(10, string.Format("Backing up web service tier files {0} ...", tiers["ws"]));
-            Utils.JFileZip(tiers["ws"], clientTargetDir + "\\Wsv.zip", true, false);
-            progress(10, string.Format("Backing up xls tier files {0} ...", tiers["xls"]));
-            Utils.JFileZip(tiers["xls"], clientTargetDir + "\\Xls.zip", true, false);
-            progress(20, tiers.ContainsKey("rule") ? string.Format("Backing up rule tier files {0} ...",tiers["rule"]) : "Skip rule tier files ...");
-            if (tiers.ContainsKey("rule"))
+            if (!string.IsNullOrEmpty(clientTargetDir))
             {
-                if (!Directory.Exists(tiers["rule"])) throw new Exception(string.Format("rule tier {0} not exist", tiers["rule"]));
-                Utils.JFileZip(tiers["rule"], clientTargetDir + "\\Rul.zip", true, false, new List<string> { "\\Deploy*\\", ".git", "\\node_modules\\", "\\npm\\", "\\npm_cache\\", ".vs", "Import", "PrecompiledWeb", "Web", "WsXls", "\\*Ws\\" });
-            }
-            if (!string.IsNullOrEmpty(dataServer["serverType"]))
-            {
-                progress(20, string.Format("Backing up data tier files {0} to {1} ...", dataServer["server"], dataTargetDir));
-                Utils.BackupServer(dataServer["serverType"], dataServer["server"], dataServer["user"], dataServer["password"], dataServer["design"], dataTargetDir + "\\Data\\", bIntegratedSecurity);
-                if (dataTargetDir.IndexOf("\\") >= 0)	// Windows path:
+                progress(20, tiers.ContainsKey("client") && !string.IsNullOrEmpty(tiers["client"]) ? string.Format("Backing up client tier files {0} ...", tiers["client"]) : "Skip client tier files ...");
+                if (tiers.ContainsKey("client") && !string.IsNullOrEmpty(tiers["client"]))
                 {
-                    Utils.JFileZip(dataTargetDir + "\\Data", dataTargetDir + "\\Dat.zip", true, false);
+                    if (!Directory.Exists(tiers["client"]))
+                    {
+                        ReportError(string.Format("client tier {0} not exist", tiers["client"]));
+                        return false;
+                    }
+                    else
+                    {
+                        Utils.JFileZip(tiers["client"], clientTargetDir + "\\Cln.zip", true, false);
+                    }
                 }
-                Directory.Delete(dataTargetDir + "\\Data", true);
+                progress(10, tiers.ContainsKey("ws") && !string.IsNullOrEmpty(tiers["ws"]) ? string.Format("Backing up web service tier files {0} ...", tiers["ws"]) : "Skip web service tier files ...");
+                if (tiers.ContainsKey("ws") && !string.IsNullOrEmpty(tiers["ws"]))
+                {
+                    if (!Directory.Exists(tiers["ws"]))
+                    {
+                        ReportError(string.Format("web service tier {0} not exist", tiers["ws"]));
+                        //return false;
+                    }
+                    else
+                    {
+                        Utils.JFileZip(tiers["ws"], clientTargetDir + "\\Wsv.zip", true, false);
+                    }
+                }
+                progress(10, tiers.ContainsKey("xls") && !string.IsNullOrEmpty(tiers["xls"]) ? string.Format("Backing up xls tier files {0} ...", tiers["xls"]) : "Skip xls tier files ...");
+                if (tiers.ContainsKey("xls") && !string.IsNullOrEmpty(tiers["xls"]))
+                {
+                    if (!Directory.Exists(tiers["xls"]))
+                    {
+                        ReportError(string.Format("xls tier {0} not exist", tiers["xls"]));
+                        //return false;
+                    }
+                    else
+                    {
+                        Utils.JFileZip(tiers["xls"], clientTargetDir + "\\Xls.zip", true, false);
+
+                    }
+                }
+                progress(20, tiers.ContainsKey("rule") && !string.IsNullOrEmpty(tiers["rule"]) ? string.Format("Backing up rule tier files {0} ...", tiers["rule"]) : "Skip rule tier files ...");
+                if (tiers.ContainsKey("rule") && !string.IsNullOrEmpty(tiers["rule"]))
+                {
+                    if (!Directory.Exists(tiers["rule"]))
+                    {
+                        ReportError(string.Format("rule tier {0} not exist", tiers["rule"]));
+                        return false;
+                    }
+                    else
+                    {
+                        Utils.JFileZip(tiers["rule"], clientTargetDir + "\\Rul.zip", true, false, new List<string> { "\\Deploy*\\", ".git", "\\node_modules\\", "\\npm\\", "\\npm_cache\\", ".vs", "Import", "PrecompiledWeb", "Web", "WsXls", "\\*Ws\\" });
+                    }
+                }
+            }
+            else
+            {
+                progress(60, "Skip client tier files ...");
+            }
+            progress(20, !string.IsNullOrEmpty(dataTargetDir) && !string.IsNullOrEmpty(dataServer["serverType"]) ? string.Format("Backing up data tier files {0} to {1} ...", dataServer["server"], dataTargetDir) : "Skip data tier files ...");
+            if (!string.IsNullOrEmpty(dataTargetDir) && !string.IsNullOrEmpty(dataServer["serverType"]))
+            {
+                Utils.BackupServer(dataServer["serverType"], dataServer["server"], dataServer["user"], dataServer["password"], dataServer["design"], dataTargetDir + (dataTargetAccessible ? "\\Data\\" : "_"), bIntegratedSecurity);
+                if (dataTargetDir.IndexOf("\\") >= 0 && clientTargetDir == dataTargetDir)	// Windows path:
+                {
+                    try
+                    {
+                        if (dataTargetAccessible)
+                        {
+                            Utils.JFileZip(dataTargetDir + "\\Data", dataTargetDir + "\\Dat.zip", true, false);
+                            Directory.Delete(dataTargetDir + "\\Data", true);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ReportError(string.Format("failed to zip data data tier file backups, {0}.", dataTargetDir + "\\Data"));
+                    }
+                }
             }
             progress(20, "Backup completed.");
             return true;
