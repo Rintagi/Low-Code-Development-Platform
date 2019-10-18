@@ -57,7 +57,7 @@
     "postcss-loader": "2.0.8",
     "promise": "8.0.1",
     "prop-types": "15.6.2",
-    "query-string": "6.8.3",
+    "query-string": "4.3.4",
     "raf": "3.4.0",
     "rc-slider": "8.6.3",
     "rc-time-picker": "3.4.0",
