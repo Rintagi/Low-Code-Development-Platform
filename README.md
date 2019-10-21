@@ -37,7 +37,8 @@ Manual setup of dependencies for Rintagi installation:
 ### Installing
 Access a step by step guide on the installation of the master package with which you can create a development package for custom applications. Changes made to the master package can also be applied to developed applications.
 
-* [Download Latest Rintagi Version](https://github.com/Rintagi/Low-Code-Development-Platform/tree/master/DeployExt)
+* [Download Latest Rintagi Version (Github)](https://github.com/Rintagi/Low-Code-Development-Platform/tree/master/DeployExt)
+* [Download Latest Rintagi Version (Website)](https://www.rintagi.com)
 * [Setting up Development System](https://www.rintagi.com/docs/site/Initial-Setup/index.html#installation)
 
 ### Features
@@ -63,6 +64,8 @@ All demos and examples, whether in a code project’s repository or displayed on
 
 ### Useful-Links 
 * [Easy Setup for New Machines Running Rintagi](https://github.com/Rintagi/Low-Code-Development-Platform/tree/master/DeploySetup)
+* [Download Latest Rintagi Version (Github)](https://github.com/Rintagi/Low-Code-Development-Platform/tree/master/DeployExt)
+* [Download Latest Rintagi Version (Website)](https://www.rintagi.com)
 * [Cross-Functional Training Videos](https://www.rintagi.com/video.aspx)
 * [Rintagi Development User Guide](https://www.rintagi.com/docs/site/index.html)
 * [Operating System Requirements](https://www.rintagi.com/docs/site/Initial-Setup/index.html#operating-system-requirements)
