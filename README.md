@@ -25,7 +25,9 @@ Applications can be extended without any restrictions by adding unique business 
 We host detailed cross-functional and Rintagi training videos on our [website](https://www.rintagi.com/video.aspx), and maintain a comprehensive [Rintagi user guide](https://www.rintagi.com/Docs/site/index.html). 
 
 ### Pre-Requisites
-To clone and run this application, you'll need the below dependencies installed on your computer.
+* [Easy Setup for New Machines Running Rintagi](https://github.com/Rintagi/Low-Code-Development-Platform/tree/master/DeploySetup)
+
+Manual setup of dependencies for Rintagi installation.
 * [Operating System Requirements](https://www.rintagi.com/docs/site/Initial-Setup/index.html#operating-system-requirements)
 * [Software Requirements](https://www.rintagi.com/docs/site/Initial-Setup/index.html#software-requirements)
 * [Windows 10 Configuration Requirement](https://www.rintagi.com/docs/site/Initial-Setup/index.html#windows-10-configuration-requirement) 
@@ -35,8 +37,8 @@ To clone and run this application, you'll need the below dependencies installed 
 ### Installing
 Access a step by step guide on the installation of the master package with which you can create a development package for custom applications. Changes made to the master package can also be applied to developed applications.
 
+* [Download Latest Rintagi Version](https://github.com/Rintagi/Low-Code-Development-Platform/tree/master/DeployExt)
 * [Setting up Development System](https://www.rintagi.com/docs/site/Initial-Setup/index.html#installation)
-* [Download Latest Rintagi Version](https://www.rintagi.com)
 
 ### Features
 
