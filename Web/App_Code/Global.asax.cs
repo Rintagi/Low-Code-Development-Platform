@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Web;
 using System.Web.SessionState;
@@ -24,6 +25,26 @@ namespace RO
 			InitializeComponent();
 		}
 
+        public static List<string> GetExceptionMessage(Exception ex)
+        {
+            List<string> msg = new List<string>();
+            for (var x = ex; x != null; x = x.InnerException)
+            {
+                if (x is AggregateException && ((AggregateException)x).InnerExceptions.Count > 1)
+                {
+                    if (((AggregateException)x).InnerExceptions.Count > 1)
+                        foreach (var y in ((AggregateException)x).InnerExceptions)
+                        {
+                            msg.Add(string.Join("\r\n", GetExceptionMessage(y).ToArray()));
+                        }
+                }
+                else
+                {
+                    msg.Add(x.Message);
+                }
+            }
+            return msg;
+        }
 		// For the embedded multimedia player only:
 		protected void Application_PreSendRequestHeaders(Object source, EventArgs e)
 		{
@@ -95,6 +116,8 @@ namespace RO
                         string domain = smtpConfig.Length > 5 ? smtpConfig[5].Trim() : null;
                         System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
                         string[] receipients = to.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        string sourceIP = string.Format("From: {0}\r\n\r\n", Request != null ? Request.UserHostAddress : "unknown request url");
+                        var exMessages = GetExceptionMessage(objErr);
                         try
                         {
                             LoginUsrId = ((RO.Common3.Data.LoginUsr)Session["Cache:LUser"]).UsrId.ToString();
@@ -107,7 +130,9 @@ namespace RO
                         }
                         mm.Subject = webtitle + " Application Error " + Request.Url.GetLeftPart(UriPartial.Path);
                         mm.Body = Request.Url.ToString() + "\r\n\r\n" + objErr.Message + "\r\n\r\n" + objErr.StackTrace + "\r\n"
-                                + "\r\n" + "UserId : " + (LoginUsrId ?? "") + " UserName: " + (LoginUserName ?? "") + "\r\n";
+                                + "\r\n" + "UserId : " + (LoginUsrId ?? "") + " UserName: " + (LoginUserName ?? "") + "\r\n"
+                                + sourceIP
+                                + "\r\n";
                         mm.IsBodyHtml = false;
                         mm.From = new System.Net.Mail.MailAddress(string.IsNullOrEmpty(username) || !(username ?? "").Contains("@") ? from : username, string.IsNullOrEmpty(fromTitle) ? from : fromTitle);    // Address must be the same as the smtp login user.
                         mm.ReplyToList.Add(new System.Net.Mail.MailAddress(string.IsNullOrEmpty(replyTo) ? from : replyTo)); // supplied from would become reply too for the 'sending on behalf of'

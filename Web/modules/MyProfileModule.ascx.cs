@@ -277,7 +277,7 @@ namespace RO.Web
             if (!string.IsNullOrEmpty(webAddress) && !webAddress.StartsWith("http"))
             {
                 string path = Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped);
-                webAddress = path.StartsWith(Config.AppNameSpace + "/") ? "/" + Config.AppNameSpace + "/" + webAddress : "/" + webAddress;
+                webAddress = path.ToUpper().StartsWith(Config.AppNameSpace.ToUpper() + "/") ? "/" + Config.AppNameSpace + "/" + webAddress : "/" + webAddress;
                 webAddress = Request.Url.GetLeftPart(UriPartial.Scheme).Replace("http:",Config.EnableSsl ? "https:" : "http:") + Request.Url.Host + Request.Url.AbsolutePath.Replace("/" + path, webAddress);
                 homeQs = (new Uri(webAddress)).GetComponents(UriComponents.Query, UriFormat.Unescaped);
             }
