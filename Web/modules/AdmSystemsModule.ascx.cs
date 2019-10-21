@@ -1748,7 +1748,7 @@ string.Format(@"
 document.Rintagi = {{
   localDev:{{
     // these setup is only effective when served via app is served via http://localhost:3000 type, for local npm start development. ignored in production build or proxying to localhost
-    appNS:{4},
+    appNS:'{4}',
     appDomainUrl:'http://{2}/{0}', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
     apiBasename: 'http://{2}/{0}', // webservice url for local development via npm start, i.e. localhost:3000 etc. must be full url in the form of http:// pointing to the site serving , no ending slash
   }},
@@ -1896,16 +1896,15 @@ document.Rintagi = {{
             {
                 if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
                 string systemAbbr = cSystemAbbr45.Text;
-                /* FIXME. someone need to give me the proper System prefix, we are doing heuristic GUESS fro CSrc!!!*/
-                //Dictionary<int, string> abbr = new Dictionary<int, string>() { { 2, "Loan" }, { 3, "Adm" }, { 5, "Cmn" } };
-                //string systemAbbr = abbr[CSrc.SrcSystemId];
-                if (string.IsNullOrEmpty(systemAbbr)) throw new Exception("pick the module first and make sure the Abbr is not empty");
+                string systemId = cSystemId45.Text;
                 string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
                 string appRoot = webAppRoot.Replace("/Web/", "");
                 string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
                 string reactTemplateDir = reactRootDir + "/Template";
                 string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
                 string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
+                string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 string siteApplicationPath = Context.Request.ApplicationPath;
                 string machineName = Environment.MachineName;
                 string rintagiJSContent =
@@ -1916,12 +1915,16 @@ string.Format(@"
  * for reactjs configuration, make sure homepage is set to './' so everything generated is relative 
  */
 document.Rintagi = {{
+  appRelBase:['React','ReactProxy','ReactPort'],  // path this app is serving UNDER(can be multiple), implicitly assume they are actually /Name/, do not put begin/end slash 
+  appNS:'', // used for login token sync(shared login when served under the same domain) between apps and asp.net site
+  appDomainUrl:'', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
+  apiBasename: '', // webservice url, can be relative or full http:// etc., no ending slash
   useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
   appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
   appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
-  apiBasename: 'http://{2}/{0}' // webservice url, can be relative or full http:// etc., no ending slash
+  systemId: {3}                
 }}
-", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName);
+", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName, systemId, siteApplicationPath);
 
                 if (System.Configuration.ConfigurationManager.AppSettings["AdvanceReactBuildVersion"] != "N")
                 {
@@ -2070,6 +2073,7 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
+
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
 		}

@@ -1618,7 +1618,7 @@ namespace RO.Web
         }
         protected string MakeCriteriaVal(DataRow dr, string val)
         {
-            if (dr["DataTypeSysName"].ToString() == "DateTime") { return string.IsNullOrEmpty(val) ? new DateTime().ToString() : val; }
+            if (dr["DataTypeSysName"].ToString() == "DateTime") { return string.IsNullOrEmpty(val) ? new DateTime(1900, 1, 1).ToString() : val; }
             else if (dr["DataTypeSysName"].ToString() == "Byte") { return string.IsNullOrEmpty(val) ? (-1).ToString() : val; }
             else if (dr["DataTypeSysName"].ToString() == "Int16") { return string.IsNullOrEmpty(val) ? (-1).ToString() : val; }
             else if (dr["DataTypeSysName"].ToString() == "Int32") { return string.IsNullOrEmpty(val) ? (-1).ToString() : val; }

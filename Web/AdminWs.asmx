@@ -1325,9 +1325,10 @@ public partial class AdminWs : WebService
     public string GetLicense(string installID, string appID, string moduleName)
     {
         string SysId = System.Configuration.ConfigurationManager.AppSettings["LicenseModule"] ?? "3";
+        bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
         KeyValuePair<string, string> conn = (from dr in ((new LoginSystem()).GetSystemsList(string.Empty, string.Empty)).AsEnumerable()
                                              where dr["SystemId"].ToString() == SysId
-                                             select new KeyValuePair<string, string>(Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", dr["dbAppUserId"].ToString()), dr["dbAppPassword"].ToString())).First();
+                                             select new KeyValuePair<string, string>(Config.GetConnStr(dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "",singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString()), singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString())).First();
         UsrImpr impr = new UsrImpr("1", "11", "1", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
         Dictionary<string, string> license = new Dictionary<string, string>();
         string installDtl = "<Params>"
@@ -1489,8 +1490,8 @@ public partial class AdminWs : WebService
         UsrCurr Curr = (UsrCurr)Session[KEY_CacheLCurr];
         UsrImpr Impr = (UsrImpr)Session[KEY_CacheLImpr];
         Dictionary<string, string> usrInfo = new Dictionary<string, string>();
-        usrInfo["UsrId"] = User.UsrId.ToString();
-        usrInfo["UsrGroup"] = Impr.UsrGroups;
+        usrInfo["UsrId"] = User == null ? "1" : User.UsrId.ToString();
+        usrInfo["UsrGroup"] = Impr == null ? "" : Impr.UsrGroups;
         return usrInfo;
     }
 }
