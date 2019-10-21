@@ -916,7 +916,7 @@
             List<System.Text.RegularExpressions.Regex> includeRules =
                 (from o in includedFiles.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>()
                  where !string.IsNullOrEmpty(o.Trim())
-                 select new System.Text.RegularExpressions.Regex("^" + zipFrNoSlash.Replace("\\", "\\\\").Replace(".", "\\.") + (o.Contains(".") && !o.Contains("\\") ? ".*" : "") + (o.StartsWith("\\") ? @"(\\)?" : @"\\") + o.Trim().ToLower().Replace("\\", "\\\\").Replace("*.*", "*").Replace(".", "\\.").Replace("*", o.Contains("\\*.*") ? ".*" : "[^\\\\]*") + "$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToList();
+                 select new System.Text.RegularExpressions.Regex("^" + zipFrNoSlash.Replace("\\", "\\\\").Replace(".", "\\.") + ((o.Contains(".") && !o.Contains("\\") || o.StartsWith("*")) ? ".*" : "") + (o.StartsWith("\\") ? @"(\\)?" : @"\\") + o.Trim().ToLower().Replace("\\", "\\\\").Replace("*.*", "*").Replace(".", "\\.").Replace("*", o.Contains("\\*.*") ? ".*" : "[^\\\\]*") + "$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToList();
             Func<string, string, bool> fIsIncluded = (f, p) => { foreach (var re in includeRules) { if (re.IsMatch(p)) return true; } return false; };
 
             //var files = (from x in Directory.GetFiles(zipFr, "*.*", SearchOption.AllDirectories)
