@@ -27,7 +27,7 @@ We host detailed cross-functional and Rintagi training videos on our [website](h
 ### Pre-Requisites
 * [Easy Setup for New Machines Running Rintagi](https://github.com/Rintagi/Low-Code-Development-Platform/tree/master/DeploySetup)
 
-Manual setup of dependencies for Rintagi installation.
+Manual setup of dependencies for Rintagi installation:
 * [Operating System Requirements](https://www.rintagi.com/docs/site/Initial-Setup/index.html#operating-system-requirements)
 * [Software Requirements](https://www.rintagi.com/docs/site/Initial-Setup/index.html#software-requirements)
 * [Windows 10 Configuration Requirement](https://www.rintagi.com/docs/site/Initial-Setup/index.html#windows-10-configuration-requirement) 
