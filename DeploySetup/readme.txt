@@ -20,4 +20,4 @@ It only installs known source packages, so if you are not comfortable with the s
 
 ./rintagi_machine_setup_install_devtools.ps1
 
-For detailed set-up instructions, please refer to our [user manual[ (https://www.rintagi.com/Docs/site/Initial-Setup/index.html)
+For detailed set-up instructions, please refer to our [user manual](https://www.rintagi.com/Docs/site/Initial-Setup/index.html).
