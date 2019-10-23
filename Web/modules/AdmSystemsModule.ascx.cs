@@ -1834,10 +1834,12 @@ document.Rintagi = {{
                         var webSiteTargetDir = webAppRoot + "/React/" + systemAbbr;
                         bool isReady = buildRet.Item2.Contains("The build folder is ready to be deployed");
 
-                        var webSiteRuntimeJS = string.Format("{0}/runtime/rintagi.js", webSiteTargetDir);
+                        var webSiteRuntimeDir = string.Format("{0}/runtime", webSiteTargetDir);
+                        var webSiteRuntimeJS = string.Format("{0}/rintagi.js", webSiteRuntimeDir);
                         var publishRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /MIR /XF rintagi.js", buildDir, webSiteTargetDir), true, appRoot);
                         if (!File.Exists(webSiteRuntimeJS))
                         {
+                            if (!Directory.Exists(webSiteRuntimeDir)) Directory.CreateDirectory(webSiteRuntimeDir);
                             using (var sr = new StreamWriter(webSiteRuntimeJS, false, System.Text.UTF8Encoding.UTF8))
                             {
                                 sr.WriteLine(rintagiJSContent);
@@ -2048,7 +2050,8 @@ document.Rintagi = {{
                 else
                 {
 
-                    var webSiteRuntimeJS = string.Format("{0}/runtime/rintagi.js", webSiteTargetDir);
+                    var webSiteRuntimeDir = string.Format("{0}/runtime", webSiteTargetDir);
+                    var webSiteRuntimeJS = string.Format("{0}/rintagi.js", webSiteRuntimeDir);
                     var publishRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /MIR /XF rintagi.js", buildDir, webSiteTargetDir), true, appRoot);
                     if (publishRet.Item1 >= 8)
                     {
@@ -2057,9 +2060,10 @@ document.Rintagi = {{
                     }
                     else
                     {
-                        if (!System.IO.File.Exists(webSiteRuntimeJS))
+                        if (File.Exists(webSiteRuntimeJS))
                         {
-                            using (var sr = new System.IO.StreamWriter(webSiteRuntimeJS, false, System.Text.UTF8Encoding.UTF8))
+                            if (!Directory.Exists(webSiteRuntimeDir)) Directory.CreateDirectory(webSiteRuntimeDir);
+                            using (var sr = new StreamWriter(webSiteRuntimeJS, false, System.Text.UTF8Encoding.UTF8))
                             {
                                 sr.WriteLine(rintagiJSContent);
                                 sr.Close();

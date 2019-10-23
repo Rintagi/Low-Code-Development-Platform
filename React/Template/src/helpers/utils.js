@@ -63,12 +63,15 @@ export function isEmptyId(val)
     return val === undefined || val === "" || val === null || val === 0;
 }
 
+export function isEmpty(val) {
+    return !val || (typeof val === 'string' && val.trim() === "");
+}
+
 export function isTouchDevice() {
     if('ontouchstart' in window || navigator.msMaxTouchPoints) {
       return true;
     }
-  }
-
+}
 
 export function getListDisplayContet(obj, column){
     const columnDef = column["ColumnName"] + column["TableId"];
@@ -82,6 +85,58 @@ export function getListDisplayContet(obj, column){
             return obj[columnDef];
         }
     }
+}
+
+export function getCurrentReactUrlPath() {
+const href = window.location.href;
+return href.replace(/\?.*$/, '');
+}
+
+export function delay(valOrFn, t) {
+const _this = this;
+return new Promise(function (resolve, reject) {
+    const f = (() => {
+    if (typeof valOrFn === "function") {
+        try {
+        const result = valOrFn()
+        resolve.bind(_this)(result)
+        } catch (e) {
+        reject.bind(_this)(e)
+        }
+    }
+    else
+        resolve.bind(_this)(valOrFn)
+    }).bind(_this)
+    if (t === undefined || t === null) f()
+    else setTimeout(f, isNaN(t) || t < 0 ? 0 : t)
+});
+}
+  
+export function debounce(func, debObj, immediate) {
+// var timeout;
+return function () {
+    var context = this, args = arguments;
+    // log.debug(context, args);
+    var later = function () {
+    debObj.timeout = null;
+    if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !debObj.timeout;
+    // log.debug(timeout);
+    clearTimeout(debObj.timeout);
+    debObj.timeout = setTimeout(later, debObj.waitTime);
+    // log.debug(timeout);
+    if (callNow) func.apply(context, args);
+}
+}
+
+export function isNotEmpty(val) {
+    return !isEmpty(val);
+}
+  
+export function isEmailFormat(v) {
+// return (v && new RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/).test(v));
+    return (v && new RegExp(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$/i).test(v));
 }
 
 export function parsedUrl(url) {

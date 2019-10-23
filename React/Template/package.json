@@ -78,6 +78,7 @@
     "react-dropdown": "1.6.2",
     "react-dropzone": "4.3.0",
     "react-google-maps": "9.4.5",
+    "react-google-recaptcha": "2.0.1",      
     "react-highcharts": "16.0.2",
     "react-highlight": "0.10.0",
     "react-images": "0.5.19",

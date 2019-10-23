@@ -31,9 +31,35 @@ class Login extends Component {
     this.props.setSpinner(true);
 
     if (!this.props.user || !this.props.user.UsrId) {
-      this.props.getCurrentUser();
+      this.props.getCurrentUser()
+        .then((data) => {
+          log.debug('get current user return', this.props.user);
+          if (!this.props.user || !this.props.user.UsrId) {
+            const _this = this;
+            this.props.setSpinner(false, 'login end');
+            // this.setState({ showBox: true });
+            // setTimeout(() => { _this.props.setSpinner(false, '#####Login2Then'); }, 500);
+          }
+          log.debug(data);
+          // do nothing if info retrieved
+        })
+        .catch(error => {
+          log.debug('get current user error');
+          const _this = this;
+          this.props.setSpinner(false, 'login end');
+          // this.setState({ showBox: true });
+          //setTimeout(() => { _this.props.setSpinner(false);}, 500);
+        })
+        .finally(() => {
+          const _this = this;
+          this.props.setSpinner(false, 'login end');
+          log.debug('get current user done');
+          /* must reset this */
+          // setTimeout(() => { _this.props.setSpinner(false, '#####Login2Final'); }, 500);
+        })
+        ;
     }
-    
+
   }
 
 
@@ -50,9 +76,9 @@ class Login extends Component {
       //window.location.reload();
     }
 
-    if (this.props.global.pageSpinner && !this.state.userId && !this.props.user.loading ) {
-      this.props.setSpinner(false);
-    }
+    // if (this.props.global.pageSpinner && !this.state.userId && !this.props.user.loading) {
+    //   this.props.setSpinner(false, 'login end');
+    // }
 
     if (this.state.submitting &&
       (((this.props.user || {}).status === "failed") ||
