@@ -491,8 +491,7 @@ mark {
 }
 
 .Dropdown-option {
-  // line-height: 38px !important;
-  height: 38px !important;
+  min-height: 38px !important;
 }
 
 .fs-16 {
@@ -684,7 +683,7 @@ mark {
 }
 
 .exclamation-icon {
-  margin-top: 4px;
+  margin-top: 0px;
   color: red;
   font-size: 25px !important;
   margin-right: 10px;
@@ -1022,9 +1021,9 @@ mark {
 }
 
 .row-bottom-report {
-  margin-top: 5px;
+  margin-top: 2px;
   font-size: 12px;
-  line-height: 9px;
+  line-height: 14px;
   font-weight: 700;
 }
 
@@ -2620,4 +2619,12 @@ label {
 
 .filter-form-border > .form__form-group-button {
   right: 15px !important;
+}
+
+.rbt > div > input {
+  padding-right: 30px;
+}
+
+.radio-btn__label__right > div:first-child { 
+  text-align: right;
 }

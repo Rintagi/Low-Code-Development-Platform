@@ -1476,6 +1476,32 @@ namespace RO.Web
             return dtCriHlp;
         }
 
+        protected void _MkScreenIn(int screenId, string screenCriId, string sp, string multiDesign, bool refresh)
+        {
+            var context = HttpContext.Current;
+            var cache = context.Cache;
+            string cacheKey = "_ScreenInCri_" + GetSystemId().ToString() + "_" + screenId.ToString() + "_" + screenCriId;
+            int minutesToCache = 60;
+            if (cache[cacheKey] == null || refresh)
+                try
+                {
+                    /* this SHOULD NOT BE DONE ON ACCESS BUT GenScreen, the whole design of these Cri SP creation is WRONG !*/
+                    (new AdminSystem()).MkGetScreenIn(screenId.ToString(), screenCriId.ToString(), sp, LcAppDb, LcDesDb, multiDesign, LcSysConnString, LcAppPw);
+                    cache.Add(cacheKey, DateTime.UtcNow, new System.Web.Caching.CacheDependency(new string[] { }, new string[] { loginHandle })
+                        , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
+
+                }
+                catch
+                {
+                    // can have race condition too !
+                }
+
+        }
+        protected void _MkScreenIn(int screenId, DataRowView drv, bool refresh)
+        {
+            _MkScreenIn(screenId, drv["ScreenCriId"].ToString(), "GetDdl" + drv["ColumnName"].ToString() + GetSystemId().ToString() + "C" + drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), refresh);
+        }
+
         protected DataTable _GetScreenIn(int screenId, DataRowView drv, bool refresh)
         {
             var context = HttpContext.Current;
@@ -1485,6 +1511,7 @@ namespace RO.Web
             DataTable dtScreenIn = cache[cacheKey] as DataTable;
             if (dtScreenIn == null || refresh)
             {
+                _MkScreenIn(screenId, drv, refresh);
                 dtScreenIn = (new AdminSystem()).GetScreenIn(screenId.ToString(), "GetDdl" + drv["ColumnName"].ToString() + GetSystemId().ToString() + "C" + drv["ScreenCriId"].ToString(), 0, drv["RequiredValid"].ToString(), 0, string.Empty, true, string.Empty, LImpr, LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : LcSysConnString, LcAppPw);
                 cache.Add(cacheKey, dtScreenIn, new System.Web.Caching.CacheDependency(new string[] { }, new string[] { loginHandle })
                     , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
@@ -1992,6 +2019,7 @@ namespace RO.Web
                 var regex = new System.Text.RegularExpressions.Regex("C[0-9]+$");
                 var scrCriId = sp.Replace(regex.Replace(sp, ""), "").Replace("C", "");
                 int CriCnt = (new AdminSystem()).CountScrCri(scrCriId, string.IsNullOrEmpty(conn) ? "N" : "Y", LcSysConnString, LcAppPw);
+                _MkScreenIn(screenId, scrCriId, sp, isSys == "Y" ? "Y" : "N", true);
                 dt = (new AdminSystem()).GetScreenIn(screenId.ToString(), sp, CriCnt, requiredValid, topN,
                 searchStr.StartsWith("**") ? "" : searchStr, !searchStr.StartsWith("**"), searchStr.StartsWith("**") ? cleanup.Replace(searchStr.Substring(2),"") : "", ui, uc,
                 isSys != "N" ? (string)null : LcAppConnString,

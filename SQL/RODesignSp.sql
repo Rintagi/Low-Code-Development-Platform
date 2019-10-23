@@ -17082,51 +17082,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId303C10
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a245.CultureId, a245.CultureTypeDesc'
-SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
-SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a245.CultureId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','a245.','Y','N',null,'N','CultureId',@wClause OUTPUT,@Usrs
-SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT CultureId=null, CultureTypeDesc=null WHERE 1<>1
-RETURN 0
- 
+CREATE PROCEDURE GetDdlCultureId303C10 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a245.CultureId, a245.CultureTypeDesc'SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a245.CultureId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','a245.','Y','N',null,'N','CultureId',@wClause OUTPUT,@UsrsSELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT CultureId=null, CultureTypeDesc=null WHERE 1<>1RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27274,53 +27230,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId203C11
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
-SELECT @fClause = 'FROM dbo.Report a22'
-SELECT @oClause = 'ORDER BY a22.ReportDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
-SELECT @tClause = ''
-EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0
- 
+CREATE PROCEDURE GetDdlReportId203C11 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'SELECT @fClause = 'FROM dbo.Report a22'SELECT @oClause = 'ORDER BY a22.ReportDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@UsrsSELECT @tClause = ''EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@UsrsIF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUTEXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ReportId=null, ReportDesc=null WHERE 1<>1RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -27331,53 +27241,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId203C39
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
-SELECT @fClause = 'FROM dbo.Report a22'
-SELECT @oClause = 'ORDER BY a22.ReportDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
-SELECT @tClause = ''
-EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0
- 
+CREATE PROCEDURE GetDdlReportId203C39 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'SELECT @fClause = 'FROM dbo.Report a22'SELECT @oClause = 'ORDER BY a22.ReportDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@UsrsSELECT @tClause = ''EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@UsrsIF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUTEXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ReportId=null, ReportDesc=null WHERE 1<>1RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31184,50 +31048,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId103C38
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
-SELECT @fClause = 'FROM dbo.Screen a15'
-SELECT @oClause = 'ORDER BY a15.ScreenDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0
- 
+CREATE PROCEDURE GetDdlScreenId103C38 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'SELECT @fClause = 'FROM dbo.Screen a15'SELECT @oClause = 'ORDER BY a15.ScreenDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31344,50 +31165,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId103C52
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
-SELECT @fClause = 'FROM dbo.Screen a15'
-SELECT @oClause = 'ORDER BY a15.ScreenDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0
- 
+CREATE PROCEDURE GetDdlScreenId103C52 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'SELECT @fClause = 'FROM dbo.Screen a15'SELECT @oClause = 'ORDER BY a15.ScreenDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -31455,50 +31233,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId103C9
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
-SELECT @fClause = 'FROM dbo.Screen a15'
-SELECT @oClause = 'ORDER BY a15.ScreenDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0
- 
+CREATE PROCEDURE GetDdlScreenId103C9 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'SELECT @fClause = 'FROM dbo.Screen a15'SELECT @oClause = 'ORDER BY a15.ScreenDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1RETURN 0 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
