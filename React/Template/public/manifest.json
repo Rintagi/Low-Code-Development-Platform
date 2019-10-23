@@ -1,6 +1,6 @@
 {
-  "short_name": "ER - FintruX",
-  "name": "Expense Report - FintruX",
+  "short_name": "Rintagi",
+  "name": "Rintagi",
   "icons": [
     {
       "src": "apple-touch-icon.png",
@@ -10,6 +10,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#21A79B",
+  "theme_color": "#fff",
   "background_color": "#ffffff"
 }

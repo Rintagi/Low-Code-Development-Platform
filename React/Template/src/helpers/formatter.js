@@ -90,3 +90,42 @@ export function strFormat(str, ...args) {
     });
     return x;
 }
+
+export function cutHash(value) {
+    return value.split("#")[1];
+}
+
+export function toLower(value) {
+    try {
+        return value.toLowerCase();
+    } catch (e) {
+        return value;
+    }
+}
+
+export function _getQueryString(location, name) {
+    const url = (location || window.location).href;
+
+    name = name.replace(/[\[\]]/g, '\\$&');
+    const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+export function getQueryString(location, name) {
+    try {
+        const query = new URLSearchParams(location.search);
+        return query.get(name);
+    }
+    catch (e) {
+        return _getQueryString(location, name);
+    }
+}
+
+export function getUrlBeforeRouter() {
+    const routerStart = window.location.href.search("/#/");
+    const beforeRouter = window.location.href.slice(0, routerStart);
+    return beforeRouter;
+}

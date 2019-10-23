@@ -397,7 +397,7 @@ options={CriReportId10List}
 </Col>
                                 </Row>
                                 <Row>
-                                  {hasScreenFilter && <Col xs={4} md={3}>
+                                  {hasScreenFilter && <Col xs={12} md={12}>
                                     <label className='form__form-group-label filter-label'>{auxSystemLabels.QFilter}</label>
                                     <div className='form__form-group-field filter-form-border'>
                                       <DropdownField
@@ -410,7 +410,7 @@ options={CriReportId10List}
                                       />
                                     </div>
                                   </Col>}
-                                  <Col xs={hasScreenFilter ? 8 : 12} md={hasScreenFilter ? 9 : 12} className={hasScreenFilter ? 'col-last-modified' : ''}>
+                                  <Col xs={12} md={12}>
                                     <label className='form__form-group-label filter-label'>{auxSystemLabels.FilterSearchLabel}</label>
                                     <div className='form__form-group-field filter-form-border'>
                                       <Field
