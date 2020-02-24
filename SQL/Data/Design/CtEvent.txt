@@ -1,0 +1,17 @@
+1~@~SELCHG~@~On Change/ On Click
+4~@~DEFVAL~@~Default Value (Folder)
+5~@~DELROG~@~Delete Grid Row (before)
+6~@~BUTCLK~@~System Button Click (before)
+7~@~DEFVAG~@~Default Value (Grid)
+8~@~ITMDTB~@~GridItemDataBound (before)
+9~@~ENPGLD~@~Page Load (End of)
+10~@~BUTCLA~@~System Button Click (after)
+11~@~ENLSSE~@~List Selection (End of)
+12~@~ITMDTA~@~GridItemDataBound (after)
+13~@~DELROR~@~Delete Grid Row (Replace)
+14~@~BUTCLR~@~System Button Click (Replace)
+15~@~ITMDTR~@~GridItemDataBound (Replace)
+16~@~FUNPRO~@~Custom Function/Procedure
+17~@~FRPGIN~@~Page Init (Front of)
+18~@~ENPGIN~@~Page Init (End of)
+19~@~CRICHG~@~Criteria Trigger (before)

@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
-import { getAddMstPath, getAddDtlPath, getNaviPath, getEditDtlPath, getEditMstPath } from '../../helpers/utils'
+import { getIn, setIn } from 'formik';
+import moment from 'moment';
+import { getAddMstPath, getAddDtlPath, getNaviPath, getEditDtlPath, getEditMstPath, debounce, isEmailFormat, isEmpty, isEmptyArray, isEmptyObject, isEmptyId, isValidRange, delay } from '../../helpers/utils'
+import { registerBlocker, unregisterBlocker } from '../../helpers/navigation';
 import { GetDropdownAction, GetBottomAction, GetRowAction } from '../../redux/_ScreenReducer'
 import log from '../../helpers/logger';
+import { toCapital } from '../../helpers/formatter';
+
+const isEmptyFileList = (fileList) => Array.isArray(fileList) && (fileList.length === 0 || (fileList.length === 1 && fileList[0].isEmptyFileObject))
 
 export default class RintagiScreen extends Component {
   constructor(props) {
@@ -67,8 +73,8 @@ export default class RintagiScreen extends Component {
 
   }
 
-  static ShowSpinner(state,src) {
-    return !state || (src==="MstList" && state.searchlist_loading) || (!src && (state.page_loading || state.page_saving));
+  static ShowSpinner(state, src) {
+    return !state || (src === "MstList" && state.searchlist_loading) || (!src && (state.page_loading || state.page_saving));
   }
 
   static ShowMoreMstBtn(state) {
@@ -139,7 +145,6 @@ export default class RintagiScreen extends Component {
       const cri = this.GetReduxState().ScreenCriteria || {};
       const auxSystemLabels = this.GetReduxState().SystemLabel || {};
       e.preventDefault();
-      log.debug('show more');
       const searchMstFn = (() => {
         this.props.LoadSearchList("MstList", "_", {}, cri.SearchStr, cri.TopN + cri.Increment, cri.FilterId);
       }).bind(this);
@@ -156,7 +161,9 @@ export default class RintagiScreen extends Component {
       else {
         setFieldValue(name, value);
       }
-      handleSubmit();
+      setTimeout(() => {
+        handleSubmit();        
+      }, 0); 
     }.bind(this);
   }
 
@@ -164,8 +171,10 @@ export default class RintagiScreen extends Component {
     return function (evt) {
        const value = evt.target.value;
         setFieldValue(controlName, value);
-        handleSubmit();
-    }.bind(this);
+        setTimeout(() => {
+          handleSubmit();        
+        }, 0); 
+      }.bind(this);
   }
 
   SetCurrentRecordState(isDirty) {
@@ -249,33 +258,223 @@ export default class RintagiScreen extends Component {
     }
   }
 
-  /* screen action handlers for different input type assume formik is used */
-  FieldChange(setFieldValue, setFieldTouched, name, blur) {
+  /* screen action handlers for different input type assume formik is used 
+   * should works hand in hand with validator logic(see TextChange/DropdownChange) to indicate what field trigger the change
+   * to work around formik deficiency 
+   */
+  AutocompleteChange = (setFieldValue, setFieldTouched, forName, blur, values, dependents = []) => {
     const _this = this;
     return function (name, value) {
-      if (blur) setFieldTouched(name, true);
-      else setFieldValue(name, value[0]);
+      log.debug('autocomplete change', value, name, forName)
+      if (blur) setFieldTouched(name || forName, true);
+      else {
+        _this.FieldInFocus = name || forName;
+        const choice = ((value || [])[0] || {});
+        const val = choice.value;
+        setFieldValue(name || forName, val);
+        dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name || forName, values), values);
+      }
     }
   }
 
-  DateChange(setFieldValue, setFieldTouched, name, blur) {
+  FieldChange(setFieldValue, setFieldTouched, forName, blur, values, dependents = []) {
+    const _this = this;
+    return function (name, value) {
+      log.debug('field change', value, name)
+      if (blur) setFieldTouched(name || forName, true);
+      else {
+        _this.FieldInFocus = name || forName;
+        const val = value[0];
+        setFieldValue(name || forName, val);
+        dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name || forName, values), values);
+      }
+    }
+  }
+
+  PhoneChange(setFieldValue, setFieldTouched, name, blur, values, dependents = []) {
     const _this = this;
     return function (value) {
+      log.debug('phone change', value, name);
       if (blur) setFieldTouched(name, true);
-      else setFieldValue(name, (value || {})._d || "");
+      else {
+        _this.FieldInFocus = name;
+        // const formattedPhone = value.replace(/[- )(]/g,'');
+        // log.debug(value, formattedPhone);
+        setFieldValue(name, value);
+      }
     }
   }
 
-  DropdownChange(setFieldValue, setFieldTouched, name) {
+
+  DateChange(setFieldValue, setFieldTouched, name, blur, values, dependents = []) {
+    const _this = this;
+    return function (value) {
+      log.debug('date change', value, name)
+      if (blur) setFieldTouched(name, true);
+      else {
+        _this.FieldInFocus = name;
+        const date = (value || {})._d;
+        const isDate = typeof date === "object" && date.constructor === Date;
+        const _date = isDate ? date : new Date(date);
+        const localSortableDateString = new Date(_date - _date.getTimezoneOffset()*60*1000).toISOString().replace(/Z/,'');
+        setFieldValue(name, localSortableDateString);
+        dependents.filter(f => typeof f === "function").reduce((values, f) => f(localSortableDateString, name, values), values);
+      }
+    }
+  }
+
+  DateChangeUTC(setFieldValue, setFieldTouched, name, blur, values, dependents = []) {
+    const _this = this;
+    return function (value) {
+      log.debug('date change', value, name)
+      if (blur) setFieldTouched(name, true);
+      else {
+        _this.FieldInFocus = name;
+        const date = (value || {})._d;
+        const isDate = typeof date === "object" && date.constructor === Date;
+        const date8601 = isDate ? date.toISOString() : date;
+        setFieldValue(name, date8601);
+        dependents.filter(f => typeof f === "function").reduce((values, f) => f(date8601, name, values), values);
+      }
+    }
+  }
+
+  DropdownChange(setFieldValue, setFieldTouched, forName, values, dependents = []) {
     const _this = this;
     return function (name, value) {
-      setFieldTouched(name, true);
-      setFieldValue(name, value);
+      _this.FieldInFocus = name || forName;
+      const val = value.value;
+      log.debug('drop down change', val, name, forName)
+      setFieldTouched(name || forName, true);
+      setFieldValue(name || forName, val);
+      dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name || forName, values), values);
     }
   }
 
+  DropdownChangeV1(setFieldValue, setFieldTouched, forName, values, dependents = []) {
+    const _this = this;
+    return function (name, value) {
+      _this.FieldInFocus = name || forName;
+      const val = value;
+      log.debug('drop down change', val, name, forName)
+      setFieldTouched(name || forName, true);
+      setFieldValue(name || forName, val);
+      dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name || forName, values), values);
+    }
+  }
 
-  FileUploadChange(setFieldValue, name) {
+  RadioChange(setFieldValue, setFieldTouched, name, list, values, dependents = []) {
+    const _this = this;
+    return function (evt) {
+      const idx = evt.currentTarget.getAttribute('listidx');
+      const val = list[idx].value;
+      log.debug('radio change', val, name)
+      _this.FieldInFocus = name;
+      setFieldTouched(name, true);
+      setFieldValue(name, val);
+      dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name, values), values);
+    }
+  }
+  
+  CheckboxChange(setFieldValue, setFieldTouched, name, list, values, dependents = []) {
+    const _this = this;
+    return function (evt) {
+      const idx = evt.currentTarget.getAttribute('listidx');
+      const val = list[idx].value;
+      log.debug('checkbox change', idx, val, name)
+      _this.FieldInFocus = name;
+      setFieldTouched(name, true);
+      setFieldValue(name, val);
+      dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name, values), values);
+    }
+  }
+
+  CheckListChange(setFieldValue, setFieldTouched, name, value, values, dependents = []) {
+    const _this = this;
+    return function (evt) {
+      const idx = evt.currentTarget.getAttribute('listidx');
+      const selected = values[name] || '';
+      const selectedList = selected ? selected.replace('(', '').replace(')', '').split(',') : [];
+      const check = selectedList.filter(o=>(value == o)).length > 0;
+      var val = '';
+
+      if(check){
+          val = selectedList.filter(o=>(value != o)).join(",");
+         
+      }else{      
+          val = selected + "," + value;
+      }
+    
+      _this.FieldInFocus = name;
+      setFieldTouched(name, true);
+      setFieldValue(name, val);
+      dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name, values), values);
+    }
+  }
+
+  TextFocus(event) {
+    // log.debug(event);
+    // event.target.select();
+    // event.preventDefault();
+    // setTimeout(() =>
+    // event.target.setSelectionRange(0, 9999)
+    // , 0);
+    event.preventDefault();
+    const target = event.target;
+    target.setSelectionRange(0, target.value.length);
+    // setTimeout(target.select.bind(target), 0);
+    // setTimeout(target.setSelectionRange(0, target.value.length), 0);
+  }
+
+  TextChange(setFieldValue, setFieldTouched, name, values, dependents = [], debObj) {
+    const _this = this;
+    return function (evt) {
+      const value = evt.target.value;
+      _this.FieldInFocus = name;
+      setFieldTouched(name, true);
+      setFieldValue(name, value);
+
+      const deb = () => {
+        log.debug(dependents, values);
+        dependents.filter(f => typeof f === "function").reduce((values, f) => f(value, name, values), values);
+      }
+
+      if(!(debObj || {}).waitTime) deb();
+      else debounce(deb, debObj)();
+    }
+  }
+  TextChangeEX = (evt) => {
+    const formikBag = this.FormikBag;
+    const value = evt.currentTarget.value;
+    const idx = evt.currentTarget.getAttribute('listidx');
+    const fieldname = evt.currentTarget.getAttribute('fieldname');
+    const fieldpath = evt.currentTarget.getAttribute('fieldpath');
+    const name = evt.currentTarget.getAttribute('name');
+    const values = formikBag.values;
+    log.debug('TextChangeEX', value, idx, fieldname, fieldpath, name, values, evt.currentTarget);
+    this.FieldInFocus = name;
+    formikBag.setFieldValue(name, value);
+    // if (idx !== undefined && idx !== null && (values[fieldpath] || []).length > idx ) {
+    //   const revisedList = values[fieldpath].map((o,i)=>( i===(+idx) ? {...o, [fieldname]: value} : o));
+    //   log.debug('revised list', revisedList)
+    //   formikBag.setFieldValue(fieldpath,revisedList);
+    //   // /* must be flatten to handle error in formik */
+    //   // formikBag.setFieldValue(name,value);
+    // }
+  }
+
+  FileUploadChange(setFieldValue, setFieldTouched, name, values, dependents = []) {
+    const _this = this;
+    
+    return function (fileList) {
+      const revisedList = !fileList || fileList.length === 0 ? [{ fileName: '', mimeType: '', lastModified: '', base64: '', isEmptyFileObject: true }] : [...fileList];
+      setFieldValue(name, revisedList);
+      (setFieldTouched || (_this.FormikBag || {}).setFieldTouched || (v => v))(name, true, false);
+      dependents.filter(f => typeof f === "function").reduce((values, f) => f(revisedList, name, values), values);
+    }
+  }
+
+  FileUploadChangeV1(setFieldValue, setFieldTouched, name) {
     const _this = this;
     return function (value) {
       const file = value.base64.result ? {
@@ -288,6 +487,251 @@ export default class RintagiScreen extends Component {
       setFieldValue(name, file);
     }
   }
+
+  FileUploadChangeEX = (fileList, name, { listidx, fieldpath, dependents }) => {
+    const formikBag = this.FormikBag;
+    const values = formikBag.values;
+    const revisedList = !fileList || fileList.length === 0 ? [{ fileName: '', mimeType: '', lastModified: '', base64: '', isEmptyFileObject: true }] : [...fileList];
+    this.FieldInFocus = name;
+    formikBag.setFieldValue(name, revisedList);
+    // if (listidx !== undefined && listidx !== null && (values[fieldpath] || []).length > listidx ) {
+    //   const revisedList = values[fieldpath].map((o,i)=>( i===(+listidx) ? {...o, [fieldname]: revisedList} : o));
+    //   log.debug('revised list', revisedList)
+    //   formikBag.setFieldValue(fieldpath,revisedList);
+    // }
+  }
+
+  DropZoneChange(setFieldValue, name) {
+    const _this = this;
+    return function (value) {
+      console.log(value);
+      setFieldValue(name, value);
+    }
+    // return function (value) {
+    //   const file = value.base64.result ? {
+    //     fileName: value.name,
+    //     mimeType: value.mimeType,
+    //     lastModified: value.lastModified,
+    //     base64: value.base64.result,
+    //   } : null;
+    //   _this.setState({ filename: (file || {}).fileName });
+    //   setFieldValue(name, file);
+    // }
+  }
+  /* end on change function */
+
+  /* standard validators */
+  SubmitForm = formGroup => (evt) => {
+    /* 
+    this is intended to be used as OnClick for form submission. would be run BEFORE actual submit so we can use state/instance variable
+    to control ValidatePage() behavior as Formik cannot distinguish between field level triggered validation and form level triggered validation
+    MUST BE reset in the form validation function
+    */
+
+    //  log.debug(this.FormikBag || {});
+
+    //   if (!(this.FormikBag || {}).isValid) {
+    //     this.props.showNotification('E', { message: 'One or more fields contain errors' });
+    //   }
+
+    this.IsFormSubmit = true;
+    this.FormGroup = formGroup;
+    this.FormAction = formGroup;
+    /* block further, uncomment 
+    evt.preventDefault();
+    evt.stopPropagation();
+    */
+  }
+
+  GrabFormikBag = ({ ...rest }) => {
+    /* grab formik callbacks during rendering{this.GrabFormikBag({...})}, undersirable but only way to interact with formik from non-user events like 
+     * server side retrieval, timer based action etc as well as writing EX version of set field value and  */
+    /* we store in instance variable and not state so no re-render is triggered */
+
+    /* store full bag value if available, otherwise whatever passed in */
+    this.FormikBag = this.Formik ? this.Formik.getFormikBag() : { ...rest }
+    if (this.NotifyPostValidation) {
+      // this is set from the form validator indicating require post validation treatment
+      this.NotifyPostValidation = false; // done once per validate
+      if (typeof this.FormikPostValidate === "function") {
+        delay(this.FormikPostValidate, 0); // always async(i.e. not current stack frame)
+      }
+    }
+  }
+
+  /* written in this form so it is auto bind to 'this', DO NOT USE this form if intended to be override by sub-class(i.e. virtual in C#/C++ lingual) */
+  ReceiveFormikRef = (formik) => {
+    /* this is done via standard React <Formik ref={this.ReceiveFormikRef} /> construct, formik === null is a reset back React */
+    this.Formik = formik
+  }
+
+  ValidatePage(values) {
+    /* a generic way to handle post validation errors for formik 
+     * mainly design for passing Formik info to components outside Formik context
+     * like global buttons that depends on state of error, dirty flags etc.
+     * it is better to be a callback by Formik but not available as of Formik 1.4
+     * this should be called by the Formik Page validator
+     * works hand in hand with GrabFormikBag in the rendering 
+     */
+    if (this.Formik && typeof this.FormikPostValidate === "function") {
+      this.NotifyPostValidation = true;
+    }
+    // always return true if we are here so subclass can go on
+    return true;
+  }
+
+  PassAll({ setFieldValue, setFieldTouched, name, message, values, formGroup, validators = [] }) {
+    const _this = this;
+    return function (value) {
+      if (formGroup && _this.FormGroup && _this.FormGroup !== formGroup) return null;
+      if (this.Formik && _this.deferValidation && !_this.isDeferredValidation) return null;
+      for (var i = 0; i < validators.length; i = i + 1) {
+        const validator = validators[i];
+        if (typeof validator !== "string" && typeof validator !== "function" && typeof validator !== "boolean") {
+          throw new TypeError("validator can only be function/string(considered failed if not empty)/boolean(consider fail if false)");
+        }
+        const error = typeof validator === "function" ? validator(value, { setFieldValue, setFieldTouched, name, message, values, formGroup }) : validator;
+        if ((typeof error === "string" && error) || (typeof error === "boolean" && !error)) {
+          if (_this.FieldInFocus === name || _this.IsFormSubmit) setFieldTouched(name, true, false);
+          return typeof error === "string" ? error : message;
+        }
+      }
+      return null;
+    }
+  }
+  PassAny({ setFieldValue, setFieldTouched, name, message, values, formGroup, validators = [] }) {
+    const _this = this;
+    return function (value) {
+      if (formGroup && _this.FormGroup && _this.FormGroup !== formGroup) return null;
+      if (this.Formik && _this.deferValidation && !_this.isDeferredValidation) return null;
+      for (var i = 0; i < validators.length; i = i + 1) {
+        const validator = validators[i];
+        if (typeof validator !== "string" && typeof validator !== "function" && typeof validator !== "boolean") {
+          throw TypeError("validator can only be function/string(considered failed if not empty)/boolean(consider fail if false)");
+        }
+        const error = typeof validator === "function" ? validator(value, { setFieldValue, setFieldTouched, name, message, values, formGroup }) : validator;
+        if ((typeof error === "boolean" && error) || (typeof error !== "boolean" && !error)) return null;
+      }
+      if (_this.FieldInFocus === name || _this.IsFormSubmit) setFieldTouched(name, true, false);
+      return message;
+    }.bind(this);
+  }
+  PassAnyEX({ setFieldValue, setFieldTouched, fieldname, message, values, formGroup, validators = [] }) {
+    const _this = this;
+    return function (value) {
+      if (formGroup && _this.FormGroup && _this.FormGroup !== formGroup) return null;
+      if (this.Formik && _this.deferValidation && !_this.isDeferredValidation) return null;
+      for (var i = 0; i < validators.length; i = i + 1) {
+        const validator = validators[i];
+        if (typeof validator !== "string" && typeof validator !== "function" && typeof validator !== "boolean") {
+          throw TypeError("validator can only be function/string(considered failed if not empty)/boolean(consider fail if false)");
+        }
+        const error = typeof validator === "function" ? validator(value, { setFieldValue, setFieldTouched, fieldname, message, values, formGroup }) : validator;
+        if ((typeof error === "boolean" && error) || (typeof error !== "boolean" && !error)) return null;
+      }
+      if (_this.FieldInFocus && fieldname && _this.FieldInFocus.match(new RegExp(fieldname + '$')) && !_this.IsFormSubmit) {
+        setFieldTouched(_this.FieldInFocus, true, false);
+      }
+      return message;
+    }
+  }
+  FailNone({ setFieldValue, setFieldTouched, name, message, values, formGroup, validators = [] }) {
+    const _this = this;
+    return function (value) {
+      if (formGroup && _this.FormGroup && _this.FormGroup !== formGroup) return null;
+      if (this.Formik && _this.deferValidation && !_this.isDeferredValidation) return null;
+      for (var i = 0; i < validators.length; i = i + 1) {
+        const validator = validators[i];
+        if (typeof validator !== "string" && typeof validator !== "function" && typeof validator !== "boolean") {
+          throw TypeError("validator can only be function/string(considered failed if not empty)/boolean(consider fail if false)");
+        }
+        const error = typeof validator === "function" ? validator(value, { setFieldValue, setFieldTouched, name, message, values, formGroup }) : validator;
+        if ((typeof error === "boolean" && error) || (typeof error !== "boolean" && !error)) return null;
+      }
+      if (_this.FieldInFocus === name || _this.IsFormSubmit) setFieldTouched(name, true, false);
+      return message;
+    }
+  }
+  IsEmptyFieldValue = (value) => isEmpty(value) || isEmptyArray(value) || isEmptyObject(value) || isEmptyFileList(value)
+  IsNotEmptyFieldValue = (value) => {
+    const v = !(isEmpty(value) || isEmptyArray(value) || isEmptyObject(value) || isEmptyFileList(value))
+    return v;
+  }
+
+  IsEmptyFileList = (value) => isEmptyFileList(value)
+  RequiredField({ setFieldValue, setFieldTouched, name, message, values, formGroup }) {
+    const _this = this;
+    return function (value) {
+      if (formGroup && _this.FormGroup && _this.FormGroup !== formGroup) return null;
+      if (this.Formik && _this.deferValidation && !_this.isDeferredValidation) return null;
+      if (isEmpty(value)
+        || (Array.isArray(value) && value.length === 0)
+        // only simple object test, anything that is not simple we assume it is not empty(including Date which has no key)
+        || (!Array.isArray(value) && typeof value === 'object' && value.constructor === Object && Object.keys(value).length === 0)
+        // file list array needs to be handled differently to work around problem of Formik dirty detection
+        || (isEmptyFileList(value))
+      ) {
+        if (_this.FieldInFocus === name || _this.IsFormSubmit) setFieldTouched(name, true, false);
+
+        return message;
+      }
+      return null;
+    }
+  }
+
+  RequiredFieldEX({ setFieldValue, setFieldTouched, fieldname, message, values, formGroup }) {
+    const _this = this;
+    return function (value) {
+      if (formGroup && _this.FormGroup && _this.FormGroup !== formGroup) return null;
+      if (this.Formik && _this.deferValidation && !_this.isDeferredValidation) return null;
+      if (_this.IsEmptyFieldValue(value)) {
+        if (_this.FieldInFocus || _this.IsFormSubmit) {
+          setFieldTouched(_this.FieldInFocus, true, false);
+        }
+        return message;
+      }
+      return null;
+    }
+  }
+
+  MinLengthField(length, { setFieldValue, setFieldTouched, name, message, values, formGroup, allowEmpty }) {
+    const _this = this;
+    return function (value) {
+      if (formGroup && _this.FormGroup && _this.FormGroup !== formGroup) return null;
+      if (this.Formik && _this.deferValidation && !_this.isDeferredValidation) return null;
+      if ((value && value.length < length) || (!allowEmpty && isEmpty(value))) {
+        if (_this.FieldInFocus === name || _this.IsFormSubmit) setFieldTouched(name, true, false);
+        return message;
+      }
+      return null;
+    }
+  }
+  ValidEmailField({ setFieldValue, setFieldTouched, name, message, values, formGroup, allowEmpty }) {
+    const _this = this;
+    return function (value) {
+      if (formGroup && _this.FormGroup && _this.FormGroup !== formGroup) return null;
+      if (this.Formik && _this.deferValidation && !_this.isDeferredValidation) return null;
+      if ((value && !isEmailFormat(value)) || (!allowEmpty && isEmpty(value))) {
+        if (_this.FieldInFocus === name || _this.IsFormSubmit) setFieldTouched(name, true, false);
+        return message;
+      }
+      return null;
+    }
+  }
+  ValidRangeField(min, max, { setFieldValue, setFieldTouched, name, message, values, formGroup, lowerBound, upperBound, allowEmpty }) {
+    const _this = this;
+    const validRange = isValidRange(lowerBound, upperBound);
+    return function (value) {
+      if (formGroup && _this.FormGroup && _this.FormGroup !== formGroup) return null;
+      if (this.Formik && _this.deferValidation && !_this.isDeferredValidation) return null;
+      if ((value && !validRange(value)) || (!allowEmpty && isEmpty(value))) {
+        if (_this.FieldInFocus === name || _this.IsFormSubmit) setFieldTouched(name, true, false);
+        return message;
+      }
+      return null;
+    }
+  }
+  /* end validator function */
 
   StripEmbeddedBase64Prefix(base64string) {
     if (base64string && base64string.length > 0) {
@@ -380,6 +824,33 @@ export default class RintagiScreen extends Component {
     }.bind(this);
   }
 
+  /* dirty prompt coordination */
+  setDirtyFlag(dirty) {
+    /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
+    if (dirty) {
+      if (this.blocker) unregisterBlocker(this.blocker);
+      this.blocker = this.confirmUnload;
+      registerBlocker(this.confirmUnload);
+    }
+    else {
+      if (this.blocker) unregisterBlocker(this.blocker);
+      this.blocker = null;
+    }
+    if (this.props.updateChangedState) this.props.updateChangedState(dirty);
+    this.SetCurrentRecordState(dirty);
+    return true;
+  }
+
+  confirmUnload(message, callback) {
+    const confirm = () => {
+      callback(true);
+    }
+    const cancel = () => {
+      callback(false);
+    }
+    this.setState({ ModalOpen: true, ModalSuccess: confirm, ModalCancel: cancel, ModalHeader: false, ModalColor: "danger", ModalTitle: 'Unsaved Changes', ModalMsg: 'You have unsaved changes on this page. Are you sure you want to leave?' });
+  }
+
   GetTargetId() {
     const { mstId, dtlId } = { ...this.props.match.params };
     return {
@@ -387,7 +858,65 @@ export default class RintagiScreen extends Component {
       targetDtlId: dtlId,
     }
   }
+  /* binding function to simple data to various component */
+  BindDateField = (value, { keyfieldname, valuefieldname, selectedObject } = {}) => {
+    return new moment(value);
+  }
+  BindDropDownField = (value, choices, { keyfieldname, valuefieldname, selectedObject } = {}) => {
+    const x = (choices || []).filter(o =>
+      o === value
+      || o[keyfieldname || 'value' || 'key'] === value
+      || o[keyfieldname || 'value' || 'key'] === (value || {})[keyfieldname || 'value' || 'key']
+    )[0]
+    return selectedObject || typeof x !== "object" || true ? x : x[keyfieldname || 'value' || 'key']
+  }
+  BindAutocompleteField = (value, choices, { keyfieldname, valuefieldname } = {}) => {
+    return (choices || []).filter(o => o === value || o[keyfieldname || 'value' || 'key'] === value || o[keyfieldname || 'value' || 'key'] === (value || {})[keyfieldname || 'value' || 'key'])
+    // .map(o => ({
+    //   ...o,
+    //   label: toCapital(o.label)
+    // }));
+  }
+  BindRadioField = (value, choice, { keyfieldname, valuefieldname } = {}) => {
+    return choice === value || choice[keyfieldname || 'value' || 'key'] === value
+  }
+  BindCheckBoxField = (value, choice, { keyfieldname, valuefieldname } = {}) => {
+    return choice === value || choice[keyfieldname || 'value' || 'key'] === value
+  }
+  BindCheckListField = (value, selected, { keyfieldname, valuefieldname } = {}) => {
+    const selectedList = selected ? selected.replace('(', '').replace(')', '').split(',') : [];
+    return selectedList.filter(o=>(value == o)).length > 0;
+  }
+  BindMultiDocFileObject = (serverList, currentList) => {
+    if (!currentList) return serverList;
+    if (!serverList || (Array.isArray(serverList) && serverList.length === 0)) return currentList;
+    const lookup = (serverList || []).reduce((a, o) => { a[o.DocId] = o; return a }, {});
 
+    const revisedList = !Array.isArray(currentList)
+      ? currentList
+      : currentList.map(o => {
+        return {
+          ...o,
+          base64: o && (o.DocId && lookup[o.DocId] ? (lookup[o.DocId] || {}).base64 : o.base64),
+          mimeType: o && (o.DocId && lookup[o.DocId] ? (lookup[o.DocId] || {}).mimeType : o.mimeType),
+          src: o && ('data:' + (o.DocId && lookup[o.DocId] ? (lookup[o.DocId] || {}).mimeType : o.mimeType) + ';base64,' + (o.DocId && lookup[o.DocId] ? (lookup[o.DocId] || {}).base64 : o.base64)),
+        }
+      }
+      )
+    return revisedList;
+  }
+  BindFileObject = (serverList, currentList) => {
+    if (!currentList) return serverList;
+    if (!serverList || (Array.isArray(serverList) && serverList.length === 0)) return currentList;
+    serverList = Array.isArray(serverList) ? serverList : [serverList];
+    currentList = Array.isArray(currentList) ? currentList : [currentList];
+    const revisedList =
+      currentList.map(
+        (o, i) => o.base64 || o.isEmptyFileObject ? o : (serverList[i].base64 ? serverList[i] : o)
+      )
+    return revisedList;
+  }
+  /* end binding function */
   DelMst({ mstId }) {
     throw new TypeError(this + " Must implement DelMst");
   }
@@ -431,7 +960,6 @@ export default class RintagiScreen extends Component {
   Print() {
     throw new TypeError("Must implement Print");
   }
-
   FormatSearchTitleL(v){
     return v;
   }
@@ -446,7 +974,5 @@ export default class RintagiScreen extends Component {
 
   FormatSearchSubTitleR(v){
     return v;
-  }
+  }  
 };
-
-

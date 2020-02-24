@@ -1,0 +1,2 @@
+M~@~MsSQL~@~Sqloledb
+S~@~Sybase~@~Sybase.ASEOLEDBProvider

@@ -236,7 +236,7 @@ export function authReducer(state = initState, action) {
       }
     case RESET_PASSWORD_EMAIL.SUCCEEDED:
       return {
-        // ...state,
+        ...state,
         page_saving: false,
         email: payload.email,
         nounce: payload.nounce,
@@ -338,7 +338,8 @@ export function login(username, password) {
         if (data.status === "success") {
           //dispatchWithNotification(dispatch, { type: LOGIN.SUCCEEDED, payload: data.accessCode});
           //dispatchWithNotification(dispatch, { type: GET_TOKEN.STARTED, payload: data.accessCode});
-          return authService.getToken(data.accessCode).then(
+          const {accessCode,refresh_token} = data;
+          return authService.getToken(refresh_token || accessCode, {grant_type:refresh_token && 'refresh_token' }).then(
             data => {
               //dispatchWithNotification(dispatch, { type: GET_TOKEN.SUCCEEDED, payload: data.data});
               //dispatchWithNotification(dispatch, { type: GET_USER.STARTED, payload: data.data});
@@ -416,9 +417,9 @@ export function logout(keepToken,currentSessionOnly) {
   }
 }
 
-export function reloadCurrentUser() {
+export function reloadCurrentUser(reAuth) {
   return (dispatch, getState, ...rest ) => {
-    return authService.renewAccessToken()
+    return authService.renewAccessToken(null, reAuth)
       .then(
         token => {
           return getCurrentUser(true)(dispatch,getState,...rest);

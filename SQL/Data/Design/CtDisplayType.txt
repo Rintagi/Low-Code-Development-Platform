@@ -1,0 +1,41 @@
+1~@~TextBox~@~TextBox~@~The default display setting for alpha-numeric data columns.~@~Y
+2~@~TextBox~@~Password~@~All characters entered will be displayed as asterisks ‘ * ’. Underlying data type should be varbinary for encrypted data.~@~N
+3~@~DropDownList~@~DropDownList~@~This is preferred for a short list of items that do not grow significantly over time.~@~N
+4~@~CheckBox~@~CheckBox~@~Underlying data type is char(1). Checked and unchecked automatically converted to Y and N respectively.~@~N
+5~@~ListBox~@~ListBox~@~Enable multiple selection of a list. Default is one line or sepcify height in pixels. Underlying data type should be varchar. Keys are enclosed in brackets () comma delimited.~@~N
+7~@~TextBox~@~MultiLine~@~More than one line can be entered and the height of the TextBox can be of any number of pixels specified.~@~N
+8~@~TextBox~@~LongDate~@~Only applicable to Datetime column. A long date in the format specified by the culture will be displayed and captured.~@~N
+9~@~TextBox~@~Currency~@~Displayed in the currency of the to-culture specified below; if from-culture is different, approximate conversion will be performed.~@~N
+16~@~TextBox~@~Money~@~Numeric value is displayed delimited by the culture specified with two decimals.  The data type suitable for this is money.~@~N
+17~@~RadioButtonList~@~RadioButtonList~@~A list of radio buttons will be displaced for selection. To make the best use of this, please make sure this is mandatory or has a default value.~@~N
+19~@~TextBox~@~ShortDate~@~Only applicable to Datetime column. A short date in the format specified by the culture will be displayed and captured.~@~N
+20~@~Calendar~@~Calendar~@~Only applicable to the Datetime database column. A calendar will be displayed to capture a date.~@~N
+21~@~CheckBox~@~CheckBoxAll~@~Same as “CheckBox” with an additional checkbox on the grid header; it toggles for all the checkboxes below.~@~N
+23~@~HyperLink~@~HyperLink~@~Static Link URL or dynamic content of the Key Column will be a hyperlink displayed from the content of the dynamic Database Column, or from the default value when present.~@~N
+24~@~HyperLink~@~ImageLink~@~Static Link URL or dynamic content of the Key Column will be a hyperlink displayed as a stock image or from the content of the Database Column, or image url in the Default Value when present.~@~N
+25~@~HyperLink~@~HyperPopUp~@~Static Link URL or dynamic content of the Key Column will be a popup hyperlink displayed from the content of the dynamic Database Column, or from the default value when present.~@~N
+26~@~HyperLink~@~ImagePopUp~@~Static Link URL or dynamic content of the Key Column will be a popup hyperlink displayed as a stock image or from the content of the dynamic Database Column, or from image url in the default value when present.~@~N
+27~@~Button~@~Action Button~@~No underlying data column. A button will be created with the label entered into the Column Header. Uses Web Rule.~@~N
+28~@~ImageButton~@~ImageButton~@~Image/file uploaded into database and size reduced if underlying data type is varbinary. Otherwise image url is expected.~@~N
+29~@~DataGrid~@~DataGridLink~@~Display a grid of links to each items in a detail table. Ideal for master with multiple details.~@~N
+30~@~TextBox~@~LongDateTime~@~Only applicable to Datetime column. A long datetime in the format specified by the culture will be displayed and captured.~@~N
+31~@~TextBox~@~ShortDateTime~@~Only applicable to Datetime column. A short datetime in the format specified by the culture will be displayed and captured.~@~N
+32~@~TextBox~@~Document~@~Underlying data type is integer. A table named the same as this column is created to capture any types of documents.~@~N
+33~@~TextBox~@~Date~@~Stores date only wihtout the time portion. Only applicable to Datetime column. The format “d-MMM-yyyy” will be displayed.~@~N
+34~@~TextBox~@~DateTime~@~Only applicable to Datetime column. The format “d-MMM-yyyy hh:mm” will be displayed.~@~N
+35~@~TextBox~@~StarRating~@~Underlying data type should be tinyint. Useful for rating via the number of stars selected.~@~N
+36~@~PlaceHolder~@~PlaceHolder~@~This is advanced level.  A web rule is usually present to manipulate this placeholder.  No underlying data column.~@~N
+37~@~Editor~@~HtmlEditor~@~Multiline textbox with functionality for editing a HTML page. Underlying data type should be nvarchar(max).~@~N
+38~@~ComboBox~@~AutoComplete~@~Each character entered automatically triggers a wild search and display the first 100 items in a dropdown.~@~N
+39~@~TextBox~@~Upload~@~The underlying data type should be varchar capturing a path to a file/image. Default path is in the Search Link or ~/data/docs/ if empty.~@~N
+40~@~TextBox~@~ProgressBar~@~Underlying data type should be tinyint. Useful for showing progress via the extent of a bar highlighted.~@~N
+41~@~TextBox~@~LongDateTimeUTC~@~Stores DateTime as Coordinated Universal Time. A long datetime in the format specified by the culture will be displayed and captured.~@~N
+42~@~TextBox~@~ShortDateTimeUTC~@~Stores DateTime as Coordinated Universal Time. A short datetime in the format specified by the culture will be displayed and captured.~@~N
+43~@~TextBox~@~DateTimeUTC~@~Stores DateTime as Coordinated Universal Time. The format “d-MMM-yyyy hh:mm” will be displayed.~@~N
+44~@~TextBox~@~DateUTC~@~Date only. Stores as Coordinated Universal Time wihtout the time portion. The format “d-MMM-yyyy” will be displayed.~@~N
+48~@~TextBox~@~TokenInput~@~Text phrases entered will be delimited by commas but displayed as tokens.~@~N
+49~@~Label~@~Label~@~Column Header is displayed as content and cannot be updated.~@~N
+50~@~Signature~@~Signature~@~E-signature captured on screen and stored as varbinary; min-height is 168px and width is 100%.~@~N
+51~@~TextBox~@~EncryptedTextBox~@~Partial content is displayed with leading "*"s and content is stored encrypted; datatype must be varchar and preferrably max.~@~N
+52~@~ListBox~@~AutoListBox~@~Enable multiple selection of a list with huge selection choices (searcheable); Underlying data type should be varchar. Keys are enclosed in brackets () comma delimited.~@~N
+53~@~DropDownList~@~WorkflowStatus~@~Underlying data type is char(1). A pair of tables created: 1. same name as column to capture workflow status; 2. same name with suffix "H" to capture history of status changes.~@~N

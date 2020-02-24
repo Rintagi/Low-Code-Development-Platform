@@ -1,0 +1,128 @@
+1~@~AdmRptTbl    30: TableName (en-US)~@~13~@~1~@~Table Name~@~
+2~@~AdmRptTbl    40: TableDesc (en-US)~@~14~@~1~@~Table Description~@~
+3~@~AdmRptTbl    50: ModifiedOn (en-US)~@~15~@~1~@~Modified On~@~
+4~@~AdmRptTbl    60: ColumnName (en-US)~@~16~@~1~@~Column Name~@~
+5~@~AdmRptTbl    70: DataTypeName (en-US)~@~17~@~1~@~DataType Name~@~
+6~@~AdmRptTbl    80: ColumnLength (en-US)~@~18~@~1~@~Column Length~@~
+7~@~AdmRptTbl    90: AllowNulls (en-US)~@~19~@~1~@~Allow Nulls~@~
+8~@~AdmRptTbl   100: ColumnIdentity (en-US)~@~20~@~1~@~Column Identity~@~
+9~@~AdmRptTbl   110: PrimaryKey (en-US)~@~21~@~1~@~Primary Key~@~
+10~@~AdmRptUsr    30: UsrGroupName (en-US)~@~859~@~1~@~User Group~@~
+11~@~AdmRptUsr    40: CultureTypeName (en-US)~@~860~@~1~@~Culture~@~
+12~@~AdmRptUsr    50: RowAuthorityDesc (en-US)~@~861~@~1~@~Row Authority~@~
+13~@~AdmRptUsr    60: ColAuthorityDesc (en-US)~@~862~@~1~@~Col Authority~@~
+14~@~AdmRptUsr    70: UsrName (en-US)~@~863~@~1~@~User Name~@~
+15~@~AdmRptUsr    80: UsrEmail (en-US)~@~864~@~1~@~User Email~@~
+16~@~AdmRptUsr    90: InvestorName (en-US)~@~865~@~1~@~Investor~@~
+17~@~AdmRptUsr   100: CustomerName (en-US)~@~866~@~1~@~Customer~@~
+18~@~AdmRptUsr   110: VendorName (en-US)~@~867~@~1~@~Vendor~@~
+19~@~AdmRptUsr   140: MemberName (en-US)~@~868~@~1~@~Member~@~
+20~@~AdmRptUsr    26: Active (en-US)~@~948~@~1~@~Active~@~
+21~@~AdmRptUsr   120: AgentName (en-US)~@~949~@~1~@~Agent Name~@~
+22~@~AdmRptUsr   130: BrokerName (en-US)~@~950~@~1~@~Broker Name~@~
+23~@~AdmRptUsr   200: iUsrName (en-US)~@~951~@~1~@~Impr User Name~@~
+24~@~AdmRptUsr   210: iInvestorName (en-US)~@~952~@~1~@~Impr Investor Name~@~
+25~@~AdmRptUsr   220: iCustomerName (en-US)~@~953~@~1~@~Impr Customer Name~@~
+26~@~AdmRptUsr   230: iVendorName (en-US)~@~954~@~1~@~Impr Vendor Name~@~
+27~@~AdmRptUsr   240: iAgentName (en-US)~@~955~@~1~@~Impr Agent Name~@~
+28~@~AdmRptUsr   250: iBrokerName (en-US)~@~956~@~1~@~Impr Broker Name~@~
+29~@~AdmRptUsr   260: iMemberName (en-US)~@~958~@~1~@~Impr Member Name~@~
+30~@~AdmRptUsr    22: UsrGroup (en-US)~@~960~@~1~@~Selected User Group~@~
+32~@~AdmRptUsr    10: a.Active (en-US)~@~963~@~1~@~a.Active~@~
+33~@~AdmRptUsr    20: a.UsrGroupId (en-US)~@~962~@~1~@~b.UsrGroupId~@~
+34~@~AdmRptUsage  1000: SystemName (en-US)~@~964~@~1~@~System Name~@~
+35~@~AdmRptUsage   100: a.UsageDt (en-US)~@~965~@~1~@~a.UsageDt~@~
+36~@~AdmRptUsage   200: a.UsageDt (en-US)~@~966~@~1~@~a.UsageDt~@~
+37~@~AdmRptUsage  1100: UsrTypeGrp (en-US)~@~967~@~1~@~Type Group~@~
+38~@~AdmRptUsage  1200: UsrTypeName (en-US)~@~968~@~1~@~Type Name~@~
+39~@~AdmRptUsage  1300: EntityTitle (en-US)~@~969~@~1~@~Entity Title~@~
+40~@~AdmRptUsage  1400: UsageNote (en-US)~@~970~@~1~@~Usage Note~@~
+41~@~AdmRptUsage  1500: NumTimes (en-US)~@~971~@~1~@~# of Times~@~
+42~@~AdmRptUsage  1310: UsrGroupName (en-US)~@~972~@~1~@~UsrGroupName~@~
+43~@~AdmRptUsage  1320: UsrName (en-US)~@~973~@~1~@~UsrName~@~
+44~@~AdmRptUsage   900: Summary (en-US)~@~974~@~1~@~Summary~@~
+45~@~AdmRptUsage  1330: UsageDt (en-US)~@~975~@~1~@~UsageDt~@~
+47~@~AdmRptBizRule  1100: SystemName (en-US)~@~977~@~1~@~System Name~@~
+48~@~AdmRptBizRule  1200: ScreenDesc (en-US)~@~978~@~1~@~Screen Description~@~
+49~@~AdmRptBizRule  1300: ExecOrder (en-US)~@~979~@~1~@~Execution Order~@~
+50~@~AdmRptBizRule  1400: RuleType (en-US)~@~980~@~1~@~Rule Type~@~
+51~@~AdmRptBizRule  1500: TableDesc (en-US)~@~981~@~1~@~Table Description~@~
+52~@~AdmRptBizRule  1600: RuleName (en-US)~@~982~@~1~@~Rule Name~@~
+53~@~AdmRptBizRule  1700: RuleDesc (en-US)~@~983~@~1~@~Rule Description~@~
+54~@~AdmRptBizRule  1800: ProcedureName (en-US)~@~984~@~1~@~Procedure Name~@~
+55~@~AdmRptBizRule  1900: OnAdd (en-US)~@~985~@~1~@~On Add~@~
+56~@~AdmRptBizRule  2000: OnUpd (en-US)~@~986~@~1~@~On Update~@~
+57~@~AdmRptBizRule  2100: OnDel (en-US)~@~987~@~1~@~On Delete~@~
+58~@~AdmRptBizRule  2200: BeforeCRUD (en-US)~@~988~@~1~@~Before CRUD~@~
+59~@~AdmRptBizRule  1000: SystemNameIn (en-US)~@~989~@~1~@~System Requested~@~
+60~@~AdmRptMsg    20: SystemNameIn (en-US)~@~990~@~1~@~System Requested~@~
+61~@~AdmRptMsg   200: SystemName (en-US)~@~991~@~1~@~System Name~@~
+62~@~AdmRptMsg    10: CultureDescIn (en-US)~@~992~@~1~@~Culture Requested~@~
+63~@~AdmRptMsg   300: ScreenTitle (en-US)~@~993~@~1~@~Screen Title~@~
+64~@~AdmRptMsg   400: MenuText (en-US)~@~994~@~1~@~Menu~@~
+65~@~AdmRptMsg   500: DefaultHlpMsg (en-US)~@~995~@~1~@~Help Message~@~
+66~@~AdmRptMsg   600: MasterTable (en-US)~@~996~@~1~@~Master Section~@~
+67~@~AdmRptMsg   700: TabIndex (en-US)~@~997~@~1~@~Tab Index~@~
+68~@~AdmRptMsg   800: ColumnHeader (en-US)~@~998~@~1~@~Column Header~@~
+69~@~AdmRptMsg   900: ToolTip (en-US)~@~999~@~1~@~Tool Tip~@~
+70~@~AdmRptMsg  1000: ErrMessage (en-US)~@~1000~@~1~@~Error Message~@~
+71~@~AdmRptUsr    90: LoginName (en-US)~@~1001~@~1~@~Login Name~@~
+72~@~AdmRptUsr   120: CompanyName (en-US)~@~1002~@~1~@~Company~@~
+73~@~AdmRptUsr    30: CurrCompany (en-US)~@~1003~@~1~@~Current Selected Company~@~
+74~@~AdmRptUsr   210: iCompanyName (en-US)~@~1004~@~1~@~Impr Company Name~@~
+75~@~AdmRptDataDict    10: SystemNameIn (en-US)~@~1005~@~1~@~System Requested~@~
+78~@~AdmRptDataDict    20: TableDesc (en-US)~@~1008~@~1~@~Table:~@~
+79~@~AdmRptDataDict   210: TblObjective (en-US)~@~1009~@~1~@~Table Described~@~
+80~@~AdmRptDataDict    90: ExternalTable (en-US)~@~1010~@~1~@~External~@~
+81~@~AdmRptDataDict    60: ColumnName (en-US)~@~1011~@~1~@~Column Name~@~
+82~@~AdmRptDataDict   100: ColObjective (en-US)~@~1012~@~1~@~Description~@~
+83~@~AdmRptDataDict    50: DataTypeName (en-US)~@~1013~@~1~@~Data Type~@~
+84~@~AdmRptDataDict    60: ColumnLength (en-US)~@~1014~@~1~@~Length~@~
+85~@~AdmRptDataDict    70: AllowNulls (en-US)~@~1015~@~1~@~Null~@~
+86~@~AdmRptDataDict    80: PrimaryKey (en-US)~@~1016~@~1~@~PK~@~
+87~@~AdmRptPrgList    10: SystemNameIn (en-US)~@~1017~@~1~@~System Requested~@~
+88~@~AdmRptPrgList    20: CultureDescIn (en-US)~@~1018~@~1~@~Culture Requested~@~
+89~@~AdmRptPrgList   100: QId (en-US)~@~1019~@~1~@~Menu Order~@~
+90~@~AdmRptPrgList   110: MenuText (en-US)~@~1020~@~1~@~Menu Label~@~
+91~@~AdmRptPrgList   120: ProgramType (en-US)~@~1021~@~1~@~Program Type~@~
+92~@~AdmRptPrgList   130: ProgramName (en-US)~@~1022~@~1~@~Program Name~@~
+93~@~AdmRptPrgList   140: Everyone (en-US)~@~1023~@~1~@~Everyone Access~@~
+94~@~AdmRptPrgList   150: ClientTierList (en-US)~@~1024~@~1~@~Client Tier List~@~
+95~@~AdmRptPrgList   160: RuleTierList (en-US)~@~1025~@~1~@~Rule Tier List~@~
+96~@~AdmRptPrgList   160: DataTierList (en-US)~@~1026~@~1~@~Data Tier List~@~
+97~@~AdmRptPrgList   170: ServerRule (en-US)~@~1027~@~1~@~Server Rule~@~
+98~@~AdmRptPrgList   110: ClientRule (en-US)~@~1028~@~1~@~Client Rule~@~
+99~@~AdmRptPrgList   120: WebRule (en-US)~@~1029~@~1~@~Web Rule~@~
+100~@~AdmRptDataDict    80: PrimaryKey (zh-CN)~@~1016~@~4~@~标准~@~
+101~@~AdmRptDataDict    10: ReportName (en-US)~@~1030~@~1~@~Report Name~@~
+385~@~AdmRptSred    10: InMonthEnding (en-US)~@~1031~@~1~@~Month Ending~@~
+386~@~AdmRptSred    20: InNumMonths (en-US)~@~1032~@~1~@~# of Months~@~
+387~@~AdmRptSred    40: EmpType (en-US)~@~1033~@~1~@~Employee Type~@~
+388~@~AdmRptSred    50: MemberName (en-US)~@~1034~@~1~@~Member Name~@~
+389~@~AdmRptSred    60: Salary (en-US)~@~1035~@~1~@~Salary or Wages~@~
+393~@~AdmRptSred    70: TxBenefit (en-US)~@~1039~@~1~@~Taxable Benefits~@~
+394~@~~@~1040~@~1~@~Report Name~@~
+395~@~~@~1041~@~1~@~Member~@~
+396~@~~@~1042~@~1~@~Work Date~@~
+397~@~~@~1043~@~1~@~Accomplished~@~
+398~@~~@~1044~@~1~@~Hours Spent~@~
+399~@~~@~1045~@~1~@~Report Name~@~
+400~@~~@~1046~@~1~@~Month~@~
+401~@~~@~1047~@~1~@~Member ID~@~
+402~@~~@~1048~@~1~@~Work %~@~
+407~@~AdmRptPerm    20: ReportCriteria (en-US)~@~1051~@~1~@~Report Criteria~@~
+408~@~AdmRptPerm    50: PermType (en-US)~@~1052~@~1~@~Menu/Screen/Report~@~
+409~@~AdmRptPerm    60: PermTitle (en-US)~@~1053~@~1~@~TITLE~@~
+410~@~AdmRptPerm    70: UserName (en-US)~@~1054~@~1~@~ENTITY / USER NAME~@~
+411~@~AdmRptPerm    80: Psel (en-US)~@~1055~@~1~@~VIEW~@~
+412~@~AdmRptPerm    90: Padd (en-US)~@~1056~@~1~@~ADD~@~
+413~@~AdmRptPerm   100: Pupd (en-US)~@~1057~@~1~@~UPD~@~
+414~@~AdmRptPerm   110: Pdel (en-US)~@~1058~@~1~@~DEL~@~
+416~@~AdmRptPerm    10: ReportName (en-US)~@~1060~@~1~@~Report Name~@~
+439~@~~@~1083~@~1~@~Report Name~@~
+440~@~~@~1084~@~1~@~Date & Time~@~
+441~@~~@~1085~@~1~@~IP Address~@~
+442~@~~@~1086~@~1~@~Login Name~@~
+443~@~~@~1087~@~1~@~Valid User~@~
+444~@~~@~1088~@~1~@~Successful~@~
+445~@~AdmRptUsrAudit    20: ReportCriteria (en-US)~@~1089~@~1~@~Report Criteria~@~

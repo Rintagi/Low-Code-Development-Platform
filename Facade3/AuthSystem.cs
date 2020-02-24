@@ -193,7 +193,7 @@ namespace RO.Facade3
             }
             return instance;
         }
-        public SerializableDictionary<string, string> GetToken(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret, string appPath, string appDomain, Func<string, string> getStoredToken, Func<LoginUsr, UsrCurr, UsrImpr, bool, bool> ValidateScope)
+        public SerializableDictionary<string, string> GetToken(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret, string appPath, string appDomain, Func<string, string> getStoredToken, Func<LoginUsr, UsrCurr, UsrImpr, string, bool, bool> ValidateScope, bool reAuth = false)
         {
             Dictionary<string, object> scopeContext = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(scope);
             byte? systemId = null;
@@ -246,11 +246,11 @@ namespace RO.Facade3
             LoginUsr LUser;
             var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             var currTime = DateTime.Now.ToUniversalTime().Subtract(utc0).TotalSeconds;
-            var nbf = loginJWT.nbf;
-            var expiredOn = loginJWT.exp;
+            var nbf = loginJWT.nbf - 20; // margin for multiple server clock skew(max 20s)
+            var expiredOn = loginJWT.exp + 20; // margin for multiple server clock skew(max 20s)
             int remainingSeconds = expiredOn - (int)currTime;
             var currentHandle = loginJWT.handle;
-            bool keepRefreshToken = remainingSeconds > 120 && grant_type == "refresh_token";
+            bool keepRefreshToken = remainingSeconds > 120 && !reAuth && grant_type == "refresh_token";
             if (currTime > nbf && currTime < expiredOn && ValidateJWTHandle(currentHandle))
             {
                 string signingKey = GetSessionSigningKey(loginJWT.iat.ToString(), loginJWT.loginId.ToString());
@@ -273,7 +273,7 @@ namespace RO.Facade3
                 LUser.HasPic = false;
                 string refreshTag = keepRefreshToken ? currentHandle : Guid.NewGuid().ToString().Replace("-", "").ToLower();
                 string loginTag = Guid.NewGuid().ToString().Replace("-", "").ToLower();
-                if (ValidateScope(LUser, LCurr, LImpr, true))
+                if (ValidateScope(LUser, LCurr, LImpr, currentHandle, true))
                 {
                     string loginTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, access_token_validity, loginTag);
                     string refreshTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, keepRefreshToken ? remainingSeconds : refresh_token_validity, refreshTag);

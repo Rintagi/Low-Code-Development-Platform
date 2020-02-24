@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmWizardObj || {});
+    this.GetReduxState = () => (this.props.AdmWizardObj || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'WizardId71';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,65 +87,53 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
     const columnLabel = (this.props.AdmWizardObj || {}).ColumnLabel || {};
     /* standard field validation */
-if (isEmptyId((values.cWizardTypeId71 || {}).value)) { errors.cWizardTypeId71 = (columnLabel.WizardTypeId71 || {}).ErrMessage;}
-if (isEmptyId((values.cMasterTableId71 || {}).value)) { errors.cMasterTableId71 = (columnLabel.MasterTableId71 || {}).ErrMessage;}
-if (!values.cWizardTitle71) { errors.cWizardTitle71 = (columnLabel.WizardTitle71 || {}).ErrMessage;}
-if (!values.cProgramName71) { errors.cProgramName71 = (columnLabel.ProgramName71 || {}).ErrMessage;}
-if (!values.cDefWorkSheet71) { errors.cDefWorkSheet71 = (columnLabel.DefWorkSheet71 || {}).ErrMessage;}
-if (!values.cDefStartRow71) { errors.cDefStartRow71 = (columnLabel.DefStartRow71 || {}).ErrMessage;}
+    if (isEmptyId((values.cWizardTypeId71 || {}).value)) { errors.cWizardTypeId71 = (columnLabel.WizardTypeId71 || {}).ErrMessage; }
+    if (isEmptyId((values.cMasterTableId71 || {}).value)) { errors.cMasterTableId71 = (columnLabel.MasterTableId71 || {}).ErrMessage; }
+    if (!values.cWizardTitle71) { errors.cWizardTitle71 = (columnLabel.WizardTitle71 || {}).ErrMessage; }
+    if (!values.cProgramName71) { errors.cProgramName71 = (columnLabel.ProgramName71 || {}).ErrMessage; }
+    if (!values.cDefWorkSheet71) { errors.cDefWorkSheet71 = (columnLabel.DefWorkSheet71 || {}).ErrMessage; }
+    if (!values.cDefStartRow71) { errors.cDefStartRow71 = (columnLabel.DefStartRow71 || {}).ErrMessage; }
     return errors;
   }
 
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmWizardObj || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmWizardObj,
         {
-          WizardId71: values.cWizardId71|| '',
-          WizardTypeId71: (values.cWizardTypeId71|| {}).value || '',
-          MasterTableId71: (values.cMasterTableId71|| {}).value || '',
-          WizardTitle71: values.cWizardTitle71|| '',
-          ProgramName71: values.cProgramName71|| '',
-          DefWorkSheet71: values.cDefWorkSheet71|| '',
-          DefStartRow71: values.cDefStartRow71|| '',
+          WizardId71: values.cWizardId71 || '',
+          WizardTypeId71: (values.cWizardTypeId71 || {}).value || '',
+          MasterTableId71: (values.cMasterTableId71 || {}).value || '',
+          WizardTitle71: values.cWizardTitle71 || '',
+          ProgramName71: values.cProgramName71 || '',
+          DefWorkSheet71: values.cDefWorkSheet71 || '',
+          DefStartRow71: values.cDefStartRow71 || '',
           DefOverwrite71: values.cDefOverwrite71 ? 'Y' : 'N',
           OvwrReadonly71: values.cOvwrReadonly71 ? 'Y' : 'N',
           AuthRequired71: values.cAuthRequired71 ? 'Y' : 'N',
@@ -185,12 +176,12 @@ if (!values.cDefStartRow71) { errors.cDefStartRow71 = (columnLabel.DefStartRow71
       const fromMstId = mstId || (mst || {}).WizardId71;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmWizardObj.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmWizardObj.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmWizardObj.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -272,7 +263,7 @@ if (!values.cDefStartRow71) { errors.cDefStartRow71 = (columnLabel.DefStartRow71
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmWizardObj || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -296,7 +287,7 @@ if (!values.cDefStartRow71) { errors.cDefStartRow71 = (columnLabel.DefStartRow71
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -325,6 +316,7 @@ if (!values.cDefStartRow71) { errors.cDefStartRow71 = (columnLabel.DefStartRow71
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmWizardObjReduxObj.GetScreenButtons(AdmWizardObjState) || {};
     const itemList = AdmWizardObjState.Dtl || [];
@@ -336,29 +328,32 @@ if (!values.cDefStartRow71) { errors.cDefStartRow71 = (columnLabel.DefStartRow71
     const authRow = (AdmWizardObjState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmWizardObj || {}).Mst || {});
     const currDtl = ((this.props.AdmWizardObj || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.WizardId71));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.WizardId71));
     const selectList = AdmWizardObjReduxObj.SearchListToSelectList(AdmWizardObjState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const WizardId71 = currMst.WizardId71;
-const WizardTypeId71List = AdmWizardObjReduxObj.ScreenDdlSelectors.WizardTypeId71(AdmWizardObjState);
-const WizardTypeId71 = currMst.WizardTypeId71;
-const MasterTableId71List = AdmWizardObjReduxObj.ScreenDdlSelectors.MasterTableId71(AdmWizardObjState);
-const MasterTableId71 = currMst.MasterTableId71;
-const WizardTitle71 = currMst.WizardTitle71;
-const ProgramName71 = currMst.ProgramName71;
-const DefWorkSheet71 = currMst.DefWorkSheet71;
-const DefStartRow71 = currMst.DefStartRow71;
-const DefOverwrite71 = currMst.DefOverwrite71;
-const OvwrReadonly71 = currMst.OvwrReadonly71;
-const AuthRequired71 = currMst.AuthRequired71;
+
+    const WizardId71 = currMst.WizardId71;
+    const WizardTypeId71List = AdmWizardObjReduxObj.ScreenDdlSelectors.WizardTypeId71(AdmWizardObjState);
+    const WizardTypeId71 = currMst.WizardTypeId71;
+    const MasterTableId71List = AdmWizardObjReduxObj.ScreenDdlSelectors.MasterTableId71(AdmWizardObjState);
+    const MasterTableId71 = currMst.MasterTableId71;
+    const WizardTitle71 = currMst.WizardTitle71;
+    const ProgramName71 = currMst.ProgramName71;
+    const DefWorkSheet71 = currMst.DefWorkSheet71;
+    const DefStartRow71 = currMst.DefStartRow71;
+    const DefOverwrite71 = currMst.DefOverwrite71;
+    const OvwrReadonly71 = currMst.OvwrReadonly71;
+    const AuthRequired71 = currMst.AuthRequired71;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -376,16 +371,16 @@ const AuthRequired71 = currMst.AuthRequired71;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cWizardId71: WizardId71 || '',
-                  cWizardTypeId71: WizardTypeId71List.filter(obj => { return obj.key === WizardTypeId71 })[0],
-                  cMasterTableId71: MasterTableId71List.filter(obj => { return obj.key === MasterTableId71 })[0],
-                  cWizardTitle71: WizardTitle71 || '',
-                  cProgramName71: ProgramName71 || '',
-                  cDefWorkSheet71: DefWorkSheet71 || '',
-                  cDefStartRow71: DefStartRow71 || '',
-                  cDefOverwrite71: DefOverwrite71 === 'Y',
-                  cOvwrReadonly71: OvwrReadonly71 === 'Y',
-                  cAuthRequired71: AuthRequired71 === 'Y',
+                    cWizardId71: formatContent(WizardId71 || '', 'TextBox'),
+                    cWizardTypeId71: WizardTypeId71List.filter(obj => { return obj.key === WizardTypeId71 })[0],
+                    cMasterTableId71: MasterTableId71List.filter(obj => { return obj.key === MasterTableId71 })[0],
+                    cWizardTitle71: formatContent(WizardTitle71 || '', 'TextBox'),
+                    cProgramName71: formatContent(ProgramName71 || '', 'TextBox'),
+                    cDefWorkSheet71: formatContent(DefWorkSheet71 || '', 'TextBox'),
+                    cDefStartRow71: formatContent(DefStartRow71 || '', 'TextBox'),
+                    cDefOverwrite71: DefOverwrite71 === 'Y',
+                    cOvwrReadonly71: OvwrReadonly71 === 'Y',
+                    cAuthRequired71: AuthRequired71 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -447,225 +442,254 @@ const AuthRequired71 = currMst.AuthRequired71;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.WizardId71 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.WizardId71 || {}).ColumnHeader} {(columnLabel.WizardId71 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.WizardId71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WizardId71 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cWizardId71'
-disabled = {(authCol.WizardId71 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cWizardId71 && touched.cWizardId71 && <span className='form__form-group-error'>{errors.cWizardId71}</span>}
-</div>
-</Col>
-}
-{(authCol.WizardTypeId71 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.WizardTypeId71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.WizardTypeId71 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.WizardTypeId71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WizardTypeId71 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cWizardTypeId71'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cWizardTypeId71')}
-value={values.cWizardTypeId71}
-options={WizardTypeId71List}
-placeholder=''
-disabled = {(authCol.WizardTypeId71 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cWizardTypeId71 && touched.cWizardTypeId71 && <span className='form__form-group-error'>{errors.cWizardTypeId71}</span>}
-</div>
-</Col>
-}
-{(authCol.MasterTableId71 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.MasterTableId71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MasterTableId71 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.MasterTableId71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MasterTableId71 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cMasterTableId71'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cMasterTableId71')}
-value={values.cMasterTableId71}
-options={MasterTableId71List}
-placeholder=''
-disabled = {(authCol.MasterTableId71 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cMasterTableId71 && touched.cMasterTableId71 && <span className='form__form-group-error'>{errors.cMasterTableId71}</span>}
-</div>
-</Col>
-}
-{(authCol.WizardTitle71 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.WizardTitle71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.WizardTitle71 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.WizardTitle71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.WizardTitle71 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cWizardTitle71'
-disabled = {(authCol.WizardTitle71 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cWizardTitle71 && touched.cWizardTitle71 && <span className='form__form-group-error'>{errors.cWizardTitle71}</span>}
-</div>
-</Col>
-}
-{(authCol.ProgramName71 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ProgramName71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ProgramName71 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ProgramName71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ProgramName71 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cProgramName71'
-disabled = {(authCol.ProgramName71 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cProgramName71 && touched.cProgramName71 && <span className='form__form-group-error'>{errors.cProgramName71}</span>}
-</div>
-</Col>
-}
-{(authCol.DefWorkSheet71 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DefWorkSheet71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DefWorkSheet71 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DefWorkSheet71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DefWorkSheet71 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDefWorkSheet71'
-disabled = {(authCol.DefWorkSheet71 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDefWorkSheet71 && touched.cDefWorkSheet71 && <span className='form__form-group-error'>{errors.cDefWorkSheet71}</span>}
-</div>
-</Col>
-}
-{(authCol.DefStartRow71 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DefStartRow71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DefStartRow71 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DefStartRow71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DefStartRow71 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDefStartRow71'
-disabled = {(authCol.DefStartRow71 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDefStartRow71 && touched.cDefStartRow71 && <span className='form__form-group-error'>{errors.cDefStartRow71}</span>}
-</div>
-</Col>
-}
-{(authCol.DefOverwrite71 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cDefOverwrite71'
-onChange={handleChange}
-defaultChecked={values.cDefOverwrite71}
-disabled={(authCol.DefOverwrite71 || {}).readonly || !(authCol.DefOverwrite71 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.DefOverwrite71 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.DefOverwrite71 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DefOverwrite71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DefOverwrite71 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
-{(authCol.OvwrReadonly71 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cOvwrReadonly71'
-onChange={handleChange}
-defaultChecked={values.cOvwrReadonly71}
-disabled={(authCol.OvwrReadonly71 || {}).readonly || !(authCol.OvwrReadonly71 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.OvwrReadonly71 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.OvwrReadonly71 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.OvwrReadonly71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.OvwrReadonly71 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
-{(authCol.AuthRequired71 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cAuthRequired71'
-onChange={handleChange}
-defaultChecked={values.cAuthRequired71}
-disabled={(authCol.AuthRequired71 || {}).readonly || !(authCol.AuthRequired71 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.AuthRequired71 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.AuthRequired71 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.AuthRequired71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AuthRequired71 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
+                              {(authCol.WizardId71 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.WizardId71 || {}).ColumnHeader} {(columnLabel.WizardId71 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.WizardId71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.WizardId71 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cWizardId71'
+                                          disabled={(authCol.WizardId71 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cWizardId71 && touched.cWizardId71 && <span className='form__form-group-error'>{errors.cWizardId71}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.WizardTypeId71 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.WizardTypeId71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.WizardTypeId71 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.WizardTypeId71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.WizardTypeId71 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cWizardTypeId71'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cWizardTypeId71')}
+                                          value={values.cWizardTypeId71}
+                                          options={WizardTypeId71List}
+                                          placeholder=''
+                                          disabled={(authCol.WizardTypeId71 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cWizardTypeId71 && touched.cWizardTypeId71 && <span className='form__form-group-error'>{errors.cWizardTypeId71}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.MasterTableId71 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.MasterTableId71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MasterTableId71 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.MasterTableId71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.MasterTableId71 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cMasterTableId71'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cMasterTableId71')}
+                                          value={values.cMasterTableId71}
+                                          options={MasterTableId71List}
+                                          placeholder=''
+                                          disabled={(authCol.MasterTableId71 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cMasterTableId71 && touched.cMasterTableId71 && <span className='form__form-group-error'>{errors.cMasterTableId71}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.WizardTitle71 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.WizardTitle71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.WizardTitle71 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.WizardTitle71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.WizardTitle71 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cWizardTitle71'
+                                          disabled={(authCol.WizardTitle71 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cWizardTitle71 && touched.cWizardTitle71 && <span className='form__form-group-error'>{errors.cWizardTitle71}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ProgramName71 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ProgramName71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ProgramName71 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ProgramName71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ProgramName71 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cProgramName71'
+                                          disabled={(authCol.ProgramName71 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cProgramName71 && touched.cProgramName71 && <span className='form__form-group-error'>{errors.cProgramName71}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DefWorkSheet71 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DefWorkSheet71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DefWorkSheet71 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DefWorkSheet71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DefWorkSheet71 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDefWorkSheet71'
+                                          disabled={(authCol.DefWorkSheet71 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDefWorkSheet71 && touched.cDefWorkSheet71 && <span className='form__form-group-error'>{errors.cDefWorkSheet71}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DefStartRow71 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DefStartRow71 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DefStartRow71 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DefStartRow71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DefStartRow71 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDefStartRow71'
+                                          disabled={(authCol.DefStartRow71 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDefStartRow71 && touched.cDefStartRow71 && <span className='form__form-group-error'>{errors.cDefStartRow71}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DefOverwrite71 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cDefOverwrite71'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cDefOverwrite71}
+                                        disabled={(authCol.DefOverwrite71 || {}).readonly || !(authCol.DefOverwrite71 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.DefOverwrite71 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.DefOverwrite71 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.DefOverwrite71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DefOverwrite71 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.OvwrReadonly71 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cOvwrReadonly71'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cOvwrReadonly71}
+                                        disabled={(authCol.OvwrReadonly71 || {}).readonly || !(authCol.OvwrReadonly71 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.OvwrReadonly71 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.OvwrReadonly71 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.OvwrReadonly71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.OvwrReadonly71 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.AuthRequired71 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cAuthRequired71'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cAuthRequired71}
+                                        disabled={(authCol.AuthRequired71 || {}).readonly || !(authCol.AuthRequired71 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.AuthRequired71 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.AuthRequired71 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.AuthRequired71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.AuthRequired71 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -725,9 +749,6 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmWizardObjReduxObj.SavePage.bind(AdmWizardObjReduxObj) },
     { DelMst: AdmWizardObjReduxObj.DelMst.bind(AdmWizardObjReduxObj) },
     { AddMst: AdmWizardObjReduxObj.AddMst.bind(AdmWizardObjReduxObj) },
-//    { SearchMemberId64: AdmWizardObjReduxObj.SearchActions.SearchMemberId64.bind(AdmWizardObjReduxObj) },
-//    { SearchCurrencyId64: AdmWizardObjReduxObj.SearchActions.SearchCurrencyId64.bind(AdmWizardObjReduxObj) },
-//    { SearchCustomerJobId64: AdmWizardObjReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmWizardObjReduxObj) },
 
     { showNotification: showNotification },
     { setTitle: setTitle },
@@ -736,5 +757,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

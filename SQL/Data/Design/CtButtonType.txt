@@ -1,0 +1,59 @@
+1~@~S~@~ClearCri~@~Screen Clear Criteria~@~Y~@~Y~@~L~@~L~@~N
+4~@~S~@~ExpRtf~@~Screen Export Rtf~@~N~@~N~@~N~@~N~@~N
+5~@~S~@~ExpTxt~@~Screen Export Txt~@~Y~@~Y~@~L~@~L~@~N
+6~@~S~@~Clear~@~Screen Clear~@~N~@~N~@~N~@~N~@~N
+7~@~S~@~Delete~@~Screen Delete~@~Y~@~N~@~L~@~L~@~N
+8~@~S~@~Copy~@~Screen Copy~@~Y~@~N~@~L~@~L~@~N
+11~@~S~@~Save~@~Screen Save~@~Y~@~N~@~L~@~N~@~B
+12~@~S~@~First~@~Screen First~@~Y~@~Y~@~L~@~L~@~N
+13~@~S~@~Last~@~Screen Last~@~Y~@~Y~@~L~@~L~@~N
+14~@~S~@~Next~@~Screen Next~@~Y~@~Y~@~L~@~L~@~N
+15~@~S~@~Prev~@~Screen Previous~@~Y~@~Y~@~L~@~L~@~N
+16~@~S~@~Goto~@~Screen Go to Page~@~Y~@~Y~@~L~@~L~@~N
+17~@~S~@~Find~@~Screen Find~@~Y~@~Y~@~L~@~L~@~N
+20~@~R~@~ClearCri~@~Report Clear Criteria~@~Y~@~Y~@~L~@~L~@~N
+21~@~R~@~ShowCri~@~Report Show Criteria~@~Y~@~Y~@~L~@~L~@~N
+22~@~R~@~Search~@~Report Global Search~@~Y~@~Y~@~L~@~L~@~N
+24~@~R~@~ExpPdf~@~Report Export Pdf~@~Y~@~Y~@~L~@~L~@~N
+25~@~R~@~ExpRtf~@~Report Export Rtf~@~Y~@~Y~@~L~@~L~@~N
+26~@~R~@~ExpTxt~@~Report Export Txt~@~Y~@~Y~@~L~@~L~@~N
+27~@~R~@~ExpDoc~@~Report Export Doc~@~Y~@~Y~@~L~@~L~@~N
+28~@~R~@~ExpXml~@~Report Export Xml~@~Y~@~Y~@~L~@~L~@~N
+29~@~R~@~Print~@~Report Print~@~Y~@~Y~@~L~@~L~@~N
+30~@~R~@~View~@~Report View~@~Y~@~Y~@~L~@~L~@~N
+40~@~W~@~List~@~Wizard List~@~Y~@~Y~@~L~@~L~@~N
+41~@~W~@~Search~@~Wizard Search~@~Y~@~Y~@~L~@~L~@~N
+42~@~W~@~Import~@~Wizard Import~@~Y~@~Y~@~L~@~L~@~N
+43~@~R~@~ExpXls~@~Report Export Xls~@~Y~@~Y~@~L~@~L~@~N
+44~@~S~@~Import~@~Screen Import~@~Y~@~Y~@~L~@~L~@~N
+45~@~S~@~RetValue~@~Screen Return Value~@~Y~@~Y~@~L~@~L~@~N
+46~@~S~@~RetCancel~@~Screen Return Cancel~@~Y~@~Y~@~L~@~L~@~N
+47~@~S~@~HideImp~@~Screen Hide Import Panel~@~N~@~N~@~N~@~N~@~N
+48~@~S~@~ShowImp~@~Screen Show Import Panel~@~N~@~N~@~N~@~N~@~N
+51~@~S~@~NewSave~@~Screen Save & New~@~N~@~N~@~N~@~N~@~N
+52~@~S~@~Continue~@~Screen Import Continue~@~Y~@~Y~@~L~@~L~@~N
+53~@~S~@~PgSize~@~Screen Grid Page Size~@~Y~@~Y~@~L~@~L~@~N
+54~@~S~@~New~@~Screen New~@~Y~@~N~@~B~@~N~@~N
+55~@~S~@~InsRow~@~Screen Insert Row~@~Y~@~Y~@~B~@~N~@~N
+56~@~S~@~CopySave~@~Screen Save & Copy~@~N~@~N~@~N~@~N~@~N
+57~@~S~@~UndoAll~@~Screen Undo All~@~Y~@~N~@~L~@~L~@~N
+58~@~R~@~Customize~@~Report Customization~@~Y~@~Y~@~L~@~L~@~N
+59~@~S~@~Preview~@~Screen Preview~@~N~@~N~@~N~@~N~@~N
+60~@~S~@~Embed~@~Screen Embed~@~Y~@~Y~@~L~@~L~@~N
+61~@~R~@~Embed~@~Report Embed~@~Y~@~Y~@~L~@~L~@~N
+62~@~W~@~Embed~@~Wizard Embed~@~Y~@~Y~@~L~@~L~@~N
+63~@~S~@~More~@~Screen More~@~Y~@~Y~@~L~@~L~@~N
+64~@~S~@~Edit~@~Screen All Data~@~N~@~N~@~N~@~N~@~N
+65~@~S~@~SaveClose~@~Screen Save & CLose~@~N~@~N~@~N~@~N~@~N
+66~@~S~@~Audit~@~Screen Audit~@~N~@~N~@~N~@~N~@~N
+67~@~S~@~DelRow~@~Screen Delete Row~@~Y~@~N~@~L~@~L~@~N
+68~@~S~@~CopyRow~@~Screen Copy Row~@~Y~@~N~@~L~@~L~@~N
+69~@~S~@~EditRow~@~Screen Eidt Row~@~Y~@~N~@~L~@~L~@~N
+70~@~S~@~EditHdr~@~Screen Edit Header~@~N~@~N~@~L~@~B~@~N
+71~@~S~@~DrillDown~@~Screen DrillDown~@~Y~@~N~@~L~@~B~@~N
+72~@~S~@~Filter~@~Screen Filter~@~Y~@~Y~@~B~@~N~@~N
+73~@~S~@~Help~@~Screen Help~@~Y~@~Y~@~L~@~N~@~N
+74~@~S~@~MasterLst~@~Screen Navi ML~@~Y~@~Y~@~N~@~N~@~N
+75~@~S~@~MasterRec~@~Screen Navi MR~@~Y~@~Y~@~N~@~N~@~N
+76~@~S~@~DetailLst~@~Screen Navi DL~@~Y~@~Y~@~N~@~N~@~N
+77~@~S~@~DetailRec~@~Screen Navi DR~@~Y~@~Y~@~N~@~N~@~N

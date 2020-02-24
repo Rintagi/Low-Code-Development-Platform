@@ -545,7 +545,7 @@ namespace RO.Rule3
             sb.Append("				if ((Config.DeployType == \"DEV\" || row[\"dbAppDatabase\"].ToString() == base.CPrj.EntityCode + \"View\") && !(base.CPrj.EntityCode != \"RO\" && row[\"SysProgram\"].ToString() == \"Y\") && (new AdminSystem()).IsRegenNeeded(string.Empty,0,0," + wizardId.ToString() + ",LcSysConnString,LcAppPw))" + Environment.NewLine);
             sb.Append("				{" + Environment.NewLine);
             sb.Append("					(new GenWizardsSystem()).CreateProgram(" + wizardId.ToString() + ", \"" + wizardTitle + "\", row[\"dbAppDatabase\"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);" + Environment.NewLine);
-            sb.Append("					Response.Redirect(Request.RawUrl);" + Environment.NewLine);
+            sb.Append("					this.Redirect(Request.RawUrl);" + Environment.NewLine);
             sb.Append("				}" + Environment.NewLine);
             sb.Append("			}" + Environment.NewLine);
             sb.Append("			catch (Exception e) { PreMsgPopup(e.Message); }" + Environment.NewLine);
@@ -753,12 +753,13 @@ namespace RO.Rule3
             //sb.Append("				return (new " + dw["ProgramName"].ToString() + "System()).ImportRows" + wizardId.ToString() + "(bOverwrite,usrId,ds,iStart,fileName" + Robot.GetCnParm("N", "N") + ");" + Environment.NewLine);
             //sb.Append("				}" + Environment.NewLine);
 			sb.Append("			}" + Environment.NewLine);
-			sb.Append("			catch(Exception e) { throw e; return 0; }" + Environment.NewLine);
-			//sb.Append("			finally" + Environment.NewLine);
-			//sb.Append("			{" + Environment.NewLine);
-			//sb.Append("				conn.Close(); conn = null;" + Environment.NewLine);
-			//sb.Append("			}" + Environment.NewLine);
-			sb.Append("		}" + Environment.NewLine);
+			sb.Append("			catch(Exception e) { if (e != null) throw e; }" + Environment.NewLine);
+            sb.Append("			return 0;" + Environment.NewLine);
+            //sb.Append("			finally" + Environment.NewLine);
+            //sb.Append("			{" + Environment.NewLine);
+            //sb.Append("				conn.Close(); conn = null;" + Environment.NewLine);
+            //sb.Append("			}" + Environment.NewLine);
+            sb.Append("		}" + Environment.NewLine);
 			sb.Append(Environment.NewLine);
 			sb.Append("		private void PopFileList(string searchTxt)" + Environment.NewLine);
 			sb.Append("		{" + Environment.NewLine);

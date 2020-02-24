@@ -28,7 +28,7 @@ namespace RO.Web
                     if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Header", 0, 0, 0, string.Empty, string.Empty))
                     {
                         (new GenSectionSystem()).CreateProgram("H", base.CPrj, base.CSrc);
-                        Session[KEY_HeaderGenerated] = true; Response.Redirect(Request.RawUrl);
+                        Session[KEY_HeaderGenerated] = true; this.Redirect(Request.RawUrl);
                     }
                 }
                 catch (Exception err) { throw new ApplicationException(err.Message); }
@@ -137,7 +137,7 @@ namespace RO.Web
                 base.LUser.Culture = (new AdminSystem()).SetCult(base.LUser.UsrId, base.LUser.CultureId);
                 base.LImpr = null; SetImpersonation(LUser.UsrId);
                 base.VMenu = new DataView((new MenuSystem()).GetMenu(base.LUser.CultureId, base.LCurr.SystemId, base.LImpr, base.SysConnectStr(base.LCurr.SystemId), base.AppPwd(base.LCurr.SystemId), null, null, null));
-                Response.Redirect(Request.Url.PathAndQuery);    // No need to SetCultureId(cLang, LUser.CultureId.ToString());
+                this.Redirect(Request.Url.PathAndQuery);    // No need to SetCultureId(cLang, LUser.CultureId.ToString());
             }
         }
 
@@ -147,7 +147,7 @@ namespace RO.Web
             base.LUser.Culture = (new AdminSystem()).SetCult(base.LUser.UsrId, base.LUser.CultureId);
             if ((LUser.LoginName ?? string.Empty).ToLower() != "anonymous") { base.LImpr = null; SetImpersonation(LUser.UsrId); } else { base.LImpr.Cultures = base.LUser.CultureId.ToString(); }
             base.VMenu = new DataView((new MenuSystem()).GetMenu(base.LUser.CultureId, base.LCurr.SystemId, base.LImpr, base.SysConnectStr(base.LCurr.SystemId), base.AppPwd(base.LCurr.SystemId), null, null, null));
-            Response.Redirect(Request.Url.PathAndQuery);
+            this.Redirect(Request.Url.PathAndQuery);
         }
     }
 }

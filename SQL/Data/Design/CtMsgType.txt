@@ -1,0 +1,5 @@
+A~@~Application Error
+I~@~Information
+L~@~Label
+S~@~Server Error
+W~@~Warning

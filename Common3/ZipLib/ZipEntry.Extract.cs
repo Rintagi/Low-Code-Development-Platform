@@ -765,9 +765,9 @@ namespace Ionic.Zip
                         if (_container.ZipFile != null)
                             checkLaterForResetDirTimes = _container.ZipFile._inExtractAll;
                     }
-
+                    /* below is wrong, Creat would overwrite, CreateNew would cause exception if exist */
                     // File.Create(CreateNew) will overwrite any existing file.
-                    output = new FileStream(targetFileName, FileMode.CreateNew);
+                    output = new FileStream(targetFileName, FileMode.Create);
                 }
                 else
                 {
@@ -811,10 +811,24 @@ namespace Ionic.Zip
                         //     3. delete the zombie.
                         //
                         zombie = targetFileName + ".PendingOverwrite";
-                        File.Move(targetFileName, zombie);
+                        try
+                        {
+                            File.Move(targetFileName, zombie);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception(string.Format("Move file failed {0} -> {1}, {2}", tmpName, zombie, ex.Message), ex);
+                        }
                     }
 
-                    File.Move(tmpName, targetFileName);
+                    try
+                    {
+                        File.Move(tmpName, targetFileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(string.Format("Move file failed {0} -> {1}, {2}", tmpName, targetFileName, ex.Message), ex);
+                    }
                     _SetTimes(targetFileName, true);
 
                     if (zombie != null && File.Exists(zombie))

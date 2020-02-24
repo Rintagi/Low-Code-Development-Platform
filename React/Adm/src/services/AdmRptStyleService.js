@@ -1,5 +1,5 @@
 
-import {fetchData,getAccessControlInfo, getAccessScope, baseUrl} from './webAPIBase';
+import { fetchData, getAccessControlInfo, getAccessScope, baseUrl } from './webAPIBase';
 
 let activeScope = {};
 
@@ -10,9 +10,9 @@ export function setAccessScope(scope) {
     }
 }
 
-export function GetAuthCol(accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetAuthCol'
-        ,{
+export function GetAuthCol(accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetAuthCol'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -22,9 +22,9 @@ export function GetAuthCol(accessScope){
         }
     )
 }
-export function GetAuthRow(accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetAuthRow'
-        ,{
+export function GetAuthRow(accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetAuthRow'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -35,9 +35,9 @@ export function GetAuthRow(accessScope){
     )
 
 }
-export function GetScreenLabel(accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetScreenLabel'
-        ,{
+export function GetScreenLabel(accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetScreenLabel'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -49,12 +49,12 @@ export function GetScreenLabel(accessScope){
 
 }
 
-export function GetLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetLabels'
-        ,{
+export function GetLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -63,12 +63,12 @@ export function GetLabels(labelCat,accessScope){
     )
 }
 
-export function GetSystemLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetSystemLabels'
-        ,{
+export function GetSystemLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetSystemLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -77,9 +77,9 @@ export function GetSystemLabels(labelCat,accessScope){
     )
 }
 
-export function GetScreenButtonHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetScreenButtonHlp'
-        ,{
+export function GetScreenButtonHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetScreenButtonHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -89,9 +89,9 @@ export function GetScreenButtonHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetScreenHlp'
-        ,{
+export function GetScreenHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetScreenHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -101,9 +101,9 @@ export function GetScreenHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenCriteria(accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetScreenCriteria'
-        ,{
+export function GetScreenCriteria(accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -113,9 +113,9 @@ export function GetScreenCriteria(accessScope){
         }
     )
 }
-export function GetNewMst(accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetNewMst'
-        ,{
+export function GetNewMst(accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetNewMst'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -125,9 +125,9 @@ export function GetNewMst(accessScope){
         }
     )
 }
-export function GetNewDtl(accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetNewDtl'
-        ,{
+export function GetNewDtl(accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetNewDtl'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -137,9 +137,9 @@ export function GetNewDtl(accessScope){
         }
     )
 }
-export function GetScreenFilter(accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetScreenFilter'
-        ,{
+export function GetScreenFilter(accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetScreenFilter'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -149,31 +149,14 @@ export function GetScreenFilter(accessScope){
         }
     )
 }
-export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetColumnContent'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    mstId: mstId || '',
-                    dtlId: dtlId || '',
-                    screenColumnName: screenColumnName,
-                    columnName: columnName,
-                    isMaster: isMaster,
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function GetAdmRptStyle89List(searchStr, topN, filterId,accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetAdmRptStyle89List'
-        ,{
+export function GetAdmRptStyle89List(searchStr, topN, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetAdmRptStyle89List'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     searchStr: searchStr || '',
                     topN: topN || 0,
-                    filterId: ('' +  (filterId || 0)),
+                    filterId: ('' + (filterId || 0)),
                 }),
             },
             ...(getAccessControlInfo()),
@@ -181,14 +164,15 @@ export function GetAdmRptStyle89List(searchStr, topN, filterId,accessScope){
         }
     )
 }
-export function GetAdmRptStyle89ById(keyId,accessScope){   
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetAdmRptStyle89ById'
-        ,{
+export const GetSearchList = GetAdmRptStyle89List;
+export function GetAdmRptStyle89ById(keyId, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetAdmRptStyle89ById'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
                     options: {
-                        currentScreenCriteria : JSON.stringify({}),
+                        CurrentScreenCriteria: JSON.stringify({}),
                     },
                 }),
             },
@@ -197,14 +181,15 @@ export function GetAdmRptStyle89ById(keyId,accessScope){
         }
     )
 }
-export function GetAdmRptStyle89DtlById(keyId,filterId,accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetAdmRptStyle89DtlById'
-        ,{
+export const GetMstById = GetAdmRptStyle89ById;
+export function GetAdmRptStyle89DtlById(keyId, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetAdmRptStyle89DtlById'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
                     options: {
-                        currentScreenCriteria : JSON.stringify({}),
+                        CurrentScreenCriteria: JSON.stringify({}),
                     },
                     filterId: filterId || 0,
                 }),
@@ -214,13 +199,13 @@ export function GetAdmRptStyle89DtlById(keyId,filterId,accessScope){
         }
     )
 }
-
-export function LoadInitPage(options,accessScope) {
+export const GetDtlById = GetAdmRptStyle89DtlById;
+export function LoadInitPage(options, accessScope) {
     const reqJson = JSON.stringify({
         options: options
     });
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/LoadInitPage'
-        ,{
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/LoadInitPage'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -229,14 +214,29 @@ export function LoadInitPage(options,accessScope) {
         }
     )
 }
-export function SaveData(mst,dtl,options,accessScope){
+export function SaveData(mst, dtl, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mst: mst || {},
+        dtl: dtl || [],
+        options: options || {}
+    });
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/SaveData'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function DelMst(mst, options, accessScope) {
     const reqJson = JSON.stringify({
         mst: mst,
-        dtl: dtl,
         options: options
     });
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/SaveData'
-        ,{
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/DelMst'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -245,26 +245,9 @@ export function SaveData(mst,dtl,options,accessScope){
         }
     )
 }
-
-export function DelMst(mst,options,accessScope){
-    const reqJson = JSON.stringify({
-        mst: mst,
-        options: options
-    });
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/DelMst'
-        ,{
-            requestOptions: {
-                body: reqJson,
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-
-export function SetScreenCriteria(criteriaValues, accessScope){
-    return fetchData(baseUrl+'/AdmRptStyleWs.asmx/SetScreenCriteria'
-        ,{
+export function SetScreenCriteria(criteriaValues, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/SetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     criteriaValues: criteriaValues
@@ -276,243 +259,263 @@ export function SetScreenCriteria(criteriaValues, accessScope){
     )
 }
 
-/*screen criteria dll and screen dropdownlist/autocomplete*/           
-            export function GetScreenCriDefaultCd10List(query, topN, filterBy, accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetScreenCriteriaDdlList'
-,{
-requestOptions: {
-body: JSON.stringify({
-screenCriId: 32,
-query: query || '',
-topN: topN || 0,
-filterBy: filterBy || null
-}),
-},
-...(getAccessControlInfo()),
-...(accessScope)
+/*screen criteria dll and screen dropdownlist/autocomplete*/
+
+export function GetScreenCriDefaultCd10List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetScreenCriteriaDdlList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    screenCriId: 32,
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
 }
-)
-}export function GetDefaultCd167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetDefaultCd167List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetBgGradType167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetBgGradType167List'
+export function GetDefaultCd167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetDefaultCd167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetDirection167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetDirection167List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetWritingMode167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetWritingMode167List'
+export function GetBgGradType167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetBgGradType167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetBorderStyleD167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetBorderStyleD167List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetBorderStyleL167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetBorderStyleL167List'
+export function GetDirection167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetDirection167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetBorderStyleR167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetBorderStyleR167List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetBorderStyleT167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetBorderStyleT167List'
+export function GetWritingMode167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetWritingMode167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetBorderStyleB167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetBorderStyleB167List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetFontStyle167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetFontStyle167List'
+export function GetBorderStyleD167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetBorderStyleD167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetFontWeight167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetFontWeight167List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetTextDecor167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetTextDecor167List'
+export function GetBorderStyleL167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetBorderStyleL167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetTextAlign167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetTextAlign167List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetVerticalAlign167List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmRptStyleWs.asmx/GetVerticalAlign167List'
+export function GetBorderStyleR167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetBorderStyleR167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }/* ReactRule: Service Custom Function *//* ReactRule End: Service Custom Function */
+
+export function GetBorderStyleT167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetBorderStyleT167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetBorderStyleB167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetBorderStyleB167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetFontStyle167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetFontStyle167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetFontWeight167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetFontWeight167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetTextDecor167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetTextDecor167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetTextAlign167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetTextAlign167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetVerticalAlign167List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmRptStyleWs.asmx/GetVerticalAlign167List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+/* ReactRule: Service Custom Function */
+
+
+/* ReactRule End: Service Custom Function */

@@ -236,11 +236,11 @@ namespace RO.Facade3
             }
         }
 
-        public void MkGetScreenIn(string screenId, string screenCriId, string procedureName, string appDatabase, string sysDatabase, string multiDesignDb, string dbConnectionString, string dbPassword)
+        public void MkGetScreenIn(string screenId, string screenCriId, string procedureName, string appDatabase, string sysDatabase, string multiDesignDb, string dbConnectionString, string dbPassword, bool reGen = true)
         {
             using (Access3.AdminAccess dac = new Access3.AdminAccess())
             {
-                dac.MkGetScreenIn(screenId, screenCriId, procedureName, appDatabase, sysDatabase, multiDesignDb, dbConnectionString, dbPassword);
+                dac.MkGetScreenIn(screenId, screenCriId, procedureName, appDatabase, sysDatabase, multiDesignDb, dbConnectionString, dbPassword, reGen);
             }
         }
 

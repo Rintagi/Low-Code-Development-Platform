@@ -54,7 +54,7 @@ function getCookie(name) {
     return null;
 }
 function eraseCookie(name) {   
-    document.cookie = name+'=; Max-Age=-99999999;';  
+    document.cookie = name+'=; Max-Age=-99999999;path=/;';  
 }
 
 function parsedUrl(url) {
@@ -97,7 +97,7 @@ const runtimeConfig = (document.Rintagi || {});
 const debuglog = runtimeConfig.debugAlert ? alert : log.debug;
 const apiBasename = runtimeConfig.apiBasename;
 const appDomainUrl = runtimeConfig.appDomainUrl || runtimeConfig.apiBasename;
-const appNS = runtimeConfig.appNS || (parsedUrl(appDomainUrl) || {}).pathname || '/';
+const appNS = (runtimeConfig.appNS || (parsedUrl(appDomainUrl) || {}).pathname || '/').toUpperCase();
 const baseUrl = apiBasename + "/webservices";
 const fetchAPIResult = fetchService.fetchAPIResult;
 const getAPIResult = fetchService.getAPIResult;
@@ -173,14 +173,14 @@ function getUserHandle(){
 function getLoginFromCookie()
 {
     try {
-        var user_handle = getCookie(makeNameFromNS(appDomainUrl,"tokenInCookieJS"));
-        var token = getCookie(makeNameFromNS(appDomainUrl,"tokenJS"));
+        var user_handle = getCookie(makeNameFromNS("tokenInCookieJS"));
+        var token = getCookie(makeNameFromNS("tokenJS"));
         if (user_handle && token) {
-            localStorage.setItem(makeNameFromNS(appDomainUrl, "user_handle"), user_handle);
-            var tokenName = getTokenName(appDomainUrl, "refresh_token");
+            localStorage.setItem(makeNameFromNS("user_handle"), user_handle);
+            var tokenName = getTokenName("refresh_token");
             localStorage.setItem(tokenName, JSON.stringify({ refresh_token: token }));
-            eraseCookie(makeNameFromNS(appDomainUrl,"tokenInCookieJS"));
-            eraseCookie(makeNameFromNS(appDomainUrl,"tokenJS"));
+            eraseCookie(makeNameFromNS("tokenInCookieJS"));
+            eraseCookie(makeNameFromNS("tokenJS"));
         }
     } catch (e) {/**/}
 
@@ -213,7 +213,7 @@ function getRefreshToken(){
         return x;
         } 
     catch(e) { 
-        const tokenInCookie = getCookie(makeNameFromNS("tokenInCookieJS"));
+        const tokenInCookie = getCookie(makeNameFromNS("tokenJS"));
         if (tokenInCookie) {
             return {
                 refresh_token:tokenInCookie,
@@ -260,6 +260,8 @@ const storeRefreshToken = (refresh_token,resources)=> {
 
 const eraseRefreshToken = ()=>{
     //eraseCookie(getTokenName("refresh_token"));
+    eraseCookie(makeNameFromNS("tokenInCookieJS"));
+    eraseCookie(makeNameFromNS("tokenJS"));
     sessionStorage.removeItem(getTokenName("refresh_token"));
     localStorage.removeItem(getTokenName("refresh_token"));    
 }
@@ -292,21 +294,38 @@ function login(username, password, options = {}) {
     })
     .then(result=>{    
         const apiResult = fetchService.getAPIResult(result);
-        if (apiResult.accessCode) {
+        if (apiResult.accessCode || (apiResult.accessToken || {}).refresh_token) {
             rememberUserHandle(username);
-            return getToken(apiResult.accessCode)
-                .then(
-                accessToken=>{
-                    return {
-                        accessCode : apiResult.accessCode,
-                        status: "success",
+            if ((apiResult.accessToken || {}).refresh_token) {
+                return renewAccessToken((apiResult.accessToken || {}).refresh_token)
+                    .then(
+                        accessToken=>{
+                            return {
+                                accessCode : apiResult.accessCode,
+                                refresh_token: accessToken.refresh_token,
+                                status: "success",
+                            }
+                        },
+                        error=>{
+                            eraseUserHandle();
+                            return Promise.reject(error);
+                        }
+                    )
+            }
+            else
+                return getToken(apiResult.accessCode)
+                    .then(
+                    accessToken=>{
+                        return {
+                            accessCode : apiResult.accessCode,
+                            status: "success",
+                        }
+                    },
+                    error=>{
+                        eraseUserHandle();
+                        return Promise.reject(error);
                     }
-                },
-                error=>{
-                    eraseUserHandle();
-                    return Promise.reject(error);
-                }
-                )
+                    )
         }
         else {
             if (apiResult.error === "access_denied" && (apiResult.message === "Your email or password is incorrect" || apiResult.message === "bot detected") && !challenge_answered) {
@@ -332,10 +351,11 @@ function login(username, password, options = {}) {
     })
     )
 }
+
 let tokenRefreshPromise = null;
 
 async function getToken (code,options={}) {
-    const {client_id,scope,code_verifier,redirect_url,client_secret,grant_type} = options;
+    const {client_id,scope,code_verifier,redirect_url,client_secret,grant_type, re_auth} = options;
     if (!code) {
         return Promise.reject( {
         status : "failed",
@@ -360,6 +380,7 @@ async function getToken (code,options={}) {
                 code_verifier:code_verifier || "",
                 redirect_url:redirect_url || "",
                 client_secret:client_secret || "", 
+                re_auth:re_auth ? "Y" : "N",
                 })
         }
     })
@@ -420,8 +441,8 @@ async function logout(keepToken = false, currentSessionOnly = false) {
     )
 
 }
-async function renewAccessToken (refresh_token) {
-    return getToken(refresh_token || (getRefreshToken() || {}).refresh_token,{grant_type:"refresh_token"})
+async function renewAccessToken (refresh_token, re_auth) {
+    return getToken(refresh_token || (getRefreshToken() || {}).refresh_token,{grant_type:"refresh_token", re_auth})
 
            .catch(error=>{
                if (!refresh_token) {

@@ -5,7 +5,8 @@ namespace RO.Rule3
 	using System.Data;
 	using System.Data.OleDb;
 	using System.Text.RegularExpressions;
-	using RO.Common3;
+    using System.Linq;
+    using RO.Common3;
 	using RO.Common3.Data;
 	using RO.Access3;
 	using RO.SystemFramewk;
@@ -15,11 +16,18 @@ namespace RO.Rule3
 		public StringBuilder sbWarning = new StringBuilder("");
 		private string sTablesExempt = "";
 		private bool bNewApp;
-
-		public DbScript(string TablesExempt, bool NewApp)
+        private bool bIsMeta;
+        private string[] exceptTables;
+		public DbScript(string TablesExempt, bool NewApp, bool isMeta = false)
 		{
 			sTablesExempt = TablesExempt;
 			bNewApp = NewApp;
+            bIsMeta = isMeta;
+            exceptTables = (sTablesExempt ?? "")
+                            .Replace("(", "")
+                            .Replace(")","")
+                            .Replace("'", "")
+                            .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).Where(s => !string.IsNullOrEmpty(s)).ToArray();
 		}
 
 		public DataTable GetFKeys(string dbProviderCd, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
@@ -29,7 +37,16 @@ namespace RO.Rule3
 				switch (dbProviderCd)
 				{
 					case "M":
-						return dac.GetData("select so1.name as fkName, so2.name as tbName from sysreferences sr inner join sysobjects so1 on sr.constid = so1.id  inner join sysobjects so2 on sr.fkeyid = so2.id ORDER BY so1.name", IsFrSource, CSrc, CTar);
+						return dac.GetData(@"
+select so1.name as fkName
+        , so2.name as tbName 
+        , soref.name as refTbName 
+from sysreferences sr 
+inner join sysobjects so1 on sr.constid = so1.id  
+inner join sysobjects so2 on sr.fkeyid = so2.id
+inner join sysobjects soref on soref.id = rkeyid   
+ORDER BY so1.name"
+                            , IsFrSource, CSrc, CTar);
 					case "S":
 						return dac.GetData("select so1.name as fkName, so2.name as tbName from sysreferences sr inner join sysobjects so1 on sr.constrid = so1.id  inner join sysobjects so2 on sr.tableid = so2.id ORDER BY so1.name", IsFrSource, CSrc, CTar);
 					default:
@@ -45,7 +62,8 @@ namespace RO.Rule3
 			string sTyClause = "type = 'U'";
 			string sExempt = sTablesExempt;
 			if (bNewApp && !IsDataExempt) { sExempt = string.Empty; }	// bcp for new robot, app, etc.
-			if (sExempt != string.Empty)
+            // always output full list unless it is about data. table structure MUST BE HANDLED at script generation level for excempt
+			if (sExempt != string.Empty && IsDataExempt)
 			{
 				if (IsInExempt)	//Both tables and views for bcp only:
 				{
@@ -58,7 +76,13 @@ namespace RO.Rule3
 			}
 			using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
 			{
-				return dac.GetData("SELECT so.name AS tbName,(SELECT 1 FROM dbo.syscolumns WHERE id=so.id AND (status & 128) = 128) AS hasIdentity FROM dbo.sysobjects so WHERE " + sTyClause + " AND name <> 'dtproperties'" + sInClause + " ORDER BY so.name", IsFrSource, CSrc, CTar);
+				return dac.GetData(@"
+                        SELECT so.name AS tbName
+                            ,(SELECT 1 FROM dbo.syscolumns WHERE id=so.id AND (status & 128) = 128) AS hasIdentity 
+                        FROM dbo.sysobjects so 
+                        WHERE " + sTyClause + " AND name <> 'dtproperties'" + sInClause 
+                        + " ORDER BY so.name"
+                        , IsFrSource, CSrc, CTar);
 			}
 		}
 
@@ -82,12 +106,24 @@ namespace RO.Rule3
 			return sb.ToString();
 		}
 
-		public string ScriptCreateTables(string SrcDbProviderCd, string TarDbProviderCd, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
+		public string ScriptCreateTables(string SrcDbProviderCd, string TarDbProviderCd, bool IsFrSource, bool allBut,  CurrSrc CSrc, CurrTar CTar)
 		{
 			StringBuilder sb = new StringBuilder("");
 			DataTable dt;
 			DataTable dtIx;
-			dt = GetViews(SrcDbProviderCd, IsFrSource, CSrc, CTar); //Drop Views
+            Func<string, bool> conditional = (tblName) =>
+            {
+                if (allBut)
+                {
+                    return exceptTables.Contains(tblName);
+                }
+                else
+                {
+                    return !exceptTables.Contains(tblName);
+                }
+            };
+
+            dt = GetViews(SrcDbProviderCd, IsFrSource, CSrc, CTar); //Drop Views
 			foreach (DataRow dr in dt.Rows)
 			{
 				sb.Append("IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + dr[0].ToString() + "') AND type='V')\r\n");
@@ -95,15 +131,30 @@ namespace RO.Rule3
 			}
 			dt = GetFKeys(SrcDbProviderCd, IsFrSource, CSrc, CTar); //Drop FKs
 			string FKType = "F"; if (TarDbProviderCd.Equals("S")) { FKType = "RI"; };
+
 			foreach (DataRow dr in dt.Rows)
 			{
-				sb.Append("IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + dr["fkName"].ToString() + "') and type='" + FKType + "')\r\n");
-				sb.Append("ALTER TABLE dbo." + dr["tbName"].ToString() + " DROP CONSTRAINT " + dr["fkName"].ToString() + " \r\nGO\r\n");
+                // it is the ref table that needs to be check for FK constraint which points to the original table(where the constraint needs to be removed) !!!
+                if (!conditional(dr["refTbName"].ToString()))
+                {
+                    sb.Append("IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + dr["fkName"].ToString() + "') and type='" + FKType + "')\r\n");
+                    sb.Append("ALTER TABLE dbo." + dr["tbName"].ToString() + " DROP CONSTRAINT " + dr["fkName"].ToString() + " \r\nGO\r\n");
+                }
 			}
 			dt = GetTables(SrcDbProviderCd, IsFrSource, false, false, CSrc, CTar);
 			foreach (DataRow dr in dt.Rows)
 			{
-				using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+                // SQL Server generated, skip
+                if (dr["tbName"].ToString().Contains("sysdiagrams")) continue;
+
+                if (conditional(dr["tbName"].ToString()))
+                {
+                    // re-create table only if it is not there
+                    sb.Append("IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + dr["tbName"].ToString() + "') and type='" + "U" + "')\r\n");
+                    sb.Append("BEGIN\r\n");
+                }
+
+                using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
 				{
 					dtIx = dac.GetData("EXEC sp_helpindex " + dr["tbName"].ToString(), IsFrSource, CSrc, CTar);
 				}
@@ -112,13 +163,21 @@ namespace RO.Rule3
 					if (drIx[0].ToString().Substring(0,3) != "PK_")	// No primary key.
 					{
 						sb.Append("IF EXISTS (SELECT name FROM sysindexes WHERE name = '" + drIx[0].ToString() + "')\r\n");
-						sb.Append("DROP INDEX " + dr["tbName"].ToString() + "." + drIx[0].ToString() + " \r\nGO\r\n");
+						sb.Append("DROP INDEX " + dr["tbName"].ToString() + "." + drIx[0].ToString() + " \r\n");
 					}
 				}
-				sb.Append("IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + dr[0].ToString() + "') AND type='U')\r\n");
-				sb.Append("DROP TABLE dbo." + dr[0].ToString() + "\r\nGO\r\n");
-				sb.Append(ScriptCreateTable(dr["tbName"].ToString(),CSrc));
-			}
+
+                sb.Append("IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + dr[0].ToString() + "') AND type='U')\r\n");
+                sb.Append("DROP TABLE dbo." + dr[0].ToString() + "\r\n");
+
+                sb.Append(ScriptCreateTable(dr["tbName"].ToString(),CSrc).Replace("\r\nGO\r\n","\r\n"));
+
+                if (conditional(dr["tbName"].ToString()))
+                {
+                    sb.Append("END\r\n");
+                }
+                sb.Append("\r\nGO\r\n");
+            }
 			return sb.ToString();
 		}
 
@@ -144,6 +203,11 @@ namespace RO.Rule3
 				sbPk = sbPk.Replace(",","",sbPk.Length-1,1);
 				sbPk.Append("\r\n)\r\n");
 			}
+            if (bIsMeta)
+            {
+                sb.Append("IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + tbName + "') and type='" + "U" + "')\r\n");
+            }
+
 			sb.Append("CREATE TABLE " + tbName + " ( \r\n");
 			foreach(DataRow dr in dtCol.Rows)
 			{
@@ -348,7 +412,7 @@ namespace RO.Rule3
 			return str;
 		}
 
-		public string ScriptIndexFK(string SrcDbProviderCd, string TarDbProviderCd, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
+		public string ScriptIndexFK(string SrcDbProviderCd, string TarDbProviderCd, bool IsFrSource, bool allBut,  CurrSrc CSrc, CurrTar CTar)
 		{
 			StringBuilder sbDrop = new StringBuilder("");
 			StringBuilder sbCrea = new StringBuilder("");
@@ -357,6 +421,21 @@ namespace RO.Rule3
 			DataTable dtIx;
 			DataTable dtFK;
 			DataTable dt;
+            Func<string, bool> conditional = (tblName) =>
+            {
+                // always unconditional because of the way defined
+                // for this is always called with allBut thus anything not in the but needs to have the index refreshed(change in def by developer)
+                // for the BUT(i.e. data + table) the table would be removed and recreate thus index would needs to be recreated
+                return false;
+                //if (allBut)
+                //{
+                //    return exceptTables.Contains(tblName);
+                //}
+                //else
+                //{
+                //    return !exceptTables.Contains(tblName);
+                //}
+            };
 			dt = GetTables(SrcDbProviderCd, IsFrSource, false, false, CSrc, CTar);
 			foreach (DataRow dr2 in dt.Rows)
 			{
@@ -364,16 +443,30 @@ namespace RO.Rule3
 				{
 					dtIx = dac.GetData("EXEC sp_helpindex " + dr2["tbName"].ToString(), IsFrSource, CSrc, CTar);
 				}
+                bool inConditionalBlock = false;
+                bool hasContent = false;
 				foreach (DataRow drIx in dtIx.Rows)
 				{
-					if (drIx[0].ToString().Substring(0,3) != "PK_")	// No primary key.
+					if (drIx[0].ToString().Substring(0,3) != "PK_"
+                        &&
+                        !dr2["tbName"].ToString().Contains("sysdiagrams") // SQL Server generated, not always available on target
+                        )	// No primary key.
 					{
+                        if (conditional(dr2["tbName"].ToString()) && !inConditionalBlock)
+                        {
+                            // re-create table only if it is not there
+                            sbCrea.Append("IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + dr2["tbName"].ToString() + "') and type='" + "U" + "')\r\n");
+                            sbCrea.Append("BEGIN\r\n");
+                            inConditionalBlock = true;
+
+                        }
+                        hasContent = true;
 						sbDrop.Append("IF EXISTS (SELECT name FROM sysindexes WHERE name = '" + drIx[0].ToString() + "')\r\n");
-						sbDrop.Append("DROP INDEX " + dr2["tbName"].ToString() + "." + drIx[0].ToString() + " \r\nGO\r\n");
+						sbDrop.Append("    DROP INDEX " + dr2["tbName"].ToString() + "." + drIx[0].ToString() + " \r\n\r\n");
 						strIx = "CREATE ";
 						if (drIx[1].ToString().LastIndexOf("unique") > 0) {strIx += " UNIQUE ";}
 						strIx += "INDEX " + drIx[0].ToString() + " ON " + dr2["tbName"].ToString() + "(";
-						strIx += drIx[2].ToString() + ")\r\nGO\r\n\r\n";
+						strIx += drIx[2].ToString() + ")\r\n";
 						//replace (-) 
 						sbCrea.Append(Regex.Replace(sbDrop.Append(strIx).ToString(),"[(]-[)]"," DESC"));
 						sbDrop.Remove(0,sbDrop.Length); //clear the drop statement
@@ -385,8 +478,16 @@ namespace RO.Rule3
 				}
 				foreach (DataRow drFK in dtFK.Rows)
 				{
+                    if (conditional(dr2["tbName"].ToString()) && !inConditionalBlock)
+                    {
+                        // re-create table only if it is not there
+                        sbCrea.Append("IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + dr2["tbName"].ToString() + "') and type='" + "U" + "')\r\n");
+                        sbCrea.Append("BEGIN\r\n");
+                        inConditionalBlock = true;
+                    }
+                    hasContent = true;
 					sbDrop.Append("if exists (select * from dbo.sysobjects where id = object_id(N'dbo." + drFK["cName"].ToString() + "') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)\r\n");
-					sbDrop.Append("ALTER TABLE dbo." + dr2["tbName"].ToString() + " DROP CONSTRAINT " + drFK["cName"].ToString() + " \r\nGO\r\n");
+					sbDrop.Append("ALTER TABLE dbo." + dr2["tbName"].ToString() + " DROP CONSTRAINT " + drFK["cName"].ToString() + " \r\n\r\n");
 					strFK = "\r\nALTER TABLE " + dr2["tbName"].ToString() + " ADD\nCONSTRAINT " + drFK["cName"].ToString() + " FOREIGN KEY\r\n(";
 					for (int i = 1; i <= (int)drFK["cColCount"]; i++) {strFK += "\r\n"+drFK["cKeyCol"+i.ToString().Trim()].ToString()+",";}
 					strFK = strFK.Substring(0,strFK.Length-1);
@@ -395,10 +496,20 @@ namespace RO.Rule3
 					strFK = strFK.Substring(0,strFK.Length-1);
 					strFK = sbDrop.Append(strFK).ToString();
 					sbDrop.Remove(0, sbDrop.Length); //clear the drop statement
-					strFK += ")\r\nGO\r\n";
+					strFK += ")\r\n";
 					sbCrea.Append(strFK);
-				}				
-			}
+				}
+                if (conditional(dr2["tbName"].ToString()) && inConditionalBlock)
+                {
+                    // re-create table only if it is not there
+                    sbCrea.Append("END\r\n");
+
+                }
+                if (hasContent)
+                {
+                    sbCrea.Append("GO\r\n\r\n");
+                }
+            }
 			return sbCrea.ToString();
 		}
 
@@ -409,7 +520,7 @@ namespace RO.Rule3
 			DataTable dtVw;
 			DataTable dt;
 			dt = GetViews(SrcDbProviderCd, IsFrSource, CSrc, CTar);
-			foreach (DataRow dr in dt.Rows)
+            foreach (DataRow dr in dt.Rows)
 			{
 				using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
 				{
@@ -418,10 +529,19 @@ namespace RO.Rule3
 				foreach (DataRow dr2 in dtVw.Rows) {sbView.Append(dr2[0].ToString());}
 				if (!sbView.ToString().Equals(""))
 				{
-					sbCrea.Append("if exists (select * from dbo.sysobjects where id = object_id(N'dbo." + dr[0].ToString() + "') and OBJECTPROPERTY(id, N'IsView') = 1)\r\n");
-					sbCrea.Append("drop view dbo." + dr[0].ToString() + "\r\n");
+                    Regex rx = new Regex("(CREATE VIEW)(\\s+.*)((\\[)?" + dr[0].ToString() + "(\\])?)(.*\\s+AS)");
+                    //sbCrea.Append("if exists (select * from dbo.sysobjects where id = object_id(N'dbo." + dr[0].ToString() + "') and OBJECTPROPERTY(id, N'IsView') = 1)\r\n");
+                    //sbCrea.Append("drop view dbo." + dr[0].ToString() + "\r\n");
+                    //sbCrea.Append("GO\r\n");
+					sbCrea.Append("if not exists (select * from dbo.sysobjects where id = object_id(N'dbo." + dr[0].ToString() + "') and OBJECTPROPERTY(id, N'IsView') = 1)\r\n");
+                    //sbCrea.Append("drop view dbo." + dr[0].ToString() + "\r\n");
+                    sbCrea.Append("EXEC('CREATE VIEW dbo." + dr[0].ToString() + " AS SELECT DUMMY=1')\r\n");
 					sbCrea.Append("GO\r\n");
-					sbCrea.Append(sbView.ToString());
+                    string ss = sbView.ToString().Trim(new char[] {' ','\r','\n'});
+                    ss = rx.Replace(ss,(m)=>{
+                        return "ALTER VIEW" + m.Groups[2].Value + m.Groups[3].Value + m.Groups[6];
+                    });
+                    sbCrea.Append(ss);
 					sbView.Remove(0, sbView.Length);
 					sbCrea.Append("\r\nGO\r\n");
 				}
@@ -434,19 +554,29 @@ namespace RO.Rule3
 			StringBuilder sb = new StringBuilder("");
 			string ss;
 			DataTable dt = GetSps(SrcDbProviderCd, TarDbProviderCd, IsFrSource, CSrc, CTar);
-			foreach (DataRow dr in dt.Rows)
+            foreach (DataRow dr in dt.Rows)
 			{
 				ss = ScriptCreaSp(dr[0].ToString(), dr[1].ToString().Trim(), SrcDbProviderCd, IsFrSource, CSrc, CTar);
-				if (ss != string.Empty)
+				if (ss != string.Empty 
+                    &&
+                    !ss.Contains("sysdiagrams") // SQL Server generated, not always available on target
+                    )
 				{
-					sb.Append(ScriptDropSp(dr[0].ToString(), dr[1].ToString().Trim()));
+                    // we use the [name] form to distinguish between hand coded string from sp_helptext
+                    Regex rx = new Regex("(CREATE PROCEDURE)(\\s+[^+]*)((\\[)?" + dr[0].ToString() + "(\\])?)", RegexOptions.Multiline);
+                    sb.Append(ScriptDropSp(dr[0].ToString(), dr[1].ToString().Trim()));
 					sb.Append("GO\r\n");
 					sb.Append("SET QUOTED_IDENTIFIER ON\r\n");
 					sb.Append("GO\r\n");
 					if (SrcDbProviderCd == "S") {sb.Append("SET ANSINULL ON\r\n");} else {sb.Append("SET ANSI_NULLS ON\r\n");}
 					sb.Append("GO\r\n");
-					sb.Append(ss);
-					sb.Append(" \r\nGO\r\n");
+                    ss = ss.Trim(new char[] { ' ', '\r', '\n' }).Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine);
+                    ss = rx.Replace(ss, (m) =>
+                    {
+                        return "ALTER PROCEDURE" + m.Groups[2].Value + m.Groups[3].Value;
+                    });
+                    sb.Append(ss + "\r\n");
+					sb.Append("GO\r\n");
 					sb.Append("SET QUOTED_IDENTIFIER OFF\r\n");
 					sb.Append("GO\r\n");
 				}
@@ -457,14 +587,19 @@ namespace RO.Rule3
 		public string ScriptDropSp(string SpName, string SpType)
 		{
 			StringBuilder sbDrop = new StringBuilder("");
-			sbDrop.Append("IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + SpName + "') AND type='" + SpType + "')\r\n");
             if ("FN,TF,IF".IndexOf(SpType) >= 0)
             {
+                /* still use DROP THEN CREATE for FUNCTION as ALTER FUNCTION cannot change type and cause error if there is a change in type but same name */
+			    sbDrop.Append("IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + SpName + "') AND type='" + SpType + "')\r\n");
 				sbDrop.Append("DROP FUNCTION dbo." + SpName + "\r\n");
 			}
 			else
 			{
-				sbDrop.Append("DROP PROCEDURE dbo." + SpName + "\r\n");
+                //sbDrop.Append("IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + SpName + "') AND type='" + SpType + "')\r\n");
+                //sbDrop.Append("DROP PROCEDURE dbo." + SpName + "\r\n");
+                //sbDrop.Append("GO\r\n");
+                sbDrop.Append("IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + SpName + "') AND type='" + SpType + "')\r\n");
+				sbDrop.Append("EXEC('CREATE PROCEDURE dbo." + SpName + " AS SELECT 1')\r\n");
 			}
 			return sbDrop.ToString();
 		}

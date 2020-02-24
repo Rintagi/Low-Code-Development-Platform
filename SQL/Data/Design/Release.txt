@@ -1,0 +1,231 @@
+63~@~Rintagi App runtime Upgrade~@~RO:11.114.00203:Rintagi App runtime Upgrade [PDT]~@~11.114.00203~@~2020-02-03 00:00:00.000~@~M~@~3~@~3~@~/* Please be reminded that each user requires a valid Company and Project. */~@~Do not delete this even though it is not applicable for RO.  It is needed as sample for the applications. "doc" should be exempted in Client Tier if UsrPref is not exempted in Data Tier.
+84~@~Rintagi Runtime Upgrade~@~RO:11.121.00219:Rintagi Runtime Upgrade [DEV]~@~11.121.00219~@~2020-02-19 00:00:00.000~@~M~@~4~@~1~@~/* Please be reminded that each user requires a valid Company and Project. */~@~RO ONLY: This is for ordinary development and will deploy object code to upgrade existing application.
+85~@~Rintagi Runtime Install~@~RO:11.121.00219:Rintagi Runtime Install [NDEV]~@~11.121.00219~@~2020-02-19 00:00:00.000~@~M~@~4~@~7~@~IF EXISTS (SELECT object_id FROM sys.tables WHERE name = 'Systems')
+EXEC('
+SET NOCOUNT ON
+
+DELETE c
+from release r 
+inner join entity e on r.EntityId = e.entityid
+inner join ctreleasetype et on r.releasetypeid = et.releasetypeid and (et.ReleaseTypeAbbr IN (''DEV'',''NDEV'') OR e.EntityName like ''% Community %'')
+inner join ClientTier c on c.EntityId = e.EntityId
+
+DELETE d 
+from release r 
+inner join entity e on r.EntityId = e.entityid
+inner join ctreleasetype et on r.releasetypeid = et.releasetypeid and (et.ReleaseTypeAbbr IN (''DEV'',''NDEV'') OR e.EntityName like ''% Community %'')
+inner join DataTier d on d.EntityId = e.EntityId
+
+DELETE ru 
+from release r 
+inner join entity e on r.EntityId = e.entityid
+inner join ctreleasetype et on r.releasetypeid = et.releasetypeid and (et.ReleaseTypeAbbr IN (''DEV'',''NDEV'') OR e.EntityName like ''% Community %'')
+inner join RuleTier ru on ru.EntityId = e.EntityId
+
+DELETE rd
+from release r 
+inner join entity e on r.EntityId = e.entityid
+inner join ctreleasetype et on r.releasetypeid = et.releasetypeid and (et.ReleaseTypeAbbr IN (''DEV'',''NDEV'') OR e.EntityName like ''% Community %'')
+inner join releaseDtl rd on rd.ReleaseId = r.ReleaseId
+
+DELETE r
+from release r 
+inner join entity e on r.EntityId = e.entityid
+inner join ctreleasetype et on r.releasetypeid = et.releasetypeid and (et.ReleaseTypeAbbr IN (''DEV'',''NDEV'') OR e.EntityName like ''% Community %'')
+
+DELETE e
+FROM Entity e
+LEFT OUTER JOIN dbo.Release r on r.EntityId = e.EntityId
+WHERE r.ReleaseId IS NULL
+
+update d
+Set ObjectExempt = ''*.config |data |.git |Thumbs.db |rintagi.js |License3.dll'', ObjectName=''*.*'' 
+             ,SprocOnly = ''A''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''PDT'',''PTY'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''C'' 
+
+update d
+Set ObjectExempt = ''.git |Install.zip |Thumbs.db'', ObjectName = ''web.config |rintagi.js |License3.dll''
+             ,SprocOnly = ''A''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''NPDT'',''NPTY'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''C'' 
+
+
+update d
+Set ObjectExempt = ''.git |.vs |*.user'', ObjectName = ''Lib\*.* |UsrAccess\*.* |UsrRules\*.*  |React\*.* |*.sln |.gitignore''
+             ,SprocOnly = ''A''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid AND rt.releasetypeabbr in (''NPTY'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''R'' 
+
+update d
+Set ObjectExempt = ''.git |.vs |*.user |rintagi.js |License3.dll'', ObjectName = ''Lib\*.* |UsrAccess\*.* |UsrRules\*.*  |React\*.* |*.sln |.gitignore''
+             ,SprocOnly = ''A''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid 
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO'' and rt.releasetypeabbr in (''PTY'')
+WHERE d.ObjectType = ''R'' 
+
+update d
+Set SprocOnly = ''P'', DoSpEncrypt = ''Y''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''NPDT'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''D'' AND SprocOnly <> ''A''
+
+update d
+Set SprocOnly = ''Y'', DoSpEncrypt = ''Y'',ObjectExempt=''''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''PDT'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''D'' AND SprocOnly <> ''A''
+
+
+update d
+Set ObjectExempt = ''ClientTier |Custom |CustomDtl |DataTier |Deleted |DshAvail |DshFld |DshFldDtl |Entity |HomeTab |MaintMsg |MenuPrm |Printer |Printer_MemberId |Printer_UsrGroupId |Release |ReleaseDtl |ReportLstCri |RptTemplate |RuleTier |ScreenLstInf |ScreenLstCri |Systems |Template |Usage |Usr |UsrGroup |UsrGroupAuth |UsrImpr |UsrAudit |UsrLink |UsrProvider |UsrPwd |UsrSafeIP |UtRptMemCri |UtRptMemCriDtl |UtRptMemFld |UtReport |UtReportDel |UtReportHlp |UtReportCri |UtReportCriHlp |UtReportObj |UtReportObjHlp |UtRptElm |UtRptCel |UtRptTbl |UtRptCha |UtRptCtr |UtReportLstCri |UtRptMemCri |UtRptMemCriDtl |WebRule |Rptwiz |RptwizDtl'',
+             SprocOnly = ''P'', DoSPEncrypt=''Y''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''PDT'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''D'' and ObjectName like ''%Design%'' AND SprocOnly <> ''A''
+
+
+update d
+Set ObjectExempt = ''Custom |CustomDtl |Deleted |DshAvail |DshFld |DshFldDtl | MenuPrm |ReportLstCri |RptTemplate |Rptwiz |RptwizDtl |ScreenLstInf |ScreenLstCri |Template |WebRule |Usage |UtRptMemCri |UtRptMemCriDtl |UtRptMemFld |UtReport |UtReportDel |UtReportHlp |UtReportCri |UtReportCriHlp |UtReportObj |UtReportObjHlp |UtRptElm |UtRptCel |UtRptTbl |UtRptCha |UtRptCtr |UtReportLstCri |UtRptMemCri |UtRptMemCriDtl'',
+             SprocOnly = ''P'', DoSPEncrypt=''Y''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''PDT'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''D'' and ObjectName like ''%CmonD%'' AND SprocOnly <> ''A''
+')~@~RO ONLY: This is for ordinary development and will deploy object code to create a new application.
+86~@~Rintagi Source Upgrade~@~RO:11.121.00219:Rintagi Source Upgrade [PTY]~@~11.121.00219~@~2020-02-19 00:00:00.000~@~M~@~2~@~2~@~~@~This is for exact prototype and will deploy all source code to override existing.
+87~@~Rintagi Source Install~@~RO:11.121.00219:Rintagi Source Install [NPTY]~@~11.121.00219~@~2020-02-19 00:00:00.000~@~M~@~2~@~5~@~~@~This is for exact prototype and will deploy all source code to create new.
+88~@~Rintagi App Runtime Install~@~RO:11.114.00203:Rintagi App Runtime Install [NPDT]~@~11.114.00203~@~2020-02-03 00:00:00.000~@~M~@~3~@~6~@~~@~Do not delete this even though it is obsolete for RO.  It is needed as sample for the applications.
+89~@~Rintagi Community Source Install~@~RO:10.93.91212:Rintagi Community Source Install [NPTY]~@~10.93.91212~@~2019-12-16 00:00:00.000~@~M~@~5~@~5~@~~@~This is for exact prototype and will deploy all source code to create new.
+90~@~Rintagi Community Source Upgrade~@~RO:10.93.91212:Rintagi Community Source Upgrade [PTY]~@~10.93.91212~@~2019-12-16 00:00:00.000~@~M~@~5~@~2~@~~@~This is for exact prototype and will deploy all source code to override existing.
+91~@~Rintagi Community Runtime Install~@~RO:11.118.00210:Rintagi Community Runtime Install [NDEV]~@~11.118.00210~@~2020-02-10 00:00:00.000~@~M~@~6~@~7~@~IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ReleaseDtl]'))
+EXEC('
+SET NOCOUNT ON
+
+DELETE c
+from release r 
+inner join entity e on r.EntityId = e.entityid
+inner join ctreleasetype et on r.releasetypeid = et.releasetypeid and (et.ReleaseTypeAbbr IN (''DEV'',''NDEV'') OR e.EntityName like ''% Community %'')
+inner join ClientTier c on c.EntityId = e.EntityId
+
+DELETE d 
+from release r 
+inner join entity e on r.EntityId = e.entityid
+inner join ctreleasetype et on r.releasetypeid = et.releasetypeid and (et.ReleaseTypeAbbr IN (''DEV'',''NDEV'') OR e.EntityName like ''% Community %'')
+inner join DataTier d on d.EntityId = e.EntityId
+
+DELETE ru 
+from release r 
+inner join entity e on r.EntityId = e.entityid
+inner join ctreleasetype et on r.releasetypeid = et.releasetypeid and (et.ReleaseTypeAbbr IN (''DEV'',''NDEV'') OR e.EntityName like ''% Community %'')
+inner join RuleTier ru on ru.EntityId = e.EntityId
+
+DELETE rd
+from release r 
+inner join entity e on r.EntityId = e.entityid
+inner join ctreleasetype et on r.releasetypeid = et.releasetypeid and (et.ReleaseTypeAbbr IN (''DEV'',''NDEV'') OR e.EntityName like ''% Community %'')
+inner join releaseDtl rd on rd.ReleaseId = r.ReleaseId
+
+DELETE r
+from release r 
+inner join entity e on r.EntityId = e.entityid
+inner join ctreleasetype et on r.releasetypeid = et.releasetypeid and (et.ReleaseTypeAbbr IN (''DEV'',''NDEV'') OR e.EntityName like ''% Community %'')
+
+DELETE e
+FROM Entity e
+LEFT OUTER JOIN dbo.Release r on r.EntityId = e.EntityId
+WHERE r.ReleaseId IS NULL
+update d
+Set ObjectExempt = ''*.config |data |.git |Thumbs.db'',
+             SprocOnly = ''A''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''PDT'',''PTY'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''C'' 
+
+update d
+Set ObjectExempt = ''.git |Install.zip |Thumbs.db'',
+             SprocOnly = ''A''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''NPDT'',''NPTY'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''C'' 
+
+update d
+Set ObjectExempt = ''.git |.vs |*.user'', ObjectName = ''Lib\*.* |UsrAccess\*.* |UsrRules\*.*  |React\*.* |*.sln |.gitignore''
+             ,SprocOnly = ''A''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid 
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''R'' 
+
+update d
+Set ObjectExempt = ''.git |.vs |*.user |rintagi.js'', ObjectName = ''Lib\*.* |UsrAccess\*.* |UsrRules\*.*  |React\*.* |*.sln |.gitignore''
+             ,SprocOnly = ''A''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid 
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO'' and rt.releasetypeabbr in (''PTY'')
+WHERE d.ObjectType = ''R'' 
+
+update d
+Set SprocOnly = ''P'', DoSpEncrypt = ''Y''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''NPDT'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''D'' AND SprocOnly <> ''A''
+
+update d
+Set SprocOnly = ''Y'', DoSpEncrypt = ''Y'',ObjectExempt=''''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''PDT'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''D'' AND SprocOnly <> ''A''
+
+
+update d
+Set ObjectExempt = ''ClientTier |Custom |CustomDtl |DataTier |Deleted |DshAvail |DshFld |DshFldDtl |Entity |HomeTab |MaintMsg |MenuPrm |Printer |Printer_MemberId |Printer_UsrGroupId |Release |ReleaseDtl |ReportLstCri |RptTemplate |RuleTier |ScreenLstInf |ScreenLstCri |Systems |Template |Usage |Usr |UsrGroup |UsrGroupAuth |UsrImpr |UsrAudit |UsrLink |UsrProvider |UsrPwd |UsrSafeIP |UtRptMemCri |UtRptMemCriDtl |UtRptMemFld |UtReport |UtReportDel |UtReportHlp |UtReportCri |UtReportCriHlp |UtReportObj |UtReportObjHlp |UtRptElm |UtRptCel |UtRptTbl |UtRptCha |UtRptCtr |UtReportLstCri |UtRptMemCri |UtRptMemCriDtl |WebRule |Rptwiz |RptwizDtl'',
+             SprocOnly = ''P'', DoSPEncrypt=''Y''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''PDT'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''D'' and ObjectName like ''%Design%'' AND SprocOnly <> ''A''
+
+
+update d
+Set ObjectExempt = ''Custom |CustomDtl |Deleted |DshAvail |DshFld |DshFldDtl | MenuPrm |ReportLstCri |RptTemplate |Rptwiz |RptwizDtl |ScreenLstInf |ScreenLstCri |Template |WebRule |Usage |UtRptMemCri |UtRptMemCriDtl |UtRptMemFld |UtReport |UtReportDel |UtReportHlp |UtReportCri |UtReportCriHlp |UtReportObj |UtReportObjHlp |UtRptElm |UtRptCel |UtRptTbl |UtRptCha |UtRptCtr |UtReportLstCri |UtRptMemCri |UtRptMemCriDtl'',
+             SprocOnly = ''P'', DoSPEncrypt=''Y''
+from ReleaseDtl d
+inner join release r on r.releaseid = d.releaseid
+inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.releasetypeabbr in (''PDT'')
+inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
+WHERE d.ObjectType = ''D'' and ObjectName like ''%CmonD%'' AND SprocOnly <> ''A''
+')~@~RO ONLY: This is for ordinary development and will deploy object code to create a new application.
+92~@~Rintagi Community Runtime Upgrade~@~RO:11.118.00210:Rintagi Community Runtime Upgrade [DEV]~@~11.118.00210~@~2020-02-10 00:00:00.000~@~M~@~6~@~1~@~/* Please be reminded that each user requires a valid Company and Project. */~@~RO ONLY: This is for ordinary development and will deploy object code to upgrade existing application.
+93~@~Rintagi Source DB Only Upgrade~@~RO:11.119.00211:Rintagi Source DB Only Upgrade [PTY]~@~11.119.00211~@~2020-02-11 00:00:00.000~@~M~@~7~@~2~@~~@~This is for exact prototype and will deploy all source code to override existing.
+94~@~Rintagi Source DB Only Install~@~RO:11.119.00211:Rintagi Source DB Only Install [NPTY]~@~11.119.00211~@~2020-02-11 00:00:00.000~@~M~@~7~@~5~@~~@~This is for exact prototype and will deploy all source code to create new.
+96~@~Rintagi Local DB Configuration~@~RO:11.119.00211:Rintagi Local DB Configuration [PTY]~@~11.119.00211~@~2020-02-11 00:00:00.000~@~M~@~8~@~2~@~~@~Local installation related DB setup(intended for passing, excluded local setup to another setup, transfer of PTY setups that is unrelated to system features)

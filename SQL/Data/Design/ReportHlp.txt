@@ -1,0 +1,73 @@
+1~@~2~@~1~@~Please select the desired table or leave it blank for all tables and other citeria to inspect the data tables and columns used in all systems.~@~Tables and Columns
+2~@~53~@~1~@~Please select the appropriate criteria and click one of the action buttons to review the report requested. Only current company data is selected.~@~Users Information
+3~@~54~@~1~@~Please select the system and time frame to report usage on. A particular entity may be specified. Company and User are authorized only. Please check User Manager for more details. Clear criteria will default to last selected criteria. To-Date is always defaulted to today's date.~@~Usage Report
+4~@~55~@~1~@~Please select the desired system and click one of the buttons to inspect all the business rules on the database server.~@~Server Rules Listing
+5~@~56~@~1~@~Please select the desired system, choose a human language and perhaps a screen, and inspect all messages and labels relating to each screen.~@~Message & Label List
+6~@~57~@~1~@~Please select the desired system and click one of the buttons to inspect the data dictionary.~@~Data Dictionary
+7~@~58~@~1~@~Please select the desired system and culture and click one of the buttons to inspect the programs listing.~@~Program Listing
+9~@~53~@~4~@~请选择合适的行动准则,按一按钮审查要求的报告. 目前公司的报关资料仅.~@~用户信息
+13~@~57~@~4~@~请选择所需的系统之一,按按钮检查数据字典.~@~数据字典
+14~@~58~@~4~@~请选择所需的制度和文化的一个按钮,点击察看节目清单.~@~上市计画
+15~@~2~@~4~@~请选择所需的表或全部留给空白表格等三类检查数据表和栏目用于所有系统.~@~桌子、栏目
+16~@~2~@~2~@~Veuillez choisir la table désirée ou la laisser blanche pour que toutes les tables et tout autre citeria inspecte les tables et les colonnes de données utilisées dans tous les systèmes.~@~Tableaux et colonnes
+17~@~53~@~2~@~Veuillez choisir les critères appropriés et cliquer un des boutons d'action pour passer en revue le rapport demandé. Seulement des données courantes de compagnie sont choisies.~@~L&#39;information d&#39;utilisateurs
+21~@~57~@~2~@~Veuillez choisir le système désiré et cliquer un des boutons pour inspecter le dictionnaire de données.~@~Dictionnaire de données
+22~@~58~@~2~@~Veuillez choisir le système et la culture désirés et cliquer un des boutons pour inspecter l'énumération de programmes.~@~Liste de programme
+272~@~2~@~8~@~कृपया इच्छित तालिका का चयन करें या यह सब मेज और अन्य citeria के लिए खाली छोड़ने के लिए डेटा तालिका और कॉलम सभी प्रणालियों में इस्तेमाल किया निरीक्षण किया.~@~टेबल और कॉलम
+273~@~53~@~8~@~कृपया उचित मानदंड और कार्रवाई के बटन पर क्लिक करें एक को चुनने के लिए रिपोर्ट की समीक्षा करने का अनुरोध किया. केवल वर्तमान कंपनी डाटा चुना है.~@~प्रयोक्ता जानकारी
+277~@~57~@~8~@~कृपया इच्छित व्यवस्था क्लिक करें और बटन के एक शब्दकोश डेटा निरीक्षण का चयन करें.~@~डेटा शब्दकोश
+278~@~58~@~8~@~कृपया वांछित व्यवस्था और संस्कृति पर क्लिक करें और बटन के एक कार्यक्रम लिस्टिंग निरीक्षण का चयन करें.~@~कार्यक्रम लिस्टिंग
+279~@~2~@~9~@~Por favor, selecione a tabela desejada ou deixe em branco para todas as tabelas e outros citeria para inspecionar as tabelas de dados e colunas usadas em todos os sistemas.~@~Tabelas e colunas
+280~@~53~@~9~@~Por favor, selecione os critérios apropriados e clique em um dos botões de ação para rever o relatório solicitado. Apenas os dados da empresa atual é selecionado.~@~Informação usuários
+284~@~57~@~9~@~Selecione o sistema desejado e clique em um dos botões para inspecionar o dicionário de dados.~@~Dicionário de Dados
+285~@~58~@~9~@~Selecione o sistema desejado e cultura e clique em um dos botões para inspecionar a lista de programas.~@~Listagem programa
+286~@~2~@~11~@~Lütfen istediğiniz tabloyu seçin veya tüm tabloları ve tüm sistemlerinde kullanılan veri tabloları ve sütunları incelemek için diğer citeria boş bırakın.~@~Tablolar ve sütunlar
+287~@~53~@~11~@~Lütfen uygun kriterleri seçmek ve istenen raporu gözden geçirmek için bir eylem düğmeleri tıklayın. Sadece mevcut şirket verilerini seçilir.~@~Kullanıcılar Bilgi
+291~@~57~@~11~@~Lütfen istenilen sistemini seçin ve veri sözlüğü incelemek için düğmelerden birine tıklayın.~@~Veri Sözlüğü
+292~@~58~@~11~@~Lütfen seçin ve istenilen sistem ve kültür programları listesini incelemek için düğmelerden birine tıklatın.~@~Programı Listeleme
+293~@~2~@~14~@~目的のテーブルを選択するか、またはすべてのテーブルとすべてのシステムで使用されるデータのテーブルおよび列を検査する他のciteriaためには何も入力しないでください。~@~テーブルとカラム
+294~@~53~@~14~@~適切な基準を選択し、要求されたレポートを確認するためのアクションボタンのいずれかをクリックしてください。のみ、現在の会社のデータが選択されています。~@~ユーザー情報
+298~@~57~@~14~@~必要なシステムを選択し、データディクショナリを検査するのいずれかのボタンをクリックしてください。~@~データ辞書
+299~@~58~@~14~@~目的のシステムや文化を選択し、プログラムのリストを検査するのいずれかのボタンをクリックしてください。~@~プログラムリスト
+300~@~2~@~12~@~Пожалуйста, выберите нужную таблицу или оставьте это поле пустым для всех таблиц и других citeria для проверки данных таблиц и столбцов, используемых во всех системах.~@~Таблицы и столбцы
+301~@~53~@~12~@~Пожалуйста, выберите соответствующие критерии и нажмите одну из кнопок для рассмотрения этого доклада просили. Только текущие данные компании выбран.~@~Пользователи информации
+305~@~57~@~12~@~Пожалуйста, выберите нужную систему и нажмите одну из кнопок для проверки данных словаря.~@~Словарь данных
+306~@~58~@~12~@~Пожалуйста, выберите нужную систему и культуру, и нажмите одну из кнопок для проверки программ листинга.~@~Программа листинга
+307~@~2~@~13~@~Por favor, seleccione la tabla deseada o dejarlo en blanco para todas las tablas y otros citeria para inspeccionar las tablas de datos y las columnas utilizadas en todos los sistemas.~@~Tablas y columnas
+308~@~53~@~13~@~Por favor, seleccione los criterios adecuados y haga clic en uno de los botones de acción para revisar el informe solicitado. Sólo datos de la empresa actual está seleccionada.~@~Usuarios de la Información
+312~@~57~@~13~@~Por favor, seleccione el sistema deseado y haga clic en uno de los botones para inspeccionar el diccionario de datos.~@~Diccionario de Datos
+313~@~58~@~13~@~Por favor, seleccione el sistema deseado y de la cultura y haga clic en uno de los botones para inspeccionar la lista de programas.~@~Programa de venta
+316~@~2~@~68~@~Bitte wählen Sie die gewünschte Tabelle oder leer lassen für alle Tabellen und andere citeria, um die Daten von Tabellen und Spalten in allen Systemen verwendet inspizieren.~@~Tabellen und Spalten
+317~@~53~@~68~@~Bitte wählen Sie die entsprechenden Kriterien und klicken Sie auf eine der Schaltflächen, um den Bericht angefordert überprüfen. Nur aktuelle Unternehmensdaten ausgewählt ist.~@~Benutzer Information
+321~@~57~@~68~@~Bitte wählen Sie das gewünschte System aus und klicken Sie auf eine der Schaltflächen, um das Data Dictionary zu inspizieren.~@~Data Dictionary
+322~@~58~@~68~@~Bitte wählen Sie das gewünschte System und Kultur und klicken Sie auf eine der Schaltflächen, um die Programme Auflistung inspizieren.~@~Programm Listing
+325~@~2~@~28~@~원하는 테이블을 선택하거나 모든 테이블과 모든 시스템에서 사용되는 데이터 테이블과 열을 검사 할 수있는 다른 citeria 공백으로 남겨 주시기 바랍니다.~@~테이블과 열
+326~@~53~@~28~@~적절한 기준을 선택하고 요청 보고서를 검토 할 수있는 작업 버튼 중 하나를 클릭하십시오. 만 현재 회사 데이터가 선택됩니다.~@~사용자 정보
+330~@~57~@~28~@~원하는 시스템을 선택하고 데이터 사전을 검사하기 버튼 중 하나를 클릭하십시오.~@~데이터 사전
+331~@~58~@~28~@~원하는 시스템과 문화를 선택하고 프로그램 목록을 검사하기 버튼 중 하나를 클릭하십시오.~@~프로그램 목록
+335~@~59~@~1~@~Please select the end date and number of months required for this SR&ED report and press one of the action buttons.~@~SR&ED Remittance
+336~@~60~@~1~@~Please select the desired criteria and click one of the action buttons to inspect the SR&ED Time Detail Report.~@~SR&ED Time Report
+337~@~61~@~1~@~Please select the desired criteria and click one of the action buttons to inspect the SR&ED Statistic chart.~@~SR&ED Statistic
+338~@~55~@~4~@~请选择所需的系统，然后单击其中一个按钮来检查所有的数据库服务器上的业务规则。~@~服务器规则列表
+339~@~59~@~4~@~请选择结束日期和数量需要这种SR＆ED报告个月的，按的动作按钮之一。~@~SR＆ED汇款
+340~@~60~@~4~@~请选择所需的条件，然后单击的动作按钮之一，检查SR＆ED时详细报告。~@~SR＆ED的报告时间
+341~@~61~@~4~@~请选择所需的条件，然后单击的动作按钮之一，检查SR＆ED统计图表。~@~SR＆ED统计
+342~@~55~@~28~@~원하는 시스템을 선택하고 데이터베이스 서버에있는 모든 비즈니스 규칙을 검사 버튼 중 하나를 클릭하십시오.~@~목록 서버 규칙
+343~@~59~@~28~@~이 SR & ED 보고서에 필요한 개월의 종료 날짜 및 번호를 선택하고 액션 버튼 중 하나를 누르십시오.~@~SR & ED 송금
+344~@~60~@~28~@~원하는 기준을 선택하고 SR & ED 시간 정보 보고서를 검사하는 작업 버튼 중 하나를 클릭하십시오.~@~SR & ED 시간 보고서
+345~@~61~@~28~@~원하는 기준을 선택하고 SR & ED 통계 차트를 검사하는 작업 버튼 중 하나를 클릭하십시오.~@~SR & ED 통계
+346~@~54~@~4~@~请选择系统和时限报告使用情况。一个特定的实体可以指定。公司和用户仅被授权。请检查用户管理器获取更多信息。明确的标准将默认为最后选择的标准。最新总是默认为今天的日期。~@~使用情况报告
+347~@~62~@~1~@~Please select the desired system, choose a human language, and inspect the current permission settings relating to each menu, screen, and report.If "Active..." is checked, only entity with active users will be reported. To filter on a particular user group, try entering the name in "Contains".~@~Permission Listing
+349~@~64~@~1~@~Please select the desired criteria and click one of the action buttons to inspect the Login Audit Report.~@~Login Audit Report
+350~@~2~@~114~@~Veuillez sélectionner la table souhaitée ou la laisser vide pour toutes les tables et autres citations afin d'inspecter les tables de données et les colonnes utilisées dans tous les systèmes.~@~Tables et colonnes
+351~@~53~@~114~@~Veuillez sélectionner les critères appropriés et cliquez sur l'un des boutons d'action pour examiner le rapport demandé. Seules les données actuelles de l'entreprise sont sélectionnées.~@~Informations utilisateurs
+352~@~54~@~114~@~Veuillez sélectionner le système et le délai pour signaler l'utilisation. Une entité particulière peut être spécifiée. La société et l'utilisateur sont autorisés uniquement. Veuillez consulter le Gestionnaire des utilisateurs pour plus de détails. L'effacement des critères sera par défaut le dernier critère sélectionné. La date actuelle est toujours par défaut la date d'aujourd'hui.~@~Rapport d'utilisation
+353~@~55~@~114~@~Veuillez sélectionner le système souhaité et cliquez sur l'un des boutons pour inspecter toutes les règles métier du serveur de base de données.~@~Liste des règles du serveur
+354~@~56~@~114~@~Veuillez sélectionner le système souhaité, choisissez une langue humaine et peut-être un écran, et inspectez tous les messages et étiquettes relatifs à chaque écran.~@~Liste de messages et d'étiquettes
+355~@~57~@~114~@~Veuillez sélectionner le système souhaité et cliquez sur l'un des boutons pour inspecter le dictionnaire de données.~@~Dictionnaire de données
+356~@~58~@~114~@~Veuillez sélectionner le système et la culture souhaités et cliquez sur l'un des boutons pour inspecter la liste des programmes.~@~Liste des programmes
+357~@~59~@~114~@~Veuillez sélectionner la date de fin et le nombre de mois requis pour ce rapport de RS&DE et appuyez sur l'un des boutons d'action.~@~Remise de RS&DE
+358~@~60~@~114~@~Veuillez sélectionner les critères souhaités et cliquez sur l'un des boutons d'action pour inspecter le rapport détaillé sur le temps de RS&DE.~@~Rapport de temps RS&DE
+359~@~61~@~114~@~Veuillez sélectionner les critères souhaités et cliquez sur l'un des boutons d'action pour inspecter le tableau des statistiques de la RS&DE.~@~Statistique RS&DE
+360~@~62~@~114~@~Veuillez sélectionner le système souhaité, choisissez une langue humaine et inspectez les paramètres d'autorisation actuels relatifs à chaque menu, écran et rapport.Si "Actif ..." est coché, seule l'entité avec des utilisateurs actifs sera signalée. Pour filtrer sur un groupe d'utilisateurs particulier, essayez d'entrer le nom dans "Contient".~@~Liste des autorisations
+361~@~64~@~114~@~Veuillez sélectionner les critères souhaités et cliquez sur l'un des boutons d'action pour inspecter le rapport d'audit de connexion.~@~Rapport d'audit de connexion

@@ -1,0 +1,4 @@
+c~@~Currency~@~2
+g~@~Numeric~@~3
+n~@~Money~@~1
+p~@~Percent~@~4

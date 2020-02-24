@@ -11,15 +11,15 @@ import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
-import FileInputField from '../../components/custom/FileInput';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import DropdownField from '../../components/custom/DropdownField';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import {isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
-import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
 import { getNaviBar } from './index';
@@ -30,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class DtlRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmMenuPerm || {});
+    this.GetReduxState = () => (this.props.AdmMenuPerm || {});
     this.blocker = null;
     this.titleSet = false;
     this.SystemName = 'FintruX';
@@ -45,8 +45,8 @@ class DtlRecord extends RintagiScreen {
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
     this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
-    this.FileUploadChange = this.FileUploadChange.bind(this);
-//    this.BGlChartId65InputChange = this.BGlChartId65InputChange.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
 
@@ -63,12 +63,12 @@ class DtlRecord extends RintagiScreen {
       isMobile: false
     }
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
   }
-  
+
   mediaqueryresponse(value) {
     if (value.matches) { // if media query matches
       this.setState({ isMobile: true });
@@ -78,8 +78,14 @@ class DtlRecord extends RintagiScreen {
     }
   }
 
-PermId231InputChange() { const _this = this; return function (name, v) {const filterBy = ((_this.props.AdmMenuPerm || {}).Dtl || {}).PermKeyId231; _this.props.SearchPermId231(v, filterBy);}}
-/* ReactRule: Detail Record Custom Function */
+  PermId231InputChange() {
+    const _this = this; 
+    return function (name, v) { 
+      const filterBy = ((_this.props.AdmMenuPerm || {}).Dtl || {}).PermKeyId231; 
+      _this.props.SearchPermId231(v, filterBy);
+    } 
+  }
+  /* ReactRule: Detail Record Custom Function */
   /* ReactRule End: Detail Record Custom Function */
 
   ValidatePage(values) {
@@ -87,9 +93,9 @@ PermId231InputChange() { const _this = this; return function (name, v) {const fi
     const columnLabel = (this.props.AdmMenuPerm || {}).ColumnLabel || {};
     const regex = new RegExp(/^-?(?:\d+|\d{1,3}(?:\d{3})+)(?:(\.|,)\d+)?$/);
     /* standard field validation */
-if (isEmptyId((values.cGrantDeny231 || {}).value)) { errors.cGrantDeny231 = (columnLabel.GrantDeny231 || {}).ErrMessage;}
-if (isEmptyId((values.cPermKeyId231 || {}).value)) { errors.cPermKeyId231 = (columnLabel.PermKeyId231 || {}).ErrMessage;}
-if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLabel.PermId231 || {}).ErrMessage;}
+    if (isEmptyId((values.cGrantDeny231 || {}).value)) { errors.cGrantDeny231 = (columnLabel.GrantDeny231 || {}).ErrMessage; }
+    if (isEmptyId((values.cPermKeyId231 || {}).value)) { errors.cPermKeyId231 = (columnLabel.PermKeyId231 || {}).ErrMessage; }
+    if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLabel.PermId231 || {}).ErrMessage; }
     return errors;
   }
 
@@ -98,7 +104,7 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
 
     this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting });
     const ScreenButton = this.state.ScreenButton || {};
-/* ReactRule: Detail Record Save */
+    /* ReactRule: Detail Record Save */
     /* ReactRule End: Detail Record Save */
 
     this.props.SavePage(
@@ -107,9 +113,9 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
       [
         {
           MenuPrmId231: values.cMenuPrmId231 || null,
-          GrantDeny231: (values.cGrantDeny231|| {}).value || '',
-          PermKeyId231: (values.cPermKeyId231|| {}).value || '',
-          PermId231: (values.cPermId231|| {}).value || '',
+          GrantDeny231: (values.cGrantDeny231 || {}).value || '',
+          PermKeyId231: (values.cPermKeyId231 || {}).value || '',
+          PermId231: (values.cPermId231 || {}).value || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cMenuPrmId231 ? 'upd' : 'add'),
         }
       ],
@@ -119,8 +125,8 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
       }
     )
   }
- 
-   /* standard screen button actions */
+
+  /* standard screen button actions */
   CopyRow({ mst, dtl, dtlId, useMobileView }) {
     const AdmMenuPermState = this.props.AdmMenuPerm || {};
     const auxSystemLabels = AdmMenuPermState.SystemLabel || {};
@@ -131,8 +137,8 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
         if (currDtlId) {
           this.props.AddDtl(mst.MenuId39, currDtlId);
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', mst, {}, this.props.AdmMenuPerm.Label);
-            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'Dtl', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', mst, {}, this.props.AdmMenuPerm.Label);
+            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'DtlRecord', '/'), '_'));
           }
           else {
             if (this.props.OnCopy) this.props.OnCopy();
@@ -142,7 +148,7 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
           this.setState({ ModalOpen: true, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
         }
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   }
@@ -226,7 +232,7 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
     return revisedState;
   }
 
- confirmUnload(message, callback) {
+  confirmUnload(message, callback) {
     const AdmMenuPermState = this.props.AdmMenuPerm || {};
     const auxSystemLabels = AdmMenuPermState.SystemLabel || {};
     const confirm = () => {
@@ -237,9 +243,9 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
     }
     this.setState({ ModalOpen: true, ModalSuccess: confirm, ModalCancel: cancel, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: message });
   }
-  
+
   setDirtyFlag(dirty) {
-   /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
+    /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
     if (dirty) {
       if (this.blocker) unregisterBlocker(this.blocker);
       this.blocker = this.confirmUnload;
@@ -263,7 +269,7 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
     if (!suppressLoadPage) {
       const { mstId, dtlId } = { ...this.props.match.params };
       if (!(this.props.AdmMenuPerm || {}).AuthCol || true)
-        this.props.LoadPage('Item', { mstId : mstId || '_', dtlId:dtlId || '_' });
+        this.props.LoadPage('Item', { mstId: mstId || '_', dtlId: dtlId || '_' });
     }
     else {
       return;
@@ -272,13 +278,13 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
   componentDidUpdate(prevprops, prevstates) {
     const currReduxScreenState = this.props.AdmMenuPerm || {};
 
-    if(!this.props.suppressLoadPage) {
-      if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!this.props.suppressLoadPage) {
+      if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
         const _this = this;
         setTimeout(() => _this.props.setSpinner(false), 500);
       }
     }
-    
+
     this.SetPageTitle(currReduxScreenState);
     if (prevstates.key !== (currReduxScreenState.EditDtl || {}).key) {
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveCloseDtl') {
@@ -286,7 +292,7 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
         const currDtl = (currReduxScreenState.EditDtl);
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
 
-        const naviBar = getNaviBar('Dtl', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('DtlRecord', currMst, currDtl, currReduxScreenState.Label);
         const dtlListPath = getDefaultPath(getNaviPath(naviBar, 'DtlList', '/'));
 
         this.props.history.push(dtlListPath);
@@ -320,13 +326,15 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
     const DetailRecSubtitle = ((screenHlp || {}).DetailRecSubtitle || '');
     const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
+    const selectList = AdmMenuPermReduxObj.SearchListToSelectList(AdmMenuPermState);
+    const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
     const screenButtons = AdmMenuPermReduxObj.GetScreenButtons(AdmMenuPermState) || {};
     const auxLabels = AdmMenuPermState.Label || {};
     const auxSystemLabels = AdmMenuPermState.SystemLabel || {};
     const columnLabel = AdmMenuPermState.ColumnLabel || {};
     const currMst = AdmMenuPermState.Mst;
     const currDtl = AdmMenuPermState.EditDtl;
-    const naviBar = getNaviBar('Dtl', currMst, currDtl, screenButtons);
+    const naviBar = getNaviBar('DtlRecord', currMst, currDtl, screenButtons);
     const authCol = this.GetAuthCol(AdmMenuPermState);
     const authRow = (AdmMenuPermState.AuthRow || [])[0] || {};
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -334,28 +342,14 @@ if (isEmptyId((values.cPermId231 || {}).value)) { errors.cPermId231 = (columnLab
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const GrantDeny231List = AdmMenuPermReduxObj.ScreenDdlSelectors.GrantDeny231(AdmMenuPermState);
-const GrantDeny231 = currDtl.GrantDeny231;
-const PermKeyId231List = AdmMenuPermReduxObj.ScreenDdlSelectors.PermKeyId231(AdmMenuPermState);
-const PermKeyId231 = currDtl.PermKeyId231;
-const PermId231List = AdmMenuPermReduxObj.ScreenDdlSelectors.PermId231(AdmMenuPermState);
-const PermId231 = currDtl.PermId231;
-// custome image upload code
-//    const TrxDetImg65 = currDtl.TrxDetImg65 ? (currDtl.TrxDetImg65.startsWith('{') ? JSON.parse(currDtl.TrxDetImg65) : { fileName: '', mimeType: 'image/jpeg', base64: currDtl.TrxDetImg65 }) : null;
-//    const TrxDetImg65FileUploadOptions = {
-//      CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
-//      DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
-//      MaxImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ResizeWidth,
-//        Height:(columnLabel.TrxDetImg65 || {}).ResizeHeight,
-//      },
-//      MinImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ColumnSize,
-//        Height:(columnLabel.TrxDetImg65 || {}).ColumnHeight,
-//      },
-//    }
-/* ReactRule: Detail Record Render */
-/* ReactRule End: Detail Record Render */
+    const GrantDeny231List = AdmMenuPermReduxObj.ScreenDdlSelectors.GrantDeny231(AdmMenuPermState);
+    const GrantDeny231 = currDtl.GrantDeny231;
+    const PermKeyId231List = AdmMenuPermReduxObj.ScreenDdlSelectors.PermKeyId231(AdmMenuPermState);
+    const PermKeyId231 = currDtl.PermKeyId231;
+    const PermId231List = AdmMenuPermReduxObj.ScreenDdlSelectors.PermId231(AdmMenuPermState);
+    const PermId231 = currDtl.PermId231;
+    /* ReactRule: Detail Record Render */
+    /* ReactRule End: Detail Record Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -373,9 +367,10 @@ const PermId231 = currDtl.PermId231;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cGrantDeny231: GrantDeny231List.filter(obj => { return obj.key === currDtl.GrantDeny231 })[0],
-                  cPermKeyId231: PermKeyId231List.filter(obj => { return obj.key === currDtl.PermKeyId231 })[0],
-                  cPermId231: PermId231List.filter(obj => { return obj.key === currDtl.PermId231 })[0],
+                    cMenuPrmId231: currDtl.MenuPrmId231 || '',
+                    cGrantDeny231: GrantDeny231List.filter(obj => { return obj.key === currDtl.GrantDeny231 })[0],
+                    cPermKeyId231: PermKeyId231List.filter(obj => { return obj.key === currDtl.PermKeyId231 })[0],
+                    cPermId231: PermId231List.filter(obj => { return obj.key === currDtl.PermId231 })[0],
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -412,7 +407,7 @@ const PermId231 = currDtl.PermId231;
                                   <ButtonGroup className='btn-group--icons'>
                                     <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
                                     {
-                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).MenuId39,currDtl.MenuPrmId231)).length > 0 &&
+                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).MenuId39, currDtl.MenuPrmId231)).length > 0 &&
                                       <DropdownToggle className='mw-50' outline>
                                         <i className='fa fa-ellipsis-h icon-holder'></i>
                                         {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
@@ -424,7 +419,7 @@ const PermId231 = currDtl.PermId231;
                                     <DropdownMenu right className={`dropdown__menu dropdown-options`}>
                                       {
                                         dropdownMenuButtonList.filter(v => !v.expose).map(v => {
-                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).MenuId39,currDtl.MenuPrmId231)) return null;
+                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).MenuId39, currDtl.MenuPrmId231)) return null;
                                           return (
                                             <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, submitForm, mst: currMst, dtl: currDtl, useMobileView })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
                                         })
@@ -437,84 +432,101 @@ const PermId231 = currDtl.PermId231;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          <div className='form__form-group'>
+                            <div className='form__form-group-narrow'>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                           <div className='w-100'>
                             <Row>
-            {(authCol.GrantDeny231 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.GrantDeny231 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.GrantDeny231 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.GrantDeny231 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.GrantDeny231 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cGrantDeny231'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cGrantDeny231')}
-value={values.cGrantDeny231}
-options={GrantDeny231List}
-placeholder=''
-disabled = {(authCol.GrantDeny231 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cGrantDeny231 && touched.cGrantDeny231 && <span className='form__form-group-error'>{errors.cGrantDeny231}</span>}
-</div>
-</Col>
-}
-{(authCol.PermKeyId231 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.PermKeyId231 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PermKeyId231 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PermKeyId231 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PermKeyId231 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cPermKeyId231'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cPermKeyId231')}
-value={values.cPermKeyId231}
-options={PermKeyId231List}
-placeholder=''
-disabled = {(authCol.PermKeyId231 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cPermKeyId231 && touched.cPermKeyId231 && <span className='form__form-group-error'>{errors.cPermKeyId231}</span>}
-</div>
-</Col>
-}
-{(authCol.PermId231 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.PermId231 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PermId231 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PermId231 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PermId231 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<AutoCompleteField
-name='cPermId231'
-onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cPermId231', false)}
-onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cPermId231', true)}
-onInputChange={this.PermId231InputChange()}
-value={values.cPermId231}
-defaultSelected={PermId231List.filter(obj => { return obj.key === PermId231 })}
-options={PermId231List}
-filterBy={this.AutoCompleteFilterBy}
-disabled = {(authCol.PermId231 || {}).readonly ? true: false }/>
-</div>
-}
-{errors.cPermId231 && touched.cPermId231 && <span className='form__form-group-error'>{errors.cPermId231}</span>}
-</div>
-</Col>
-}
+                              {(authCol.GrantDeny231 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.GrantDeny231 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.GrantDeny231 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.GrantDeny231 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.GrantDeny231 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cGrantDeny231'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cGrantDeny231')}
+                                          value={values.cGrantDeny231}
+                                          options={GrantDeny231List}
+                                          placeholder=''
+                                          disabled={(authCol.GrantDeny231 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cGrantDeny231 && touched.cGrantDeny231 && <span className='form__form-group-error'>{errors.cGrantDeny231}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.PermKeyId231 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PermKeyId231 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PermKeyId231 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PermKeyId231 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PermKeyId231 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cPermKeyId231'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cPermKeyId231')}
+                                          value={values.cPermKeyId231}
+                                          options={PermKeyId231List}
+                                          placeholder=''
+                                          disabled={(authCol.PermKeyId231 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cPermKeyId231 && touched.cPermKeyId231 && <span className='form__form-group-error'>{errors.cPermKeyId231}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.PermId231 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PermId231 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PermId231 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PermId231 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PermId231 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmMenuPermState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='cPermId231'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cPermId231', false)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cPermId231', true)}
+                                          onInputChange={this.PermId231InputChange()}
+                                          value={values.cPermId231}
+                                          defaultSelected={PermId231List.filter(obj => { return obj.key === PermId231 })}
+                                          options={PermId231List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol.PermId231 || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.cPermId231 && touched.cPermId231 && <span className='form__form-group-error'>{errors.cPermId231}</span>}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mb-0'>
@@ -530,7 +542,7 @@ disabled = {(authCol.PermId231 || {}).readonly ? true: false }/>
                                     bottomButtonList
                                       .filter(v => v.expose)
                                       .map((v, i, a) => {
-                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).MenuId39,currDtl.MenuPrmId231)) return null;
+                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).MenuId39, currDtl.MenuPrmId231)) return null;
                                         const buttonCount = a.length;
                                         const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
@@ -573,11 +585,10 @@ const mapDispatchToProps = (dispatch) => (
     { LoadPage: AdmMenuPermReduxObj.LoadPage.bind(AdmMenuPermReduxObj) },
     { AddDtl: AdmMenuPermReduxObj.AddDtl.bind(AdmMenuPermReduxObj) },
     { SavePage: AdmMenuPermReduxObj.SavePage.bind(AdmMenuPermReduxObj) },
-{ SearchPermId231: AdmMenuPermReduxObj.SearchActions.SearchPermId231.bind(AdmMenuPermReduxObj) },
-  { setTitle: setTitle },
+    { SearchPermId231: AdmMenuPermReduxObj.SearchActions.SearchPermId231.bind(AdmMenuPermReduxObj) },
+    { setTitle: setTitle },
     { setSpinner: setSpinner },
   ), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
-

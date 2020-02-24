@@ -8,7 +8,6 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
-using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Threading;
 using System.Linq;
@@ -179,6 +178,7 @@ namespace RO.Web
 				Session.Remove(KEY_dtAdmReport67List);
 				Session.Remove(KEY_dtSystems);
 				Session.Remove(KEY_sysConnectionString);
+				Session.Remove(KEY_sysConnectionString + "Pwd");
 				Session.Remove(KEY_dtScreenHlp);
 				Session.Remove(KEY_dtClientRule);
 				Session.Remove(KEY_dtAuthCol);
@@ -267,7 +267,7 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 			}
 			else if (string.IsNullOrEmpty(bViewState.Text))		// Viewstate is lost.
 			{
-				Session["Idle:" + Request.Url.PathAndQuery] = "Y"; Response.Redirect(Request.Url.PathAndQuery);
+				Session["Idle:" + Request.Url.PathAndQuery] = "Y"; this.Redirect(Request.Url.PathAndQuery);
 			}
 			if (!string.IsNullOrEmpty(cCurrentTab.Value))
 			{
@@ -329,7 +329,7 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 				if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && (new AdminSystem()).IsRegenNeeded(string.Empty,67,0,0,LcSysConnString,LcAppPw))
 				{
 					(new GenScreensSystem()).CreateProgram(67, "Report Definition", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
-					Response.Redirect(Request.RawUrl);
+					this.Redirect(Request.RawUrl);
 				}
 			}
 			catch (Exception e) { bErrNow.Value = "Y"; PreMsgPopup(e.Message); }
@@ -557,6 +557,7 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 		private void GetSystems()
 		{
 			Session[KEY_sysConnectionString] = LcSysConnString;
+			Session[KEY_sysConnectionString + "Pwd"] = LcAppPw;
 			DataTable dtSystems = base.SystemsList;
 			if (dtSystems != null)
 			{
@@ -573,6 +574,7 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 					}
 					base.LCurr.DbId = byte.Parse(cSystemId.SelectedValue);
 					Session[KEY_sysConnectionString] = Config.GetConnStr(dtSystems.Rows[cSystemId.SelectedIndex]["dbAppProvider"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["ServerName"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["dbDesDatabase"].ToString(), "", dtSystems.Rows[cSystemId.SelectedIndex]["dbAppUserId"].ToString());
+					Session[KEY_sysConnectionString + "Pwd"] = base.AppPwd(base.LCurr.DbId);
 					cSystemLabel.Text = (new AdminSystem()).GetLabel(base.LUser.CultureId, "cSystem", "Label", null, null, null);
 					cSystem.Visible = true;
 				}
@@ -654,8 +656,8 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 				int filterId = 0; if (Utils.IsInt(cFilterId.SelectedValue)) { filterId = int.Parse(cFilterId.SelectedValue); }
 				try
 				{
-					try {dv = new DataView((new AdminSystem()).GetExp(67,"GetExpAdmReport67","Y",(string)Session[KEY_sysConnectionString],LcAppPw,filterId,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false)));}
-					catch {dv = new DataView((new AdminSystem()).GetExp(67,"GetExpAdmReport67","N",(string)Session[KEY_sysConnectionString],LcAppPw,filterId,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false)));}
+					try {dv = new DataView((new AdminSystem()).GetExp(67,"GetExpAdmReport67","Y",(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),filterId,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false)));}
+					catch {dv = new DataView((new AdminSystem()).GetExp(67,"GetExpAdmReport67","N",(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),filterId,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false)));}
 				}
 				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				if (eExport == "TXT")
@@ -964,14 +966,14 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					}
 					// In case DocId has not been saved properly, always find the most recent to replace as long as it has the same file name:
 					string DocId = string.Empty;
-					DocId = new AdminSystem().GetDocId(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), base.LUser.UsrId.ToString(), (string)Session[KEY_sysConnectionString], LcAppPw);
+					DocId = new AdminSystem().GetDocId(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), base.LUser.UsrId.ToString(), (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId));
 					if (DocId == string.Empty || !cRptTemplate22Ow.Checked)
 					{
-						DocId = new AdminSystem().AddDbDoc(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], LcAppPw, base.LUser);
+						DocId = new AdminSystem().AddDbDoc(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId), base.LUser);
 					}
 					else
 					{
-						new AdminSystem().UpdDbDoc(DocId, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], LcAppPw, base.LUser);
+						new AdminSystem().UpdDbDoc(DocId, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId), base.LUser);
 					}
 					cRptTemplate22Pan.Visible = false; cRptTemplate22Div.Visible = true;
 					SetRptTemplate22(cRptTemplate22GV, string.Empty);
@@ -1187,7 +1189,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 						string val = null; try {val=dt.Rows[ii]["LastCriteria"].ToString();} catch {};
 						base.SetCriBehavior(cComboBox, null, cLabel, dtCriHlp.Rows[ii-1]);
 						(new AdminSystem()).MkGetScreenIn("67", drv["ScreenCriId"].ToString(), "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), LcAppDb, LcDesDb, drv["MultiDesignDb"].ToString(), LcSysConnString, LcAppPw);
-						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], LcAppPw), drv["RequiredValid"].ToString(), 0, string.Empty, drv["DisplayMode"].ToString() != "AutoListBox", val, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], LcAppPw));
+						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)), drv["RequiredValid"].ToString(), 0, string.Empty, drv["DisplayMode"].ToString() != "AutoListBox", val, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)));
 						FilterCriteriaDdl(cCriteria, dv, drv);
 						cComboBox.DataSource = dv;
 						try { cComboBox.SelectByValue(dt.Rows[ii]["LastCriteria"], string.Empty, false); } catch { try { cComboBox.SelectedIndex = 0; } catch { } }
@@ -1197,7 +1199,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 						cDropDownList = (DropDownList)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
 						base.SetCriBehavior(cDropDownList, null, cLabel, dtCriHlp.Rows[ii-1]);
 						(new AdminSystem()).MkGetScreenIn("67", drv["ScreenCriId"].ToString(), "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), LcAppDb, LcDesDb, drv["MultiDesignDb"].ToString(), LcSysConnString, LcAppPw);
-						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], LcAppPw), drv["RequiredValid"].ToString(), 0, string.Empty, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], LcAppPw));
+						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)), drv["RequiredValid"].ToString(), 0, string.Empty, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)));
 						FilterCriteriaDdl(cCriteria, dv, drv);
 						cDropDownList.DataSource = dv;
 						cDropDownList.DataBind();
@@ -1209,7 +1211,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 						string val = null; try {val=dt.Rows[ii]["LastCriteria"].ToString();} catch {};
 						base.SetCriBehavior(cListBox, null, cLabel, dtCriHlp.Rows[ii-1]);
 						(new AdminSystem()).MkGetScreenIn("67", drv["ScreenCriId"].ToString(), "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), LcAppDb, LcDesDb, drv["MultiDesignDb"].ToString(), LcSysConnString, LcAppPw);
-						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], LcAppPw), drv["RequiredValid"].ToString(), 0, string.Empty, drv["DisplayMode"].ToString() != "AutoListBox", val, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], LcAppPw));
+						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)), drv["RequiredValid"].ToString(), 0, string.Empty, drv["DisplayMode"].ToString() != "AutoListBox", val, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)));
 						FilterCriteriaDdl(cCriteria, dv, drv);
 						cListBox.DataSource = dv;
 						cListBox.DataBind();
@@ -1220,7 +1222,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 						cRadioButtonList = (RadioButtonList)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
 						base.SetCriBehavior(cRadioButtonList, null, cLabel, dtCriHlp.Rows[ii-1]);
 						(new AdminSystem()).MkGetScreenIn("67", drv["ScreenCriId"].ToString(), "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), LcAppDb, LcDesDb, drv["MultiDesignDb"].ToString(), LcSysConnString, LcAppPw);
-						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], LcAppPw), drv["RequiredValid"].ToString(), 0, string.Empty, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], LcAppPw));
+						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)), drv["RequiredValid"].ToString(), 0, string.Empty, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)));
 						FilterCriteriaDdl(cCriteria, dv, drv);
 						cRadioButtonList.DataSource = dv;
 						cRadioButtonList.DataBind();
@@ -1272,7 +1274,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						cComboBox = (RoboCoder.WebControls.ComboBox)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
 						string val = cComboBox.SelectedValue;
-						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], LcAppPw), drv["RequiredValid"].ToString(), 0, string.Empty, drv["DisplayMode"].ToString() != "AutoListBox", val, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], LcAppPw));
+						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)), drv["RequiredValid"].ToString(), 0, string.Empty, drv["DisplayMode"].ToString() != "AutoListBox", val, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)));
 						FilterCriteriaDdl(cCriteria, dv, drv);
 						cComboBox.DataSource = dv;
 						try { cComboBox.SelectByValue(val, string.Empty, false); } catch { try { cComboBox.SelectedIndex = 0; } catch { } }
@@ -1281,7 +1283,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						cDropDownList = (DropDownList)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
 						string val = cDropDownList.SelectedValue;
-						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], LcAppPw), drv["RequiredValid"].ToString(), 0, string.Empty, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], LcAppPw));
+						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)), drv["RequiredValid"].ToString(), 0, string.Empty, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)));
 						FilterCriteriaDdl(cCriteria, dv, drv);
 						cDropDownList.DataSource = dv;
 						cDropDownList.DataBind();
@@ -1293,7 +1295,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 						TextBox cTextBox = (TextBox)cCriteria.FindControl("x" + drv["ColumnName"].ToString() + "Hidden");
 						string selectedValues = string.Join(",", cListBox.Items.Cast<ListItem>().Where(x => x.Selected).Select(x => "'" + x.Value + "'").ToArray());
 						if (drv["DisplayMode"].ToString() == "AutoListBox" && cTextBox != null) selectedValues = cTextBox.Text ;
-						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], LcAppPw), drv["RequiredValid"].ToString(), 0, string.Empty, drv["DisplayMode"].ToString() != "AutoListBox", selectedValues, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], LcAppPw));
+						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)), drv["RequiredValid"].ToString(), 0, string.Empty, drv["DisplayMode"].ToString() != "AutoListBox", selectedValues, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)));
 						FilterCriteriaDdl(cCriteria, dv, drv);
 						cListBox.DataSource = dv;
 						cListBox.DataBind();
@@ -1303,7 +1305,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						cRadioButtonList = (RadioButtonList)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
 						string val = cRadioButtonList.SelectedValue;
-						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], LcAppPw), drv["RequiredValid"].ToString(), 0, string.Empty, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], LcAppPw));
+						DataView dv = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)), drv["RequiredValid"].ToString(), 0, string.Empty, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId)));
 						FilterCriteriaDdl(cCriteria, dv, drv);
 						cRadioButtonList.DataSource = dv;
 						cRadioButtonList.DataBind();
@@ -1519,8 +1521,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					cListBox = (ListBox)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
 					if (cListBox != null)
 					{
-						int CriCnt = (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], LcAppPw);
-						int TotalChoiceCnt = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), CriCnt, drv["RequiredValid"].ToString(), 0, string.Empty, true, string.Empty, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], LcAppPw)).Count;
+						int CriCnt = (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId));
+						int TotalChoiceCnt = new DataView((new AdminSystem()).GetScreenIn("67", "GetDdl" + drv["ColumnName"].ToString() + LCurr.SystemId.ToString() + "C" + drv["ScreenCriId"].ToString(), CriCnt, drv["RequiredValid"].ToString(), 0, string.Empty, true, string.Empty, base.LImpr, base.LCurr, drv["MultiDesignDb"].ToString() == "N" ? LcAppConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId))).Count;
 						string selectedValues = string.Join(",", cListBox.Items.Cast<ListItem>().Where(x => x.Selected).Select(x => "'" + x.Value + "'").ToArray());
 						bool noneSelected = string.IsNullOrEmpty(selectedValues) || selectedValues == "''";
 					    dr[drv["ColumnName"].ToString()] = "(";
@@ -1631,7 +1633,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					bFirst = true;
 					try
 					{
-						dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlReportTypeCd3S1729",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlReportTypeCd3S1729",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 					}
 					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				}
@@ -1650,7 +1652,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						try
 						{
-							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlReportTypeCd3S1729",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlReportTypeCd3S1729",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 						}
 						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
@@ -1660,7 +1662,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						try
 						{
-							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlReportTypeCd3S1729",true,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlReportTypeCd3S1729",true,true,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 						}
 						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
@@ -1686,7 +1688,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					bFirst = true;
 					try
 					{
-						dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlOrientationCd3S1010",false,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlOrientationCd3S1010",false,bAll,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 					}
 					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				}
@@ -1705,7 +1707,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						try
 						{
-							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlOrientationCd3S1010",false,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlOrientationCd3S1010",false,bAll,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 						}
 						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
@@ -1715,7 +1717,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						try
 						{
-							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlOrientationCd3S1010",false,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlOrientationCd3S1010",false,true,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 						}
 						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
@@ -1754,7 +1756,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
 				try
 				{
-					dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlCopyReportId3S1012",true,false,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlCopyReportId3S1012",true,false,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 				}
 				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				if (dv != null)
@@ -1788,7 +1790,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					bFirst = true;
 					try
 					{
-						dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlModifiedBy3S1470",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlModifiedBy3S1470",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 					}
 					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				}
@@ -1807,7 +1809,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						try
 						{
-							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlModifiedBy3S1470",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlModifiedBy3S1470",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 						}
 						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
@@ -1817,7 +1819,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						try
 						{
-							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlModifiedBy3S1470",true,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlModifiedBy3S1470",true,true,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 						}
 						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
@@ -1838,7 +1840,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					try
 					{
-						dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlRptTemplate3S1728",false,false,0,cAdmReport67List.SelectedValue,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlRptTemplate3S1728",false,false,0,cAdmReport67List.SelectedValue,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 						if (dv != null)
 						{
 							foreach (DataRowView drv in dv)
@@ -1876,7 +1878,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					bFirst = true;
 					try
 					{
-						dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlUnitCd3S1525",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+						dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlUnitCd3S1525",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 					}
 					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				}
@@ -1895,7 +1897,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						try
 						{
-							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlUnitCd3S1525",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlUnitCd3S1525",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 						}
 						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
@@ -1905,7 +1907,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						try
 						{
-							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlUnitCd3S1525",true,true,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+							dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlUnitCd3S1525",true,true,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 						}
 						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
@@ -1944,7 +1946,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
 				try
 				{
-					dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlCultureId3S1022",true,false,0,keyId,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr));
+					dv = new DataView((new AdminSystem()).GetDdl(67,"GetDdlCultureId3S1022",true,false,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
 				}
 				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				if (dv != null)
@@ -1975,8 +1977,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				else if (Utils.IsInt(cFilterId.SelectedValue)) { filterId = int.Parse(cFilterId.SelectedValue); }
 				try
 				{
-					try {dt = (new AdminSystem()).GetLis(67,"GetLisAdmReport67",true,"Y",0,(string)Session[KEY_sysConnectionString],LcAppPw,filterId,key,string.Empty,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false));}
-					catch {dt = (new AdminSystem()).GetLis(67,"GetLisAdmReport67",true,"N",0,(string)Session[KEY_sysConnectionString],LcAppPw,filterId,key,string.Empty,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false));}
+					try {dt = (new AdminSystem()).GetLis(67,"GetLisAdmReport67",true,"Y",0,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),filterId,key,string.Empty,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false));}
+					catch {dt = (new AdminSystem()).GetLis(67,"GetLisAdmReport67",true,"N",0,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),filterId,key,string.Empty,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false));}
 				}
 				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return new DataView(); }
 				dt = SetFunctionality(dt);
@@ -2162,6 +2164,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			{
 				DataTable dtSystems = (DataTable)Session[KEY_dtSystems];
 				Session[KEY_sysConnectionString] = Config.GetConnStr(dtSystems.Rows[cSystemId.SelectedIndex]["dbAppProvider"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["ServerName"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["dbDesDatabase"].ToString(), "", dtSystems.Rows[cSystemId.SelectedIndex]["dbAppUserId"].ToString());
+				Session[KEY_sysConnectionString + "Pwd"] = base.AppPwd(base.LCurr.DbId);
 				Session.Remove(KEY_dtReportTypeCd22);
 				Session.Remove(KEY_dtOrientationCd22);
 				Session.Remove(KEY_dtCopyReportId22);
@@ -2261,7 +2264,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			DataTable dt = null;
 			try
 			{
-				dt = (new AdminSystem()).GetMstById("GetAdmReport67ById",cAdmReport67List.SelectedValue,(string)Session[KEY_sysConnectionString],LcAppPw);
+				dt = (new AdminSystem()).GetMstById("GetAdmReport67ById",cAdmReport67List.SelectedValue,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId));
 			}
 			catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 			if (dt != null)
@@ -2309,7 +2312,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			int filterId = 0; if (Utils.IsInt(cFilterId.SelectedValue)) { filterId = int.Parse(cFilterId.SelectedValue); }
 			try
 			{
-				dtAdmReportGrid = (new AdminSystem()).GetDtlById(67,"GetAdmReport67DtlById",cAdmReport67List.SelectedValue,(string)Session[KEY_sysConnectionString],LcAppPw,filterId,base.LImpr,base.LCurr);
+				dtAdmReportGrid = (new AdminSystem()).GetDtlById(67,"GetAdmReport67DtlById",cAdmReport67List.SelectedValue,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),filterId,base.LImpr,base.LCurr);
 			}
 			catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 			if (!dtAdmReportGrid.Columns.Contains("_NewRow")) { dtAdmReportGrid.Columns.Add("_NewRow"); }
@@ -2343,7 +2346,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			{
 				try
 				{
-					(new AdminSystem()).DelDoc(cReportId22.Text, e.CommandArgument.ToString(), base.LUser.UsrId.ToString(), "RptTemplate", "Report", "RptTemplate", "ReportId",(string)Session[KEY_sysConnectionString],LcAppPw);
+					(new AdminSystem()).DelDoc(cReportId22.Text, e.CommandArgument.ToString(), base.LUser.UsrId.ToString(), "RptTemplate", "Report", "RptTemplate", "ReportId",(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId));
 				}
 				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
 				Session.Remove(KEY_dtRptTemplate22); SetRptTemplate22(cRptTemplate22GV, string.Empty);
@@ -2686,7 +2689,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 						{
 							try
 							{
-								dtd = (new AdminSystem()).GetDdl(67,"GetDdlCultureId3S1022",true,true,0,string.Empty,(string)Session[KEY_sysConnectionString],LcAppPw,string.Empty,base.LImpr,base.LCurr);
+								dtd = (new AdminSystem()).GetDdl(67,"GetDdlCultureId3S1022",true,true,0,string.Empty,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr);
 							}
 							catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 							Session[KEY_dtCultureId96] = dtd;
@@ -2948,8 +2951,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			// *** GridItemDataBound (before) Web Rule End *** //
 			DataTable dt = (DataTable)Session[KEY_dtAdmReportGrid];
 			bool isEditItem = false;
-			bool isImage = true;
-			bool hasImageContent = false;
 			DataView dvAdmReportGrid = dt != null ? dt.DefaultView : null;
 			if (cAdmReportGrid.EditIndex > -1 && GetDataItemIndex(cAdmReportGrid.EditIndex) == e.Item.DataItemIndex)
 			{
@@ -3251,11 +3252,16 @@ bool bRegenNeeded = false;
 				if (dv.RowFilter != string.Empty) { ftr = dv.RowFilter; dv.RowFilter = string.Empty; }
 				AdmReport67 ds = PrepAdmReportData(dv,cReportId22.Text == string.Empty);
 				if (ftr != string.Empty) {dv.RowFilter = ftr;}
+				if (!string.IsNullOrEmpty(cAdmReport67List.SelectedValue) && cReportId22.Text != cAdmReport67List.SelectedValue)
+				{
+					PreMsgPopup("Primary key cannot be changed");
+					return rtn;
+				}
 				if (string.IsNullOrEmpty(cAdmReport67List.SelectedValue))	// Add
 				{
 					if (ds != null)
 					{
-						pid = (new AdminSystem()).AddData(67,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],LcAppPw,base.CPrj,base.CSrc);
+						pid = (new AdminSystem()).AddData(67,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc);
 					}
 					if (!string.IsNullOrEmpty(pid))
 					{
@@ -3266,7 +3272,7 @@ bool bRegenNeeded = false;
 				}
 				else {
 					bool bValid7 = false;
-					if (ds != null && (new AdminSystem()).UpdData(67,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],LcAppPw,base.CPrj,base.CSrc)) {bValid7 = true;}
+					if (ds != null && (new AdminSystem()).UpdData(67,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc)) {bValid7 = true;}
 					if (bValid7)
 					{
 						cAdmReport67List.ClearSearch(); Session.Remove(KEY_dtAdmReport67List);
@@ -3287,7 +3293,7 @@ bool bRegenNeeded = false;
 					base.CSrc = new CurrSrc(true, row); base.CTar = new CurrTar(true, row);
 					(new GenReportsSystem()).CreateProgram(string.Empty, int.Parse(pid), dtTle.Rows[0]["ReportTitle"].ToString(), row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
 					(new MenuSystem()).NewMenuItem(0, int.Parse(pid), 0, dtTle.Rows[0]["ReportTitle"].ToString(), (string)Session[KEY_sysConnectionString], LcAppPw);
-					Response.Redirect(Request.RawUrl);
+					this.Redirect(Request.RawUrl);
 				}
 				catch {}
 			}
@@ -3312,7 +3318,7 @@ bool bRegenNeeded = false;
 				AdmReport67 ds = PrepAdmReportData(null,false);
 				try
 				{
-					if (ds != null && (new AdminSystem()).DelData(67,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],LcAppPw,base.CPrj,base.CSrc))
+					if (ds != null && (new AdminSystem()).DelData(67,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc))
 					{
 						cAdmReport67List.ClearSearch(); Session.Remove(KEY_dtAdmReport67List);
 						ShowDirty(false); PopAdmReport67List(sender, e, false, null);
@@ -3490,7 +3496,7 @@ bool bRegenNeeded = false;
 		{
 			if (cAdmReportGrid.EditIndex > -1)
 			{
-				TextBox pwd = null;				cAdmReportGrid_OnItemUpdating(sender, new ListViewUpdateEventArgs(cAdmReportGrid.EditIndex));
+				cAdmReportGrid_OnItemUpdating(sender, new ListViewUpdateEventArgs(cAdmReportGrid.EditIndex));
 			}
 			return true;
 		}

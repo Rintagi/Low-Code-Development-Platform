@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmTbdRule || {});
+    this.GetReduxState = () => (this.props.AdmTbdRule || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'TbdRuleId254';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,58 +87,46 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-ScreenId254InputChange() { const _this = this; return function (name, v) {const filterBy = ''; _this.props.SearchScreenId254(v, filterBy);}}/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+  ScreenId254InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchScreenId254(v, filterBy); } }
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
     const columnLabel = (this.props.AdmTbdRule || {}).ColumnLabel || {};
     /* standard field validation */
-if (isEmptyId((values.cScreenId254 || {}).value)) { errors.cScreenId254 = (columnLabel.ScreenId254 || {}).ErrMessage;}
-if (!values.cTbdRuleName254) { errors.cTbdRuleName254 = (columnLabel.TbdRuleName254 || {}).ErrMessage;}
+    if (isEmptyId((values.cScreenId254 || {}).value)) { errors.cScreenId254 = (columnLabel.ScreenId254 || {}).ErrMessage; }
+    if (!values.cTbdRuleName254) { errors.cTbdRuleName254 = (columnLabel.TbdRuleName254 || {}).ErrMessage; }
     return errors;
   }
 
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmTbdRule || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmTbdRule,
         {
-          TbdRuleId254: values.cTbdRuleId254|| '',
-          ScreenId254: (values.cScreenId254|| {}).value || '',
-          TbdRuleName254: values.cTbdRuleName254|| '',
-          TbdRuleDesc254: values.cTbdRuleDesc254|| '',
+          TbdRuleId254: values.cTbdRuleId254 || '',
+          ScreenId254: (values.cScreenId254 || {}).value || '',
+          TbdRuleName254: values.cTbdRuleName254 || '',
+          TbdRuleDesc254: values.cTbdRuleDesc254 || '',
         },
         [],
         {
@@ -175,12 +166,12 @@ if (!values.cTbdRuleName254) { errors.cTbdRuleName254 = (columnLabel.TbdRuleName
       const fromMstId = mstId || (mst || {}).TbdRuleId254;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmTbdRule.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmTbdRule.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmTbdRule.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -262,7 +253,7 @@ if (!values.cTbdRuleName254) { errors.cTbdRuleName254 = (columnLabel.TbdRuleName
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmTbdRule || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -286,7 +277,7 @@ if (!values.cTbdRuleName254) { errors.cTbdRuleName254 = (columnLabel.TbdRuleName
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -315,6 +306,7 @@ if (!values.cTbdRuleName254) { errors.cTbdRuleName254 = (columnLabel.TbdRuleName
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmTbdRuleReduxObj.GetScreenButtons(AdmTbdRuleState) || {};
     const itemList = AdmTbdRuleState.Dtl || [];
@@ -326,22 +318,25 @@ if (!values.cTbdRuleName254) { errors.cTbdRuleName254 = (columnLabel.TbdRuleName
     const authRow = (AdmTbdRuleState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmTbdRule || {}).Mst || {});
     const currDtl = ((this.props.AdmTbdRule || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.TbdRuleId254));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.TbdRuleId254));
     const selectList = AdmTbdRuleReduxObj.SearchListToSelectList(AdmTbdRuleState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const TbdRuleId254 = currMst.TbdRuleId254;
-const ScreenId254List = AdmTbdRuleReduxObj.ScreenDdlSelectors.ScreenId254(AdmTbdRuleState);
-const ScreenId254 = currMst.ScreenId254;
-const TbdRuleName254 = currMst.TbdRuleName254;
-const TbdRuleDesc254 = currMst.TbdRuleDesc254;
+
+    const TbdRuleId254 = currMst.TbdRuleId254;
+    const ScreenId254List = AdmTbdRuleReduxObj.ScreenDdlSelectors.ScreenId254(AdmTbdRuleState);
+    const ScreenId254 = currMst.ScreenId254;
+    const TbdRuleName254 = currMst.TbdRuleName254;
+    const TbdRuleDesc254 = currMst.TbdRuleDesc254;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -359,10 +354,10 @@ const TbdRuleDesc254 = currMst.TbdRuleDesc254;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cTbdRuleId254: TbdRuleId254 || '',
-                  cScreenId254: ScreenId254List.filter(obj => { return obj.key === ScreenId254 })[0],
-                  cTbdRuleName254: TbdRuleName254 || '',
-                  cTbdRuleDesc254: TbdRuleDesc254 || '',
+                    cTbdRuleId254: formatContent(TbdRuleId254 || '', 'TextBox'),
+                    cScreenId254: ScreenId254List.filter(obj => { return obj.key === ScreenId254 })[0],
+                    cTbdRuleName254: formatContent(TbdRuleName254 || '', 'TextBox'),
+                    cTbdRuleDesc254: formatContent(TbdRuleDesc254 || '', 'MultiLine'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -424,99 +419,128 @@ const TbdRuleDesc254 = currMst.TbdRuleDesc254;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.TbdRuleId254 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.TbdRuleId254 || {}).ColumnHeader} {(columnLabel.TbdRuleId254 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.TbdRuleId254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TbdRuleId254 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cTbdRuleId254'
-disabled = {(authCol.TbdRuleId254 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cTbdRuleId254 && touched.cTbdRuleId254 && <span className='form__form-group-error'>{errors.cTbdRuleId254}</span>}
-</div>
-</Col>
-}
-{(authCol.ScreenId254 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ScreenId254 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScreenId254 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ScreenId254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenId254 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<AutoCompleteField
-name='cScreenId254'
-onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId254', false)}
-onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId254', true)}
-onInputChange={this.ScreenId254InputChange()}
-value={values.cScreenId254}
-defaultSelected={ScreenId254List.filter(obj => { return obj.key === ScreenId254 })}
-options={ScreenId254List}
-filterBy={this.AutoCompleteFilterBy}
-disabled = {(authCol.ScreenId254 || {}).readonly ? true: false }/>
-</div>
-}
-{errors.cScreenId254 && touched.cScreenId254 && <span className='form__form-group-error'>{errors.cScreenId254}</span>}
-</div>
-</Col>
-}
-{(authCol.TbdRuleName254 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.TbdRuleName254 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TbdRuleName254 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.TbdRuleName254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TbdRuleName254 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cTbdRuleName254'
-disabled = {(authCol.TbdRuleName254 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cTbdRuleName254 && touched.cTbdRuleName254 && <span className='form__form-group-error'>{errors.cTbdRuleName254}</span>}
-</div>
-</Col>
-}
-{(authCol.TbdRuleDesc254 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.TbdRuleDesc254 || {}).ColumnHeader} {(columnLabel.TbdRuleDesc254 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.TbdRuleDesc254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TbdRuleDesc254 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cTbdRuleDesc254'
-disabled = {(authCol.TbdRuleDesc254 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cTbdRuleDesc254 && touched.cTbdRuleDesc254 && <span className='form__form-group-error'>{errors.cTbdRuleDesc254}</span>}
-</div>
-</Col>
-}
+                              {(authCol.TbdRuleId254 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.TbdRuleId254 || {}).ColumnHeader} {(columnLabel.TbdRuleId254 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.TbdRuleId254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.TbdRuleId254 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cTbdRuleId254'
+                                          disabled={(authCol.TbdRuleId254 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cTbdRuleId254 && touched.cTbdRuleId254 && <span className='form__form-group-error'>{errors.cTbdRuleId254}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ScreenId254 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ScreenId254 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScreenId254 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ScreenId254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ScreenId254 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='cScreenId254'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId254', false)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId254', true)}
+                                          onInputChange={this.ScreenId254InputChange()}
+                                          value={values.cScreenId254}
+                                          defaultSelected={ScreenId254List.filter(obj => { return obj.key === ScreenId254 })}
+                                          options={ScreenId254List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol.ScreenId254 || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.cScreenId254 && touched.cScreenId254 && <span className='form__form-group-error'>{errors.cScreenId254}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.TbdRuleName254 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.TbdRuleName254 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TbdRuleName254 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.TbdRuleName254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.TbdRuleName254 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cTbdRuleName254'
+                                          disabled={(authCol.TbdRuleName254 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cTbdRuleName254 && touched.cTbdRuleName254 && <span className='form__form-group-error'>{errors.cTbdRuleName254}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {false && (authCol.TbdRuleDesc254 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.TbdRuleDesc254 || {}).ColumnHeader} {(columnLabel.TbdRuleDesc254 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.TbdRuleDesc254 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.TbdRuleDesc254 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmTbdRuleState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cTbdRuleDesc254'
+                                          disabled={(authCol.TbdRuleDesc254 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cTbdRuleDesc254 && touched.cTbdRuleDesc254 && <span className='form__form-group-error'>{errors.cTbdRuleDesc254}</span>}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -576,10 +600,7 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmTbdRuleReduxObj.SavePage.bind(AdmTbdRuleReduxObj) },
     { DelMst: AdmTbdRuleReduxObj.DelMst.bind(AdmTbdRuleReduxObj) },
     { AddMst: AdmTbdRuleReduxObj.AddMst.bind(AdmTbdRuleReduxObj) },
-//    { SearchMemberId64: AdmTbdRuleReduxObj.SearchActions.SearchMemberId64.bind(AdmTbdRuleReduxObj) },
-//    { SearchCurrencyId64: AdmTbdRuleReduxObj.SearchActions.SearchCurrencyId64.bind(AdmTbdRuleReduxObj) },
-//    { SearchCustomerJobId64: AdmTbdRuleReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmTbdRuleReduxObj) },
-{ SearchScreenId254: AdmTbdRuleReduxObj.SearchActions.SearchScreenId254.bind(AdmTbdRuleReduxObj) },
+    { SearchScreenId254: AdmTbdRuleReduxObj.SearchActions.SearchScreenId254.bind(AdmTbdRuleReduxObj) },
     { showNotification: showNotification },
     { setTitle: setTitle },
     { setSpinner: setSpinner },
@@ -587,5 +608,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

@@ -1,0 +1,15 @@
+1~@~=~@~equal
+2~@~>=~@~greater than or equal
+3~@~<=~@~less than or equal
+4~@~>~@~greater than
+5~@~<~@~less than
+6~@~like~@~contains
+7~@~in~@~in the list
+8~@~not like~@~does not contain
+9~@~not in~@~not in the list
+10~@~noop~@~do not filter on this
+11~@~have some~@~at least one in the list
+12~@~have none~@~none in the list
+13~@~only in~@~only if in the list (superset)
+14~@~have all~@~all in the list (subset)
+15~@~same as~@~exactly the same list

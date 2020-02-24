@@ -11,15 +11,15 @@ import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
-import FileInputField from '../../components/custom/FileInput';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import DropdownField from '../../components/custom/DropdownField';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import {isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
-import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
 import { getNaviBar } from './index';
@@ -30,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class DtlRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmPageObj || {});
+    this.GetReduxState = () => (this.props.AdmPageObj || {});
     this.blocker = null;
     this.titleSet = false;
     this.SystemName = 'FintruX';
@@ -45,8 +45,8 @@ class DtlRecord extends RintagiScreen {
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
     this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
-    this.FileUploadChange = this.FileUploadChange.bind(this);
-//    this.BGlChartId65InputChange = this.BGlChartId65InputChange.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
 
@@ -63,12 +63,12 @@ class DtlRecord extends RintagiScreen {
       isMobile: false
     }
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
   }
-  
+
   mediaqueryresponse(value) {
     if (value.matches) { // if media query matches
       this.setState({ isMobile: true });
@@ -79,7 +79,7 @@ class DtlRecord extends RintagiScreen {
   }
 
 
-/* ReactRule: Detail Record Custom Function */
+  /* ReactRule: Detail Record Custom Function */
   /* ReactRule End: Detail Record Custom Function */
 
   ValidatePage(values) {
@@ -96,7 +96,7 @@ class DtlRecord extends RintagiScreen {
 
     this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting });
     const ScreenButton = this.state.ScreenButton || {};
-/* ReactRule: Detail Record Save */
+    /* ReactRule: Detail Record Save */
     /* ReactRule End: Detail Record Save */
 
     this.props.SavePage(
@@ -105,11 +105,11 @@ class DtlRecord extends RintagiScreen {
       [
         {
           PageLnkId1278: values.cPageLnkId1278 || null,
-          PageLnkTxt1278: values.cPageLnkTxt1278|| '',
-          PageLnkRef1278: values.cPageLnkRef1278|| '',
+          PageLnkTxt1278: values.cPageLnkTxt1278 || '',
+          PageLnkRef1278: values.cPageLnkRef1278 || '',
           PageLnkImg1278: values.cPageLnkImg1278 || '',
           PageLnkAlt1278: values.cPageLnkAlt1278 || '',
-          PageLnkOrd1278: values.cPageLnkOrd1278|| '',
+          PageLnkOrd1278: values.cPageLnkOrd1278 || '',
           Popup1278: values.cPopup1278 ? 'Y' : 'N',
           PageLnkCss1278: values.cPageLnkCss1278 || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cPageLnkId1278 ? 'upd' : 'add'),
@@ -121,8 +121,8 @@ class DtlRecord extends RintagiScreen {
       }
     )
   }
- 
-   /* standard screen button actions */
+
+  /* standard screen button actions */
   CopyRow({ mst, dtl, dtlId, useMobileView }) {
     const AdmPageObjState = this.props.AdmPageObj || {};
     const auxSystemLabels = AdmPageObjState.SystemLabel || {};
@@ -133,8 +133,8 @@ class DtlRecord extends RintagiScreen {
         if (currDtlId) {
           this.props.AddDtl(mst.PageObjId1277, currDtlId);
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', mst, {}, this.props.AdmPageObj.Label);
-            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'Dtl', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', mst, {}, this.props.AdmPageObj.Label);
+            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'DtlRecord', '/'), '_'));
           }
           else {
             if (this.props.OnCopy) this.props.OnCopy();
@@ -144,7 +144,7 @@ class DtlRecord extends RintagiScreen {
           this.setState({ ModalOpen: true, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
         }
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   }
@@ -228,7 +228,7 @@ class DtlRecord extends RintagiScreen {
     return revisedState;
   }
 
- confirmUnload(message, callback) {
+  confirmUnload(message, callback) {
     const AdmPageObjState = this.props.AdmPageObj || {};
     const auxSystemLabels = AdmPageObjState.SystemLabel || {};
     const confirm = () => {
@@ -239,9 +239,9 @@ class DtlRecord extends RintagiScreen {
     }
     this.setState({ ModalOpen: true, ModalSuccess: confirm, ModalCancel: cancel, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: message });
   }
-  
+
   setDirtyFlag(dirty) {
-   /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
+    /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
     if (dirty) {
       if (this.blocker) unregisterBlocker(this.blocker);
       this.blocker = this.confirmUnload;
@@ -265,7 +265,7 @@ class DtlRecord extends RintagiScreen {
     if (!suppressLoadPage) {
       const { mstId, dtlId } = { ...this.props.match.params };
       if (!(this.props.AdmPageObj || {}).AuthCol || true)
-        this.props.LoadPage('Item', { mstId : mstId || '_', dtlId:dtlId || '_' });
+        this.props.LoadPage('Item', { mstId: mstId || '_', dtlId: dtlId || '_' });
     }
     else {
       return;
@@ -274,13 +274,13 @@ class DtlRecord extends RintagiScreen {
   componentDidUpdate(prevprops, prevstates) {
     const currReduxScreenState = this.props.AdmPageObj || {};
 
-    if(!this.props.suppressLoadPage) {
-      if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!this.props.suppressLoadPage) {
+      if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
         const _this = this;
         setTimeout(() => _this.props.setSpinner(false), 500);
       }
     }
-    
+
     this.SetPageTitle(currReduxScreenState);
     if (prevstates.key !== (currReduxScreenState.EditDtl || {}).key) {
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveCloseDtl') {
@@ -288,7 +288,7 @@ class DtlRecord extends RintagiScreen {
         const currDtl = (currReduxScreenState.EditDtl);
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
 
-        const naviBar = getNaviBar('Dtl', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('DtlRecord', currMst, currDtl, currReduxScreenState.Label);
         const dtlListPath = getDefaultPath(getNaviPath(naviBar, 'DtlList', '/'));
 
         this.props.history.push(dtlListPath);
@@ -322,13 +322,15 @@ class DtlRecord extends RintagiScreen {
     const DetailRecSubtitle = ((screenHlp || {}).DetailRecSubtitle || '');
     const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
+    const selectList = AdmPageObjReduxObj.SearchListToSelectList(AdmPageObjState);
+    const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
     const screenButtons = AdmPageObjReduxObj.GetScreenButtons(AdmPageObjState) || {};
     const auxLabels = AdmPageObjState.Label || {};
     const auxSystemLabels = AdmPageObjState.SystemLabel || {};
     const columnLabel = AdmPageObjState.ColumnLabel || {};
     const currMst = AdmPageObjState.Mst;
     const currDtl = AdmPageObjState.EditDtl;
-    const naviBar = getNaviBar('Dtl', currMst, currDtl, screenButtons);
+    const naviBar = getNaviBar('DtlRecord', currMst, currDtl, screenButtons);
     const authCol = this.GetAuthCol(AdmPageObjState);
     const authRow = (AdmPageObjState.AuthRow || [])[0] || {};
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -336,29 +338,15 @@ class DtlRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const PageLnkTxt1278 = currDtl.PageLnkTxt1278;
-const PageLnkRef1278 = currDtl.PageLnkRef1278;
-const PageLnkImg1278 = currDtl.PageLnkImg1278;
-const PageLnkAlt1278 = currDtl.PageLnkAlt1278;
-const PageLnkOrd1278 = currDtl.PageLnkOrd1278;
-const Popup1278 = currDtl.Popup1278;
-const PageLnkCss1278 = currDtl.PageLnkCss1278;
-// custome image upload code
-//    const TrxDetImg65 = currDtl.TrxDetImg65 ? (currDtl.TrxDetImg65.startsWith('{') ? JSON.parse(currDtl.TrxDetImg65) : { fileName: '', mimeType: 'image/jpeg', base64: currDtl.TrxDetImg65 }) : null;
-//    const TrxDetImg65FileUploadOptions = {
-//      CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
-//      DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
-//      MaxImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ResizeWidth,
-//        Height:(columnLabel.TrxDetImg65 || {}).ResizeHeight,
-//      },
-//      MinImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ColumnSize,
-//        Height:(columnLabel.TrxDetImg65 || {}).ColumnHeight,
-//      },
-//    }
-/* ReactRule: Detail Record Render */
-/* ReactRule End: Detail Record Render */
+    const PageLnkTxt1278 = currDtl.PageLnkTxt1278;
+    const PageLnkRef1278 = currDtl.PageLnkRef1278;
+    const PageLnkImg1278 = currDtl.PageLnkImg1278;
+    const PageLnkAlt1278 = currDtl.PageLnkAlt1278;
+    const PageLnkOrd1278 = currDtl.PageLnkOrd1278;
+    const Popup1278 = currDtl.Popup1278;
+    const PageLnkCss1278 = currDtl.PageLnkCss1278;
+    /* ReactRule: Detail Record Render */
+    /* ReactRule End: Detail Record Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -376,13 +364,14 @@ const PageLnkCss1278 = currDtl.PageLnkCss1278;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cPageLnkTxt1278: currDtl.PageLnkTxt1278 || '',
-                  cPageLnkRef1278: currDtl.PageLnkRef1278 || '',
-                  cPageLnkImg1278: currDtl.PageLnkImg1278 || '',
-                  cPageLnkAlt1278: currDtl.PageLnkAlt1278 || '',
-                  cPageLnkOrd1278: currDtl.PageLnkOrd1278 || '',
-                  cPopup1278: currDtl.Popup1278 === 'Y',
-                  cPageLnkCss1278: currDtl.PageLnkCss1278 || '',
+                    cPageLnkId1278: currDtl.PageLnkId1278 || '',
+                    cPageLnkTxt1278: formatContent(currDtl.PageLnkTxt1278 || '', 'TextBox'),
+                    cPageLnkRef1278: formatContent(currDtl.PageLnkRef1278 || '', 'TextBox'),
+                    cPageLnkImg1278: formatContent(currDtl.PageLnkImg1278 || '', 'Upload'),
+                    cPageLnkAlt1278: formatContent(currDtl.PageLnkAlt1278 || '', 'Upload'),
+                    cPageLnkOrd1278: formatContent(currDtl.PageLnkOrd1278 || '', 'TextBox'),
+                    cPopup1278: currDtl.Popup1278 === 'Y',
+                    cPageLnkCss1278: formatContent(currDtl.PageLnkCss1278 || '', 'MultiLine'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -419,7 +408,7 @@ const PageLnkCss1278 = currDtl.PageLnkCss1278;
                                   <ButtonGroup className='btn-group--icons'>
                                     <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
                                     {
-                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).PageObjId1277,currDtl.PageLnkId1278)).length > 0 &&
+                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).PageObjId1277, currDtl.PageLnkId1278)).length > 0 &&
                                       <DropdownToggle className='mw-50' outline>
                                         <i className='fa fa-ellipsis-h icon-holder'></i>
                                         {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
@@ -431,7 +420,7 @@ const PageLnkCss1278 = currDtl.PageLnkCss1278;
                                     <DropdownMenu right className={`dropdown__menu dropdown-options`}>
                                       {
                                         dropdownMenuButtonList.filter(v => !v.expose).map(v => {
-                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).PageObjId1277,currDtl.PageLnkId1278)) return null;
+                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).PageObjId1277, currDtl.PageLnkId1278)) return null;
                                           return (
                                             <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, submitForm, mst: currMst, dtl: currDtl, useMobileView })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
                                         })
@@ -444,156 +433,173 @@ const PageLnkCss1278 = currDtl.PageLnkCss1278;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          <div className='form__form-group'>
+                            <div className='form__form-group-narrow'>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                           <div className='w-100'>
                             <Row>
-            {(authCol.PageLnkTxt1278 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.PageLnkTxt1278 || {}).ColumnHeader} {(columnLabel.PageLnkTxt1278 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PageLnkTxt1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PageLnkTxt1278 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cPageLnkTxt1278'
-disabled = {(authCol.PageLnkTxt1278 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cPageLnkTxt1278 && touched.cPageLnkTxt1278 && <span className='form__form-group-error'>{errors.cPageLnkTxt1278}</span>}
-</div>
-</Col>
-}
-{(authCol.PageLnkRef1278 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.PageLnkRef1278 || {}).ColumnHeader} {(columnLabel.PageLnkRef1278 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PageLnkRef1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PageLnkRef1278 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cPageLnkRef1278'
-disabled = {(authCol.PageLnkRef1278 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cPageLnkRef1278 && touched.cPageLnkRef1278 && <span className='form__form-group-error'>{errors.cPageLnkRef1278}</span>}
-</div>
-</Col>
-}
-{(authCol.PageLnkImg1278 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.PageLnkImg1278 || {}).ColumnHeader} {(columnLabel.PageLnkImg1278 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PageLnkImg1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PageLnkImg1278 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cPageLnkImg1278'
-disabled = {(authCol.PageLnkImg1278 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cPageLnkImg1278 && touched.cPageLnkImg1278 && <span className='form__form-group-error'>{errors.cPageLnkImg1278}</span>}
-</div>
-</Col>
-}
-{(authCol.PageLnkAlt1278 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.PageLnkAlt1278 || {}).ColumnHeader} {(columnLabel.PageLnkAlt1278 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PageLnkAlt1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PageLnkAlt1278 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cPageLnkAlt1278'
-disabled = {(authCol.PageLnkAlt1278 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cPageLnkAlt1278 && touched.cPageLnkAlt1278 && <span className='form__form-group-error'>{errors.cPageLnkAlt1278}</span>}
-</div>
-</Col>
-}
-{(authCol.PageLnkOrd1278 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.PageLnkOrd1278 || {}).ColumnHeader} {(columnLabel.PageLnkOrd1278 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PageLnkOrd1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PageLnkOrd1278 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cPageLnkOrd1278'
-disabled = {(authCol.PageLnkOrd1278 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cPageLnkOrd1278 && touched.cPageLnkOrd1278 && <span className='form__form-group-error'>{errors.cPageLnkOrd1278}</span>}
-</div>
-</Col>
-}
-{(authCol.Popup1278 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cPopup1278'
-onChange={handleChange}
-defaultChecked={values.cPopup1278}
-disabled={(authCol.Popup1278 || {}).readonly || !(authCol.Popup1278 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.Popup1278 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.Popup1278 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.Popup1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Popup1278 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
-{(authCol.PageLnkCss1278 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.PageLnkCss1278 || {}).ColumnHeader} {(columnLabel.PageLnkCss1278 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PageLnkCss1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PageLnkCss1278 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cPageLnkCss1278'
-disabled = {(authCol.PageLnkCss1278 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cPageLnkCss1278 && touched.cPageLnkCss1278 && <span className='form__form-group-error'>{errors.cPageLnkCss1278}</span>}
-</div>
-</Col>
-}
+                              {(authCol.PageLnkTxt1278 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PageLnkTxt1278 || {}).ColumnHeader} {(columnLabel.PageLnkTxt1278 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PageLnkTxt1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PageLnkTxt1278 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cPageLnkTxt1278'
+                                          disabled={(authCol.PageLnkTxt1278 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cPageLnkTxt1278 && touched.cPageLnkTxt1278 && <span className='form__form-group-error'>{errors.cPageLnkTxt1278}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.PageLnkRef1278 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PageLnkRef1278 || {}).ColumnHeader} {(columnLabel.PageLnkRef1278 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PageLnkRef1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PageLnkRef1278 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cPageLnkRef1278'
+                                          disabled={(authCol.PageLnkRef1278 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cPageLnkRef1278 && touched.cPageLnkRef1278 && <span className='form__form-group-error'>{errors.cPageLnkRef1278}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {false && (authCol.PageLnkImg1278 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PageLnkImg1278 || {}).ColumnHeader} {(columnLabel.PageLnkImg1278 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PageLnkImg1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PageLnkImg1278 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cPageLnkImg1278'
+                                          disabled={(authCol.PageLnkImg1278 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cPageLnkImg1278 && touched.cPageLnkImg1278 && <span className='form__form-group-error'>{errors.cPageLnkImg1278}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {false && (authCol.PageLnkAlt1278 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PageLnkAlt1278 || {}).ColumnHeader} {(columnLabel.PageLnkAlt1278 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PageLnkAlt1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PageLnkAlt1278 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cPageLnkAlt1278'
+                                          disabled={(authCol.PageLnkAlt1278 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cPageLnkAlt1278 && touched.cPageLnkAlt1278 && <span className='form__form-group-error'>{errors.cPageLnkAlt1278}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.PageLnkOrd1278 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PageLnkOrd1278 || {}).ColumnHeader} {(columnLabel.PageLnkOrd1278 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PageLnkOrd1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PageLnkOrd1278 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cPageLnkOrd1278'
+                                          disabled={(authCol.PageLnkOrd1278 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cPageLnkOrd1278 && touched.cPageLnkOrd1278 && <span className='form__form-group-error'>{errors.cPageLnkOrd1278}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.Popup1278 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cPopup1278'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cPopup1278}
+                                        disabled={(authCol.Popup1278 || {}).readonly || !(authCol.Popup1278 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.Popup1278 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.Popup1278 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.Popup1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.Popup1278 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {false && (authCol.PageLnkCss1278 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PageLnkCss1278 || {}).ColumnHeader} {(columnLabel.PageLnkCss1278 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PageLnkCss1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PageLnkCss1278 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cPageLnkCss1278'
+                                          disabled={(authCol.PageLnkCss1278 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cPageLnkCss1278 && touched.cPageLnkCss1278 && <span className='form__form-group-error'>{errors.cPageLnkCss1278}</span>}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mb-0'>
@@ -609,7 +615,7 @@ disabled = {(authCol.PageLnkCss1278 || {}).readonly ? 'disabled': '' }/>
                                     bottomButtonList
                                       .filter(v => v.expose)
                                       .map((v, i, a) => {
-                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).PageObjId1277,currDtl.PageLnkId1278)) return null;
+                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).PageObjId1277, currDtl.PageLnkId1278)) return null;
                                         const buttonCount = a.length;
                                         const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
@@ -653,10 +659,9 @@ const mapDispatchToProps = (dispatch) => (
     { AddDtl: AdmPageObjReduxObj.AddDtl.bind(AdmPageObjReduxObj) },
     { SavePage: AdmPageObjReduxObj.SavePage.bind(AdmPageObjReduxObj) },
 
-  { setTitle: setTitle },
+    { setTitle: setTitle },
     { setSpinner: setSpinner },
   ), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
-

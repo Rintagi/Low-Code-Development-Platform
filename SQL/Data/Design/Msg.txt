@@ -1,0 +1,66 @@
+1~@~S~@~CrOneAuthDefaultOnly~@~{1} Please choose one and only one authority default and try again (%1s).
+
+2~@~S~@~Cr_ChkWebRule~@~{2} Please do not specify any specific column or button for this event and try again.
+3~@~S~@~Cr_ChkWebRule~@~{3} Please only specify a system button for this event and try again.
+4~@~S~@~Cr_ChkWebRule~@~{4} Please only specify a column for this event and try again.
+5~@~S~@~Cr_RmScrObjWRule~@~{5} Please remove the referencing web rule and try again.
+6~@~S~@~Cr_RmScrObjCRule~@~{6} Please remove the referencing client rule and try again.
+8~@~S~@~Cr_RmScrCriCRule~@~{8} Please remove the referencing client rule and try again.
+9~@~S~@~Cr_RmRptCriCRule~@~{9} Please remove the referencing client rule and try again.
+10~@~S~@~Cr_ChkDbColumn~@~{10} Sybase does not allow keyword "exec" to be embeded in column name "%1s", please try again.
+11~@~S~@~Cr_DelDbColumn~@~{11} Please remove the screen column "%1s" from referencing screen "%2s" and try again.
+12~@~S~@~Cr_ChkPrimaryKey~@~{12} Please make sure there is one and only one primary key column and try again.
+13~@~S~@~Cr_ChkAuthCol~@~{13} Change the screen column to non-mandatory and try again please.
+14~@~S~@~Cr_ChkReportMargins~@~{14} Please enter positive numbers for report margins.
+15~@~S~@~Cr_ChkReportMargins~@~{15} Please enter positive numbers for report page width and height.
+16~@~S~@~Cr_ChkReportMargins~@~{16} Please enter a page width greater than the sum of left and right margin.
+17~@~S~@~Cr_ChkReportMargins~@~{17} Please enter a page height greater than the sum of top and bottom margin.
+18~@~S~@~Cr_ChkRmRptStyle~@~{18} Please do not delete style as it is being used by report element.
+19~@~S~@~Cr_ChkRmRptStyle~@~{19} Please do not delete style as it is being used by report item.
+21~@~S~@~Ir_InitScreenObj~@~{21} Please enter the default number of rows (1 - 200) for this screen type and try again.
+22~@~S~@~Cr_ChkRptElm~@~{22} Please make sure there is one and only one Body for the report "%1s" and try again.
+23~@~S~@~Cr_ChkRptElm~@~{23} Please make sure there is not more than one Header for the report "%1s" and try again.
+24~@~S~@~Cr_ChkRptElm~@~{24} Please make sure there is not more than one Footer for the report "%1s" and try again.
+25~@~S~@~Cr_ChkRptElm~@~{25} Please make sure page body is "%1s" for the report "%2s" and try again.
+26~@~S~@~Cr_DelRptElm~@~{26} Please do not delete element "%1s" as it is being used by report control.
+27~@~S~@~Cr_ChkRptCtr~@~{27} Please make sure control's width does not exceed "%1s" and try again.
+28~@~S~@~Cr_ChkRptwizCri~@~{28} Please make sure at least one column is selected as criteria and try again.
+29~@~S~@~Cr_NoDelCatRef~@~{29} Please do not delete this report data category as it is being used by report generator.
+30~@~S~@~Cr_ChkRptwizDtlOp~@~{30} Please make sure all selected criteria has operator assigned and try again.
+31~@~S~@~Cr_ChkRptwizCri~@~{31} Please make sure at least one column is selected as display and try again.
+33~@~S~@~WrRptwizGen~@~{33} Please be notified that only gauge, chart, list, table or document report-templates can be generated for now.
+35~@~S~@~Cr_ChkRptwizCri~@~{35} This report name is in use, please enter another unique name and try again.
+36~@~S~@~GetReportHlp~@~{36} Invalid report id as QueryString rpt, please rectify and try again.
+37~@~S~@~CrOneServerOnly~@~{37} Please do not backup and restore for target Sybase server for now.
+38~@~S~@~WrRptwizGen~@~{38} Please make sure template name has an extension txt, rtf or mht.
+39~@~S~@~Ir_DelRptTmpl~@~{39} Please do not delete default template.
+40~@~S~@~MkReportCha~@~{40} Please select a column for charting category and try again.
+41~@~S~@~MkReportCha~@~{41} Please select a scalar column for charting values and try again.
+42~@~S~@~Cr_ChkAuthRow~@~{42} Please select a screen or a report or both as subject(s) to assign this row authority override.
+43~@~S~@~Cr_ChkReportMargins~@~{43} Please do not Allow Columns Selection unless it is document merging.
+44~@~S~@~GetGaugeValue~@~{44} Minimum value cannot be greater than the low range maximum value, please rectify and try again.
+45~@~S~@~GetGaugeValue~@~{45} Low range maximum value cannot be greater than the mid range maximum value, please rectify and try again.
+46~@~S~@~GetGaugeValue~@~{46} Mid range maximum value cannot be greater than the maximum value, please rectify and try again.
+47~@~W~@~GetPwdExpMsg~@~{47} Your password has not been changed for %1s days, for your protection please change it at your convenience.
+48~@~L~@~GetMsg~@~{48} Password
+49~@~L~@~GetMsg~@~{49} My Account
+51~@~L~@~GetMsg~@~{51} New Password*:
+52~@~L~@~GetMsg~@~{52} Confirm Password*:
+53~@~L~@~GetMsg~@~{53} Hint Question
+54~@~L~@~GetMsg~@~{54} Question*:
+56~@~L~@~GetMsg~@~{56} Hide
+57~@~L~@~GetMsg~@~{57} Please enter a password and try again.
+58~@~L~@~GetMsg~@~{58} Please confirm password and try again.
+59~@~L~@~GetMsg~@~{59} Password updated successfully.
+60~@~L~@~GetMsg~@~{60} Cannot update password, please try again.
+61~@~L~@~GetMsg~@~{61} Please select a hint question and try again.
+62~@~L~@~GetMsg~@~{62} Please enter an answer and try again.
+63~@~L~@~GetMsg~@~{63} Hint Q&A updated successfully.
+64~@~L~@~GetMsg~@~{64} Cannot update hint Q&A, please try again.
+65~@~S~@~Cr_ChkCulture~@~{65} Please make sure a row for U.S. English culture is present and try again.
+66~@~L~@~GetMsg~@~{66} Valid until
+67~@~L~@~GetMsg~@~{67} Changed On
+68~@~W~@~GetMsg~@~{68} Your password has expired. You have only limited access to the system until you change the password.
+69~@~W~@~GetMsg~@~{69} Password must be between 8-32 characters containing at least one upper case, one lower case, and one numeric character.
+72~@~S~@~Cr_DelDbColumn~@~{72} Please remove the search column "%1s" from referencing screen "%2s" and try again.
+73~@~S~@~Cr_DelDbColumn~@~{73} Please remove the screen criteria column "%1s" from referencing screen "%2s" and try again.

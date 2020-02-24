@@ -1,0 +1,7 @@
+1~@~1~@~51~@~AdmImpCulture    20: CultureTypeName~@~20
+2~@~1~@~1154~@~AdmImpCulture    30: CultureTypeDesc~@~30
+3~@~1~@~311~@~AdmImpCulture    40: CultureDefault~@~40
+4~@~1~@~1372~@~AdmImpCulture    50: EnNumberRule~@~50
+8~@~1~@~2173~@~AdmImpCulture    90: ToTranslate~@~90
+9~@~1~@~2186~@~AdmImpCulture    70: CountryCd~@~70
+10~@~1~@~2183~@~AdmImpCulture    80: CurrencyCd~@~80

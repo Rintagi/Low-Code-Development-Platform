@@ -3,7 +3,7 @@
 import { naviPath } from '../../helpers/utils'
 import MstList from './MstList';
 import MstRecord from './MstRecord';
-   
+
 /* react router match by order of appearance in list so make sure wider match comes last, use order to control display order */
 export const pagesRoutes = [
   {
@@ -15,9 +15,9 @@ export const pagesRoutes = [
     isPublic: false,
     type: 'MstRecord',
     order: 2,
-    screenId : 83
+    screenId: 83
   },
-   
+
   {
     path: '/AdmAppItem/:mstId?',
     name: 'Master List',
@@ -29,7 +29,7 @@ export const pagesRoutes = [
     order: 1,
     inMenu: true,
     menuLabel: 'AdmAppItem',
-    screenId : 83
+    screenId: 83
   },
 ]
 
@@ -53,4 +53,3 @@ export function getNaviBar(type, mst, dtl, label) {
       }
     });
 }
-            

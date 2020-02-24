@@ -9,7 +9,7 @@ export default class DropdownField extends Component {
   handleChange = (value => {
     // this is going to call setFieldValue and manually update values.this.props.name
     if (typeof this.props.onChange === "function")
-      this.props.onChange(this.props.name || (this.props.field || {}).name, value, { fieldname: this.props.fieldname, listidx: this.props.listidx, fieldpath: this.props.fieldpath });
+      this.props.onChange(this.props.name || (this.props.field || {}).name, value,{fieldname:this.props.fieldname,listidx:this.props.listidx, fieldpath:this.props.fieldpath});
     // simulate formik validation routine  
     // if (typeof this.props.validate === "function")
     //   this.props.validate(value);
@@ -18,15 +18,15 @@ export default class DropdownField extends Component {
   render() {
     return (
       // <div className='form__form-group-input-wrap'>
-      <Dropdown
-        name={this.props.name || (this.props.field || {}).name}
-        options={this.props.options}
-        value={this.props.value}
-        onChange={this.handleChange}
-        className={`form__form-group-select ${this.props.className}`}
-        placeholder={this.props.placeholder}
-        disabled={this.props.disabled}
-      />
+        <Dropdown
+          name={this.props.name || (this.props.field || {}).name }
+          options={this.props.options}
+          value={this.props.value}
+          onChange={this.handleChange}
+          className={`form__form-group-select ${this.props.className}`}
+          placeholder={this.props.placeholder}
+          disabled={this.props.disabled}
+        />
       // </div>
     );
   };

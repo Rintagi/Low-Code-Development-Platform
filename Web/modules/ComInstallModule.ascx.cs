@@ -59,7 +59,7 @@ namespace RO.Web
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(Config.RintagiLicense))
+                    if (string.IsNullOrEmpty(Config.RintagiLicense) && !RO.Common3.Utils.IsFullyLicense("Design","Deploy"))
                     {
                         Tuple<string, bool,string> _license = (new RO.Access3.AdminAccess()).UpdateLicense(null, "");
                         if (_license.Item2)

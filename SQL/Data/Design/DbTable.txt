@@ -1,0 +1,341 @@
+1~@~3~@~Usr~@~Adm - User Particulars and Credentials~@~N~@~N~@~~@~This captures all login users information.~@~~@~55~@~2018-10-23 22:56:21.183~@~2018-10-23 15:56:48.240
+3~@~3~@~DbTable~@~Adm - Data Table Characteristic~@~Y~@~N~@~~@~This captures all data table information.~@~~@~55~@~2015-11-14 18:56:23.620~@~2015-11-14 10:56:39.540
+5~@~3~@~DbColumn~@~Adm - Data Table Columns~@~Y~@~N~@~~@~This captures all data columns information.~@~~@~55~@~2014-07-13 22:51:07.463~@~2014-07-13 15:51:28.337
+6~@~3~@~CtDataType~@~Adm - Data Type~@~N~@~N~@~~@~This is a code table capturing the data types.~@~~@~55~@~2015-07-23 16:48:56.460~@~2015-07-23 09:49:04.037
+7~@~3~@~UsrGroup~@~Adm - User Group Particulars~@~N~@~N~@~~@~This captures all defined user groups information.~@~~@~55~@~2012-02-27 15:54:21.457~@~2009-08-18 16:27:50.000
+8~@~3~@~CtCulture~@~Adm - Culture Type~@~N~@~N~@~~@~This is a robot controlled table capturing all culture types available.~@~~@~55~@~2013-03-23 07:15:15.270~@~2013-03-21 16:55:27.000
+14~@~3~@~ScreenObj~@~Adm - Screen Object~@~Y~@~N~@~~@~This captures characteristics of screen columns.~@~~@~55~@~2019-08-20 21:32:38.693~@~2019-08-20 14:32:43.707
+15~@~3~@~Screen~@~Adm - Screen Definition~@~Y~@~N~@~~@~This captures the characteristics and definitions of screen.~@~~@~55~@~2019-05-31 23:48:36.090~@~2019-05-31 16:48:58.767
+16~@~3~@~ScreenHlp~@~Adm - Screen Default Messages~@~Y~@~N~@~~@~This captures culture specific screen messages.~@~~@~55~@~2018-10-14 02:01:18.580~@~2018-10-14 10:01:57.950
+17~@~3~@~CtScreenType~@~Adm - Screen Type~@~N~@~N~@~~@~This captures screen type information.~@~~@~54~@~2007-01-06 23:30:18.670~@~
+18~@~3~@~CtDisplayType~@~Adm - Display Type Code Table~@~N~@~N~@~~@~This is a code table capturing the display types for input screen.~@~~@~55~@~2012-09-19 23:46:35.220~@~2012-09-19 23:47:42.140
+19~@~3~@~ScreenTab~@~Adm - Screen Tab Folder~@~Y~@~N~@~~@~This captures all available screen tabs information.~@~~@~55~@~2015-06-16 19:10:56.633~@~2015-06-16 09:53:10.000
+20~@~3~@~DbKey~@~Adm - Data Table Foreign Keys~@~Y~@~N~@~~@~This captures all foreign keys information.~@~~@~54~@~2007-03-04 10:52:12.623~@~
+21~@~3~@~ScreenObjHlp~@~Adm - Screen Object Messages~@~Y~@~N~@~~@~This captures culture specific screen column labels.~@~~@~55~@~2015-02-10 18:36:33.783~@~2015-02-05 00:32:33.000
+22~@~3~@~Report~@~Adm - Report Definition~@~Y~@~N~@~~@~This captures all reports information.~@~~@~55~@~2015-11-20 18:58:26.503~@~2015-11-20 10:07:56.000
+23~@~3~@~ReportObj~@~Adm - Report Columns Characteristics~@~Y~@~N~@~~@~This captures all columns and their characteristics for the report.~@~~@~55~@~2014-07-14 00:42:46.387~@~2014-07-13 17:42:54.510
+24~@~3~@~ServerRule~@~Adm - Server Rule~@~Y~@~N~@~~@~This table captures all server side rules for all screens.~@~~@~55~@~2016-12-06 13:52:56.113~@~2016-12-06 05:53:21.663
+25~@~3~@~CtRuleType~@~Adm - Rule Type (General)~@~N~@~N~@~~@~This is a code table capturing general server rule type information.~@~~@~55~@~2019-05-31 21:59:05.343~@~
+27~@~5~@~Investor~@~Cmn - Investor Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-02-27 13:41:06.717~@~
+39~@~3~@~Menu~@~Adm - Menu Items~@~Y~@~N~@~~@~This captures the menu information.~@~~@~55~@~2017-03-02 19:57:17.413~@~2017-03-02 11:57:24.700
+40~@~3~@~MenuHlp~@~Adm - Menu Items Label~@~Y~@~N~@~~@~This captures the display label of each menu item in its locale.~@~~@~55~@~2011-05-10 14:43:58.750~@~2011-05-10 14:45:52.367
+45~@~3~@~Systems~@~Adm - Systems Particulars~@~N~@~N~@~~@~This captures all systems information for the databases.~@~~@~55~@~2017-03-25 06:46:05.780~@~2017-03-24 23:46:17.410
+52~@~5~@~Customer~@~Cmn - Customer Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-02-27 13:40:33.913~@~
+54~@~5~@~Member~@~Cmn - Member Particulars~@~N~@~N~@~~@~~@~~@~55~@~2013-06-23 17:23:09.430~@~2013-06-14 10:32:51.000
+58~@~3~@~UsrGroupAuth~@~Adm - User Group Authority~@~N~@~N~@~~@~This captures all user group authority overrides information.~@~~@~55~@~2013-02-26 19:47:15.517~@~2009-08-18 16:28:10.000
+60~@~5~@~Vendor~@~Cmn - Vendor Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-02-27 13:42:06.063~@~
+70~@~3~@~CtWizardType~@~Adm - Wizard Type~@~N~@~N~@~~@~This code table captures available import wizard types.~@~~@~55~@~2008-03-13 17:21:02.090~@~
+71~@~3~@~Wizard~@~Adm - Wizard Definition~@~Y~@~N~@~~@~This captures all the import wizards information.~@~~@~55~@~2012-08-28 14:02:44.013~@~2012-08-28 14:02:47.400
+72~@~3~@~WizardObj~@~Adm - Wizard Columns Characteristics~@~Y~@~N~@~~@~This captures all import wizard columns information.~@~~@~54~@~2007-01-07 00:10:26.890~@~
+73~@~3~@~WizardRule~@~Adm - Wizard Rules~@~Y~@~N~@~~@~This captures all import wizard rules information.~@~~@~54~@~2007-02-12 12:12:30.140~@~
+79~@~3~@~Template~@~Adm - Template Type~@~Y~@~N~@~~@~This captures the templates to be used for mail merging purpose.~@~~@~54~@~2007-01-06 23:57:41.547~@~
+80~@~3~@~ScreenTabHlp~@~Adm - Screen Tab Folder Names~@~Y~@~N~@~~@~This captures culture specific screen tab labels.~@~~@~55~@~2008-09-15 08:36:22.443~@~2008-09-15 08:36:28.250
+86~@~3~@~ScreenFilter~@~Adm - Screen Filter~@~Y~@~N~@~~@~This captures all the screen filters.~@~~@~55~@~2008-09-28 22:00:07.060~@~2008-09-28 22:00:40.587
+87~@~3~@~ScreenFilterHlp~@~Adm - Screen Filter Names~@~Y~@~N~@~~@~This captures culture specific screen filter description.~@~~@~54~@~2007-01-06 20:12:50.483~@~
+88~@~5~@~Agent~@~Cmn - Agent Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-02-27 13:27:27.607~@~
+89~@~5~@~Broker~@~Cmn - Broker Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-02-27 13:28:02.287~@~
+92~@~3~@~CtSysListVisible~@~Adm - User System List Visibility~@~N~@~N~@~~@~This code table captures available system list visibility/readability options.~@~~@~54~@~2007-01-07 00:06:21.483~@~
+93~@~3~@~UsrPref~@~Adm - User Preference~@~N~@~N~@~~@~This captures all user preferences information.~@~~@~55~@~2018-10-23 23:26:54.527~@~2018-10-23 16:27:11.123
+94~@~3~@~ReportGrp~@~Adm - Report Criteria Group~@~Y~@~N~@~~@~This captures the grouping information for report criteria and columns if default groups are not used.~@~~@~55~@~2007-05-22 17:23:32.747~@~2007-05-22 17:24:19.170
+95~@~3~@~UsrImpr~@~Adm - User Impersonation~@~N~@~N~@~~@~This table captures all the users impersonation information.~@~~@~55~@~2015-08-07 00:20:58.150~@~2015-08-06 17:21:17.080
+96~@~3~@~ReportHlp~@~Adm - Report Default Messages~@~Y~@~N~@~~@~This captures all the culture specific help messages for the report.~@~~@~55~@~2009-10-28 19:42:04.003~@~2009-10-28 19:42:08.960
+97~@~3~@~ReportCri~@~Adm - Report Criteria Characteristic~@~Y~@~N~@~~@~This captures all criteria and their characteristics for the report.~@~~@~55~@~2015-09-09 22:26:08.253~@~2015-09-09 15:26:12.807
+98~@~3~@~ReportCriHlp~@~Adm - Report Criteria Messages~@~Y~@~N~@~~@~This captures the culture specific labels for the report criteria.~@~~@~55~@~2016-03-04 22:31:03.780~@~2009-07-26 10:39:58.000
+99~@~3~@~ReportObjHlp~@~Adm - Report Object Messages~@~Y~@~N~@~~@~This captures all culture specific column labels.~@~~@~55~@~2016-03-04 22:30:50.000~@~
+100~@~3~@~CtOperator~@~Adm - Operator Code Table~@~N~@~N~@~~@~This is a code table capturing the available operators.~@~~@~55~@~2007-11-29 21:03:55.357~@~2007-11-29 21:04:03.797
+102~@~3~@~CtHintQuestion~@~Adm - Hint Question Type~@~N~@~N~@~~@~This is a code table capturing the hint questions available.~@~~@~55~@~2014-07-15 00:16:44.020~@~
+104~@~3~@~ScreenCri~@~Adm - Screen Criteria Characteristic~@~Y~@~N~@~~@~This captures all the screen criteria and their characteristics.~@~~@~55~@~2015-09-09 22:28:55.320~@~2015-09-09 15:29:02.377
+105~@~3~@~ScreenCriHlp~@~Adm - Screen Criteria Messages~@~Y~@~N~@~~@~This captures all the culture specific screen criteria labels.~@~~@~55~@~2016-03-04 22:31:25.490~@~2009-07-26 09:32:24.000
+106~@~3~@~GroupCol~@~Adm - Column Grouping~@~N~@~N~@~~@~This captures all display column groupings of columns and criteria.~@~~@~55~@~2014-06-12 20:59:32.090~@~2014-06-12 13:59:39.070
+115~@~3~@~CtButtonType~@~Adm - Button Type Code Table~@~N~@~N~@~~@~This is a code table capturing all button types.~@~~@~55~@~2018-09-21 14:18:12.503~@~2018-09-21 07:21:33.733
+116~@~3~@~ButtonHlp~@~Adm - Button Characteristic Override~@~Y~@~N~@~~@~This captures all buttons characteristic override information.~@~~@~55~@~2018-09-21 15:00:42.660~@~2018-09-21 08:01:01.137
+118~@~3~@~CtReportSct~@~Adm - Report Sections~@~N~@~N~@~~@~This is a code table capturing the sections available to the report customization.~@~~@~54~@~2007-01-04 16:40:04.123~@~
+119~@~3~@~CtAlignment~@~Adm - Alignment Choice~@~N~@~N~@~~@~This is a code table capturing the alignment type such as center, left, etc.~@~~@~55~@~2007-09-21 08:59:28.937~@~2012-08-13 08:16:47.810
+120~@~3~@~CtLineType~@~Adm - Line Type~@~N~@~N~@~~@~This is a code table capturing the available line types.~@~~@~54~@~2006-12-28 23:32:59.077~@~
+121~@~3~@~CtAggregate~@~Adm - Aggregate Type~@~N~@~N~@~~@~This is a code table capturing the aggregate types such as average, sum, etc.~@~~@~55~@~2015-12-29 00:25:04.677~@~2007-11-28 10:30:25.000
+122~@~3~@~Ovride~@~Adm - Pwd Override~@~N~@~N~@~~@~This captures the password override types.~@~~@~55~@~2008-11-01 19:53:52.993~@~
+123~@~3~@~OvrideGrp~@~Adm - Pwd Override Group~@~N~@~N~@~~@~This captures all user groups whose users' password can override.~@~~@~55~@~2008-11-01 19:54:01.893~@~
+124~@~3~@~CtSelectType~@~Adm - Select Type~@~N~@~N~@~~@~This code table captures available choice for select permission.~@~~@~54~@~2007-01-06 23:32:20.077~@~
+125~@~3~@~CtCheckBox~@~Adm - CheckBox Code Table~@~N~@~N~@~~@~This is a code table with two rows: Yes and No.~@~~@~54~@~2006-12-27 20:40:25.000~@~
+126~@~3~@~CtClientScript~@~Adm - Client-Side Script Stock~@~N~@~N~@~~@~This is a code table capturing all stock client rules.~@~~@~55~@~2013-06-17 16:26:38.927~@~2013-06-17 09:26:48.537
+127~@~3~@~ClientRule~@~Adm - Client Rule~@~Y~@~N~@~~@~This captures all defined client-rules information.~@~~@~55~@~2016-03-04 19:02:30.463~@~2016-03-04 11:12:24.523
+128~@~3~@~WebRule~@~Adm - Web Rule~@~Y~@~N~@~~@~This captures all the web rules and contents for generation.~@~~@~55~@~2019-08-28 23:06:56.760~@~2019-08-28 16:07:25.970
+129~@~3~@~CtEvent~@~Adm - Event Code Table~@~N~@~N~@~~@~This is a code table capturing the events for web rules.~@~~@~54~@~2006-12-28 23:38:18.263~@~
+130~@~3~@~VwScrButton~@~Adm - Button Type View (Screen)~@~N~@~Y~@~CREATE VIEW [dbo].[VwScrButton]
+AS
+SELECT     ButtonTypeId, ButtonTypeDesc
+FROM         dbo.CtButtonType
+WHERE ObjectType = 'S'
+~@~This is a view on the button types extracting only screen buttons.~@~~@~55~@~2016-12-31 01:26:26.410~@~
+131~@~3~@~CtButtonHlp~@~Adm - Button Characteristic Default~@~N~@~N~@~~@~This is a code table capturing all default buttons characteristic.~@~~@~55~@~2018-10-12 17:11:23.357~@~2018-10-13 01:11:29.530
+132~@~5~@~Company~@~Cmn - Company Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-09-18 11:47:34.250~@~
+135~@~3~@~AppInfo~@~Adm - Release Version Tracking~@~Y~@~N~@~~@~This table tracks all version release header information.~@~~@~55~@~2016-08-15 05:04:33.103~@~2013-03-24 10:59:11.000
+136~@~3~@~AppItem~@~Adm - Version Content~@~Y~@~N~@~~@~This table tracks all version release detail information.~@~~@~55~@~2009-08-19 15:24:31.957~@~2016-02-12 14:53:07.590
+137~@~3~@~CtObjectType~@~Adm - Tier Type~@~N~@~N~@~~@~This table captures the three tiers: Client, Rule and Data.~@~~@~54~@~2006-08-14 12:12:27.403~@~
+138~@~3~@~CtDbProvider~@~Adm - Database Provider Type~@~N~@~N~@~~@~This is a code table capturing the information required for each available database provider.~@~~@~54~@~2006-12-28 23:39:38.030~@~
+139~@~3~@~CtLanguage~@~Adm - Computer Language Type~@~N~@~N~@~~@~This is a code table capturing the information required for each available computer language.~@~~@~54~@~2006-12-27 20:47:14.607~@~
+140~@~3~@~CtFramework~@~Adm - Framework Type~@~N~@~N~@~~@~This is a code table capturing the information required for each available framework.~@~~@~54~@~2006-12-28 23:35:06.857~@~
+141~@~3~@~CtMsgType~@~Adm - Prompt Message Type~@~N~@~N~@~~@~This is a code table capturing the available message type.~@~~@~54~@~2006-12-28 23:55:07.653~@~
+146~@~3~@~Msg~@~Adm - Message Master~@~Y~@~N~@~~@~This table captures all business rule error messages.~@~~@~55~@~2016-06-09 15:37:09.680~@~2016-06-09 08:37:13.167
+147~@~3~@~MsgCenter~@~Adm - Message Detail~@~Y~@~N~@~~@~This captures all business rule error messages in desired cultural human language.~@~~@~54~@~2007-03-03 10:05:13.390~@~
+151~@~3~@~CtCrawler~@~Adm - Crawler Code Table~@~N~@~N~@~~@~This is a code table capturing information required for crawling specific translation web sites.~@~~@~54~@~2007-01-26 09:36:50.590~@~
+152~@~3~@~CtJustify~@~Adm - Justification Code Table~@~N~@~N~@~~@~This is a code table with three rows: left, right and center.~@~~@~54~@~2007-03-06 19:34:56.577~@~
+153~@~5~@~Project~@~Cmn - Project Particulars~@~N~@~N~@~~@~This table captures all project information.~@~~@~55~@~2013-02-26 19:35:41.723~@~2007-07-09 18:28:56.000
+154~@~3~@~CtUnit~@~Adm - Unit of Measure Code Table~@~N~@~N~@~~@~This is a code table capturing all unit of measure.~@~~@~55~@~2007-07-14 18:02:11.670~@~2007-07-14 18:27:21.750
+156~@~3~@~CtRptObjType~@~Adm - Report Column Type~@~N~@~N~@~~@~This is a code table capturing the report column types such as parameter, field, etc.~@~~@~55~@~2007-07-25 15:46:07.077~@~2007-07-25 15:46:15.373
+157~@~3~@~CtRptCtrType~@~Adm - Report Control Type~@~N~@~N~@~~@~This is a code table capturing the report control types.~@~~@~55~@~2007-11-25 10:39:40.937~@~2007-11-25 10:39:48.000
+158~@~3~@~CtRptElmType~@~Adm - Report Element Type~@~N~@~N~@~~@~This is a code table capturing the report element types.~@~~@~55~@~2007-07-28 16:13:11.513~@~2007-11-04 10:47:13.263
+159~@~3~@~CtRptTblType~@~Adm - Report Table Type~@~N~@~N~@~~@~This is a code table capturing the report table types.~@~~@~55~@~2007-07-28 16:07:55.340~@~2007-07-28 16:08:16.217
+160~@~3~@~RptElm~@~Adm - Report Element~@~Y~@~N~@~~@~This table captures the report elements and their characteristics.~@~~@~55~@~2007-10-15 19:59:52.983~@~2007-10-15 21:00:44.640
+161~@~3~@~RptCtr~@~Adm - Report Control~@~Y~@~N~@~~@~This table captures all report controls and their origins.~@~~@~55~@~2008-02-13 10:21:58.940~@~2008-02-21 18:08:46.327
+162~@~3~@~RptTbl~@~Adm - Report Table~@~Y~@~N~@~~@~This table captures the various table elements.~@~~@~55~@~2007-12-30 10:38:40.933~@~2007-12-29 09:49:52.000
+164~@~3~@~RptCel~@~Adm - Report Table Row and Cell~@~Y~@~N~@~~@~This table captures all the table rows and cells for Header, Footer and Details.~@~~@~55~@~2007-10-16 15:56:23.607~@~2007-10-16 15:34:18.000
+167~@~3~@~RptStyle~@~Adm - Report Style~@~Y~@~N~@~~@~This table defines a reuseable style for all reporting use.~@~~@~55~@~2012-07-04 08:27:13.753~@~2009-05-06 08:51:53.000
+168~@~3~@~CtBorderStyle~@~Adm - Border Style Code Table~@~N~@~N~@~~@~This code table captures all available border styles.~@~~@~55~@~2007-09-24 19:14:33.480~@~2007-09-24 17:50:49.000
+170~@~3~@~CtBgGradType~@~Adm - Background Gradient Type Table~@~N~@~N~@~~@~This code table captures all available Background Gradient Types.~@~~@~55~@~2007-09-24 20:18:13.327~@~2007-09-24 19:10:19.000
+171~@~3~@~CtFontStyle~@~Adm - Font Stye Code Table~@~N~@~N~@~~@~This code table captures all available font styles.~@~~@~55~@~2007-09-24 19:12:40.263~@~2007-09-24 19:12:44.797
+172~@~3~@~CtFontWeight~@~Adm - Font Weight Code Table~@~N~@~N~@~~@~This code table captures all available font weights.~@~~@~55~@~2007-09-24 20:12:57.107~@~2007-09-24 19:13:58.000
+173~@~3~@~CtTextDecor~@~Adm - Text Decoration CodeTable~@~N~@~N~@~~@~This code table captures all available Text Decorations.~@~~@~55~@~2007-09-24 20:09:52.077~@~2007-09-24 19:44:04.000
+174~@~3~@~CtTextAlign~@~Adm - Text Align CodeTable~@~N~@~N~@~~@~This code table captures all available Text Horizontal Alignments.~@~~@~55~@~2007-09-24 19:45:11.950~@~2007-09-24 19:45:18.310
+175~@~3~@~CtVerticalAlign~@~Adm - Vertical Align CodeTable~@~N~@~N~@~~@~This code table captures all available Text Vertical Alignments.~@~~@~55~@~2007-09-24 19:45:53.170~@~2007-09-24 19:45:57.047
+176~@~3~@~CtDirection~@~Adm - Direction Code Table~@~N~@~N~@~~@~This code table captures all available Text Directions.~@~~@~55~@~2007-12-11 10:25:21.817~@~2007-09-24 19:46:51.000
+177~@~3~@~CtWritingMode~@~Adm - Writing Mode CodeTable~@~N~@~N~@~~@~This code table captures all available Text Writing Modes.~@~~@~55~@~2007-09-24 20:04:16.403~@~2007-09-24 19:47:30.000
+178~@~3~@~CtRptStyDef~@~Adm - Report Style Default Table~@~N~@~N~@~~@~This code table captures all available Report Style Defaults.~@~~@~55~@~2007-09-25 12:58:59.293~@~2007-09-25 12:59:10.763
+180~@~3~@~CtRuleLayer~@~Adm - Rule Layer Code Table~@~N~@~N~@~~@~This is a code table capturing advanced rule layer information.~@~~@~55~@~2007-10-19 23:26:04.123~@~2007-10-19 23:26:13.547
+181~@~3~@~RptwizCat~@~Adm - Report Data Category~@~Y~@~N~@~~@~This table captures report wizard's category information on related tables.~@~~@~55~@~2012-07-26 14:39:28.470~@~2009-03-30 21:08:55.000
+182~@~3~@~RptwizCatDtl~@~Adm - Report Data Category Detail~@~Y~@~N~@~~@~This table captures report wizard's category related tables information.~@~~@~55~@~2009-03-31 20:46:05.517~@~2009-03-30 21:34:20.000
+183~@~3~@~Rptwiz~@~Adm - Report Generator~@~Y~@~N~@~~@~This table captures all report wizard header information.~@~~@~55~@~2009-12-06 14:04:55.443~@~2009-12-02 17:33:31.000
+184~@~3~@~RptwizDtl~@~Adm - Report Generator Detail~@~Y~@~N~@~~@~This table captures all report wizard detail information.~@~~@~55~@~2008-02-13 17:49:50.780~@~2008-02-13 17:50:22.123
+185~@~3~@~RptwizTyp~@~Adm - Report Data Type~@~Y~@~N~@~~@~This table captures the available report data type that the report data category belongs.~@~~@~55~@~2007-11-23 16:43:39.577~@~2007-11-23 15:08:44.000
+186~@~3~@~CtRptGroup~@~Adm - Report Group Level~@~N~@~N~@~~@~This is a code table capturing the report group levels.~@~~@~55~@~2007-11-29 08:46:29.183~@~2007-11-29 08:47:45.047
+187~@~3~@~CtOrientation~@~Adm - Print Orientation Code Table~@~N~@~N~@~~@~This code table captures the codes for Portrait and Landscape print orientation.~@~~@~55~@~2007-12-11 10:25:05.503~@~2007-09-24 19:46:51.000
+191~@~3~@~Release~@~Adm - Release Characteristic~@~N~@~N~@~~@~This is the installer configuration header table.~@~~@~55~@~2014-05-19 23:28:48.530~@~2014-05-19 16:29:57.933
+192~@~3~@~ReleaseDtl~@~Adm - Release Detail~@~N~@~N~@~~@~This captures all release detail information for execution purpose.~@~~@~55~@~2009-10-28 19:39:07.933~@~2009-10-28 19:39:58.450
+193~@~3~@~CtReleaseType~@~Adm - Release Type~@~N~@~N~@~~@~~@~~@~55~@~2008-01-18 14:52:28.123~@~2008-01-18 14:52:28.123
+194~@~3~@~ClientTier~@~Adm - Client Tier~@~N~@~N~@~~@~This table captures all information about the client tier.~@~~@~55~@~2016-01-12 19:05:45.217~@~2016-01-12 11:05:52.303
+195~@~3~@~DataTier~@~Adm - Data Tier~@~N~@~N~@~~@~~@~~@~55~@~2016-01-12 19:06:02.883~@~2016-01-12 11:06:06.223
+196~@~3~@~RuleTier~@~Adm - Rule Tier~@~N~@~N~@~~@~~@~~@~55~@~2016-01-12 19:05:13.413~@~2016-01-12 11:05:28.213
+197~@~3~@~CtOsType~@~Adm - Operating System Type~@~N~@~N~@~~@~~@~~@~55~@~2008-01-18 14:52:28.123~@~2008-01-18 14:52:28.123
+198~@~3~@~CtSProcOnly~@~Adm - S.Proc. Only Type~@~N~@~N~@~~@~This is a code table capturing the deployment type for the database.~@~~@~55~@~2008-01-18 14:52:28.123~@~2008-01-18 14:52:28.123
+199~@~3~@~Entity~@~Adm - Entity Info~@~N~@~N~@~~@~This table captures all the information relating to namespace, installation, etc.~@~~@~55~@~2012-08-09 21:52:26.823~@~2012-08-09 21:52:42.063
+203~@~3~@~CtReportType~@~Adm - Report Type~@~N~@~N~@~~@~This captures report type information.~@~~@~55~@~2008-02-06 07:29:18.827~@~
+204~@~3~@~RptTemplate~@~Adm - Report template document~@~Y~@~N~@~~@~This table captures all files for document merging purpose.  The columns of this table is exactly the same for all document tables.~@~~@~55~@~2009-10-26 21:02:25.233~@~2009-10-26 21:48:25.800
+205~@~3~@~CtRptChaType~@~Adm - Report Chart Type~@~N~@~N~@~~@~This is a code table capturing the report chart types.~@~~@~55~@~2008-02-13 08:38:33.903~@~2008-02-13 00:59:47.000
+206~@~3~@~RptCha~@~Adm - Report Chart~@~Y~@~N~@~~@~This table captures the charting requirements.~@~~@~55~@~2008-02-13 10:21:29.823~@~2008-02-13 01:27:35.000
+207~@~3~@~CtRptChart~@~Adm - Report Chart Selection~@~N~@~N~@~~@~This is a code table capturing the report chart selections.~@~~@~55~@~2008-02-13 11:56:18.507~@~2008-02-13 11:52:15.000
+208~@~3~@~CtPermKey~@~Adm - Permission Keys Code Table~@~N~@~N~@~~@~This table captures all the columns used for rights managments settings.~@~~@~55~@~2008-03-04 19:42:21.997~@~2008-03-04 19:42:30.107
+209~@~3~@~RptMemCriDtl~@~Adm - Memorized Report Criteria Detail~@~Y~@~N~@~~@~This table captures all memorized and named report criteria details.~@~~@~55~@~2008-03-17 18:02:47.060~@~2008-03-09 09:31:50.000
+210~@~3~@~RptMemCri~@~Adm - Memorized Report Criteria Header~@~Y~@~N~@~~@~This table captures all memorized and named report criteria header.~@~~@~55~@~2009-12-06 14:51:23.473~@~2008-03-19 20:57:55.000
+211~@~3~@~ScrMemCriDtl~@~Adm - Memorized Screen Criteria Detail~@~Y~@~N~@~~@~This table captures all memorized and named screen criteria detail.~@~~@~55~@~2008-03-17 15:56:15.233~@~2008-03-17 07:24:37.000
+212~@~3~@~ScrMemCri~@~Adm - Memorized Screen Criteria Header~@~Y~@~N~@~~@~This table captures all memorized and named screen criteria header.~@~~@~55~@~2008-03-17 15:56:24.013~@~2008-03-17 07:24:27.000
+213~@~3~@~RptMemFld~@~Adm - Memorized Report Folder~@~Y~@~N~@~~@~This table captures all memorized report folder.~@~~@~55~@~2009-12-06 10:52:03.097~@~2008-09-29 12:29:08.000
+215~@~3~@~Label~@~Adm - Label Translation~@~Y~@~N~@~~@~This table captures all general labels and their multilingual translations.~@~~@~55~@~2012-02-27 15:51:54.353~@~2012-01-16 10:40:47.000
+218~@~3~@~QueryStr~@~Adm - QueryString Override~@~Y~@~N~@~~@~This table captures all query strings by user defined id.~@~~@~55~@~2008-05-07 14:54:01.967~@~2008-05-07 14:54:09.513
+221~@~3~@~CtFormat~@~Adm - Format Type~@~N~@~N~@~~@~This is the available format types, culture dependent.~@~~@~55~@~2008-06-14 09:10:56.420~@~2008-06-14 09:11:28.310
+225~@~3~@~CtLinkType~@~Adm - Link Type~@~N~@~N~@~~@~This is a code table capturing the widgets (home logo, social icons, links, etc.) available for Header, Footer, and Side Panels.~@~~@~55~@~2014-06-11 18:16:01.990~@~2014-06-10 21:06:40.000
+227~@~3~@~CtMatch~@~Adm - Match Type~@~N~@~N~@~~@~This is a code table capturing the match types for grid import~@~~@~55~@~2008-08-22 11:47:19.193~@~2008-08-22 11:47:41.783
+228~@~3~@~CtAccess~@~Adm - Access Type~@~N~@~N~@~~@~This is a code table stating 'P' when public, 'V' when private.~@~~@~55~@~2017-05-09 19:06:27.637~@~2012-06-13 14:37:35.000
+229~@~3~@~CtEveryone~@~Adm - Everyone Code Table~@~N~@~N~@~~@~This is a code table with three rows for Menu Permission purpose: Y for All, G for Grant and D for Deny.~@~~@~55~@~2009-06-06 21:09:04.660~@~2009-06-15 13:38:57.803
+230~@~3~@~VwPermKey~@~Adm - Permission Keys View~@~N~@~Y~@~CREATE VIEW [dbo].[VwPermKey]
+AS
+SELECT PermKeyId = CtPermKeyId, PermKeyDesc = TableName
+FROM dbo.CtPermKey
+WHERE CtPermKeyId IN (1,2,3,4,6,7,8,9,10,11,12)
+~@~This view captures all the unique permission keys for menu permission.~@~~@~55~@~2017-03-02 21:59:54.577~@~2008-03-04 19:42:30.000
+231~@~3~@~MenuPrm~@~Adm - Menu Permission~@~Y~@~N~@~~@~This captures the permission to each menu item. Empty means everyone can access.~@~~@~55~@~2009-07-06 09:58:09.740~@~2009-07-01 09:23:42.000
+233~@~3~@~MaintMsg~@~Adm - Maintenance Message~@~N~@~N~@~~@~This table captures all maintenance messages.~@~~@~55~@~2009-08-08 00:20:17.190~@~2009-08-07 13:12:17.000
+234~@~3~@~CtRowAuth~@~Adm - Row Authority (Rbt)~@~N~@~N~@~~@~This is the robot defined code table capturing all row default authorization information. This should only be changed by the robot and is complimentary to AtRowAuth.~@~~@~55~@~2009-08-11 12:11:08.420~@~2009-08-09 14:58:06.000
+235~@~3~@~CtRowAuthPrm~@~Adm - Row Authority Permission (Rbt)~@~N~@~N~@~~@~This table captures the permission override, if any, to the robot defined default row authority.  This table should only be changed by robot.~@~~@~55~@~2009-08-09 18:13:48.797~@~2009-08-09 14:58:16.000
+236~@~3~@~AtRowAuth~@~Adm - Row Authority (App)~@~N~@~N~@~~@~This is the applicaiton defined code table capturing all row default authorization information. This should only be changed by the application developer and is complimentary to CtRowAuth.~@~~@~55~@~2009-08-11 12:10:48.003~@~2009-08-09 14:58:25.000
+237~@~3~@~AtRowAuthPrm~@~Adm - Row Authority Permission (App)~@~N~@~N~@~~@~This table captures the Selection Level override, if any, to the application defined default row authority.  This table should only be changed by robot.~@~~@~55~@~2009-08-09 18:13:36.673~@~2009-08-09 14:58:33.000
+238~@~3~@~RowOvrd~@~Adm - Authority Override (ROW)~@~Y~@~N~@~~@~This captures row authorization for all screens and reports to override the defaults.~@~~@~55~@~2009-08-17 22:01:32.720~@~2009-08-09 18:29:44.000
+239~@~3~@~RowOvrdPrm~@~Adm - Authority Override Permission (ROW)~@~Y~@~N~@~~@~This table captures the Selection Level override, if any, to the row override authority.~@~~@~55~@~2012-04-06 15:56:38.477~@~2012-04-06 15:56:41.957
+240~@~3~@~VwRowAuth~@~Adm - Row Authority View (Rbt+App)~@~N~@~Y~@~CREATE VIEW [dbo].[VwRowAuth] AS
+	SELECT RowAuthId, RowAuthName, AllowSel, AllowAdd, AllowUpd, AllowDel, SysAdmin, OvrideId
+	FROM dbo.CtRowAuth
+	UNION
+	SELECT RowAuthId, RowAuthName, AllowSel, AllowAdd, AllowUpd, AllowDel, SysAdmin, OvrideId
+	FROM dbo.AtRowAuth
+~@~This is the view table combining both row default authorization tables for robot and application.~@~~@~55~@~2016-12-31 01:28:13.863~@~2009-08-09 14:58:25.000
+241~@~3~@~ColOvrd~@~Adm - Authority Override (COL)~@~Y~@~N~@~~@~This captures column authorization for all screens to override the defaults (visible, editable and exportable); This is also used for report column authorization override if the ScreenObjId matches the table and column of the report.~@~~@~55~@~2016-07-25 18:14:20.480~@~2016-07-25 11:14:28.497
+242~@~3~@~CtCultureLbl~@~Adm - Culture Type Label~@~N~@~N~@~~@~This is the rintagi-controlled table capturing multilingual labels for all culture types.~@~~@~55~@~2013-03-21 22:58:41.123~@~2008-09-09 20:30:02.000
+245~@~3~@~VwCulture~@~Adm - Culture Type View~@~N~@~Y~@~CREATE VIEW [dbo].[VwCulture] AS
+	SELECT CultureId = CultureTypeId, CultureTypeName, CultureTypeDesc, CultureDefault, EnNumberRule, CountryCd, CurrencyCd
+	FROM dbo.CtCulture~@~This is the view table capturing all culture types available.~@~~@~55~@~2013-03-31 23:51:42.537~@~2013-03-31 16:51:26.000
+246~@~3~@~VwCultureLbl~@~Adm - Culture Type Label View~@~N~@~Y~@~-- ??Design only:
+CREATE VIEW [dbo].[VwCultureLbl] AS
+	SELECT a.CultureLblId, a.CultureTypeId, a.CultureId, a.CultureTypeLabel, b.CultureTypeName, b.CountryCd, b.CurrencyCd
+	FROM dbo.CtCultureLbl a INNER JOIN dbo.CtCulture b ON a.CultureTypeId = b.CultureTypeId~@~This is the view table capturing multilingual labels for all culture types.~@~~@~55~@~2013-03-31 23:36:25.313~@~2013-03-31 16:34:18.000
+247~@~3~@~VwMailProfile~@~Adm - Mail Profile View Table~@~N~@~Y~@~CREATE VIEW [dbo].[VwMailProfile]
+AS
+SELECT ProfileNm = [name] FROM msdb.dbo.sysmail_profile
+~@~~@~~@~55~@~2016-12-31 01:27:22.673~@~
+248~@~3~@~MyMenuOpt~@~Adm - Menu Options~@~N~@~N~@~~@~This is where developers can publish their menu options design.~@~~@~55~@~2013-02-26 19:52:22.680~@~2011-02-16 05:05:08.000
+253~@~3~@~AppZipId~@~Administration - AppZipId Doc~@~N~@~N~@~~@~This table captures upload of all document types.~@~~@~55~@~2012-01-17 22:37:21.433~@~2012-01-17 22:35:46.000
+254~@~3~@~TbdRule~@~Adm - To Be Done Rules~@~Y~@~N~@~~@~This table captures all the descriptions of the business rules to be implemented.~@~~@~55~@~2012-02-23 08:11:28.517~@~2012-02-23 08:07:49.000
+256~@~3~@~CtAndOr~@~Adm - And / Or Code Table~@~N~@~N~@~~@~~@~~@~55~@~2012-04-06 16:21:26.017~@~2012-04-06 15:57:45.000
+258~@~3~@~VwDisplayType~@~Adm - Display Type View~@~N~@~Y~@~CREATE VIEW [dbo].[VwDisplayType] AS SELECT TypeId, TypeName, TypeDesc, DisplayDefault FROM dbo.CtDisplayType WHERE TypeId IN (1,3,4,5,17,18,20,33,35,38,40,44,52)
+~@~This is a view on the code table for the criteria display types.~@~~@~55~@~2016-06-09 16:11:28.810~@~
+259~@~3~@~StaticPg~@~Adm - Static Page~@~Y~@~N~@~~@~Static html pages.~@~~@~55~@~2013-07-28 21:04:43.557~@~2013-07-28 14:04:48.620
+260~@~3~@~StaticCs~@~Adm - Static CSS~@~Y~@~N~@~~@~Shared CSS for Static pages.~@~~@~55~@~2012-09-26 10:19:53.473~@~2012-09-26 10:22:21.510
+261~@~3~@~StaticJs~@~Adm - Static Javascript~@~Y~@~N~@~~@~Shared JavaScript for Static pages.~@~~@~55~@~2012-09-26 10:22:07.183~@~2012-09-26 10:22:13.090
+262~@~3~@~StaticFi~@~Adm - Static Files~@~Y~@~N~@~~@~Shared files including images uploaded for Static pages.~@~~@~55~@~2012-09-26 10:24:34.810~@~2012-09-26 10:24:39.990
+263~@~3~@~CtGridGrp~@~Adm - Grid Column Grouping Code Table~@~N~@~N~@~~@~This is a code table with three values:
+N - Nothing;
+Y - Block mode to wrap under previous column;
+I - Inline mode to group with previous column side-by-side;~@~~@~55~@~2012-10-17 18:23:02.680~@~2012-10-17 11:23:09.903
+264~@~3~@~CronJob~@~Adm - Cron Timed Jobs~@~Y~@~N~@~~@~~@~~@~55~@~2012-11-15 23:32:32.253~@~2012-11-15 15:21:01.000
+265~@~3~@~VwLabel~@~Adm - Label Translation View~@~Y~@~Y~@~CREATE VIEW dbo.VwLabel AS
+SELECT LabelId, CultureId, LabelCat, LabelKey, LabelText, SortOrder
+	, LabelLink = 'AdmLabel.aspx?col=LabelId&typ=N&key=' + convert(varchar(20),LabelId)
+	FROM dbo.Label
+	WHERE CompanyId is null~@~This view table captures all labels and their multilingual translations unrestricted by Company.~@~~@~55~@~2012-12-21 18:48:26.400~@~2012-12-21 10:44:00.000
+268~@~5~@~FxRate~@~Cmn - FX Rate Table~@~N~@~N~@~~@~~@~~@~55~@~2013-03-22 02:13:29.453~@~2013-03-21 19:13:24.000
+269~@~3~@~CtCountry~@~Adm - Country Table~@~N~@~N~@~~@~~@~~@~55~@~2013-03-23 16:43:16.763~@~2013-03-23 09:42:57.000
+270~@~3~@~VwUsr~@~Adm - User View~@~N~@~Y~@~CREATE VIEW [dbo].[VwUsr] AS
+SELECT UsrId, LoginName, UsrName, UsrEmail, UsrPassword, Active FROM dbo.Usr~@~This redundant view is for dropdown, etc. to avoid being filtered by CultureId.~@~~@~55~@~2016-10-28 02:48:54.480~@~
+272~@~3~@~SredTime~@~Cmn - Sred Time Tracking~@~N~@~N~@~~@~~@~~@~55~@~2013-06-23 16:02:59.857~@~2013-06-23 09:06:38.077
+273~@~3~@~fSredTime~@~Cmn - Sred Statistic~@~N~@~Y~@~CREATE FUNCTION [dbo].[fSredTime]() RETURNS TABLE 
+AS
+RETURN 
+(
+	SELECT YearMn = convert(char(4),datepart(yyyy,s.SredTimeDt)) + right('0'+convert(varchar(2),datepart(mm,s.SredTimeDt)),2)
+		, r.MemberId, r.MemberName, r.MnWorkHours
+		, TtWorkHours = SUM(s.HourSpent), MnPerc = round(SUM(s.HourSpent) / r.MnWorkHours * 100,2)
+	FROM dbo.SredMebr r
+	INNER JOIN dbo.SredTime s ON r.MemberId = s.MemberId
+	GROUP BY convert(char(4),datepart(yyyy,s.SredTimeDt)) + right('0'+convert(varchar(2),datepart(mm,s.SredTimeDt)),2), r.MemberId, r.MemberName, r.MnWorkHours
+)~@~~@~~@~55~@~2013-11-14 04:31:06.480~@~2013-06-17 15:54:07.000
+274~@~3~@~SredMebr~@~Adm - Member Info for SR&ED~@~N~@~N~@~~@~~@~~@~55~@~2013-11-14 04:23:08.687~@~2013-11-13 20:23:33.623
+275~@~3~@~VwIntUsr~@~Adm - Internal User View~@~N~@~Y~@~CREATE VIEW [dbo].[VwIntUsr] AS
+SELECT UsrId, LoginName, UsrName, MemberId, Active, PicMed FROM dbo.Usr WHERE InternalUsr = 'Y'
+~@~~@~~@~55~@~2013-06-24 23:14:59.977~@~2013-06-24 16:05:36.000
+277~@~3~@~VwLinkType~@~Adm - Link Type View~@~N~@~Y~@~CREATE VIEW [dbo].[VwLinkType] AS SELECT LinkTypeCd, LinkTypeName, LinkTypeDesc FROM dbo.CtLinkType WHERE UsrDefined = 'Y'~@~This is a view table showing all the link types that can be defined by users.~@~~@~55~@~2014-06-11 05:24:15.860~@~2014-06-10 21:06:40.000
+1277~@~3~@~PageObj~@~Adm - Section Object Header~@~N~@~N~@~~@~This captures the objects to be displayed to Header, Footer, Left & Right Sides, Landing and Master Pages.~@~~@~55~@~2014-07-26 06:22:29.423~@~2014-07-25 23:25:09.840
+1278~@~3~@~PageLnk~@~Adm - Section Object Detail~@~N~@~N~@~~@~This captures the details of each page object.~@~~@~55~@~2015-01-07 07:18:48.253~@~2015-01-06 23:19:04.040
+1280~@~3~@~CtSection~@~Adm - Section Code Table~@~N~@~N~@~~@~~@~~@~55~@~2014-08-07 18:10:42.477~@~2014-08-07 11:10:47.030
+1281~@~3~@~GroupRow~@~Adm - Row Grouping~@~N~@~N~@~~@~This captures all the user-defined row groupings.~@~~@~55~@~2014-06-26 21:16:49.850~@~2014-06-26 14:18:13.110
+1282~@~3~@~MemTrans~@~Adm - Memorized translation~@~Y~@~N~@~~@~~@~~@~55~@~2014-07-09 20:56:30.910~@~2014-07-09 13:56:35.010
+1283~@~3~@~SctGrpRow~@~Adm - Section Row Group CSS~@~N~@~N~@~~@~~@~~@~55~@~2014-07-25 20:02:12.250~@~2014-07-25 13:02:16.030
+1284~@~3~@~SctGrpCol~@~Adm - Section Column Group CSS~@~N~@~N~@~~@~~@~~@~55~@~2014-07-25 20:01:25.337~@~2014-07-25 13:01:47.673
+1287~@~3~@~VwAppItem~@~Adm - Release Content View~@~Y~@~Y~@~CREATE VIEW [dbo].[VwAppItem] AS
+	SELECT a.AppInfoDesc, b.ItemOrder, b.DbProviderCd, b.AppItemName, b.MultiDesignDb, b.AppItemCode
+	FROM dbo.AppInfo a INNER JOIN dbo.AppItem b ON a.AppInfoId = b.AppInfoId
+	WHERE a.VersionDt is not null AND b.ObjectTypeCd = 'D'
+	AND a.VersionDt > dateadd(mm,-120,convert(datetime,convert(varchar,getdate(),102)))
+/* Do not change this view table or the deployment will fail */~@~~@~~@~55~@~2015-03-12 21:47:59.547~@~2015-03-11 22:22:52.000
+1288~@~3~@~VwUsrAudit~@~Adm - User Login Audit View~@~N~@~Y~@~CREATE VIEW dbo.VwUsrAudit AS
+SELECT AttemptDt, IpAddress, LoginName, ValidUser = CASE WHEN UsrId is NULL THEN 'N' ELSE 'Y' END, LoginSuccess FROM dbo.UsrAudit
+~@~~@~~@~55~@~2015-09-15 02:38:25.377~@~2015-03-15 12:35:05.000
+1289~@~3~@~CtCrudType~@~Adm - CRUD Type code~@~N~@~N~@~~@~This is a code table indicating the CRUD type for server rules.~@~~@~55~@~2015-08-14 20:43:17.807~@~2015-08-14 13:28:41.000
+1291~@~3~@~VwNumSuccess~@~Adm - Login Summary View~@~N~@~Y~@~CREATE VIEW [dbo].[VwNumSuccess] AS
+SELECT LoginName, LoginSuccess, NumAttempt = count(1) FROM dbo.UsrAudit GROUP BY LoginName, LoginSuccess
+~@~~@~~@~55~@~2015-09-15 02:41:35.167~@~2015-03-15 12:35:05.000
+1293~@~3~@~CtViewType~@~Adm - Sceen View Type~@~N~@~N~@~~@~This is a code table capturing the screen view types.~@~~@~55~@~2015-12-29 00:24:43.567~@~2015-12-28 16:24:51.150
+1294~@~3~@~CtRuleCntType~@~Adm - Client Rule Content Type Code~@~N~@~N~@~~@~This is a code table capturing the content type for embedded Css/Js on Client rule.~@~~@~55~@~2016-03-04 17:55:01.100~@~2016-03-04 09:55:04.947
+1295~@~3~@~CtRuleMethod~@~Adm - Client Rule Method Code~@~N~@~N~@~~@~This is a code table for the method variations on Client rule.~@~~@~55~@~2016-03-04 18:06:39.300~@~2016-03-04 10:06:45.713
+1296~@~3~@~VwScreenObjHlp~@~Adm - Screen Object Message View~@~Y~@~Y~@~CREATE VIEW [dbo].[VwScreenObjHlp]
+AS
+SELECT a.ScreenObjHlpId, a.ScreenObjHlpDesc, a.ScreenObjId, b.ScreenId, a.CultureId
+FROM dbo.ScreenObjHlp a INNER JOIN dbo.ScreenObj b ON a.ScreenObjId = b.ScreenObjId
+~@~~@~~@~55~@~2016-03-04 22:31:58.100~@~2016-03-04 14:18:42.000
+1297~@~3~@~VwScreenCriHlp~@~Adm - Screen Criteria Message View~@~Y~@~Y~@~CREATE VIEW [dbo].[VwScreenCriHlp]
+AS
+SELECT a.ScreenCriHlpId, a.ScreenCriHlpDesc, a.ScreenCriId, b.ScreenId, a.CultureId
+FROM dbo.ScreenCriHlp a INNER JOIN dbo.ScreenCri b ON a.ScreenCriId = b.ScreenCriId
+~@~~@~~@~55~@~2016-03-04 22:33:16.257~@~2016-03-04 14:32:50.000
+1298~@~3~@~VwReportCriHlp~@~Adm - Report Criteria Message View~@~Y~@~Y~@~CREATE VIEW [dbo].[VwReportCriHlp]
+AS
+SELECT a.ReportCriHlpId, a.ReportCriHlpDesc, a.ReportCriId, b.ReportId, a.CultureId
+FROM dbo.ReportCriHlp a INNER JOIN dbo.ReportCri b ON a.ReportCriId = b.ReportCriId
+~@~~@~~@~55~@~2016-03-04 22:36:37.840~@~2016-03-04 14:36:22.000
+1299~@~3~@~VwPermKeyRow~@~Adm - Permission keys row view~@~N~@~Y~@~CREATE VIEW dbo.VwPermKeyRow
+AS
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + a.AgentId, PermKeyId=p.CtPermKeyId, PermId=AgentId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + AgentName
+, Active
+, UsrId=NULL, CompanyLs=NULL, ProjectLs=NULL, UsrGroupId = NULL, CompanyId = NULL, ProjectId = NULL, CultureId = NULL
+, AgentId, BrokerId=NULL, CustomerId=NULL,  InvestorId = NULL, MemberId = NULL, VendorId = NULL
+FROM ROCmon.dbo.Agent a INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 1
+UNION
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + b.BrokerId, PermKeyId=p.CtPermKeyId, PermId=BrokerId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + BrokerName
+, Active
+, UsrId=NULL, CompanyLs=NULL, ProjectLs=NULL, UsrGroupId = NULL, CompanyId = NULL, ProjectId = NULL, CultureId = NULL
+, AgentId = NULL, BrokerId, CustomerId=NULL,  InvestorId = NULL, MemberId = NULL, VendorId = NULL
+FROM ROCmon.dbo.Broker b INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 2
+UNION
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + c.CultureId, PermKeyId=p.CtPermKeyId, PermId=CultureId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + CultureTypeDesc
+, Active='Y'
+, UsrId=NULL, CompanyLs=NULL, ProjectLs=NULL, UsrGroupId = NULL, CompanyId = NULL, ProjectId = NULL, CultureId
+, AgentId = NULL, BrokerId = NULL, CustomerId=NULL,  InvestorId = NULL, MemberId = NULL, VendorId = NULL
+FROM dbo.VwCulture c INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 3
+UNION
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + cu.CustomerId, PermKeyId=p.CtPermKeyId, PermId=CustomerId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + CustomerName
+, Active
+, UsrId=NULL, CompanyLs=NULL, ProjectLs=NULL, UsrGroupId = NULL, CompanyId = NULL, ProjectId = NULL, CultureId = NULL
+, AgentId = NULL, BrokerId = NULL, CustomerId,  InvestorId = NULL, MemberId = NULL, VendorId = NULL
+FROM ROCmon.dbo.Customer cu INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 4
+UNION
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + i.InvestorId, PermKeyId=p.CtPermKeyId, PermId=InvestorId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + InvestorName
+, Active
+, UsrId=NULL, CompanyLs=NULL, ProjectLs=NULL, UsrGroupId = NULL, CompanyId = NULL, ProjectId = NULL, CultureId = NULL
+, AgentId = NULL, BrokerId = NULL, CustomerId=NULL,  InvestorId, MemberId = NULL, VendorId = NULL
+FROM ROCmon.dbo.Investor i INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 6
+UNION
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + m.MemberId, PermKeyId=p.CtPermKeyId, PermId=MemberId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + MemberName
+, Active
+, UsrId=NULL, CompanyLs=NULL, ProjectLs=NULL, UsrGroupId = NULL, CompanyId = NULL, ProjectId = NULL, CultureId = NULL
+, AgentId = NULL, BrokerId = NULL, CustomerId=NULL,  InvestorId = NULL, MemberId, VendorId = NULL
+FROM ROCmon.dbo.Member m INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 7
+UNION
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + u.UsrGroupId, PermKeyId=p.CtPermKeyId, PermId=UsrGroupId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + UsrGroupName
+, Active='Y'
+, UsrId=NULL, CompanyLs=NULL, ProjectLs=NULL, UsrGroupId, CompanyId, ProjectId = NULL, CultureId = NULL
+, AgentId = NULL, BrokerId=NULL, CustomerId=NULL,  InvestorId = NULL, MemberId = NULL, VendorId = NULL
+FROM dbo.UsrGroup u INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 8
+UNION
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + v.VendorId, PermKeyId=p.CtPermKeyId, PermId=VendorId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + VendorName
+, Active
+, UsrId=NULL, CompanyLs=NULL, ProjectLs=NULL, UsrGroupId = NULL, CompanyId = NULL, ProjectId = NULL, CultureId = NULL
+, AgentId = NULL, BrokerId = NULL, CustomerId=NULL,  InvestorId = NULL, MemberId = NULL, VendorId
+FROM ROCmon.dbo.Vendor v INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 9
+UNION
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + c.CompanyId, PermKeyId=p.CtPermKeyId, PermId=CompanyId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + CompanyDesc
+, Active
+, UsrId=NULL, CompanyLs=NULL, ProjectLs=NULL, UsrGroupId = NULL, CompanyId, ProjectId = NULL, CultureId = NULL
+, AgentId = NULL, BrokerId = NULL, CustomerId=NULL,  InvestorId = NULL, MemberId = NULL, VendorId = NULL
+FROM ROCmon.dbo.Company c INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 10
+UNION
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + pj.ProjectId, PermKeyId=p.CtPermKeyId, PermId=ProjectId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + ProjectDesc
+, Active
+, UsrId=NULL, CompanyLs=NULL, ProjectLs=NULL, UsrGroupId = NULL, CompanyId = NULL, ProjectId, CultureId = NULL
+, AgentId = NULL, BrokerId = NULL, CustomerId=NULL,  InvestorId = NULL, MemberId = NULL, VendorId = NULL
+FROM ROCmon.dbo.Project pj
+INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 11
+UNION
+SELECT PermKeyRowId = p.CtPermKeyId * 100000000 + u.UsrId, PermKeyId=p.CtPermKeyId, PermId=UsrId, PermIdText = UPPER(LEFT(p.TableName,4)) + ': ' + UsrName
+, Active
+, UsrId, CompanyLs, ProjectLs, UsrGroupId = NULL, CompanyId = NULL, ProjectId = NULL, CultureId = NULL
+, AgentId = NULL, BrokerId=NULL, CustomerId=NULL,  InvestorId = NULL, MemberId = NULL, VendorId = NULL
+FROM dbo.Usr u INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 12
+~@~~@~~@~55~@~2018-10-24 00:12:07.853~@~2016-07-25 11:08:41.000
+1300~@~3~@~ScrAudit~@~Adm - Screen Audit Trail Header~@~Y~@~N~@~~@~Capture audit changes on screen when requested.~@~~@~55~@~2016-12-06 15:11:29.303~@~2016-12-05 06:21:17.000
+1301~@~3~@~ScrAuditDtl~@~Adm - Screen Audit Trail Detail~@~Y~@~N~@~~@~~@~~@~55~@~2016-12-06 15:11:13.913~@~2016-12-05 06:26:23.000
+1302~@~3~@~CtCudAction~@~Adm - Audit action type~@~N~@~N~@~~@~This is a code table indicating 'A' for "ADD", 'U' for "UPD", 'D' for "DEL"~@~~@~55~@~2016-12-06 14:17:38.237~@~2016-12-06 06:17:56.367
+1303~@~3~@~LastEmail~@~Adm - Last emails sent info~@~N~@~N~@~~@~This is a one row table capturing last email sent information.~@~~@~55~@~2017-02-04 06:12:33.600~@~2017-02-03 22:12:47.417
+1304~@~8~@~Barcode~@~Test - Barcode~@~N~@~N~@~~@~~@~~@~55~@~2017-04-25 15:47:30.847~@~2017-04-25 08:46:43.000
+1305~@~3~@~SrUsr~@~adm - User view for search~@~N~@~Y~@~CREATE VIEW dbo.SrUsr AS
+SELECT UsrId, UsrTitle = LoginName + ISNULL(' [' + UsrName + ']','') + CASE WHEN Active='N' THEN ' (Inactive)' ELSE '' END
+, UsrDetail = ISNULL(UsrEmail,'') + ISNULL(' ' + UsrMobile,''), PicMed, ExtPassword, CultureId, UsrGroupLs, CompanyLs, ProjectLs, InvestorId, CustomerId, VendorId, AgentId, BrokerId, MemberId, Active
+FROM dbo.Usr~@~~@~~@~55~@~2018-10-24 00:17:49.073~@~2017-05-09 11:05:51.000
+1306~@~3~@~CtButtonStyle~@~Adm - Button Style~@~N~@~N~@~~@~This is a code table for button style stating 'L' for List, 'B' for Button and 'N' for Not-visible.~@~~@~55~@~2018-09-21 15:17:52.570~@~2018-09-21 08:18:00.607
+1307~@~5~@~Lender~@~Cmn - Lender Particulars~@~N~@~N~@~~@~~@~~@~55~@~2018-10-23 23:03:11.513~@~2013-06-14 10:32:51.000
+1308~@~5~@~Borrower~@~Cmn - Borrower Particulars~@~N~@~N~@~~@~~@~~@~55~@~2018-10-23 23:04:07.593~@~2013-06-14 10:32:51.000
+1309~@~5~@~Guarantor~@~Cmn - Guarantor Particulars~@~N~@~N~@~~@~~@~~@~55~@~2018-10-23 23:05:17.730~@~2013-06-14 10:32:51.000
+1310~@~3~@~CtRuleAsmxType~@~Adm - Rule Event/Type (ASMX)~@~N~@~N~@~~@~This is a code table capturing server ASMX rule event/type information.~@~~@~55~@~2019-08-28 23:27:30.623~@~2019-05-31 14:52:28.000
+1311~@~3~@~CtRuleReactType~@~Adm - Rule Event/Type (React)~@~N~@~N~@~~@~This is a code table capturing React rule event/type information.~@~~@~55~@~2019-08-28 23:30:11.113~@~2019-05-31 14:53:27.000
+1312~@~3~@~RuleReact~@~Adm - React Rule~@~Y~@~N~@~~@~This captures all the React JS rules and contents for generation.~@~~@~55~@~2019-05-31 22:08:50.417~@~2019-05-31 15:08:57.073
+1313~@~3~@~RuleAsmx~@~Adm - Asmx Rule~@~Y~@~N~@~~@~This captures all the Asmx rules and contents for generation.~@~~@~55~@~2019-05-31 22:13:08.537~@~2019-05-31 15:13:25.823
+1314~@~3~@~CtDtlLstPos~@~Adm - Detail List Search Position~@~N~@~N~@~~@~This is a code table stating Top Left, Bottom Left, Top Right, Bottom Right.~@~~@~55~@~2019-08-20 21:36:36.047~@~2019-08-20 14:31:54.000
+1315~@~3~@~CtRuleServiceType~@~Adm - Rule Event/Type (Service)~@~N~@~N~@~~@~This is a code table capturing service rule event/type information.~@~~@~55~@~2019-08-28 23:30:02.190~@~2019-08-28 16:28:50.000
+1316~@~3~@~CtRuleReduxType~@~Adm - Rule Event/Type (Redux)~@~N~@~N~@~~@~This is a code table capturing Redux rule event/type information.~@~~@~55~@~2019-08-28 23:29:44.533~@~2019-08-28 16:29:52.937
+1317~@~3~@~VwRintagi~@~Adm - Rintagi Installation~@~N~@~N~@~~@~~@~~@~2~@~2019-12-03 20:05:14.610~@~2019-12-03 12:04:58.000

@@ -827,7 +827,7 @@ function fnWinOpen(_url, name, misc) {
     var l = window.location;
     var x = /ssd=[0-9]+/;
     var z = l.href.match(x);
-    var url = url.replace(/^\~\//, "");
+    var url = _url.replace(/^\~\//, "");
     var w = null;
     try {
         if ((url.startsWith(l.protocol + "//" + l.hostname) && l.href.match(/\?/)) || (!url.startsWith('http'))) {
@@ -1289,7 +1289,9 @@ function AsyncInform(o, params) {
 
 // keyCtrlID is needed for client-side communication without a postback.
 function SearchLink(url, keyCtrlID, dlgWidth, dlgHeight) {
+
     if (url === '') return false;
+
     var canClose = [false];
     var vpWidth = $(window).width();
     var vpHeight = $(window).height();
@@ -1299,6 +1301,7 @@ function SearchLink(url, keyCtrlID, dlgWidth, dlgHeight) {
     var keyCtrl = $('#' + keyCtrlID.replace(/_KeyIdText$/, '_KeyId'));
     var key = keyCtrl.length > 0 ? "&key=" + keyCtrl.val() : "";
     url = url.replace(/^\~\//, "");
+
     if (url.match(/^file|mail|http|java/i) || IsMobile() || url.search(/\.jpg|\.png|\.gif|\.mp3|\.mp4|\.txt/i) >= 0) {
         var windowName = url.split("?")[0].split("#")[0];
         window.open(url + key, windowName, 'resizable=yes,scrollbars=yes,status=yes,width=700,height=500');
@@ -1343,7 +1346,7 @@ function SearchLink(url, keyCtrlID, dlgWidth, dlgHeight) {
             }
             , beforeClose: function (event, ui) {
                 $(this).find('#searchLinkIframe').attr('src', 'about:blank');
-                setTimeout(function () { if ($('#searchLinkIframe').contents()[0].location === "about:blank") { canClose[0] = true; dlg.dialog('destroy'); } }, 100); return canClose[0];
+                setTimeout(function () { if ($('#searchLinkIframe').contents()[0].location === "about:blank" || ($('#searchLinkIframe').contents()[0].location || {}).href === "about:blank") { canClose[0] = true; dlg.dialog('destroy'); } }, 100); return canClose[0];
             }
         });
 
@@ -2748,7 +2751,7 @@ function getCookie(name) {
     return null;
 }
 function eraseCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999;';
+    document.cookie = name + '=; expires = Thu, 01 Jan 1970 00:00:00 GMT;path=/;';
 }
 
 //function MouseOverEffect(e, i) { e.src = i; }

@@ -5,7 +5,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 -- Multidesign function to map ColumnId for WrCloneScreen:
 CREATE FUNCTION [dbo].[fColumn] (@cid int, @uClause nvarchar(2000)) RETURNS nvarchar(max)
 /* WITH ENCRYPTION */
@@ -86,8 +85,6 @@ BEGIN
 	END
 	RETURN @iClause
 END
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -98,11 +95,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 CREATE FUNCTION [dbo].[fSelRowAuth] (@RowAuthId smallint, @ScreenId int, @ReportId int, @key varchar(50)) RETURNS char(1)
 /* WITH ENCRYPTION */
 AS
@@ -181,11 +173,6 @@ BEGIN
 	END
 	RETURN @rtn
 END
- 
- 
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -196,7 +183,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 -- Multidesign function to map TableId for WrCloneScreen:
 CREATE FUNCTION [dbo].[fTable] (@tid int, @uClause nvarchar(2000)) RETURNS nvarchar(max)
 /* WITH ENCRYPTION */
@@ -230,24 +216,17 @@ BEGIN
 	END
 	RETURN @iClause
 END
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.AddAdmRptWiz95Dt') AND type='P')
-DROP PROCEDURE dbo.AddAdmRptWiz95Dt
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.AddAdmRptWiz95Dt') AND type='P')
+EXEC('CREATE PROCEDURE dbo.AddAdmRptWiz95Dt AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[AddAdmRptWiz95Dt]
+ALTER PROCEDURE [dbo].[AddAdmRptWiz95Dt]
  @RptwizId		int
 ,@RptwizDtlId	int
 ,@ColumnId		int
@@ -290,25 +269,18 @@ BEGIN
 	WHERE RptwizDtlId = @RptwizDtlId
 	SELECT @RptwizDtlId
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ae_DelServerRule') AND type='P')
-DROP PROCEDURE dbo.Ae_DelServerRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ae_DelServerRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ae_DelServerRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[Ae_DelServerRule]
+ALTER PROCEDURE [dbo].[Ae_DelServerRule]
  @ServerRuleId		int
 /* WITH ENCRYPTION */
 AS
@@ -338,21 +310,18 @@ ELSE
 BEGIN
 	EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @dClause + '''')
 END
-RETURN 0 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add76M') AND type='P')
-DROP PROCEDURE dbo.Audit_Add76M
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add76M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add76M AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE dbo.Audit_Add76M
+ALTER PROCEDURE dbo.Audit_Add76M
  @ButtonHlpId		Int
 ,@UserId		int
 /* WITH ENCRYPTION */
@@ -413,19 +382,17 @@ IF @OBotVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
 	SELECT @ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,NULL
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del76M') AND type='P')
-DROP PROCEDURE dbo.Audit_Del76M
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del76M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del76M AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE dbo.Audit_Del76M
+ALTER PROCEDURE dbo.Audit_Del76M
  @ButtonHlpId		Int
 ,@UserId		int
 /* WITH ENCRYPTION */
@@ -486,19 +453,17 @@ IF @OBotVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
 	SELECT @ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,NULL
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd76M') AND type='P')
-DROP PROCEDURE dbo.Audit_Upd76M
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd76M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd76M AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE dbo.Audit_Upd76M
+ALTER PROCEDURE dbo.Audit_Upd76M
  @ButtonHlpId		Int
 ,@ScreenId		Int
 ,@CultureId		SmallInt
@@ -574,22 +539,17 @@ INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,C
 	SELECT @ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,@BotVisible
 END
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CountRptCri') AND type='P')
-DROP PROCEDURE dbo.CountRptCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CountRptCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.CountRptCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[CountRptCri]
+ALTER PROCEDURE [dbo].[CountRptCri]
  @ReportCriId		int
 /* WITH ENCRYPTION */
 AS
@@ -607,24 +567,17 @@ IF @TableName is not null and @TableName <> '' and exists (SELECT 1 FROM RODesig
 ELSE
 	SELECT 0
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CountScrCri') AND type='P')
-DROP PROCEDURE dbo.CountScrCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CountScrCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.CountScrCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[CountScrCri]
+ALTER PROCEDURE [dbo].[CountScrCri]
  @ScreenCriId		int
 ,@MultiDesignDb		char(1)
 /* WITH ENCRYPTION */
@@ -644,25 +597,17 @@ SELECT @sClause = 'DECLARE @TableName varchar(500), @db varchar(50), @ColumnName
 + '		SELECT 0'
 EXEC (@sClause)
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkAppItem') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkAppItem
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkAppItem') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkAppItem AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkAppItem]
+ALTER PROCEDURE [dbo].[Cr_ChkAppItem]
  @AppItemId		int
 /* WITH ENCRYPTION */
 AS
@@ -675,28 +620,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkAuthCol') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkAuthCol
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkAuthCol') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkAuthCol AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkAuthCol]
+ALTER PROCEDURE [dbo].[Cr_ChkAuthCol]
  @ColOvrdId		int
 /* WITH ENCRYPTION */
 AS
@@ -728,25 +662,17 @@ UPDATE dbo.ColOvrd SET ScreenId = d.ScreenId, Priority = @Priority
 	LEFT OUTER JOIN RODesign.dbo.VwPermKeyRow p on p.PermKeyRowId = a.PermKeyRowId
 	WHERE a.ColOvrdId = @ColOvrdId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkClientRule') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkClientRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkClientRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkClientRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkClientRule]
+ALTER PROCEDURE [dbo].[Cr_ChkClientRule]
  @ClientRuleId		int
 /* WITH ENCRYPTION */
 AS
@@ -790,24 +716,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture01') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkCulture01
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture01') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkCulture01 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkCulture01]
+ALTER PROCEDURE [dbo].[Cr_ChkCulture01]
  @ScreenId	Int
 /* WITH ENCRYPTION */
 AS
@@ -819,25 +738,17 @@ IF NOT EXISTS (SELECT 1 FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId AND Cultur
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
 */
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture02') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkCulture02
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture02') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkCulture02 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkCulture02]
+ALTER PROCEDURE [dbo].[Cr_ChkCulture02]
  @ScreenObjId	Int
 /* WITH ENCRYPTION */
 AS
@@ -847,28 +758,17 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 IF NOT EXISTS (SELECT 1 FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture03') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkCulture03
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture03') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkCulture03 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkCulture03]
+ALTER PROCEDURE [dbo].[Cr_ChkCulture03]
  @ScreenTabId	Int
 /* WITH ENCRYPTION */
 AS
@@ -878,28 +778,17 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 IF NOT EXISTS (SELECT 1 FROM dbo.ScreenTabHlp WHERE ScreenTabId = @ScreenTabId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture04') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkCulture04
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture04') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkCulture04 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkCulture04]
+ALTER PROCEDURE [dbo].[Cr_ChkCulture04]
  @ScreenFilterId	Int
 /* WITH ENCRYPTION */
 AS
@@ -909,28 +798,17 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 IF NOT EXISTS (SELECT 1 FROM dbo.ScreenFilterHlp WHERE ScreenFilterId = @ScreenFilterId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture05') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkCulture05
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture05') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkCulture05 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkCulture05]
+ALTER PROCEDURE [dbo].[Cr_ChkCulture05]
  @ReportId	Int
 /* WITH ENCRYPTION */
 AS
@@ -940,28 +818,17 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 IF NOT EXISTS (SELECT 1 FROM dbo.ReportHlp WHERE ReportId = @ReportId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture06') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkCulture06
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture06') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkCulture06 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkCulture06]
+ALTER PROCEDURE [dbo].[Cr_ChkCulture06]
  @ReportCriId	Int
 /* WITH ENCRYPTION */
 AS
@@ -971,28 +838,17 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 IF NOT EXISTS (SELECT 1 FROM dbo.ReportCriHlp WHERE ReportCriId = @ReportCriId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture07') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkCulture07
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture07') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkCulture07 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkCulture07]
+ALTER PROCEDURE [dbo].[Cr_ChkCulture07]
  @ReportObjId	Int
 /* WITH ENCRYPTION */
 AS
@@ -1002,28 +858,17 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 IF NOT EXISTS (SELECT 1 FROM dbo.ReportObjHlp WHERE ReportObjId = @ReportObjId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture08') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkCulture08
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture08') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkCulture08 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkCulture08]
+ALTER PROCEDURE [dbo].[Cr_ChkCulture08]
  @ScreenCriId	Int
 /* WITH ENCRYPTION */
 AS
@@ -1033,28 +878,17 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 IF NOT EXISTS (SELECT 1 FROM dbo.ScreenCriHlp WHERE ScreenCriId = @ScreenCriId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture09') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkCulture09
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCulture09') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkCulture09 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkCulture09]
+ALTER PROCEDURE [dbo].[Cr_ChkCulture09]
  @MsgId	Int
 /* WITH ENCRYPTION */
 AS
@@ -1064,28 +898,17 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 IF NOT EXISTS (SELECT 1 FROM dbo.MsgCenter WHERE MsgId = @MsgId AND CultureId = @DefCultureId)
 BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCustomDtl') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkCustomDtl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkCustomDtl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkCustomDtl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkCustomDtl]
+ALTER PROCEDURE [dbo].[Cr_ChkCustomDtl]
  @CustomDtlId		int
 /* WITH ENCRYPTION */
 AS
@@ -1098,29 +921,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkDbColumn') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkDbColumn
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkDbColumn') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkDbColumn AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkDbColumn]
+ALTER PROCEDURE [dbo].[Cr_ChkDbColumn]
  @TableId		int
 ,@ColumnName	varchar(50)
 /* WITH ENCRYPTION */
@@ -1136,28 +947,18 @@ BEGIN
 	RAISERROR('Column name "%s" cannot be repeated within a table, please rectify and try again.',18,2,@ColumnName) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkDupTblByName') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkDupTblByName
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkDupTblByName') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkDupTblByName AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkDupTblByName]
+ALTER PROCEDURE [dbo].[Cr_ChkDupTblByName]
  @TableId		int
 ,@TableName		varchar(500)
 /* WITH ENCRYPTION */
@@ -1168,54 +969,34 @@ BEGIN
 	RAISERROR('Table with the same name "%s" already exist, please choose another name.',18,2,@tableName) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkEveryone') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkEveryone
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkEveryone') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkEveryone AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkEveryone]
+ALTER PROCEDURE [dbo].[Cr_ChkEveryone]
  @MenuId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkGlobalCriteria') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkGlobalCriteria
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkGlobalCriteria') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkGlobalCriteria AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkGlobalCriteria]
+ALTER PROCEDURE [dbo].[Cr_ChkGlobalCriteria]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
@@ -1225,28 +1006,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkMenuLoop') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkMenuLoop
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkMenuLoop') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkMenuLoop AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkMenuLoop]
+ALTER PROCEDURE [dbo].[Cr_ChkMenuLoop]
  @MenuId	int
 /* WITH ENCRYPTION */
 AS
@@ -1270,27 +1040,18 @@ BEGIN
 		RETURN 1
 	END
 END
-RETURN 0 
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkPrimaryKey') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkPrimaryKey
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkPrimaryKey') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkPrimaryKey AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkPrimaryKey]
+ALTER PROCEDURE [dbo].[Cr_ChkPrimaryKey]
  @TableId	int
 /* WITH ENCRYPTION */
 AS
@@ -1305,28 +1066,18 @@ BEGIN
 	RAISERROR('Please make sure there is at most one identity column and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
- 
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkReportColHeader') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkReportColHeader
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkReportColHeader') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkReportColHeader AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkReportColHeader]
+ALTER PROCEDURE [dbo].[Cr_ChkReportColHeader]
  @ReportCriId	Int
 /* WITH ENCRYPTION */
 AS
@@ -1385,27 +1136,17 @@ BEGIN
 END
 */
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkReportGrp') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkReportGrp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkReportGrp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkReportGrp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkReportGrp]
+ALTER PROCEDURE [dbo].[Cr_ChkReportGrp]
  @ReportId	Int
 /* WITH ENCRYPTION */
 AS
@@ -1418,34 +1159,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
-
-
-
-
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkReportGrpLoop') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkReportGrpLoop
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkReportGrpLoop') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkReportGrpLoop AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkReportGrpLoop]
+ALTER PROCEDURE [dbo].[Cr_ChkReportGrpLoop]
  @ReportGrpId	int
 /* WITH ENCRYPTION */
 AS
@@ -1471,28 +1195,18 @@ BEGIN
 		RETURN 1
 	END
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkReportMargins') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkReportMargins
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkReportMargins') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkReportMargins AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkReportMargins]
+ALTER PROCEDURE [dbo].[Cr_ChkReportMargins]
  @ReportId	int
 /* WITH ENCRYPTION */
 AS
@@ -1524,26 +1238,18 @@ IF @PageHeight < (@TopMargin + @BottomMargin)
 	BEGIN RAISERROR('{17}',18,2) WITH SETERROR RETURN 1 END
 IF @AllowSelect = 'Y' AND @ReportTypeCd not in ('R','T')
 	BEGIN RAISERROR('{43}',18,2) WITH SETERROR RETURN 1 END
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkReportParentGrp') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkReportParentGrp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkReportParentGrp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkReportParentGrp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkReportParentGrp]
+ALTER PROCEDURE [dbo].[Cr_ChkReportParentGrp]
  @ReportId	Int
 /* WITH ENCRYPTION */
 AS
@@ -1567,30 +1273,19 @@ BEGIN
 	RAISERROR('Report Groups must have one and only one default group, please only assign one of four default groups (*) to both Report Groups and Report Columns and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRmRptStyle') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkRmRptStyle
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRmRptStyle') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkRmRptStyle AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 -- Only in ??Design
-CREATE PROCEDURE [dbo].[Cr_ChkRmRptStyle]
+ALTER PROCEDURE [dbo].[Cr_ChkRmRptStyle]
  @RptStyleId	int
 ,@DefaultCd		char(2)
 /* WITH ENCRYPTION */
@@ -1612,29 +1307,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRowOvrd') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkRowOvrd
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRowOvrd') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkRowOvrd AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkRowOvrd]
+ALTER PROCEDURE [dbo].[Cr_ChkRowOvrd]
  @RowOvrdId		int
 /* WITH ENCRYPTION */
 AS
@@ -1653,29 +1336,17 @@ UPDATE dbo.RowOvrd SET RowOvrdDesc = case
 	LEFT OUTER JOIN dbo.Screen c ON a.ScreenId = c.ScreenId
 	LEFT OUTER JOIN dbo.Report d ON a.ReportId = d.ReportId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRptCtr') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkRptCtr
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRptCtr') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkRptCtr AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkRptCtr]
+ALTER PROCEDURE [dbo].[Cr_ChkRptCtr]
  @RptCtrId	int
 /* WITH ENCRYPTION */
 AS
@@ -1699,29 +1370,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRptElm') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkRptElm
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRptElm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkRptElm AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkRptElm]
+ALTER PROCEDURE [dbo].[Cr_ChkRptElm]
  @RptElmId	int
 /* WITH ENCRYPTION */
 AS
@@ -1756,29 +1415,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRptStyle') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkRptStyle
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRptStyle') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkRptStyle AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkRptStyle]
+ALTER PROCEDURE [dbo].[Cr_ChkRptStyle]
  @RptStyleId	int
 /* WITH ENCRYPTION */
 AS
@@ -1791,29 +1438,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRptwizCri') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkRptwizCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkRptwizCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkRptwizCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkRptwizCri]
+ALTER PROCEDURE [dbo].[Cr_ChkRptwizCri]
  @RptwizId		int
 /* WITH ENCRYPTION */
 AS
@@ -1842,29 +1477,18 @@ BEGIN
 	RAISERROR('{38}',18,2) WITH SETERROR	/* Default template name should not be empty. */
 	RETURN 1
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkScreenColHeader') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkScreenColHeader
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkScreenColHeader') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkScreenColHeader AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkScreenColHeader]
+ALTER PROCEDURE [dbo].[Cr_ChkScreenColHeader]
  @ScreenCriId	Int
 /* WITH ENCRYPTION */
 AS
@@ -1932,24 +1556,17 @@ BEGIN
 END
 */
 RETURN 0
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkScreenObj') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkScreenObj
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkScreenObj') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkScreenObj AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkScreenObj]
+ALTER PROCEDURE [dbo].[Cr_ChkScreenObj]
  @ScreenObjId	Int
 /* WITH ENCRYPTION */
 AS
@@ -2243,23 +1860,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkTables') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkTables
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkTables') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkTables AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkTables]
+ALTER PROCEDURE [dbo].[Cr_ChkTables]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
@@ -2356,24 +1967,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkWebRule') AND type='P')
-DROP PROCEDURE dbo.Cr_ChkWebRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ChkWebRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ChkWebRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ChkWebRule]
+ALTER PROCEDURE [dbo].[Cr_ChkWebRule]
  @WebRuleId		int
 /* WITH ENCRYPTION */
 AS
@@ -2400,26 +2004,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_DelDbColumn') AND type='P')
-DROP PROCEDURE dbo.Cr_DelDbColumn
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_DelDbColumn') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_DelDbColumn AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_DelDbColumn]
+ALTER PROCEDURE [dbo].[Cr_DelDbColumn]
  @ColumnId	Int
 ,@CultureId smallint
 /* WITH ENCRYPTION */
@@ -2469,28 +2064,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_DelRptElm') AND type='P')
-DROP PROCEDURE dbo.Cr_DelRptElm
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_DelRptElm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_DelRptElm AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_DelRptElm]
+ALTER PROCEDURE [dbo].[Cr_DelRptElm]
  @RptElmId	int
 /* WITH ENCRYPTION */
 AS
@@ -2503,29 +2087,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_DelScreenTab') AND type='P')
-DROP PROCEDURE dbo.Cr_DelScreenTab
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_DelScreenTab') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_DelScreenTab AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_DelScreenTab]
+ALTER PROCEDURE [dbo].[Cr_DelScreenTab]
  @ScreenTabId	int
 /* WITH ENCRYPTION */
 AS
@@ -2536,28 +2108,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_NoDelCatRef') AND type='P')
-DROP PROCEDURE dbo.Cr_NoDelCatRef
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_NoDelCatRef') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_NoDelCatRef AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_NoDelCatRef]
+ALTER PROCEDURE [dbo].[Cr_NoDelCatRef]
  @RptwizCatId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -2567,29 +2128,18 @@ BEGIN
 	RAISERROR('{29}',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_NoReportDelWhenRef') AND type='P')
-DROP PROCEDURE dbo.Cr_NoReportDelWhenRef
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_NoReportDelWhenRef') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_NoReportDelWhenRef AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_NoReportDelWhenRef]
+ALTER PROCEDURE [dbo].[Cr_NoReportDelWhenRef]
  @ReportGrpId	int
 /* WITH ENCRYPTION */
 AS
@@ -2601,29 +2151,18 @@ BEGIN
 	RAISERROR('Cannot delete Criteria Group: %s. Please delete all criteria referenced and try again.',18,2,@ReportGrpName) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_OneObjectTypeOnly') AND type='P')
-DROP PROCEDURE dbo.Cr_OneObjectTypeOnly
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_OneObjectTypeOnly') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_OneObjectTypeOnly AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_OneObjectTypeOnly]
+ALTER PROCEDURE [dbo].[Cr_OneObjectTypeOnly]
  @ButtonHlpId		int
 /* WITH ENCRYPTION */
 AS
@@ -2642,34 +2181,18 @@ BEGIN
 	RAISERROR('Please select one and only one of Screen, Report or Wizard and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_OneTemplateDefaultOnly') AND type='P')
-DROP PROCEDURE dbo.Cr_OneTemplateDefaultOnly
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_OneTemplateDefaultOnly') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_OneTemplateDefaultOnly AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_OneTemplateDefaultOnly]
+ALTER PROCEDURE [dbo].[Cr_OneTemplateDefaultOnly]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
@@ -2679,33 +2202,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
-
-
-
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_RmRptCriCRule') AND type='P')
-DROP PROCEDURE dbo.Cr_RmRptCriCRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_RmRptCriCRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_RmRptCriCRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_RmRptCriCRule]
+ALTER PROCEDURE [dbo].[Cr_RmRptCriCRule]
  @ReportCriHlpId	int
 /* WITH ENCRYPTION */
 AS
@@ -2716,30 +2223,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_RmScrCriCRule') AND type='P')
-DROP PROCEDURE dbo.Cr_RmScrCriCRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_RmScrCriCRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_RmScrCriCRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_RmScrCriCRule]
+ALTER PROCEDURE [dbo].[Cr_RmScrCriCRule]
  @ScreenCriHlpId	int
 /* WITH ENCRYPTION */
 AS
@@ -2750,30 +2244,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_RmScrObjCRule') AND type='P')
-DROP PROCEDURE dbo.Cr_RmScrObjCRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_RmScrObjCRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_RmScrObjCRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_RmScrObjCRule]
+ALTER PROCEDURE [dbo].[Cr_RmScrObjCRule]
  @ScreenObjId	int
 /* WITH ENCRYPTION */
 AS
@@ -2785,30 +2266,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_RmScrObjHlpCRule') AND type='P')
-DROP PROCEDURE dbo.Cr_RmScrObjHlpCRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_RmScrObjHlpCRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_RmScrObjHlpCRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_RmScrObjHlpCRule]
+ALTER PROCEDURE [dbo].[Cr_RmScrObjHlpCRule]
  @ScreenObjHlpId	int
 /* WITH ENCRYPTION */
 AS
@@ -2819,29 +2287,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_RmScrObjWRule') AND type='P')
-DROP PROCEDURE dbo.Cr_RmScrObjWRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_RmScrObjWRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_RmScrObjWRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_RmScrObjWRule]
+ALTER PROCEDURE [dbo].[Cr_RmScrObjWRule]
  @ScreenObjId	int
 /* WITH ENCRYPTION */
 AS
@@ -2882,28 +2338,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ValidGrpAuth') AND type='P')
-DROP PROCEDURE dbo.Cr_ValidGrpAuth
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Cr_ValidGrpAuth') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Cr_ValidGrpAuth AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Cr_ValidGrpAuth]
+ALTER PROCEDURE [dbo].[Cr_ValidGrpAuth]
  @UsrGroupAuthId	int
 /* WITH ENCRYPTION */
 AS
@@ -2914,58 +2359,36 @@ BEGIN
 	RAISERROR('At least one of Company, Project, or System should be selected to override the default, please try again.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
-
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelAdmRptWiz95Dt') AND type='P')
-DROP PROCEDURE dbo.DelAdmRptWiz95Dt
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelAdmRptWiz95Dt') AND type='P')
+EXEC('CREATE PROCEDURE dbo.DelAdmRptWiz95Dt AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[DelAdmRptWiz95Dt]
+ALTER PROCEDURE [dbo].[DelAdmRptWiz95Dt]
  @RptwizDtlId	int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 IF EXISTS (SELECT 1 FROM dbo.RptwizDtl WHERE RptwizDtlId = @RptwizDtlId)
 	DELETE FROM dbo.RptwizDtl WHERE RptwizDtlId = @RptwizDtlId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelLastCriteria') AND type='P')
-DROP PROCEDURE dbo.DelLastCriteria
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelLastCriteria') AND type='P')
+EXEC('CREATE PROCEDURE dbo.DelLastCriteria AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[DelLastCriteria]
+ALTER PROCEDURE [dbo].[DelLastCriteria]
  @ScreenId		int
 ,@ReportId		int
 ,@UsrId			int
@@ -3002,29 +2425,18 @@ BEGIN
 	CLOSE sysCursor
 	DEALLOCATE sysCursor
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelMemCri') AND type='P')
-DROP PROCEDURE dbo.DelMemCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelMemCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.DelMemCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[DelMemCri]
+ALTER PROCEDURE [dbo].[DelMemCri]
  @GenPrefix		varchar(10)
 ,@ReportId		int
 ,@MemCriId		int
@@ -3058,29 +2470,18 @@ BEGIN
 		AND NOT EXISTS (SELECT 1 FROM dbo.ReportCri a WHERE a.ReportCriId = dbo.RptMemCriDtl.ReportCriId)
 	END
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelMemFld') AND type='P')
-DROP PROCEDURE dbo.DelMemFld
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelMemFld') AND type='P')
+EXEC('CREATE PROCEDURE dbo.DelMemFld AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[DelMemFld]
+ALTER PROCEDURE [dbo].[DelMemFld]
  @GenPrefix		varchar(10)
 ,@MemFldId		int
 /* WITH ENCRYPTION */
@@ -3096,29 +2497,18 @@ BEGIN
 	DELETE FROM dbo.RptMemCri WHERE RptMemFldId = @MemFldId
 	DELETE FROM dbo.RptMemFld WHERE RptMemFldId = @MemFldId
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelReportCriDel') AND type='P')
-DROP PROCEDURE dbo.DelReportCriDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelReportCriDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.DelReportCriDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[DelReportCriDel]
+ALTER PROCEDURE [dbo].[DelReportCriDel]
  @GenPrefix			varchar(10)
 ,@appDatabase		varchar(50)
 ,@reportId			int
@@ -3149,25 +2539,17 @@ BEGIN
 END
 */
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelReportDel') AND type='P')
-DROP PROCEDURE dbo.DelReportDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelReportDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.DelReportDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[DelReportDel]
+ALTER PROCEDURE [dbo].[DelReportDel]
  @GenPrefix			varchar(10)
 ,@srcDatabase		varchar(50)
 ,@appDatabase		varchar(50)
@@ -3199,28 +2581,17 @@ SELECT @sClause = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @sClause + '''')
 */
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelRptCriteria') AND type='P')
-DROP PROCEDURE dbo.DelRptCriteria
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelRptCriteria') AND type='P')
+EXEC('CREATE PROCEDURE dbo.DelRptCriteria AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[DelRptCriteria]
+ALTER PROCEDURE [dbo].[DelRptCriteria]
  @GenPrefix		varchar(10)
 ,@ReportId		int
 ,@UsrId			int
@@ -3238,30 +2609,18 @@ BEGIN
 		DELETE FROM dbo.ReportLstCri WHERE ReportId = @ReportId
 			AND NOT EXISTS (SELECT 1 FROM dbo.ReportCri a WHERE a.ReportCriId = dbo.ReportLstCri.ReportCriId)
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelScreenCriDel') AND type='P')
-DROP PROCEDURE dbo.DelScreenCriDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelScreenCriDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.DelScreenCriDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[DelScreenCriDel]
+ALTER PROCEDURE [dbo].[DelScreenCriDel]
  @appDatabase		varchar(50)
 ,@procedureName		varchar(50)
 /* WITH ENCRYPTION */
@@ -3271,29 +2630,17 @@ SET NOCOUNT ON
 SELECT @sClause = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''GetDdl' + @procedureName + ''''') AND xtype = ''''P'''') DROP PROCEDURE GetDdl' + @procedureName
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @sClause + '''')
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelScreenDel') AND type='P')
-DROP PROCEDURE dbo.DelScreenDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelScreenDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.DelScreenDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[DelScreenDel]
+ALTER PROCEDURE [dbo].[DelScreenDel]
  @srcDatabase		varchar(50)
 ,@appDatabase		varchar(50)
 ,@desDatabase		varchar(50)
@@ -3352,30 +2699,18 @@ BEGIN
 	EXEC (@desDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedure6Sql + '''')
 	EXEC (@desDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedure0Sql + '''')
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelWizardDel') AND type='P')
-DROP PROCEDURE dbo.DelWizardDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelWizardDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.DelWizardDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[DelWizardDel]
+ALTER PROCEDURE [dbo].[DelWizardDel]
  @srcDatabase		varchar(50)
 ,@appDatabase		varchar(50)
 ,@programName		varchar(50)
@@ -3392,25 +2727,17 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 SELECT @sClause = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''Wiz' + @programName + ''''') AND xtype = ''''P'''') DROP PROCEDURE Wiz' + @programName
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @sClause + '''')
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmAppInfo82ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmAppInfo82ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmAppInfo82ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmAppInfo82ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmAppInfo82ById
+ALTER PROCEDURE GetAdmAppInfo82ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -3428,22 +2755,20 @@ SELECT @sClause = 'SELECT AppInfoId135=b135.AppInfoId'
 + ', AppZipId135=b135.AppZipId'
 + ', Prerequisite135=b135.Prerequisite'
 + ', Readme135=b135.Readme'
-SELECT @wClause = 'WHERE b135.AppInfoId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b135.AppInfoId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmAppItem83ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmAppItem83ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmAppItem83ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmAppItem83ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmAppItem83ById
+ALTER PROCEDURE GetAdmAppItem83ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -3468,22 +2793,20 @@ SELECT @sClause = 'SELECT AppItemId136=b136.AppItemId'
 + ', ReportId136=b136.ReportId'
 + ', WizardId136=b136.WizardId'
 + ', CustomId136=b136.CustomId'
-SELECT @wClause = 'WHERE b136.AppItemId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b136.AppItemId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmAuthCol16ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmAuthCol16ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmAuthCol16ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmAuthCol16ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmAuthCol16ById
+ALTER PROCEDURE GetAdmAuthCol16ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -3493,22 +2816,20 @@ DECLARE	 @sClause		nvarchar(max)
 	,@wClause		nvarchar(max)
 SELECT @fClause = 'FROM dbo.ScreenObj b14'
 SELECT @sClause = 'SELECT ScreenObjId14=b14.ScreenObjId'
-SELECT @wClause = 'WHERE b14.ScreenObjId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b14.ScreenObjId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmAuthCol16DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmAuthCol16DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmAuthCol16DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmAuthCol16DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmAuthCol16DtlById
+ALTER PROCEDURE GetAdmAuthCol16DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -3572,26 +2893,24 @@ SELECT @sClause = 'SELECT ColOvrdId241=b241.ColOvrdId'
 + ', ColumnHeader241=b241.ColumnHeader'
 + ', ErrMessage241=b241.ErrMessage'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b241.ScreenObjId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b241.ScreenObjId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmClientRule79ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmClientRule79ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmClientRule79ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmClientRule79ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmClientRule79ById
+ALTER PROCEDURE GetAdmClientRule79ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -3617,22 +2936,20 @@ SELECT @sClause = 'SELECT ClientRuleId127=b127.ClientRuleId'
 + ', UserScriptEvent127=b127.UserScriptEvent'
 + ', UserScriptName127=b127.UserScriptName'
 + ', ScriptParam127=b127.ScriptParam'
-SELECT @wClause = 'WHERE b127.ClientRuleId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b127.ClientRuleId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmColHlp1006ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmColHlp1006ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmColHlp1006ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmColHlp1006ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmColHlp1006ById
+ALTER PROCEDURE GetAdmColHlp1006ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -3642,22 +2959,20 @@ DECLARE	 @sClause		nvarchar(max)
 	,@wClause		nvarchar(max)
 SELECT @fClause = 'FROM dbo.ScreenObj b14'
 SELECT @sClause = 'SELECT ScreenObjId14=b14.ScreenObjId'
-SELECT @wClause = 'WHERE b14.ScreenObjId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b14.ScreenObjId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmColHlp1006DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmColHlp1006DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmColHlp1006DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmColHlp1006DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmColHlp1006DtlById
+ALTER PROCEDURE GetAdmColHlp1006DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -3716,7 +3031,7 @@ SELECT @sClause = 'SELECT ScreenObjHlpId21=b21.ScreenObjHlpId'
 + ', ErrMessage21=b21.ErrMessage'
 + ', TbHint21=b21.TbHint'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b21.ScreenObjId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b21.ScreenObjId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b21.','Y','N',null,'N','ScreenObjHlpId',@wClause OUTPUT,@Usrs
@@ -3725,19 +3040,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmCronJob118ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmCronJob118ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmCronJob118ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmCronJob118ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmCronJob118ById
+ALTER PROCEDURE GetAdmCronJob118ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -3758,22 +3071,20 @@ SELECT @sClause = 'SELECT CronJobId264=b264.CronJobId'
 + ', Hour264=b264.Hour'
 + ', Minute264=b264.Minute'
 + ', DayOfWeek264=b264.DayOfWeek'
-SELECT @wClause = 'WHERE b264.CronJobId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b264.CronJobId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmDataCat96ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmDataCat96ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmDataCat96ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmDataCat96ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmDataCat96ById
+ALTER PROCEDURE GetAdmDataCat96ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -3788,22 +3099,20 @@ SELECT @sClause = 'SELECT RptwizCatId181=b181.RptwizCatId'
 + ', CatDescription181=b181.CatDescription'
 + ', TableId181=b181.TableId'
 + ', SampleImage181=b181.SampleImage'
-SELECT @wClause = 'WHERE b181.RptwizCatId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b181.RptwizCatId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmDataCat96DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmDataCat96DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmDataCat96DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmDataCat96DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmDataCat96DtlById
+ALTER PROCEDURE GetAdmDataCat96DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -3866,26 +3175,24 @@ SELECT @sClause = 'SELECT RptwizCatDtlId182=b182.RptwizCatDtlId'
 + ', RegClause182=b182.RegClause'
 + ', StoredProc182=b182.StoredProc'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b182.RptwizCatId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b182.RptwizCatId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmDbKey15ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmDbKey15ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmDbKey15ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmDbKey15ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmDbKey15ById
+ALTER PROCEDURE GetAdmDbKey15ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -3900,22 +3207,20 @@ SELECT @sClause = 'SELECT KeyId20=b20.KeyId'
 + ', ColumnId20=b20.ColumnId'
 + ', RefTableId20=b20.RefTableId'
 + ', RefColumnId20=b20.RefColumnId'
-SELECT @wClause = 'WHERE b20.KeyId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b20.KeyId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmDbTable2ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmDbTable2ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmDbTable2ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmDbTable2ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmDbTable2ById
+ALTER PROCEDURE GetAdmDbTable2ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -3935,22 +3240,20 @@ SELECT @sClause = 'SELECT TableId3=b3.TableId'
 + ', ModifiedOn3=b3.ModifiedOn'
 + ', LastSyncDt3=b3.LastSyncDt'
 + ', VirtualSql3=b3.VirtualSql'
-SELECT @wClause = 'WHERE b3.TableId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b3.TableId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmDbTable2DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmDbTable2DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmDbTable2DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmDbTable2DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmDbTable2DtlById
+ALTER PROCEDURE GetAdmDbTable2DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -4016,26 +3319,24 @@ SELECT @sClause = 'SELECT ColumnId5=b5.ColumnId'
 + ', IsIndex5=b5.IsIndex'
 + ', ColObjective5=b5.ColObjective'
 SELECT @oClause = 'ORDER BY b5.ColumnIndex'
-SELECT @wClause = 'WHERE b5.TableId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b5.TableId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmLabel112ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmLabel112ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmLabel112ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmLabel112ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmLabel112ById
+ALTER PROCEDURE GetAdmLabel112ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -4051,22 +3352,20 @@ SELECT @sClause = 'SELECT LabelId215=b215.LabelId'
 + ', LabelText215=b215.LabelText'
 + ', CompanyId215=b215.CompanyId'
 + ', SortOrder215=b215.SortOrder'
-SELECT @wClause = 'WHERE b215.LabelId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b215.LabelId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenu35ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmMenu35ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenu35ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmMenu35ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmMenu35ById
+ALTER PROCEDURE GetAdmMenu35ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -4085,22 +3384,20 @@ SELECT @sClause = 'SELECT MenuId39=b39.MenuId'
 + ', StaticPgId39=b39.StaticPgId'
 + ', Miscellaneous39=b39.Miscellaneous'
 + ', IconUrl39=b39.IconUrl'
-SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenuDrg121ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmMenuDrg121ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenuDrg121ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmMenuDrg121ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmMenuDrg121ById
+ALTER PROCEDURE GetAdmMenuDrg121ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -4112,22 +3409,20 @@ SELECT @fClause = 'FROM dbo.Menu b39'
 SELECT @sClause = 'SELECT MenuId39=b39.MenuId'
 + ', ParentId39=b39.ParentId'
 + ', MenuIndex39=b39.MenuIndex'
-SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenuHlp36ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmMenuHlp36ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenuHlp36ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmMenuHlp36ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmMenuHlp36ById
+ALTER PROCEDURE GetAdmMenuHlp36ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -4137,22 +3432,20 @@ DECLARE	 @sClause		nvarchar(max)
 	,@wClause		nvarchar(max)
 SELECT @fClause = 'FROM dbo.Menu b39'
 SELECT @sClause = 'SELECT MenuId39=b39.MenuId'
-SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenuHlp36DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmMenuHlp36DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenuHlp36DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmMenuHlp36DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmMenuHlp36DtlById
+ALTER PROCEDURE GetAdmMenuHlp36DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -4208,7 +3501,7 @@ SELECT @sClause = 'SELECT MenuHlpId40=b40.MenuHlpId'
 + ', CultureId40Text=x1304.CultureTypeDesc'
 + ', MenuText40=b40.MenuText'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b40.MenuId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b40.MenuId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b40.','Y','N',null,'N','MenuHlpId',@wClause OUTPUT,@Usrs
@@ -4217,19 +3510,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenuPerm58ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmMenuPerm58ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenuPerm58ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmMenuPerm58ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmMenuPerm58ById
+ALTER PROCEDURE GetAdmMenuPerm58ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -4239,22 +3530,20 @@ DECLARE	 @sClause		nvarchar(max)
 	,@wClause		nvarchar(max)
 SELECT @fClause = 'FROM dbo.Menu b39'
 SELECT @sClause = 'SELECT MenuId39=b39.MenuId'
-SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b39.MenuId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenuPerm58DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmMenuPerm58DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMenuPerm58DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmMenuPerm58DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmMenuPerm58DtlById
+ALTER PROCEDURE GetAdmMenuPerm58DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -4314,26 +3603,24 @@ SELECT @sClause = 'SELECT MenuPrmId231=b231.MenuPrmId'
 + ', PermId231=x1888.PermId'
 + ', PermId231Text=x1888.PermIdText'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b231.MenuId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b231.MenuId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMsgCenter86ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmMsgCenter86ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMsgCenter86ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmMsgCenter86ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmMsgCenter86ById
+ALTER PROCEDURE GetAdmMsgCenter86ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -4345,22 +3632,20 @@ SELECT @fClause = 'FROM dbo.Msg b146'
 SELECT @sClause = 'SELECT MsgId146=b146.MsgId'
 + ', MsgTypeCd146=b146.MsgTypeCd'
 + ', MsgSource146=b146.MsgSource'
-SELECT @wClause = 'WHERE b146.MsgId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b146.MsgId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMsgCenter86DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmMsgCenter86DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmMsgCenter86DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmMsgCenter86DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmMsgCenter86DtlById
+ALTER PROCEDURE GetAdmMsgCenter86DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -4416,7 +3701,7 @@ SELECT @sClause = 'SELECT MsgCenterId147=b147.MsgCenterId'
 + ', CultureId147Text=x1312.CultureTypeDesc'
 + ', Msg147=b147.Msg'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b147.MsgId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b147.MsgId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b147.','Y','N',null,'N','MsgCenterId',@wClause OUTPUT,@Usrs
@@ -4426,22 +3711,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmOvride78ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmOvride78ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmOvride78ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmOvride78ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAdmOvride78ById]
+ALTER PROCEDURE [dbo].[GetAdmOvride78ById]
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -4457,27 +3737,17 @@ SELECT @sClause = 'SELECT OvrideId122=b122.OvrideId'
 SELECT @wClause = 'WHERE b122.OvrideId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmOvride78DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmOvride78DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmOvride78DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmOvride78DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAdmOvride78DtlById]
+ALTER PROCEDURE [dbo].[GetAdmOvride78DtlById]
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -4534,24 +3804,17 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGro
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmPuDbTable') AND type='P')
-DROP PROCEDURE dbo.GetAdmPuDbTable
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmPuDbTable') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmPuDbTable AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetAdmPuDbTable]
+ALTER PROCEDURE [dbo].[GetAdmPuDbTable]
  @SystemId	tinyint
 ,@TableId	int
 ,@TableName	varchar(500)
@@ -4683,21 +3946,18 @@ SELECT @iClause = @iClause + ' FETCH NEXT FROM cur2 INTO @Des END CLOSE cur2 DEA
 + ' FETCH NEXT FROM cur1 INTO @ColumnIndex, @OpMode, @ColumnName END CLOSE cur1 DEALLOCATE cur1'
 -- Report changes:
 EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @dClause + ''',''' + @sClause + ''',''' + @iClause + ''','' SELECT * FROM #rst DROP TABLE #rst DROP TABLE dbo.#sync''')
-RETURN 0 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReport67ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmReport67ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReport67ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmReport67ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmReport67ById
+ALTER PROCEDURE GetAdmReport67ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -4735,22 +3995,20 @@ SELECT @sClause = 'SELECT ReportId22=b22.ReportId'
 + ', UpdCode22=b22.UpdCode'
 + ', XlsClause22=b22.XlsClause'
 + ', XlsCode22=b22.XlsCode'
-SELECT @wClause = 'WHERE b22.ReportId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b22.ReportId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReport67DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmReport67DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReport67DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmReport67DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmReport67DtlById
+ALTER PROCEDURE GetAdmReport67DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -4807,7 +4065,7 @@ SELECT @sClause = 'SELECT ReportHlpId96=b96.ReportHlpId'
 + ', DefaultHlpMsg96=b96.DefaultHlpMsg'
 + ', ReportTitle96=b96.ReportTitle'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b96.ReportId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b96.ReportId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b96.','Y','N',null,'N','ReportHlpId',@wClause OUTPUT,@Usrs
@@ -4818,19 +4076,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportCri69ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmReportCri69ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportCri69ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmReportCri69ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmReportCri69ById
+ALTER PROCEDURE GetAdmReportCri69ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -4861,22 +4117,20 @@ SELECT @sClause = 'SELECT ReportCriId97=b97.ReportCriId'
 + ', DdlFtrColumnId97=b97.DdlFtrColumnId'
 + ', WhereClause97=b97.WhereClause'
 + ', RegClause97=b97.RegClause'
-SELECT @wClause = 'WHERE b97.ReportCriId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b97.ReportCriId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportCri69DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmReportCri69DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportCri69DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmReportCri69DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmReportCri69DtlById
+ALTER PROCEDURE GetAdmReportCri69DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -4932,7 +4186,7 @@ SELECT @sClause = 'SELECT ReportCriHlpId98=b98.ReportCriHlpId'
 + ', CultureId98Text=x923.CultureTypeDesc'
 + ', ColumnHeader98=b98.ColumnHeader'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b98.ReportCriId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b98.ReportCriId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b98.','Y','N',null,'N','ReportCriHlpId',@wClause OUTPUT,@Usrs
@@ -4942,27 +4196,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportGrp65ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmReportGrp65ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportGrp65ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmReportGrp65ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAdmReportGrp65ById]
+ALTER PROCEDURE [dbo].[GetAdmReportGrp65ById]
  @ReportId		int
 /* WITH ENCRYPTION */
 AS
@@ -4975,37 +4219,17 @@ SELECT @fClause = 'FROM dbo.Report b22'
 SELECT @wClause = 'WHERE b22.ReportId = ' + isnull(convert(varchar,@ReportId),'null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
-
-
-
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportGrp65DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmReportGrp65DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportGrp65DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmReportGrp65DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAdmReportGrp65DtlById]
+ALTER PROCEDURE [dbo].[GetAdmReportGrp65DtlById]
  @ReportId		int
 /* WITH ENCRYPTION */
 AS
@@ -5020,29 +4244,17 @@ SELECT @oClause = 'ORDER BY b94.ReportGrpIndex'
 SELECT @wClause = 'WHERE b94.ReportId = ' + isnull(convert(varchar,@ReportId),'null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportObj13ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmReportObj13ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportObj13ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmReportObj13ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmReportObj13ById
+ALTER PROCEDURE GetAdmReportObj13ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -5062,22 +4274,20 @@ SELECT @sClause = 'SELECT ReportObjId23=b23.ReportObjId'
 + ', DataTypeId23=b23.DataTypeId'
 + ', OperatorId23=b23.OperatorId'
 + ', ReportCriId23=b23.ReportCriId'
-SELECT @wClause = 'WHERE b23.ReportObjId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b23.ReportObjId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportObj13DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmReportObj13DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmReportObj13DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmReportObj13DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmReportObj13DtlById
+ALTER PROCEDURE GetAdmReportObj13DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -5134,7 +4344,7 @@ SELECT @sClause = 'SELECT ReportObjHlpId99=b99.ReportObjHlpId'
 + ', ColumnHeader99=b99.ColumnHeader'
 + ', HeaderWidth99=b99.HeaderWidth'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b99.ReportObjId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b99.ReportObjId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b99.','Y','N',null,'N','ReportObjHlpId',@wClause OUTPUT,@Usrs
@@ -5144,19 +4354,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRowOvrd17ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmRowOvrd17ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRowOvrd17ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmRowOvrd17ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmRowOvrd17ById
+ALTER PROCEDURE GetAdmRowOvrd17ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -5173,22 +4381,20 @@ SELECT @sClause = 'SELECT RowOvrdId238=b238.RowOvrdId'
 + ', AllowAdd238=b238.AllowAdd'
 + ', AllowUpd238=b238.AllowUpd'
 + ', AllowDel238=b238.AllowDel'
-SELECT @wClause = 'WHERE b238.RowOvrdId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b238.RowOvrdId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRowOvrd17DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmRowOvrd17DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRowOvrd17DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmRowOvrd17DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmRowOvrd17DtlById
+ALTER PROCEDURE GetAdmRowOvrd17DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -5248,26 +4454,24 @@ SELECT @sClause = 'SELECT RowOvrdPrmId239=b239.RowOvrdPrmId'
 + ', SelLevel239=x1951.SelectTypeCd'
 + ', SelLevel239Text=x1951.SelectTypeName'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b239.RowOvrdId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b239.RowOvrdId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptCha100ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmRptCha100ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptCha100ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmRptCha100ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmRptCha100ById
+ALTER PROCEDURE GetAdmRptCha100ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -5284,22 +4488,20 @@ SELECT @sClause = 'SELECT RptChaId206=b206.RptChaId'
 + ', CategoryGrp206=b206.CategoryGrp'
 + ', ChartData206=b206.ChartData'
 + ', SeriesGrp206=b206.SeriesGrp'
-SELECT @wClause = 'WHERE b206.RptChaId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b206.RptChaId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptCtr90ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmRptCtr90ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptCtr90ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmRptCtr90ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmRptCtr90ById
+ALTER PROCEDURE GetAdmRptCtr90ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -5332,22 +4534,20 @@ SELECT @sClause = 'SELECT RptCtrId161=b161.RptCtrId'
 + ', CtrToggle161=b161.CtrToggle'
 + ', CtrGrouping161=b161.CtrGrouping'
 + ', CtrToolTip161=b161.CtrToolTip'
-SELECT @wClause = 'WHERE b161.RptCtrId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b161.RptCtrId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptStyle89ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmRptStyle89ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptStyle89ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmRptStyle89ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmRptStyle89ById
+ALTER PROCEDURE GetAdmRptStyle89ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -5394,22 +4594,20 @@ SELECT @sClause = 'SELECT RptStyleId167=b167.RptStyleId'
 + ', PadRight167=b167.PadRight'
 + ', PadTop167=b167.PadTop'
 + ', PadBottom167=b167.PadBottom'
-SELECT @wClause = 'WHERE b167.RptStyleId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b167.RptStyleId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptTbl92ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmRptTbl92ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptTbl92ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmRptTbl92ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmRptTbl92ById
+ALTER PROCEDURE GetAdmRptTbl92ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -5429,22 +4627,20 @@ SELECT @sClause = 'SELECT RptTblId162=b162.RptTblId'
 + ', TblRepeatNew162=b162.TblRepeatNew'
 + ', TblOrder162=b162.TblOrder'
 + ', ColWidth162=b162.ColWidth'
-SELECT @wClause = 'WHERE b162.RptTblId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b162.RptTblId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptTbl92DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmRptTbl92DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptTbl92DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmRptTbl92DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmRptTbl92DtlById
+ALTER PROCEDURE GetAdmRptTbl92DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -5502,29 +4698,24 @@ SELECT @sClause = 'SELECT RptCelId164=b164.RptCelId'
 + ', CelNum164Text=x1477.RptTblDesc'
 + ', CelColSpan164=b164.CelColSpan'
 SELECT @oClause = 'ORDER BY b164.RowNum, x1477.RptTblDesc'
-SELECT @wClause = 'WHERE b164.RptTblId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b164.RptTblId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptWiz95ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmRptWiz95ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptWiz95ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmRptWiz95ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAdmRptWiz95ById]
+ALTER PROCEDURE [dbo].[GetAdmRptWiz95ById]
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -5544,27 +4735,17 @@ SELECT @sClause = 'SELECT RptwizId183=b183.RptwizId, RptwizName183=b183.RptwizNa
 SELECT @wClause = 'WHERE b183.RptwizId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptWiz95DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmRptWiz95DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmRptWiz95DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmRptWiz95DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAdmRptWiz95DtlById]
+ALTER PROCEDURE [dbo].[GetAdmRptWiz95DtlById]
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -5630,24 +4811,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreen9ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmScreen9ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreen9ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmScreen9ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmScreen9ById
+ALTER PROCEDURE GetAdmScreen9ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -5682,22 +4856,20 @@ SELECT @sClause = 'SELECT ScreenId15=b15.ScreenId'
 + ', ScreenObj15=b15.ScreenObj'
 + ', ScreenObj15URL=b15.ScreenObj'
 + ', ScreenFilter15URL=b15.ScreenFilter'
-SELECT @wClause = 'WHERE b15.ScreenId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b15.ScreenId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreen9DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmScreen9DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreen9DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmScreen9DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmScreen9DtlById
+ALTER PROCEDURE GetAdmScreen9DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -5773,7 +4945,7 @@ SELECT @sClause = 'SELECT ScreenHlpId16=b16.ScreenHlpId'
 + ', DetailRecSubtitle16=b16.DetailRecSubtitle'
 + ', DetailFoundMsg16=b16.DetailFoundMsg'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b16.ScreenId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b16.ScreenId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b16.','Y','N',null,'N','ScreenHlpId',@wClause OUTPUT,@Usrs
@@ -5783,19 +4955,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenCri73ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmScreenCri73ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenCri73ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmScreenCri73ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmScreenCri73ById
+ALTER PROCEDURE GetAdmScreenCri73ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -5820,22 +4990,20 @@ SELECT @sClause = 'SELECT ScreenCriId104=b104.ScreenCriId'
 + ', DdlRefColumnId104=b104.DdlRefColumnId'
 + ', DdlSrtColumnId104=b104.DdlSrtColumnId'
 + ', DdlFtrColumnId104=b104.DdlFtrColumnId'
-SELECT @wClause = 'WHERE b104.ScreenCriId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b104.ScreenCriId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenCri73DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmScreenCri73DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenCri73DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmScreenCri73DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmScreenCri73DtlById
+ALTER PROCEDURE GetAdmScreenCri73DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -5891,7 +5059,7 @@ SELECT @sClause = 'SELECT ScreenCriHlpId105=b105.ScreenCriHlpId'
 + ', CultureId105Text=x990.CultureTypeDesc'
 + ', ColumnHeader105=b105.ColumnHeader'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b105.ScreenCriId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b105.ScreenCriId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b105.','Y','N',null,'N','ScreenCriHlpId',@wClause OUTPUT,@Usrs
@@ -5901,19 +5069,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenFilter59ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmScreenFilter59ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenFilter59ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmScreenFilter59ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmScreenFilter59ById
+ALTER PROCEDURE GetAdmScreenFilter59ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -5928,22 +5094,20 @@ SELECT @sClause = 'SELECT ScreenFilterId86=b86.ScreenFilterId'
 + ', FilterClause86=b86.FilterClause'
 + ', FilterOrder86=b86.FilterOrder'
 + ', ApplyToMst86=b86.ApplyToMst'
-SELECT @wClause = 'WHERE b86.ScreenFilterId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b86.ScreenFilterId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenFilter59DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmScreenFilter59DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenFilter59DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmScreenFilter59DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmScreenFilter59DtlById
+ALTER PROCEDURE GetAdmScreenFilter59DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -5999,7 +5163,7 @@ SELECT @sClause = 'SELECT ScreenFilterHlpId87=b87.ScreenFilterHlpId'
 + ', CultureId87Text=x730.CultureTypeDesc'
 + ', FilterName87=b87.FilterName'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b87.ScreenFilterId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b87.ScreenFilterId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b87.','Y','N',null,'N','ScreenFilterHlpId',@wClause OUTPUT,@Usrs
@@ -6009,19 +5173,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenObj10ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmScreenObj10ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenObj10ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmScreenObj10ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmScreenObj10ById
+ALTER PROCEDURE GetAdmScreenObj10ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -6074,22 +5236,20 @@ SELECT @sClause = 'SELECT ScreenObjId14=b14.ScreenObjId'
 + ', RangeValidMax14=b14.RangeValidMax'
 + ', RangeValidMin14=b14.RangeValidMin'
 + ', MatchCd14=b14.MatchCd'
-SELECT @wClause = 'WHERE b14.ScreenObjId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b14.ScreenObjId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenTab54ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmScreenTab54ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenTab54ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmScreenTab54ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmScreenTab54ById
+ALTER PROCEDURE GetAdmScreenTab54ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -6102,22 +5262,20 @@ SELECT @sClause = 'SELECT ScreenTabId19=b19.ScreenTabId'
 + ', ScreenId19=b19.ScreenId'
 + ', TabFolderName19=b19.TabFolderName'
 + ', TabFolderOrder19=b19.TabFolderOrder'
-SELECT @wClause = 'WHERE b19.ScreenTabId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b19.ScreenTabId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenTab54DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmScreenTab54DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmScreenTab54DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmScreenTab54DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmScreenTab54DtlById
+ALTER PROCEDURE GetAdmScreenTab54DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -6173,7 +5331,7 @@ SELECT @sClause = 'SELECT ScreenTabHlpId80=b80.ScreenTabHlpId'
 + ', CultureId80Text=x621.CultureTypeDesc'
 + ', TabFolderName80=b80.TabFolderName'
 SELECT @oClause = ''
-SELECT @wClause = 'WHERE b80.ScreenTabId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b80.ScreenTabId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b80.','Y','N',null,'N','ScreenTabHlpId',@wClause OUTPUT,@Usrs
@@ -6182,19 +5340,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmServerRule14ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmServerRule14ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmServerRule14ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmServerRule14ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmServerRule14ById
+ALTER PROCEDURE GetAdmServerRule14ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -6222,26 +5378,20 @@ SELECT @sClause = 'SELECT ServerRuleId24=b24.ServerRuleId'
 + ', ModifiedBy24=b24.ModifiedBy'
 + ', ModifiedOn24=b24.ModifiedOn'
 + ', LastGenDt24=b24.LastGenDt'
-SELECT @wClause = 'WHERE b24.ServerRuleId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b24.ServerRuleId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmServerRule14DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmServerRule14DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmServerRule14DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmServerRule14DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAdmServerRule14DtlById]
+ALTER PROCEDURE [dbo].[GetAdmServerRule14DtlById]
  @ScreenId		Int
 /* WITH ENCRYPTION */
 AS
@@ -6256,24 +5406,17 @@ SELECT @oClause = 'ORDER BY b24.ExecOrder'
 SELECT @wClause = 'WHERE b24.ScreenId = ' + isnull(convert(varchar,@ScreenId),'null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmStaticCs115ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmStaticCs115ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmStaticCs115ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmStaticCs115ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmStaticCs115ById
+ALTER PROCEDURE GetAdmStaticCs115ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -6285,22 +5428,20 @@ SELECT @fClause = 'FROM dbo.StaticCs b260'
 SELECT @sClause = 'SELECT StaticCsId260=b260.StaticCsId'
 + ', StaticCsNm260=b260.StaticCsNm'
 + ', StyleDef260=b260.StyleDef'
-SELECT @wClause = 'WHERE b260.StaticCsId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b260.StaticCsId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmStaticJs116ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmStaticJs116ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmStaticJs116ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmStaticJs116ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmStaticJs116ById
+ALTER PROCEDURE GetAdmStaticJs116ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -6312,22 +5453,20 @@ SELECT @fClause = 'FROM dbo.StaticJs b261'
 SELECT @sClause = 'SELECT StaticJsId261=b261.StaticJsId'
 + ', StaticJsNm261=b261.StaticJsNm'
 + ', ScriptDef261=b261.ScriptDef'
-SELECT @wClause = 'WHERE b261.StaticJsId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b261.StaticJsId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmStaticPg114ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmStaticPg114ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmStaticPg114ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmStaticPg114ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmStaticPg114ById
+ALTER PROCEDURE GetAdmStaticPg114ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -6348,22 +5487,20 @@ SELECT @sClause = 'SELECT StaticPgId259=b259.StaticPgId'
 + ', StaticPgHtm259=b259.StaticPgHtm'
 + ', StaticPgCss259=b259.StaticPgCss'
 + ', StaticPgJs259=b259.StaticPgJs'
-SELECT @wClause = 'WHERE b259.StaticPgId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b259.StaticPgId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmTbdRule113ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmTbdRule113ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmTbdRule113ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmTbdRule113ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmTbdRule113ById
+ALTER PROCEDURE GetAdmTbdRule113ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -6376,22 +5513,20 @@ SELECT @sClause = 'SELECT TbdRuleId254=b254.TbdRuleId'
 + ', ScreenId254=b254.ScreenId'
 + ', TbdRuleName254=b254.TbdRuleName'
 + ', TbdRuleDesc254=b254.TbdRuleDesc'
-SELECT @wClause = 'WHERE b254.TbdRuleId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b254.TbdRuleId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWebRule80ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmWebRule80ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWebRule80ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmWebRule80ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmWebRule80ById
+ALTER PROCEDURE GetAdmWebRule80ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -6417,22 +5552,20 @@ SELECT @sClause = 'SELECT WebRuleId128=b128.WebRuleId'
 + ', ServiceRuleProg128=b128.ServiceRuleProg'
 + ', AsmxEventId128=b128.AsmxEventId'
 + ', AsmxRuleProg128=b128.AsmxRuleProg'
-SELECT @wClause = 'WHERE b128.WebRuleId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b128.WebRuleId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWizardObj49ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmWizardObj49ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWizardObj49ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmWizardObj49ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmWizardObj49ById
+ALTER PROCEDURE GetAdmWizardObj49ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -6451,22 +5584,20 @@ SELECT @sClause = 'SELECT WizardId71=b71.WizardId'
 + ', DefOverwrite71=b71.DefOverwrite'
 + ', OvwrReadonly71=b71.OvwrReadonly'
 + ', AuthRequired71=b71.AuthRequired'
-SELECT @wClause = 'WHERE b71.WizardId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b71.WizardId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWizardObj49DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmWizardObj49DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWizardObj49DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmWizardObj49DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmWizardObj49DtlById
+ALTER PROCEDURE GetAdmWizardObj49DtlById
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -6521,26 +5652,24 @@ SELECT @sClause = 'SELECT WizardObjId72=b72.WizardObjId'
 + ', ColumnId72Text=x551.ColumnDesc'
 + ', TabIndex72=b72.TabIndex'
 SELECT @oClause = 'ORDER BY b72.TabIndex'
-SELECT @wClause = 'WHERE b72.WizardId' + case when @KeyId is null then ' is null' else '=' + convert(varchar,@KeyId) end
+SELECT @wClause = 'WHERE b72.WizardId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
 IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWizardRule50ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmWizardRule50ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWizardRule50ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmWizardRule50ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmWizardRule50ById
+ALTER PROCEDURE GetAdmWizardRule50ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -6557,26 +5686,20 @@ SELECT @sClause = 'SELECT WizardRuleId73=b73.WizardRuleId'
 + ', RuleOrder73=b73.RuleOrder'
 + ', ProcedureName73=b73.ProcedureName'
 + ', BeforeCRUD73=b73.BeforeCRUD'
-SELECT @wClause = 'WHERE b73.WizardRuleId' + isnull('='+@KeyId1,' is null')
+SELECT @wClause = 'WHERE b73.WizardRuleId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWizardRule50DtlById') AND type='P')
-DROP PROCEDURE dbo.GetAdmWizardRule50DtlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWizardRule50DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmWizardRule50DtlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAdmWizardRule50DtlById]
+ALTER PROCEDURE [dbo].[GetAdmWizardRule50DtlById]
  @WizardId		Int
 /* WITH ENCRYPTION */
 AS
@@ -6591,29 +5714,17 @@ SELECT @oClause = 'ORDER BY b73.ExecOrder'
 SELECT @wClause = 'WHERE b73.WizardId = ' + isnull(convert(varchar,@WizardId),'null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdvRule') AND type='P')
-DROP PROCEDURE dbo.GetAdvRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdvRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdvRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAdvRule]
+ALTER PROCEDURE [dbo].[GetAdvRule]
  @screenId		int
 /* WITH ENCRYPTION */
 AS
@@ -6626,83 +5737,50 @@ SELECT @fClause = 'FROM dbo.AdvRule a'
 SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAllowSelect') AND type='P')
-DROP PROCEDURE dbo.GetAllowSelect
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAllowSelect') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAllowSelect AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAllowSelect]
+ALTER PROCEDURE [dbo].[GetAllowSelect]
  @ReportId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 SELECT AllowSelect, AuthRequired FROM dbo.Report WHERE ReportId = @ReportId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAppVersion') AND type='P')
-DROP PROCEDURE dbo.GetAppVersion
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAppVersion') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAppVersion AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetAppVersion]
+ALTER PROCEDURE [dbo].[GetAppVersion]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 SELECT replace(max(AppInfoDesc),space(1),space(0)) FROM dbo.AppInfo WHERE VersionDt is not null
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAuthCol') AND type='P')
-DROP PROCEDURE dbo.GetAuthCol
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAuthCol') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAuthCol AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[GetAuthCol]
+ALTER PROCEDURE [dbo].[GetAuthCol]
  @ScreenId		int
 ,@Usrs			varchar(1000)
 ,@Customers		varchar(1000)
@@ -6799,20 +5877,17 @@ CLOSE cur1 DEALLOCATE cur1
 SELECT MasterTable, DisplayName, DisplayMode, ColVisible, ColReadOnly, ColName FROM #tbl ORDER BY tid
 DROP TABLE dbo.#tbl
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAuthExp') AND type='P')
-DROP PROCEDURE dbo.GetAuthExp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAuthExp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAuthExp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetAuthExp]
+ALTER PROCEDURE [dbo].[GetAuthExp]
  @ScreenId		int
 ,@CultureId		smallint
 ,@Usrs			varchar(1000)
@@ -6898,27 +5973,18 @@ CLOSE cur1 DEALLOCATE cur1
 SELECT ScreenObjId, ColExport, ColumnHeader FROM #exp ORDER BY tid
 DROP TABLE dbo.#exp
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAuthRow') AND type='P')
-DROP PROCEDURE dbo.GetAuthRow
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAuthRow') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAuthRow AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 -- AllowSel not selected here for security reasons.
-CREATE PROCEDURE [dbo].[GetAuthRow]
+ALTER PROCEDURE [dbo].[GetAuthRow]
  @ScreenId		int
 ,@RowAuthoritys	varchar(1000)
 /* WITH ENCRYPTION */
@@ -6948,21 +6014,18 @@ BEGIN
 	END
 END
 SELECT AllowAdd = @AllowAdd, AllowUpd = @AllowUpd, AllowDel = @AllowDel, ViewOnly FROM Screen s WHERE ScreenId = @ScreenId
-RETURN 0  
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetButtonHlp') AND type='P')
-DROP PROCEDURE dbo.GetButtonHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetButtonHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetButtonHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetButtonHlp]
+ALTER PROCEDURE [dbo].[GetButtonHlp]
  @ScreenId	int
 ,@ReportId	int
 ,@WizardId	int
@@ -7032,24 +6095,17 @@ UPDATE bh SET bh.ButtonVisible = CASE WHEN s.ScreenTypeId = 5 THEN 'N' ELSE Butt
 SELECT * FROM #bh ORDER BY tid
 DROP table dbo.#bh
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetClientRule') AND type='P')
-DROP PROCEDURE dbo.GetClientRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetClientRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetClientRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetClientRule]
+ALTER PROCEDURE [dbo].[GetClientRule]
  @ScreenId	int
 ,@ReportId	int
 ,@CultureId	smallint
@@ -7187,25 +6243,17 @@ SELECT MasterTable,ColName,ScriptEvent,ScriptName,ParamName,ParamType,ClientRule
 DROP TABLE dbo.#rul
 DROP TABLE dbo.#rst
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetCriReportGrp') AND type='P')
-DROP PROCEDURE dbo.GetCriReportGrp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetCriReportGrp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetCriReportGrp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetCriReportGrp]
+ALTER PROCEDURE [dbo].[GetCriReportGrp]
  @GenPrefix		varchar(10)
 ,@reportId		int
 /* WITH ENCRYPTION */
@@ -7237,28 +6285,17 @@ SELECT @oClause = 'ORDER BY ReportGrpIndex'
 SELECT @tClause = 'SELECT ParentGrpId, ReportGrpId, ContentVertical, LabelVertical, BorderWidth, GrpStyle FROM #tbl ORDER BY tid'
 EXEC (@dClause + ' ' + @xClause + ' ' + @sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause + ' ' + @tClause + ' DROP TABLE dbo.#tbl')
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetCronJob') AND type='P')
-DROP PROCEDURE dbo.GetCronJob
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetCronJob') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetCronJob AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetCronJob]
+ALTER PROCEDURE [dbo].[GetCronJob]
  @cronJobId	int=null
 ,@joblink	varchar(200)=null
 /* WITH ENCRYPTION */
@@ -7268,30 +6305,19 @@ SELECT * FROM CronJob
 WHERE 
 (@cronJobId IS NULL OR CronJobId = @cronJobId) AND (@joblink IS NULL OR JobLink = @joblink)
 ORDER BY NextRun
-RETURN 0 
-
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetCurrFilter') AND type='P')
-DROP PROCEDURE dbo.GetCurrFilter
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetCurrFilter') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetCurrFilter AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 /* DECLARE @wClause nvarchar(4000) EXEC RODesign.dbo.GetCurrFilter 1,'CompanyLs','Company','b1.','Y','Y',null,'UsrId',@wClause OUTPUT SELECT @wClause */
-CREATE PROCEDURE [dbo].[GetCurrFilter]
+ALTER PROCEDURE [dbo].[GetCurrFilter]
  @CurrKey			int
 ,@PermKeyName		varchar(50)
 ,@TableName			varchar(500)
@@ -7330,26 +6356,18 @@ BEGIN
 	IF @ExternalTable is not null AND @ExternalTable <> '' SELECT @wFilter = @wFilter + '))' ELSE SELECT @wFilter = @wFilter + ')'
 	SELECT @wClause = isnull(@wClause,space(0)) + @wFilter
 END
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetCustomById') AND type='P')
-DROP PROCEDURE dbo.GetCustomById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetCustomById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetCustomById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetCustomById]
+ALTER PROCEDURE [dbo].[GetCustomById]
  @customId		int
 /* WITH ENCRYPTION */
 AS
@@ -7362,29 +6380,17 @@ SELECT @fClause = 'FROM dbo.Custom a'
 SELECT @wClause = 'WHERE a.CustomId = ' + CONVERT(varchar,@customId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetCustomList') AND type='P')
-DROP PROCEDURE dbo.GetCustomList
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetCustomList') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetCustomList AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetCustomList]
+ALTER PROCEDURE [dbo].[GetCustomList]
  @searchTxt		nvarchar(25)
 /* WITH ENCRYPTION */
 AS
@@ -7402,28 +6408,17 @@ ELSE
 SELECT @oClause = 'ORDER BY a.CustomDesc'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAccessCd') AND type='P')
-DROP PROCEDURE dbo.GetDdlAccessCd
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAccessCd') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAccessCd AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlAccessCd]
+ALTER PROCEDURE [dbo].[GetDdlAccessCd]
  @bAll		char(1)
 ,@keyId		Char(100)
 ,@RowAuthoritys		varchar(1000)
@@ -7460,29 +6455,18 @@ IF @keyId is not null SELECT @wClause = @wClause + 'AccessCd = ''' + convert(var
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAccessCd3S1673') AND type='P')
-DROP PROCEDURE dbo.GetDdlAccessCd3S1673
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAccessCd3S1673') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAccessCd3S1673 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 -- Do not delete. Used by AdmRptWiz:
-CREATE PROCEDURE [dbo].[GetDdlAccessCd3S1673]
+ALTER PROCEDURE [dbo].[GetDdlAccessCd3S1673]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -7524,24 +6508,17 @@ END
 ELSE
 	SELECT AccessCd183=null, AccessCd183Text=null WHERE 1<>1
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAggregateCd3S1238') AND type='P')
-DROP PROCEDURE dbo.GetDdlAggregateCd3S1238
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAggregateCd3S1238') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAggregateCd3S1238 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlAggregateCd3S1238
+ALTER PROCEDURE GetDdlAggregateCd3S1238
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -7586,22 +6563,17 @@ END
 ELSE
 	SELECT AggregateCd14=null, AggregateCd14Text=null, AggregateSort=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAggregateCd3S1652') AND type='P')
-DROP PROCEDURE dbo.GetDdlAggregateCd3S1652
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAggregateCd3S1652') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAggregateCd3S1652 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlAggregateCd3S1652]
+ALTER PROCEDURE [dbo].[GetDdlAggregateCd3S1652]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -7643,27 +6615,17 @@ END
 ELSE
 	SELECT AggregateCd184=null, AggregateCd184Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAggregateCd3S1684') AND type='P')
-DROP PROCEDURE dbo.GetDdlAggregateCd3S1684
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAggregateCd3S1684') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAggregateCd3S1684 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlAggregateCd3S1684]
+ALTER PROCEDURE [dbo].[GetDdlAggregateCd3S1684]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -7705,27 +6667,17 @@ END
 ELSE
 	SELECT AggregateCd184=null, AggregateCd184Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAlignment3S1235') AND type='P')
-DROP PROCEDURE dbo.GetDdlAlignment3S1235
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAlignment3S1235') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAlignment3S1235 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlAlignment3S1235]
+ALTER PROCEDURE [dbo].[GetDdlAlignment3S1235]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -7763,24 +6715,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAllowSel3S201') AND type='P')
-DROP PROCEDURE dbo.GetDdlAllowSel3S201
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAllowSel3S201') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAllowSel3S201 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlAllowSel3S201
+ALTER PROCEDURE GetDdlAllowSel3S201
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -7825,19 +6770,17 @@ END
 ELSE
 	SELECT AllowSel238=null, AllowSel238Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAndCondition3S1981') AND type='P')
-DROP PROCEDURE dbo.GetDdlAndCondition3S1981
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAndCondition3S1981') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAndCondition3S1981 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlAndCondition3S1981
+ALTER PROCEDURE GetDdlAndCondition3S1981
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -7882,19 +6825,17 @@ END
 ELSE
 	SELECT AndCondition239=null, AndCondition239Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAppInfoId3S1352') AND type='P')
-DROP PROCEDURE dbo.GetDdlAppInfoId3S1352
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAppInfoId3S1352') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAppInfoId3S1352 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlAppInfoId3S1352
+ALTER PROCEDURE GetDdlAppInfoId3S1352
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -7939,19 +6880,17 @@ END
 ELSE
 	SELECT AppInfoId136=null, AppInfoId136Text=null, AppInfoDesc=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAppItemLink3S1349') AND type='P')
-DROP PROCEDURE dbo.GetDdlAppItemLink3S1349
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAppItemLink3S1349') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAppItemLink3S1349 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlAppItemLink3S1349
+ALTER PROCEDURE GetDdlAppItemLink3S1349
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		VarChar(100)
@@ -7996,19 +6935,17 @@ END
 ELSE
 	SELECT AppItemLink135=null, AppItemLink135Text=null, AppInfoId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAppZipId3S1416') AND type='P')
-DROP PROCEDURE dbo.GetDdlAppZipId3S1416
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAppZipId3S1416') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAppZipId3S1416 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlAppZipId3S1416
+ALTER PROCEDURE GetDdlAppZipId3S1416
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -8054,19 +6991,17 @@ END
 ELSE
 	SELECT DocId=null, DocLink=null, DocName=null, DocSize=null, InputOn=null, LoginName=null, AppInfoId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAsmxEventId3S4214') AND type='P')
-DROP PROCEDURE dbo.GetDdlAsmxEventId3S4214
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlAsmxEventId3S4214') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlAsmxEventId3S4214 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlAsmxEventId3S4214
+ALTER PROCEDURE GetDdlAsmxEventId3S4214
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -8111,19 +7046,17 @@ END
 ELSE
 	SELECT AsmxEventId128=null, AsmxEventId128Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBeforeCRUD3S163') AND type='P')
-DROP PROCEDURE dbo.GetDdlBeforeCRUD3S163
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBeforeCRUD3S163') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlBeforeCRUD3S163 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlBeforeCRUD3S163
+ALTER PROCEDURE GetDdlBeforeCRUD3S163
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -8168,19 +7101,17 @@ END
 ELSE
 	SELECT BeforeCRUD24=null, BeforeCRUD24Text=null, CrudTypeSort=null, CrudTypeDesc1289=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBgGradType3S1551') AND type='P')
-DROP PROCEDURE dbo.GetDdlBgGradType3S1551
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBgGradType3S1551') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlBgGradType3S1551 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlBgGradType3S1551
+ALTER PROCEDURE GetDdlBgGradType3S1551
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -8225,19 +7156,17 @@ END
 ELSE
 	SELECT BgGradType167=null, BgGradType167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorderStyleB3S1544') AND type='P')
-DROP PROCEDURE dbo.GetDdlBorderStyleB3S1544
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorderStyleB3S1544') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlBorderStyleB3S1544 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlBorderStyleB3S1544
+ALTER PROCEDURE GetDdlBorderStyleB3S1544
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -8282,19 +7211,17 @@ END
 ELSE
 	SELECT BorderStyleB167=null, BorderStyleB167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorderStyleD3S1540') AND type='P')
-DROP PROCEDURE dbo.GetDdlBorderStyleD3S1540
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorderStyleD3S1540') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlBorderStyleD3S1540 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlBorderStyleD3S1540
+ALTER PROCEDURE GetDdlBorderStyleD3S1540
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -8339,19 +7266,17 @@ END
 ELSE
 	SELECT BorderStyleD167=null, BorderStyleD167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorderStyleL3S1541') AND type='P')
-DROP PROCEDURE dbo.GetDdlBorderStyleL3S1541
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorderStyleL3S1541') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlBorderStyleL3S1541 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlBorderStyleL3S1541
+ALTER PROCEDURE GetDdlBorderStyleL3S1541
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -8396,19 +7321,17 @@ END
 ELSE
 	SELECT BorderStyleL167=null, BorderStyleL167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorderStyleR3S1542') AND type='P')
-DROP PROCEDURE dbo.GetDdlBorderStyleR3S1542
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorderStyleR3S1542') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlBorderStyleR3S1542 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlBorderStyleR3S1542
+ALTER PROCEDURE GetDdlBorderStyleR3S1542
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -8453,19 +7376,17 @@ END
 ELSE
 	SELECT BorderStyleR167=null, BorderStyleR167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorderStyleT3S1543') AND type='P')
-DROP PROCEDURE dbo.GetDdlBorderStyleT3S1543
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBorderStyleT3S1543') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlBorderStyleT3S1543 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlBorderStyleT3S1543
+ALTER PROCEDURE GetDdlBorderStyleT3S1543
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -8510,19 +7431,17 @@ END
 ELSE
 	SELECT BorderStyleT167=null, BorderStyleT167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBotVisible3S4163') AND type='P')
-DROP PROCEDURE dbo.GetDdlBotVisible3S4163
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlBotVisible3S4163') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlBotVisible3S4163 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlBotVisible3S4163
+ALTER PROCEDURE GetDdlBotVisible3S4163
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -8567,19 +7486,17 @@ END
 ELSE
 	SELECT BotVisible116=null, BotVisible116Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlButtonTypeId3S1210') AND type='P')
-DROP PROCEDURE dbo.GetDdlButtonTypeId3S1210
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlButtonTypeId3S1210') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlButtonTypeId3S1210 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlButtonTypeId3S1210
+ALTER PROCEDURE GetDdlButtonTypeId3S1210
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -8624,19 +7541,17 @@ END
 ELSE
 	SELECT ButtonTypeId116=null, ButtonTypeId116Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlButtonTypeId3S1288') AND type='P')
-DROP PROCEDURE dbo.GetDdlButtonTypeId3S1288
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlButtonTypeId3S1288') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlButtonTypeId3S1288 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlButtonTypeId3S1288
+ALTER PROCEDURE GetDdlButtonTypeId3S1288
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -8681,19 +7596,17 @@ END
 ELSE
 	SELECT ButtonTypeId128=null, ButtonTypeId128Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCategoryGrp3S1736') AND type='P')
-DROP PROCEDURE dbo.GetDdlCategoryGrp3S1736
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCategoryGrp3S1736') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCategoryGrp3S1736 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCategoryGrp3S1736
+ALTER PROCEDURE GetDdlCategoryGrp3S1736
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -8738,19 +7651,17 @@ END
 ELSE
 	SELECT CategoryGrp206=null, CategoryGrp206Text=null, ReportId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCelNum3S1624') AND type='P')
-DROP PROCEDURE dbo.GetDdlCelNum3S1624
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCelNum3S1624') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCelNum3S1624 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCelNum3S1624
+ALTER PROCEDURE GetDdlCelNum3S1624
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -8795,19 +7706,17 @@ END
 ELSE
 	SELECT CelNum164=null, CelNum164Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlChangedBy3S4112') AND type='P')
-DROP PROCEDURE dbo.GetDdlChangedBy3S4112
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlChangedBy3S4112') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlChangedBy3S4112 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlChangedBy3S4112
+ALTER PROCEDURE GetDdlChangedBy3S4112
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -8853,19 +7762,17 @@ END
 ELSE
 	SELECT ChangedBy1300=null, ChangedBy1300Text=null, Active=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlClientScript3S1261') AND type='P')
-DROP PROCEDURE dbo.GetDdlClientScript3S1261
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlClientScript3S1261') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlClientScript3S1261 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlClientScript3S1261
+ALTER PROCEDURE GetDdlClientScript3S1261
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -8910,19 +7817,17 @@ END
 ELSE
 	SELECT ClientScript127=null, ClientScript127Text=null, ClientScriptHelp126=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S1181') AND type='P')
-DROP PROCEDURE dbo.GetDdlColumnId3S1181
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S1181') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlColumnId3S1181 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlColumnId3S1181
+ALTER PROCEDURE GetDdlColumnId3S1181
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -8967,22 +7872,17 @@ END
 ELSE
 	SELECT ColumnId104=null, ColumnId104Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S1195') AND type='P')
-DROP PROCEDURE dbo.GetDdlColumnId3S1195
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S1195') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlColumnId3S1195 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlColumnId3S1195]
+ALTER PROCEDURE [dbo].[GetDdlColumnId3S1195]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -9024,24 +7924,17 @@ END
 ELSE
 	SELECT ColumnId107=null, ColumnId107Text=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S1644') AND type='P')
-DROP PROCEDURE dbo.GetDdlColumnId3S1644
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S1644') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlColumnId3S1644 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlColumnId3S1644]
+ALTER PROCEDURE [dbo].[GetDdlColumnId3S1644]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -9083,24 +7976,17 @@ END
 ELSE
 	SELECT ColumnId184=null, ColumnId184Text=null, ColObjective5=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S1667') AND type='P')
-DROP PROCEDURE dbo.GetDdlColumnId3S1667
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S1667') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlColumnId3S1667 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlColumnId3S1667
+ALTER PROCEDURE GetDdlColumnId3S1667
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -9145,19 +8031,17 @@ END
 ELSE
 	SELECT ColumnId182=null, ColumnId182Text=null, TableId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S167') AND type='P')
-DROP PROCEDURE dbo.GetDdlColumnId3S167
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S167') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlColumnId3S167 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlColumnId3S167
+ALTER PROCEDURE GetDdlColumnId3S167
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -9202,19 +8086,17 @@ END
 ELSE
 	SELECT ColumnId20=null, ColumnId20Text=null, TableId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S642') AND type='P')
-DROP PROCEDURE dbo.GetDdlColumnId3S642
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S642') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlColumnId3S642 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlColumnId3S642
+ALTER PROCEDURE GetDdlColumnId3S642
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -9259,19 +8141,17 @@ END
 ELSE
 	SELECT ColumnId72=null, ColumnId72Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S74') AND type='P')
-DROP PROCEDURE dbo.GetDdlColumnId3S74
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnId3S74') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlColumnId3S74 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlColumnId3S74
+ALTER PROCEDURE GetDdlColumnId3S74
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -9316,19 +8196,17 @@ END
 ELSE
 	SELECT ColumnId14=null, ColumnId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnJustify3S1422') AND type='P')
-DROP PROCEDURE dbo.GetDdlColumnJustify3S1422
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnJustify3S1422') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlColumnJustify3S1422 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlColumnJustify3S1422
+ALTER PROCEDURE GetDdlColumnJustify3S1422
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -9373,19 +8251,17 @@ END
 ELSE
 	SELECT ColumnJustify14=null, ColumnJustify14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnJustify3S1425') AND type='P')
-DROP PROCEDURE dbo.GetDdlColumnJustify3S1425
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlColumnJustify3S1425') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlColumnJustify3S1425 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlColumnJustify3S1425
+ALTER PROCEDURE GetDdlColumnJustify3S1425
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -9430,19 +8306,17 @@ END
 ELSE
 	SELECT ColumnJustify104=null, ColumnJustify104Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCompanyId3S1971') AND type='P')
-DROP PROCEDURE dbo.GetDdlCompanyId3S1971
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCompanyId3S1971') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCompanyId3S1971 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCompanyId3S1971
+ALTER PROCEDURE GetDdlCompanyId3S1971
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -9489,19 +8363,17 @@ END
 ELSE
 	SELECT CompanyId215=null, CompanyId215Text=null, Active=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCopyReportId3S1012') AND type='P')
-DROP PROCEDURE dbo.GetDdlCopyReportId3S1012
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCopyReportId3S1012') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCopyReportId3S1012 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCopyReportId3S1012
+ALTER PROCEDURE GetDdlCopyReportId3S1012
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -9549,22 +8421,17 @@ END
 ELSE
 	SELECT CopyReportId22=null, CopyReportId22Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCriOperatorId3S1645') AND type='P')
-DROP PROCEDURE dbo.GetDdlCriOperatorId3S1645
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCriOperatorId3S1645') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCriOperatorId3S1645 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlCriOperatorId3S1645]
+ALTER PROCEDURE [dbo].[GetDdlCriOperatorId3S1645]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -9606,24 +8473,17 @@ END
 ELSE
 	SELECT CriOperatorId184=null, CriOperatorId184Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCtrGrouping3S1595') AND type='P')
-DROP PROCEDURE dbo.GetDdlCtrGrouping3S1595
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCtrGrouping3S1595') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCtrGrouping3S1595 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCtrGrouping3S1595
+ALTER PROCEDURE GetDdlCtrGrouping3S1595
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -9668,19 +8528,17 @@ END
 ELSE
 	SELECT CtrGrouping161=null, CtrGrouping161Text=null, ReportId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCtrToggle3S1697') AND type='P')
-DROP PROCEDURE dbo.GetDdlCtrToggle3S1697
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCtrToggle3S1697') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCtrToggle3S1697 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCtrToggle3S1697
+ALTER PROCEDURE GetDdlCtrToggle3S1697
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -9725,19 +8583,17 @@ END
 ELSE
 	SELECT CtrToggle161=null, CtrToggle161Text=null, ReportId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCtrVisibility3S1587') AND type='P')
-DROP PROCEDURE dbo.GetDdlCtrVisibility3S1587
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCtrVisibility3S1587') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCtrVisibility3S1587 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCtrVisibility3S1587
+ALTER PROCEDURE GetDdlCtrVisibility3S1587
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -9782,19 +8638,17 @@ END
 ELSE
 	SELECT CtrVisibility161=null, CtrVisibility161Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCudAction3S4106') AND type='P')
-DROP PROCEDURE dbo.GetDdlCudAction3S4106
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCudAction3S4106') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCudAction3S4106 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCudAction3S4106
+ALTER PROCEDURE GetDdlCudAction3S4106
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -9839,19 +8693,17 @@ END
 ELSE
 	SELECT CudAction1300=null, CudAction1300Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1022') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S1022
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1022') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S1022 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S1022
+ALTER PROCEDURE GetDdlCultureId3S1022
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -9900,19 +8752,17 @@ END
 ELSE
 	SELECT CultureId96=null, CultureId96Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1097') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S1097
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1097') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S1097 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S1097
+ALTER PROCEDURE GetDdlCultureId3S1097
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -9960,19 +8810,17 @@ END
 ELSE
 	SELECT CultureId98=null, CultureId98Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1191') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S1191
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1191') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S1191 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S1191
+ALTER PROCEDURE GetDdlCultureId3S1191
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10020,19 +8868,17 @@ END
 ELSE
 	SELECT CultureId105=null, CultureId105Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1209') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S1209
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1209') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S1209 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S1209
+ALTER PROCEDURE GetDdlCultureId3S1209
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10080,19 +8926,17 @@ END
 ELSE
 	SELECT CultureId116=null, CultureId116Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1259') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S1259
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1259') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S1259 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S1259
+ALTER PROCEDURE GetDdlCultureId3S1259
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10138,22 +8982,17 @@ END
 ELSE
 	SELECT CultureId127=null, CultureId127Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1271') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S1271
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1271') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S1271 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlCultureId3S1271]
+ALTER PROCEDURE [dbo].[GetDdlCultureId3S1271]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10198,21 +9037,17 @@ END
 ELSE
 	SELECT CultureId21=null, CultureId21Text=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1276') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S1276
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1276') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S1276 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S1276
+ALTER PROCEDURE GetDdlCultureId3S1276
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10260,19 +9095,17 @@ END
 ELSE
 	SELECT CultureId99=null, CultureId99Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1414') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S1414
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1414') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S1414 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S1414
+ALTER PROCEDURE GetDdlCultureId3S1414
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10320,19 +9153,17 @@ END
 ELSE
 	SELECT CultureId147=null, CultureId147Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1967') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S1967
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S1967') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S1967 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S1967
+ALTER PROCEDURE GetDdlCultureId3S1967
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10377,19 +9208,17 @@ END
 ELSE
 	SELECT CultureId215=null, CultureId215Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S3255') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S3255
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S3255') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S3255 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S3255
+ALTER PROCEDURE GetDdlCultureId3S3255
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10436,19 +9265,17 @@ END
 ELSE
 	SELECT CultureId21=null, CultureId21Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S448') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S448
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S448') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S448 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S448
+ALTER PROCEDURE GetDdlCultureId3S448
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10495,19 +9322,17 @@ END
 ELSE
 	SELECT CultureId40=null, CultureId40Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S53') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S53
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S53') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S53 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S53
+ALTER PROCEDURE GetDdlCultureId3S53
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10555,19 +9380,17 @@ END
 ELSE
 	SELECT CultureId16=null, CultureId16Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S721') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S721
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S721') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S721 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S721
+ALTER PROCEDURE GetDdlCultureId3S721
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10614,19 +9437,17 @@ END
 ELSE
 	SELECT CultureId80=null, CultureId80Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S848') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureId3S848
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureId3S848') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureId3S848 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureId3S848
+ALTER PROCEDURE GetDdlCultureId3S848
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10674,22 +9495,17 @@ END
 ELSE
 	SELECT CultureId87=null, CultureId87Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureTypeId3S3073') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureTypeId3S3073
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureTypeId3S3073') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureTypeId3S3073 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlCultureTypeId3S3073]
+ALTER PROCEDURE [dbo].[GetDdlCultureTypeId3S3073]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -10731,24 +9547,17 @@ END
 ELSE
 	SELECT CultureTypeId135=null, CultureTypeId135Text=null, CurrencyCd8=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureTypeName3S3073') AND type='P')
-DROP PROCEDURE dbo.GetDdlCultureTypeName3S3073
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCultureTypeName3S3073') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCultureTypeName3S3073 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlCultureTypeName3S3073
+ALTER PROCEDURE GetDdlCultureTypeName3S3073
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		VarChar(100)
@@ -10793,22 +9602,17 @@ END
 ELSE
 	SELECT CultureTypeName135=null, CultureTypeName135Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCustomDtlLink3S1379') AND type='P')
-DROP PROCEDURE dbo.GetDdlCustomDtlLink3S1379
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCustomDtlLink3S1379') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCustomDtlLink3S1379 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlCustomDtlLink3S1379]
+ALTER PROCEDURE [dbo].[GetDdlCustomDtlLink3S1379]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		VarChar(100)
@@ -10851,26 +9655,17 @@ END
 ELSE
 	SELECT CustomDtlLink133=null, CustomDtlLink133Text=null, CustomId=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCustomId3S1381') AND type='P')
-DROP PROCEDURE dbo.GetDdlCustomId3S1381
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCustomId3S1381') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCustomId3S1381 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlCustomId3S1381]
+ALTER PROCEDURE [dbo].[GetDdlCustomId3S1381]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -10912,23 +9707,17 @@ END
 ELSE
 	SELECT CustomId134=null, CustomId134Text=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDataType3S17') AND type='P')
-DROP PROCEDURE dbo.GetDdlDataType3S17
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDataType3S17') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDataType3S17 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDataType3S17
+ALTER PROCEDURE GetDdlDataType3S17
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -10973,19 +9762,17 @@ END
 ELSE
 	SELECT DataType5=null, DataType5Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDataTypeId3S1081') AND type='P')
-DROP PROCEDURE dbo.GetDdlDataTypeId3S1081
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDataTypeId3S1081') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDataTypeId3S1081 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDataTypeId3S1081
+ALTER PROCEDURE GetDdlDataTypeId3S1081
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -11030,19 +9817,17 @@ END
 ELSE
 	SELECT DataTypeId97=null, DataTypeId97Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDataTypeId3S133') AND type='P')
-DROP PROCEDURE dbo.GetDdlDataTypeId3S133
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDataTypeId3S133') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDataTypeId3S133 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDataTypeId3S133
+ALTER PROCEDURE GetDdlDataTypeId3S133
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -11087,19 +9872,17 @@ END
 ELSE
 	SELECT DataTypeId23=null, DataTypeId23Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDbProviderCd3S1357') AND type='P')
-DROP PROCEDURE dbo.GetDdlDbProviderCd3S1357
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDbProviderCd3S1357') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDbProviderCd3S1357 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDbProviderCd3S1357
+ALTER PROCEDURE GetDdlDbProviderCd3S1357
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -11144,22 +9927,17 @@ END
 ELSE
 	SELECT DbProviderCd136=null, DbProviderCd136Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDbProviderCd3S1390') AND type='P')
-DROP PROCEDURE dbo.GetDdlDbProviderCd3S1390
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDbProviderCd3S1390') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDbProviderCd3S1390 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlDbProviderCd3S1390]
+ALTER PROCEDURE [dbo].[GetDdlDbProviderCd3S1390]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -11201,23 +9979,17 @@ END
 ELSE
 	SELECT DbProviderCd134=null, DbProviderCd134Text=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlAdnColumnId3S1281') AND type='P')
-DROP PROCEDURE dbo.GetDdlDdlAdnColumnId3S1281
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlAdnColumnId3S1281') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDdlAdnColumnId3S1281 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDdlAdnColumnId3S1281
+ALTER PROCEDURE GetDdlDdlAdnColumnId3S1281
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11262,19 +10034,17 @@ END
 ELSE
 	SELECT DdlAdnColumnId14=null, DdlAdnColumnId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlFtrColumnId3S1282') AND type='P')
-DROP PROCEDURE dbo.GetDdlDdlFtrColumnId3S1282
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlFtrColumnId3S1282') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDdlFtrColumnId3S1282 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDdlFtrColumnId3S1282
+ALTER PROCEDURE GetDdlDdlFtrColumnId3S1282
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11319,19 +10089,17 @@ END
 ELSE
 	SELECT DdlFtrColumnId14=null, DdlFtrColumnId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlFtrColumnId3S3365') AND type='P')
-DROP PROCEDURE dbo.GetDdlDdlFtrColumnId3S3365
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlFtrColumnId3S3365') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDdlFtrColumnId3S3365 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDdlFtrColumnId3S3365
+ALTER PROCEDURE GetDdlDdlFtrColumnId3S3365
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11376,19 +10144,17 @@ END
 ELSE
 	SELECT DdlFtrColumnId104=null, DdlFtrColumnId104Text=null, ScreenId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlFtrColumnId3S3367') AND type='P')
-DROP PROCEDURE dbo.GetDdlDdlFtrColumnId3S3367
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlFtrColumnId3S3367') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDdlFtrColumnId3S3367 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDdlFtrColumnId3S3367
+ALTER PROCEDURE GetDdlDdlFtrColumnId3S3367
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11433,19 +10199,17 @@ END
 ELSE
 	SELECT DdlFtrColumnId97=null, DdlFtrColumnId97Text=null, ReportId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlKeyColumnId3S1185') AND type='P')
-DROP PROCEDURE dbo.GetDdlDdlKeyColumnId3S1185
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlKeyColumnId3S1185') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDdlKeyColumnId3S1185 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDdlKeyColumnId3S1185
+ALTER PROCEDURE GetDdlDdlKeyColumnId3S1185
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11490,19 +10254,17 @@ END
 ELSE
 	SELECT DdlKeyColumnId104=null, DdlKeyColumnId104Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlKeyColumnId3S82') AND type='P')
-DROP PROCEDURE dbo.GetDdlDdlKeyColumnId3S82
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlKeyColumnId3S82') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDdlKeyColumnId3S82 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDdlKeyColumnId3S82
+ALTER PROCEDURE GetDdlDdlKeyColumnId3S82
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11547,19 +10309,17 @@ END
 ELSE
 	SELECT DdlKeyColumnId14=null, DdlKeyColumnId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlRefColumnId3S1186') AND type='P')
-DROP PROCEDURE dbo.GetDdlDdlRefColumnId3S1186
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlRefColumnId3S1186') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDdlRefColumnId3S1186 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDdlRefColumnId3S1186
+ALTER PROCEDURE GetDdlDdlRefColumnId3S1186
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11604,19 +10364,17 @@ END
 ELSE
 	SELECT DdlRefColumnId104=null, DdlRefColumnId104Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlRefColumnId3S83') AND type='P')
-DROP PROCEDURE dbo.GetDdlDdlRefColumnId3S83
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlRefColumnId3S83') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDdlRefColumnId3S83 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDdlRefColumnId3S83
+ALTER PROCEDURE GetDdlDdlRefColumnId3S83
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11661,19 +10419,17 @@ END
 ELSE
 	SELECT DdlRefColumnId14=null, DdlRefColumnId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlSrtColumnId3S1269') AND type='P')
-DROP PROCEDURE dbo.GetDdlDdlSrtColumnId3S1269
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlSrtColumnId3S1269') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDdlSrtColumnId3S1269 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDdlSrtColumnId3S1269
+ALTER PROCEDURE GetDdlDdlSrtColumnId3S1269
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11718,19 +10474,17 @@ END
 ELSE
 	SELECT DdlSrtColumnId14=null, DdlSrtColumnId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlSrtColumnId3S1278') AND type='P')
-DROP PROCEDURE dbo.GetDdlDdlSrtColumnId3S1278
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDdlSrtColumnId3S1278') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDdlSrtColumnId3S1278 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDdlSrtColumnId3S1278
+ALTER PROCEDURE GetDdlDdlSrtColumnId3S1278
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11775,19 +10529,17 @@ END
 ELSE
 	SELECT DdlSrtColumnId104=null, DdlSrtColumnId104Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDefaultCd3S1571') AND type='P')
-DROP PROCEDURE dbo.GetDdlDefaultCd3S1571
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDefaultCd3S1571') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDefaultCd3S1571 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDefaultCd3S1571
+ALTER PROCEDURE GetDdlDefaultCd3S1571
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -11832,19 +10584,17 @@ END
 ELSE
 	SELECT DefaultCd167=null, DefaultCd167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDetailTableId3S60') AND type='P')
-DROP PROCEDURE dbo.GetDdlDetailTableId3S60
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDetailTableId3S60') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDetailTableId3S60 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDetailTableId3S60
+ALTER PROCEDURE GetDdlDetailTableId3S60
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -11890,19 +10640,17 @@ END
 ELSE
 	SELECT DetailTableId15=null, DetailTableId15Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDirection3S1568') AND type='P')
-DROP PROCEDURE dbo.GetDdlDirection3S1568
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDirection3S1568') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDirection3S1568 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDirection3S1568
+ALTER PROCEDURE GetDdlDirection3S1568
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -11947,19 +10695,17 @@ END
 ELSE
 	SELECT Direction167=null, Direction167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDisplayModeId3S1083') AND type='P')
-DROP PROCEDURE dbo.GetDdlDisplayModeId3S1083
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDisplayModeId3S1083') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDisplayModeId3S1083 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDisplayModeId3S1083
+ALTER PROCEDURE GetDdlDisplayModeId3S1083
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -12004,19 +10750,17 @@ END
 ELSE
 	SELECT DisplayModeId97=null, DisplayModeId97Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDisplayModeId3S1183') AND type='P')
-DROP PROCEDURE dbo.GetDdlDisplayModeId3S1183
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDisplayModeId3S1183') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDisplayModeId3S1183 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDisplayModeId3S1183
+ALTER PROCEDURE GetDdlDisplayModeId3S1183
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -12061,19 +10805,17 @@ END
 ELSE
 	SELECT DisplayModeId104=null, DisplayModeId104Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDisplayModeId3S1843') AND type='P')
-DROP PROCEDURE dbo.GetDdlDisplayModeId3S1843
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDisplayModeId3S1843') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDisplayModeId3S1843 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDisplayModeId3S1843
+ALTER PROCEDURE GetDdlDisplayModeId3S1843
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -12118,19 +10860,17 @@ END
 ELSE
 	SELECT DisplayModeId182=null, DisplayModeId182Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDisplayModeId3S81') AND type='P')
-DROP PROCEDURE dbo.GetDdlDisplayModeId3S81
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDisplayModeId3S81') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDisplayModeId3S81 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDisplayModeId3S81
+ALTER PROCEDURE GetDdlDisplayModeId3S81
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -12175,19 +10915,17 @@ END
 ELSE
 	SELECT DisplayModeId14=null, DisplayModeId14Text=null, DisplayDesc18=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDtlLstPosId3S4206') AND type='P')
-DROP PROCEDURE dbo.GetDdlDtlLstPosId3S4206
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlDtlLstPosId3S4206') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlDtlLstPosId3S4206 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlDtlLstPosId3S4206
+ALTER PROCEDURE GetDdlDtlLstPosId3S4206
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -12232,19 +10970,17 @@ END
 ELSE
 	SELECT DtlLstPosId14=null, DtlLstPosId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlEventId3S1289') AND type='P')
-DROP PROCEDURE dbo.GetDdlEventId3S1289
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlEventId3S1289') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlEventId3S1289 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlEventId3S1289
+ALTER PROCEDURE GetDdlEventId3S1289
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -12289,22 +11025,17 @@ END
 ELSE
 	SELECT EventId128=null, EventId128Text=null, EventCode=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlEveryone3S838') AND type='P')
-DROP PROCEDURE dbo.GetDdlEveryone3S838
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlEveryone3S838') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlEveryone3S838 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlEveryone3S838]
+ALTER PROCEDURE [dbo].[GetDdlEveryone3S838]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -12333,24 +11064,17 @@ END
 ELSE
 	SELECT Everyone85=null, Everyone85Text=null, EveryoneSort=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlFontStyle3S1554') AND type='P')
-DROP PROCEDURE dbo.GetDdlFontStyle3S1554
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlFontStyle3S1554') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlFontStyle3S1554 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlFontStyle3S1554
+ALTER PROCEDURE GetDdlFontStyle3S1554
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -12395,19 +11119,17 @@ END
 ELSE
 	SELECT FontStyle167=null, FontStyle167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlFontWeight3S1557') AND type='P')
-DROP PROCEDURE dbo.GetDdlFontWeight3S1557
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlFontWeight3S1557') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlFontWeight3S1557 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlFontWeight3S1557
+ALTER PROCEDURE GetDdlFontWeight3S1557
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -12452,19 +11174,17 @@ END
 ELSE
 	SELECT FontWeight167=null, FontWeight167Text=null, FontWeightName=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlFrameworkCd3S1356') AND type='P')
-DROP PROCEDURE dbo.GetDdlFrameworkCd3S1356
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlFrameworkCd3S1356') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlFrameworkCd3S1356 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlFrameworkCd3S1356
+ALTER PROCEDURE GetDdlFrameworkCd3S1356
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -12509,22 +11229,17 @@ END
 ELSE
 	SELECT FrameworkCd136=null, FrameworkCd136Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlFrameworkCd3S1389') AND type='P')
-DROP PROCEDURE dbo.GetDdlFrameworkCd3S1389
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlFrameworkCd3S1389') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlFrameworkCd3S1389 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlFrameworkCd3S1389]
+ALTER PROCEDURE [dbo].[GetDdlFrameworkCd3S1389]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -12566,26 +11281,17 @@ END
 ELSE
 	SELECT FrameworkCd134=null, FrameworkCd134Text=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGFormat3S1794') AND type='P')
-DROP PROCEDURE dbo.GetDdlGFormat3S1794
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGFormat3S1794') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlGFormat3S1794 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlGFormat3S1794]
+ALTER PROCEDURE [dbo].[GetDdlGFormat3S1794]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -12627,27 +11333,17 @@ END
 ELSE
 	SELECT GFormat183=null, GFormat183Text=null, FormatSort=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGPositive3S1637') AND type='P')
-DROP PROCEDURE dbo.GetDdlGPositive3S1637
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGPositive3S1637') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlGPositive3S1637 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlGPositive3S1637]
+ALTER PROCEDURE [dbo].[GetDdlGPositive3S1637]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		varchar(1000)
@@ -12674,24 +11370,17 @@ DECLARE	 @sClause		varchar(8000)
 SELECT @sClause = 'SELECT GPositive183 = ''Y'', GPositive183Text = ''+ve'' UNION SELECT GPositive183 = ''N'', GPositive183Text = ''-ve'''
 EXEC (@sClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGrantDeny3S838') AND type='P')
-DROP PROCEDURE dbo.GetDdlGrantDeny3S838
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGrantDeny3S838') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlGrantDeny3S838 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlGrantDeny3S838
+ALTER PROCEDURE GetDdlGrantDeny3S838
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -12736,19 +11425,17 @@ END
 ELSE
 	SELECT GrantDeny231=null, GrantDeny231Text=null, EveryoneSort=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGridGrpCd3S2016') AND type='P')
-DROP PROCEDURE dbo.GetDdlGridGrpCd3S2016
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGridGrpCd3S2016') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlGridGrpCd3S2016 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlGridGrpCd3S2016
+ALTER PROCEDURE GetDdlGridGrpCd3S2016
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -12793,19 +11480,17 @@ END
 ELSE
 	SELECT GridGrpCd14=null, GridGrpCd14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGroupColId3S1204') AND type='P')
-DROP PROCEDURE dbo.GetDdlGroupColId3S1204
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGroupColId3S1204') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlGroupColId3S1204 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlGroupColId3S1204
+ALTER PROCEDURE GetDdlGroupColId3S1204
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -12850,19 +11535,17 @@ END
 ELSE
 	SELECT GroupColId14=null, GroupColId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGroupColId3S3264') AND type='P')
-DROP PROCEDURE dbo.GetDdlGroupColId3S3264
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGroupColId3S3264') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlGroupColId3S3264 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlGroupColId3S3264
+ALTER PROCEDURE GetDdlGroupColId3S3264
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -12907,19 +11590,17 @@ END
 ELSE
 	SELECT GroupColId14=null, GroupColId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGroupRowId3S3136') AND type='P')
-DROP PROCEDURE dbo.GetDdlGroupRowId3S3136
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGroupRowId3S3136') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlGroupRowId3S3136 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlGroupRowId3S3136
+ALTER PROCEDURE GetDdlGroupRowId3S3136
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -12964,19 +11645,17 @@ END
 ELSE
 	SELECT GroupRowId14=null, GroupRowId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGroupRowId3S3263') AND type='P')
-DROP PROCEDURE dbo.GetDdlGroupRowId3S3263
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGroupRowId3S3263') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlGroupRowId3S3263 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlGroupRowId3S3263
+ALTER PROCEDURE GetDdlGroupRowId3S3263
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -13021,22 +11700,17 @@ END
 ELSE
 	SELECT GroupRowId14=null, GroupRowId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlInputBy3S1768') AND type='P')
-DROP PROCEDURE dbo.GetDdlInputBy3S1768
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlInputBy3S1768') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlInputBy3S1768 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlInputBy3S1768]
+ALTER PROCEDURE [dbo].[GetDdlInputBy3S1768]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -13084,27 +11758,17 @@ EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',n
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlInputBy3S1790') AND type='P')
-DROP PROCEDURE dbo.GetDdlInputBy3S1790
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlInputBy3S1790') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlInputBy3S1790 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlInputBy3S1790]
+ALTER PROCEDURE [dbo].[GetDdlInputBy3S1790]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -13152,27 +11816,17 @@ EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',n
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlKeyId3S1667') AND type='P')
-DROP PROCEDURE dbo.GetDdlKeyId3S1667
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlKeyId3S1667') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlKeyId3S1667 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlKeyId3S1667]
+ALTER PROCEDURE [dbo].[GetDdlKeyId3S1667]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -13201,24 +11855,17 @@ END
 ELSE
 	SELECT KeyId182=null, KeyId182Text=null, RefTableId=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlLanguageCd3S1355') AND type='P')
-DROP PROCEDURE dbo.GetDdlLanguageCd3S1355
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlLanguageCd3S1355') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlLanguageCd3S1355 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlLanguageCd3S1355
+ALTER PROCEDURE GetDdlLanguageCd3S1355
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -13263,22 +11910,17 @@ END
 ELSE
 	SELECT LanguageCd136=null, LanguageCd136Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlLanguageCd3S1388') AND type='P')
-DROP PROCEDURE dbo.GetDdlLanguageCd3S1388
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlLanguageCd3S1388') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlLanguageCd3S1388 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlLanguageCd3S1388]
+ALTER PROCEDURE [dbo].[GetDdlLanguageCd3S1388]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -13320,26 +11962,17 @@ END
 ELSE
 	SELECT LanguageCd134=null, LanguageCd134Text=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlLineBottom3S1237') AND type='P')
-DROP PROCEDURE dbo.GetDdlLineBottom3S1237
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlLineBottom3S1237') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlLineBottom3S1237 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlLineBottom3S1237]
+ALTER PROCEDURE [dbo].[GetDdlLineBottom3S1237]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -13377,27 +12010,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlLineTop3S1236') AND type='P')
-DROP PROCEDURE dbo.GetDdlLineTop3S1236
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlLineTop3S1236') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlLineTop3S1236 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlLineTop3S1236]
+ALTER PROCEDURE [dbo].[GetDdlLineTop3S1236]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -13435,24 +12058,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlMasterTableId3S59') AND type='P')
-DROP PROCEDURE dbo.GetDdlMasterTableId3S59
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlMasterTableId3S59') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlMasterTableId3S59 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlMasterTableId3S59
+ALTER PROCEDURE GetDdlMasterTableId3S59
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -13498,19 +12114,17 @@ END
 ELSE
 	SELECT MasterTableId15=null, MasterTableId15Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlMasterTableId3S635') AND type='P')
-DROP PROCEDURE dbo.GetDdlMasterTableId3S635
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlMasterTableId3S635') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlMasterTableId3S635 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlMasterTableId3S635
+ALTER PROCEDURE GetDdlMasterTableId3S635
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -13556,19 +12170,17 @@ END
 ELSE
 	SELECT MasterTableId71=null, MasterTableId71Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlMatchCd3S1806') AND type='P')
-DROP PROCEDURE dbo.GetDdlMatchCd3S1806
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlMatchCd3S1806') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlMatchCd3S1806 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlMatchCd3S1806
+ALTER PROCEDURE GetDdlMatchCd3S1806
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -13613,22 +12225,17 @@ END
 ELSE
 	SELECT MatchCd14=null, MatchCd14Text=null, MatchSort=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlMenuOption3S944') AND type='P')
-DROP PROCEDURE dbo.GetDdlMenuOption3S944
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlMenuOption3S944') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlMenuOption3S944 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlMenuOption3S944]
+ALTER PROCEDURE [dbo].[GetDdlMenuOption3S944]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -13657,27 +12264,17 @@ END
 ELSE
 	SELECT MenuOption93=null, MenuOption93Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlModifiedBy3S1394') AND type='P')
-DROP PROCEDURE dbo.GetDdlModifiedBy3S1394
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlModifiedBy3S1394') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlModifiedBy3S1394 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlModifiedBy3S1394]
+ALTER PROCEDURE [dbo].[GetDdlModifiedBy3S1394]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -13732,23 +12329,17 @@ END
 ELSE
 	SELECT ModifiedBy134=null, ModifiedBy134Text=null, Active=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlModifiedBy3S1397') AND type='P')
-DROP PROCEDURE dbo.GetDdlModifiedBy3S1397
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlModifiedBy3S1397') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlModifiedBy3S1397 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlModifiedBy3S1397
+ALTER PROCEDURE GetDdlModifiedBy3S1397
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -13809,19 +12400,17 @@ END
 ELSE
 	SELECT ModifiedBy24=null, ModifiedBy24Text=null, Active=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlModifiedBy3S1451') AND type='P')
-DROP PROCEDURE dbo.GetDdlModifiedBy3S1451
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlModifiedBy3S1451') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlModifiedBy3S1451 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlModifiedBy3S1451
+ALTER PROCEDURE GetDdlModifiedBy3S1451
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -13882,19 +12471,17 @@ END
 ELSE
 	SELECT ModifiedBy3=null, ModifiedBy3Text=null, Active=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlModifiedBy3S1470') AND type='P')
-DROP PROCEDURE dbo.GetDdlModifiedBy3S1470
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlModifiedBy3S1470') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlModifiedBy3S1470 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlModifiedBy3S1470
+ALTER PROCEDURE GetDdlModifiedBy3S1470
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -13958,19 +12545,17 @@ END
 ELSE
 	SELECT ModifiedBy22=null, ModifiedBy22Text=null, Active=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlMsgTypeCd3S1409') AND type='P')
-DROP PROCEDURE dbo.GetDdlMsgTypeCd3S1409
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlMsgTypeCd3S1409') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlMsgTypeCd3S1409 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlMsgTypeCd3S1409
+ALTER PROCEDURE GetDdlMsgTypeCd3S1409
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -14015,19 +12600,17 @@ END
 ELSE
 	SELECT MsgTypeCd146=null, MsgTypeCd146Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlObjectTypeCd3S1354') AND type='P')
-DROP PROCEDURE dbo.GetDdlObjectTypeCd3S1354
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlObjectTypeCd3S1354') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlObjectTypeCd3S1354 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlObjectTypeCd3S1354
+ALTER PROCEDURE GetDdlObjectTypeCd3S1354
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -14072,22 +12655,17 @@ END
 ELSE
 	SELECT ObjectTypeCd136=null, ObjectTypeCd136Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlObjectTypeCd3S1383') AND type='P')
-DROP PROCEDURE dbo.GetDdlObjectTypeCd3S1383
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlObjectTypeCd3S1383') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlObjectTypeCd3S1383 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlObjectTypeCd3S1383]
+ALTER PROCEDURE [dbo].[GetDdlObjectTypeCd3S1383]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -14129,27 +12707,17 @@ END
 ELSE
 	SELECT ObjectTypeCd134=null, ObjectTypeCd134Text=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOperator3S1652') AND type='P')
-DROP PROCEDURE dbo.GetDdlOperator3S1652
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOperator3S1652') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlOperator3S1652 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlOperator3S1652]
+ALTER PROCEDURE [dbo].[GetDdlOperator3S1652]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
@@ -14161,25 +12729,17 @@ SELECT @fClause = 'FROM RODesign.dbo.CtOperator a100'
 SELECT @oClause = 'ORDER BY a100.OperatorId'
 EXEC (@sClause + ' ' + @fClause + ' ' + @oClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOperatorId3S1024') AND type='P')
-DROP PROCEDURE dbo.GetDdlOperatorId3S1024
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOperatorId3S1024') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlOperatorId3S1024 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlOperatorId3S1024
+ALTER PROCEDURE GetDdlOperatorId3S1024
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -14224,22 +12784,17 @@ END
 ELSE
 	SELECT OperatorId23=null, OperatorId23Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOperatorId3S1196') AND type='P')
-DROP PROCEDURE dbo.GetDdlOperatorId3S1196
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOperatorId3S1196') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlOperatorId3S1196 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlOperatorId3S1196]
+ALTER PROCEDURE [dbo].[GetDdlOperatorId3S1196]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -14281,21 +12836,17 @@ END
 ELSE
 	SELECT OperatorId107=null, OperatorId107Text=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOperatorId3S3305') AND type='P')
-DROP PROCEDURE dbo.GetDdlOperatorId3S3305
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOperatorId3S3305') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlOperatorId3S3305 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlOperatorId3S3305
+ALTER PROCEDURE GetDdlOperatorId3S3305
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -14340,22 +12891,17 @@ END
 ELSE
 	SELECT OperatorId104=null, OperatorId104Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOriColumnId33S1682') AND type='P')
-DROP PROCEDURE dbo.GetDdlOriColumnId33S1682
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOriColumnId33S1682') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlOriColumnId33S1682 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlOriColumnId33S1682]
+ALTER PROCEDURE [dbo].[GetDdlOriColumnId33S1682]
  @rptwizCatId		int
 ,@bAll				char(1)
 ,@keyId				varchar(100)
@@ -14432,23 +12978,17 @@ SELECT @sClause = ' DECLARE @CultureId smallint'
 SELECT @oClause = 'ORDER BY ColumnHeader'
 EXEC (@dClause + ' ' + @fClause + ' ' + @wClause + ' ' + @sClause + ' ' + @oClause + ' DROP TABLE dbo.#col')
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOrientationCd3S1010') AND type='P')
-DROP PROCEDURE dbo.GetDdlOrientationCd3S1010
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOrientationCd3S1010') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlOrientationCd3S1010 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlOrientationCd3S1010
+ALTER PROCEDURE GetDdlOrientationCd3S1010
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -14493,22 +13033,17 @@ END
 ELSE
 	SELECT OrientationCd22=null, OrientationCd22Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOrientationCd3S1674') AND type='P')
-DROP PROCEDURE dbo.GetDdlOrientationCd3S1674
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOrientationCd3S1674') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlOrientationCd3S1674 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlOrientationCd3S1674]
+ALTER PROCEDURE [dbo].[GetDdlOrientationCd3S1674]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -14550,27 +13085,17 @@ END
 ELSE
 	SELECT OrientationCd183=null, OrientationCd183Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOvrideId3S1239') AND type='P')
-DROP PROCEDURE dbo.GetDdlOvrideId3S1239
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlOvrideId3S1239') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlOvrideId3S1239 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlOvrideId3S1239]
+ALTER PROCEDURE [dbo].[GetDdlOvrideId3S1239]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -14612,24 +13137,17 @@ END
 ELSE
 	SELECT OvrideId236=null, OvrideId236Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlParentGrpId3S982') AND type='P')
-DROP PROCEDURE dbo.GetDdlParentGrpId3S982
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlParentGrpId3S982') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlParentGrpId3S982 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlParentGrpId3S982
+ALTER PROCEDURE GetDdlParentGrpId3S982
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -14674,19 +13192,17 @@ END
 ELSE
 	SELECT ParentGrpId94=null, ParentGrpId94Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlParentId3S1609') AND type='P')
-DROP PROCEDURE dbo.GetDdlParentId3S1609
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlParentId3S1609') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlParentId3S1609 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlParentId3S1609
+ALTER PROCEDURE GetDdlParentId3S1609
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -14731,19 +13247,17 @@ END
 ELSE
 	SELECT ParentId162=null, ParentId162Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermId3S1751') AND type='P')
-DROP PROCEDURE dbo.GetDdlPermId3S1751
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermId3S1751') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPermId3S1751 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlPermId3S1751
+ALTER PROCEDURE GetDdlPermId3S1751
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -14806,22 +13320,17 @@ END
 ELSE
 	SELECT PermId231=null, PermId231Text=null, Active=null, PermKeyId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermId3S1887') AND type='P')
-DROP PROCEDURE dbo.GetDdlPermId3S1887
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermId3S1887') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPermId3S1887 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlPermId3S1887]
+ALTER PROCEDURE [dbo].[GetDdlPermId3S1887]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -14878,21 +13387,17 @@ END
 ELSE
 	SELECT PermId241=null, PermId241Text=null, Active=null, PermKeyId=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyId3S182') AND type='P')
-DROP PROCEDURE dbo.GetDdlPermKeyId3S182
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyId3S182') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPermKeyId3S182 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlPermKeyId3S182
+ALTER PROCEDURE GetDdlPermKeyId3S182
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -14937,19 +13442,17 @@ END
 ELSE
 	SELECT PermKeyId241=null, PermKeyId241Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyId3S1882') AND type='P')
-DROP PROCEDURE dbo.GetDdlPermKeyId3S1882
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyId3S1882') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPermKeyId3S1882 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlPermKeyId3S1882
+ALTER PROCEDURE GetDdlPermKeyId3S1882
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -14994,19 +13497,17 @@ END
 ELSE
 	SELECT PermKeyId239=null, PermKeyId239Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyId3S833') AND type='P')
-DROP PROCEDURE dbo.GetDdlPermKeyId3S833
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyId3S833') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPermKeyId3S833 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlPermKeyId3S833
+ALTER PROCEDURE GetDdlPermKeyId3S833
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -15051,19 +13552,17 @@ END
 ELSE
 	SELECT PermKeyId231=null, PermKeyId231Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyRowId3S1887') AND type='P')
-DROP PROCEDURE dbo.GetDdlPermKeyRowId3S1887
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyRowId3S1887') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPermKeyRowId3S1887 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlPermKeyRowId3S1887
+ALTER PROCEDURE GetDdlPermKeyRowId3S1887
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -15126,22 +13625,17 @@ END
 ELSE
 	SELECT PermKeyRowId241=null, PermKeyRowId241Text=null, Active=null, PermKeyId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPopup3S1805') AND type='P')
-DROP PROCEDURE dbo.GetDdlPopup3S1805
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPopup3S1805') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPopup3S1805 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlPopup3S1805]
+ALTER PROCEDURE [dbo].[GetDdlPopup3S1805]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -15165,24 +13659,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPRptCtrId3S1574') AND type='P')
-DROP PROCEDURE dbo.GetDdlPRptCtrId3S1574
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPRptCtrId3S1574') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPRptCtrId3S1574 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlPRptCtrId3S1574
+ALTER PROCEDURE GetDdlPRptCtrId3S1574
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -15227,19 +13714,17 @@ END
 ELSE
 	SELECT PRptCtrId161=null, PRptCtrId161Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReactEventId3S4207') AND type='P')
-DROP PROCEDURE dbo.GetDdlReactEventId3S4207
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReactEventId3S4207') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReactEventId3S4207 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReactEventId3S4207
+ALTER PROCEDURE GetDdlReactEventId3S4207
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -15284,19 +13769,17 @@ END
 ELSE
 	SELECT ReactEventId128=null, ReactEventId128Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReduxEventId3S4210') AND type='P')
-DROP PROCEDURE dbo.GetDdlReduxEventId3S4210
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReduxEventId3S4210') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReduxEventId3S4210 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReduxEventId3S4210
+ALTER PROCEDURE GetDdlReduxEventId3S4210
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -15341,19 +13824,17 @@ END
 ELSE
 	SELECT ReduxEventId128=null, ReduxEventId128Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRefColumnId3S169') AND type='P')
-DROP PROCEDURE dbo.GetDdlRefColumnId3S169
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRefColumnId3S169') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRefColumnId3S169 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRefColumnId3S169
+ALTER PROCEDURE GetDdlRefColumnId3S169
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -15398,19 +13879,17 @@ END
 ELSE
 	SELECT RefColumnId20=null, RefColumnId20Text=null, TableId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRefTableId3S168') AND type='P')
-DROP PROCEDURE dbo.GetDdlRefTableId3S168
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRefTableId3S168') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRefTableId3S168 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRefTableId3S168
+ALTER PROCEDURE GetDdlRefTableId3S168
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -15456,19 +13935,17 @@ END
 ELSE
 	SELECT RefTableId20=null, RefTableId20Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportCriHlpId3S1267') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportCriHlpId3S1267
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportCriHlpId3S1267') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportCriHlpId3S1267 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportCriHlpId3S1267
+ALTER PROCEDURE GetDdlReportCriHlpId3S1267
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -15514,19 +13991,17 @@ END
 ELSE
 	SELECT ReportCriHlpId127=null, ReportCriHlpId127Text=null, ReportId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportCriId3S1025') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportCriId3S1025
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportCriId3S1025') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportCriId3S1025 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportCriId3S1025
+ALTER PROCEDURE GetDdlReportCriId3S1025
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -15571,19 +14046,17 @@ END
 ELSE
 	SELECT ReportCriId23=null, ReportCriId23Text=null, ReportId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportGrpId3S1076') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportGrpId3S1076
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportGrpId3S1076') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportGrpId3S1076 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportGrpId3S1076
+ALTER PROCEDURE GetDdlReportGrpId3S1076
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -15628,22 +14101,17 @@ END
 ELSE
 	SELECT ReportGrpId97=null, ReportGrpId97Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId1003C13') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId1003C13
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId1003C13') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId1003C13 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlReportId1003C13]
+ALTER PROCEDURE [dbo].[GetDdlReportId1003C13]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -15686,28 +14154,17 @@ END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId1003C2') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId1003C2
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId1003C2') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId1003C2 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlReportId1003C2]
+ALTER PROCEDURE [dbo].[GetDdlReportId1003C2]
  @screenId		int
 ,@RowAuthoritys		varchar(1000)
 ,@Usrs		varchar(1000)
@@ -15747,27 +14204,17 @@ END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId1003C4') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId1003C4
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId1003C4') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId1003C4 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlReportId1003C4]
+ALTER PROCEDURE [dbo].[GetDdlReportId1003C4]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -15810,24 +14257,17 @@ END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C13') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId103C13
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C13') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId103C13 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId103C13
+ALTER PROCEDURE GetDdlReportId103C13
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -15875,247 +14315,17 @@ END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C2') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId103C2
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C2') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId103C2 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId103C2
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
-SELECT @fClause = 'FROM dbo.Report a22'
-SELECT @oClause = 'ORDER BY a22.ReportDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
-SELECT @tClause = ''
-EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0
- 
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C29') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId103C29
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_NULLS ON
-GO
-
-CREATE PROCEDURE GetDdlReportId103C29
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
-SELECT @fClause = 'FROM dbo.Report a22'
-SELECT @oClause = 'ORDER BY a22.ReportDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
-SELECT @tClause = ''
-EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0
- 
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C30') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId103C30
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_NULLS ON
-GO
-
-CREATE PROCEDURE GetDdlReportId103C30
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
-SELECT @fClause = 'FROM dbo.Report a22'
-SELECT @oClause = 'ORDER BY a22.ReportDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
-SELECT @tClause = ''
-EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0
- 
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C34') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId103C34
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_NULLS ON
-GO
-
-CREATE PROCEDURE GetDdlReportId103C34
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
-SELECT @fClause = 'FROM dbo.Report a22'
-SELECT @oClause = 'ORDER BY a22.ReportDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
-SELECT @tClause = ''
-EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
-RETURN 0
- 
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C4') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId103C4
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_NULLS ON
-GO
-
-CREATE PROCEDURE GetDdlReportId103C4
+ALTER PROCEDURE GetDdlReportId103C2
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -16163,22 +14373,249 @@ END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId1503C11') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId1503C11
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C29') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId103C29 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlReportId1503C11]
+ALTER PROCEDURE GetDdlReportId103C29
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
+SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @oClause = 'ORDER BY a22.ReportDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C30') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId103C30 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlReportId103C30
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
+SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @oClause = 'ORDER BY a22.ReportDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C34') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId103C34 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlReportId103C34
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
+SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @oClause = 'ORDER BY a22.ReportDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId103C4') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId103C4 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlReportId103C4
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
+SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @oClause = 'ORDER BY a22.ReportDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId1503C11') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId1503C11 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[GetDdlReportId1503C11]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -16221,46 +14658,133 @@ END
 ELSE
 	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId203C11') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId203C11
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId203C11') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId203C11 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE GetDdlReportId203C11 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'SELECT @fClause = 'FROM dbo.Report a22'SELECT @oClause = 'ORDER BY a22.ReportDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@UsrsSELECT @tClause = ''EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@UsrsIF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUTEXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ReportId=null, ReportDesc=null WHERE 1<>1RETURN 0 
+ALTER PROCEDURE GetDdlReportId203C11
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
+SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @oClause = 'ORDER BY a22.ReportDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId203C39') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId203C39
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId203C39') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId203C39 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE GetDdlReportId203C39 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'SELECT @fClause = 'FROM dbo.Report a22'SELECT @oClause = 'ORDER BY a22.ReportDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@UsrsSELECT @tClause = ''EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@UsrsIF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUTEXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ReportId=null, ReportDesc=null WHERE 1<>1RETURN 0 
+ALTER PROCEDURE GetDdlReportId203C39
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
+SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @oClause = 'ORDER BY a22.ReportDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a22.ReportId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a22.','Y','Y',null,'Y','ReportId',@wClause OUTPUT,@Usrs
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a22.','Y',null,'ReportId',@wClause OUTPUT
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ReportId=null, ReportDesc=null WHERE 1<>1
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1075') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1075
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1075') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1075 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S1075
+ALTER PROCEDURE GetDdlReportId3S1075
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16308,19 +14832,17 @@ END
 ELSE
 	SELECT ReportId97=null, ReportId97Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S121') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S121
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S121') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S121 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S121
+ALTER PROCEDURE GetDdlReportId3S121
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16368,19 +14890,17 @@ END
 ELSE
 	SELECT ReportId23=null, ReportId23Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1214') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1214
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1214') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1214 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S1214
+ALTER PROCEDURE GetDdlReportId3S1214
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16428,19 +14948,17 @@ END
 ELSE
 	SELECT ReportId116=null, ReportId116Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1265') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1265
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1265') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1265 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S1265
+ALTER PROCEDURE GetDdlReportId3S1265
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16488,19 +15006,17 @@ END
 ELSE
 	SELECT ReportId127=null, ReportId127Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1365') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1365
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1365') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1365 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S1365
+ALTER PROCEDURE GetDdlReportId3S1365
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16548,19 +15064,17 @@ END
 ELSE
 	SELECT ReportId136=null, ReportId136Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1577') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1577
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1577') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1577 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S1577
+ALTER PROCEDURE GetDdlReportId3S1577
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16608,19 +15122,17 @@ END
 ELSE
 	SELECT ReportId161=null, ReportId161Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1599') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1599
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1599') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1599 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S1599
+ALTER PROCEDURE GetDdlReportId3S1599
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16668,22 +15180,17 @@ END
 ELSE
 	SELECT ReportId160=null, ReportId160Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1672') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1672
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1672') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1672 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlReportId3S1672]
+ALTER PROCEDURE [dbo].[GetDdlReportId3S1672]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16739,24 +15246,17 @@ ELSE
 	SELECT ReportId183=null, ReportId183Text=null WHERE 1<>1
 */
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1695') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1695
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1695') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1695 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S1695
+ALTER PROCEDURE GetDdlReportId3S1695
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16804,19 +15304,17 @@ END
 ELSE
 	SELECT ReportId162=null, ReportId162Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1733') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1733
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1733') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1733 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S1733
+ALTER PROCEDURE GetDdlReportId3S1733
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16864,19 +15362,17 @@ END
 ELSE
 	SELECT ReportId206=null, ReportId206Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1750') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1750
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1750') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1750 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S1750
+ALTER PROCEDURE GetDdlReportId3S1750
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16924,22 +15420,17 @@ END
 ELSE
 	SELECT ReportId238=null, ReportId238Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1766') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S1766
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S1766') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S1766 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlReportId3S1766]
+ALTER PROCEDURE [dbo].[GetDdlReportId3S1766]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -16965,24 +15456,17 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy'
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S436') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S436
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S436') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S436 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S436
+ALTER PROCEDURE GetDdlReportId3S436
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -17030,19 +15514,17 @@ END
 ELSE
 	SELECT ReportId39=null, ReportId39Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S967') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportId3S967
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportId3S967') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportId3S967 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportId3S967
+ALTER PROCEDURE GetDdlReportId3S967
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -17090,22 +15572,17 @@ END
 ELSE
 	SELECT ReportId94=null, ReportId94Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportSctId3S1223') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportSctId3S1223
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportSctId3S1223') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportSctId3S1223 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlReportSctId3S1223]
+ALTER PROCEDURE [dbo].[GetDdlReportSctId3S1223]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -17143,24 +15620,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportTypeCd3S1729') AND type='P')
-DROP PROCEDURE dbo.GetDdlReportTypeCd3S1729
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlReportTypeCd3S1729') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlReportTypeCd3S1729 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlReportTypeCd3S1729
+ALTER PROCEDURE GetDdlReportTypeCd3S1729
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -17205,19 +15675,17 @@ END
 ELSE
 	SELECT ReportTypeCd22=null, ReportTypeCd22Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRowAuthId3S200') AND type='P')
-DROP PROCEDURE dbo.GetDdlRowAuthId3S200
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRowAuthId3S200') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRowAuthId3S200 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRowAuthId3S200
+ALTER PROCEDURE GetDdlRowAuthId3S200
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -17262,19 +15730,17 @@ END
 ELSE
 	SELECT RowAuthId238=null, RowAuthId238Text=null, OvrideId=null, PromptAlways=null, PromptModal=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRowVisible3S4160') AND type='P')
-DROP PROCEDURE dbo.GetDdlRowVisible3S4160
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRowVisible3S4160') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRowVisible3S4160 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRowVisible3S4160
+ALTER PROCEDURE GetDdlRowVisible3S4160
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -17319,19 +15785,17 @@ END
 ELSE
 	SELECT RowVisible116=null, RowVisible116Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptCelId3S1576') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptCelId3S1576
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptCelId3S1576') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptCelId3S1576 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptCelId3S1576
+ALTER PROCEDURE GetDdlRptCelId3S1576
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -17376,23 +15840,17 @@ END
 ELSE
 	SELECT RptCelId161=null, RptCelId161Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptChart3S1652') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptChart3S1652
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptChart3S1652') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptChart3S1652 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlRptChart3S1652]
+ALTER PROCEDURE [dbo].[GetDdlRptChart3S1652]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
@@ -17404,25 +15862,17 @@ SELECT @fClause = 'FROM RODesign.dbo.CtRptChart a184'
 SELECT @oClause = 'ORDER BY a184.RptChartName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @oClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptChaTypeCd3S1734') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptChaTypeCd3S1734
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptChaTypeCd3S1734') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptChaTypeCd3S1734 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptChaTypeCd3S1734
+ALTER PROCEDURE GetDdlRptChaTypeCd3S1734
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -17467,22 +15917,17 @@ END
 ELSE
 	SELECT RptChaTypeCd206=null, RptChaTypeCd206Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptChaTypeCd3S1739') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptChaTypeCd3S1739
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptChaTypeCd3S1739') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptChaTypeCd3S1739 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlRptChaTypeCd3S1739]
+ALTER PROCEDURE [dbo].[GetDdlRptChaTypeCd3S1739]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -17524,24 +15969,17 @@ END
 ELSE
 	SELECT RptChaTypeCd183=null, RptChaTypeCd183Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptCtrId203C31') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptCtrId203C31
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptCtrId203C31') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptCtrId203C31 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptCtrId203C31
+ALTER PROCEDURE GetDdlRptCtrId203C31
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -17555,6 +15993,9 @@ CREATE PROCEDURE GetDdlRptCtrId203C31
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -17583,19 +16024,17 @@ END
 ELSE
 	SELECT RptCtrId=null, RptCtrDesc=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptCtrId3S1610') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptCtrId3S1610
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptCtrId3S1610') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptCtrId3S1610 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptCtrId3S1610
+ALTER PROCEDURE GetDdlRptCtrId3S1610
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -17640,19 +16079,17 @@ END
 ELSE
 	SELECT RptCtrId162=null, RptCtrId162Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptCtrId3S1732') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptCtrId3S1732
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptCtrId3S1732') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptCtrId3S1732 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptCtrId3S1732
+ALTER PROCEDURE GetDdlRptCtrId3S1732
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -17697,19 +16134,17 @@ END
 ELSE
 	SELECT RptCtrId206=null, RptCtrId206Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptCtrTypeCd3S1578') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptCtrTypeCd3S1578
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptCtrTypeCd3S1578') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptCtrTypeCd3S1578 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptCtrTypeCd3S1578
+ALTER PROCEDURE GetDdlRptCtrTypeCd3S1578
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -17754,19 +16189,17 @@ END
 ELSE
 	SELECT RptCtrTypeCd161=null, RptCtrTypeCd161Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptElmId3S1575') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptElmId3S1575
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptElmId3S1575') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptElmId3S1575 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptElmId3S1575
+ALTER PROCEDURE GetDdlRptElmId3S1575
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -17811,19 +16244,17 @@ END
 ELSE
 	SELECT RptElmId161=null, RptElmId161Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptElmTypeCd3S1600') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptElmTypeCd3S1600
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptElmTypeCd3S1600') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptElmTypeCd3S1600 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptElmTypeCd3S1600
+ALTER PROCEDURE GetDdlRptElmTypeCd3S1600
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -17868,23 +16299,17 @@ END
 ELSE
 	SELECT RptElmTypeCd160=null, RptElmTypeCd160Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptGroupId3S1652') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptGroupId3S1652
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptGroupId3S1652') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptGroupId3S1652 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlRptGroupId3S1652]
+ALTER PROCEDURE [dbo].[GetDdlRptGroupId3S1652]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
@@ -17896,28 +16321,17 @@ SELECT @fClause = 'FROM RODesign.dbo.CtRptGroup a186'
 SELECT @oClause = 'ORDER BY a186.RptGroupId'
 EXEC (@sClause + ' ' + @fClause + ' ' + @oClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptMemCri') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptMemCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptMemCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptMemCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlRptMemCri]
+ALTER PROCEDURE [dbo].[GetDdlRptMemCri]
  @GenPrefix		varchar(10)
 ,@reportId		int
 ,@bAll			char(1)
@@ -17952,27 +16366,17 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a.','Y',null,'RptMemCriId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptMemFld') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptMemFld
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptMemFld') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptMemFld AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlRptMemFld]
+ALTER PROCEDURE [dbo].[GetDdlRptMemFld]
  @GenPrefix		varchar(10)
 ,@bAll			char(1)
 ,@keyId			Int
@@ -18003,24 +16407,17 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a.','Y',null,'RptMemFldId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptObjTypeCd3S1469') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptObjTypeCd3S1469
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptObjTypeCd3S1469') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptObjTypeCd3S1469 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptObjTypeCd3S1469
+ALTER PROCEDURE GetDdlRptObjTypeCd3S1469
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -18065,19 +16462,17 @@ END
 ELSE
 	SELECT RptObjTypeCd23=null, RptObjTypeCd23Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptStyleId3S1580') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptStyleId3S1580
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptStyleId3S1580') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptStyleId3S1580 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptStyleId3S1580
+ALTER PROCEDURE GetDdlRptStyleId3S1580
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -18122,19 +16517,17 @@ END
 ELSE
 	SELECT RptStyleId161=null, RptStyleId161Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptStyleId3S1601') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptStyleId3S1601
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptStyleId3S1601') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptStyleId3S1601 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptStyleId3S1601
+ALTER PROCEDURE GetDdlRptStyleId3S1601
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -18179,19 +16572,17 @@ END
 ELSE
 	SELECT RptStyleId160=null, RptStyleId160Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptTblTypeCd3S1611') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptTblTypeCd3S1611
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptTblTypeCd3S1611') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptTblTypeCd3S1611 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptTblTypeCd3S1611
+ALTER PROCEDURE GetDdlRptTblTypeCd3S1611
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -18236,19 +16627,17 @@ END
 ELSE
 	SELECT RptTblTypeCd162=null, RptTblTypeCd162Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptTemplate3S1728') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptTemplate3S1728
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptTemplate3S1728') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptTemplate3S1728 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptTemplate3S1728
+ALTER PROCEDURE GetDdlRptTemplate3S1728
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -18294,22 +16683,17 @@ END
 ELSE
 	SELECT DocId=null, DocLink=null, DocName=null, DocSize=null, InputOn=null, LoginName=null, ReportId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptwizCatId3S1638') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptwizCatId3S1638
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptwizCatId3S1638') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptwizCatId3S1638 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlRptwizCatId3S1638]
+ALTER PROCEDURE [dbo].[GetDdlRptwizCatId3S1638]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -18351,27 +16735,17 @@ END
 ELSE
 	SELECT RptwizCatId183=null, RptwizCatId183Text=null, CatDescription181=null, RptwizCatImg181=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptwizTypeCd3S1637') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptwizTypeCd3S1637
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptwizTypeCd3S1637') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptwizTypeCd3S1637 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlRptwizTypeCd3S1637]
+ALTER PROCEDURE [dbo].[GetDdlRptwizTypeCd3S1637]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -18405,24 +16779,17 @@ SELECT @sClause = ' IF object_id(''tempdb.dbo.#type'') is not null DROP TABLE db
 + ' SELECT * FROM #type'
 EXEC (@sClause + ' DROP TABLE dbo.#type')
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptwizTypId3S1671') AND type='P')
-DROP PROCEDURE dbo.GetDdlRptwizTypId3S1671
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRptwizTypId3S1671') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRptwizTypId3S1671 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRptwizTypId3S1671
+ALTER PROCEDURE GetDdlRptwizTypId3S1671
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -18467,19 +16834,17 @@ END
 ELSE
 	SELECT RptwizTypId181=null, RptwizTypId181Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleAsmxTypeId3S4192') AND type='P')
-DROP PROCEDURE dbo.GetDdlRuleAsmxTypeId3S4192
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleAsmxTypeId3S4192') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRuleAsmxTypeId3S4192 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRuleAsmxTypeId3S4192
+ALTER PROCEDURE GetDdlRuleAsmxTypeId3S4192
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -18524,19 +16889,17 @@ END
 ELSE
 	SELECT RuleAsmxTypeId1313=null, RuleAsmxTypeId1313Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleCntTypeId3S4075') AND type='P')
-DROP PROCEDURE dbo.GetDdlRuleCntTypeId3S4075
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleCntTypeId3S4075') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRuleCntTypeId3S4075 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRuleCntTypeId3S4075
+ALTER PROCEDURE GetDdlRuleCntTypeId3S4075
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -18581,22 +16944,17 @@ END
 ELSE
 	SELECT RuleCntTypeId127=null, RuleCntTypeId127Text=null, RuleCntTypeDesc1294=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleLayerCd3S1627') AND type='P')
-DROP PROCEDURE dbo.GetDdlRuleLayerCd3S1627
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleLayerCd3S1627') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRuleLayerCd3S1627 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlRuleLayerCd3S1627]
+ALTER PROCEDURE [dbo].[GetDdlRuleLayerCd3S1627]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -18638,21 +16996,17 @@ END
 ELSE
 	SELECT RuleLayerCd179=null, RuleLayerCd179Text=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleMethodId3S4073') AND type='P')
-DROP PROCEDURE dbo.GetDdlRuleMethodId3S4073
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleMethodId3S4073') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRuleMethodId3S4073 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRuleMethodId3S4073
+ALTER PROCEDURE GetDdlRuleMethodId3S4073
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -18697,19 +17051,17 @@ END
 ELSE
 	SELECT RuleMethodId127=null, RuleMethodId127Text=null, RuleMethodId=null, RuleMethodDesc1295=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleReactTypeId3S4199') AND type='P')
-DROP PROCEDURE dbo.GetDdlRuleReactTypeId3S4199
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleReactTypeId3S4199') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRuleReactTypeId3S4199 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRuleReactTypeId3S4199
+ALTER PROCEDURE GetDdlRuleReactTypeId3S4199
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -18754,19 +17106,17 @@ END
 ELSE
 	SELECT RuleReactTypeId1312=null, RuleReactTypeId1312Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleTypeId3S1284') AND type='P')
-DROP PROCEDURE dbo.GetDdlRuleTypeId3S1284
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleTypeId3S1284') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRuleTypeId3S1284 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRuleTypeId3S1284
+ALTER PROCEDURE GetDdlRuleTypeId3S1284
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -18811,19 +17161,17 @@ END
 ELSE
 	SELECT RuleTypeId128=null, RuleTypeId128Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleTypeId3S1293') AND type='P')
-DROP PROCEDURE dbo.GetDdlRuleTypeId3S1293
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleTypeId3S1293') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRuleTypeId3S1293 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRuleTypeId3S1293
+ALTER PROCEDURE GetDdlRuleTypeId3S1293
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -18868,19 +17216,17 @@ END
 ELSE
 	SELECT RuleTypeId127=null, RuleTypeId127Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleTypeId3S151') AND type='P')
-DROP PROCEDURE dbo.GetDdlRuleTypeId3S151
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleTypeId3S151') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRuleTypeId3S151 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRuleTypeId3S151
+ALTER PROCEDURE GetDdlRuleTypeId3S151
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -18925,19 +17271,17 @@ END
 ELSE
 	SELECT RuleTypeId24=null, RuleTypeId24Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleTypeId3S654') AND type='P')
-DROP PROCEDURE dbo.GetDdlRuleTypeId3S654
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRuleTypeId3S654') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRuleTypeId3S654 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlRuleTypeId3S654
+ALTER PROCEDURE GetDdlRuleTypeId3S654
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -18982,19 +17326,17 @@ END
 ELSE
 	SELECT RuleTypeId73=null, RuleTypeId73Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenCriHlpId3S1266') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenCriHlpId3S1266
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenCriHlpId3S1266') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenCriHlpId3S1266 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenCriHlpId3S1266
+ALTER PROCEDURE GetDdlScreenCriHlpId3S1266
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -19040,22 +17382,17 @@ END
 ELSE
 	SELECT ScreenCriHlpId127=null, ScreenCriHlpId127Text=null, ScreenId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenCriId3S1197') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenCriId3S1197
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenCriId3S1197') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenCriId3S1197 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenCriId3S1197]
+ALTER PROCEDURE [dbo].[GetDdlScreenCriId3S1197]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -19097,24 +17434,17 @@ END
 ELSE
 	SELECT ScreenCriId107=null, ScreenCriId107Text=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenCriId3S1302') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenCriId3S1302
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenCriId3S1302') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenCriId3S1302 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenCriId3S1302]
+ALTER PROCEDURE [dbo].[GetDdlScreenCriId3S1302]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -19156,26 +17486,17 @@ END
 ELSE
 	SELECT ScreenCriId128=null, ScreenCriId128Text=null, ScreenId=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenGrpId3003C46') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenGrpId3003C46
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenGrpId3003C46') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenGrpId3003C46 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenGrpId3003C46]
+ALTER PROCEDURE [dbo].[GetDdlScreenGrpId3003C46]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -19215,27 +17536,17 @@ END
 ELSE
 	SELECT ScreenGrpId=null, ScreenGrpName=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenGrpId3S1180') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenGrpId3S1180
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenGrpId3S1180') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenGrpId3S1180 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenGrpId3S1180]
+ALTER PROCEDURE [dbo].[GetDdlScreenGrpId3S1180]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -19277,26 +17588,17 @@ END
 ELSE
 	SELECT ScreenGrpId104=null, ScreenGrpId104Text=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C1') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId1003C1
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C1') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId1003C1 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId1003C1]
+ALTER PROCEDURE [dbo].[GetDdlScreenId1003C1]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -19336,27 +17638,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C12') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId1003C12
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C12') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId1003C12 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId1003C12]
+ALTER PROCEDURE [dbo].[GetDdlScreenId1003C12]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -19396,27 +17688,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C15') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId1003C15
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C15') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId1003C15 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId1003C15]
+ALTER PROCEDURE [dbo].[GetDdlScreenId1003C15]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -19456,27 +17738,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C16') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId1003C16
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C16') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId1003C16 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId1003C16]
+ALTER PROCEDURE [dbo].[GetDdlScreenId1003C16]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -19516,27 +17788,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C3') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId1003C3
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C3') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId1003C3 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId1003C3]
+ALTER PROCEDURE [dbo].[GetDdlScreenId1003C3]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -19576,27 +17838,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C5') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId1003C5
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C5') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId1003C5 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId1003C5]
+ALTER PROCEDURE [dbo].[GetDdlScreenId1003C5]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -19636,27 +17888,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C9') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId1003C9
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1003C9') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId1003C9 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId1003C9]
+ALTER PROCEDURE [dbo].[GetDdlScreenId1003C9]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -19696,28 +17938,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1005C16') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId1005C16
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId1005C16') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId1005C16 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId1005C16]
+ALTER PROCEDURE [dbo].[GetDdlScreenId1005C16]
  @screenId		int
 ,@RowAuthoritys		varchar(1000)
 ,@Usrs		varchar(1000)
@@ -19754,27 +17985,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C1
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C1 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId103C1]
+ALTER PROCEDURE [dbo].[GetDdlScreenId103C1]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -19814,77 +18035,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1072') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C1072
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1072') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C1072 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId103C1072
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
-SELECT @fClause = 'FROM dbo.Screen a15'
-SELECT @oClause = 'ORDER BY a15.ScreenDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0
- 
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1074') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C1074
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_NULLS ON
-GO
-
-CREATE PROCEDURE GetDdlScreenId103C1074
+ALTER PROCEDURE GetDdlScreenId103C1072
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -19929,201 +18090,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1075') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C1075
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1074') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C1074 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId103C1075]
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-,@bAll		char(1)=null
-,@keyId		varchar(max)=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
-SELECT @fClause = 'FROM dbo.Screen a15'
-SELECT @oClause = 'ORDER BY a15.ScreenDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
- + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0
-
- 
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1078') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C1078
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_NULLS ON
-GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId103C1078]
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
-SELECT @fClause = 'FROM dbo.Screen a15'
-SELECT @oClause = 'ORDER BY a15.ScreenDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
-SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0
-
-
- 
-
- 
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C12') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C12
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_NULLS ON
-GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId103C12]
- @screenId		int
-,@Usrs		varchar(4000)
-,@RowAuthoritys		varchar(4000)
-,@Customers		varchar(4000)
-,@Vendors		varchar(4000)
-,@Members		varchar(4000)
-,@Investors		varchar(4000)
-,@Agents		varchar(4000)
-,@Brokers		varchar(4000)
-,@UsrGroups		varchar(4000)
-,@Companys		varchar(4000)
-,@Projects		varchar(4000)
-,@Cultures		varchar(4000)
-,@currCompanyId		int
-,@currProjectId		int
-,@FilterTxt		nvarchar(1000) = null
-,@TopN		smallint=null
-/* WITH ENCRYPTION */
-AS
-SET NOCOUNT ON
-DECLARE	 @sClause		nvarchar(max)
-	,@fClause		nvarchar(max)
-	,@wClause		nvarchar(max)
-	,@oClause		nvarchar(max)
-	,@tClause		nvarchar(max)
-IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
-BEGIN
-SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
-SELECT @fClause = 'FROM dbo.Screen a15'
-SELECT @oClause = 'ORDER BY a15.ScreenDesc'
-SELECT @wClause = 'WHERE ( 1=1 ' 
- + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
-SELECT @tClause = ''
-IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-END
-ELSE
-	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
-RETURN 0
- 
-
- 
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C15') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C15
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_NULLS ON
-GO
-CREATE PROCEDURE GetDdlScreenId103C15 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'SELECT @fClause = 'FROM dbo.Screen a15'SELECT @oClause = 'ORDER BY a15.ScreenDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1RETURN 0 
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C16') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C16
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_NULLS ON
-GO
-
-CREATE PROCEDURE GetDdlScreenId103C16
+ALTER PROCEDURE GetDdlScreenId103C1074
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -20168,19 +18145,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C3') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C3
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1075') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C1075 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId103C3
+ALTER PROCEDURE GetDdlScreenId103C1075
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -20194,6 +18169,9 @@ CREATE PROCEDURE GetDdlScreenId103C3
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -20222,33 +18200,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C38') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C38
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1078') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C1078 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE GetDdlScreenId103C38 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'SELECT @fClause = 'FROM dbo.Screen a15'SELECT @oClause = 'ORDER BY a15.ScreenDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1RETURN 0 
-GO
-SET QUOTED_IDENTIFIER OFF
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C45') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C45
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_NULLS ON
-GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId103C45]
+ALTER PROCEDURE [dbo].[GetDdlScreenId103C1078]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -20288,24 +18250,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C5') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C5
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C12') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C12 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId103C5]
+ALTER PROCEDURE [dbo].[GetDdlScreenId103C12]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -20345,32 +18300,392 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C52') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C52
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C15') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C15 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE GetDdlScreenId103C52 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'SELECT @fClause = 'FROM dbo.Screen a15'SELECT @oClause = 'ORDER BY a15.ScreenDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1RETURN 0 
+ALTER PROCEDURE GetDdlScreenId103C15
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C60') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C60
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C16') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C16 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId103C60
+ALTER PROCEDURE GetDdlScreenId103C16
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C3') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C3 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlScreenId103C3
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C38') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C38 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlScreenId103C38
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C45') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C45 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[GetDdlScreenId103C45]
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C5') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C5 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[GetDdlScreenId103C5]
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C52') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C52 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlScreenId103C52
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C60') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C60 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlScreenId103C60
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -20415,30 +18730,72 @@ END
 ELSE
 	SELECT ScreenId=null, ProgramName=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C9') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId103C9
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C9') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C9 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE GetDdlScreenId103C9 @screenId		int,@Usrs		varchar(4000),@RowAuthoritys		varchar(4000),@Customers		varchar(4000),@Vendors		varchar(4000),@Members		varchar(4000),@Investors		varchar(4000),@Agents		varchar(4000),@Brokers		varchar(4000),@UsrGroups		varchar(4000),@Companys		varchar(4000),@Projects		varchar(4000),@Cultures		varchar(4000),@Borrowers		varchar(1000),@Guarantors		varchar(1000),@Lenders		varchar(1000),@currCompanyId		int,@currProjectId		int,@FilterTxt		nvarchar(1000) = null,@TopN		smallint=null,@bAll		char(1)=null,@keyId		varchar(max)=null/* WITH ENCRYPTION */ASSET NOCOUNT ONDECLARE	 @sClause		nvarchar(max)	,@fClause		nvarchar(max)	,@wClause		nvarchar(max)	,@oClause		nvarchar(max)	,@tClause		nvarchar(max)IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')BEGINSELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'SELECT @fClause = 'FROM dbo.Screen a15'SELECT @oClause = 'ORDER BY a15.ScreenDesc'SELECT @wClause = 'WHERE ( 1=1 '  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') '  + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)ENDELSE	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1RETURN 0 
+ALTER PROCEDURE GetDdlScreenId103C9
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId104C1075') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId104C1075
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId104C1075') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId104C1075 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId104C1075]
+ALTER PROCEDURE [dbo].[GetDdlScreenId104C1075]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -20480,20 +18837,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId105C1075') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId105C1075
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId105C1075') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId105C1075 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId105C1075]
+ALTER PROCEDURE [dbo].[GetDdlScreenId105C1075]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -20535,23 +18889,17 @@ END
 ELSE
 	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId203C60') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId203C60
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId203C60') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId203C60 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId203C60]
+ALTER PROCEDURE [dbo].[GetDdlScreenId203C60]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -20591,26 +18939,17 @@ END
 ELSE
 	SELECT ScreenId=null, ProgramName=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1159') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1159
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1159') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1159 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId3S1159]
+ALTER PROCEDURE [dbo].[GetDdlScreenId3S1159]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -20652,23 +18991,17 @@ END
 ELSE
 	SELECT ScreenId106=null, ScreenId106Text=null WHERE 1<>1
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1179') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1179
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1179') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1179 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S1179
+ALTER PROCEDURE GetDdlScreenId3S1179
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -20713,22 +19046,17 @@ END
 ELSE
 	SELECT ScreenId104=null, ScreenId104Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1194') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1194
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1194') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1194 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId3S1194]
+ALTER PROCEDURE [dbo].[GetDdlScreenId3S1194]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -20770,21 +19098,17 @@ END
 ELSE
 	SELECT ScreenId107=null, ScreenId107Text=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1208') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1208
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1208') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1208 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S1208
+ALTER PROCEDURE GetDdlScreenId3S1208
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -20829,19 +19153,17 @@ END
 ELSE
 	SELECT ScreenId116=null, ScreenId116Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1258') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1258
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1258') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1258 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S1258
+ALTER PROCEDURE GetDdlScreenId3S1258
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -20886,19 +19208,17 @@ END
 ELSE
 	SELECT ScreenId127=null, ScreenId127Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1268') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1268
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1268') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1268 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S1268
+ALTER PROCEDURE GetDdlScreenId3S1268
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -20943,19 +19263,17 @@ END
 ELSE
 	SELECT ScreenId14=null, ScreenId14Text=null, ScreenTypeId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1286') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1286
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1286') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1286 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S1286
+ALTER PROCEDURE GetDdlScreenId3S1286
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21000,19 +19318,17 @@ END
 ELSE
 	SELECT ScreenId128=null, ScreenId128Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1364') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1364
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1364') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1364 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S1364
+ALTER PROCEDURE GetDdlScreenId3S1364
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21057,19 +19373,17 @@ END
 ELSE
 	SELECT ScreenId136=null, ScreenId136Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S139') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S139
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S139') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S139 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S139
+ALTER PROCEDURE GetDdlScreenId3S139
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21114,22 +19428,17 @@ END
 ELSE
 	SELECT ScreenId24=null, ScreenId24Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1631') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1631
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1631') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1631 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId3S1631]
+ALTER PROCEDURE [dbo].[GetDdlScreenId3S1631]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21171,21 +19480,17 @@ END
 ELSE
 	SELECT ScreenId179=null, ScreenId179Text=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S188') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S188
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S188') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S188 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S188
+ALTER PROCEDURE GetDdlScreenId3S188
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21230,22 +19535,17 @@ END
 ELSE
 	SELECT ScreenId238=null, ScreenId238Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1883') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1883
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1883') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1883 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenId3S1883]
+ALTER PROCEDURE [dbo].[GetDdlScreenId3S1883]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21287,21 +19587,17 @@ END
 ELSE
 	SELECT ScreenId241=null, ScreenId241Text=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1977') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S1977
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S1977') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S1977 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S1977
+ALTER PROCEDURE GetDdlScreenId3S1977
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21346,19 +19642,17 @@ END
 ELSE
 	SELECT ScreenId254=null, ScreenId254Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S3162') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S3162
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S3162') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S3162 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S3162
+ALTER PROCEDURE GetDdlScreenId3S3162
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21403,19 +19697,17 @@ END
 ELSE
 	SELECT ScreenId19=null, ScreenId19Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S3261') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S3261
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S3261') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S3261 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S3261
+ALTER PROCEDURE GetDdlScreenId3S3261
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21460,19 +19752,17 @@ END
 ELSE
 	SELECT ScreenId14=null, ScreenId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S4107') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S4107
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S4107') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S4107 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S4107
+ALTER PROCEDURE GetDdlScreenId3S4107
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21517,19 +19807,17 @@ END
 ELSE
 	SELECT ScreenId1300=null, ScreenId1300Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S4196') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S4196
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S4196') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S4196 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S4196
+ALTER PROCEDURE GetDdlScreenId3S4196
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21574,19 +19862,17 @@ END
 ELSE
 	SELECT ScreenId1313=null, ScreenId1313Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S4203') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S4203
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S4203') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S4203 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S4203
+ALTER PROCEDURE GetDdlScreenId3S4203
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21631,19 +19917,17 @@ END
 ELSE
 	SELECT ScreenId1312=null, ScreenId1312Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S435') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S435
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S435') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S435 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S435
+ALTER PROCEDURE GetDdlScreenId3S435
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21688,19 +19972,17 @@ END
 ELSE
 	SELECT ScreenId39=null, ScreenId39Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S841') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenId3S841
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S841') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S841 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenId3S841
+ALTER PROCEDURE GetDdlScreenId3S841
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21745,19 +20027,17 @@ END
 ELSE
 	SELECT ScreenId86=null, ScreenId86Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenObjHlpId3S1260') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenObjHlpId3S1260
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenObjHlpId3S1260') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenObjHlpId3S1260 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenObjHlpId3S1260
+ALTER PROCEDURE GetDdlScreenObjHlpId3S1260
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21803,19 +20083,17 @@ END
 ELSE
 	SELECT ScreenObjHlpId127=null, ScreenObjHlpId127Text=null, ScreenId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenObjId3S1287') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenObjId3S1287
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenObjId3S1287') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenObjId3S1287 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenObjId3S1287
+ALTER PROCEDURE GetDdlScreenObjId3S1287
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21860,22 +20138,17 @@ END
 ELSE
 	SELECT ScreenObjId128=null, ScreenObjId128Text=null, ScreenId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenObjId3S181') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenObjId3S181
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenObjId3S181') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenObjId3S181 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlScreenObjId3S181]
+ALTER PROCEDURE [dbo].[GetDdlScreenObjId3S181]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21917,21 +20190,17 @@ END
 ELSE
 	SELECT ScreenObjId241=null, ScreenObjId241Text=null, ScreenId=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenObjId3S4204') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenObjId3S4204
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenObjId3S4204') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenObjId3S4204 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenObjId3S4204
+ALTER PROCEDURE GetDdlScreenObjId3S4204
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -21976,19 +20245,17 @@ END
 ELSE
 	SELECT ScreenObjId1312=null, ScreenObjId1312Text=null, ScreenId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenTypeId3S45') AND type='P')
-DROP PROCEDURE dbo.GetDdlScreenTypeId3S45
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenTypeId3S45') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenTypeId3S45 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlScreenTypeId3S45
+ALTER PROCEDURE GetDdlScreenTypeId3S45
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -22033,19 +20300,17 @@ END
 ELSE
 	SELECT ScreenTypeId15=null, ScreenTypeId15Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchDtlId3S4148') AND type='P')
-DROP PROCEDURE dbo.GetDdlSearchDtlId3S4148
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchDtlId3S4148') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSearchDtlId3S4148 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlSearchDtlId3S4148
+ALTER PROCEDURE GetDdlSearchDtlId3S4148
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -22090,19 +20355,17 @@ END
 ELSE
 	SELECT SearchDtlId15=null, SearchDtlId15Text=null, TableId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchDtlIdR3S4165') AND type='P')
-DROP PROCEDURE dbo.GetDdlSearchDtlIdR3S4165
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchDtlIdR3S4165') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSearchDtlIdR3S4165 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlSearchDtlIdR3S4165
+ALTER PROCEDURE GetDdlSearchDtlIdR3S4165
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -22147,19 +20410,17 @@ END
 ELSE
 	SELECT SearchDtlIdR15=null, SearchDtlIdR15Text=null, TableId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchId3S46') AND type='P')
-DROP PROCEDURE dbo.GetDdlSearchId3S46
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchId3S46') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSearchId3S46 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlSearchId3S46
+ALTER PROCEDURE GetDdlSearchId3S46
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -22204,19 +20465,17 @@ END
 ELSE
 	SELECT SearchId15=null, SearchId15Text=null, TableId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchIdR3S4164') AND type='P')
-DROP PROCEDURE dbo.GetDdlSearchIdR3S4164
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchIdR3S4164') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSearchIdR3S4164 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlSearchIdR3S4164
+ALTER PROCEDURE GetDdlSearchIdR3S4164
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -22261,19 +20520,17 @@ END
 ELSE
 	SELECT SearchIdR15=null, SearchIdR15Text=null, TableId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchImgId3S4146') AND type='P')
-DROP PROCEDURE dbo.GetDdlSearchImgId3S4146
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchImgId3S4146') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSearchImgId3S4146 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlSearchImgId3S4146
+ALTER PROCEDURE GetDdlSearchImgId3S4146
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -22318,19 +20575,17 @@ END
 ELSE
 	SELECT SearchImgId15=null, SearchImgId15Text=null, TableId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchTableId3S4145') AND type='P')
-DROP PROCEDURE dbo.GetDdlSearchTableId3S4145
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchTableId3S4145') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSearchTableId3S4145 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlSearchTableId3S4145
+ALTER PROCEDURE GetDdlSearchTableId3S4145
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -22376,19 +20631,17 @@ END
 ELSE
 	SELECT SearchTableId15=null, SearchTableId15Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchUrlId3S4147') AND type='P')
-DROP PROCEDURE dbo.GetDdlSearchUrlId3S4147
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSearchUrlId3S4147') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSearchUrlId3S4147 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlSearchUrlId3S4147
+ALTER PROCEDURE GetDdlSearchUrlId3S4147
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -22433,22 +20686,17 @@ END
 ELSE
 	SELECT SearchUrlId15=null, SearchUrlId15Text=null, TableId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelAgent3S1312') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelAgent3S1312
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelAgent3S1312') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelAgent3S1312 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelAgent3S1312]
+ALTER PROCEDURE [dbo].[GetDdlSelAgent3S1312]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -22477,27 +20725,17 @@ END
 ELSE
 	SELECT SelAgent13=null, SelAgent13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelAgent3S1322') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelAgent3S1322
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelAgent3S1322') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelAgent3S1322 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelAgent3S1322]
+ALTER PROCEDURE [dbo].[GetDdlSelAgent3S1322]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -22526,27 +20764,17 @@ END
 ELSE
 	SELECT SelAgent10=null, SelAgent10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelBroker3S1313') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelBroker3S1313
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelBroker3S1313') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelBroker3S1313 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelBroker3S1313]
+ALTER PROCEDURE [dbo].[GetDdlSelBroker3S1313]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -22575,27 +20803,17 @@ END
 ELSE
 	SELECT SelBroker13=null, SelBroker13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelBroker3S1323') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelBroker3S1323
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelBroker3S1323') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelBroker3S1323 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelBroker3S1323]
+ALTER PROCEDURE [dbo].[GetDdlSelBroker3S1323]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -22624,27 +20842,17 @@ END
 ELSE
 	SELECT SelBroker10=null, SelBroker10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelColumnId33S1682') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelColumnId33S1682
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelColumnId33S1682') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelColumnId33S1682 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelColumnId33S1682]
+ALTER PROCEDURE [dbo].[GetDdlSelColumnId33S1682]
  @screenId			int
 ,@bAll				char(1)
 ,@keyId				varchar(100)
@@ -22721,26 +20929,17 @@ SELECT @sClause = ' DECLARE @CultureId smallint'
 + ' , NumericData, RptwizDtlId FROM #col'
 EXEC (@dClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause + ' ' + @sClause + ' DROP TABLE dbo.#col')
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelColumnId44S1682') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelColumnId44S1682
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelColumnId44S1682') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelColumnId44S1682 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelColumnId44S1682]
+ALTER PROCEDURE [dbo].[GetDdlSelColumnId44S1682]
  @screenId			int
 ,@bAll				char(1)
 ,@keyId				varchar(100)
@@ -22802,26 +21001,17 @@ SELECT @sClause = ' DECLARE @CultureId smallint'
 + ', ColSort, RptwizDtlId FROM #col'
 EXEC (@dClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause + ' ' + @sClause + ' DROP TABLE dbo.#col')
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelColumnId77S1682') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelColumnId77S1682
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelColumnId77S1682') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelColumnId77S1682 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelColumnId77S1682]
+ALTER PROCEDURE [dbo].[GetDdlSelColumnId77S1682]
  @screenId			int
 ,@bAll				char(1)
 ,@keyId				varchar(100)
@@ -22888,26 +21078,17 @@ SELECT @sClause = ' DECLARE @CultureId smallint'
 + ', OperatorName, NumericData, RptwizDtlId FROM #col'
 EXEC (@dClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause + ' ' + @sClause + ' DROP TABLE dbo.#col')
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCompany3S1311') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelCompany3S1311
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCompany3S1311') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelCompany3S1311 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelCompany3S1311]
+ALTER PROCEDURE [dbo].[GetDdlSelCompany3S1311]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -22936,27 +21117,17 @@ END
 ELSE
 	SELECT SelCompany13=null, SelCompany13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCompany3S1321') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelCompany3S1321
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCompany3S1321') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelCompany3S1321 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelCompany3S1321]
+ALTER PROCEDURE [dbo].[GetDdlSelCompany3S1321]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -22985,27 +21156,17 @@ END
 ELSE
 	SELECT SelCompany10=null, SelCompany10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCulture3S1310') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelCulture3S1310
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCulture3S1310') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelCulture3S1310 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelCulture3S1310]
+ALTER PROCEDURE [dbo].[GetDdlSelCulture3S1310]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23034,27 +21195,17 @@ END
 ELSE
 	SELECT SelCulture13=null, SelCulture13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCulture3S1320') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelCulture3S1320
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCulture3S1320') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelCulture3S1320 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelCulture3S1320]
+ALTER PROCEDURE [dbo].[GetDdlSelCulture3S1320]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23083,27 +21234,17 @@ END
 ELSE
 	SELECT SelCulture10=null, SelCulture10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCustomer3S1314') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelCustomer3S1314
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCustomer3S1314') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelCustomer3S1314 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelCustomer3S1314]
+ALTER PROCEDURE [dbo].[GetDdlSelCustomer3S1314]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23132,27 +21273,17 @@ END
 ELSE
 	SELECT SelCustomer13=null, SelCustomer13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCustomer3S1324') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelCustomer3S1324
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelCustomer3S1324') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelCustomer3S1324 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelCustomer3S1324]
+ALTER PROCEDURE [dbo].[GetDdlSelCustomer3S1324]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23181,27 +21312,17 @@ END
 ELSE
 	SELECT SelCustomer10=null, SelCustomer10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelInvestor3S1315') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelInvestor3S1315
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelInvestor3S1315') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelInvestor3S1315 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelInvestor3S1315]
+ALTER PROCEDURE [dbo].[GetDdlSelInvestor3S1315]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23230,27 +21351,17 @@ END
 ELSE
 	SELECT SelInvestor13=null, SelInvestor13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelInvestor3S1325') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelInvestor3S1325
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelInvestor3S1325') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelInvestor3S1325 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelInvestor3S1325]
+ALTER PROCEDURE [dbo].[GetDdlSelInvestor3S1325]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23279,24 +21390,17 @@ END
 ELSE
 	SELECT SelInvestor10=null, SelInvestor10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelLevel3S1308') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelLevel3S1308
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelLevel3S1308') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelLevel3S1308 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlSelLevel3S1308
+ALTER PROCEDURE GetDdlSelLevel3S1308
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23341,22 +21445,17 @@ END
 ELSE
 	SELECT SelLevel239=null, SelLevel239Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelMember3S1316') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelMember3S1316
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelMember3S1316') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelMember3S1316 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelMember3S1316]
+ALTER PROCEDURE [dbo].[GetDdlSelMember3S1316]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23385,27 +21484,17 @@ END
 ELSE
 	SELECT SelMember13=null, SelMember13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelMember3S1326') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelMember3S1326
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelMember3S1326') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelMember3S1326 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelMember3S1326]
+ALTER PROCEDURE [dbo].[GetDdlSelMember3S1326]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23434,27 +21523,17 @@ END
 ELSE
 	SELECT SelMember10=null, SelMember10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelProject3S1461') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelProject3S1461
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelProject3S1461') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelProject3S1461 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelProject3S1461]
+ALTER PROCEDURE [dbo].[GetDdlSelProject3S1461]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23483,27 +21562,17 @@ END
 ELSE
 	SELECT SelProject10=null, SelProject10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelProject3S1462') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelProject3S1462
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelProject3S1462') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelProject3S1462 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelProject3S1462]
+ALTER PROCEDURE [dbo].[GetDdlSelProject3S1462]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23532,27 +21601,17 @@ END
 ELSE
 	SELECT SelProject13=null, SelProject13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelUsr3S1308') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelUsr3S1308
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelUsr3S1308') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelUsr3S1308 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelUsr3S1308]
+ALTER PROCEDURE [dbo].[GetDdlSelUsr3S1308]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23581,27 +21640,17 @@ END
 ELSE
 	SELECT SelUsr13=null, SelUsr13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelUsr3S1318') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelUsr3S1318
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelUsr3S1318') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelUsr3S1318 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelUsr3S1318]
+ALTER PROCEDURE [dbo].[GetDdlSelUsr3S1318]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23630,27 +21679,17 @@ END
 ELSE
 	SELECT SelUsr10=null, SelUsr10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelUsrGroup3S1309') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelUsrGroup3S1309
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelUsrGroup3S1309') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelUsrGroup3S1309 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelUsrGroup3S1309]
+ALTER PROCEDURE [dbo].[GetDdlSelUsrGroup3S1309]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23679,27 +21718,17 @@ END
 ELSE
 	SELECT SelUsrGroup13=null, SelUsrGroup13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelUsrGroup3S1319') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelUsrGroup3S1319
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelUsrGroup3S1319') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelUsrGroup3S1319 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelUsrGroup3S1319]
+ALTER PROCEDURE [dbo].[GetDdlSelUsrGroup3S1319]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23728,27 +21757,17 @@ END
 ELSE
 	SELECT SelUsrGroup10=null, SelUsrGroup10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelVendor3S1317') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelVendor3S1317
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelVendor3S1317') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelVendor3S1317 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelVendor3S1317]
+ALTER PROCEDURE [dbo].[GetDdlSelVendor3S1317]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23777,27 +21796,17 @@ END
 ELSE
 	SELECT SelVendor13=null, SelVendor13Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelVendor3S1327') AND type='P')
-DROP PROCEDURE dbo.GetDdlSelVendor3S1327
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSelVendor3S1327') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSelVendor3S1327 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlSelVendor3S1327]
+ALTER PROCEDURE [dbo].[GetDdlSelVendor3S1327]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -23826,24 +21835,17 @@ END
 ELSE
 	SELECT SelVendor10=null, SelVendor10Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSeriesGrp3S1738') AND type='P')
-DROP PROCEDURE dbo.GetDdlSeriesGrp3S1738
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSeriesGrp3S1738') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSeriesGrp3S1738 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlSeriesGrp3S1738
+ALTER PROCEDURE GetDdlSeriesGrp3S1738
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -23888,19 +21890,17 @@ END
 ELSE
 	SELECT SeriesGrp206=null, SeriesGrp206Text=null, ReportId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlServiceEventId3S4212') AND type='P')
-DROP PROCEDURE dbo.GetDdlServiceEventId3S4212
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlServiceEventId3S4212') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlServiceEventId3S4212 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlServiceEventId3S4212
+ALTER PROCEDURE GetDdlServiceEventId3S4212
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -23945,19 +21945,17 @@ END
 ELSE
 	SELECT ServiceEventId128=null, ServiceEventId128Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlStaticCsId3S2011') AND type='P')
-DROP PROCEDURE dbo.GetDdlStaticCsId3S2011
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlStaticCsId3S2011') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlStaticCsId3S2011 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlStaticCsId3S2011
+ALTER PROCEDURE GetDdlStaticCsId3S2011
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -24002,19 +22000,17 @@ END
 ELSE
 	SELECT StaticCsId259=null, StaticCsId259Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlStaticJsId3S2012') AND type='P')
-DROP PROCEDURE dbo.GetDdlStaticJsId3S2012
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlStaticJsId3S2012') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlStaticJsId3S2012 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlStaticJsId3S2012
+ALTER PROCEDURE GetDdlStaticJsId3S2012
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -24059,19 +22055,17 @@ END
 ELSE
 	SELECT StaticJsId259=null, StaticJsId259Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlStaticPgId3S1998') AND type='P')
-DROP PROCEDURE dbo.GetDdlStaticPgId3S1998
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlStaticPgId3S1998') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlStaticPgId3S1998 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlStaticPgId3S1998
+ALTER PROCEDURE GetDdlStaticPgId3S1998
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -24116,19 +22110,17 @@ END
 ELSE
 	SELECT StaticPgId39=null, StaticPgId39Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSystemId3S430') AND type='P')
-DROP PROCEDURE dbo.GetDdlSystemId3S430
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlSystemId3S430') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlSystemId3S430 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlSystemId3S430
+ALTER PROCEDURE GetDdlSystemId3S430
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -24173,22 +22165,17 @@ END
 ELSE
 	SELECT SystemId3=null, SystemId3Text=null, Active=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTabFolderId2003C47') AND type='P')
-DROP PROCEDURE dbo.GetDdlTabFolderId2003C47
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTabFolderId2003C47') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTabFolderId2003C47 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlTabFolderId2003C47]
+ALTER PROCEDURE [dbo].[GetDdlTabFolderId2003C47]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -24228,27 +22215,17 @@ END
 ELSE
 	SELECT ScreenTabId=null, TabFolderName=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTabFolderId203C47') AND type='P')
-DROP PROCEDURE dbo.GetDdlTabFolderId203C47
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTabFolderId203C47') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTabFolderId203C47 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlTabFolderId203C47]
+ALTER PROCEDURE [dbo].[GetDdlTabFolderId203C47]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -24288,21 +22265,17 @@ END
 ELSE
 	SELECT ScreenTabId=null, TabFolderName=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTabFolderId3S3291') AND type='P')
-DROP PROCEDURE dbo.GetDdlTabFolderId3S3291
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTabFolderId3S3291') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTabFolderId3S3291 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTabFolderId3S3291
+ALTER PROCEDURE GetDdlTabFolderId3S3291
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -24347,22 +22320,17 @@ END
 ELSE
 	SELECT TabFolderId14=null, TabFolderId14Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTabFolderId3S84') AND type='P')
-DROP PROCEDURE dbo.GetDdlTabFolderId3S84
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTabFolderId3S84') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTabFolderId3S84 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlTabFolderId3S84]
+ALTER PROCEDURE [dbo].[GetDdlTabFolderId3S84]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -24404,21 +22372,17 @@ END
 ELSE
 	SELECT TabFolderId14=null, TabFolderId14Text=null, TabFolderOrder=null, ScreenId=null WHERE 1<>1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTableId3S1077') AND type='P')
-DROP PROCEDURE dbo.GetDdlTableId3S1077
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTableId3S1077') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTableId3S1077 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTableId3S1077
+ALTER PROCEDURE GetDdlTableId3S1077
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -24464,19 +22428,17 @@ END
 ELSE
 	SELECT TableId97=null, TableId97Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTableId3S166') AND type='P')
-DROP PROCEDURE dbo.GetDdlTableId3S166
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTableId3S166') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTableId3S166 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTableId3S166
+ALTER PROCEDURE GetDdlTableId3S166
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -24522,19 +22484,17 @@ END
 ELSE
 	SELECT TableId20=null, TableId20Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTableId3S1663') AND type='P')
-DROP PROCEDURE dbo.GetDdlTableId3S1663
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTableId3S1663') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTableId3S1663 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTableId3S1663
+ALTER PROCEDURE GetDdlTableId3S1663
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -24580,19 +22540,17 @@ END
 ELSE
 	SELECT TableId181=null, TableId181Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTableId3S4109') AND type='P')
-DROP PROCEDURE dbo.GetDdlTableId3S4109
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTableId3S4109') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTableId3S4109 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTableId3S4109
+ALTER PROCEDURE GetDdlTableId3S4109
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -24638,22 +22596,17 @@ END
 ELSE
 	SELECT TableId1300=null, TableId1300Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTarClientTierId3S1717') AND type='P')
-DROP PROCEDURE dbo.GetDdlTarClientTierId3S1717
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTarClientTierId3S1717') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTarClientTierId3S1717 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlTarClientTierId3S1717]
+ALTER PROCEDURE [dbo].[GetDdlTarClientTierId3S1717]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -24677,27 +22630,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTarRuleTierId3S1719') AND type='P')
-DROP PROCEDURE dbo.GetDdlTarRuleTierId3S1719
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTarRuleTierId3S1719') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTarRuleTierId3S1719 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlTarRuleTierId3S1719]
+ALTER PROCEDURE [dbo].[GetDdlTarRuleTierId3S1719]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -24721,24 +22664,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTblGrouping3S1615') AND type='P')
-DROP PROCEDURE dbo.GetDdlTblGrouping3S1615
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTblGrouping3S1615') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTblGrouping3S1615 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTblGrouping3S1615
+ALTER PROCEDURE GetDdlTblGrouping3S1615
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -24783,19 +22719,17 @@ END
 ELSE
 	SELECT TblGrouping162=null, TblGrouping162Text=null, ReportId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTblToggle3S1696') AND type='P')
-DROP PROCEDURE dbo.GetDdlTblToggle3S1696
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTblToggle3S1696') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTblToggle3S1696 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTblToggle3S1696
+ALTER PROCEDURE GetDdlTblToggle3S1696
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -24840,19 +22774,17 @@ END
 ELSE
 	SELECT TblToggle162=null, TblToggle162Text=null, ReportId=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTblVisibility3S1617') AND type='P')
-DROP PROCEDURE dbo.GetDdlTblVisibility3S1617
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTblVisibility3S1617') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTblVisibility3S1617 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTblVisibility3S1617
+ALTER PROCEDURE GetDdlTblVisibility3S1617
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -24897,19 +22829,17 @@ END
 ELSE
 	SELECT TblVisibility162=null, TblVisibility162Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTextAlign3S1560') AND type='P')
-DROP PROCEDURE dbo.GetDdlTextAlign3S1560
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTextAlign3S1560') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTextAlign3S1560 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTextAlign3S1560
+ALTER PROCEDURE GetDdlTextAlign3S1560
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -24954,19 +22884,17 @@ END
 ELSE
 	SELECT TextAlign167=null, TextAlign167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTextDecor3S1559') AND type='P')
-DROP PROCEDURE dbo.GetDdlTextDecor3S1559
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTextDecor3S1559') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTextDecor3S1559 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTextDecor3S1559
+ALTER PROCEDURE GetDdlTextDecor3S1559
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -25011,19 +22939,17 @@ END
 ELSE
 	SELECT TextDecor167=null, TextDecor167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTopVisible3S4161') AND type='P')
-DROP PROCEDURE dbo.GetDdlTopVisible3S4161
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlTopVisible3S4161') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlTopVisible3S4161 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlTopVisible3S4161
+ALTER PROCEDURE GetDdlTopVisible3S4161
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -25068,19 +22994,17 @@ END
 ELSE
 	SELECT TopVisible116=null, TopVisible116Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUnitCd3S1525') AND type='P')
-DROP PROCEDURE dbo.GetDdlUnitCd3S1525
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUnitCd3S1525') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlUnitCd3S1525 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlUnitCd3S1525
+ALTER PROCEDURE GetDdlUnitCd3S1525
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -25125,22 +23049,17 @@ END
 ELSE
 	SELECT UnitCd22=null, UnitCd22Text=null, UnitOrder=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUnitCd3S1679') AND type='P')
-DROP PROCEDURE dbo.GetDdlUnitCd3S1679
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUnitCd3S1679') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlUnitCd3S1679 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlUnitCd3S1679]
+ALTER PROCEDURE [dbo].[GetDdlUnitCd3S1679]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -25182,27 +23101,17 @@ END
 ELSE
 	SELECT UnitCd183=null, UnitCd183Text=null, UnitOrder=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUsrGroupId3S1246') AND type='P')
-DROP PROCEDURE dbo.GetDdlUsrGroupId3S1246
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUsrGroupId3S1246') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlUsrGroupId3S1246 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlUsrGroupId3S1246]
+ALTER PROCEDURE [dbo].[GetDdlUsrGroupId3S1246]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -25247,27 +23156,17 @@ END
 ELSE
 	SELECT UsrGroupId123=null, UsrGroupId123Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUsrGroupId3S833') AND type='P')
-DROP PROCEDURE dbo.GetDdlUsrGroupId3S833
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUsrGroupId3S833') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlUsrGroupId3S833 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlUsrGroupId3S833]
+ALTER PROCEDURE [dbo].[GetDdlUsrGroupId3S833]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		SmallInt
@@ -25301,27 +23200,17 @@ END
 ELSE
 	SELECT UsrGroupId85=null, UsrGroupId85Text=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUsrId3S1641') AND type='P')
-DROP PROCEDURE dbo.GetDdlUsrId3S1641
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUsrId3S1641') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlUsrId3S1641 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlUsrId3S1641]
+ALTER PROCEDURE [dbo].[GetDdlUsrId3S1641]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -25376,27 +23265,17 @@ END
 ELSE
 	SELECT UsrId183=null, UsrId183Text=null, Active=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUsrId3S1767') AND type='P')
-DROP PROCEDURE dbo.GetDdlUsrId3S1767
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUsrId3S1767') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlUsrId3S1767 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlUsrId3S1767]
+ALTER PROCEDURE [dbo].[GetDdlUsrId3S1767]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -25444,27 +23323,17 @@ EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',n
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUsrId3S1789') AND type='P')
-DROP PROCEDURE dbo.GetDdlUsrId3S1789
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlUsrId3S1789') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlUsrId3S1789 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlUsrId3S1789]
+ALTER PROCEDURE [dbo].[GetDdlUsrId3S1789]
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -25512,24 +23381,17 @@ EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1.','Y',n
 EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1.','Y',null,'UsrId',@wClause OUTPUT
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlVerticalAlign3S1561') AND type='P')
-DROP PROCEDURE dbo.GetDdlVerticalAlign3S1561
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlVerticalAlign3S1561') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlVerticalAlign3S1561 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlVerticalAlign3S1561
+ALTER PROCEDURE GetDdlVerticalAlign3S1561
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -25574,19 +23436,17 @@ END
 ELSE
 	SELECT VerticalAlign167=null, VerticalAlign167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlViewOnly3S3103') AND type='P')
-DROP PROCEDURE dbo.GetDdlViewOnly3S3103
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlViewOnly3S3103') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlViewOnly3S3103 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlViewOnly3S3103
+ALTER PROCEDURE GetDdlViewOnly3S3103
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -25631,22 +23491,17 @@ END
 ELSE
 	SELECT ViewOnly15=null, ViewOnly15Text=null, ViewTypeSort=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId1003C17') AND type='P')
-DROP PROCEDURE dbo.GetDdlWizardId1003C17
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId1003C17') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlWizardId1003C17 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDdlWizardId1003C17]
+ALTER PROCEDURE [dbo].[GetDdlWizardId1003C17]
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -25686,24 +23541,17 @@ END
 ELSE
 	SELECT WizardId=null, WizardTitle=null WHERE 1<>1
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId103C17') AND type='P')
-DROP PROCEDURE dbo.GetDdlWizardId103C17
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId103C17') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlWizardId103C17 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlWizardId103C17
+ALTER PROCEDURE GetDdlWizardId103C17
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -25717,6 +23565,9 @@ CREATE PROCEDURE GetDdlWizardId103C17
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@FilterTxt		nvarchar(1000) = null
@@ -25745,19 +23596,17 @@ END
 ELSE
 	SELECT WizardId=null, WizardTitle=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId3S1215') AND type='P')
-DROP PROCEDURE dbo.GetDdlWizardId3S1215
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId3S1215') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlWizardId3S1215 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlWizardId3S1215
+ALTER PROCEDURE GetDdlWizardId3S1215
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -25802,19 +23651,17 @@ END
 ELSE
 	SELECT WizardId116=null, WizardId116Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId3S1366') AND type='P')
-DROP PROCEDURE dbo.GetDdlWizardId3S1366
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId3S1366') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlWizardId3S1366 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlWizardId3S1366
+ALTER PROCEDURE GetDdlWizardId3S1366
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -25859,19 +23706,17 @@ END
 ELSE
 	SELECT WizardId136=null, WizardId136Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId3S645') AND type='P')
-DROP PROCEDURE dbo.GetDdlWizardId3S645
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId3S645') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlWizardId3S645 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlWizardId3S645
+ALTER PROCEDURE GetDdlWizardId3S645
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -25916,19 +23761,17 @@ END
 ELSE
 	SELECT WizardId73=null, WizardId73Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId3S839') AND type='P')
-DROP PROCEDURE dbo.GetDdlWizardId3S839
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardId3S839') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlWizardId3S839 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlWizardId3S839
+ALTER PROCEDURE GetDdlWizardId3S839
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -25973,19 +23816,17 @@ END
 ELSE
 	SELECT WizardId39=null, WizardId39Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardTypeId3S634') AND type='P')
-DROP PROCEDURE dbo.GetDdlWizardTypeId3S634
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWizardTypeId3S634') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlWizardTypeId3S634 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlWizardTypeId3S634
+ALTER PROCEDURE GetDdlWizardTypeId3S634
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		TinyInt
@@ -26030,19 +23871,17 @@ END
 ELSE
 	SELECT WizardTypeId71=null, WizardTypeId71Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWritingMode3S1569') AND type='P')
-DROP PROCEDURE dbo.GetDdlWritingMode3S1569
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlWritingMode3S1569') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlWritingMode3S1569 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetDdlWritingMode3S1569
+ALTER PROCEDURE GetDdlWritingMode3S1569
  @screenId		int
 ,@bAll		char(1)
 ,@keyId		Char(100)
@@ -26087,23 +23926,18 @@ END
 ELSE
 	SELECT WritingMode167=null, WritingMode167Text=null WHERE 1<>1
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDistinctScreenTab') AND type='P')
-DROP PROCEDURE dbo.GetDistinctScreenTab
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDistinctScreenTab') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDistinctScreenTab AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
 /* Called by GenScreensRules */
-CREATE PROCEDURE [dbo].[GetDistinctScreenTab]
+ALTER PROCEDURE [dbo].[GetDistinctScreenTab]
  @screenId		int
 /* WITH ENCRYPTION */
 AS
@@ -26118,25 +23952,17 @@ SELECT @wClause = 'WHERE ScreenId = ' + CONVERT(varchar,@screenId)
 SELECT @oClause = 'ORDER BY TabFolderOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDocImage') AND type='P')
-DROP PROCEDURE dbo.GetDocImage
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDocImage') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDocImage AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetDocImage]
+ALTER PROCEDURE [dbo].[GetDocImage]
  @ReportId		int
 ,@TemplateId	smallint
 /* WITH ENCRYPTION */
@@ -26166,24 +23992,17 @@ BEGIN
 	RETURN 1
 END
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmAppInfo82') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmAppInfo82
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmAppInfo82') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmAppInfo82 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmAppInfo82
+ALTER PROCEDURE GetExpAdmAppInfo82
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -26277,26 +24096,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b135.AppInfoId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b135.AppInfoId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @VersionDt53 is not null SELECT @wClause = @wClause + ' AND (DATEADD(hour, DATEDIFF(hour, 0, b135.VersionDt), 0) >= ''' + convert(varchar,@VersionDt53,120) + ''')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmAppItem83') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmAppItem83
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmAppItem83') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmAppItem83 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmAppItem83
+ALTER PROCEDURE GetExpAdmAppItem83
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -26409,26 +24226,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b136.AppItemId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b136.AppItemId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @AppItemCode44 is not null SELECT @wClause = @wClause + ' AND (b136.AppItemCode like N''%' + replace(@AppItemCode44,'''','''''') + '%'')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmAuthCol16') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmAuthCol16
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmAuthCol16') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmAuthCol16 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmAuthCol16
+ALTER PROCEDURE GetExpAdmAuthCol16
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -26526,22 +24341,20 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmClientRule79') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmClientRule79
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmClientRule79') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmClientRule79 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmClientRule79
+ALTER PROCEDURE GetExpAdmClientRule79
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -26666,7 +24479,7 @@ END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b127.','Y','N',null,'N','ClientRuleId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b127.ClientRuleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b127.ClientRuleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId9 is not null SELECT @wClause = @wClause + ' AND (b127.ScreenId = ' + convert(varchar,@ScreenId9) + ')'
@@ -26675,19 +24488,17 @@ BEGIN
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmColHlp1006') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmColHlp1006
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmColHlp1006') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmColHlp1006 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmColHlp1006
+ALTER PROCEDURE GetExpAdmColHlp1006
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -26782,22 +24593,20 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmCronJob118') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmCronJob118
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmCronJob118') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmCronJob118 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmCronJob118
+ALTER PROCEDURE GetExpAdmCronJob118
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -26889,22 +24698,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b264.CronJobId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b264.CronJobId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmDataCat96') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmDataCat96
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmDataCat96') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmDataCat96 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmDataCat96
+ALTER PROCEDURE GetExpAdmDataCat96
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -27010,22 +24817,20 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b181.RptwizCatId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b181.RptwizCatId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmDbKey15') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmDbKey15
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmDbKey15') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmDbKey15 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmDbKey15
+ALTER PROCEDURE GetExpAdmDbKey15
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -27119,22 +24924,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b20.KeyId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b20.KeyId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmDbTable2') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmDbTable2
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmDbTable2') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmDbTable2 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmDbTable2
+ALTER PROCEDURE GetExpAdmDbTable2
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -27251,7 +25054,7 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy'
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b3.TableId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b3.TableId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @TableName25 is not null SELECT @wClause = @wClause + ' AND (b3.TableName like N''%' + replace(@TableName25,'''','''''') + '%'')'
@@ -27259,19 +25062,17 @@ BEGIN
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmLabel112') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmLabel112
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmLabel112') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmLabel112 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmLabel112
+ALTER PROCEDURE GetExpAdmLabel112
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -27372,7 +25173,7 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'Company
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','b215.','N',null,'LabelId',@wClause OUTPUT
-IF @key is not null SELECT @wClause = @wClause + ' AND (b215.LabelId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b215.LabelId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @CultureId48 is not null SELECT @wClause = @wClause + ' AND (b215.CultureId = ' + convert(varchar,@CultureId48) + ')'
@@ -27382,19 +25183,17 @@ BEGIN
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmMenu35') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmMenu35
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmMenu35') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmMenu35 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmMenu35
+ALTER PROCEDURE GetExpAdmMenu35
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -27492,22 +25291,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmMenuDrg121') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmMenuDrg121
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmMenuDrg121') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmMenuDrg121 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmMenuDrg121
+ALTER PROCEDURE GetExpAdmMenuDrg121
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -27590,22 +25387,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmMenuHlp36') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmMenuHlp36
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmMenuHlp36') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmMenuHlp36 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmMenuHlp36
+ALTER PROCEDURE GetExpAdmMenuHlp36
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -27697,22 +25492,20 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmMenuPerm58') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmMenuPerm58
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmMenuPerm58') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmMenuPerm58 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmMenuPerm58
+ALTER PROCEDURE GetExpAdmMenuPerm58
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -27806,22 +25599,20 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmMsgCenter86') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmMsgCenter86
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmMsgCenter86') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmMsgCenter86 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmMsgCenter86
+ALTER PROCEDURE GetExpAdmMsgCenter86
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -27921,7 +25712,7 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b146.MsgId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b146.MsgId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @MsgId28 is not null SELECT @wClause = @wClause + ' AND (b146.MsgId = ' + convert(varchar,@MsgId28) + ')'
@@ -27930,22 +25721,17 @@ BEGIN
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmOvride78') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmOvride78
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmOvride78') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmOvride78 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetExpAdmOvride78]
+ALTER PROCEDURE [dbo].[GetExpAdmOvride78]
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -28035,24 +25821,17 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 IF @key is not null SELECT @wClause = @wClause + ' AND (b122.OvrideId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmReport67') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmReport67
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmReport67') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmReport67 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmReport67
+ALTER PROCEDURE GetExpAdmReport67
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -28190,22 +25969,20 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','b22.','Y',null,'ReportId',@wClause OUTPUT
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b22.ReportId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b22.ReportId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmReportCri69') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmReportCri69
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmReportCri69') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmReportCri69 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmReportCri69
+ALTER PROCEDURE GetExpAdmReportCri69
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -28332,26 +26109,24 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b97.ReportCriId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b97.ReportCriId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ReportId4 is not null SELECT @wClause = @wClause + ' AND (b97.ReportId = ' + convert(varchar,@ReportId4) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmReportObj13') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmReportObj13
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmReportObj13') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmReportObj13 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmReportObj13
+ALTER PROCEDURE GetExpAdmReportObj13
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -28466,26 +26241,24 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b23.ReportObjId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b23.ReportObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ReportId13 is not null SELECT @wClause = @wClause + ' AND (b23.ReportId = ' + convert(varchar,@ReportId13) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRowOvrd17') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmRowOvrd17
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRowOvrd17') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmRowOvrd17 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmRowOvrd17
+ALTER PROCEDURE GetExpAdmRowOvrd17
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -28596,7 +26369,7 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b238.RowOvrdId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b238.RowOvrdId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId38 is not null SELECT @wClause = @wClause + ' AND (b238.ScreenId = ' + convert(varchar,@ScreenId38) + ')'
@@ -28604,19 +26377,17 @@ BEGIN
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRptCha100') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmRptCha100
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRptCha100') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmRptCha100 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmRptCha100
+ALTER PROCEDURE GetExpAdmRptCha100
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -28714,22 +26485,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b206.RptChaId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b206.RptChaId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRptCtr90') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmRptCtr90
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRptCtr90') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmRptCtr90 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmRptCtr90
+ALTER PROCEDURE GetExpAdmRptCtr90
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -28853,7 +26622,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b161.RptCtrId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b161.RptCtrId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ReportId29 is not null SELECT @wClause = @wClause + ' AND (b161.ReportId = ' + convert(varchar,@ReportId29) + ')'
@@ -28861,19 +26630,17 @@ BEGIN
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRptStyle89') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmRptStyle89
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRptStyle89') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmRptStyle89 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmRptStyle89
+ALTER PROCEDURE GetExpAdmRptStyle89
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -29020,26 +26787,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b167.RptStyleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b167.RptStyleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @DefaultCd32 is not null SELECT @wClause = @wClause + ' AND (b167.DefaultCd = N''' + @DefaultCd32 + ''')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRptTbl92') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmRptTbl92
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRptTbl92') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmRptTbl92 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmRptTbl92
+ALTER PROCEDURE GetExpAdmRptTbl92
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -29157,7 +26922,7 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b162.RptTblId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b162.RptTblId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ReportId34 is not null SELECT @wClause = @wClause + ' AND (b162.ReportId = ' + convert(varchar,@ReportId34) + ')'
@@ -29165,22 +26930,17 @@ BEGIN
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRptWiz95') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmRptWiz95
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRptWiz95') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmRptWiz95 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetExpAdmRptWiz95]
+ALTER PROCEDURE [dbo].[GetExpAdmRptWiz95]
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -29308,24 +27068,17 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 IF @key is not null SELECT @wClause = @wClause + ' AND (b183.RptwizId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmScreen9') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmScreen9
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmScreen9') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmScreen9 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmScreen9
+ALTER PROCEDURE GetExpAdmScreen9
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -29484,26 +27237,24 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b15.ScreenId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b15.ScreenId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId60 is not null SELECT @wClause = @wClause + ' AND (b15.ScreenId = ' + convert(varchar,@ScreenId60) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmScreenCri73') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmScreenCri73
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmScreenCri73') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmScreenCri73 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmScreenCri73
+ALTER PROCEDURE GetExpAdmScreenCri73
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -29630,26 +27381,24 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b104.ScreenCriId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b104.ScreenCriId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId3 is not null SELECT @wClause = @wClause + ' AND (b104.ScreenId = ' + convert(varchar,@ScreenId3) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmScreenFilter59') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmScreenFilter59
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmScreenFilter59') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmScreenFilter59 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmScreenFilter59
+ALTER PROCEDURE GetExpAdmScreenFilter59
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -29750,26 +27499,24 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b86.ScreenFilterId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b86.ScreenFilterId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId1072 is not null SELECT @wClause = @wClause + ' AND (b86.ScreenId = ' + convert(varchar,@ScreenId1072) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmScreenObj10') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmScreenObj10
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmScreenObj10') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmScreenObj10 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmScreenObj10
+ALTER PROCEDURE GetExpAdmScreenObj10
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -29924,22 +27671,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmScreenTab54') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmScreenTab54
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmScreenTab54') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmScreenTab54 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmScreenTab54
+ALTER PROCEDURE GetExpAdmScreenTab54
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -30036,22 +27781,20 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b19.ScreenTabId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b19.ScreenTabId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmServerRule14') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmServerRule14
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmServerRule14') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmServerRule14 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmServerRule14
+ALTER PROCEDURE GetExpAdmServerRule14
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -30161,26 +27904,24 @@ END
 SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','b24.','N','N',null,'Y','ServerRuleId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b24.ServerRuleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b24.ServerRuleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId16 is not null SELECT @wClause = @wClause + ' AND (b24.ScreenId = ' + convert(varchar,@ScreenId16) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmStaticCs115') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmStaticCs115
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmStaticCs115') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmStaticCs115 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmStaticCs115
+ALTER PROCEDURE GetExpAdmStaticCs115
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -30263,22 +28004,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b260.StaticCsId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b260.StaticCsId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmStaticJs116') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmStaticJs116
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmStaticJs116') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmStaticJs116 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmStaticJs116
+ALTER PROCEDURE GetExpAdmStaticJs116
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -30361,22 +28100,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b261.StaticJsId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b261.StaticJsId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmStaticPg114') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmStaticPg114
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmStaticPg114') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmStaticPg114 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmStaticPg114
+ALTER PROCEDURE GetExpAdmStaticPg114
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -30473,7 +28210,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b259.StaticPgId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b259.StaticPgId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @StaticPgId1070 is not null SELECT @wClause = @wClause + ' AND (b259.StaticPgId = ' + convert(varchar,@StaticPgId1070) + ')'
@@ -30481,19 +28218,17 @@ BEGIN
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmTbdRule113') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmTbdRule113
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmTbdRule113') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmTbdRule113 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmTbdRule113
+ALTER PROCEDURE GetExpAdmTbdRule113
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -30580,26 +28315,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b254.TbdRuleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b254.TbdRuleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId52 is not null SELECT @wClause = @wClause + ' AND (b254.ScreenId = ' + convert(varchar,@ScreenId52) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmWebRule80') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmWebRule80
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmWebRule80') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmWebRule80 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmWebRule80
+ALTER PROCEDURE GetExpAdmWebRule80
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -30715,26 +28448,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b128.WebRuleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b128.WebRuleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId15 is not null SELECT @wClause = @wClause + ' AND (b128.ScreenId = ' + convert(varchar,@ScreenId15) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmWizardObj49') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmWizardObj49
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmWizardObj49') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmWizardObj49 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmWizardObj49
+ALTER PROCEDURE GetExpAdmWizardObj49
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -30836,22 +28567,20 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b71.WizardId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b71.WizardId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmWizardRule50') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmWizardRule50
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmWizardRule50') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmWizardRule50 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmWizardRule50
+ALTER PROCEDURE GetExpAdmWizardRule50
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -30944,30 +28673,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b73.WizardRuleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b73.WizardRuleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @WizardId17 is not null SELECT @wClause = @wClause + ' AND (b73.WizardId = ' + convert(varchar,@WizardId17) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetGaugeValue') AND type='P')
-DROP PROCEDURE dbo.GetGaugeValue
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetGaugeValue') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetGaugeValue AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetGaugeValue]
+ALTER PROCEDURE [dbo].[GetGaugeValue]
  @ReportId	Int
 /* WITH ENCRYPTION */
 AS
@@ -30983,30 +28706,17 @@ SELECT GMinValue, GLowRange, GMidRange, GMaxValue, GNeedle
 	LEFT OUTER JOIN dbo.DbColumn b5 ON a.GNeedleId = b5.ColumnId
 	WHERE ReportId = @ReportId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetGlobalFilter') AND type='P')
-DROP PROCEDURE dbo.GetGlobalFilter
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetGlobalFilter') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetGlobalFilter AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetGlobalFilter]
+ALTER PROCEDURE [dbo].[GetGlobalFilter]
  @usrId		int
 ,@screenId	int
 ,@cultureId	smallint
@@ -31022,30 +28732,17 @@ BEGIN
 	IF @@ROWCOUNT <> 0 SELECT FilterDesc = @FilterDesc
 END
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetInfoByCol') AND type='P')
-DROP PROCEDURE dbo.GetInfoByCol
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetInfoByCol') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetInfoByCol AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetInfoByCol]
+ALTER PROCEDURE [dbo].[GetInfoByCol]
  @ScreenId	int
 ,@ColumnName	varchar(50)
 /* WITH ENCRYPTION */
@@ -31061,30 +28758,17 @@ SELECT @fClause = 'FROM dbo.ScreenObj a'
 SELECT @wClause = 'WHERE a.MasterTable = ''Y'' AND a.ScreenId = ' + convert(varchar,@ScreenId) + ' AND a.ColumnName = ''' + @ColumnName + ''''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
-
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLabel') AND type='P')
-DROP PROCEDURE dbo.GetLabel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLabel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLabel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetLabel]
+ALTER PROCEDURE [dbo].[GetLabel]
  @CultureId		smallint
 ,@LabelCat		varchar(50)
 ,@LabelKey		varchar(50)
@@ -31112,27 +28796,17 @@ ELSE
 SELECT @oClause = 'ORDER BY SortOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLabels') AND type='P')
-DROP PROCEDURE dbo.GetLabels
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLabels') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLabels AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetLabels]
+ALTER PROCEDURE [dbo].[GetLabels]
  @CultureId		smallint
 ,@LabelCat		varchar(50)
 ,@CompanyId		int
@@ -31166,28 +28840,17 @@ END
 SELECT LabelKey, LabelText FROM #Label ORDER BY SortOrder
 DROP TABLE dbo.#label
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLastCriteria') AND type='P')
-DROP PROCEDURE dbo.GetLastCriteria
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLastCriteria') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLastCriteria AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetLastCriteria]
+ALTER PROCEDURE [dbo].[GetLastCriteria]
  @ScreenId	Int
 ,@ReportId	Int
 ,@UsrId		Int
@@ -31219,25 +28882,17 @@ BEGIN
 		WHERE a.UsrId = @UsrId AND a.ReportId = @ReportId ORDER BY b.TabIndex
 END
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLastPageInfo') AND type='P')
-DROP PROCEDURE dbo.GetLastPageInfo
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLastPageInfo') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLastPageInfo AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetLastPageInfo]
+ALTER PROCEDURE [dbo].[GetLastPageInfo]
  @ScreenId	Int
 ,@UsrId		Int
 /* WITH ENCRYPTION */
@@ -31252,25 +28907,17 @@ BEGIN
 END
 SELECT LastPageInfo FROM dbo.ScreenLstInf WHERE UsrId = @UsrId AND ScreenId = @ScreenId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmAppInfo82') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmAppInfo82
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmAppInfo82') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmAppInfo82 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmAppInfo82
+ALTER PROCEDURE GetLisAdmAppInfo82
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -31351,7 +28998,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b135.AppInfoId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b135.AppInfoId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @VersionDt53 is not null SELECT @wClause = @wClause + ' AND (DATEADD(hour, DATEDIFF(hour, 0, b135.VersionDt), 0) >= ''' + convert(varchar,@VersionDt53,120) + ''')'
@@ -31361,19 +29008,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b135.AppInfoDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b135.Readme LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmAppItem83') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmAppItem83
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmAppItem83') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmAppItem83 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmAppItem83
+ALTER PROCEDURE GetLisAdmAppItem83
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -31454,7 +29099,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b136.AppItemId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b136.AppItemId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @AppItemCode44 is not null SELECT @wClause = @wClause + ' AND (b136.AppItemCode like N''%' + replace(@AppItemCode44,'''','''''') + '%'')'
@@ -31464,19 +29109,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b136.AppItemDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmAuthCol16') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmAuthCol16
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmAuthCol16') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmAuthCol16 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmAuthCol16
+ALTER PROCEDURE GetLisAdmAuthCol16
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -31556,25 +29199,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b14.ColumnDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmButtonHlp76') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmButtonHlp76
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmButtonHlp76') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmButtonHlp76 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmButtonHlp76
+ALTER PROCEDURE GetLisAdmButtonHlp76
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -31687,26 +29328,24 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b116.','Y','N',null,'N','ButtonHlpId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b116.ButtonHlpId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b116.ButtonHlpId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @CultureId19 is not null SELECT @wClause = @wClause + ' AND (b116.CultureId = ' + convert(varchar,@CultureId19) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmClientRule79') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmClientRule79
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmClientRule79') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmClientRule79 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmClientRule79
+ALTER PROCEDURE GetLisAdmClientRule79
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -31791,7 +29430,7 @@ END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b127.','Y','N',null,'N','ClientRuleId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b127.ClientRuleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b127.ClientRuleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId9 is not null SELECT @wClause = @wClause + ' AND (b127.ScreenId = ' + convert(varchar,@ScreenId9) + ')'
@@ -31803,19 +29442,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b127.RuleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b127.RuleDescription LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmColDrg1007') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmColDrg1007
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmColDrg1007') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmColDrg1007 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmColDrg1007
+ALTER PROCEDURE GetLisAdmColDrg1007
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -31911,26 +29548,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId1074 is not null SELECT @wClause = @wClause + ' AND (b14.ScreenId = ' + convert(varchar,@ScreenId1074) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmColHlp1006') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmColHlp1006
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmColHlp1006') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmColHlp1006 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmColHlp1006
+ALTER PROCEDURE GetLisAdmColHlp1006
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -32010,25 +29645,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b14.ColumnDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmCronJob118') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmCronJob118
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmCronJob118') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmCronJob118 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmCronJob118
+ALTER PROCEDURE GetLisAdmCronJob118
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -32108,25 +29741,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b264.CronJobId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b264.CronJobId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b264.CronJobName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b264.LastStatus LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmDataCat96') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmDataCat96
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmDataCat96') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmDataCat96 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmDataCat96
+ALTER PROCEDURE GetLisAdmDataCat96
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -32206,25 +29837,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b181.RptwizCatId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b181.RptwizCatId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b181.RptwizCatDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b181.CatDescription LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmDbKey15') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmDbKey15
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmDbKey15') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmDbKey15 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmDbKey15
+ALTER PROCEDURE GetLisAdmDbKey15
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -32304,25 +29933,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b20.KeyId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b20.KeyId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b20.KeyName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmDbTable2') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmDbTable2
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmDbTable2') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmDbTable2 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmDbTable2
+ALTER PROCEDURE GetLisAdmDbTable2
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -32405,7 +30032,7 @@ END
 SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','b3.','N','N',null,'Y','TableId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b3.TableId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b3.TableId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @TableName25 is not null SELECT @wClause = @wClause + ' AND (b3.TableName like N''%' + replace(@TableName25,'''','''''') + '%'')'
@@ -32416,19 +30043,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b3.TableDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b3.TblObjective LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmLabel112') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmLabel112
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmLabel112') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmLabel112 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmLabel112
+ALTER PROCEDURE GetLisAdmLabel112
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -32518,7 +30143,7 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'Company
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','b215.','N',null,'LabelId',@wClause OUTPUT
-IF @key is not null SELECT @wClause = @wClause + ' AND (b215.LabelId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b215.LabelId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @CultureId48 is not null SELECT @wClause = @wClause + ' AND (b215.CultureId = ' + convert(varchar,@CultureId48) + ')'
@@ -32531,19 +30156,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b215.LabelDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmLabelVw119') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmLabelVw119
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmLabelVw119') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmLabelVw119 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmLabelVw119
+ALTER PROCEDURE GetLisAdmLabelVw119
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -32634,7 +30257,7 @@ END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b265.','Y','N',null,'N','LabelId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b265.LabelId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b265.LabelId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @CultureId56 is not null SELECT @wClause = @wClause + ' AND (b265.CultureId = ' + convert(varchar,@CultureId56) + ')'
@@ -32642,19 +30265,17 @@ BEGIN
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmMenu35') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmMenu35
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmMenu35') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmMenu35 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmMenu35
+ALTER PROCEDURE GetLisAdmMenu35
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -32734,25 +30355,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b39.MenuId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmMenuDrg121') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmMenuDrg121
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmMenuDrg121') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmMenuDrg121 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmMenuDrg121
+ALTER PROCEDURE GetLisAdmMenuDrg121
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -32832,25 +30451,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b39.MenuId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmMenuHlp36') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmMenuHlp36
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmMenuHlp36') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmMenuHlp36 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmMenuHlp36
+ALTER PROCEDURE GetLisAdmMenuHlp36
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -32930,25 +30547,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b39.MenuId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmMenuPerm58') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmMenuPerm58
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmMenuPerm58') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmMenuPerm58 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmMenuPerm58
+ALTER PROCEDURE GetLisAdmMenuPerm58
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -33028,25 +30643,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b39.MenuId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b39.MenuId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmMsgCenter86') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmMsgCenter86
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmMsgCenter86') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmMsgCenter86 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmMsgCenter86
+ALTER PROCEDURE GetLisAdmMsgCenter86
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -33129,7 +30742,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b146.MsgId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b146.MsgId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @MsgId28 is not null SELECT @wClause = @wClause + ' AND (b146.MsgId = ' + convert(varchar,@MsgId28) + ')'
@@ -33141,22 +30754,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b146.MsgName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmOvride78') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmOvride78
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmOvride78') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmOvride78 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetLisAdmOvride78]
+ALTER PROCEDURE [dbo].[GetLisAdmOvride78]
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -33236,24 +30844,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b122.OvrideName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmReport67') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmReport67
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmReport67') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmReport67 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmReport67
+ALTER PROCEDURE GetLisAdmReport67
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -33337,25 +30938,23 @@ SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','b22.','N','N',null,'Y','ReportId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','b22.','Y',null,'ReportId',@wClause OUTPUT
-IF @key is not null SELECT @wClause = @wClause + ' AND (b22.ReportId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b22.ReportId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b22.ReportDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b22.ProgramName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmReportCri69') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmReportCri69
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmReportCri69') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmReportCri69 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmReportCri69
+ALTER PROCEDURE GetLisAdmReportCri69
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -33436,7 +31035,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b97.ReportCriId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b97.ReportCriId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ReportId4 is not null SELECT @wClause = @wClause + ' AND (b97.ReportId = ' + convert(varchar,@ReportId4) + ')'
@@ -33446,19 +31045,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b97.ReportCriDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmReportGrp65') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmReportGrp65
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmReportGrp65') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmReportGrp65 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmReportGrp65
+ALTER PROCEDURE GetLisAdmReportGrp65
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -33551,26 +31148,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b94.ReportGrpId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b94.ReportGrpId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ReportId2 is not null SELECT @wClause = @wClause + ' AND (b94.ReportId = ' + convert(varchar,@ReportId2) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmReportObj13') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmReportObj13
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmReportObj13') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmReportObj13 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmReportObj13
+ALTER PROCEDURE GetLisAdmReportObj13
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -33651,7 +31246,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b23.ReportObjId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b23.ReportObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ReportId13 is not null SELECT @wClause = @wClause + ' AND (b23.ReportId = ' + convert(varchar,@ReportId13) + ')'
@@ -33661,19 +31256,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b23.ColumnDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRowOvrd17') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmRowOvrd17
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRowOvrd17') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmRowOvrd17 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmRowOvrd17
+ALTER PROCEDURE GetLisAdmRowOvrd17
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -33755,7 +31348,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b238.RowOvrdId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b238.RowOvrdId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId38 is not null SELECT @wClause = @wClause + ' AND (b238.ScreenId = ' + convert(varchar,@ScreenId38) + ')'
@@ -33766,19 +31359,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b238.RowOvrdDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptCha100') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmRptCha100
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptCha100') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmRptCha100 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmRptCha100
+ALTER PROCEDURE GetLisAdmRptCha100
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -33858,25 +31449,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b206.RptChaId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b206.RptChaId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b206.RptChaDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptCtr90') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmRptCtr90
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptCtr90') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmRptCtr90 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmRptCtr90
+ALTER PROCEDURE GetLisAdmRptCtr90
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -33958,7 +31547,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b161.RptCtrId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b161.RptCtrId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ReportId29 is not null SELECT @wClause = @wClause + ' AND (b161.ReportId = ' + convert(varchar,@ReportId29) + ')'
@@ -33969,19 +31558,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b161.RptCtrDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptElm91') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmRptElm91
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptElm91') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmRptElm91 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmRptElm91
+ALTER PROCEDURE GetLisAdmRptElm91
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -34076,26 +31663,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b160.RptElmId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b160.RptElmId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ReportId30 is not null SELECT @wClause = @wClause + ' AND (b160.ReportId = ' + convert(varchar,@ReportId30) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptStyle89') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmRptStyle89
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptStyle89') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmRptStyle89 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmRptStyle89
+ALTER PROCEDURE GetLisAdmRptStyle89
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -34176,7 +31761,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b167.RptStyleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b167.RptStyleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @DefaultCd32 is not null SELECT @wClause = @wClause + ' AND (b167.DefaultCd = N''' + @DefaultCd32 + ''')'
@@ -34186,19 +31771,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b167.RptStyleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptTbl92') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmRptTbl92
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptTbl92') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmRptTbl92 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmRptTbl92
+ALTER PROCEDURE GetLisAdmRptTbl92
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -34280,7 +31863,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b162.RptTblId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b162.RptTblId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ReportId34 is not null SELECT @wClause = @wClause + ' AND (b162.ReportId = ' + convert(varchar,@ReportId34) + ')'
@@ -34291,22 +31874,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b162.RptTblDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptWiz95') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmRptWiz95
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptWiz95') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmRptWiz95 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetLisAdmRptWiz95]
+ALTER PROCEDURE [dbo].[GetLisAdmRptWiz95]
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -34387,24 +31965,17 @@ SELECT @FilterTxt = REPLACE(@FilterTxt, '''','''''')
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b183.RptwizName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptwizTyp97') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmRptwizTyp97
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRptwizTyp97') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmRptwizTyp97 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmRptwizTyp97
+ALTER PROCEDURE GetLisAdmRptwizTyp97
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -34485,22 +32056,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b185.RptwizTypId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b185.RptwizTypId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScrAudit1019') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmScrAudit1019
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScrAudit1019') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmScrAudit1019 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmScrAudit1019
+ALTER PROCEDURE GetLisAdmScrAudit1019
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -34597,26 +32166,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b1300.ScrAuditId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b1300.ScrAuditId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId1075 is not null SELECT @wClause = @wClause + ' AND (b1300.ScreenId = ' + convert(varchar,@ScreenId1075) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScrAuditDtl1020') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmScrAuditDtl1020
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScrAuditDtl1020') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmScrAuditDtl1020 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmScrAuditDtl1020
+ALTER PROCEDURE GetLisAdmScrAuditDtl1020
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -34704,26 +32271,24 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b1301.ScrAuditDtlId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b1301.ScrAuditDtlId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScrAuditId1076 is not null SELECT @wClause = @wClause + ' AND (b1301.ScrAuditId = ' + convert(varchar,@ScrAuditId1076) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScreen9') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmScreen9
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScreen9') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmScreen9 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmScreen9
+ALTER PROCEDURE GetLisAdmScreen9
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -34804,7 +32369,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b15.ScreenId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b15.ScreenId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId60 is not null SELECT @wClause = @wClause + ' AND (b15.ScreenId = ' + convert(varchar,@ScreenId60) + ')'
@@ -34814,19 +32379,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b15.ScreenDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b15.ProgramName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScreenCri73') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmScreenCri73
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScreenCri73') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmScreenCri73 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmScreenCri73
+ALTER PROCEDURE GetLisAdmScreenCri73
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -34907,7 +32470,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b104.ScreenCriId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b104.ScreenCriId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId3 is not null SELECT @wClause = @wClause + ' AND (b104.ScreenId = ' + convert(varchar,@ScreenId3) + ')'
@@ -34917,19 +32480,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b104.ScreenCriDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScreenFilter59') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmScreenFilter59
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScreenFilter59') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmScreenFilter59 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmScreenFilter59
+ALTER PROCEDURE GetLisAdmScreenFilter59
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -35010,7 +32571,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b86.ScreenFilterId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b86.ScreenFilterId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId1072 is not null SELECT @wClause = @wClause + ' AND (b86.ScreenId = ' + convert(varchar,@ScreenId1072) + ')'
@@ -35020,19 +32581,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b86.ScreenFilterDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b86.FilterClause LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScreenObj10') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmScreenObj10
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScreenObj10') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmScreenObj10 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmScreenObj10
+ALTER PROCEDURE GetLisAdmScreenObj10
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -35112,25 +32671,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b14.ColumnDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScreenTab54') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmScreenTab54
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmScreenTab54') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmScreenTab54 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmScreenTab54
+ALTER PROCEDURE GetLisAdmScreenTab54
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -35210,25 +32767,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b19.ScreenTabId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b19.ScreenTabId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b19.ScreenTabDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmServerRule14') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmServerRule14
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmServerRule14') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmServerRule14 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmServerRule14
+ALTER PROCEDURE GetLisAdmServerRule14
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -35310,7 +32865,7 @@ END
 SELECT @tClause = ''
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','b24.','N','N',null,'Y','ServerRuleId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b24.ServerRuleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b24.ServerRuleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId16 is not null SELECT @wClause = @wClause + ' AND (b24.ScreenId = ' + convert(varchar,@ScreenId16) + ')'
@@ -35320,19 +32875,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b24.RuleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b24.RuleDescription LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmStaticCs115') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmStaticCs115
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmStaticCs115') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmStaticCs115 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmStaticCs115
+ALTER PROCEDURE GetLisAdmStaticCs115
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -35412,25 +32965,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b260.StaticCsId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b260.StaticCsId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b260.StaticCsNm LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmStaticFi117') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmStaticFi117
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmStaticFi117') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmStaticFi117 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmStaticFi117
+ALTER PROCEDURE GetLisAdmStaticFi117
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -35511,22 +33062,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b262.StaticFiId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b262.StaticFiId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmStaticJs116') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmStaticJs116
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmStaticJs116') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmStaticJs116 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmStaticJs116
+ALTER PROCEDURE GetLisAdmStaticJs116
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -35606,25 +33155,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b261.StaticJsId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b261.StaticJsId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b261.StaticJsNm LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmStaticPg114') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmStaticPg114
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmStaticPg114') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmStaticPg114 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmStaticPg114
+ALTER PROCEDURE GetLisAdmStaticPg114
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -35706,7 +33253,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b259.StaticPgId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b259.StaticPgId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @StaticPgId1070 is not null SELECT @wClause = @wClause + ' AND (b259.StaticPgId = ' + convert(varchar,@StaticPgId1070) + ')'
@@ -35717,19 +33264,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b259.StaticPgDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmTbdRule113') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmTbdRule113
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmTbdRule113') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmTbdRule113 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmTbdRule113
+ALTER PROCEDURE GetLisAdmTbdRule113
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -35810,7 +33355,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b254.TbdRuleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b254.TbdRuleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId52 is not null SELECT @wClause = @wClause + ' AND (b254.ScreenId = ' + convert(varchar,@ScreenId52) + ')'
@@ -35820,19 +33365,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b254.TbdRuleName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b254.TbdRuleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmTemplate53') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmTemplate53
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmTemplate53') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmTemplate53 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmTemplate53
+ALTER PROCEDURE GetLisAdmTemplate53
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -35915,22 +33458,20 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b79.TemplateId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b79.TemplateId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmWebRule80') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmWebRule80
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmWebRule80') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmWebRule80 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmWebRule80
+ALTER PROCEDURE GetLisAdmWebRule80
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -36011,7 +33552,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b128.WebRuleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b128.WebRuleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @ScreenId15 is not null SELECT @wClause = @wClause + ' AND (b128.ScreenId = ' + convert(varchar,@ScreenId15) + ')'
@@ -36021,19 +33562,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b128.RuleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b128.RuleDescription LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmWizardObj49') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmWizardObj49
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmWizardObj49') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmWizardObj49 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmWizardObj49
+ALTER PROCEDURE GetLisAdmWizardObj49
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -36113,25 +33652,23 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b71.WizardId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b71.WizardId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b71.WizardTitle LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmWizardRule50') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmWizardRule50
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmWizardRule50') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmWizardRule50 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmWizardRule50
+ALTER PROCEDURE GetLisAdmWizardRule50
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -36212,7 +33749,7 @@ BEGIN
 END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
-IF @key is not null SELECT @wClause = @wClause + ' AND (b73.WizardRuleId = ' + @key + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b73.WizardRuleId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 ELSE
 BEGIN
 	IF @WizardId17 is not null SELECT @wClause = @wClause + ' AND (b73.WizardId = ' + convert(varchar,@WizardId17) + ')'
@@ -36222,23 +33759,17 @@ SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b73.RuleDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b73.RuleDescription LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetMemCri') AND type='P')
-DROP PROCEDURE dbo.GetMemCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetMemCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetMemCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetMemCri]
+ALTER PROCEDURE [dbo].[GetMemCri]
  @GenPrefix	varchar(10)
 ,@ReportId	Int
 ,@MemCriId	Int
@@ -36254,26 +33785,18 @@ ELSE
 	SELECT LastCriteria = a.MemCriteria FROM dbo.RptMemCriDtl a
 		LEFT OUTER JOIN dbo.ReportCri b ON a.ReportCriId = b.ReportCriId
 		WHERE a.RptMemCriId = @MemCriId ORDER BY b.TabIndex
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetMenu') AND type='P')
-DROP PROCEDURE dbo.GetMenu
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetMenu') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetMenu AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[GetMenu]
+ALTER PROCEDURE [dbo].[GetMenu]
  @CultureId		smallint
 ,@SystemId		tinyint
 ,@RowAuthoritys		varchar(1000)
@@ -36447,23 +33970,17 @@ ELSE
 DROP TABLE dbo.#menu
 DROP TABLE dbo.#hlp
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetMsg') AND type='P')
-DROP PROCEDURE dbo.GetMsg
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetMsg') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetMsg AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetMsg]
+ALTER PROCEDURE [dbo].[GetMsg]
  @MsgId		Int
 ,@CultureId	smallint
 /* WITH ENCRYPTION */
@@ -36480,27 +33997,17 @@ ELSE
 	SELECT a.Msg, MsgSource = @MsgSource, b.CultureTypeName FROM dbo.MsgCenter a INNER JOIN RODesign.dbo.VwCulture b ON a.CultureId = b.CultureId
 	WHERE a.MsgId = @MsgId and a.CultureId = @DefCultureId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetObjGroupCol') AND type='P')
-DROP PROCEDURE dbo.GetObjGroupCol
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetObjGroupCol') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetObjGroupCol AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetObjGroupCol]
+ALTER PROCEDURE [dbo].[GetObjGroupCol]
  @screenId		int
 /* WITH ENCRYPTION */
 AS
@@ -36531,28 +34038,18 @@ DEALLOCATE cur1
 SELECT GroupColId, ColCssClass, TabFolderId FROM #tbl
 DROP TABLE #tbl
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetPermFilter') AND type='P')
-DROP PROCEDURE dbo.GetPermFilter
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetPermFilter') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetPermFilter AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 /* DECLARE @wClause nvarchar(4000) EXEC RODesign.dbo.GetPermFilter 1,null,'1','8?1','CompanyLs','Company','b1.','Y','Y',null,'Y','UsrId',@wClause OUTPUT SELECT @wClause */
-CREATE PROCEDURE [dbo].[GetPermFilter]
+ALTER PROCEDURE [dbo].[GetPermFilter]
  @ScreenId			int  
 ,@ReportId			int  
 ,@RowAuthoritys		varchar(1000)  
@@ -36593,6 +34090,12 @@ DECLARE  @rr			varchar(1000)
 		,@dFilter		varchar(4000)
 		,@SysAdmin		char(1)
 SET NOCOUNT ON
+/* REMOVE redundant, only first 2 is enough */
+SELECT @PermKeys = RODesign.dbo.CompressLS(@PermKeys)
+SELECT @RowAuthoritys = RODesign.dbo.CompressLS(@RowAuthoritys)
+--SELECT @Usrs = RODesign.dbo.CompressLS(@Usrs)
+
+
 /* Prepare additional user filtering regardless of row authority: DO NOT add @SysAdmin <> 'Y' */
 SELECT @dFilter = '', @gFilter = '', @pp = @Usrs
 WHILE @pp <> '' AND datalength(@pp) > 0
@@ -36673,25 +34176,17 @@ IF @Usrs is not null AND @PermKeyName = @PKeyColName AND EXISTS (SELECT 1 FROM R
 ELSE
 	SELECT @wClause = isnull(@wClause,space(0)) + @wFilter + ')))'
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportById') AND type='P')
-DROP PROCEDURE dbo.GetReportById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportById]
+ALTER PROCEDURE [dbo].[GetReportById]
  @GenPrefix		varchar(10)
 ,@desDatabase	varchar(50)
 ,@srcDatabase	varchar(50)
@@ -36712,29 +34207,17 @@ SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'Report a'
 SELECT @wClause = 'WHERE a.ReportId = ' + CONVERT(varchar,@reportId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportCha') AND type='P')
-DROP PROCEDURE dbo.GetReportCha
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportCha') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportCha AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportCha]
+ALTER PROCEDURE [dbo].[GetReportCha]
  @GenPrefix		varchar(10)
 ,@RptCtrId		int
 /* WITH ENCRYPTION */
@@ -36756,29 +34239,17 @@ SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'RptCha a'
 SELECT @wClause = 'WHERE a.RptCtrId = ' + CONVERT(varchar,@RptCtrId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportColumns') AND type='P')
-DROP PROCEDURE dbo.GetReportColumns
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportColumns') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportColumns AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportColumns]
+ALTER PROCEDURE [dbo].[GetReportColumns]
  @GenPrefix		varchar(10)
 ,@reportId		int
 /* WITH ENCRYPTION */
@@ -36798,28 +34269,17 @@ SELECT @wClause = 'WHERE a.ReportId = ' + CONVERT(varchar,@reportId)
 SELECT @oClause = 'ORDER BY a.TabIndex'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportCriDel') AND type='P')
-DROP PROCEDURE dbo.GetReportCriDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportCriDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportCriDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportCriDel]
+ALTER PROCEDURE [dbo].[GetReportCriDel]
  @GenPrefix		varchar(10)
 ,@reportId		int
 /* WITH ENCRYPTION */
@@ -36833,28 +34293,17 @@ SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'ReportCri'
 SELECT @wClause = 'WHERE ReportId = ' + convert(varchar,@reportId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportCriHlp') AND type='P')
-DROP PROCEDURE dbo.GetReportCriHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportCriHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportCriHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportCriHlp]
+ALTER PROCEDURE [dbo].[GetReportCriHlp]
  @ReportId	int
 ,@CultureId	smallint
 /* WITH ENCRYPTION */
@@ -36880,27 +34329,17 @@ SELECT ColumnHeader = isnull(a.ColumnHeader,''), b.ColumnSize, RowSize=CASE WHEN
 	ORDER BY a.TabIndex
 DROP TABLE dbo.#hlp
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportCriteria') AND type='P')
-DROP PROCEDURE dbo.GetReportCriteria
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportCriteria') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportCriteria AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportCriteria]
+ALTER PROCEDURE [dbo].[GetReportCriteria]
  @GenPrefix		varchar(10)
 ,@reportId		int
 /* WITH ENCRYPTION */
@@ -36930,24 +34369,17 @@ SELECT @wClause = 'WHERE a.ReportId = ' + CONVERT(varchar,@reportId)
 SELECT @oClause = 'ORDER BY a.TabIndex'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportCtr') AND type='P')
-DROP PROCEDURE dbo.GetReportCtr
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportCtr') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportCtr AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportCtr]
+ALTER PROCEDURE [dbo].[GetReportCtr]
  @GenPrefix		varchar(10)
 ,@PRptCtrId		int
 ,@RptElmId		int
@@ -36998,26 +34430,18 @@ IF @PRptCtrId is not null SELECT @wClause = 'WHERE a.PRptCtrId = ' + CONVERT(var
 ELSE IF @RptElmId is not null SELECT @wClause = 'WHERE a.RptElmId = ' + CONVERT(varchar,@RptElmId)
 ELSE SELECT @wClause = 'WHERE a.RptCelId = ' + CONVERT(varchar,@RptCelId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportDel') AND type='P')
-DROP PROCEDURE dbo.GetReportDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportDel]
+ALTER PROCEDURE [dbo].[GetReportDel]
  @GenPrefix			varchar(10)
 ,@srcDatabase		varchar(50)
 /* WITH ENCRYPTION */
@@ -37029,28 +34453,17 @@ SELECT @sClause = 'SELECT a.ReportId, a.ProgramName, b.dbAppDatabase'
 SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'ReportDel a INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 EXEC (@sClause + ' ' + @fClause)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportElm') AND type='P')
-DROP PROCEDURE dbo.GetReportElm
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportElm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportElm AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportElm]
+ALTER PROCEDURE [dbo].[GetReportElm]
  @GenPrefix		varchar(10)
 ,@reportId		int
 /* WITH ENCRYPTION */
@@ -37090,26 +34503,18 @@ SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'RptElm a'
 + ' LEFT OUTER JOIN RODesign.dbo.CtWritingMode m ON c.WritingMode = m.WritingModeCd'
 SELECT @wClause = 'WHERE a.ReportId = ' + CONVERT(varchar,@reportId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportHlp') AND type='P')
-DROP PROCEDURE dbo.GetReportHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportHlp]
+ALTER PROCEDURE [dbo].[GetReportHlp]
  @ReportId		int
 ,@CultureId		smallint
 /* WITH ENCRYPTION */
@@ -37129,30 +34534,17 @@ ELSE
 	SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd, TemplateName = @TemplateName
 		FROM dbo.ReportHlp WHERE ReportId = @ReportId and CultureId = @DefCultureId
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportItem') AND type='P')
-DROP PROCEDURE dbo.GetReportItem
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportItem') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportItem AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportItem]
+ALTER PROCEDURE [dbo].[GetReportItem]
  @ReportId	int
 /* WITH ENCRYPTION */
 AS
@@ -37167,31 +34559,17 @@ FROM dbo.ReportItem a INNER JOIN RODesign.dbo.CtReportSct b ON a.ReportSctId = b
 WHERE ReportId = @ReportId ORDER BY ReportSctName
 */
 RETURN 0
-
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportList') AND type='P')
-DROP PROCEDURE dbo.GetReportList
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportList') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportList AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportList]
+ALTER PROCEDURE [dbo].[GetReportList]
  @searchTxt		nvarchar(25)
 /* WITH ENCRYPTION */
 AS
@@ -37212,28 +34590,17 @@ ELSE
 SELECT @oClause = 'ORDER BY a.ReportTitle'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportObjHlp') AND type='P')
-DROP PROCEDURE dbo.GetReportObjHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportObjHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportObjHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportObjHlp]
+ALTER PROCEDURE [dbo].[GetReportObjHlp]
  @GenPrefix	varchar(10)
 ,@ReportId	int
 ,@CultureId	smallint
@@ -37273,27 +34640,17 @@ END
 SELECT ColumnName, ColumnHeader, RptObjTypeCd FROM #labl ORDER BY TabIndex
 DROP table dbo.#labl
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportParm') AND type='P')
-DROP PROCEDURE dbo.GetReportParm
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportParm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportParm AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportParm]
+ALTER PROCEDURE [dbo].[GetReportParm]
  @GenPrefix		varchar(10)
 ,@reportId		int
 ,@WhereClause	varchar(4000)
@@ -37405,26 +34762,17 @@ END
 CLOSE criCursor
 DEALLOCATE criCursor
 RETURN 0
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportTbl') AND type='P')
-DROP PROCEDURE dbo.GetReportTbl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetReportTbl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetReportTbl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetReportTbl]
+ALTER PROCEDURE [dbo].[GetReportTbl]
  @GenPrefix		varchar(10)
 ,@RptCtrId		int
 ,@ParentId		int
@@ -37456,28 +34804,17 @@ ELSE
 SELECT @oClause = 'ORDER BY a.RptTblTypeCd, a.TblOrder, b.RowNum, c.TblOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetRptCriHlp') AND type='P')
-DROP PROCEDURE dbo.GetRptCriHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetRptCriHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetRptCriHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetRptCriHlp]
+ALTER PROCEDURE [dbo].[GetRptCriHlp]
  @GenPrefix	varchar(10)
 ,@ReportId	int
 ,@CultureId	smallint
@@ -37523,28 +34860,17 @@ ELSE
 		ORDER BY a.TabIndex
 DROP TABLE dbo.#hlp
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetRptCriteria') AND type='P')
-DROP PROCEDURE dbo.GetRptCriteria
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetRptCriteria') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetRptCriteria AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetRptCriteria]
+ALTER PROCEDURE [dbo].[GetRptCriteria]
  @GenPrefix		varchar(10)
 ,@ReportId	Int
 ,@UsrId		Int
@@ -37573,25 +34899,17 @@ BEGIN
 		WHERE a.UsrId = @UsrId AND a.ReportId = @ReportId ORDER BY b.TabIndex
 END
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetRptHlp') AND type='P')
-DROP PROCEDURE dbo.GetRptHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetRptHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetRptHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetRptHlp]
+ALTER PROCEDURE [dbo].[GetRptHlp]
  @GenPrefix	varchar(10)
 ,@ReportId		int
 ,@CultureId		smallint
@@ -37626,56 +34944,34 @@ BEGIN
 			FROM dbo.ReportHlp WHERE ReportId = @ReportId and CultureId = @DefCultureId
 END
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetRptWizId') AND type='P')
-DROP PROCEDURE dbo.GetRptWizId
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetRptWizId') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetRptWizId AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetRptWizId]
+ALTER PROCEDURE [dbo].[GetRptWizId]
  @reportId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 SELECT RptWizId FROM dbo.RptWiz WHERE ReportId = @reportId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetSchemaScrImp') AND type='P')
-DROP PROCEDURE dbo.GetSchemaScrImp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetSchemaScrImp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetSchemaScrImp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetSchemaScrImp]
+ALTER PROCEDURE [dbo].[GetSchemaScrImp]
  @screenId	int
 ,@cultureId	smallint
 /* WITH ENCRYPTION */
@@ -37745,26 +35041,17 @@ INSERT INTO #buff (sXml) VALUES ('<BR><SPAN STYLE=''FONT-SIZE:9pt;FONT-FAMILY:ve
 SELECT sXml FROM #buff ORDER BY tid
 DROP TABLE dbo.#buff
 RETURN 0
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetSchemaWizImp') AND type='P')
-DROP PROCEDURE dbo.GetSchemaWizImp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetSchemaWizImp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetSchemaWizImp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetSchemaWizImp]
+ALTER PROCEDURE [dbo].[GetSchemaWizImp]
  @wizardId	int
 ,@cultureId	smallint
 /* WITH ENCRYPTION */
@@ -37810,27 +35097,17 @@ INSERT INTO #buff (sXml) VALUES ('<BR><SPAN STYLE=''FONT-SIZE:9pt;FONT-FAMILY:ve
 SELECT sXml FROM #buff ORDER BY tid
 DROP TABLE dbo.#buff
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenAud') AND type='P')
-DROP PROCEDURE dbo.GetScreenAud
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenAud') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenAud AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetScreenAud]
+ALTER PROCEDURE [dbo].[GetScreenAud]
  @screenId		int
 ,@screenTypeName	char(2)
 ,@desDatabase		varchar(50)
@@ -38196,21 +35473,17 @@ DROP TABLE dbo.#rtn
 DROP TABLE dbo.#mst
 DROP TABLE dbo.#dtl
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenById') AND type='P')
-DROP PROCEDURE dbo.GetScreenById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetScreenById]
+ALTER PROCEDURE [dbo].[GetScreenById]
  @desDatabase		varchar(50)
 ,@srcDatabase		varchar(50)
 ,@screenId		int
@@ -38232,22 +35505,17 @@ SELECT @fClause = 'FROM dbo.Screen a'
 SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 EXEC (@dClause + ' ' + @sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenColumns') AND type='P')
-DROP PROCEDURE dbo.GetScreenColumns
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenColumns') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenColumns AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[GetScreenColumns]
+ALTER PROCEDURE [dbo].[GetScreenColumns]
  @screenId		int
 /* WITH ENCRYPTION */
 AS
@@ -38313,25 +35581,17 @@ WHERE a.ScreenId = @screenId
 ORDER BY a.TabIndex	/* Do not sort by b.PrimaryKey desc; Assuming order by MasterTable DESC, TabFolderOrder, TabIndex from Ir_UpdScreenObjInd */
 DROP TABLE dbo.#mst
 RETURN 0
- 
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenCriDel') AND type='P')
-DROP PROCEDURE dbo.GetScreenCriDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenCriDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenCriDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetScreenCriDel]
+ALTER PROCEDURE [dbo].[GetScreenCriDel]
  @screenId		int
 /* WITH ENCRYPTION */
 AS
@@ -38350,28 +35610,17 @@ SELECT @f2Clause = 'FROM dbo.ScreenObj a INNER JOIN dbo.DbColumn b ON a.ColumnId
 SELECT @w2Clause = 'WHERE a.ScreenId = ' + convert(varchar,@screenId) + ' AND a.DdlKeyColumnId is not null'
 EXEC (@s1Clause + ' ' + @f1Clause + ' ' + @w1Clause + ' UNION ' + @s2Clause + ' ' + @f2Clause + ' ' + @w2Clause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenCriHlp') AND type='P')
-DROP PROCEDURE dbo.GetScreenCriHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenCriHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenCriHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetScreenCriHlp]
+ALTER PROCEDURE [dbo].[GetScreenCriHlp]
  @ScreenId	int
 ,@CultureId	smallint
 /* WITH ENCRYPTION */
@@ -38398,24 +35647,17 @@ SELECT ColumnHeader = isnull(a.ColumnHeader,''), b.ColumnSize, b.RowSize, Displa
 	ORDER BY a.TabIndex
 DROP TABLE dbo.#hlp
 RETURN 0
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenCriteria') AND type='P')
-DROP PROCEDURE dbo.GetScreenCriteria
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenCriteria') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenCriteria AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[GetScreenCriteria]
+ALTER PROCEDURE [dbo].[GetScreenCriteria]
  @screenId		int
 /* WITH ENCRYPTION */
 AS
@@ -38450,24 +35692,17 @@ SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 SELECT @oClause = 'ORDER BY a.TabIndex'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenCud') AND type='P')
-DROP PROCEDURE dbo.GetScreenCud
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenCud') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenCud AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetScreenCud]
+ALTER PROCEDURE [dbo].[GetScreenCud]
  @screenId		int
 ,@screenTypeName	char(2)
 ,@desDatabase		varchar(50)
@@ -38820,28 +36055,17 @@ DROP TABLE dbo.#mst
 DROP TABLE dbo.#dtl
 */
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenDel') AND type='P')
-DROP PROCEDURE dbo.GetScreenDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetScreenDel]
+ALTER PROCEDURE [dbo].[GetScreenDel]
  @srcDatabase		varchar(50)
 /* WITH ENCRYPTION */
 AS
@@ -38853,29 +36077,17 @@ SELECT @fClause = 'FROM dbo.ScreenDel a'
 SELECT @fClause = @fClause + ' INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 EXEC (@sClause + ' ' + @fClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenFilter') AND type='P')
-DROP PROCEDURE dbo.GetScreenFilter
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenFilter') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenFilter AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetScreenFilter]
+ALTER PROCEDURE [dbo].[GetScreenFilter]
 @ScreenId	int,
 @CultureId	smallint
 /* WITH ENCRYPTION */
@@ -38895,25 +36107,17 @@ SELECT a.ScreenFilterId, b.FilterName
 	WHERE a.ScreenId = @screenId ORDER BY a.FilterOrder
 DROP TABLE dbo.#hlp
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenHlp') AND type='P')
-DROP PROCEDURE dbo.GetScreenHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[GetScreenHlp]
+ALTER PROCEDURE [dbo].[GetScreenHlp]
  @ScreenId	int
 ,@CultureId	smallint
 /* WITH ENCRYPTION */
@@ -38928,19 +36132,17 @@ ELSE
 	SELECT DefaultHlpMsg, FootNote, ScreenTitle, AddMsg, UpdMsg, DelMsg, MasterLstTitle, MasterLstSubtitle, MasterRecTitle, MasterRecSubtitle, DetailLstTitle, DetailLstSubtitle, DetailRecTitle, DetailRecSubtitle, NoMasterMsg, NoDetailMsg, AddMasterMsg, AddDetailMsg, MasterFoundMsg, DetailFoundMsg, IncrementMsg
 		FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId and CultureId = @DefCultureId
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLabel') AND type='P')
-DROP PROCEDURE dbo.GetScreenLabel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLabel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenLabel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetScreenLabel]
+ALTER PROCEDURE [dbo].[GetScreenLabel]
  @ScreenId		int
 ,@CultureId		smallint
 ,@Usrs			varchar(1000)
@@ -39038,24 +36240,17 @@ SELECT ColumnHeader = isnull(a.ColumnHeader,''), b.ResizeWidth, b.ResizeHeight
 	ORDER BY b.TabIndex
 DROP TABLE dbo.#hlp
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLis1Proc') AND type='P')
-DROP PROCEDURE dbo.GetScreenLis1Proc
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLis1Proc') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenLis1Proc AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-CREATE PROCEDURE [dbo].[GetScreenLis1Proc]
+ALTER PROCEDURE [dbo].[GetScreenLis1Proc]
  @procedureName		varchar(200)
 ,@criClause			varchar(4000)
 ,@paramCriSql		varchar(4000)
@@ -39168,26 +36363,17 @@ SELECT @procedureSql3 = @selfClause + @criClause
 + 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLis2Proc') AND type='P')
-DROP PROCEDURE dbo.GetScreenLis2Proc
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLis2Proc') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenLis2Proc AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetScreenLis2Proc]
+ALTER PROCEDURE [dbo].[GetScreenLis2Proc]
  @procedureName		varchar(200)
 ,@param2Sql			varchar(4000)
 ,@select2Clause		varchar(max)
@@ -39208,31 +36394,17 @@ SELECT @procedure2Sql = 'CREATE PROCEDURE ' + @procedureName + CHAR(13)
 + 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause)' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
 RETURN 0
-
-
-
-
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLis3Proc') AND type='P')
-DROP PROCEDURE dbo.GetScreenLis3Proc
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLis3Proc') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenLis3Proc AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[GetScreenLis3Proc]
+ALTER PROCEDURE [dbo].[GetScreenLis3Proc]
  @procedureName		varchar(200)
 ,@paramKeySql		varchar(4000)
 ,@paramSql			varchar(4000)
@@ -39313,27 +36485,18 @@ SELECT @procedureSql3 = @selfClause
 + 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLisCri') AND type='P')
-DROP PROCEDURE dbo.GetScreenLisCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLisCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenLisCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 -- Do not check for RequiredValid because criteria could pass null even when manadatory.
-CREATE PROCEDURE [dbo].[GetScreenLisCri]
+ALTER PROCEDURE [dbo].[GetScreenLisCri]
  @screenId		int
 ,@tableId		int
 ,@tableAbbr		varchar(10)
@@ -39361,9 +36524,9 @@ IF @tableAbbr is null OR rtrim(@tableAbbr) = '' SELECT @tableAbbr = '' ELSE SELE
 SELECT @paramCriSql = '', @tmpClause = ''
 SELECT @criClause = 'IF @key is not null SELECT @wClause = @wClause + '''' AND (' + @tableAbbr + @PKeyColumnName
 IF @numericData = 'Y'
-	SELECT @criClause = @criClause + ' = '''' + @key + '''')''''' + CHAR(13)
+	SELECT @criClause = @criClause + ' = '''' + RODesign.dbo.fSanitizeKeyVal(@key,1) + '''')''''' + CHAR(13)
 ELSE
-	SELECT @criClause = @criClause + ' = '''''''''''' + @key + '''''''''''')''''' + CHAR(13)
+	SELECT @criClause = @criClause + ' = '''''''''''' + RODesign.dbo.fSanitizeKeyVal(@key,0) + '''''''''''')''''' + CHAR(13)
 DECLARE criCursor CURSOR FOR
 	SELECT a1.ColumnName, a1.AllowNulls, e.OperatorName, a2.NumericData, a2.DataTypeSqlName
 	, b1.ColumnName + convert(varchar,a.ScreenCriId), isnull(a3.TableName,'')
@@ -39427,23 +36590,18 @@ END
 CLOSE criCursor
 DEALLOCATE criCursor
 IF @tmpClause <> '' SELECT @criClause = @criClause + 'ELSE' + CHAR(13) + 'BEGIN' + CHAR(13) + @tmpClause + 'END' + CHAR(13)
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLisI1ById') AND type='P')
-DROP PROCEDURE dbo.GetScreenLisI1ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLisI1ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenLisI1ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[GetScreenLisI1ById]
+ALTER PROCEDURE [dbo].[GetScreenLisI1ById]
  @screenId		int
 ,@procedureName		varchar(200)
 ,@appDatabase		varchar(50)
@@ -39707,9 +36865,9 @@ BEGIN
 				,@parameter2DByte = @parameter2DByte + ',' + @dataTypeDByteOle
 		END
 		IF @numericData = 'Y'
-			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + isnull(''''=''''+@KeyId' + CONVERT(varchar,@jj) + ','''' is null'''')' + CHAR(13)
+			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + isnull(''''=''''+ RODesign.dbo.fSanitizeKeyVal(@KeyId' + CONVERT(varchar,@jj) + ',1),'''' is null'''')' + CHAR(13)
 		ELSE
-			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ' = '''''''''''' + isnull(@KeyId' + CONVERT(varchar,@jj) + ','''''''') + ''''''''''''''''' + CHAR(13)
+			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ' = '''''''''''' + isnull(RODesign.dbo.fSanitizeKeyVal(@KeyId' + CONVERT(varchar,@jj) + ',0),'''''''') + ''''''''''''''''' + CHAR(13)
 		SELECT @criNfilterTxtClause = @criClause + CHAR(13)
 			+ 'SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,''''['''',''''[[]''''),''''%'''',''''[%]''''),''''_'''',''''[_]''''), '''''''''''''''','''''''''''''''''''''''') ' + CHAR(13)
 			+ 'IF @FilterTxt is not null AND @FilterTxt <> '''''''' SELECT @wClause = @wClause + '''' AND ('
@@ -39879,6 +37037,7 @@ BEGIN
 END
 CLOSE objCursor
 DEALLOCATE objCursor
+
 /* Prepare Search List procedure */
 SELECT @proc1Name = 'GetLis' + @procedureName, @select1Clause = @select1Clause + ', MatchCount=COUNT(1) OVER ()'
 IF @order1Clause = '' EXEC dbo.GetSortOrder @screenId,@fromClause,@sysDatabase,'Y',@order1Clause OUTPUT
@@ -39911,6 +37070,7 @@ END
 SELECT @dropProcedure1Sql = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''' + @proc1Name + ''''') AND type = ''''P'''') DROP PROCEDURE ' + @proc1Name
 SELECT @dropProcedure2Sql = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''' + @proc2Name + ''''') AND type = ''''P'''') DROP PROCEDURE ' + @proc2Name
 SELECT @dropProcedure4Sql = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''' + @proc4Name + ''''') AND type = ''''P'''') DROP PROCEDURE ' + @proc4Name
+
 IF @multiDesignDb = 'Y'
 BEGIN
 	DECLARE sysCursor CURSOR FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
@@ -39960,19 +37120,17 @@ SELECT 	 parameter1Names='Usrs,RowAuthoritys'+@parameter1Names
 	,parameter4Types='string,string'+@parameter4Types
 	,parameter4SByte='VarChar,VarChar'+@parameter4SByte
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLisI2ById') AND type='P')
-DROP PROCEDURE dbo.GetScreenLisI2ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLisI2ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenLisI2ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetScreenLisI2ById]
+ALTER PROCEDURE [dbo].[GetScreenLisI2ById]
  @screenId		int
 ,@procedureName		varchar(200)
 ,@appDatabase		varchar(50)
@@ -40177,9 +37335,9 @@ BEGIN
 				,@parameter2DByte = @parameter2DByte + ',' + @dataTypeDByteOle
 		END
 		IF @numericData = 'Y'
-			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + case when @KeyId' + ' is null then '''' is null'''' else ''''='''' + convert(varchar,@KeyId) end' + CHAR(13)
+			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + case when @KeyId' + ' is null then '''' is null'''' else ''''='''' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end' + CHAR(13)
 		ELSE
-			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + case when @KeyId' + ' is null then '''' is null'''' else ''''='''''''''''' + convert(varchar,@KeyId) + '''''''''''''''' end' + CHAR(13)
+			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + case when @KeyId' + ' is null then '''' is null'''' else ''''='''''''''''' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,0)) + '''''''''''''''' end' + CHAR(13)
 	END
 	IF @tableId is NOT NULL
 	BEGIN
@@ -40384,20 +37542,17 @@ SELECT 	 parameter1Names='RowAuthoritys'+@parameter1Names
 	,parameter2DByte=RIGHT(@parameter2DByte,LEN(@parameter2DByte)-1)
 	,calling2Params='c'+@procedureName+'List.SelectedValue'
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLisI3ById') AND type='P')
-DROP PROCEDURE dbo.GetScreenLisI3ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLisI3ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenLisI3ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetScreenLisI3ById]
+ALTER PROCEDURE [dbo].[GetScreenLisI3ById]
  @screenId		int
 ,@procedureName		varchar(200)
 ,@appDatabase		varchar(50)
@@ -40732,23 +37887,17 @@ SELECT parameter1Names='Usrs,RowAuthoritys'+@parameter1Names
 	,parameter1Types='string,string'+@parameter1Types
 	,parameter1SByte='VarChar,VarChar'+@parameter1SByte
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLisParm') AND type='P')
-DROP PROCEDURE dbo.GetScreenLisParm
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenLisParm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenLisParm AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[GetScreenLisParm]
+ALTER PROCEDURE [dbo].[GetScreenLisParm]
  @screenId			int
 ,@reportId			int
 ,@tableId			int
@@ -40840,22 +37989,17 @@ IF charindex('Projects',@paramSql) > 0
 		+ @tableAbbr + ''''',''''' + @MulProject + ''''',' + isnull('''''' + @ExtProject + '''''','null') + ',''''' + @pKeyColName + ''''',@wClause OUTPUT' + CHAR(13)
 SELECT @param1Sql = @param1Sql + @paramSql
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenList') AND type='P')
-DROP PROCEDURE dbo.GetScreenList
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenList') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenList AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[GetScreenList]
+ALTER PROCEDURE [dbo].[GetScreenList]
  @searchTxt		nvarchar(25)
 /* WITH ENCRYPTION */
 AS
@@ -40887,19 +38031,17 @@ ELSE
 SELECT @oClause = 'ORDER BY a.ScreenTitle'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenObjDdlById') AND type='P')
-DROP PROCEDURE dbo.GetScreenObjDdlById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenObjDdlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenObjDdlById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[GetScreenObjDdlById]
+ALTER PROCEDURE [dbo].[GetScreenObjDdlById]
  @screenId		int
 ,@screenObjId		int
 ,@procedureName		varchar(200)
@@ -41170,21 +38312,18 @@ SELECT 	 parameter1Names='RowAuthoritys'+@parameter1Names
 	,calling3Params='filterTxt'
 */
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenObjDdlProc') AND type='P')
-DROP PROCEDURE dbo.GetScreenObjDdlProc
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenObjDdlProc') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenObjDdlProc AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 /* @param1Sql is replaced by all the parameters in UsrImpr */
-CREATE PROCEDURE [dbo].[GetScreenObjDdlProc]
+ALTER PROCEDURE [dbo].[GetScreenObjDdlProc]
  @procedureName		varchar(200)
 ,@paramKeySql		varchar(4000)
 ,@param1Sql		varchar(4000)
@@ -41268,26 +38407,17 @@ SELECT @procedureSql3 = @selfClause
 + CHAR(9) + 'SELECT ' + @select2Clause + ' WHERE 1<>1' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenTab') AND type='P')
-DROP PROCEDURE dbo.GetScreenTab
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScreenTab') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScreenTab AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetScreenTab]
+ALTER PROCEDURE [dbo].[GetScreenTab]
  @ScreenId	int
 ,@CultureId	smallint
 /* WITH ENCRYPTION */
@@ -41307,24 +38437,17 @@ SELECT TabFolderId = a.ScreenTabId, b.TabFolderName, a.TabFolderOrder
 	WHERE a.ScreenId = @ScreenId ORDER BY a.TabFolderOrder
 DROP TABLE dbo.#hlp
 RETURN 0
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScrImpTmpl') AND type='P')
-DROP PROCEDURE dbo.GetScrImpTmpl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetScrImpTmpl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetScrImpTmpl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[GetScrImpTmpl]
+ALTER PROCEDURE [dbo].[GetScrImpTmpl]
  @screenId	int
 ,@cultureId	smallint
 /* WITH ENCRYPTION */
@@ -41463,26 +38586,17 @@ select '</Row></Table></Worksheet></Workbook>'
 
 SELECT xml FROM @xmlTable ORDER by xid
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetServerRule') AND type='P')
-DROP PROCEDURE dbo.GetServerRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetServerRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetServerRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetServerRule]
+ALTER PROCEDURE [dbo].[GetServerRule]
  @screenId		int
 /* WITH ENCRYPTION */
 AS
@@ -41501,29 +38615,17 @@ SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 SELECT @oClause = 'ORDER BY a.RuleOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetSortOrder') AND type='P')
-DROP PROCEDURE dbo.GetSortOrder
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetSortOrder') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetSortOrder AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetSortOrder]
+ALTER PROCEDURE [dbo].[GetSortOrder]
  @screenId	int
 ,@fromClause	varchar(8000)
 ,@sysDatabase	varchar(50)
@@ -41597,30 +38699,18 @@ BEGIN
 	DEALLOCATE sort_cursor
 	SELECT @orderClause = @sOrderBy
 END
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetTableAbbr') AND type='P')
-DROP PROCEDURE dbo.GetTableAbbr
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetTableAbbr') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetTableAbbr AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetTableAbbr]
+ALTER PROCEDURE [dbo].[GetTableAbbr]
  @tableIdx	 tinyint OUTPUT
 ,@tableAbbr	 varchar(3) OUTPUT	/* Cannot be char(3) here */
 /* WITH ENCRYPTION */
@@ -41630,33 +38720,17 @@ AS
 	IF @tableIdx < 10 SELECT @tableAbbr = @tableAbbr + '0'
 	SELECT @tableAbbr = @tableAbbr + CONVERT(VARCHAR(2),@tableIdx), @tableIdx = @tableIdx + 1
 RETURN 0
-
-
-
-
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWebRule') AND type='P')
-DROP PROCEDURE dbo.GetWebRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWebRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetWebRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetWebRule]
+ALTER PROCEDURE [dbo].[GetWebRule]
  @screenId		int
 /* WITH ENCRYPTION */
 AS
@@ -41673,29 +38747,17 @@ SELECT @fClause = 'FROM dbo.WebRule a'
 SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizardById') AND type='P')
-DROP PROCEDURE dbo.GetWizardById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizardById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetWizardById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetWizardById]
+ALTER PROCEDURE [dbo].[GetWizardById]
  @desDatabase		varchar(50)
 ,@srcDatabase		varchar(50)
 ,@wizardId		int
@@ -41713,30 +38775,17 @@ SELECT @fClause = 'FROM dbo.Wizard a'
 SELECT @wClause = 'WHERE a.WizardId = ' + CONVERT(varchar,@wizardId)
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizardColumns') AND type='P')
-DROP PROCEDURE dbo.GetWizardColumns
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizardColumns') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetWizardColumns AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetWizardColumns]
+ALTER PROCEDURE [dbo].[GetWizardColumns]
  @wizardId		int
 /* WITH ENCRYPTION */
 AS
@@ -41756,30 +38805,17 @@ SELECT @wClause = 'WHERE a.WizardId = ' + CONVERT(varchar,@wizardId)
 SELECT @oClause = 'ORDER BY b.PrimaryKey desc, a.TabIndex'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizardDel') AND type='P')
-DROP PROCEDURE dbo.GetWizardDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizardDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetWizardDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetWizardDel]
+ALTER PROCEDURE [dbo].[GetWizardDel]
  @srcDatabase		varchar(50)
 /* WITH ENCRYPTION */
 AS
@@ -41791,30 +38827,17 @@ SELECT @fClause = 'FROM dbo.WizardDel a'
 + ' INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 EXEC (@sClause + ' ' + @fClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizardList') AND type='P')
-DROP PROCEDURE dbo.GetWizardList
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizardList') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetWizardList AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetWizardList]
+ALTER PROCEDURE [dbo].[GetWizardList]
  @searchTxt		nvarchar(25)
 /* WITH ENCRYPTION */
 AS
@@ -41833,29 +38856,17 @@ ELSE
 SELECT @oClause = 'ORDER BY a.WizardTitle'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizardRule') AND type='P')
-DROP PROCEDURE dbo.GetWizardRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizardRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetWizardRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetWizardRule]
+ALTER PROCEDURE [dbo].[GetWizardRule]
  @wizardId		int
 /* WITH ENCRYPTION */
 AS
@@ -41870,30 +38881,17 @@ SELECT @wClause = 'WHERE a.WizardId = ' + CONVERT(varchar,@wizardId)
 SELECT @oClause = 'ORDER BY a.RuleOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizImpTmpl') AND type='P')
-DROP PROCEDURE dbo.GetWizImpTmpl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetWizImpTmpl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetWizImpTmpl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[GetWizImpTmpl]
+ALTER PROCEDURE [dbo].[GetWizImpTmpl]
  @wizardId	int
 ,@cultureId	smallint
 /* WITH ENCRYPTION */
@@ -41963,28 +38961,17 @@ select '</Row></Table></Worksheet></Workbook>'
 
 SELECT xml FROM @xmlTable ORDER by xid
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.IniLastCriteria') AND type='P')
-DROP PROCEDURE dbo.IniLastCriteria
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.IniLastCriteria') AND type='P')
+EXEC('CREATE PROCEDURE dbo.IniLastCriteria AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[IniLastCriteria]
+ALTER PROCEDURE [dbo].[IniLastCriteria]
  @ScreenId		int
 ,@ReportId		int
 ,@UsrId			int
@@ -42017,7 +39004,17 @@ END
 ELSE
 IF EXISTS (SELECT 'true' FROM RODesign.dbo.Usr WHERE UsrId = @UsrId AND Active = 'Y')
 BEGIN
-	DECLARE sysCursor CURSOR FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
+	DECLARE sysCursor CURSOR FOR 
+	/* handle cross server/cross namespace
+	SELECT dbDesDatabase 
+	FROM dbo.Systems 
+	*/
+	SELECT
+	m.dbDesDatabase
+	FROM RODesign.dbo.Systems s
+	INNER JOIN RODesign.dbo.Systems m on m.dbDesDatabase LIKE REPLACE(s.dbDesDatabase,'Design','') + '%' 
+	WHERE s.SysProgram = 'Y' AND m.dbAppUserId = s.dbAppUserId AND m.dbAppServer = s.dbAppServer 
+		  --AND m.Active = 'Y'	FOR READ ONLY
 	OPEN sysCursor
 	FETCH NEXT FROM sysCursor INTO @dbDesDatabase
 	WHILE @@FETCH_STATUS = 0
@@ -42048,28 +39045,17 @@ BEGIN
 END
 ELSE EXEC dbo.DelLastCriteria null,null,@UsrId
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.IniMemCri') AND type='P')
-DROP PROCEDURE dbo.IniMemCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.IniMemCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.IniMemCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[IniMemCri]
+ALTER PROCEDURE [dbo].[IniMemCri]
  @GenPrefix		varchar(10)
 ,@ReportId		int
 ,@MemCriId		Int
@@ -42089,29 +39075,17 @@ ELSE
 		WHERE a.ReportId = @ReportId
 		AND NOT EXISTS (SELECT 1 FROM dbo.RptMemCriDtl b WHERE b.RptMemCriId = @MemCriId AND a.ReportCriId = b.ReportCriId)
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.IniRptCriteria') AND type='P')
-DROP PROCEDURE dbo.IniRptCriteria
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.IniRptCriteria') AND type='P')
+EXEC('CREATE PROCEDURE dbo.IniRptCriteria AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[IniRptCriteria]
+ALTER PROCEDURE [dbo].[IniRptCriteria]
  @GenPrefix		varchar(10)
 ,@ReportId		int
 ,@UsrId			int
@@ -42136,29 +39110,17 @@ END
 ELSE
 	EXEC dbo.DelRptCriteria null,null,@UsrId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_AssignPermUp') AND type='P')
-DROP PROCEDURE dbo.Ir_AssignPermUp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_AssignPermUp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_AssignPermUp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_AssignPermUp]
+ALTER PROCEDURE [dbo].[Ir_AssignPermUp]
  @MenuId		int
 /* WITH ENCRYPTION */
 AS
@@ -42203,29 +39165,17 @@ BEGIN
 END
 */
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_ChgReportCriGrp') AND type='P')
-DROP PROCEDURE dbo.Ir_ChgReportCriGrp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_ChgReportCriGrp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_ChgReportCriGrp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_ChgReportCriGrp]
+ALTER PROCEDURE [dbo].[Ir_ChgReportCriGrp]
  @ReportId		int
 ,@ReportCriId	Int
 ,@ReportGrpId	Int
@@ -42250,56 +39200,35 @@ BEGIN
 			UPDATE dbo.ReportCri SET ReportGrpId = @ReportGrpId WHERE ReportId = @ReportId
 	END
 END
-RETURN 0 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelAuthCol') AND type='P')
-DROP PROCEDURE dbo.Ir_DelAuthCol
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelAuthCol') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelAuthCol AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelAuthCol]
+ALTER PROCEDURE [dbo].[Ir_DelAuthCol]
 @ScreenObjId	int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 DELETE FROM dbo.ColOvrd WHERE ScreenObjId = @ScreenObjId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelDbKey') AND type='P')
-DROP PROCEDURE dbo.Ir_DelDbKey
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelDbKey') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelDbKey AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelDbKey]
+ALTER PROCEDURE [dbo].[Ir_DelDbKey]
  @ScreenObjId		int
 ,@ColumnId			int
 ,@DdlKeyColumnId	int
@@ -42340,27 +39269,17 @@ BEGIN
 END
 */
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelMenuHlp') AND type='P')
-DROP PROCEDURE dbo.Ir_DelMenuHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelMenuHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelMenuHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelMenuHlp]
+ALTER PROCEDURE [dbo].[Ir_DelMenuHlp]
 @MenuId		int
 /* WITH ENCRYPTION */
 AS
@@ -42392,26 +39311,17 @@ DROP TABLE dbo.#mnu
 DELETE FROM dbo.MenuPrm WHERE MenuId = @MenuId
 DELETE FROM dbo.MenuHlp WHERE MenuId = @MenuId
 RETURN 0
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldRptonDel') AND type='P')
-DROP PROCEDURE dbo.Ir_DelOldRptonDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldRptonDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelOldRptonDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelOldRptonDel]
+ALTER PROCEDURE [dbo].[Ir_DelOldRptonDel]
  @ReportId		int
 ,@ProgramName	varchar(50)
 /* WITH ENCRYPTION */
@@ -42445,26 +39355,17 @@ DELETE FROM dbo.MenuHlp WHERE MenuId = @MenuId
 DELETE FROM dbo.MenuPrm WHERE MenuId = @MenuId
 DELETE FROM dbo.Menu WHERE MenuId = @MenuId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldRptonRen') AND type='P')
-DROP PROCEDURE dbo.Ir_DelOldRptonRen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldRptonRen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelOldRptonRen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelOldRptonRen]
+ALTER PROCEDURE [dbo].[Ir_DelOldRptonRen]
  @ReportId		int
 ,@ProgramName	varchar(50)
 /* WITH ENCRYPTION */
@@ -42480,32 +39381,17 @@ BEGIN
 		WHERE ReportId = @ReportId
 END
 RETURN 0
-
-
-
-
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldScronDel') AND type='P')
-DROP PROCEDURE dbo.Ir_DelOldScronDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldScronDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelOldScronDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelOldScronDel]
+ALTER PROCEDURE [dbo].[Ir_DelOldScronDel]
  @ScreenId	int
 ,@ProgramName	varchar(50)
 /* WITH ENCRYPTION */
@@ -42548,25 +39434,17 @@ DELETE FROM dbo.MenuHlp WHERE MenuId = @MenuId
 DELETE FROM dbo.MenuPrm WHERE MenuId = @MenuId
 DELETE FROM dbo.Menu WHERE MenuId = @MenuId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldScronRen') AND type='P')
-DROP PROCEDURE dbo.Ir_DelOldScronRen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldScronRen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelOldScronRen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelOldScronRen]
+ALTER PROCEDURE [dbo].[Ir_DelOldScronRen]
  @ScreenId	int
 ,@ProgramName	varchar(50)
 /* WITH ENCRYPTION */
@@ -42588,25 +39466,17 @@ BEGIN
 		WHERE a.ScreenId = @ScreenId
 END
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldWizonDel') AND type='P')
-DROP PROCEDURE dbo.Ir_DelOldWizonDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldWizonDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelOldWizonDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelOldWizonDel]
+ALTER PROCEDURE [dbo].[Ir_DelOldWizonDel]
  @WizardId	int
 ,@ProgramName	varchar(50)
 /* WITH ENCRYPTION */
@@ -42622,32 +39492,18 @@ SELECT @MenuId = MenuId FROM dbo.Menu WHERE WizardId = @WizardId
 DELETE FROM dbo.MenuHlp WHERE MenuId = @MenuId
 DELETE FROM dbo.MenuPrm WHERE MenuId = @MenuId
 DELETE FROM dbo.Menu WHERE MenuId = @MenuId
-RETURN 0 
- 
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldWizonRen') AND type='P')
-DROP PROCEDURE dbo.Ir_DelOldWizonRen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelOldWizonRen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelOldWizonRen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelOldWizonRen]
+ALTER PROCEDURE [dbo].[Ir_DelOldWizonRen]
  @WizardId	int
 ,@ProgramName	varchar(50)
 /* WITH ENCRYPTION */
@@ -42657,120 +39513,68 @@ SET NOCOUNT ON
 SELECT @oProgramName = ProgramName FROM dbo.Wizard WHERE WizardId = @WizardId
 IF @oProgramName <> @ProgramName INSERT INTO dbo.WizardDel (WizardId, ProgramName) SELECT @WizardId, @oProgramName
 RETURN 0
-
-
-
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelRefColumn') AND type='P')
-DROP PROCEDURE dbo.Ir_DelRefColumn
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelRefColumn') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelRefColumn AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelRefColumn]
+ALTER PROCEDURE [dbo].[Ir_DelRefColumn]
  @ColumnId	int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 DELETE FROM dbo.DbKey WHERE ColumnId = @ColumnId OR RefColumnId = @ColumnId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelReportObjHlp') AND type='P')
-DROP PROCEDURE dbo.Ir_DelReportObjHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelReportObjHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelReportObjHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelReportObjHlp]
+ALTER PROCEDURE [dbo].[Ir_DelReportObjHlp]
  @ReportObjId	int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 DELETE FROM dbo.ReportObjHlp WHERE ReportObjId = @ReportObjId
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelRptCel') AND type='P')
-DROP PROCEDURE dbo.Ir_DelRptCel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelRptCel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelRptCel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelRptCel]
+ALTER PROCEDURE [dbo].[Ir_DelRptCel]
  @RptCelId	int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 DELETE FROM dbo.RptCtr WHERE RptCelId = @RptCelId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelRptCtr') AND type='P')
-DROP PROCEDURE dbo.Ir_DelRptCtr
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelRptCtr') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelRptCtr AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelRptCtr]
+ALTER PROCEDURE [dbo].[Ir_DelRptCtr]
  @RptCtrId	int
 /* WITH ENCRYPTION */
 AS
@@ -42785,29 +39589,18 @@ BEGIN
 	RAISERROR('Cannot delete this control as one or more other control is currently referencing it.',18,2) WITH SETERROR
 	RETURN 1
 END
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelRptTbl') AND type='P')
-DROP PROCEDURE dbo.Ir_DelRptTbl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelRptTbl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelRptTbl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelRptTbl]
+ALTER PROCEDURE [dbo].[Ir_DelRptTbl]
  @RptTblId	int
 /* WITH ENCRYPTION */
 AS
@@ -42819,29 +39612,18 @@ BEGIN
 END
 DELETE FROM dbo.RptCtr WHERE EXISTS 
 	(SELECT 1 FROM dbo.RptCel WHERE RptCel.RptTblId = @RptTblId AND RptCtr.RptCelId = RptCel.RptCelId)
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelRptTmpl') AND type='P')
-DROP PROCEDURE dbo.Ir_DelRptTmpl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelRptTmpl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelRptTmpl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_DelRptTmpl]
+ALTER PROCEDURE [dbo].[Ir_DelRptTmpl]
  @TemplateId	int
 /* WITH ENCRYPTION */
 AS
@@ -42852,29 +39634,17 @@ SELECT @TmplPrefix = TmplPrefix, @TmplDefault = TmplDefault FROM dbo.Template WH
 IF @TmplDefault = 'Y' BEGIN RAISERROR('{39}',18,2) WITH SETERROR RETURN 1 END
 IF @TmplPrefix <> '' DELETE FROM dbo.RptTemplate WHERE charindex(@TmplPrefix,DocName) = 1
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitAppInfo') AND type='P')
-DROP PROCEDURE dbo.Ir_InitAppInfo
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitAppInfo') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitAppInfo AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_InitAppInfo]
+ALTER PROCEDURE [dbo].[Ir_InitAppInfo]
  @AppInfoId		int
 /* WITH ENCRYPTION */
 AS
@@ -42909,30 +39679,17 @@ BEGIN
 	SELECT right(space(3)+convert(varchar,@VersionMa),4) + '.' + right(space(3)+convert(varchar,@VersionMi),4), @VersionMa, @VersionMi
 END
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitCustom') AND type='P')
-DROP PROCEDURE dbo.Ir_InitCustom
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitCustom') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitCustom AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_InitCustom]
+ALTER PROCEDURE [dbo].[Ir_InitCustom]
  @CustomId int
 /* WITH ENCRYPTION */
 AS
@@ -42941,28 +39698,18 @@ SET NOCOUNT ON
 SELECT @CustomDesc = GenerateCm + ':' + CustomName FROM dbo.Custom WHERE CustomId = @CustomId
 UPDATE dbo.Custom SET CustomDesc = @CustomDesc WHERE CustomId = @CustomId
 UPDATE dbo.CustomDtl SET CustomDtlDesc = @CustomDesc + ':' + ObjectTypeCd + ':' + isnull(LanguageCd,'*') + ':' + isnull(FrameworkCd,'*') + ':' + isnull(DbProviderCd,'*') + ':' + ProgramName WHERE CustomId = @CustomId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitLabel') AND type='P')
-DROP PROCEDURE dbo.Ir_InitLabel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitLabel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitLabel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_InitLabel]
+ALTER PROCEDURE [dbo].[Ir_InitLabel]
  @LabelId	int
 /* WITH ENCRYPTION */
 AS
@@ -42972,28 +39719,17 @@ LabelDesc = LabelCat + ': ' + ISNULL(RIGHT('000'+CONVERT(varchar,SortOrder),4)+'
 FROM dbo.Label a INNER JOIN RODesign.dbo.VwCulture b ON a.CultureId = b.CultureId
 WHERE LabelId = @LabelId
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitMenuHlp') AND type='P')
-DROP PROCEDURE dbo.Ir_InitMenuHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitMenuHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitMenuHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_InitMenuHlp]
+ALTER PROCEDURE [dbo].[Ir_InitMenuHlp]
  @MenuId	int
 /* WITH ENCRYPTION */
 AS
@@ -43037,26 +39773,17 @@ BEGIN
 	DROP TABLE dbo.#mnu
 END
 RETURN 0
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitReportClauses') AND type='P')
-DROP PROCEDURE dbo.Ir_InitReportClauses
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitReportClauses') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitReportClauses AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_InitReportClauses]
+ALTER PROCEDURE [dbo].[Ir_InitReportClauses]
  @ReportId	int
 /* WITH ENCRYPTION */
 AS
@@ -43089,28 +39816,17 @@ IF @ReportTypeCd = 'X' AND (@XlsClause is null OR @XlsClause = '')
 /* In case of a conversion from Crystal report to SQL Reporting */
 EXEC dbo.WrRptConvSql @ReportId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitReportCriClauses') AND type='P')
-DROP PROCEDURE dbo.Ir_InitReportCriClauses
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitReportCriClauses') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitReportCriClauses AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_InitReportCriClauses]
+ALTER PROCEDURE [dbo].[Ir_InitReportCriClauses]
  @ReportCriId	int
 /* WITH ENCRYPTION */
 AS
@@ -43132,30 +39848,18 @@ END
 ELSE
 	UPDATE dbo.ReportCri SET RegClause = '' WHERE ReportCriId = @ReportCriId
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitReportObj') AND type='P')
-DROP PROCEDURE dbo.Ir_InitReportObj
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitReportObj') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitReportObj AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
 -- Enter @dbDesDatabase name when copying from another database:
-CREATE PROCEDURE [dbo].[Ir_InitReportObj]
+ALTER PROCEDURE [dbo].[Ir_InitReportObj]
  @NReportId			int
 ,@CopyReportId		int
 ,@dbDesDatabase		varchar(50) = null		/* After CRUD */
@@ -43359,25 +40063,17 @@ SELECT @x4Clause = ' DELETE FROM dbo.RptCtr WHERE ReportId = ' + CONVERT(varchar
 -- Bypass varchar(max) running as varchar(8000) issue on certain SQL server versions;
 EXEC dbo.MkStoredProcedure @x1Clause, @x2Clause, @x3Clause, @x4Clause
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitReportObjHlp') AND type='P')
-DROP PROCEDURE dbo.Ir_InitReportObjHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitReportObjHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitReportObjHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_InitReportObjHlp]
+ALTER PROCEDURE [dbo].[Ir_InitReportObjHlp]
  @ReportObjId	int
 /* WITH ENCRYPTION */
 AS
@@ -43390,25 +40086,17 @@ IF NOT EXISTS (SELECT 1 from dbo.ReportObjHlp WHERE CultureId = @CultureId and R
 	SELECT ColumnDesc + ' (' + @CultureTypeName + ')',@ReportObjId,@CultureId,ColumnName
 	FROM dbo.ReportObj WHERE ReportObjId = @ReportObjId
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitScreenObj') AND type='P')
-DROP PROCEDURE dbo.Ir_InitScreenObj
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitScreenObj') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitScreenObj AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[Ir_InitScreenObj]
+ALTER PROCEDURE [dbo].[Ir_InitScreenObj]
  @ScreenId	int
 ,@DbId		tinyint
 /* WITH ENCRYPTION */
@@ -43563,23 +40251,17 @@ UPDATE dbo.Screen SET
 	,ScreenFilter = 'AdmScreenFilter.aspx?id=181&cri1=' + convert(varchar,@ScreenId) + '&typ=N&sys=' + convert(varchar,@DbId)
 	WHERE ScreenId = @ScreenId
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitScreenObjHlp') AND type='P')
-DROP PROCEDURE dbo.Ir_InitScreenObjHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitScreenObjHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitScreenObjHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_InitScreenObjHlp]
+ALTER PROCEDURE [dbo].[Ir_InitScreenObjHlp]
  @ScreenObjId	int
 /* WITH ENCRYPTION */
 AS
@@ -43607,24 +40289,17 @@ BEGIN
 	END
 END
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitStaticPg') AND type='P')
-DROP PROCEDURE dbo.Ir_InitStaticPg
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitStaticPg') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitStaticPg AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[Ir_InitStaticPg]
+ALTER PROCEDURE [dbo].[Ir_InitStaticPg]
  @StaticPgId	int
 ,@StaticPgNm	varchar(50)
 ,@DbId			smallint
@@ -43652,29 +40327,18 @@ UPDATE dbo.StaticPg
 	SET StaticPgUrl = 'showpage.aspx?pg=' + CONVERT(varchar,@StaticPgId) + '&csy=' + CONVERT(varchar,@DbId)
 	, StaticPgDesc = @StaticPgTitle + ' (' + @StaticPgNm + ')'
 	WHERE StaticPgId = @StaticPgId
-RETURN 0 
-
-
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitWizardObj') AND type='P')
-DROP PROCEDURE dbo.Ir_InitWizardObj
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_InitWizardObj') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_InitWizardObj AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_InitWizardObj]
+ALTER PROCEDURE [dbo].[Ir_InitWizardObj]
  @WizardId	int
 ,@MasterTableId	int
 /* WITH ENCRYPTION */
@@ -43691,30 +40355,17 @@ BEGIN
 		FROM dbo.DbColumn WHERE TableId = @masterTableId
 END
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_MemScreenObjHlp') AND type='P')
-DROP PROCEDURE dbo.Ir_MemScreenObjHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_MemScreenObjHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_MemScreenObjHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_MemScreenObjHlp]
+ALTER PROCEDURE [dbo].[Ir_MemScreenObjHlp]
  @ScreenObjHlpId	int
 ,@ScreenObjId		int
 ,@CultureId			smallint
@@ -43755,28 +40406,17 @@ BEGIN
 	END
 END
 RETURN 0
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdAdvRule') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdAdvRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdAdvRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdAdvRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdAdvRule]
+ALTER PROCEDURE [dbo].[Ir_UpdAdvRule]
  @AdvRuleId		int
 ,@CultureId		smallint
 /* WITH ENCRYPTION */
@@ -43791,28 +40431,17 @@ UPDATE dbo.AdvRule SET RuleDesc = isnull(b.ScreenTitle,space(0)) + ' [' + c.Rule
 		AND b.CultureId = CASE WHEN EXISTS (SELECT 1 FROM dbo.ScreenHlp x WHERE x.ScreenId = a.ScreenId AND x.CultureId = @CultureId) THEN @CultureId ELSE @DefCultureId END
 	WHERE a.AdvRuleId = @AdvRuleId
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdAppItem') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdAppItem
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdAppItem') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdAppItem AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdAppItem]
+ALTER PROCEDURE [dbo].[Ir_UpdAppItem]
  @AppItemId	int
 ,@DbId		tinyint
 /* WITH ENCRYPTION */
@@ -43851,22 +40480,17 @@ UPDATE dbo.AppItem SET
 	,AppItemLink = 'SearchLink("AdmAppItem.aspx?id=213&key=' + convert(varchar,@AppItemId) + '&typ=N&sys=' + convert(varchar,@DbId) + '","","",""); return false;'
 WHERE AppItemId = @AppItemId
 RETURN 0
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdAsmxRule') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdAsmxRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdAsmxRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdAsmxRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[Ir_UpdAsmxRule]
+ALTER PROCEDURE [dbo].[Ir_UpdAsmxRule]
  @RuleAsmxId		int
 ,@CultureId		smallint
 /* WITH ENCRYPTION */
@@ -43880,23 +40504,17 @@ UPDATE dbo.RuleAsmx SET RuleAsmxDesc = isnull(b.ScreenTitle,space(0)) + ': ' + a
 	AND b.CultureId = CASE WHEN EXISTS (SELECT 1 FROM dbo.ScreenHlp x WHERE x.ScreenId = a.ScreenId AND x.CultureId = @CultureId) THEN @CultureId ELSE @DefCultureId END
 	WHERE a.RuleAsmxId = @RuleAsmxId
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdClientRule') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdClientRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdClientRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdClientRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdClientRule]
+ALTER PROCEDURE [dbo].[Ir_UpdClientRule]
  @ClientRuleId		int
 /* WITH ENCRYPTION */
 AS
@@ -43933,24 +40551,17 @@ UPDATE dbo.ClientRule SET
 	LEFT OUTER JOIN dbo.ScreenHlp sh ON sh.ScreenId = a.ScreenId AND sh.CultureId = @CultureId
 	WHERE a.ClientRuleId = @ClientRuleId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdColByCol') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdColByCol
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdColByCol') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdColByCol AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdColByCol]
+ALTER PROCEDURE [dbo].[Ir_UpdColByCol]
  @ColumnId		int
 ,@ColumnName	varchar(50)
 /* WITH ENCRYPTION */
@@ -43986,49 +40597,35 @@ BEGIN
 	EXEC (@sClause)
 END
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdCronJob') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdCronJob
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdCronJob') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdCronJob AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdCronJob]
+ALTER PROCEDURE [dbo].[Ir_UpdCronJob]
  @CronJobId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.CronJob SET NextRun = null WHERE CronJobId = @CronJobId
-RETURN 0  
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdDbColumn') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdDbColumn
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdDbColumn') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdDbColumn AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
 -- Fire on master because TableName can change when columns have no activitiy:
-CREATE PROCEDURE [dbo].[Ir_UpdDbColumn]
+ALTER PROCEDURE [dbo].[Ir_UpdDbColumn]
  @TableId	int
 ,@TableName	varchar(500)
 /* WITH ENCRYPTION */
@@ -44036,26 +40633,18 @@ AS
 SET NOCOUNT ON
 SELECT @TableName = LEFT(@TableName, CASE WHEN CHARINDEX('(',@TableName) > 0 THEN CHARINDEX('(',@TableName) - 1 ELSE LEN(@TableName) END)
 UPDATE dbo.DbColumn SET ColumnDesc = @TableName + ' - ' + ColumnName WHERE TableId = @TableId
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdIndByCol') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdIndByCol
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdIndByCol') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdIndByCol AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdIndByCol]
+ALTER PROCEDURE [dbo].[Ir_UpdIndByCol]
  @ColumnId		int
 /* WITH ENCRYPTION */
 AS
@@ -44111,29 +40700,18 @@ BEGIN
 	END
 END
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdMenuIndex') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdMenuIndex
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdMenuIndex') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdMenuIndex AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 -- Assuming 4 levels of menu but it is alright if more levels present:
-CREATE PROCEDURE [dbo].[Ir_UpdMenuIndex]
+ALTER PROCEDURE [dbo].[Ir_UpdMenuIndex]
 /* WITH ENCRYPTION */
 AS
 DECLARE	 @ii1			int
@@ -44193,25 +40771,17 @@ BEGIN
 END
 CLOSE cur1 DEALLOCATE cur1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdMsg') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdMsg
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdMsg') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdMsg AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdMsg]
+ALTER PROCEDURE [dbo].[Ir_UpdMsg]
  @MsgId		int
 /* WITH ENCRYPTION */
 AS
@@ -44222,41 +40792,34 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 SELECT @Msg = Msg FROM dbo.MsgCenter WHERE MsgId = @MsgId AND CultureId = @DefCultureId
 UPDATE dbo.Msg SET MsgName = '{' + CONVERT(varchar(10),@MsgId) + '} ' + @Msg WHERE MsgId = @MsgId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReactNeedRegen') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdReactNeedRegen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReactNeedRegen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdReactNeedRegen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[Ir_UpdReactNeedRegen]
+ALTER PROCEDURE [dbo].[Ir_UpdReactNeedRegen]
  @ScreenId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 IF @ScreenId is not null UPDATE dbo.Screen SET NeedReactRegen = 'Y' WHERE ScreenId = @ScreenId
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReactRule') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdReactRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReactRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdReactRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdReactRule]
+ALTER PROCEDURE [dbo].[Ir_UpdReactRule]
  @RuleReactId		int
 ,@CultureId		smallint
 /* WITH ENCRYPTION */
@@ -44270,23 +40833,17 @@ UPDATE dbo.RuleReact SET RuleReactDesc = isnull(b.ScreenTitle,space(0)) + ': ' +
 	AND b.CultureId = CASE WHEN EXISTS (SELECT 1 FROM dbo.ScreenHlp x WHERE x.ScreenId = a.ScreenId AND x.CultureId = @CultureId) THEN @CultureId ELSE @DefCultureId END
 	WHERE a.RuleReactId = @RuleReactId
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportCriDesc') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdReportCriDesc
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportCriDesc') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdReportCriDesc AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdReportCriDesc]
+ALTER PROCEDURE [dbo].[Ir_UpdReportCriDesc]
  @ReportCriId		int
 /* WITH ENCRYPTION */
 AS
@@ -44296,30 +40853,17 @@ UPDATE dbo.ReportCri SET ReportCriDesc = b.ProgramName + right(space(6) + conver
 	FROM dbo.ReportCri a INNER JOIN dbo.Report b ON a.ReportId = b.ReportId
 	WHERE ReportCriId = @ReportCriId
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportCriHlp') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdReportCriHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportCriHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdReportCriHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdReportCriHlp]
+ALTER PROCEDURE [dbo].[Ir_UpdReportCriHlp]
  @ReportCriHlpId	int
 /* WITH ENCRYPTION */
 AS
@@ -44330,28 +40874,17 @@ UPDATE dbo.ReportCriHlp SET ReportCriHlpDesc = b.ReportCriDesc + ' (' + c.Cultur
 	INNER JOIN RODesign.dbo.VwCulture c ON a.CultureId = c.CultureId
 	WHERE a.ReportCriHlpId = @ReportCriHlpId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportGrpIndex') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdReportGrpIndex
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportGrpIndex') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdReportGrpIndex AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdReportGrpIndex]
+ALTER PROCEDURE [dbo].[Ir_UpdReportGrpIndex]
  @ReportId	int
 /* WITH ENCRYPTION */
 AS
@@ -44387,29 +40920,17 @@ END
 CLOSE curs
 DEALLOCATE curs
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportGrpIndex1') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdReportGrpIndex1
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportGrpIndex1') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdReportGrpIndex1 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdReportGrpIndex1]
+ALTER PROCEDURE [dbo].[Ir_UpdReportGrpIndex1]
  @ReportId		int
 ,@ParentGrpId		int
 ,@TabIndex		smallint OUTPUT
@@ -44432,29 +40953,18 @@ END
 CLOSE curs
 DEALLOCATE curs
 IF @MaxIndex > @TabIndex SELECT @TabIndex = @MaxIndex
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportGrpIndex2') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdReportGrpIndex2
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportGrpIndex2') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdReportGrpIndex2 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdReportGrpIndex2]
+ALTER PROCEDURE [dbo].[Ir_UpdReportGrpIndex2]
  @ReportId		int
 ,@ParentGrpId		int
 ,@ParentCode		varchar(50) OUTPUT
@@ -44482,29 +40992,18 @@ BEGIN
 END
 CLOSE curs
 DEALLOCATE curs
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportObj') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdReportObj
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportObj') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdReportObj AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdReportObj]
+ALTER PROCEDURE [dbo].[Ir_UpdReportObj]
  @ReportObjId		int
 /* WITH ENCRYPTION */
 AS
@@ -44538,29 +41037,17 @@ BEGIN
 END
 UPDATE dbo.ReportObj SET ColumnDesc = @ProgramName + right(space(6) + convert(varchar,TabIndex),6) + ': ' + ColumnName WHERE ReportObjId = @ReportObjId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportObjHlp') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdReportObjHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdReportObjHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdReportObjHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdReportObjHlp]
+ALTER PROCEDURE [dbo].[Ir_UpdReportObjHlp]
  @ReportObjHlpId	int
 /* WITH ENCRYPTION */
 AS
@@ -44571,28 +41058,17 @@ UPDATE dbo.ReportObjHlp SET ReportObjHlpDesc = b.ColumnDesc + ' (' + c.CultureTy
 	INNER JOIN RODesign.dbo.VwCulture c ON a.CultureId = c.CultureId
 	WHERE a.ReportObjHlpId = @ReportObjHlpId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptCel') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdRptCel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptCel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdRptCel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdRptCel]
+ALTER PROCEDURE [dbo].[Ir_UpdRptCel]
  @RptCelId	int
 /* WITH ENCRYPTION */
 AS
@@ -44604,29 +41080,18 @@ UPDATE dbo.RptCel SET
 	INNER JOIN dbo.RptTbl c ON a.CelNum = c.RptTblId
 	INNER JOIN RODesign.dbo.CtRptTblType d ON c.RptTblTypeCd = d.RptTblTypeCd
 WHERE a.RptCelId = @RptCelId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptCha') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdRptCha
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptCha') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdRptCha AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdRptCha]
+ALTER PROCEDURE [dbo].[Ir_UpdRptCha]
  @RptChaId	int
 /* WITH ENCRYPTION */
 AS
@@ -44637,29 +41102,18 @@ UPDATE dbo.RptCha SET
 	INNER JOIN dbo.RptCtr b ON a.RptCtrId = b.RptCtrId
 	INNER JOIN RODesign.dbo.CtRptChaType c ON a.RptChaTypeCd = c.RptChaTypeCd
 WHERE a.RptChaId = @RptChaId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptCtr') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdRptCtr
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptCtr') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdRptCtr AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdRptCtr]
+ALTER PROCEDURE [dbo].[Ir_UpdRptCtr]
  @RptCtrId	int
 /* WITH ENCRYPTION */
 AS
@@ -44677,30 +41131,17 @@ UPDATE dbo.RptCtr SET
 	LEFT OUTER JOIN dbo.RptCel f ON a.RptCelId = f.RptCelId
 WHERE a.RptCtrId = @RptCtrId
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptElm') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdRptElm
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptElm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdRptElm AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdRptElm]
+ALTER PROCEDURE [dbo].[Ir_UpdRptElm]
  @RptElmId	int
 /* WITH ENCRYPTION */
 AS
@@ -44712,30 +41153,17 @@ UPDATE dbo.RptElm SET
 	INNER JOIN RODesign.dbo.CtRptElmType c ON a.RptElmTypeCd = c.RptElmTypeCd
 WHERE a.RptElmId = @RptElmId
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptNeedRegen') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdRptNeedRegen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptNeedRegen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdRptNeedRegen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdRptNeedRegen]
+ALTER PROCEDURE [dbo].[Ir_UpdRptNeedRegen]
  @ReportId		int
 /* WITH ENCRYPTION */
 AS
@@ -44747,26 +41175,17 @@ IF @ReportId is not null
 	INNER JOIN RODesign.dbo.VwCulture c ON b.CultureId = c.CultureId
 	WHERE a.ReportId = @ReportId AND c.CultureDefault = 'Y'
 RETURN 0
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptTbl') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdRptTbl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptTbl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdRptTbl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdRptTbl]
+ALTER PROCEDURE [dbo].[Ir_UpdRptTbl]
  @RptTblId	int
 /* WITH ENCRYPTION */
 AS
@@ -44789,56 +41208,34 @@ BEGIN
 END
 CLOSE CelCur
 DEALLOCATE CelCur
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptTblWiz') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdRptTblWiz
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptTblWiz') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdRptTblWiz AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdRptTblWiz]
+ALTER PROCEDURE [dbo].[Ir_UpdRptTblWiz]
  @ReportId	int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptwizCat') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdRptwizCat
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdRptwizCat') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdRptwizCat AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdRptwizCat]
+ALTER PROCEDURE [dbo].[Ir_UpdRptwizCat]
  @RptwizCatId		smallint
 /* WITH ENCRYPTION */
 AS
@@ -44849,29 +41246,17 @@ UPDATE dbo.RptwizCat
 	INNER JOIN dbo.RptwizTyp b ON a.RptwizTypId = b.RptwizTypId
 	WHERE a.RptwizCatId = @RptwizCatId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenCriDesc') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdScreenCriDesc
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenCriDesc') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdScreenCriDesc AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdScreenCriDesc]
+ALTER PROCEDURE [dbo].[Ir_UpdScreenCriDesc]
  @ScreenCriId		int
 /* WITH ENCRYPTION */
 AS
@@ -44909,25 +41294,17 @@ CLOSE cur
 DEALLOCATE cur
 UPDATE dbo.ScreenCri SET TabIndex = TabIndex * 10 WHERE ScreenId = @ScreenId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenCriHlp') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdScreenCriHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenCriHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdScreenCriHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdScreenCriHlp]
+ALTER PROCEDURE [dbo].[Ir_UpdScreenCriHlp]
  @ScreenCriHlpId	int
 /* WITH ENCRYPTION */
 AS
@@ -44938,31 +41315,17 @@ UPDATE dbo.ScreenCriHlp SET ScreenCriHlpDesc = b.ScreenCriDesc + ' (' + c.Cultur
 	INNER JOIN RODesign.dbo.VwCulture c ON a.CultureId = c.CultureId
 	WHERE a.ScreenCriHlpId = @ScreenCriHlpId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenFilterDesc') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdScreenFilterDesc
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenFilterDesc') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdScreenFilterDesc AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdScreenFilterDesc]
+ALTER PROCEDURE [dbo].[Ir_UpdScreenFilterDesc]
  @ScreenId			int
 ,@ScreenFilterId		int
 /* WITH ENCRYPTION */
@@ -44975,28 +41338,17 @@ UPDATE dbo.ScreenFilter
 UPDATE dbo.Screen SET ScreenFilter = 'AdmScreenFilter.aspx?id=181&key=' + convert(varchar,@ScreenFilterId)
 	WHERE ScreenId = @screenId
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenObj') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdScreenObj
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenObj') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdScreenObj AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdScreenObj]
+ALTER PROCEDURE [dbo].[Ir_UpdScreenObj]
  @ScreenObjId		int
 /* WITH ENCRYPTION */
 AS
@@ -45056,25 +41408,17 @@ END
 CLOSE run_cursor
 DEALLOCATE run_cursor
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenObjHlp') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdScreenObjHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenObjHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdScreenObjHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdScreenObjHlp]
+ALTER PROCEDURE [dbo].[Ir_UpdScreenObjHlp]
  @ScreenObjHlpId	int
 ,@FromScreenObj		char(1)='N'
 /* WITH ENCRYPTION */
@@ -45127,25 +41471,17 @@ UPDATE c SET ColObjective = convert(nvarchar(200),h.ToolTip)
 	INNER JOIN dbo.DbColumn c on c.ColumnId = o.ColumnId
 	WHERE h.ScreenObjHlpId = @ScreenObjHlpId AND c.ColObjective IS NULL AND h.ToolTip IS NOT NULL
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenObjInd') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdScreenObjInd
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenObjInd') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdScreenObjInd AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdScreenObjInd]
+ALTER PROCEDURE [dbo].[Ir_UpdScreenObjInd]
  @ScreenId		int
 /* WITH ENCRYPTION */
 AS
@@ -45172,25 +41508,17 @@ END
 CLOSE cur
 DEALLOCATE cur
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenTab') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdScreenTab
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScreenTab') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdScreenTab AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdScreenTab]
+ALTER PROCEDURE [dbo].[Ir_UpdScreenTab]
  @ScreenTabId		int
 /* WITH ENCRYPTION */
 AS
@@ -45217,48 +41545,35 @@ BEGIN
 END
 CLOSE cur
 DEALLOCATE cur
-RETURN 0  
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScrNeedRegen') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdScrNeedRegen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdScrNeedRegen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdScrNeedRegen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdScrNeedRegen]
+ALTER PROCEDURE [dbo].[Ir_UpdScrNeedRegen]
  @ScreenId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 IF @ScreenId is not null UPDATE dbo.Screen SET NeedRegen = 'Y' WHERE ScreenId = @ScreenId
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdServerRule') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdServerRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdServerRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdServerRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[Ir_UpdServerRule]
+ALTER PROCEDURE [dbo].[Ir_UpdServerRule]
  @ScreenId		int
 ,@CultureId		smallint
 /* WITH ENCRYPTION */
@@ -45305,27 +41620,17 @@ END
 CLOSE cur DEALLOCATE cur
 DROP TABLE dbo.#rule
 RETURN 0
- 
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdStaticPgNm') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdStaticPgNm
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdStaticPgNm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdStaticPgNm AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdStaticPgNm]
+ALTER PROCEDURE [dbo].[Ir_UpdStaticPgNm]
  @StaticPgId	int
 ,@StaticPgNm	varchar(50)
 /* WITH ENCRYPTION */
@@ -45338,29 +41643,18 @@ UPDATE dbo.Label SET LabelCat = @StaticPgNm
 	FROM dbo.Label a
 	INNER JOIN RODesign.dbo.VwCulture b ON a.CultureId = b.CultureId
 	WHERE LabelCat = @OStaticPgNm
-RETURN 0 
-
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdUtRptCel') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdUtRptCel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdUtRptCel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdUtRptCel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdUtRptCel]
+ALTER PROCEDURE [dbo].[Ir_UpdUtRptCel]
  @RptCelId	int
 /* WITH ENCRYPTION */
 AS
@@ -45372,29 +41666,18 @@ UPDATE dbo.UtRptCel SET
 	INNER JOIN dbo.UtRptTbl c ON a.CelNum = c.RptTblId
 	INNER JOIN RODesign.dbo.CtRptTblType d ON c.RptTblTypeCd = d.RptTblTypeCd
 WHERE a.RptCelId = @RptCelId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdUtRptCha') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdUtRptCha
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdUtRptCha') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdUtRptCha AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdUtRptCha]
+ALTER PROCEDURE [dbo].[Ir_UpdUtRptCha]
  @RptChaId	int
 /* WITH ENCRYPTION */
 AS
@@ -45405,29 +41688,18 @@ UPDATE dbo.UtRptCha SET
 	INNER JOIN dbo.UtRptCtr b ON a.RptCtrId = b.RptCtrId
 	INNER JOIN RODesign.dbo.CtRptChaType c ON a.RptChaTypeCd = c.RptChaTypeCd
 WHERE a.RptChaId = @RptChaId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdUtRptCtr') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdUtRptCtr
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdUtRptCtr') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdUtRptCtr AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdUtRptCtr]
+ALTER PROCEDURE [dbo].[Ir_UpdUtRptCtr]
  @RptCtrId	int
 /* WITH ENCRYPTION */
 AS
@@ -45445,28 +41717,17 @@ UPDATE dbo.UtRptCtr SET
 	LEFT OUTER JOIN dbo.UtRptCel f ON a.RptCelId = f.RptCelId
 WHERE a.RptCtrId = @RptCtrId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdUtRptTbl') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdUtRptTbl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdUtRptTbl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdUtRptTbl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdUtRptTbl]
+ALTER PROCEDURE [dbo].[Ir_UpdUtRptTbl]
  @RptTblId	int
 /* WITH ENCRYPTION */
 AS
@@ -45485,28 +41746,18 @@ UPDATE dbo.UtRptCel SET
 	INNER JOIN dbo.UtRptTbl c ON a.CelNum = c.RptTblId
 	INNER JOIN RODesign.dbo.CtRptTblType d ON c.RptTblTypeCd = d.RptTblTypeCd
 WHERE a.RptTblId = @RptTblId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdWebRule') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdWebRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdWebRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdWebRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdWebRule]
+ALTER PROCEDURE [dbo].[Ir_UpdWebRule]
  @WebRuleId		int
 ,@CultureId		smallint
 /* WITH ENCRYPTION */
@@ -45520,29 +41771,17 @@ UPDATE dbo.WebRule SET RuleDesc = isnull(b.ScreenTitle,space(0)) + ': ' + a.Rule
 	AND b.CultureId = CASE WHEN EXISTS (SELECT 1 FROM dbo.ScreenHlp x WHERE x.ScreenId = a.ScreenId AND x.CultureId = @CultureId) THEN @CultureId ELSE @DefCultureId END
 	WHERE a.WebRuleId = @WebRuleId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdWizardObjColumnDesc') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdWizardObjColumnDesc
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdWizardObjColumnDesc') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdWizardObjColumnDesc AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdWizardObjColumnDesc]
+ALTER PROCEDURE [dbo].[Ir_UpdWizardObjColumnDesc]
  @WizardObjId		int
 /* WITH ENCRYPTION */
 AS
@@ -45551,30 +41790,17 @@ UPDATE dbo.WizardObj SET ColumnDesc = b.ProgramName + right(space(6) + convert(v
 	FROM dbo.WizardObj a INNER JOIN dbo.Wizard b ON a.WizardId = b.WizardId INNER JOIN dbo.DbColumn c ON a.ColumnId = c.ColumnId
 	WHERE a.WizardObjId = @WizardObjId
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdWizardRule') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdWizardRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdWizardRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdWizardRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdWizardRule]
+ALTER PROCEDURE [dbo].[Ir_UpdWizardRule]
  @WizardId		int
 ,@WizardRuleId		int
 /* WITH ENCRYPTION */
@@ -45609,57 +41835,34 @@ UPDATE dbo.WizardRule SET RuleDesc = isnull(b.WizardTitle,space(0)) + right(spac
 	FROM dbo.WizardRule a INNER JOIN dbo.Wizard b ON a.WizardId = b.WizardId
 	WHERE a.WizardRuleId = @WizardRuleId
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdWizNeedRegen') AND type='P')
-DROP PROCEDURE dbo.Ir_UpdWizNeedRegen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdWizNeedRegen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdWizNeedRegen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[Ir_UpdWizNeedRegen]
+ALTER PROCEDURE [dbo].[Ir_UpdWizNeedRegen]
  @WizardId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.Wizard SET NeedRegen = 'Y' WHERE WizardId = @WizardId
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.IsRegenNeeded') AND type='P')
-DROP PROCEDURE dbo.IsRegenNeeded
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.IsRegenNeeded') AND type='P')
+EXEC('CREATE PROCEDURE dbo.IsRegenNeeded AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[IsRegenNeeded]
+ALTER PROCEDURE [dbo].[IsRegenNeeded]
  @ProgramName	varchar(50)
 ,@ScreenId		int
 ,@ReportId		int
@@ -45691,27 +41894,17 @@ END
 ELSE IF EXISTS (SELECT 1 FROM dbo.CtSection WHERE LOWER(SectionName) = LOWER(@ProgramName) AND (NeedRegen = 'Y'))
 	SELECT 1 ELSE SELECT 0
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.LogDelete') AND type='P')
-DROP PROCEDURE dbo.LogDelete
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.LogDelete') AND type='P')
+EXEC('CREATE PROCEDURE dbo.LogDelete AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[LogDelete]
+ALTER PROCEDURE [dbo].[LogDelete]
  @UsrId			int
 ,@ExecDb		varchar(50)
 ,@DesDatabase	varchar(50)
@@ -45744,24 +41937,17 @@ ORDER BY ORDINAL_POSITION) c'
 + ''''')'
 EXEC (@DbName + '.dbo.MkStoredProcedure ''' + @sql + '''')
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.LogUsage') AND type='P')
-DROP PROCEDURE dbo.LogUsage
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.LogUsage') AND type='P')
+EXEC('CREATE PROCEDURE dbo.LogUsage AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[LogUsage]
+ALTER PROCEDURE [dbo].[LogUsage]
  @UsrId		int
 ,@UsageNote	nvarchar(200)
 ,@EntityTitle	nvarchar(50)
@@ -45778,38 +41964,24 @@ IF @WizardId = 0 SELECT @WizardId = null
 INSERT dbo.Usage (UsageDt, UsrId, UsageNote, EntityTitle, ScreenId, ReportId, WizardId, Miscellaneous)
 	SELECT getutcdate(), @UsrId, @UsageNote, @EntityTitle, @ScreenId, @ReportId, @WizardId, @Miscellaneous
 RETURN 0
-
-
-
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkGetScreenIn') AND type='P')
-DROP PROCEDURE dbo.MkGetScreenIn
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkGetScreenIn') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkGetScreenIn AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[MkGetScreenIn]
+ALTER PROCEDURE [dbo].[MkGetScreenIn]
  @screenId		int
 ,@screenCriId		int
 ,@procedureName		varchar(200)
 ,@appDatabase		varchar(50)
 ,@sysDatabase		varchar(50)
 ,@multiDesignDb		char(1)
+,@reGen				char(1) = 'Y'
 /* WITH ENCRYPTION */
 AS
 DECLARE	 	 @procedureSql1		varchar(max)
@@ -45957,6 +42129,7 @@ BEGIN
 END
 CLOSE objCursor
 DEALLOCATE objCursor
+/* @param1Sql is obsoleted and not used, check GetScreenObjDdlProc */
 SELECT @param1Sql = ',@Usrs' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 	+ ',@UsrGroups' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
 	+ ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
@@ -45974,16 +42147,35 @@ BEGIN
 	RAISERROR('Stored Procedure %s not generated because of null.',18,2,@procedureName) WITH SETERROR
 	RETURN 1
 END
-SELECT @dropProcedureSql = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''' + @procedureName + ''''') AND type = ''''P'''') DROP PROCEDURE ' + @procedureName
+--SELECT @dropProcedureSql = 'IF exists (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''' + @procedureName + ''''') AND type = ''''P'''') DROP PROCEDURE ' + @procedureName
+DECLARE @CreateProcedureSql nvarchar(max)
+SELECT @CreateProcedureSql = 'IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(''''' + @procedureName + ''''') AND type = ''''P'''')'
+							+' EXEC('''''+  REPLACE(@procedureSql1,'''','''''') + ISNULL(REPLACE(@procedureSql2,'''',''''''),'') +  ISNULL(REPLACE(@procedureSql3,'''',''''''),'') +''''') '  
 IF @multiDesignDb = 'Y'
 BEGIN
-	DECLARE sysCursor CURSOR FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
+	DECLARE sysCursor CURSOR FOR 
+	/* handle cross server/cross namespace
+	SELECT dbDesDatabase 
+	FROM dbo.Systems 
+	*/
+	SELECT
+	m.dbDesDatabase
+	FROM RODesign.dbo.Systems s
+	INNER JOIN RODesign.dbo.Systems m on m.dbDesDatabase LIKE REPLACE(s.dbDesDatabase,'Design','') + '%' 
+	WHERE s.SysProgram = 'Y' AND s.Active ='Y' AND m.dbAppUserId = s.dbAppUserId AND m.dbAppServer = s.dbAppServer 
+		  --AND m.Active = 'Y'	FOR READ ONLY
+	FOR READ ONLY
 	OPEN sysCursor
 	FETCH NEXT FROM sysCursor INTO @sysDatabase
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		EXEC (@sysDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedureSql + '''')
-		EXEC (@sysDatabase + '.dbo.MkStoredProcedure ''' + @procedureSql1 + ''',''' + @procedureSql2 + ''',''' + @procedureSql3 + '''')
+		EXEC (@sysDatabase + '.dbo.MkStoredProcedure ''' + @CreateProcedureSql + '''')
+		--EXEC (@sysDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedureSql + '''')
+		IF @reGen = 'Y'
+		BEGIN
+			SELECT @procedureSql1 = REPLACE(@procedureSql1,'CREATE PROCEDURE','ALTER PROCEDURE')
+			EXEC (@sysDatabase + '.dbo.MkStoredProcedure ''' + @procedureSql1 + ''',''' + @procedureSql2 + ''',''' + @procedureSql3 + '''')
+		END
 		FETCH NEXT FROM sysCursor INTO @sysDatabase
 	END
 	CLOSE sysCursor
@@ -45991,8 +42183,13 @@ BEGIN
 END
 ELSE	/* Always on the app database */
 BEGIN
-	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedureSql + '''')
-	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @procedureSql1 + ''',''' + @procedureSql2 + ''',''' + @procedureSql3 + '''')
+	--EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @dropProcedureSql + '''')
+	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @CreateProcedureSql + '''')
+	IF @reGen = 'Y'
+	BEGIN
+		SELECT @procedureSql1 = REPLACE(@procedureSql1,'CREATE PROCEDURE','ALTER PROCEDURE')
+		EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @procedureSql1 + ''',''' + @procedureSql2 + ''',''' + @procedureSql3 + '''')
+	END
 END
 /*
 SELECT 	 parameter1Names='RowAuthoritys'+@parameter1Names
@@ -46000,25 +42197,17 @@ SELECT 	 parameter1Names='RowAuthoritys'+@parameter1Names
 	,parameter1SByte='VarChar'+@parameter1SByte
 */
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportCha') AND type='P')
-DROP PROCEDURE dbo.MkReportCha
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportCha') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkReportCha AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[MkReportCha]
+ALTER PROCEDURE [dbo].[MkReportCha]
  @RptwizTypeCd	char(1)
 ,@RptwizId		int
 ,@RptElmId		int
@@ -46075,22 +42264,17 @@ INSERT dbo.UtRptCha (RptCtrId, ReportId, RptChaTypeCd, ThreeD, CategoryGrp, Char
 	SELECT @RptCtrId, @ReportId, @RptChaTypeCd, @ThreeD, @CategoryGrp, @ChartData, @SeriesGrp
 SELECT @RptChaId = @@IDENTITY EXEC dbo.Ir_UpdUtRptCha @RptChaId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportGet') AND type='P')
-DROP PROCEDURE dbo.MkReportGet
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportGet') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkReportGet AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[MkReportGet]
+ALTER PROCEDURE [dbo].[MkReportGet]
  @GenPrefix		varchar(10)
 ,@reportId		int
 ,@procedureName	varchar(200)
@@ -46203,22 +42387,17 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @procedureSql + '''')
 END
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportGetIn') AND type='P')
-DROP PROCEDURE dbo.MkReportGetIn
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportGetIn') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkReportGetIn AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[MkReportGetIn]
+ALTER PROCEDURE [dbo].[MkReportGetIn]
  @GenPrefix			varchar(10)
 ,@reportCriId		int
 ,@procedureName		varchar(200)
@@ -46311,26 +42490,17 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @procedureSql1 + ''',''' + @procedureSql2 + ''',''' + @procedureSql3 + '''')
 END
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportLis') AND type='P')
-DROP PROCEDURE dbo.MkReportLis
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportLis') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkReportLis AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[MkReportLis]
+ALTER PROCEDURE [dbo].[MkReportLis]
  @ColGroup		smallint
 ,@RptwizId		int
 ,@RptElmId		int
@@ -46466,25 +42636,18 @@ END
 CLOSE cur DEALLOCATE cur
 IF @ColGroup is not null SELECT @PIndent = round(@ColGroup * (case when @UnitCd = 'in' then 0.2 when @UnitCd = 'cm' then 0.51 else 5.08 end) /@TotWidth * @RptWidth,2)
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportReg') AND type='P')
-DROP PROCEDURE dbo.MkReportReg
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportReg') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkReportReg AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
 -- Called by WrRptwizGen:
-CREATE PROCEDURE [dbo].[MkReportReg]
+ALTER PROCEDURE [dbo].[MkReportReg]
  @RptwizId		int
 ,@ProgramName	varchar(50)
 ,@AppDatabase	varchar(50)
@@ -46666,25 +42829,17 @@ IF @RegCode is null BEGIN RAISERROR('Cannot create _Get stored procedure, please
 SELECT @RegCode = replace(@RegCode,'''','''''')
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @RegCode + '''')
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportTbl') AND type='P')
-DROP PROCEDURE dbo.MkReportTbl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportTbl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkReportTbl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[MkReportTbl]
+ALTER PROCEDURE [dbo].[MkReportTbl]
  @RptwizId		int
 ,@RptElmId		int
 /* WITH ENCRYPTION */
@@ -46990,25 +43145,17 @@ BEGIN
 END
 CLOSE cur2 DEALLOCATE cur2
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportUpd') AND type='P')
-DROP PROCEDURE dbo.MkReportUpd
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportUpd') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkReportUpd AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[MkReportUpd]
+ALTER PROCEDURE [dbo].[MkReportUpd]
  @GenPrefix		varchar(10)
 ,@reportId		int
 ,@procedureName	varchar(200)
@@ -47127,28 +43274,18 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @ProcMemSql + '''')
 END
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportVal') AND type='P')
-DROP PROCEDURE dbo.MkReportVal
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkReportVal') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkReportVal AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 -- Called by WrRptwizGen:
-CREATE PROCEDURE [dbo].[MkReportVal]
+ALTER PROCEDURE [dbo].[MkReportVal]
  @RptwizId		int
 ,@ProgramName	varchar(50)
 ,@AppDatabase	varchar(50)
@@ -47202,27 +43339,17 @@ IF @ValCode is null BEGIN RAISERROR('Cannot create _Get stored procedure, please
 SELECT @ValCode = replace(@ValCode,'''','''''')
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @ValCode + '''')
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkRptStyle') AND type='P')
-DROP PROCEDURE dbo.MkRptStyle
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkRptStyle') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkRptStyle AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[MkRptStyle]
+ALTER PROCEDURE [dbo].[MkRptStyle]
 /* WITH ENCRYPTION */
 AS
 -- Initialize style table for report generator:
@@ -47231,22 +43358,17 @@ INSERT dbo.RptStyle (RptStyleDesc, BorderStyleD, BorderWidthD, BgColor, FontStyl
 SELECT RptStyleDesc, BorderStyleD, BorderWidthD, BgColor, FontStyle, FontFamily, FontSize
 	, FontWeight, Format, TextAlign, PadLeft, PadRight, PadTop, PadBottom, DefaultCd FROM RODesign.dbo.RptStyle
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkScrAudit') AND type='P')
-DROP PROCEDURE dbo.MkScrAudit
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkScrAudit') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkScrAudit AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[MkScrAudit]
+ALTER PROCEDURE [dbo].[MkScrAudit]
  @CudAction		char(1)
 ,@ScreenId		int
 ,@MasterTable	char(1)
@@ -47410,23 +43532,17 @@ BEGIN
 		FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId AND CultureId = @DefCultureId
 END
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkScreenUpdIn') AND type='P')
-DROP PROCEDURE dbo.MkScreenUpdIn
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkScreenUpdIn') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkScreenUpdIn AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[MkScreenUpdIn]
+ALTER PROCEDURE [dbo].[MkScreenUpdIn]
  @screenId		int
 ,@procedureName		varchar(200)
 ,@appDatabase		varchar(50)
@@ -47501,25 +43617,17 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @procedureUpdSql + '''')
 END
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkStoredProcedure') AND type='P')
-DROP PROCEDURE dbo.MkStoredProcedure
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkStoredProcedure') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkStoredProcedure AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[MkStoredProcedure]
+ALTER PROCEDURE [dbo].[MkStoredProcedure]
   @spString1	varchar(max)
 , @spString2	varchar(max) = ''
 , @spString3	varchar(max) = ''
@@ -47537,24 +43645,17 @@ EXEC ('SET QUOTED_IDENTIFIER ON SET ANSI_NULLS ON' + @nl)
 EXEC (@spString1 + @spString2 + @spString3 + @spString4 + @spString5 + @spString6 + @spString7 + @spString8 + @spString9)
 EXEC ('SET QUOTED_IDENTIFIER OFF')
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkWfStatus') AND type='P')
-DROP PROCEDURE dbo.MkWfStatus
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkWfStatus') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkWfStatus AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[MkWfStatus]
+ALTER PROCEDURE [dbo].[MkWfStatus]
  @ScreenObjId	int
 ,@MasterTable	char(1)
 ,@appDatabase	varchar(50)
@@ -47680,24 +43781,17 @@ INSERT dbo.ServerRule (ScreenId,RuleTypeId,MasterTable,RuleName,RuleDesc,RuleOrd
 	,'Y','N','N','N'
 	FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId AND CultureId = @DefCultureId
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkWizardW1Upd') AND type='P')
-DROP PROCEDURE dbo.MkWizardW1Upd
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkWizardW1Upd') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkWizardW1Upd AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[MkWizardW1Upd]
+ALTER PROCEDURE [dbo].[MkWizardW1Upd]
  @wizardId		int
 ,@procedureName		varchar(200)
 ,@appDatabase		varchar(50)
@@ -47769,27 +43863,17 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @procedureAddSql + '''')
 END
 RETURN 0
- 
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.NewMenuItem') AND type='P')
-DROP PROCEDURE dbo.NewMenuItem
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.NewMenuItem') AND type='P')
+EXEC('CREATE PROCEDURE dbo.NewMenuItem AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[NewMenuItem]
+ALTER PROCEDURE [dbo].[NewMenuItem]
  @ScreenId		int
 ,@ReportId		int
 ,@WizardId		int
@@ -47821,22 +43905,17 @@ BEGIN
 	INSERT dbo.MenuHlp (MenuId,CultureId,MenuText) VALUES (@MenuId,@CultureId,@ItemTitle)
 END
 RETURN 0
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.PurgeScrAudit') AND type='P')
-DROP PROCEDURE dbo.PurgeScrAudit
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.PurgeScrAudit') AND type='P')
+EXEC('CREATE PROCEDURE dbo.PurgeScrAudit AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[PurgeScrAudit]
+ALTER PROCEDURE [dbo].[PurgeScrAudit]
  @YearOld		SmallInt
 /* WITH ENCRYPTION */
 AS
@@ -47844,24 +43923,17 @@ SET NOCOUNT ON
 DELETE FROM dbo.ScrAuditDtl WHERE EXISTS (SELECT 1 FROM dbo.ScrAudit b WHERE dbo.ScrAuditDtl.ScrAuditId = b.ScrAuditId AND b.ChangedOn < dateadd(yyyy,-@YearOld,getutcdate()))
 DELETE FROM dbo.ScrAudit WHERE ChangedOn < dateadd(yyyy,-@YearOld,getutcdate())
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetRptGrp') AND type='P')
-DROP PROCEDURE dbo.SetRptGrp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetRptGrp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.SetRptGrp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[SetRptGrp]
+ALTER PROCEDURE [dbo].[SetRptGrp]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
@@ -47880,84 +43952,52 @@ BEGIN
 	SET IDENTITY_INSERT dbo.ReportGrp OFF
 END
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetRptNeedRegen') AND type='P')
-DROP PROCEDURE dbo.SetRptNeedRegen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetRptNeedRegen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.SetRptNeedRegen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[SetRptNeedRegen]
+ALTER PROCEDURE [dbo].[SetRptNeedRegen]
  @reportId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.Report SET NeedRegen = 'N' WHERE ReportId = @reportId
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetScrNeedRegen') AND type='P')
-DROP PROCEDURE dbo.SetScrNeedRegen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetScrNeedRegen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.SetScrNeedRegen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[SetScrNeedRegen]
+ALTER PROCEDURE [dbo].[SetScrNeedRegen]
  @screenId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.Screen SET NeedRegen = 'N' WHERE ScreenId = @screenId
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetScrTab') AND type='P')
-DROP PROCEDURE dbo.SetScrTab
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetScrTab') AND type='P')
+EXEC('CREATE PROCEDURE dbo.SetScrTab AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
 /* Called by GenScreensRules */
-CREATE PROCEDURE [dbo].[SetScrTab]
+ALTER PROCEDURE [dbo].[SetScrTab]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
@@ -47966,53 +44006,34 @@ BEGIN
 	INSERT INTO dbo.AppInfo (AppInfoDesc, VersionMa, VersionMi) SELECT '1.0', 1, 0
 END
 RETURN 0
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetWizNeedRegen') AND type='P')
-DROP PROCEDURE dbo.SetWizNeedRegen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetWizNeedRegen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.SetWizNeedRegen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[SetWizNeedRegen]
+ALTER PROCEDURE [dbo].[SetWizNeedRegen]
  @wizardId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.Wizard SET NeedRegen = 'N' WHERE WizardId = @wizardId
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdCronJob') AND type='P')
-DROP PROCEDURE dbo.UpdCronJob
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdCronJob') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdCronJob AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdCronJob]
+ALTER PROCEDURE [dbo].[UpdCronJob]
  @cronJobId	int
 ,@lastRun	datetime
 ,@nextRun	datetime
@@ -48022,28 +44043,18 @@ SET NOCOUNT ON
 UPDATE CronJob
 set LastRun = @lastRun, NextRun = @nextRun
 WHERE CronJobId = @cronJobId
-RETURN 0 
-
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdCronJobStatus') AND type='P')
-DROP PROCEDURE dbo.UpdCronJobStatus
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdCronJobStatus') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdCronJobStatus AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdCronJobStatus]
+ALTER PROCEDURE [dbo].[UpdCronJobStatus]
  @cronJobId	int
 ,@status	varchar(500)
 /* WITH ENCRYPTION */
@@ -48052,30 +44063,18 @@ SET NOCOUNT ON
 UPDATE CronJob
 set LastStatus = LEFT(@status,500)
 WHERE CronJobId = @cronJobId
-RETURN 0 
-
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdLastCriteria') AND type='P')
-DROP PROCEDURE dbo.UpdLastCriteria
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdLastCriteria') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdLastCriteria AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdLastCriteria]
+ALTER PROCEDURE [dbo].[UpdLastCriteria]
  @ScreenId	int
 ,@ReportId	int
 ,@UsrId		int
@@ -48090,31 +44089,17 @@ IF @ScreenId is not null AND @ScreenId <> 0
 ELSE
 	UPDATE dbo.ReportLstCri SET LastCriteria = @LastCriteria WHERE ReportId = @ReportId AND UsrId = @UsrId AND ReportCriId = @CriId
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdLastPageInfo') AND type='P')
-DROP PROCEDURE dbo.UpdLastPageInfo
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdLastPageInfo') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdLastPageInfo AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdLastPageInfo]
+ALTER PROCEDURE [dbo].[UpdLastPageInfo]
  @ScreenId	int
 ,@UsrId		int
 ,@LastPageInfo	nvarchar(900)
@@ -48124,30 +44109,17 @@ SET NOCOUNT ON
 SET XACT_ABORT ON
 UPDATE dbo.ScreenLstInf SET LastPageInfo = @LastPageInfo WHERE ScreenId = @ScreenId AND UsrId = @UsrId
 RETURN 0
-
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdMemFld') AND type='P')
-DROP PROCEDURE dbo.UpdMemFld
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdMemFld') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdMemFld AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdMemFld]
+ALTER PROCEDURE [dbo].[UpdMemFld]
  @GenPrefix		varchar(10)
 ,@PublicAccess	char(1)
 ,@RptMemFldId	int
@@ -48188,29 +44160,17 @@ BEGIN
 END
 SELECT @RptMemFldId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdMemViewdt') AND type='P')
-DROP PROCEDURE dbo.UpdMemViewdt
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdMemViewdt') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdMemViewdt AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdMemViewdt]
+ALTER PROCEDURE [dbo].[UpdMemViewdt]
  @GenPrefix			varchar(10)
 ,@RptMemCriId		int
 /* WITH ENCRYPTION */
@@ -48221,29 +44181,17 @@ IF @GenPrefix = 'Ut'
 ELSE
 	UPDATE dbo.RptMemCri SET ViewedOn = getdate() WHERE RptMemCriId = @RptMemCriId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdReportLstCri') AND type='P')
-DROP PROCEDURE dbo.UpdReportLstCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdReportLstCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdReportLstCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdReportLstCri]
+ALTER PROCEDURE [dbo].[UpdReportLstCri]
  @reportId		int
 ,@ColumnName		varchar(50)
 ,@usrId			int
@@ -48255,29 +44203,17 @@ SET NOCOUNT ON
 SELECT @ReportCriId = ReportCriId FROM dbo.ReportCri WHERE ReportId = @reportId AND ColumnName = @ColumnName
 UPDATE dbo.ReportLstCri SET LastCriteria = @LastCriteria WHERE UsrId = @usrId AND ReportId = @reportId AND ReportCriId = @ReportCriId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdRptMemCri') AND type='P')
-DROP PROCEDURE dbo.UpdRptMemCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdRptMemCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdRptMemCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdRptMemCri]
+ALTER PROCEDURE [dbo].[UpdRptMemCri]
  @RptMemCriId	int
 ,@ReportId		int
 ,@ColumnName	varchar(50)
@@ -48292,29 +44228,17 @@ IF EXISTS (SELECT 1 FROM dbo.RptMemCriDtl WHERE RptMemCriId = @RptMemCriId AND R
 ELSE
 	INSERT dbo.RptMemCriDtl (RptMemCriId, ReportCriId, MemCriteria) SELECT @RptMemCriId, @ReportCriId, @MemCriteria
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdScreenLstCri') AND type='P')
-DROP PROCEDURE dbo.UpdScreenLstCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdScreenLstCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdScreenLstCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdScreenLstCri]
+ALTER PROCEDURE [dbo].[UpdScreenLstCri]
  @usrId			int
 ,@screenId		int
 ,@ScreenCriId		int
@@ -48324,29 +44248,17 @@ AS
 SET NOCOUNT ON
 UPDATE dbo.ScreenLstCri SET LastCriteria = @LastCriteria WHERE UsrId = @usrId AND ScreenId = @screenId AND ScreenCriId = @ScreenCriId
 RETURN 0
- 
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdUtReportLstCri') AND type='P')
-DROP PROCEDURE dbo.UpdUtReportLstCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdUtReportLstCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdUtReportLstCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdUtReportLstCri]
+ALTER PROCEDURE [dbo].[UpdUtReportLstCri]
  @reportId		int
 ,@ColumnName		varchar(50)
 ,@usrId			int
@@ -48358,29 +44270,17 @@ SET NOCOUNT ON
 SELECT @ReportCriId = ReportCriId FROM dbo.UtReportCri WHERE ReportId = @reportId AND ColumnName = @ColumnName
 UPDATE dbo.UtReportLstCri SET LastCriteria = @LastCriteria WHERE UsrId = @usrId AND ReportId = @reportId AND ReportCriId = @ReportCriId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdUtRptMemCri') AND type='P')
-DROP PROCEDURE dbo.UpdUtRptMemCri
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdUtRptMemCri') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdUtRptMemCri AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[UpdUtRptMemCri]
+ALTER PROCEDURE [dbo].[UpdUtRptMemCri]
  @RptMemCriId	int
 ,@ReportId		int
 ,@ColumnName	varchar(50)
@@ -48395,27 +44295,17 @@ IF EXISTS (SELECT 1 FROM dbo.UtRptMemCriDtl WHERE RptMemCriId = @RptMemCriId AND
 ELSE
 	INSERT dbo.UtRptMemCriDtl (RptMemCriId, ReportCriId, MemCriteria) SELECT @RptMemCriId, @ReportCriId, @MemCriteria
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrAddDocTbl') AND type='P')
-DROP PROCEDURE dbo.WrAddDocTbl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrAddDocTbl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrAddDocTbl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrAddDocTbl]
+ALTER PROCEDURE [dbo].[WrAddDocTbl]
  @SystemId		smallint
 ,@TableName		varchar(500)
 /* WITH ENCRYPTION */
@@ -48455,21 +44345,17 @@ BEGIN
 	SELECT ColumnId FROM dbo.DbColumn WHERE TableId = @TableId ORDER BY ColumnIndex
 END
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrAddMenu') AND type='P')
-DROP PROCEDURE dbo.WrAddMenu
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrAddMenu') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrAddMenu AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrAddMenu]
+ALTER PROCEDURE [dbo].[WrAddMenu]
  @PMenuId		smallint
 ,@ParentId		int
 /* WITH ENCRYPTION */
@@ -48487,25 +44373,17 @@ EXEC dbo.Ir_UpdMenuIndex
 EXEC dbo.Ir_InitMenuHlp @MenuId
 SELECT MenuId, MenuText FROM dbo.MenuHlp WHERE MenuId = @MenuId AND CultureId = 1
 RETURN 0
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrAddScreenObj') AND type='P')
-DROP PROCEDURE dbo.WrAddScreenObj
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrAddScreenObj') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrAddScreenObj AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrAddScreenObj]
+ALTER PROCEDURE [dbo].[WrAddScreenObj]
  @ScreenId			int
 ,@PScreenObjId		int
 ,@TabFolderId		int
@@ -48544,24 +44422,18 @@ EXEC @Ret = dbo.Ir_InitScreenObjHlp @ScreenObjId
 UPDATE dbo.Screen SET NeedRegen = 'Y' WHERE ScreenId = @ScreenId
 SELECT ScreenObjId, ColumnHeader FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId AND CultureId = 1
 
-RETURN 0  
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrAddScreenTab') AND type='P')
-DROP PROCEDURE dbo.WrAddScreenTab
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrAddScreenTab') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrAddScreenTab AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrAddScreenTab]
+ALTER PROCEDURE [dbo].[WrAddScreenTab]
  @TabFolderOrder	tinyint
 ,@ScreenId			int
 /* WITH ENCRYPTION */
@@ -48574,22 +44446,17 @@ EXEC dbo.Ir_UpdScreenTab @ScreenTabId
 INSERT dbo.ScreenTabHlp (ScreenTabId, CultureId, TabFolderName) SELECT @ScreenTabId, 1, 'NEW TAB'
 SELECT ScreenTabId, TabFolderName FROM dbo.ScreenTabHlp WHERE ScreenTabId = @ScreenTabId AND CultureId = 1
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrAddWfsTbl') AND type='P')
-DROP PROCEDURE dbo.WrAddWfsTbl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrAddWfsTbl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrAddWfsTbl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[WrAddWfsTbl]
+ALTER PROCEDURE [dbo].[WrAddWfsTbl]
  @SystemId		smallint
 ,@TableName		varchar(50)
 /* WITH ENCRYPTION */
@@ -48739,19 +44606,17 @@ BEGIN
 	SELECT ColumnId FROM dbo.DbColumn WHERE TableId = @TableId ORDER BY ColumnIndex		/* Do not change ColumnIndex without changing ScreenObj webrule */
 END
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrCloneScreen') AND type='P')
-DROP PROCEDURE dbo.WrCloneScreen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrCloneScreen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrCloneScreen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrCloneScreen]
+ALTER PROCEDURE [dbo].[WrCloneScreen]
  @ScreenId		int
 /* WITH ENCRYPTION */
 AS
@@ -49159,23 +45024,18 @@ SELECT @iClause = @iClause + char(13) + char(10)
 + char(13) + char(10) + '/* Check to see if Data Column has been added; get ready to push to physical database if yes; */'
 + char(13) + char(10) + '/* Check to see if Data Table has been added; if yes (ModifiedBy is null), verify SystemId and content of function/view and get ready to push to physical database; */'
 SELECT (@iClause)
-RETURN 0 
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrDelMenu') AND type='P')
-DROP PROCEDURE dbo.WrDelMenu
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrDelMenu') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrDelMenu AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrDelMenu]
+ALTER PROCEDURE [dbo].[WrDelMenu]
  @MenuId		int
 /* WITH ENCRYPTION */
 AS
@@ -49183,26 +45043,17 @@ SET NOCOUNT ON
 EXEC dbo.Ir_DelMenuHlp @MenuId
 DELETE FROM dbo.Menu WHERE MenuId = @MenuId
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrDelScreenObj') AND type='P')
-DROP PROCEDURE dbo.WrDelScreenObj
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrDelScreenObj') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrDelScreenObj AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrDelScreenObj]
+ALTER PROCEDURE [dbo].[WrDelScreenObj]
  @ScreenObjId		int
 /* WITH ENCRYPTION */
 AS
@@ -49216,24 +45067,17 @@ DELETE FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId
 DELETE FROM dbo.ScreenObj WHERE ScreenObjId = @ScreenObjId
 UPDATE dbo.Screen SET NeedRegen = 'Y' WHERE ScreenId = @ScreenId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrDelScreenTab') AND type='P')
-DROP PROCEDURE dbo.WrDelScreenTab
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrDelScreenTab') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrDelScreenTab AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrDelScreenTab]
+ALTER PROCEDURE [dbo].[WrDelScreenTab]
  @ScreenTabId		int
 /* WITH ENCRYPTION */
 AS
@@ -49242,24 +45086,17 @@ EXEC dbo.Cr_DelScreenTab @ScreenTabId
 DELETE FROM dbo.ScreenTabHlp WHERE ScreenTabId = @ScreenTabId
 DELETE FROM dbo.ScreenTab WHERE ScreenTabId = @ScreenTabId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetAdmMenuPerm') AND type='P')
-DROP PROCEDURE dbo.WrGetAdmMenuPerm
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetAdmMenuPerm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetAdmMenuPerm AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetAdmMenuPerm]
+ALTER PROCEDURE [dbo].[WrGetAdmMenuPerm]
  @screenId		int
 ,@keyId58		Int
 ,@RowAuthoritys		varchar(1000)
@@ -49336,25 +45173,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetButtonHlp') AND type='P')
-DROP PROCEDURE dbo.WrGetButtonHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetButtonHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetButtonHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[WrGetButtonHlp]
+ALTER PROCEDURE [dbo].[WrGetButtonHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -49370,23 +45199,17 @@ SELECT a.ButtonHlpId, a.ButtonName, a.ButtonLongNm, a.ButtonToolTip
 	OR (WizardId is not null AND a.WizardId is not null AND WizardId = a.WizardId))
 	AND ButtonTypeId = a.ButtonTypeId AND CultureId = @CultureId)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetCatCol') AND type='P')
-DROP PROCEDURE dbo.WrGetCatCol
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetCatCol') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetCatCol AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetCatCol]
+ALTER PROCEDURE [dbo].[WrGetCatCol]
  @RptwizCatId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -49401,29 +45224,18 @@ SELECT RptwizDtlId184 = null, ColumnId184 = b.ColumnId, ColumnId184Text = b.Colu
 	WHERE a.RptwizCatId = @RptwizCatId
 	ORDER BY a.TableId, b.ColumnIndex
 */
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetCustomSp') AND type='P')
-DROP PROCEDURE dbo.WrGetCustomSp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetCustomSp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetCustomSp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetCustomSp]
+ALTER PROCEDURE [dbo].[WrGetCustomSp]
  @CustomDtlId	int
 ,@DbId		int
 /* WITH ENCRYPTION */
@@ -49434,29 +45246,18 @@ SET NOCOUNT ON
 SELECT @ProcedureName = ProgramName FROM dbo.CustomDtl WHERE CustomDtlId = @CustomDtlId
 SELECT @dbAppDatabase = dbAppDatabase FROM RODesign.dbo.Systems WHERE SystemId = @DbId
 EXEC (@dbAppDatabase + '.dbo.MkStoredProcedure '' sp_helptext ' + @ProcedureName + '''')
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetDbTableSys') AND type='P')
-DROP PROCEDURE dbo.WrGetDbTableSys
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetDbTableSys') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetDbTableSys AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetDbTableSys]
+ALTER PROCEDURE [dbo].[WrGetDbTableSys]
  @TableId	int
 ,@DbId		int
 /* WITH ENCRYPTION */
@@ -49470,25 +45271,18 @@ IF @MultiDesignDb = 'Y'
 ELSE
 	SELECT dbProvider = dbAppProvider, dbServer = dbAppServer, dbDatabase = dbAppDatabase, dbUserId = dbAppUserId
 	FROM RODesign.dbo.Systems WHERE SystemId = @DbId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetDdlPermId') AND type='P')
-DROP PROCEDURE dbo.WrGetDdlPermId
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetDdlPermId') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetDdlPermId AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrGetDdlPermId]
+ALTER PROCEDURE [dbo].[WrGetDdlPermId]
  @PermKeyId		int
 ,@ScreenId		int
 ,@TableId		int
@@ -49631,26 +45425,17 @@ ELSE
 	SELECT @sClause = 'SELECT PermId' + convert(varchar,@TableId) + '=null, PermId' + convert(varchar,@TableId) + 'Text=null, Active=null WHERE 1<>1'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetLabel') AND type='P')
-DROP PROCEDURE dbo.WrGetLabel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetLabel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetLabel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetLabel]
+ALTER PROCEDURE [dbo].[WrGetLabel]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -49661,28 +45446,17 @@ SELECT a.LabelId, a.LabelText
 	FROM dbo.Label a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.Label WHERE LabelCat = a.LabelCat AND LabelKey = a.LabelKey AND CultureId = @CultureId)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetMasterTable') AND type='P')
-DROP PROCEDURE dbo.WrGetMasterTable
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetMasterTable') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetMasterTable AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetMasterTable]
+ALTER PROCEDURE [dbo].[WrGetMasterTable]
  @ScreenId		int
 ,@ColumnId		int
 /* WITH ENCRYPTION */
@@ -49707,23 +45481,18 @@ BEGIN
 	ELSE SELECT ''
 END
 ELSE SELECT ''
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetMaxCustLabelNbr') AND type='P')
-DROP PROCEDURE dbo.WrGetMaxCustLabelNbr
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetMaxCustLabelNbr') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetMaxCustLabelNbr AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[WrGetMaxCustLabelNbr]
+ALTER PROCEDURE [dbo].[WrGetMaxCustLabelNbr]
  @ScreenId	int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -49769,23 +45538,17 @@ AND ISNUMERIC(LabelKey) = 1
 
 SELECT MaxKeyNumber = ISNULL(@MaxKeyNumber,0)
 RETURN 0
- 
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetMemTranslate') AND type='P')
-DROP PROCEDURE dbo.WrGetMemTranslate
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetMemTranslate') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetMemTranslate AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetMemTranslate]
+ALTER PROCEDURE [dbo].[WrGetMemTranslate]
  @InStr		nvarchar(2000)
 ,@CultureId	smallint
 /* WITH ENCRYPTION */
@@ -49793,27 +45556,17 @@ AS
 SET NOCOUNT ON
 SELECT OutStr FROM dbo.MemTrans WHERE Instr = @InStr AND CultureTypeId = @CultureId
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetMenuHlp') AND type='P')
-DROP PROCEDURE dbo.WrGetMenuHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetMenuHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetMenuHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetMenuHlp]
+ALTER PROCEDURE [dbo].[WrGetMenuHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -49824,28 +45577,17 @@ SELECT a.MenuHlpId, a.MenuText
 	FROM dbo.MenuHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.MenuHlp WHERE MenuId = a.MenuId AND CultureId = @CultureId)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetMsgCenter') AND type='P')
-DROP PROCEDURE dbo.WrGetMsgCenter
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetMsgCenter') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetMsgCenter AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetMsgCenter]
+ALTER PROCEDURE [dbo].[WrGetMsgCenter]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -49856,28 +45598,17 @@ SELECT a.MsgCenterId, a.Msg
 	FROM dbo.MsgCenter a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.MsgCenter WHERE MsgId = a.MsgId AND CultureId = @CultureId)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetReportApp') AND type='P')
-DROP PROCEDURE dbo.WrGetReportApp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetReportApp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetReportApp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetReportApp]
+ALTER PROCEDURE [dbo].[WrGetReportApp]
  @DbId		int
 /* WITH ENCRYPTION */
 AS
@@ -49885,29 +45616,18 @@ SET NOCOUNT ON
 SELECT dbProvider = dbAppProvider, dbServer = dbAppServer, dbDatabase = dbAppDatabase, dbUserId = dbAppUserId
 	FROM RODesign.dbo.Systems
 	WHERE SystemId = @DbId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetReportCriHlp') AND type='P')
-DROP PROCEDURE dbo.WrGetReportCriHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetReportCriHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetReportCriHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetReportCriHlp]
+ALTER PROCEDURE [dbo].[WrGetReportCriHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -49918,28 +45638,17 @@ SELECT a.ReportCriHlpId, a.ColumnHeader
 	FROM dbo.ReportCriHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ReportCriHlp WHERE ReportCriId = a.ReportCriId AND CultureId = @CultureId)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetReportHlp') AND type='P')
-DROP PROCEDURE dbo.WrGetReportHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetReportHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetReportHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetReportHlp]
+ALTER PROCEDURE [dbo].[WrGetReportHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -49950,28 +45659,17 @@ SELECT a.ReportHlpId, a.DefaultHlpMsg, a.ReportTitle
 	FROM dbo.ReportHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ReportHlp WHERE ReportId = a.ReportId AND CultureId = @CultureId)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetRptProc') AND type='P')
-DROP PROCEDURE dbo.WrGetRptProc
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetRptProc') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetRptProc AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetRptProc]
+ALTER PROCEDURE [dbo].[WrGetRptProc]
  @ProcName	varchar(50)
 ,@DbId		int
 /* WITH ENCRYPTION */
@@ -49981,29 +45679,18 @@ SET NOCOUNT ON
 SELECT @dbAppDatabase = dbAppDatabase FROM RODesign.dbo.Systems WHERE SystemId = @DbId
 /* sp_helptext do not accept 'dbo.' */
 EXEC (@dbAppDatabase + '.dbo.MkStoredProcedure ''sp_helptext ' + @ProcName + '''')
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenCriHlp') AND type='P')
-DROP PROCEDURE dbo.WrGetScreenCriHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenCriHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetScreenCriHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetScreenCriHlp]
+ALTER PROCEDURE [dbo].[WrGetScreenCriHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -50014,28 +45701,17 @@ SELECT a.ScreenCriHlpId, a.ColumnHeader
 	FROM dbo.ScreenCriHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ScreenCriHlp WHERE ScreenCriId = a.ScreenCriId AND CultureId = @CultureId)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenFilterHlp') AND type='P')
-DROP PROCEDURE dbo.WrGetScreenFilterHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenFilterHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetScreenFilterHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetScreenFilterHlp]
+ALTER PROCEDURE [dbo].[WrGetScreenFilterHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -50046,28 +45722,17 @@ SELECT a.ScreenFilterHlpId, a.FilterName
 	FROM dbo.ScreenFilterHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ScreenFilterHlp WHERE ScreenFilterId = a.ScreenFilterId AND CultureId = @CultureId)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenHlp') AND type='P')
-DROP PROCEDURE dbo.WrGetScreenHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetScreenHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetScreenHlp]
+ALTER PROCEDURE [dbo].[WrGetScreenHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -50078,49 +45743,34 @@ SELECT a.ScreenHlpId, a.DefaultHlpMsg, a.FootNote, a.ScreenTitle, a.AddMsg, a.Up
 	FROM dbo.ScreenHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ScreenHlp WHERE ScreenId = a.ScreenId AND CultureId = @CultureId)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenId') AND type='P')
-DROP PROCEDURE dbo.WrGetScreenId
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenId') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetScreenId AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetScreenId]
+ALTER PROCEDURE [dbo].[WrGetScreenId]
  @ProgramName	varchar(20)
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 SELECT ScreenId FROM dbo.Screen WHERE ProgramName = @ProgramName
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenObj') AND type='P')
-DROP PROCEDURE dbo.WrGetScreenObj
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenObj') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetScreenObj AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[WrGetScreenObj]
+ALTER PROCEDURE [dbo].[WrGetScreenObj]
  @ScreenId		int
 ,@CultureId		smallint
 ,@ScreenObjId   int=null
@@ -50138,6 +45788,7 @@ SELECT a.ScreenTabId, ah.TabFolderName, a.TabFolderOrder, c.GridGrpCd, c.ColumnH
 	,e.TableId
 	,e.TableName
 	,PrimaryKey = f.ColumnName
+	,PKColumnIdentity = f.ColumnIdentity
 	,DdlAdnColumnName=x1.ColumnName
 	,DdlFtrColumnName=x2.ColumnName
 	,c.DdlFtrColumnId,DdlFtrTableId=x2.TableId
@@ -50147,6 +45798,8 @@ SELECT a.ScreenTabId, ah.TabFolderName, a.TabFolderOrder, c.GridGrpCd, c.ColumnH
 	,DataTypeDByteOle = ISNULL(d3.DataTypeDByteOle,'VarWChar')
 	,d.ColumnLength
 	,e.SystemId
+	,MultiDesignDb=ISNULL(e.MultiDesignDb,'N')
+
 FROM dbo.ScreenTab a
 INNER JOIN dbo.ScreenTabHlp ah ON a.ScreenTabId = ah.ScreenTabId 
 AND (ah.CultureId = @CultureId
@@ -50157,7 +45810,11 @@ INNER JOIN RODesign.dbo.CtScreenType t ON s.ScreenTypeId = t.ScreenTypeId
 LEFT OUTER JOIN dbo.ScreenObj c ON a.ScreenTabId = c.TabFolderId
 LEFT OUTER JOIN dbo.DbColumn d ON c.ColumnId = d.ColumnId
 LEFT OUTER JOIN dbo.DbTable e ON d.TableId = e.TableId
-LEFT OUTER JOIN (SELECT TableId,ColumnName FROM DbColumn WHERE PrimaryKey = 'Y') f ON e.TableId = f.TableId
+LEFT OUTER JOIN (
+	SELECT TableId, ColumnName, c.ColumnIdentity  
+	FROM DbColumn c
+	WHERE PrimaryKey = 'Y'
+) f ON e.TableId = f.TableId
 LEFT OUTER JOIN dbo.ScreenObjHlp b ON c.ScreenObjId = b.ScreenObjId 
 	AND (b.CultureId = @CultureId
 	OR (b.CultureId = @DefCultureId AND not EXISTS (SELECT 1 FROM ScreenObjHlp b2 WHERE b2.ScreenObjId = b.ScreenObjId AND b2.CultureId = @CultureId))
@@ -50172,19 +45829,18 @@ LEFT OUTER JOIN RODesign.dbo.CtDataType d2 ON x2.DataType = d2.DataTypeId
 LEFT OUTER JOIN RODesign.dbo.CtDataType d3 ON d.DataType = d3.DataTypeId
 WHERE  (a.ScreenId = @ScreenId OR @ScreenId IS NULL) AND (@ScreenObjId = c.ScreenObjId OR @ScreenObjId IS NULL)
 ORDER BY a.TabFolderOrder, c.MasterTable DESC, c.TabIndex
-RETURN 0  
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenObjById') AND type='P')
-DROP PROCEDURE dbo.WrGetScreenObjById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenObjById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetScreenObjById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrGetScreenObjById]
+ALTER PROCEDURE [dbo].[WrGetScreenObjById]
  @screenId		int
 ,@keyId		nvarchar(1000)
 ,@Usrs		varchar(1000)
@@ -50241,24 +45897,17 @@ SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenObjHlp') AND type='P')
-DROP PROCEDURE dbo.WrGetScreenObjHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenObjHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetScreenObjHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetScreenObjHlp]
+ALTER PROCEDURE [dbo].[WrGetScreenObjHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -50270,27 +45919,17 @@ SELECT a.ScreenObjHlpId, b.DisplayModeId, a.ColumnHeader, a.TbHint, a.ToolTip, a
 	WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ScreenObjHlp WHERE ScreenObjId = a.ScreenObjId AND CultureId = @CultureId)
 RETURN 0
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenTabHlp') AND type='P')
-DROP PROCEDURE dbo.WrGetScreenTabHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetScreenTabHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetScreenTabHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetScreenTabHlp]
+ALTER PROCEDURE [dbo].[WrGetScreenTabHlp]
  @CultureId	smallint
 /* WITH ENCRYPTION */
 AS
@@ -50301,24 +45940,17 @@ SELECT a.ScreenTabHlpId, a.TabFolderName
 	FROM dbo.ScreenTabHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 1 FROM dbo.ScreenTabHlp WHERE ScreenTabId = a.ScreenTabId AND CultureId = @CultureId)
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetSvrRule') AND type='P')
-DROP PROCEDURE dbo.WrGetSvrRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetSvrRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetSvrRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrGetSvrRule]
+ALTER PROCEDURE [dbo].[WrGetSvrRule]
  @ServerRuleId	int
 ,@DbId		int
 /* WITH ENCRYPTION */
@@ -50330,25 +45962,18 @@ SELECT @ProcedureName = ProcedureName FROM dbo.ServerRule WHERE ServerRuleId = @
 SELECT @dbAppDatabase = dbAppDatabase FROM RODesign.dbo.Systems WHERE SystemId = @DbId
 UPDATE dbo.ServerRule SET LastGenDt = getdate() WHERE ServerRuleId = @ServerRuleId
 EXEC (@dbAppDatabase + '.dbo.MkStoredProcedure '' sp_helptext ' + @ProcedureName + '''')
-RETURN 0 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetSvrRuleSys') AND type='P')
-DROP PROCEDURE dbo.WrGetSvrRuleSys
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetSvrRuleSys') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetSvrRuleSys AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetSvrRuleSys]
+ALTER PROCEDURE [dbo].[WrGetSvrRuleSys]
  @ScreenId	int
 ,@DbId		int
 /* WITH ENCRYPTION */
@@ -50362,26 +45987,18 @@ IF @MultiDesignDb = 'Y'
 ELSE
 	SELECT dbProvider = dbAppProvider, dbServer = dbAppServer, dbDatabase = dbAppDatabase, dbUserId = dbAppUserId
 	FROM RODesign.dbo.Systems WHERE SystemId = @DbId
-RETURN 0 
- 
-
-
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetUageCalender') AND type='P')
-DROP PROCEDURE dbo.WrGetUageCalender
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetUageCalender') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetUageCalender AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[WrGetUageCalender]
+ALTER PROCEDURE [dbo].[WrGetUageCalender]
 @screenId		int
 ,@bAll		char(1)
 ,@keyId		Int
@@ -50416,26 +46033,17 @@ SELECT UsageDt = CONVERT(varchar,UsageDt,111), Cnt=COUNT(1), Color = CASE WHEN C
 	GROUP BY CONVERT(varchar,UsageDt,111)
 	ORDER BY CONVERT(varchar,UsageDt,111)
 RETURN 0
-
-
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetVirtualTbl') AND type='P')
-DROP PROCEDURE dbo.WrGetVirtualTbl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetVirtualTbl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetVirtualTbl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrGetVirtualTbl]
+ALTER PROCEDURE [dbo].[WrGetVirtualTbl]
  @TableId	int
 ,@DbId		int
 /* WITH ENCRYPTION */
@@ -50454,22 +46062,18 @@ SELECT @OpenBracket = CHARINDEX('(',@FunctionName)
 IF @OpenBracket > 0 SELECT @FunctionName = SUBSTRING(@FunctionName, 1, @OpenBracket - 1)
 SELECT @dbAppDatabase = dbAppDatabase FROM RODesign.dbo.Systems WHERE SystemId = @DbId
 EXEC (@dbAppDatabase + '.dbo.MkStoredProcedure '' sp_helptext ' + @FunctionName + '''')
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetWebRule') AND type='P')
-DROP PROCEDURE dbo.WrGetWebRule
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetWebRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetWebRule AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrGetWebRule]
+ALTER PROCEDURE [dbo].[WrGetWebRule]
  @ScreenId		int
 /* WITH ENCRYPTION */
 AS
@@ -50477,19 +46081,18 @@ SET NOCOUNT ON
 
 SELECT WebRuleId, ReactEventId, ReactRuleProg, ReduxEventId, ReduxRuleProg, ServiceEventId, ServiceRuleProg, AsmxEventId, AsmxRuleProg
 FROM dbo.WebRule WHERE ScreenId = @ScreenId
-RETURN 0  
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsButtonHlp') AND type='P')
-DROP PROCEDURE dbo.WrInsButtonHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsButtonHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsButtonHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrInsButtonHlp]
+ALTER PROCEDURE [dbo].[WrInsButtonHlp]
  @ButtonHlpId	int
 ,@CultureId		smallint
 ,@ButtonName	nvarchar(50)
@@ -50502,19 +46105,17 @@ INSERT INTO dbo.ButtonHlp (ScreenId, ReportId, WizardId, CultureId, ButtonTypeId
 	SELECT ScreenId, ReportId, WizardId, @CultureId, ButtonTypeId, @ButtonName, @ButtonLongNm, @ButtonToolTip, ButtonVisible, TopVisible, RowVisible, BotVisible
 	FROM dbo.ButtonHlp WHERE ButtonHlpId = @ButtonHlpId
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsCtButtonHlp') AND type='P')
-DROP PROCEDURE dbo.WrInsCtButtonHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsCtButtonHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsCtButtonHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrInsCtButtonHlp]
+ALTER PROCEDURE [dbo].[WrInsCtButtonHlp]
  @ButtonHlpId	int
 ,@CultureId		smallint
 ,@ButtonName	nvarchar(50)
@@ -50527,23 +46128,18 @@ INSERT INTO dbo.CtButtonHlp (ButtonTypeId, CultureId, ButtonName, ButtonLongNm, 
 	SELECT ButtonTypeId, @CultureId, @ButtonName, @ButtonLongNm, @ButtonToolTip
 	FROM dbo.CtButtonHlp WHERE ButtonHlpId = @ButtonHlpId
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsCultureLbl') AND type='P')
-DROP PROCEDURE dbo.WrInsCultureLbl
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsCultureLbl') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsCultureLbl AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
 -- ??Design.only:
-CREATE PROCEDURE [dbo].[WrInsCultureLbl]
+ALTER PROCEDURE [dbo].[WrInsCultureLbl]
  @CultureLblId	int
 ,@CultureId		smallint
 ,@Label			nvarchar(50)
@@ -50553,29 +46149,17 @@ SET NOCOUNT ON
 INSERT INTO RODesign.dbo.CtCultureLbl (CultureTypeId, CultureId, CultureTypeLabel)
 	SELECT CultureTypeId, @CultureId, @Label FROM RODesign.dbo.CtCultureLbl WHERE CultureLblId = @CultureLblId
 RETURN 0
-
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsLabel') AND type='P')
-DROP PROCEDURE dbo.WrInsLabel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsLabel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsLabel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrInsLabel]
+ALTER PROCEDURE [dbo].[WrInsLabel]
  @LabelId		int
 ,@CultureId		smallint
 ,@LabelText		nvarchar(max)
@@ -50587,29 +46171,17 @@ INSERT INTO dbo.Label (CultureId, LabelCat, LabelKey, LabelText, CompanyId, Sort
 	FROM dbo.Label WHERE LabelId = @LabelId
 EXEC dbo.Ir_InitLabel @@IDENTITY
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsMenuHlp') AND type='P')
-DROP PROCEDURE dbo.WrInsMenuHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsMenuHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsMenuHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrInsMenuHlp]
+ALTER PROCEDURE [dbo].[WrInsMenuHlp]
  @MenuHlpId	int
 ,@CultureId	smallint
 ,@MenuText	nvarchar(30)
@@ -50618,29 +46190,17 @@ AS
 SET NOCOUNT ON
 INSERT INTO dbo.MenuHlp (MenuId, CultureId, MenuText) SELECT MenuId, @CultureId, @MenuText FROM dbo.MenuHlp WHERE MenuHlpId = @MenuHlpId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsMsgCenter') AND type='P')
-DROP PROCEDURE dbo.WrInsMsgCenter
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsMsgCenter') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsMsgCenter AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrInsMsgCenter]
+ALTER PROCEDURE [dbo].[WrInsMsgCenter]
  @MsgCenterId	int
 ,@CultureId		smallint
 ,@Msg			nvarchar(800)
@@ -50649,29 +46209,17 @@ AS
 SET NOCOUNT ON
 INSERT INTO dbo.MsgCenter (MsgId, CultureId, Msg) SELECT MsgId, @CultureId, @Msg FROM dbo.MsgCenter WHERE MsgCenterId = @MsgCenterId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsReportCriHlp') AND type='P')
-DROP PROCEDURE dbo.WrInsReportCriHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsReportCriHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsReportCriHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrInsReportCriHlp]
+ALTER PROCEDURE [dbo].[WrInsReportCriHlp]
  @ReportCriHlpId	int
 ,@CultureId			smallint
 ,@ColumnHeader		nvarchar(50)
@@ -50682,29 +46230,17 @@ INSERT INTO dbo.ReportCriHlp (ReportCriId, CultureId, ColumnHeader)
 	SELECT ReportCriId, @CultureId, @ColumnHeader
 	FROM dbo.ReportCriHlp WHERE ReportCriHlpId = @ReportCriHlpId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsReportHlp') AND type='P')
-DROP PROCEDURE dbo.WrInsReportHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsReportHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsReportHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrInsReportHlp]
+ALTER PROCEDURE [dbo].[WrInsReportHlp]
  @ReportHlpId	int
 ,@CultureId		smallint
 ,@DefaultHlpMsg	nvarchar(400)
@@ -50716,29 +46252,17 @@ INSERT INTO dbo.ReportHlp (ReportId, CultureId, DefaultHlpMsg, ReportTitle)
 	SELECT ReportId, @CultureId, @DefaultHlpMsg, @ReportTitle
 	FROM dbo.ReportHlp WHERE ReportHlpId = @ReportHlpId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsScreenCriHlp') AND type='P')
-DROP PROCEDURE dbo.WrInsScreenCriHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsScreenCriHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsScreenCriHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrInsScreenCriHlp]
+ALTER PROCEDURE [dbo].[WrInsScreenCriHlp]
  @ScreenCriHlpId	int
 ,@CultureId			smallint
 ,@ColumnHeader		nvarchar(50)
@@ -50749,29 +46273,17 @@ INSERT INTO dbo.ScreenCriHlp (ScreenCriId, CultureId, ColumnHeader)
 	SELECT ScreenCriId, @CultureId, @ColumnHeader
 	FROM dbo.ScreenCriHlp WHERE ScreenCriHlpId = @ScreenCriHlpId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsScreenFilterHlp') AND type='P')
-DROP PROCEDURE dbo.WrInsScreenFilterHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsScreenFilterHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsScreenFilterHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrInsScreenFilterHlp]
+ALTER PROCEDURE [dbo].[WrInsScreenFilterHlp]
  @ScreenFilterHlpId	int
 ,@CultureId			smallint
 ,@FilterName		nvarchar(50)
@@ -50782,29 +46294,17 @@ INSERT INTO dbo.ScreenFilterHlp (ScreenFilterId, CultureId, FilterName)
 	SELECT ScreenFilterId, @CultureId, @FilterName
 	FROM dbo.ScreenFilterHlp WHERE ScreenFilterHlpId = @ScreenFilterHlpId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsScreenHlp') AND type='P')
-DROP PROCEDURE dbo.WrInsScreenHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsScreenHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsScreenHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrInsScreenHlp]
+ALTER PROCEDURE [dbo].[WrInsScreenHlp]
  @ScreenHlpId	int
 ,@CultureId		smallint
 ,@DefaultHlpMsg	nvarchar(400)
@@ -50820,27 +46320,17 @@ INSERT INTO dbo.ScreenHlp (ScreenId, CultureId, DefaultHlpMsg, FootNote, ScreenT
 	SELECT ScreenId, @CultureId, @DefaultHlpMsg, @FootNote, @ScreenTitle, @AddMsg, @UpdMsg, @DelMsg
 	FROM dbo.ScreenHlp WHERE ScreenHlpId = @ScreenHlpId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsScreenObjHlp') AND type='P')
-DROP PROCEDURE dbo.WrInsScreenObjHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsScreenObjHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsScreenObjHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrInsScreenObjHlp]
+ALTER PROCEDURE [dbo].[WrInsScreenObjHlp]
  @ScreenObjHlpId	int
 ,@CultureId			smallint
 ,@ColumnHeader		nvarchar(max)
@@ -50854,28 +46344,17 @@ INSERT INTO dbo.ScreenObjHlp (ScreenObjId, ScreenObjHlpDesc, CultureId, ColumnHe
 	SELECT ScreenObjId, ScreenObjHlpDesc, @CultureId, @ColumnHeader, @TbHint, @ToolTip, @ErrMessage
 	FROM dbo.ScreenObjHlp WHERE ScreenObjHlpId = @ScreenObjHlpId
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsScreenTabHlp') AND type='P')
-DROP PROCEDURE dbo.WrInsScreenTabHlp
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrInsScreenTabHlp') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrInsScreenTabHlp AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrInsScreenTabHlp]
+ALTER PROCEDURE [dbo].[WrInsScreenTabHlp]
  @ScreenTabHlpId	int
 ,@CultureId			smallint
 ,@TabFolderName		nvarchar(30)
@@ -50886,29 +46365,18 @@ INSERT INTO dbo.ScreenTabHlp (ScreenTabId, CultureId, TabFolderName)
 	SELECT ScreenTabId, @CultureId, @TabFolderName
 	FROM dbo.ScreenTabHlp WHERE ScreenTabHlpId = @ScreenTabHlpId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrRptConvSql') AND type='P')
-DROP PROCEDURE dbo.WrRptConvSql
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrRptConvSql') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrRptConvSql AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 -- Assuming all report criteria and columns are filled and the _R and _V s.procs are constructed (must run before Ir_InitReportObj):
-CREATE PROCEDURE [dbo].[WrRptConvSql]
+ALTER PROCEDURE [dbo].[WrRptConvSql]
  @ReportId		int
 /* WITH ENCRYPTION */
 AS
@@ -51074,25 +46542,17 @@ BEGIN
 	EXEC dbo.Ir_UpdRptCtr @@IDENTITY
 END
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrRptRmSql') AND type='P')
-DROP PROCEDURE dbo.WrRptRmSql
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrRptRmSql') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrRptRmSql AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrRptRmSql]
+ALTER PROCEDURE [dbo].[WrRptRmSql]
  @ReportId		int
 /* WITH ENCRYPTION */
 AS
@@ -51104,28 +46564,17 @@ DELETE FROM dbo.RptCel WHERE EXISTS (SELECT 1 FROM dbo.RptTbl
 	WHERE dbo.RptTbl.RptTblId = dbo.RptCel.RptTblId AND dbo.RptTbl.ReportId = @ReportId)
 DELETE FROM dbo.RptTbl WHERE ReportId = @ReportId
 RETURN 0
- 
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrRptwizDel') AND type='P')
-DROP PROCEDURE dbo.WrRptwizDel
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrRptwizDel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrRptwizDel AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrRptwizDel]
+ALTER PROCEDURE [dbo].[WrRptwizDel]
  @ReportId	int
 /* WITH ENCRYPTION */
 AS
@@ -51150,27 +46599,17 @@ DELETE FROM dbo.UtRptMemCri WHERE ReportId = @ReportId
 DELETE FROM dbo.UtReportLstCri WHERE ReportId = @ReportId
 DELETE FROM dbo.UtReport WHERE ReportId = @ReportId
 RETURN 0
-
- 
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrRptwizGen') AND type='P')
-DROP PROCEDURE dbo.WrRptwizGen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrRptwizGen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrRptwizGen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrRptwizGen]
+ALTER PROCEDURE [dbo].[WrRptwizGen]
  @RptwizId		int
 ,@AppDatabase	varchar(50)
 ,@SystemId		tinyint
@@ -51525,25 +46964,17 @@ ELSE
 	UPDATE dbo.UtRptMemCri SET UsrId = CASE WHEN @AccessCd = 'P' THEN NULL ELSE @UsrId END, CompanyLs = @CompanyLs WHERE ReportId = @ReportId
 SELECT @ReportId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrSyncByDb') AND type='P')
-DROP PROCEDURE dbo.WrSyncByDb
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrSyncByDb') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrSyncByDb AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrSyncByDb]
+ALTER PROCEDURE [dbo].[WrSyncByDb]
  @UsrId		int
 ,@SystemId	tinyint
 ,@DbId		tinyint
@@ -51617,26 +47048,18 @@ SELECT @sClause = @sClause + ' IF EXISTS (SELECT 1 FROM #sync WHERE len(ColumnNa
 + ' END END DROP TABLE dbo.#sync SELECT @Tid'
 + ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = getdate() WHERE TableId = @Tid'
 EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @dClause + ''', ''' + @sClause + '''')
-RETURN 0 
- 
-
- 
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrSyncToDb') AND type='P')
-DROP PROCEDURE dbo.WrSyncToDb
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrSyncToDb') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrSyncToDb AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrSyncToDb]
+ALTER PROCEDURE [dbo].[WrSyncToDb]
  @SystemId	tinyint
 ,@TableId	int
 ,@TableName	varchar(500)
@@ -51861,25 +47284,17 @@ SELECT @a5 = @a5 + ' SELECT @AppItemId = @@IDENTITY'
 + ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = getdate() WHERE TableId = ' + convert(varchar,@TableId)
 EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @a1 + ''', ''' + @a2 + ''', ''' + @a3 + ''', ''' + @a4 + ''', ''' + @a5 + '''')
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdMemTranslate') AND type='P')
-DROP PROCEDURE dbo.WrUpdMemTranslate
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdMemTranslate') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrUpdMemTranslate AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrUpdMemTranslate]
+ALTER PROCEDURE [dbo].[WrUpdMemTranslate]
  @InStr		nvarchar(2000)
 ,@CultureId	smallint
 ,@OutStr	nvarchar(2000)
@@ -51894,26 +47309,17 @@ BEGIN
 		INSERT dbo.MemTrans (Instr, CultureTypeId, OutStr) SELECT @Instr, @CultureId, @OutStr
 END
 RETURN 0
-
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdMenu') AND type='P')
-DROP PROCEDURE dbo.WrUpdMenu
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdMenu') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrUpdMenu AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrUpdMenu]
+ALTER PROCEDURE [dbo].[WrUpdMenu]
  @MenuId		int
 ,@PMenuId		int
 ,@MenuText		nvarchar(30)
@@ -51935,22 +47341,17 @@ IF EXISTS (SELECT 1 FROM dbo.MenuHlp WHERE MenuId = @MenuId AND CultureId = @Cul
 ELSE
 	INSERT dbo.MenuHlp (MenuId, CultureId, MenuText) SELECT @MenuId, @CultureId, @MenuText
 RETURN 0
-
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenGridObjLayout') AND type='P')
-DROP PROCEDURE dbo.WrUpdScreenGridObjLayout
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenGridObjLayout') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrUpdScreenGridObjLayout AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrUpdScreenGridObjLayout]
+ALTER PROCEDURE [dbo].[WrUpdScreenGridObjLayout]
  @ScreenId			int
 ,@Usrs				varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -52057,20 +47458,17 @@ INNER JOIN @ScreenObj o2 on o2.ScreenObjId = o.ScreenObjId
 --RETURN 1
 	
 RETURN 0
- 
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenGridObjSize') AND type='P')
-DROP PROCEDURE dbo.WrUpdScreenGridObjSize
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenGridObjSize') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrUpdScreenGridObjSize AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrUpdScreenGridObjSize]
+ALTER PROCEDURE [dbo].[WrUpdScreenGridObjSize]
  @ScreenId	int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -52120,23 +47518,17 @@ INNER JOIN Screen s on o.ScreenId = s.ScreenId
 WHERE ScreenObjId = @ScreenObjId
 
 RETURN 0
- 
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenObj') AND type='P')
-DROP PROCEDURE dbo.WrUpdScreenObj
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenObj') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrUpdScreenObj AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-CREATE PROCEDURE [dbo].[WrUpdScreenObj]
+ALTER PROCEDURE [dbo].[WrUpdScreenObj]
  @ScreenObjId		int
 ,@PScreenObjId		int
 ,@ColumnHeader		nvarchar(max)
@@ -52166,21 +47558,17 @@ BEGIN
 END
 UPDATE dbo.Screen SET NeedRegen = 'Y' WHERE ScreenId = @ScreenId
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenObjLayoutAndSize') AND type='P')
-DROP PROCEDURE dbo.WrUpdScreenObjLayoutAndSize
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenObjLayoutAndSize') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrUpdScreenObjLayoutAndSize AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrUpdScreenObjLayoutAndSize]
+ALTER PROCEDURE [dbo].[WrUpdScreenObjLayoutAndSize]
  @ScreenId			int
 ,@Usrs				varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -52275,44 +47663,34 @@ END
 update dbo.Screen set NeedRegen = 'Y' where ScreenId =  @ScreenId
 SELECT @updCount
 RETURN 0
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenReactGen') AND type='P')
-DROP PROCEDURE dbo.WrUpdScreenReactGen
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenReactGen') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrUpdScreenReactGen AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE [dbo].[WrUpdScreenReactGen]
+ALTER PROCEDURE [dbo].[WrUpdScreenReactGen]
  @ScreenId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 UPDATE dbo.Screen SET ReactGenerated = 'Y' WHERE ScreenId = @ScreenId
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenTab') AND type='P')
-DROP PROCEDURE dbo.WrUpdScreenTab
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdScreenTab') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrUpdScreenTab AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
-
-CREATE PROCEDURE [dbo].[WrUpdScreenTab]
+ALTER PROCEDURE [dbo].[WrUpdScreenTab]
  @ScreenTabId		int
 ,@TabFolderOrder	tinyint
 ,@TabFolderName		nvarchar(50)
@@ -52337,26 +47715,18 @@ INNER JOIN Screen s on t.ScreenId = s.ScreenId
 WHERE t.ScreenTabId = @ScreenTabId
 	
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrXferRpt') AND type='P')
-DROP PROCEDURE dbo.WrXferRpt
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrXferRpt') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrXferRpt AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
-
 /* Migrate a report from Report Generator to Advanced Report for further customization. Original should be deleted after this is called. */
-CREATE PROCEDURE [dbo].[WrXferRpt]
+ALTER PROCEDURE [dbo].[WrXferRpt]
  @ReportId	int
 /* WITH ENCRYPTION */
 AS
@@ -52580,9 +47950,6 @@ DROP TABLE #cel
 DROP TABLE #ctr
 COMMIT TRANSACTION
 RETURN 0
- 
-
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO

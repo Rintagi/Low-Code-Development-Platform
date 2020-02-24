@@ -151,7 +151,7 @@ namespace RO.Common3
         {
             if (multiDesignDb == "Y")
             {
-                return ",(string)Session[KEY_sysConnectionString],LcAppPw";
+                return ",(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId)";
             }
             else if (sysProgram != "Y")
             {
@@ -168,7 +168,7 @@ namespace RO.Common3
 		{
 			if (multiDesignDb == "Y")
 			{
-				return ",(string)Session[KEY_sysConnectionString],LcAppPw";
+				return ",(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId)";
 			}
 			else if (sysProgram != "Y")
 			{
@@ -456,10 +456,10 @@ namespace RO.Common3
         {
             // Need to recompile Facade layer to make MkWsProxy works:
             CompilePrj("Facade" + CSrc.SrcSystemId.ToString() + "\\Facade" + CSrc.SrcSystemId.ToString() + ".csproj");
-            File.Copy(CPrj.SrcRuleProgramPath + "Facade" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Facade" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcWsProgramPath + "\\Bin\\Facade" + CSrc.SrcSystemId.ToString() + ".dll", true);
-            File.Copy(CPrj.SrcRuleProgramPath + "Facade" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Rule" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcWsProgramPath + "\\Bin\\Rule" + CSrc.SrcSystemId.ToString() + ".dll", true);
-            File.Copy(CPrj.SrcRuleProgramPath + "Facade" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Access" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcWsProgramPath + "\\Bin\\Access" + CSrc.SrcSystemId.ToString() + ".dll", true);
-            File.Copy(CPrj.SrcRuleProgramPath + "Facade" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Common" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcWsProgramPath + "\\Bin\\Common" + CSrc.SrcSystemId.ToString() + ".dll", true);
+            File.Copy(CPrj.SrcRuleProgramPath + "\\" + "Facade" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Facade" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcWsProgramPath + "\\Bin\\Facade" + CSrc.SrcSystemId.ToString() + ".dll", true);
+            File.Copy(CPrj.SrcRuleProgramPath + "\\" + "Facade" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Rule" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcWsProgramPath + "\\Bin\\Rule" + CSrc.SrcSystemId.ToString() + ".dll", true);
+            File.Copy(CPrj.SrcRuleProgramPath + "\\" + "Facade" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Access" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcWsProgramPath + "\\Bin\\Access" + CSrc.SrcSystemId.ToString() + ".dll", true);
+            File.Copy(CPrj.SrcRuleProgramPath + "\\" + "Facade" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Common" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcWsProgramPath + "\\Bin\\Common" + CSrc.SrcSystemId.ToString() + ".dll", true);
         }
 
         public static string CompileAuxProj(CurrPrj CPrj)
@@ -471,10 +471,10 @@ namespace RO.Common3
                 if (Directory.Exists(Config.RuleTierPath + "\\" + proj))
                 {
                     result = result + CompilePrj(proj + "\\" + proj + ".csproj");
-                    File.Copy(CPrj.SrcRuleProgramPath + proj + "\\Bin\\Debug\\" + proj + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\" + proj + ".dll", true);
+                    File.Copy(CPrj.SrcRuleProgramPath + "\\" + proj + "\\Bin\\Debug\\" + proj + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\" + proj + ".dll", true);
                     if (proj == "SystemFramewk")
                     {
-                        File.Copy(CPrj.SrcRuleProgramPath + proj + "\\Bin\\Debug\\" + proj + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\" + proj + ".dll", true);
+                        File.Copy(CPrj.SrcRuleProgramPath + "\\" + proj + "\\Bin\\Debug\\" + proj + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\" + proj + ".dll", true);
                     }
                 }
             }
@@ -483,11 +483,11 @@ namespace RO.Common3
 
         public static void RefreshClientTier(CurrPrj CPrj, CurrSrc CSrc)
         {
-            File.Copy(CPrj.SrcRuleProgramPath + "Service" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Service" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\Service" + CSrc.SrcSystemId.ToString() + ".dll", true);
-            File.Copy(CPrj.SrcRuleProgramPath + "Service" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Facade" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\Facade" + CSrc.SrcSystemId.ToString() + ".dll", true);
-            File.Copy(CPrj.SrcRuleProgramPath + "Service" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Rule" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\Rule" + CSrc.SrcSystemId.ToString() + ".dll", true);
-            File.Copy(CPrj.SrcRuleProgramPath + "Service" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Access" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\Access" + CSrc.SrcSystemId.ToString() + ".dll", true);
-            File.Copy(CPrj.SrcRuleProgramPath + "Service" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Common" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\Common" + CSrc.SrcSystemId.ToString() + ".dll", true);
+            File.Copy(CPrj.SrcRuleProgramPath + "\\" + "Service" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Service" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\Service" + CSrc.SrcSystemId.ToString() + ".dll", true);
+            File.Copy(CPrj.SrcRuleProgramPath + "\\" + "Service" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Facade" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\Facade" + CSrc.SrcSystemId.ToString() + ".dll", true);
+            File.Copy(CPrj.SrcRuleProgramPath + "\\" + "Service" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Rule" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\Rule" + CSrc.SrcSystemId.ToString() + ".dll", true);
+            File.Copy(CPrj.SrcRuleProgramPath + "\\" + "Service" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Access" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\Access" + CSrc.SrcSystemId.ToString() + ".dll", true);
+            File.Copy(CPrj.SrcRuleProgramPath + "\\" + "Service" + CSrc.SrcSystemId.ToString() + "\\Bin\\Debug\\Common" + CSrc.SrcSystemId.ToString() + ".dll", CPrj.SrcClientProgramPath + "\\Bin\\Common" + CSrc.SrcSystemId.ToString() + ".dll", true);
         }
 
 		public static StringBuilder MkWsProxy(string ProgramName, CurrPrj CPrj, CurrSrc CSrc)

@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmDatTier || {});
+    this.GetReduxState = () => (this.props.AdmDatTier || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'DataTierId195';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,77 +87,65 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
     const columnLabel = (this.props.AdmDatTier || {}).ColumnLabel || {};
     /* standard field validation */
-if (!values.cDataTierName195) { errors.cDataTierName195 = (columnLabel.DataTierName195 || {}).ErrMessage;}
-if (isEmptyId((values.cEntityId195 || {}).value)) { errors.cEntityId195 = (columnLabel.EntityId195 || {}).ErrMessage;}
-if (isEmptyId((values.cDbProviderCd195 || {}).value)) { errors.cDbProviderCd195 = (columnLabel.DbProviderCd195 || {}).ErrMessage;}
-if (!values.cServerName195) { errors.cServerName195 = (columnLabel.ServerName195 || {}).ErrMessage;}
-if (!values.cDesServer195) { errors.cDesServer195 = (columnLabel.DesServer195 || {}).ErrMessage;}
-if (!values.cDesDatabase195) { errors.cDesDatabase195 = (columnLabel.DesDatabase195 || {}).ErrMessage;}
-if (!values.cDesUserId195) { errors.cDesUserId195 = (columnLabel.DesUserId195 || {}).ErrMessage;}
-if (!values.cDesPassword195) { errors.cDesPassword195 = (columnLabel.DesPassword195 || {}).ErrMessage;}
-if (!values.cPortBinPath195) { errors.cPortBinPath195 = (columnLabel.PortBinPath195 || {}).ErrMessage;}
-if (!values.cInstBinPath195) { errors.cInstBinPath195 = (columnLabel.InstBinPath195 || {}).ErrMessage;}
-if (!values.cScriptPath195) { errors.cScriptPath195 = (columnLabel.ScriptPath195 || {}).ErrMessage;}
-if (!values.cDbDataPath195) { errors.cDbDataPath195 = (columnLabel.DbDataPath195 || {}).ErrMessage;}
+    if (!values.cDataTierName195) { errors.cDataTierName195 = (columnLabel.DataTierName195 || {}).ErrMessage; }
+    if (isEmptyId((values.cEntityId195 || {}).value)) { errors.cEntityId195 = (columnLabel.EntityId195 || {}).ErrMessage; }
+    if (isEmptyId((values.cDbProviderCd195 || {}).value)) { errors.cDbProviderCd195 = (columnLabel.DbProviderCd195 || {}).ErrMessage; }
+    if (!values.cServerName195) { errors.cServerName195 = (columnLabel.ServerName195 || {}).ErrMessage; }
+    if (!values.cDesServer195) { errors.cDesServer195 = (columnLabel.DesServer195 || {}).ErrMessage; }
+    if (!values.cDesDatabase195) { errors.cDesDatabase195 = (columnLabel.DesDatabase195 || {}).ErrMessage; }
+    if (!values.cDesUserId195) { errors.cDesUserId195 = (columnLabel.DesUserId195 || {}).ErrMessage; }
+    if (!values.cDesPassword195) { errors.cDesPassword195 = (columnLabel.DesPassword195 || {}).ErrMessage; }
+    if (!values.cPortBinPath195) { errors.cPortBinPath195 = (columnLabel.PortBinPath195 || {}).ErrMessage; }
+    if (!values.cInstBinPath195) { errors.cInstBinPath195 = (columnLabel.InstBinPath195 || {}).ErrMessage; }
+    if (!values.cScriptPath195) { errors.cScriptPath195 = (columnLabel.ScriptPath195 || {}).ErrMessage; }
+    if (!values.cDbDataPath195) { errors.cDbDataPath195 = (columnLabel.DbDataPath195 || {}).ErrMessage; }
     return errors;
   }
 
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmDatTier || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmDatTier,
         {
-          DataTierId195: values.cDataTierId195|| '',
-          DataTierName195: values.cDataTierName195|| '',
-          EntityId195: (values.cEntityId195|| {}).value || '',
-          DbProviderCd195: (values.cDbProviderCd195|| {}).value || '',
-          ServerName195: values.cServerName195|| '',
-          DesServer195: values.cDesServer195|| '',
-          DesDatabase195: values.cDesDatabase195|| '',
-          DesUserId195: values.cDesUserId195|| '',
-          DesPassword195: values.cDesPassword195|| '',
-          PortBinPath195: values.cPortBinPath195|| '',
-          InstBinPath195: values.cInstBinPath195|| '',
-          ScriptPath195: values.cScriptPath195|| '',
-          DbDataPath195: values.cDbDataPath195|| '',
+          DataTierId195: values.cDataTierId195 || '',
+          DataTierName195: values.cDataTierName195 || '',
+          EntityId195: (values.cEntityId195 || {}).value || '',
+          DbProviderCd195: (values.cDbProviderCd195 || {}).value || '',
+          ServerName195: values.cServerName195 || '',
+          DesServer195: values.cDesServer195 || '',
+          DesDatabase195: values.cDesDatabase195 || '',
+          DesUserId195: values.cDesUserId195 || '',
+          DesPassword195: values.cDesPassword195 || '',
+          PortBinPath195: values.cPortBinPath195 || '',
+          InstBinPath195: values.cInstBinPath195 || '',
+          ScriptPath195: values.cScriptPath195 || '',
+          DbDataPath195: values.cDbDataPath195 || '',
           IsDevelopment195: values.cIsDevelopment195 ? 'Y' : 'N',
           IsDefault195: values.cIsDefault195 ? 'Y' : 'N',
         },
@@ -196,12 +187,12 @@ if (!values.cDbDataPath195) { errors.cDbDataPath195 = (columnLabel.DbDataPath195
       const fromMstId = mstId || (mst || {}).DataTierId195;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmDatTier.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmDatTier.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmDatTier.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -283,7 +274,7 @@ if (!values.cDbDataPath195) { errors.cDbDataPath195 = (columnLabel.DbDataPath195
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmDatTier || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -307,7 +298,7 @@ if (!values.cDbDataPath195) { errors.cDbDataPath195 = (columnLabel.DbDataPath195
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -336,6 +327,7 @@ if (!values.cDbDataPath195) { errors.cDbDataPath195 = (columnLabel.DbDataPath195
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmDatTierReduxObj.GetScreenButtons(AdmDatTierState) || {};
     const itemList = AdmDatTierState.Dtl || [];
@@ -347,34 +339,37 @@ if (!values.cDbDataPath195) { errors.cDbDataPath195 = (columnLabel.DbDataPath195
     const authRow = (AdmDatTierState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmDatTier || {}).Mst || {});
     const currDtl = ((this.props.AdmDatTier || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.DataTierId195));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.DataTierId195));
     const selectList = AdmDatTierReduxObj.SearchListToSelectList(AdmDatTierState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const DataTierId195 = currMst.DataTierId195;
-const DataTierName195 = currMst.DataTierName195;
-const EntityId195List = AdmDatTierReduxObj.ScreenDdlSelectors.EntityId195(AdmDatTierState);
-const EntityId195 = currMst.EntityId195;
-const DbProviderCd195List = AdmDatTierReduxObj.ScreenDdlSelectors.DbProviderCd195(AdmDatTierState);
-const DbProviderCd195 = currMst.DbProviderCd195;
-const ServerName195 = currMst.ServerName195;
-const DesServer195 = currMst.DesServer195;
-const DesDatabase195 = currMst.DesDatabase195;
-const DesUserId195 = currMst.DesUserId195;
-const DesPassword195 = currMst.DesPassword195;
-const PortBinPath195 = currMst.PortBinPath195;
-const InstBinPath195 = currMst.InstBinPath195;
-const ScriptPath195 = currMst.ScriptPath195;
-const DbDataPath195 = currMst.DbDataPath195;
-const IsDevelopment195 = currMst.IsDevelopment195;
-const IsDefault195 = currMst.IsDefault195;
+
+    const DataTierId195 = currMst.DataTierId195;
+    const DataTierName195 = currMst.DataTierName195;
+    const EntityId195List = AdmDatTierReduxObj.ScreenDdlSelectors.EntityId195(AdmDatTierState);
+    const EntityId195 = currMst.EntityId195;
+    const DbProviderCd195List = AdmDatTierReduxObj.ScreenDdlSelectors.DbProviderCd195(AdmDatTierState);
+    const DbProviderCd195 = currMst.DbProviderCd195;
+    const ServerName195 = currMst.ServerName195;
+    const DesServer195 = currMst.DesServer195;
+    const DesDatabase195 = currMst.DesDatabase195;
+    const DesUserId195 = currMst.DesUserId195;
+    const DesPassword195 = currMst.DesPassword195;
+    const PortBinPath195 = currMst.PortBinPath195;
+    const InstBinPath195 = currMst.InstBinPath195;
+    const ScriptPath195 = currMst.ScriptPath195;
+    const DbDataPath195 = currMst.DbDataPath195;
+    const IsDevelopment195 = currMst.IsDevelopment195;
+    const IsDefault195 = currMst.IsDefault195;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -392,21 +387,21 @@ const IsDefault195 = currMst.IsDefault195;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cDataTierId195: DataTierId195 || '',
-                  cDataTierName195: DataTierName195 || '',
-                  cEntityId195: EntityId195List.filter(obj => { return obj.key === EntityId195 })[0],
-                  cDbProviderCd195: DbProviderCd195List.filter(obj => { return obj.key === DbProviderCd195 })[0],
-                  cServerName195: ServerName195 || '',
-                  cDesServer195: DesServer195 || '',
-                  cDesDatabase195: DesDatabase195 || '',
-                  cDesUserId195: DesUserId195 || '',
-                  cDesPassword195: DesPassword195 || '',
-                  cPortBinPath195: PortBinPath195 || '',
-                  cInstBinPath195: InstBinPath195 || '',
-                  cScriptPath195: ScriptPath195 || '',
-                  cDbDataPath195: DbDataPath195 || '',
-                  cIsDevelopment195: IsDevelopment195 === 'Y',
-                  cIsDefault195: IsDefault195 === 'Y',
+                    cDataTierId195: formatContent(DataTierId195 || '', 'TextBox'),
+                    cDataTierName195: formatContent(DataTierName195 || '', 'TextBox'),
+                    cEntityId195: EntityId195List.filter(obj => { return obj.key === EntityId195 })[0],
+                    cDbProviderCd195: DbProviderCd195List.filter(obj => { return obj.key === DbProviderCd195 })[0],
+                    cServerName195: formatContent(ServerName195 || '', 'TextBox'),
+                    cDesServer195: formatContent(DesServer195 || '', 'TextBox'),
+                    cDesDatabase195: formatContent(DesDatabase195 || '', 'TextBox'),
+                    cDesUserId195: formatContent(DesUserId195 || '', 'TextBox'),
+                    cDesPassword195: formatContent(DesPassword195 || '', 'TextBox'),
+                    cPortBinPath195: formatContent(PortBinPath195 || '', 'TextBox'),
+                    cInstBinPath195: formatContent(InstBinPath195 || '', 'TextBox'),
+                    cScriptPath195: formatContent(ScriptPath195 || '', 'TextBox'),
+                    cDbDataPath195: formatContent(DbDataPath195 || '', 'TextBox'),
+                    cIsDevelopment195: IsDevelopment195 === 'Y',
+                    cIsDefault195: IsDefault195 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -468,330 +463,359 @@ const IsDefault195 = currMst.IsDefault195;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.DataTierId195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DataTierId195 || {}).ColumnHeader} {(columnLabel.DataTierId195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DataTierId195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DataTierId195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDataTierId195'
-disabled = {(authCol.DataTierId195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDataTierId195 && touched.cDataTierId195 && <span className='form__form-group-error'>{errors.cDataTierId195}</span>}
-</div>
-</Col>
-}
-{(authCol.DataTierName195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DataTierName195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DataTierName195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DataTierName195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DataTierName195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDataTierName195'
-disabled = {(authCol.DataTierName195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDataTierName195 && touched.cDataTierName195 && <span className='form__form-group-error'>{errors.cDataTierName195}</span>}
-</div>
-</Col>
-}
-{(authCol.EntityId195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.EntityId195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.EntityId195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.EntityId195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.EntityId195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cEntityId195'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cEntityId195')}
-value={values.cEntityId195}
-options={EntityId195List}
-placeholder=''
-disabled = {(authCol.EntityId195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cEntityId195 && touched.cEntityId195 && <span className='form__form-group-error'>{errors.cEntityId195}</span>}
-</div>
-</Col>
-}
-{(authCol.DbProviderCd195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DbProviderCd195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DbProviderCd195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DbProviderCd195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DbProviderCd195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cDbProviderCd195'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cDbProviderCd195')}
-value={values.cDbProviderCd195}
-options={DbProviderCd195List}
-placeholder=''
-disabled = {(authCol.DbProviderCd195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDbProviderCd195 && touched.cDbProviderCd195 && <span className='form__form-group-error'>{errors.cDbProviderCd195}</span>}
-</div>
-</Col>
-}
-{(authCol.ServerName195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ServerName195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ServerName195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ServerName195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ServerName195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cServerName195'
-disabled = {(authCol.ServerName195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cServerName195 && touched.cServerName195 && <span className='form__form-group-error'>{errors.cServerName195}</span>}
-</div>
-</Col>
-}
-{(authCol.DesServer195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DesServer195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DesServer195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DesServer195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DesServer195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDesServer195'
-disabled = {(authCol.DesServer195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDesServer195 && touched.cDesServer195 && <span className='form__form-group-error'>{errors.cDesServer195}</span>}
-</div>
-</Col>
-}
-{(authCol.DesDatabase195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DesDatabase195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DesDatabase195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DesDatabase195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DesDatabase195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDesDatabase195'
-disabled = {(authCol.DesDatabase195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDesDatabase195 && touched.cDesDatabase195 && <span className='form__form-group-error'>{errors.cDesDatabase195}</span>}
-</div>
-</Col>
-}
-{(authCol.DesUserId195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DesUserId195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DesUserId195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DesUserId195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DesUserId195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDesUserId195'
-disabled = {(authCol.DesUserId195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDesUserId195 && touched.cDesUserId195 && <span className='form__form-group-error'>{errors.cDesUserId195}</span>}
-</div>
-</Col>
-}
-{(authCol.DesPassword195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DesPassword195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DesPassword195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DesPassword195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DesPassword195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDesPassword195'
-disabled = {(authCol.DesPassword195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDesPassword195 && touched.cDesPassword195 && <span className='form__form-group-error'>{errors.cDesPassword195}</span>}
-</div>
-</Col>
-}
-{(authCol.PortBinPath195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.PortBinPath195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PortBinPath195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PortBinPath195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PortBinPath195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cPortBinPath195'
-disabled = {(authCol.PortBinPath195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cPortBinPath195 && touched.cPortBinPath195 && <span className='form__form-group-error'>{errors.cPortBinPath195}</span>}
-</div>
-</Col>
-}
-{(authCol.InstBinPath195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.InstBinPath195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.InstBinPath195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.InstBinPath195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.InstBinPath195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cInstBinPath195'
-disabled = {(authCol.InstBinPath195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cInstBinPath195 && touched.cInstBinPath195 && <span className='form__form-group-error'>{errors.cInstBinPath195}</span>}
-</div>
-</Col>
-}
-{(authCol.ScriptPath195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ScriptPath195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScriptPath195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ScriptPath195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScriptPath195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cScriptPath195'
-disabled = {(authCol.ScriptPath195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cScriptPath195 && touched.cScriptPath195 && <span className='form__form-group-error'>{errors.cScriptPath195}</span>}
-</div>
-</Col>
-}
-{(authCol.DbDataPath195 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DbDataPath195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DbDataPath195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DbDataPath195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DbDataPath195 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDbDataPath195'
-disabled = {(authCol.DbDataPath195 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDbDataPath195 && touched.cDbDataPath195 && <span className='form__form-group-error'>{errors.cDbDataPath195}</span>}
-</div>
-</Col>
-}
-{(authCol.IsDevelopment195 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cIsDevelopment195'
-onChange={handleChange}
-defaultChecked={values.cIsDevelopment195}
-disabled={(authCol.IsDevelopment195 || {}).readonly || !(authCol.IsDevelopment195 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.IsDevelopment195 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.IsDevelopment195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.IsDevelopment195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.IsDevelopment195 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
-{(authCol.IsDefault195 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cIsDefault195'
-onChange={handleChange}
-defaultChecked={values.cIsDefault195}
-disabled={(authCol.IsDefault195 || {}).readonly || !(authCol.IsDefault195 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.IsDefault195 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.IsDefault195 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.IsDefault195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.IsDefault195 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
+                              {(authCol.DataTierId195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DataTierId195 || {}).ColumnHeader} {(columnLabel.DataTierId195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DataTierId195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DataTierId195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDataTierId195'
+                                          disabled={(authCol.DataTierId195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDataTierId195 && touched.cDataTierId195 && <span className='form__form-group-error'>{errors.cDataTierId195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DataTierName195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DataTierName195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DataTierName195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DataTierName195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DataTierName195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDataTierName195'
+                                          disabled={(authCol.DataTierName195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDataTierName195 && touched.cDataTierName195 && <span className='form__form-group-error'>{errors.cDataTierName195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.EntityId195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.EntityId195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.EntityId195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.EntityId195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.EntityId195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cEntityId195'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cEntityId195')}
+                                          value={values.cEntityId195}
+                                          options={EntityId195List}
+                                          placeholder=''
+                                          disabled={(authCol.EntityId195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cEntityId195 && touched.cEntityId195 && <span className='form__form-group-error'>{errors.cEntityId195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DbProviderCd195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DbProviderCd195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DbProviderCd195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DbProviderCd195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DbProviderCd195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cDbProviderCd195'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cDbProviderCd195')}
+                                          value={values.cDbProviderCd195}
+                                          options={DbProviderCd195List}
+                                          placeholder=''
+                                          disabled={(authCol.DbProviderCd195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDbProviderCd195 && touched.cDbProviderCd195 && <span className='form__form-group-error'>{errors.cDbProviderCd195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ServerName195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ServerName195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ServerName195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ServerName195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ServerName195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cServerName195'
+                                          disabled={(authCol.ServerName195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cServerName195 && touched.cServerName195 && <span className='form__form-group-error'>{errors.cServerName195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DesServer195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DesServer195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DesServer195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DesServer195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DesServer195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDesServer195'
+                                          disabled={(authCol.DesServer195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDesServer195 && touched.cDesServer195 && <span className='form__form-group-error'>{errors.cDesServer195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DesDatabase195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DesDatabase195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DesDatabase195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DesDatabase195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DesDatabase195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDesDatabase195'
+                                          disabled={(authCol.DesDatabase195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDesDatabase195 && touched.cDesDatabase195 && <span className='form__form-group-error'>{errors.cDesDatabase195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DesUserId195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DesUserId195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DesUserId195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DesUserId195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DesUserId195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDesUserId195'
+                                          disabled={(authCol.DesUserId195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDesUserId195 && touched.cDesUserId195 && <span className='form__form-group-error'>{errors.cDesUserId195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DesPassword195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DesPassword195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DesPassword195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DesPassword195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DesPassword195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDesPassword195'
+                                          disabled={(authCol.DesPassword195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDesPassword195 && touched.cDesPassword195 && <span className='form__form-group-error'>{errors.cDesPassword195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.PortBinPath195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PortBinPath195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.PortBinPath195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PortBinPath195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PortBinPath195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cPortBinPath195'
+                                          disabled={(authCol.PortBinPath195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cPortBinPath195 && touched.cPortBinPath195 && <span className='form__form-group-error'>{errors.cPortBinPath195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.InstBinPath195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.InstBinPath195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.InstBinPath195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.InstBinPath195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.InstBinPath195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cInstBinPath195'
+                                          disabled={(authCol.InstBinPath195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cInstBinPath195 && touched.cInstBinPath195 && <span className='form__form-group-error'>{errors.cInstBinPath195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ScriptPath195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ScriptPath195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScriptPath195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ScriptPath195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ScriptPath195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cScriptPath195'
+                                          disabled={(authCol.ScriptPath195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cScriptPath195 && touched.cScriptPath195 && <span className='form__form-group-error'>{errors.cScriptPath195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DbDataPath195 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DbDataPath195 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DbDataPath195 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DbDataPath195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DbDataPath195 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDatTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDbDataPath195'
+                                          disabled={(authCol.DbDataPath195 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDbDataPath195 && touched.cDbDataPath195 && <span className='form__form-group-error'>{errors.cDbDataPath195}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.IsDevelopment195 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cIsDevelopment195'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cIsDevelopment195}
+                                        disabled={(authCol.IsDevelopment195 || {}).readonly || !(authCol.IsDevelopment195 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.IsDevelopment195 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.IsDevelopment195 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.IsDevelopment195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.IsDevelopment195 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.IsDefault195 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cIsDefault195'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cIsDefault195}
+                                        disabled={(authCol.IsDefault195 || {}).readonly || !(authCol.IsDefault195 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.IsDefault195 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.IsDefault195 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.IsDefault195 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.IsDefault195 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -851,9 +875,6 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmDatTierReduxObj.SavePage.bind(AdmDatTierReduxObj) },
     { DelMst: AdmDatTierReduxObj.DelMst.bind(AdmDatTierReduxObj) },
     { AddMst: AdmDatTierReduxObj.AddMst.bind(AdmDatTierReduxObj) },
-//    { SearchMemberId64: AdmDatTierReduxObj.SearchActions.SearchMemberId64.bind(AdmDatTierReduxObj) },
-//    { SearchCurrencyId64: AdmDatTierReduxObj.SearchActions.SearchCurrencyId64.bind(AdmDatTierReduxObj) },
-//    { SearchCustomerJobId64: AdmDatTierReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmDatTierReduxObj) },
 
     { showNotification: showNotification },
     { setTitle: setTitle },
@@ -862,5 +883,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

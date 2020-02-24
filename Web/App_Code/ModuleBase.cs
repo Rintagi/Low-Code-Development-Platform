@@ -106,6 +106,8 @@ namespace RO.Web
 	public class ModuleBase : UserControl
 	{
 		private string PageUrlBase;
+        private string IntPageUrlBase;
+
         private string findControlId;
 
 		private const String KEY_SystemsList = "Cache:SystemsList";
@@ -132,16 +134,58 @@ namespace RO.Web
 		private const String KEY_CacheCSrc = "Cache:CSrc";
 		private const String KEY_CacheCTar = "Cache:CTar";
 		private const String KEY_CacheVMenu = "Cache:VMenu";
-
+        private static string _ROVersion = null;
+        private static object o_lock = new object();
+        protected static string ROVersion { 
+            get {
+                if (_ROVersion == null)
+                {
+                    lock (o_lock)
+                    {
+                        try
+                        {
+                            _ROVersion = (new LoginSystem()).GetRbtVersion();
+                        }
+                        catch
+                        {
+                            _ROVersion = "unknown";
+                        }
+                    }
+                }
+                return _ROVersion;
+            } 
+        }
 		public ModuleBase()
 		{
-            PageUrlBase = (Config.EnableSsl ? @"https://" : @"http://") + Context.Request.Url.Host + Context.Request.ApplicationPath + "/";
+            var Request = Context.Request;
+            IntPageUrlBase = (Request.IsSecureConnection ? "https://" : "http://") + Context.Request.Url.Host + (Context.Request.ApplicationPath + "/").Replace("//","/");
+            PageUrlBase = ResolveUrlCustom("~/", false, true);
+            string xForwardedFor = Request.Headers["X-Forwarded-For"];
+            string extBasePath = Config.ExtBasePath;
+            string appPath = Request.ApplicationPath;
+
+            if (!string.IsNullOrEmpty(xForwardedFor) 
+                && !string.IsNullOrEmpty(extBasePath) 
+                && (extBasePath??"").Length != appPath.Length 
+                && !Request.Url.ToString().ToLower().Contains("msg.aspx")
+                )
+            {
+                throw new Exception(string.Format("Server configuration issue, proxy path({0}) must be the same length as app path({1}), check extBaseUrl setting", extBasePath, appPath));
+            }
+
+                //(IsSecureConnection() || Config.EnableSsl ? @"https://" : @"http://") 
+                //+ Context.Request.Url.Host 
+                //+ Context.Request.ApplicationPath +  "/";
 		}
 
 		protected String UrlBase
 		{
 			get {return PageUrlBase;}
 		}
+        protected String IntUrlBase
+        {
+            get { return IntPageUrlBase; }
+        }
 
         protected bool IsCrawlerBot(string userAgent)
         {
@@ -180,7 +224,7 @@ namespace RO.Web
                     {
                         dr.Delete();
                     }
-                    if (singleSQLCredential)
+                    else if (singleSQLCredential)
                     {
                         dr["ServerName"] = Config.DesServer;
                     }
@@ -326,6 +370,8 @@ namespace RO.Web
                 if (null == value) { Session.Remove(KEY_CacheCPrj); }
                 else { Session[KEY_CacheCPrj] = value; }
                 bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                string RedirectProjectRoot = System.Configuration.ConfigurationManager.AppSettings["RedirectProjectRoot"];
+
                 if (singleSQLCredential)
                 {
                     value.SrcDesServer = Config.DesServer;
@@ -335,6 +381,20 @@ namespace RO.Web
                     value.TarDesUserId = Config.DesUserId;
                     value.TarDesPassword = Config.DesPassword;
 
+                }
+                if (!string.IsNullOrEmpty(RedirectProjectRoot))
+                {
+                    string[] redirect = RedirectProjectRoot.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+                    if (redirect.Length == 2)
+                    {
+                        value.DeployPath = value.DeployPath.Replace(redirect[0], redirect[1]);
+                        value.SrcClientProgramPath = value.SrcClientProgramPath.Replace(redirect[0], redirect[1]);
+                        value.SrcRuleProgramPath = value.SrcRuleProgramPath.Replace(redirect[0], redirect[1]);
+                        value.SrcWsProgramPath = value.SrcWsProgramPath.Replace(redirect[0], redirect[1]);
+                        value.TarClientProgramPath = value.TarClientProgramPath.Replace(redirect[0], redirect[1]);
+                        value.TarRuleProgramPath = value.TarRuleProgramPath.Replace(redirect[0], redirect[1]);
+                        value.TarWsProgramPath = value.TarWsProgramPath.Replace(redirect[0], redirect[1]);
+                    }
                 }
             }
         }
@@ -1164,7 +1224,7 @@ namespace RO.Web
             if (redirect)
             {
                 Session.Abandon();
-                Response.Redirect(Config.OrdUrl);
+                this.Redirect(Config.OrdUrl);
             }
         }
 
@@ -1216,6 +1276,9 @@ namespace RO.Web
                     LImpr.Agents = ui.Agents;
                     LImpr.Brokers = ui.Brokers;
                     LImpr.Members = ui.Members;
+                    LImpr.Borrowers = ui.Borrowers;
+                    LImpr.Lenders = ui.Lenders;
+                    LImpr.Guarantors = ui.Guarantors;
                 }
                 DataTable dt = (new LoginSystem()).GetUsrImprNext(usrId);
                 if (dt != null && dt.Rows.Count > 0)
@@ -1261,7 +1324,13 @@ namespace RO.Web
             int jobId = int.Parse(Request.QueryString["jid"].ToString());
             UpdCronStatus(jobId, LcSysConnString, LcAppPw);
         }
-
+        protected void UpdCronStatus(string msg, string LcSysConnString, string LcAppPw)
+        {
+            int jobId = int.Parse(Request.QueryString["jid"].ToString());
+            string url = ResolveUrlCustom(Request.RawUrl, false, true);
+            (new AdminSystem()).UpdCronJobStatus(jobId, DateTime.Now.ToUniversalTime().ToString() + " - " + msg , LcSysConnString, LcAppPw);
+            UpdCronStatus(jobId, LcSysConnString, LcAppPw);
+        }
         protected Pair GetSSD()
         {
             string ssd = string.Empty;
@@ -1374,7 +1443,7 @@ namespace RO.Web
                     {
                         Session["DirectPostedData"] = Request.Form;
                     }
-                    if (!IsCrawlerBot(Request.UserAgent)) { Response.Redirect((strUrl.IndexOf("?") < 0 ? strUrl : strUrl.Substring(0, strUrl.IndexOf("?"))) + "?" + qs.ToString()); }
+                    if (!IsCrawlerBot(Request.UserAgent)) { this.Redirect((strUrl.IndexOf("?") < 0 ? strUrl : strUrl.Substring(0, strUrl.IndexOf("?"))) + "?" + qs.ToString()); }
                 }
             }
         }
@@ -1494,15 +1563,20 @@ namespace RO.Web
 
         protected InvokeResult SelfInvoke(string url, string expectedContentType)
         {
+            Uri myUri = Request.Url; 
             string ticket = PrepImpersonation();
+            /* we cannot use myUrl.Host as dns name may not be the same as access from outside 
+             * use either localhost assuming default web site or must be configured
+             */
+            string intBaseUrl = string.IsNullOrEmpty(Config.IntBaseUrl) 
+                    ? "http://localhost/" + (Request.ApplicationPath + "/").Replace("//", "/") 
+                    : Config.IntBaseUrl ;
 
-            Uri myUri = Request.Url;
             string newUrl =
                 //myUri.Scheme
                 //+ "://" + myUri.Host + ":" + myUri.Port
-                "http://localhost/"
-                + (Request.ApplicationPath + "/").Replace("//", "/")
-                + url + (url.Contains("?") ? "&" : "?") + "runas=" + ticket;
+                intBaseUrl
+                + ResolveUrl((url.StartsWith("~/") || url.StartsWith("/") || url.StartsWith("http") ? "" : "~/") + url) + (url.Contains("?") ? "&" : "?") + "runas=" + ticket;
 
             System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(newUrl);
             System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
@@ -1585,8 +1659,11 @@ namespace RO.Web
                         System.Text.RegularExpressions.Match match = re.Match(referrer);
                         if (match.Success) { typ = new System.Text.RegularExpressions.Regex("=[a-z0-9]+", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Match(match.Value).Value.Substring(1); }
                     }
-                    string rurl = "&ReturnUrl=" + Server.UrlEncode(Request.Url.PathAndQuery + (!string.IsNullOrEmpty(typ) && !isDefaultPage ? (Request.QueryString["typ"] == null ? (Request.Url.PathAndQuery.IndexOf('?') > 0 ? "&" : "?") + "typ=" + typ : "") : ""));
-                    Response.Redirect(loginUrl + (loginUrl.IndexOf('?') > 0 ? "&" : "?") + "wrn=" + (pageLoad ? "1" : "2") + rurl);
+                    string rurl = "&ReturnUrl=" 
+                                + Server.UrlEncode(
+                                Request.Url.PathAndQuery 
+                                + (!string.IsNullOrEmpty(typ) && !isDefaultPage ? (Request.QueryString["typ"] == null ? (Request.Url.PathAndQuery.IndexOf('?') > 0 ? "&" : "?") + "typ=" + typ : "") : ""));
+                    this.Redirect(loginUrl + (loginUrl.IndexOf('?') > 0 ? "&" : "?") + "wrn=" + (pageLoad ? "1" : "2") + rurl);
                 }
             }
             else
@@ -1611,26 +1688,47 @@ namespace RO.Web
                         if (match.Success) { typ = new System.Text.RegularExpressions.Regex("=[a-z0-9]+", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Match(match.Value).Value.Substring(1); }
                     }
                     string rurl = "&ReturnUrl=" + Server.UrlEncode(Request.Url.PathAndQuery + (!string.IsNullOrEmpty(typ) && !isDefaultPage ? (Request.QueryString["typ"] == null ? (Request.Url.PathAndQuery.IndexOf('?') > 0 ? "&" : "?") + "typ=" + typ : "") : ""));
-                    Response.Redirect(loginUrl + (loginUrl.IndexOf('?') > 0 ? "&" : "?") + "wrn=3" + rurl);
+                    this.Redirect(loginUrl + (loginUrl.IndexOf('?') > 0 ? "&" : "?") + "wrn=3" + rurl);
                 }
             }
         }
         protected void EnforceSSL()
         {
-            if (!Request.IsLocal && Config.EnableSsl)
+            if (!Request.IsLocal 
+                && (Config.EnableSsl ||
+                    (IsProxy() && Config.ExtBaseUrl.ToLower().StartsWith("https:"))) 
+                && !Request.Path.ToLower().Contains("msg.aspx"))
             {
-                string sessionCookieName = "ASP.NET_" + Config.AppNameSpace + "SessionId";
+                System.Web.Configuration.SessionStateSection SessionSettings = ConfigurationManager.GetSection("system.web/sessionState") as System.Web.Configuration.SessionStateSection;
+                string sessionCookieName = SessionSettings != null ? SessionSettings.CookieName : null;
+
                 HttpCookie sessionCookie = Response.Cookies[sessionCookieName];
                 if (Request.Cookies["secureChannel"] == null)
                 {
                     HttpCookie x = new HttpCookie("secureChannel", "test");
                     x.Secure = true;
+                    x.HttpOnly = true;
                     Response.AppendCookie(x);
-                    if (sessionCookie != null)
+                    HttpCookie y = new HttpCookie("secureChannelResult", "test");
+                    y.Secure = true;
+                    y.HttpOnly = true;
+                    Response.AppendCookie(y);
+                    if (
+                        !string.IsNullOrEmpty(Request.Headers["X-ARR-LOG-ID"])
+                        && Request.Headers["X-Forwarded-Https"] == "off" // iis urlrewrite can't handle same domain redirect from http => https, endless loop
+                        //|| Request.Headers["Front-End-Https"] == "off"
+                        )
                     {
-                        Response.Cookies.Remove(sessionCookieName);
+                        throw new Exception(string.Format("Proxy configuration issue for IIS Urlrewrite(https:{0}) vs {1}, must enforce https:// before proxying", Request.Headers["X-Forwarded-Https"], Config.ExtBaseUrl));
                     }
-                    Response.Redirect(Request.Url.AbsoluteUri.Replace("http://", "https://"));
+                    else
+                    {
+                        if (sessionCookie != null)
+                        {
+                            Response.Cookies[sessionCookieName].Expires = new DateTime(1900, 1, 1);
+                        }
+                        this.Redirect(Request.Url.AbsoluteUri.Replace("http://", "https://"));
+                    }
                 }
                 if (sessionCookie != null)
                 {
@@ -1640,9 +1738,13 @@ namespace RO.Web
                         Response.Cookies.Remove(sessionCookieName);
                         Response.Cookies.Add(Request.Cookies[sessionCookieName]);
                         Request.Cookies[sessionCookieName].Secure = true;
+                        Request.Cookies[sessionCookieName].HttpOnly = true;
                     }
                     else
+                    {
                         sessionCookie.Secure = true;
+                        sessionCookie.HttpOnly = true;
+                    }
                 }
             }
         }
@@ -2364,9 +2466,12 @@ namespace RO.Web
             byte[] resetTime = System.Text.Encoding.ASCII.GetBytes(DateTime.Now.ToFileTimeUtc().ToString());
             string resetTimeEnc = Convert.ToBase64String(Encrypt(resetTime, dr["UsrPassword"] as byte[], dr["UsrPassword"] as byte[]));
             string loginUrl = (System.Web.Security.FormsAuthentication.LoginUrl ?? "").Replace("/" + Config.AppNameSpace + "/", "");
-            if (string.IsNullOrEmpty(loginUrl)) loginUrl = "MyAccount.aspx";
-            string reset_url = string.Format("{0}" + (Request.Url.ToString().Contains("?") && !string.IsNullOrEmpty(signUpURL) ? "&" : "?") + "{3}={1}&p={2}{4}",
-                ((Config.EnableSsl ? Config.SslUrl : Config.OrdUrl).StartsWith("http") ? (new Uri(Config.EnableSsl ? Config.SslUrl : Config.OrdUrl)) : Request.Url).GetLeftPart(UriPartial.Scheme) + Request.Url.Host + Request.Url.AbsolutePath.ToLower().Replace((signUpURL ?? loginUrl).ToLower(), loginUrl),
+            if (string.IsNullOrEmpty(loginUrl)) loginUrl = "~/MyAccount.aspx";
+            string resetUrlPath =
+                ResolveUrlCustom(loginUrl.StartsWith("~/") || loginUrl.StartsWith("/") || loginUrl.StartsWith("http") ? loginUrl : "~/" + loginUrl, !IsProxy(), true);
+                //((Config.EnableSsl ? Config.SslUrl : Config.OrdUrl).StartsWith("http") ? (new Uri(Config.EnableSsl ? Config.SslUrl : Config.OrdUrl)) : Request.Url).GetLeftPart(UriPartial.Scheme) + Request.Url.Host + Request.Url.AbsolutePath.ToLower().Replace((signUpURL ?? loginUrl).ToLower(), loginUrl);
+            string reset_url = string.Format("{0}" + (resetUrlPath.Contains("?") ? "&" : "?") + "{3}={1}&p={2}{4}",
+                resetUrlPath,
                 HttpUtility.UrlEncode(dr["UsrId"].ToString()),
                 HttpUtility.UrlEncode(resetTimeEnc),
                 string.IsNullOrEmpty(keyAs) ? "j" : keyAs,
@@ -2397,6 +2502,7 @@ namespace RO.Web
 
         protected void SetSecureCookie(string name, Dictionary<string, string> content, int duration)
         {
+            string xForwardedFor = Request.Headers["X-Forwarded-For"];
             string sessionCookieName = "ASP.NET_" + Config.AppNameSpace + "SessionId";
             string cookieName = name + "_" + sessionCookieName;
             HttpCookie sessionCookie = Request.Cookies[sessionCookieName];
@@ -2406,7 +2512,9 @@ namespace RO.Web
             string cookieContent = salt + "," + Convert.ToBase64String(Encrypt(System.Text.UTF8Encoding.UTF8.GetBytes(value), System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword), System.Text.UTF8Encoding.UTF8.GetBytes(salt)));
             HttpCookie cookie = new HttpCookie(cookieName, cookieContent);
             cookie.HttpOnly = true;
-            cookie.Secure = (!Request.IsLocal && Config.EnableSsl) || Request.IsSecureConnection;
+            cookie.Secure = IsSecureConnection() 
+                            ||
+                            (!string.IsNullOrEmpty(xForwardedFor) && (Config.EnableSsl) && !Request.IsLocal);
             cookie.Domain = sessionCookie.Domain;
             cookie.Path = sessionCookie.Path;
 
@@ -2432,7 +2540,10 @@ namespace RO.Web
 
         protected string GetSiteUrl(bool bIncludeTitle = false)
         {
-            string site = Request.Url.Scheme + "://" + Request.Url.Host + Request.ApplicationPath + (bIncludeTitle ? " (" + Config.WebTitle + ")" : "");
+            string site = 
+                ResolveUrlCustom("", !IsProxy(), true)
+                //Request.Url.Scheme + "://" + Request.Url.Host + Request.ApplicationPath 
+                + (bIncludeTitle ? " (" + Config.WebTitle + ")" : "");
             return site;
         }
 
@@ -2516,5 +2627,307 @@ namespace RO.Web
                 dv.RowFilter = rowFilter;
             }
         }
+
+        protected bool IsProxy()
+        {
+            var Request = Context.Request;
+            string extBasePath = Config.ExtBasePath;
+            string extDomain = Config.ExtDomain;
+            string extBaseUrl = Config.ExtBaseUrl;
+            string xForwardedFor = Request.Headers["X-Forwarded-For"];
+            string xOriginalUrl = Request.Headers["X-Orginal-URL"];
+            string isaHttps = Request.Headers["Front-End-Https"];
+            string host = Request.Url.Host;
+            string appPath = Request.ApplicationPath;
+
+            return !string.IsNullOrEmpty(extBasePath)
+                && (!string.IsNullOrEmpty(xForwardedFor) || !string.IsNullOrEmpty(isaHttps))
+                //&& appPath.ToLower() != extBasePath.ToLower()
+                ;
+
+        }
+
+        protected string ResolveUrlCustom(string relativeUrl, bool isInternal = false, bool withDomain = false)
+        {
+            var Request = Context.Request;
+            string url = ResolveUrl(relativeUrl);
+            string extBasePath = Config.ExtBasePath;
+            string extDomain = Config.ExtDomain;
+            string extBaseUrl = Config.ExtBaseUrl;
+            string xForwardedFor = Request.Headers["X-Forwarded-For"];
+            string xOriginalUrl = Request.Headers["X-Orginal-URL"];
+            string host = Request.Url.Host;
+            string appPath = Request.ApplicationPath;
+            if (IsProxy()
+                 && !isInternal
+                 //&& Config.TranslateExtUrl
+                 && (
+                 url.ToLower().StartsWith(("https://" + host + appPath).ToLower())
+                 ||
+                 url.ToLower().StartsWith(("http://" + host + appPath).ToLower())
+                 ||
+                 (url.ToLower().StartsWith((appPath).ToLower()) && appPath != "/")
+                 ||
+                 (appPath == "/" && url.StartsWith("/"))
+                 ||
+                 !url.StartsWith("/")
+                ))
+            {
+                Dictionary<string, string> requestHeader = new Dictionary<string, string>();
+                foreach (string x in Request.Headers.Keys)
+                {
+                    requestHeader[x] = Request.Headers[x];
+                }
+                requestHeader["Host"] = host;
+                requestHeader["ApplicationPath"] = appPath;
+                url = Utils.transformProxyUrl(url, requestHeader);
+                return withDomain ? url : new Regex("^" + GetDomainUrl(), RegexOptions.IgnoreCase).Replace(url, "");
+            }
+            else
+            {
+                return withDomain 
+                        ? (url.StartsWith("http") ? url : GetDomainUrl(false) + (url.StartsWith("/") ? "" : "/") + url) 
+                        : new Regex("^" + GetDomainUrl(false), RegexOptions.IgnoreCase).Replace(url,"");
+            }
+
+        }
+        protected string GetDomainUrl(bool isInternal = false)
+        {
+            var Request = Context.Request;
+            string intBaseUrl = (Request.IsSecureConnection ? "https://" : "http://") + Request.Url.Host;
+            if (isInternal || !IsProxy() || string.IsNullOrEmpty(Config.ExtBaseUrl)) return intBaseUrl;
+            else return Config.ExtBaseUrl.Replace(Config.ExtBasePath, "");
+        }
+        protected string GetBaseUrl(bool isInternal = false)
+        {
+            string intBaseUrl = (Request.IsSecureConnection ? "https://" : "http://") + Request.Url.Host + ResolveUrl("~/");
+            string baseUrl = ResolveUrlCustom(intBaseUrl, isInternal);
+            return baseUrl.EndsWith("/") ? baseUrl.Left(baseUrl.Length - 1) : baseUrl;
+        }
+        
+        protected string GetExtUrl(string url)
+        {
+            return ResolveUrlCustom(url,false,true);
+        }
+
+        protected Dictionary<string, string> GetProxyInfo()
+        {
+            Dictionary<string, string> info = new Dictionary<string, string>(){
+                                                {"X-Forwarded-For",Request.Headers["X-Forwarded-For"]},
+                                                {"X-Forwarded-Host",Request.Headers["X-Forwarded-Host"]},
+                                                {"X-Forwarded-Proto",Request.Headers["X-Forwarded-Proto"]},
+                                                {"X-Forwarded-Port",Request.Headers["X-Forwarded-Port"]},
+                                                {"X-Original-URL",Request.Headers["X-Original-URL"]}
+                                            };
+            return info;
+        }
+
+        protected void Redirect(string url)
+        {
+            string extBasePath = Config.ExtBasePath;
+            string extDomain = Config.ExtDomain;
+            string extBaseUrl = Config.ExtBaseUrl;
+            string xForwardedFor = Request.Headers["X-Forwarded-For"];
+            string xOriginalUrl = Request.Headers["X-Orginal-URL"];
+            string host = Request.Url.Host;
+            string appPath = Request.ApplicationPath;
+            if (IsProxy()
+                && Config.TranslateExtUrl
+                && 
+                (
+                 url.ToLower().StartsWith(("https://" + host + appPath).ToLower())
+                 ||
+                 url.ToLower().StartsWith(("http://" + host + appPath).ToLower())
+                 ||
+                 (url.ToLower().StartsWith((appPath).ToLower()) && appPath != "/")
+                 ||
+                 (appPath=="/" && url.StartsWith("/"))
+                 ||
+                 !url.StartsWith("/")
+                 )
+                )
+            {
+                Dictionary<string, string> requestHeader = new Dictionary<string, string>();
+                foreach (string x in Request.Headers.Keys)
+                {
+                    requestHeader[x] = Request.Headers[x];
+                }
+                requestHeader["Host"] = host;
+                requestHeader["ApplicationPath"] = appPath;
+
+                string extUrl = Utils.transformProxyUrl(url, requestHeader);
+
+                Response.Redirect(extUrl);
+            }
+            else
+            {
+                Response.Redirect(url);
+            }
+        }
+
+        protected void Redirect(string url, bool endResponse)
+        {
+            Response.Redirect(url, endResponse);
+        }
+
+        protected bool IsSecureConnection()
+        {
+            string xForwardedProto = Request.Headers["X-Forwarded-Proto"];
+            string xForwardedHttps = Request.Headers["X-Forwarded-Https"];
+            string xForwardedFor = Request.Headers["X-Forwarded-For"];
+            string isaHttps = Request.Headers["Front-End-Https"];
+            return 
+                Request.IsSecureConnection 
+                || (xForwardedProto ?? "").ToLower() == "https" 
+                || (xForwardedHttps ?? "").ToLower() == "on"
+                || (isaHttps ?? "").ToLower() == "on"
+                || Request.Cookies["secureChannelTest"] != null
+                ;
+        }
+
+        public static List<string> GetExceptionMessage(Exception ex)
+        {
+            List<string> msg = new List<string>();
+            for (var x = ex; x != null; x = x.InnerException)
+            {
+                if (x is AggregateException && ((AggregateException)x).InnerExceptions.Count > 1)
+                {
+                    if (((AggregateException)x).InnerExceptions.Count > 1)
+                        foreach (var y in ((AggregateException)x).InnerExceptions)
+                        {
+                            msg.Add(string.Join("\r\n", GetExceptionMessage(y).ToArray()));
+                        }
+                }
+                else
+                {
+                    msg.Add(x.Message);
+                }
+            }
+            return msg;
+        }
+
+        protected void ErrorTrace(Exception e, string severity) 
+        {
+            string supportEmail = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"];
+            if (supportEmail != "none" && supportEmail != string.Empty)
+            {
+                try
+                {
+                    string webtitle = System.Configuration.ConfigurationManager.AppSettings["WebTitle"] ?? "";
+                    string to = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"] ?? "cs@robocoder.com";
+                    string from = "cs@robocoder.com";
+                    string fromTitle = "";
+                    string replyTo = "";
+                    string smtpServer = System.Configuration.ConfigurationManager.AppSettings["SmtpServer"];
+                    string[] smtpConfig = smtpServer.Split(new char[] { '|' });
+                    bool bSsl = smtpConfig[0].Trim() == "true" ? true : false;
+                    int port = smtpConfig.Length > 1 ? int.Parse(smtpConfig[1].Trim()) : 25;
+                    string server = smtpConfig.Length > 2 ? smtpConfig[2].Trim() : null;
+                    string username = smtpConfig.Length > 3 ? smtpConfig[3].Trim() : null;
+                    string password = smtpConfig.Length > 4 ? smtpConfig[4].Trim() : null;
+                    string domain = smtpConfig.Length > 5 ? smtpConfig[5].Trim() : null;
+                    System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
+                    string[] receipients = to.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    string sourceIP = string.Format("From: {0}\r\n\r\n", Request != null ? Request.UserHostAddress : "unknown request url");
+                    string machine = string.Format("Machine: {0}\r\n\r\n", Environment.MachineName);
+                    string usrId = string.Format("User: {0}\r\n\r\n", LUser != null ? LUser.UsrId.ToString() : "");
+                    string currentTime = string.Format("Server Time: {0} \r\n\r\n UTC: {1} \r\n\r\n", DateTime.Now.ToString("O"), DateTime.UtcNow.ToString("O"));
+                    string roVersion = string.Format("RO Version: {0}\r\n\r\n", ROVersion);
+                    var exMessages = GetExceptionMessage(e);
+                    Exception innerException = e.InnerException;
+
+                    foreach (var t in receipients)
+                    {
+                        mm.To.Add(new System.Net.Mail.MailAddress(t.Trim()));
+                    }
+                    mm.Subject = webtitle + " Application Error " + (Request != null ? Request.Url.GetLeftPart(UriPartial.Path) : "unknown request url");
+                    mm.Body = (Request != null ? Request.Url.ToString() : "unknown request url")
+                            + "\r\n\r\n"
+                            + sourceIP
+                            + usrId
+                            + machine
+                            + currentTime
+                            + roVersion
+                            + exMessages[exMessages.Count - 1] + "\r\n\r\n" + e.StackTrace + (innerException != null ? "\r\n InnerException: \r\n\r\n" + string.Join("\r\n", exMessages.ToArray()) + "\r\n\r\n" + innerException.StackTrace : "") + "\r\n";
+                    mm.IsBodyHtml = false;
+                    mm.From = new System.Net.Mail.MailAddress(string.IsNullOrEmpty(username) || !(username ?? "").Contains("@") ? from : username, string.IsNullOrEmpty(fromTitle) ? from : fromTitle);    // Address must be the same as the smtp login user.
+                    mm.ReplyToList.Add(new System.Net.Mail.MailAddress(string.IsNullOrEmpty(replyTo) ? from : replyTo)); // supplied from would become reply too for the 'sending on behalf of'
+                    (new RO.WebRules.WebRule()).SendEmail(bSsl, port, server, username, password, domain, mm);
+                    mm.Dispose();   // Error is trapped and reported from the caller.
+
+                }
+                catch (Exception ex)
+                {
+                    // never happen, i.e. do nothing just to get around unnecessary compilation warning
+                    if (ex == null) throw;
+                }
+            }
+        }
+
+        #region XlsImportExport
+        public List<string> GetSheetNames(string fileFullName)
+        {
+            List<string> names = new List<string>();
+            OleDbConnection conn = new OleDbConnection();
+            System.Collections.ArrayList al = new System.Collections.ArrayList();
+            try
+            {
+                conn.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileFullName + ";Extended Properties=\"Excel 12.0; HDR=NO; IMEX=1;\"";
+                //conn.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileFullName + ";Extended Properties=\"Excel 8.0; HDR=NO; IMEX=1;\"";
+                conn.Open();
+                // Get original sheet order:
+                DataTable dt = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
+                DataRow[] drs = dt.Select(dt.Columns[2].ColumnName + " not like '*$Print_Area' AND " + dt.Columns[2].ColumnName + " not like '*$''Print_Area'");
+                foreach (DataRow dr in drs) { names.Add(dr["TABLE_NAME"].ToString().Replace("'", string.Empty).Replace("$", string.Empty)); }
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
+            finally
+            {
+                conn.Close(); conn = null;
+            }
+
+            return names;
+        }
+        public string ImportFile(string fileName, string workSheet, string startRow, string fileFullName)
+        {
+            OleDbConnection conn = new OleDbConnection();
+            OleDbDataAdapter da = new OleDbDataAdapter();
+            DataTable dt = new DataTable();
+            try
+            {
+                conn.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileFullName + ";Extended Properties=\"Excel 12.0; HDR=NO; IMEX=1;\"";
+                //conn.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileFullName + ";Extended Properties=\"Excel 8.0; HDR=NO; IMEX=1;\"";
+                conn.Open();
+                string myQuery = @"SELECT * From [" + workSheet + "$]";
+                OleDbCommand myCmd = new OleDbCommand(myQuery, conn);
+                da.SelectCommand = myCmd;
+                da.Fill(dt);
+            }
+            catch (Exception e) { throw (e); }
+            finally { conn.Close(); conn = null; }
+            dt.TableName = workSheet;
+            dt = CleanData(dt);
+            return dt.DataTableToXml();
+        }
+        private DataTable CleanData(DataTable dt)
+        {
+            foreach (DataRow dr in dt.Rows)
+            {
+                foreach (DataColumn dc in dt.Columns)
+                {
+                    if (dc.DataType == typeof(string))
+                    {
+                        string r = "[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u10000-\u10FFFF]";
+                        dr[dc.ColumnName] = System.Text.RegularExpressions.Regex.Replace(dr[dc.ColumnName].ToString(), r, "", System.Text.RegularExpressions.RegexOptions.Compiled);
+                    }
+                }
+            }
+            return dt;
+        }
+        #endregion
+
     }
 }

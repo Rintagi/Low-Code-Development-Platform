@@ -1,6 +1,7 @@
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Agent') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Agent') AND type='U')
 DROP TABLE dbo.Agent
-GO
 CREATE TABLE Agent ( 
 AgentId int IDENTITY(1,1) NOT NULL ,
 FirmId int NOT NULL ,
@@ -11,10 +12,11 @@ CONSTRAINT PK_Agent PRIMARY KEY CLUSTERED (
 AgentId
 )
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Borrower') AND type='U')
 DROP TABLE dbo.Borrower
-GO
 CREATE TABLE Borrower ( 
 BorrowerId int IDENTITY(1,1) NOT NULL ,
 FirmId int NOT NULL ,
@@ -25,10 +27,12 @@ CONSTRAINT PK_Borrower PRIMARY KEY CLUSTERED (
 BorrowerId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Broker') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Broker') AND type='U')
 DROP TABLE dbo.Broker
-GO
 CREATE TABLE Broker ( 
 BrokerId int IDENTITY(1,1) NOT NULL ,
 FirmId int NOT NULL ,
@@ -39,10 +43,11 @@ CONSTRAINT PK_Broker PRIMARY KEY CLUSTERED (
 BrokerId
 )
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.City') AND type='U')
 DROP TABLE dbo.City
-GO
 CREATE TABLE City ( 
 CityId int IDENTITY(1,1) NOT NULL ,
 CityName nvarchar (50) NOT NULL ,
@@ -52,10 +57,10 @@ CONSTRAINT PK_City PRIMARY KEY CLUSTERED (
 CityId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Company') AND type='U')
 DROP TABLE dbo.Company
-GO
 CREATE TABLE Company ( 
 CompanyId int IDENTITY(1,1) NOT NULL ,
 FirmId int NOT NULL ,
@@ -66,10 +71,10 @@ CONSTRAINT PK_Company PRIMARY KEY CLUSTERED (
 CompanyId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Country') AND type='U')
 DROP TABLE dbo.Country
-GO
 CREATE TABLE Country ( 
 CountryId smallint IDENTITY(1,1) NOT NULL ,
 CountryName nvarchar (50) NOT NULL ,
@@ -78,10 +83,12 @@ CONSTRAINT PK_Country PRIMARY KEY CLUSTERED (
 CountryId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Customer') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Customer') AND type='U')
 DROP TABLE dbo.Customer
-GO
 CREATE TABLE Customer ( 
 CustomerId int IDENTITY(1,1) NOT NULL ,
 FirmId int NOT NULL ,
@@ -92,10 +99,11 @@ CONSTRAINT PK_Customer PRIMARY KEY CLUSTERED (
 CustomerId
 )
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Firm') AND type='U')
 DROP TABLE dbo.Firm
-GO
 CREATE TABLE Firm ( 
 FirmId int IDENTITY(1,1) NOT NULL ,
 TradeName nvarchar (100) NOT NULL ,
@@ -119,13 +127,12 @@ CONSTRAINT PK_Firm PRIMARY KEY CLUSTERED (
 FirmId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_FxRate')
 DROP INDEX FxRate.IX_FxRate 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.FxRate') AND type='U')
 DROP TABLE dbo.FxRate
-GO
 CREATE TABLE FxRate ( 
 FxRateId int IDENTITY(1,1) NOT NULL ,
 FrCurrency char (3) NOT NULL ,
@@ -137,10 +144,10 @@ CONSTRAINT PK_FxRate PRIMARY KEY CLUSTERED (
 FxRateId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Guarantor') AND type='U')
 DROP TABLE dbo.Guarantor
-GO
 CREATE TABLE Guarantor ( 
 GuarantorId int IDENTITY(1,1) NOT NULL ,
 FirmId int NOT NULL ,
@@ -151,10 +158,12 @@ CONSTRAINT PK_Guarantor PRIMARY KEY CLUSTERED (
 GuarantorId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Investor') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Investor') AND type='U')
 DROP TABLE dbo.Investor
-GO
 CREATE TABLE Investor ( 
 InvestorId int IDENTITY(1,1) NOT NULL ,
 FirmId int NOT NULL ,
@@ -165,10 +174,11 @@ CONSTRAINT PK_Investor PRIMARY KEY CLUSTERED (
 InvestorId
 )
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Lender') AND type='U')
 DROP TABLE dbo.Lender
-GO
 CREATE TABLE Lender ( 
 LenderId int IDENTITY(1,1) NOT NULL ,
 FirmId int NOT NULL ,
@@ -179,10 +189,12 @@ CONSTRAINT PK_Lender PRIMARY KEY CLUSTERED (
 LenderId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Member') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Member') AND type='U')
 DROP TABLE dbo.Member
-GO
 CREATE TABLE Member ( 
 MemberId int IDENTITY(1,1) NOT NULL ,
 ParentId int NULL ,
@@ -192,10 +204,13 @@ CONSTRAINT PK_Member PRIMARY KEY CLUSTERED (
 MemberId
 )
 )
+END
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Project') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Project') AND type='U')
 DROP TABLE dbo.Project
-GO
 CREATE TABLE Project ( 
 ProjectId int IDENTITY(1,1) NOT NULL ,
 ParentId int NULL ,
@@ -208,10 +223,11 @@ CONSTRAINT PK_Project PRIMARY KEY CLUSTERED (
 ProjectId
 )
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.State') AND type='U')
 DROP TABLE dbo.State
-GO
 CREATE TABLE State ( 
 StateId smallint IDENTITY(1,1) NOT NULL ,
 StateName nvarchar (50) NOT NULL ,
@@ -221,10 +237,12 @@ CONSTRAINT PK_State PRIMARY KEY CLUSTERED (
 StateId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Vendor') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Vendor') AND type='U')
 DROP TABLE dbo.Vendor
-GO
 CREATE TABLE Vendor ( 
 VendorId int IDENTITY(1,1) NOT NULL ,
 FirmId int NOT NULL ,
@@ -235,4 +253,6 @@ CONSTRAINT PK_Vendor PRIMARY KEY CLUSTERED (
 VendorId
 )
 )
+END
+
 GO

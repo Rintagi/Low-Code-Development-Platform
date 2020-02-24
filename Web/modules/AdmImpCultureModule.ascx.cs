@@ -86,7 +86,7 @@ namespace RO.Web
 				if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && (new AdminSystem()).IsRegenNeeded(string.Empty,0,0,1,LcSysConnString,LcAppPw))
 				{
 					(new GenWizardsSystem()).CreateProgram(1, "Culture Type Import", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
-					Response.Redirect(Request.RawUrl);
+					this.Redirect(Request.RawUrl);
 				}
 			}
 			catch (Exception e) { PreMsgPopup(e.Message); }
@@ -231,18 +231,19 @@ namespace RO.Web
 					if (rows[iRow][0].ToString() == string.Empty && rows[iRow][1].ToString() == string.Empty && rows[iRow][2].ToString() == string.Empty && rows[iRow][3].ToString() == string.Empty && rows[iRow][6].ToString() == string.Empty) {rows[iRow].Delete();}
 					else
 					{
-						rows[iRow][0] = rows[iRow][0].ToString().Replace("\r","").Replace("\n","");
-						rows[iRow][1] = rows[iRow][1].ToString().Replace("\r","").Replace("\n","");
-						rows[iRow][2] = rows[iRow][2].ToString().Replace("\r","").Replace("\n","");
-						rows[iRow][3] = rows[iRow][3].ToString().Replace("\r","").Replace("\n","");
-						rows[iRow][4] = rows[iRow][4].ToString().Replace("\r","").Replace("\n","");
-						rows[iRow][5] = rows[iRow][5].ToString().Replace("\r","").Replace("\n","");
-						rows[iRow][6] = rows[iRow][6].ToString().Replace("\r","").Replace("\n","");
+						try {rows[iRow][0] = rows[iRow][0].ToString().Replace("\r","").Replace("\n","");} catch {};
+						try {rows[iRow][1] = rows[iRow][1].ToString().Replace("\r","").Replace("\n","");} catch {};
+						try {rows[iRow][2] = rows[iRow][2].ToString().Replace("\r","").Replace("\n","");} catch {};
+						try {rows[iRow][3] = rows[iRow][3].ToString().Replace("\r","").Replace("\n","");} catch {};
+						try {rows[iRow][4] = rows[iRow][4].ToString().Replace("\r","").Replace("\n","");} catch {};
+						try {rows[iRow][5] = rows[iRow][5].ToString().Replace("\r","").Replace("\n","");} catch {};
+						try {rows[iRow][6] = rows[iRow][6].ToString().Replace("\r","").Replace("\n","");} catch {};
 					}
 				}
 				return (new AdminSystem()).ImportRows(1,"WizAdmImpCulture",bOverwrite,usrId,ds,iStart,fileName,LcAppConnString,LcAppPw,CPrj,CSrc);
 			}
-			catch(Exception e) { throw e; return 0; }
+			catch(Exception e) { if (e != null) throw e; }
+			return 0;
 		}
 
 		private void PopFileList(string searchTxt)

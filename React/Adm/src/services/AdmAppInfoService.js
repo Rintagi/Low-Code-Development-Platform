@@ -1,5 +1,5 @@
 
-import {fetchData,getAccessControlInfo, getAccessScope, baseUrl} from './webAPIBase';
+import { fetchData, getAccessControlInfo, getAccessScope, baseUrl } from './webAPIBase';
 
 let activeScope = {};
 
@@ -10,9 +10,9 @@ export function setAccessScope(scope) {
     }
 }
 
-export function GetAuthCol(accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetAuthCol'
-        ,{
+export function GetAuthCol(accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAuthCol'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -22,9 +22,9 @@ export function GetAuthCol(accessScope){
         }
     )
 }
-export function GetAuthRow(accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetAuthRow'
-        ,{
+export function GetAuthRow(accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAuthRow'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -35,9 +35,9 @@ export function GetAuthRow(accessScope){
     )
 
 }
-export function GetScreenLabel(accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetScreenLabel'
-        ,{
+export function GetScreenLabel(accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetScreenLabel'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -49,12 +49,12 @@ export function GetScreenLabel(accessScope){
 
 }
 
-export function GetLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetLabels'
-        ,{
+export function GetLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -63,12 +63,12 @@ export function GetLabels(labelCat,accessScope){
     )
 }
 
-export function GetSystemLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetSystemLabels'
-        ,{
+export function GetSystemLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetSystemLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -77,9 +77,9 @@ export function GetSystemLabels(labelCat,accessScope){
     )
 }
 
-export function GetScreenButtonHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetScreenButtonHlp'
-        ,{
+export function GetScreenButtonHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetScreenButtonHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -89,9 +89,9 @@ export function GetScreenButtonHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetScreenHlp'
-        ,{
+export function GetScreenHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetScreenHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -101,9 +101,9 @@ export function GetScreenHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenCriteria(accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetScreenCriteria'
-        ,{
+export function GetScreenCriteria(accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -113,9 +113,9 @@ export function GetScreenCriteria(accessScope){
         }
     )
 }
-export function GetNewMst(accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetNewMst'
-        ,{
+export function GetNewMst(accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetNewMst'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -125,9 +125,9 @@ export function GetNewMst(accessScope){
         }
     )
 }
-export function GetNewDtl(accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetNewDtl'
-        ,{
+export function GetNewDtl(accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetNewDtl'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -137,9 +137,9 @@ export function GetNewDtl(accessScope){
         }
     )
 }
-export function GetScreenFilter(accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetScreenFilter'
-        ,{
+export function GetScreenFilter(accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetScreenFilter'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -149,31 +149,14 @@ export function GetScreenFilter(accessScope){
         }
     )
 }
-export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetColumnContent'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    mstId: mstId || '',
-                    dtlId: dtlId || '',
-                    screenColumnName: screenColumnName,
-                    columnName: columnName,
-                    isMaster: isMaster,
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function GetAdmAppInfo82List(searchStr, topN, filterId,accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetAdmAppInfo82List'
-        ,{
+export function GetAdmAppInfo82List(searchStr, topN, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAdmAppInfo82List'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     searchStr: searchStr || '',
                     topN: topN || 0,
-                    filterId: ('' +  (filterId || 0)),
+                    filterId: ('' + (filterId || 0)),
                 }),
             },
             ...(getAccessControlInfo()),
@@ -181,14 +164,15 @@ export function GetAdmAppInfo82List(searchStr, topN, filterId,accessScope){
         }
     )
 }
-export function GetAdmAppInfo82ById(keyId,accessScope){   
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetAdmAppInfo82ById'
-        ,{
+export const GetSearchList = GetAdmAppInfo82List;
+export function GetAdmAppInfo82ById(keyId, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAdmAppInfo82ById'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
                     options: {
-                        currentScreenCriteria : JSON.stringify({}),
+                        CurrentScreenCriteria: JSON.stringify({}),
                     },
                 }),
             },
@@ -197,14 +181,15 @@ export function GetAdmAppInfo82ById(keyId,accessScope){
         }
     )
 }
-export function GetAdmAppInfo82DtlById(keyId,filterId,accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetAdmAppInfo82DtlById'
-        ,{
+export const GetMstById = GetAdmAppInfo82ById;
+export function GetAdmAppInfo82DtlById(keyId, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAdmAppInfo82DtlById'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
                     options: {
-                        currentScreenCriteria : JSON.stringify({}),
+                        CurrentScreenCriteria: JSON.stringify({}),
                     },
                     filterId: filterId || 0,
                 }),
@@ -214,13 +199,13 @@ export function GetAdmAppInfo82DtlById(keyId,filterId,accessScope){
         }
     )
 }
-
-export function LoadInitPage(options,accessScope) {
+export const GetDtlById = GetAdmAppInfo82DtlById;
+export function LoadInitPage(options, accessScope) {
     const reqJson = JSON.stringify({
         options: options
     });
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/LoadInitPage'
-        ,{
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/LoadInitPage'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -229,14 +214,29 @@ export function LoadInitPage(options,accessScope) {
         }
     )
 }
-export function SaveData(mst,dtl,options,accessScope){
+export function SaveData(mst, dtl, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mst: mst || {},
+        dtl: dtl || [],
+        options: options || {}
+    });
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/SaveData'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function DelMst(mst, options, accessScope) {
     const reqJson = JSON.stringify({
         mst: mst,
-        dtl: dtl,
         options: options
     });
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/SaveData'
-        ,{
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/DelMst'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -245,26 +245,9 @@ export function SaveData(mst,dtl,options,accessScope){
         }
     )
 }
-
-export function DelMst(mst,options,accessScope){
-    const reqJson = JSON.stringify({
-        mst: mst,
-        options: options
-    });
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/DelMst'
-        ,{
-            requestOptions: {
-                body: reqJson,
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-
-export function SetScreenCriteria(criteriaValues, accessScope){
-    return fetchData(baseUrl+'/AdmAppInfoWs.asmx/SetScreenCriteria'
-        ,{
+export function SetScreenCriteria(criteriaValues, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/SetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     criteriaValues: criteriaValues
@@ -276,51 +259,136 @@ export function SetScreenCriteria(criteriaValues, accessScope){
     )
 }
 
-/*screen criteria dll and screen dropdownlist/autocomplete*/           
-            export function GetScreenCriVersionDt10List(query, topN, filterBy, accessScope){
-return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetScreenCriteriaDdlList'
-,{
-requestOptions: {
-body: JSON.stringify({
-screenCriId: 53,
-query: query || '',
-topN: topN || 0,
-filterBy: filterBy || null
-}),
-},
-...(getAccessControlInfo()),
-...(accessScope)
+export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessScope) {
+    const reqJson = JSON.stringify({
+        mstId: mstId,
+        dtlId: dtlId,
+        isMaster: isMaster,
+        docId: docId,
+        screenColumnName: screenColumnName,
+    });
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetDoc'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
 }
-)
-}export function GetCultureTypeName135List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetCultureTypeName135List'
+/*screen criteria dll and screen dropdownlist/autocomplete*/
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetAppItemLink135List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmAppInfoWs.asmx/GetAppItemLink135List'
+export function GetScreenCriVersionDt10List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetScreenCriteriaDdlList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    screenCriId: 53,
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }/* ReactRule: Service Custom Function *//* ReactRule End: Service Custom Function */
+export function GetCultureTypeName135List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetCultureTypeName135List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function SaveAppZipId135(mstId, dtlId, isMaster, docId, overwrite, screenColumnName, docJson, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mstId: mstId,
+        dtlId: dtlId,
+        isMaster: isMaster,
+        docId: docId,
+        overwrite: overwrite,
+        screenColumnName: 'AppZipId135',
+        docJson: docJson,
+        options: options
+    });
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/SaveAppZipId135'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+export function DelAppZipId135(mstId, dtlId, isMaster, screenColumnName, docIdList, accessScope) {
+    const reqJson = JSON.stringify({
+        mstId: mstId,
+        dtlId: dtlId,
+        isMaster: isMaster || true,
+        screenColumnName: 'AppZipId135',
+        docIdList: docIdList,
+    });
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/DelAppZipId135'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+export function GetAppZipId135List(mstId, dtlId, isMaster, accessScope) {
+    const reqJson = JSON.stringify({
+        mstId: mstId || '',
+        dtlId: dtlId || '',
+        isMaster: isMaster || true,
+    });
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAppZipId135List'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetAppItemLink135List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAppItemLink135List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+/* ReactRule: Service Custom Function */
+
+
+/* ReactRule End: Service Custom Function */

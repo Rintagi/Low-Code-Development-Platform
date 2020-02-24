@@ -1,0 +1,15 @@
+AH~@~Area - 100% Stacked
+AP~@~Area - Plain
+AS~@~Area - Stacked
+BH~@~Horizontal Bar - 100% Stacked
+BP~@~Horizontal Bar - Plain
+BS~@~Horizontal Bar - Stacked
+CH~@~Vertical Column - 100% Stacked
+CP~@~Vertical Column - Plain
+CS~@~Vertical Column - Stacked
+DE~@~Doughnut - Exploded
+DP~@~Doughnut - Plain
+LP~@~Line - Plain
+LS~@~Line - Smooth
+PE~@~Pie - Exploded
+PP~@~Pie - Plain

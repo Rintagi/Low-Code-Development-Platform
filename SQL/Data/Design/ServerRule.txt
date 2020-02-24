@@ -1,0 +1,2309 @@
+2~@~1~@~2~@~Y~@~Check Duplicate User Email Name~@~User Manager   30 [Master: Before CRUD] Check Duplicate User Email Name~@~Do not allow duplicate active users having the same email.~@~30~@~CrChkDupUsrByEmail~@~UsrId,UsrEmail,LoginName~@~Int,NVarChar,NVarChar~@~UsrId1,UsrEmail1,LoginName1~@~Y~@~Y~@~N~@~Y~@~~@~55~@~2015-04-07 18:03:08.090~@~2011-08-18 12:09:21.000
+3~@~2~@~2~@~Y~@~Check Duplicate Table Name~@~Data Table and Columns   20 [Master: Before CRUD] Check Duplicate Table Name~@~Ensure unique table names are referenced~@~20~@~Cr_ChkDupTblByName~@~TableId,TableName~@~Int,VarChar~@~TableId3,TableName3~@~Y~@~Y~@~N~@~Y~@~CREATE PROCEDURE Cr_ChkDupTblByName
+ @TableId	int
+,@TableName	nvarchar(20)
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.DbTable WHERE (@TableId is null OR TableId <> @TableId) AND TableName = @tableName)
+BEGIN
+	RAISERROR('Cr_ChkDupTblByName: Table with the same name "%s" already exist, please choose another name.',18,2,@tableName) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2011-04-08 15:06:21.787~@~2007-01-22 13:18:40.000
+4~@~2~@~1~@~Y~@~Update Data Column Description by table change~@~Data Table and Columns   40 [Master: After CRUD] Update Data Column Description by table change~@~Update data column Description by table change~@~40~@~Ir_UpdDbColumn~@~TableId,TableName~@~Int,VarChar~@~TableId3,TableName3~@~Y~@~Y~@~N~@~N~@~~@~55~@~2016-10-12 21:13:07.907~@~
+5~@~9~@~1~@~Y~@~Initialize ScreenObj Table~@~Screen Definition   40 [Master: After CRUD] Initialize ScreenObj Table~@~~@~40~@~Ir_InitScreenObj~@~ScreenId,DbId~@~Int,TinyInt~@~ScreenId15,LCurr.DbId~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_InitScreenObj
+ @ScreenId	int
+,@DbId		tinyint
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ProgramName		varchar(50)
+	,@MasterTableId		int
+	,@DetailTableId		int
+	,@DefaultDisplay	tinyint
+	,@Offset		int
+	,@CultureId		tinyint
+	,@CultureTypeName	varchar(6)
+	,@DefColAuthority	smallint
+	,@ScreenFilterId	int
+	,@ScreenObjId		int
+SET NOCOUNT ON
+UPDATE dbo.Screen SET ScreenDesc = b.ScreenTitle
+	FROM dbo.Screen a
+	INNER JOIN ScreenHlp b ON a.ScreenId = b.ScreenId
+	INNER JOIN RODesign.dbo.CtCultureType c ON b.CultureId = c.CultureId WHERE a.ScreenId = @ScreenId AND c.CultureDefault = 'Y'
+IF NOT EXISTS (SELECT 'true' from ScreenObj WHERE ScreenId = @ScreenId)
+BEGIN
+	/* Create ScreenObj */
+	SELECT @ProgramName = ProgramName, @MasterTableId = MasterTableId, @DetailTableId = DetailTableId FROM dbo.Screen WHERE ScreenId = @ScreenId
+	SELECT @DefaultDisplay = TypeId FROM RODesign.dbo.CtDisplayType WHERE DisplayDefault = 'Y'
+	SELECT @Offset = isnull(max(ColumnIndex),1000) FROM dbo.DbColumn WHERE TableId = @MasterTableId
+	INSERT dbo.ScreenObj (ScreenId,MasterTable,ScreenGrpId,ColumnId,ColumnName,ColumnWrap,ColumnJustify,DisplayModeId,GenerateSp,TabIndex,RequiredValid,RefreshOnCUD)
+		SELECT @ScreenId,'Y',3,a.ColumnId,a.ColumnName,'Y',case when b.NumericData='Y' then 'R' else 'L' end
+		,@DefaultDisplay,'Y',isnull(a.ColumnIndex,a.ColumnId),CASE WHEN a.AllowNulls = 'N' THEN 'Y' ELSE 'N' END,'N'
+		FROM dbo.DbColumn a INNER JOIN RODesign.dbo.CtDataType b ON a.DataType = b.DataTypeId
+		WHERE TableId = @MasterTableId ORDER BY ColumnIndex
+	INSERT dbo.ScreenObj (ScreenId,MasterTable,ScreenGrpId,ColumnId,ColumnName,ColumnWrap,ColumnJustify,DisplayModeId,GenerateSp,TabIndex,RequiredValid,RefreshOnCUD)
+		SELECT @ScreenId,'N',3,a.ColumnId,a.ColumnName,'Y',case when b.NumericData='Y' then 'R' else 'L' end
+		,@DefaultDisplay,'Y',isnull(a.ColumnIndex,a.ColumnId) + @Offset,CASE WHEN a.AllowNulls='N' THEN 'Y' ELSE 'N' END,'N'
+		FROM dbo.DbColumn a INNER JOIN RODesign.dbo.CtDataType b ON a.DataType = b.DataTypeId
+		WHERE TableId = @DetailTableId ORDER BY ColumnIndex
+	/* Update ScreenObj */
+	DECLARE objcur CURSOR FOR SELECT ScreenObjId FROM dbo.ScreenObj WHERE ScreenId = @ScreenId ORDER BY TabIndex FOR READ ONLY
+	OPEN objcur
+	FETCH NEXT FROM objcur INTO @ScreenObjId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		EXEC dbo.Ir_UpdScreenObj @ScreenObjId
+		FETCH NEXT FROM objcur INTO @ScreenObjId
+	END
+	CLOSE objcur
+	DEALLOCATE objcur
+	/* Update ScreenObjHlp etc. */
+	SELECT @CultureId = CultureId, @CultureTypeName = CultureTypeName FROM RODesign.dbo.CtCultureType WHERE CultureDefault = 'Y'
+	INSERT dbo.ScreenObjHlp (ScreenObjHlpDesc,ScreenObjId,CultureId,ColumnHeader)
+		SELECT ColumnDesc + ' (' + @CultureTypeName + ')',ScreenObjId,@CultureId,ColumnName FROM dbo.ScreenObj WHERE ScreenId = @ScreenId
+	SELECT @DefColAuthority = ColAuthorityId FROM RODesign.dbo.CtColAuthority WHERE AuthDefault = 'Y'
+	INSERT dbo.AuthCol (ScreenObjId,ColAuthorityId,ScreenId,TabIndex,ColVisible,ColReadOnly,ColExport)
+		SELECT ScreenObjId,@DefColAuthority,@ScreenId,TabIndex,'Y','N','Y' FROM dbo.ScreenObj WHERE ScreenId = @ScreenId
+END
+-- Update popup
+SET ROWCOUNT 1
+SELECT @ScreenFilterId = ScreenFilterId FROM dbo.ScreenFilter WHERE ScreenId = @ScreenId ORDER BY ScreenFilterDesc
+SELECT @ScreenObjId = a.ScreenObjId FROM dbo.ScreenObj a
+	INNER JOIN DbColumn b ON a.ColumnId = b.ColumnId AND b.PrimaryKey = 'Y' AND a.MasterTable = 'Y' AND ScreenId = @ScreenId
+SET ROWCOUNT 0
+UPDATE dbo.Screen SET
+	 ScreenObj = 'AdmScreenObj.aspx?id=26&key=' + convert(varchar,isnull(@ScreenObjId,0)) + '&typ=N&sys=' + convert(varchar,@DbId)
+	,ScreenFilter = 'AdmScreenFilter.aspx?id=181&key=' + convert(varchar,@ScreenFilterId) + '&typ=N&sys=' + convert(varchar,@DbId)
+	WHERE ScreenId = @ScreenId
+RETURN 0~@~1~@~2007-03-06 20:06:43.810~@~2007-03-06 20:06:43.000
+9~@~10~@~1~@~Y~@~Erase from Column Authority Table~@~Screen Object   30 [Master: Before CRUD] Erase from Column Authority Table~@~Cascade delete unused rows from Column Authority~@~30~@~Ir_DelAuthCol~@~ScreenObjId~@~Int~@~ScreenObjId14~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE [dbo].[Ir_DelAuthCol]
+@ScreenObjId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DELETE FROM dbo.ColOvrd WHERE ScreenObjId = @ScreenObjId
+RETURN 0~@~55~@~2009-10-25 10:21:35.167~@~2009-10-25 10:21:34.000
+11~@~10~@~1~@~Y~@~Update essential information~@~Screen Object   70 [Master: After CRUD] Update essential information~@~Update essential information~@~70~@~Ir_UpdScreenObj~@~ScreenObjId~@~Int~@~ScreenObjId14~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdScreenObj
+ @ScreenObjId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ScreenId		int
+	,@ProgramName		varchar(50)
+	,@TabIndex		smallint
+	,@ii			int
+	,@ObjId			int
+SET NOCOUNT ON
+SELECT @TabIndex = TabIndex, @ScreenId = ScreenId FROM dbo.ScreenObj WHERE ScreenObjId = @ScreenObjId
+SELECT @ProgramName = ProgramName FROM dbo.Screen WHERE ScreenId = @ScreenId
+/* Need to reorder Tab Index */
+IF NOT (@TabIndex is not null AND right(space(1)+convert(varchar,@TabIndex),1) = '0')
+BEGIN
+	UPDATE dbo.ScreenObj SET TabIndex = 32757 WHERE ScreenId = @ScreenId AND TabIndex is null
+	SELECT @ii = 1
+	DECLARE cur CURSOR FOR SELECT ScreenObjId, TabIndex FROM dbo.ScreenObj WHERE ScreenId = @ScreenId ORDER BY TabIndex FOR READ ONLY
+	OPEN cur
+	FETCH NEXT FROM cur INTO @ObjId, @TabIndex
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		UPDATE dbo.ScreenObj SET TabIndex = @ii
+			, ColumnDesc = @ProgramName + right(space(6) + convert(varchar,@ii * 10),6) + ': ' + ColumnName
+			WHERE ScreenObjId = @ObjId
+		IF @ii > 3275 SELECT @ii = 3276 ELSE SELECT @ii = @ii + 1
+		FETCH NEXT FROM cur INTO @ObjId, @TabIndex
+	END
+	CLOSE cur
+	DEALLOCATE cur
+	UPDATE dbo.ScreenObj SET TabIndex = TabIndex * 10 WHERE ScreenId = @ScreenId
+	UPDATE dbo.AuthCol SET TabIndex = b.TabIndex FROM dbo.AuthCol a INNER JOIN dbo.ScreenObj b ON a.ScreenObjId = b.ScreenObjId WHERE b.ScreenId = @ScreenId
+END
+UPDATE dbo.ScreenObj SET
+	 ColumnName = replace(a.ColumnName,space(1),space(0))
+	,ColumnDesc = @ProgramName + right(space(6) + convert(varchar,a.TabIndex),6) + ': ' + a.ColumnName
+	,RequiredValid = CASE WHEN c.ColumnIdentity IS NOT NULL AND c.ColumnIdentity = 'Y' THEN 'N' ELSE a.RequiredValid END
+	FROM dbo.ScreenObj a LEFT OUTER JOIN dbo.DbColumn c ON a.ColumnId = c.ColumnId
+	WHERE ScreenObjId = @ScreenObjId
+RETURN 0~@~55~@~2015-07-16 18:23:49.687~@~2007-07-05 10:25:36.000
+20~@~32~@~2~@~Y~@~One and Only One Default Check~@~Display Type Code   10 [Master: After CRUD] One and Only One Default Check~@~~@~10~@~CrOneDisplayDefaultOnly~@~~@~~@~~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE CrOneDisplayDefaultOnly
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.CtDisplayType WHERE DisplayDefault = 'Y') <> 1
+BEGIN
+	RAISERROR('CrOneDisplayDefaultOnly: Please choose one and only one display default and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2007-02-10 17:06:49.903~@~2007-02-10 17:06:49.000
+21~@~8~@~2~@~Y~@~One and Only One Default Check~@~Culture Translation   20 [Master: After CRUD] One and Only One Default Check~@~~@~20~@~CrOneCultureDefaultOnly~@~~@~~@~~@~Y~@~Y~@~N~@~N~@~~@~55~@~2013-03-22 02:23:17.320~@~2007-02-10 17:06:17.000
+23~@~35~@~1~@~Y~@~Initialize Menu related tables and description~@~Menu Item   30 [Master: After CRUD] Initialize Menu related tables and description~@~Insert if not exists in child table MenuHlp and MenuPerm plus update descriptions~@~30~@~Ir_InitMenuHlp~@~MenuId~@~Int~@~MenuId39~@~Y~@~Y~@~N~@~N~@~~@~55~@~2014-11-07 22:47:51.333~@~
+24~@~35~@~1~@~Y~@~Erase from MenuHlp & MenuPerm Tables~@~Menu Item   10 [Master: Before CRUD] Erase from MenuHlp & MenuPerm Tables~@~Cascade delete child table MenuHlp & MenuPerm~@~10~@~Ir_DelMenuHlp~@~MenuId~@~Int~@~MenuId39~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Ir_DelMenuHlp
+@MenuId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DELETE FROM dbo.MenuPerm WHERE MenuId = @MenuId
+DELETE FROM dbo.MenuHlp WHERE MenuId = @MenuId
+RETURN 0~@~1~@~2006-12-08 09:55:58.890~@~
+33~@~67~@~1~@~Y~@~Initialize ReportObj and Copy an existing report (add only)~@~Report Definition   70 [Master: After CRUD] Initialize ReportObj and Copy an existing report (add only)~@~Initialize ReportObj and Copy an existing report (add only)~@~70~@~Ir_InitReportObj~@~ReportId,CopyReportId~@~Int,Int~@~ReportId22,CopyReportId22~@~Y~@~N~@~N~@~N~@~CREATE PROCEDURE Ir_InitReportObj
+ @ReportId	int
+,@CopyReportId	int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @CultureId	tinyint
+	,@CultureTypeName	varchar(6)
+	,@ProgramName	varchar(50)
+SET NOCOUNT ON
+UPDATE dbo.Report SET ReportDesc = b.ReportTitle
+	FROM dbo.Report a
+	INNER JOIN ReportHlp b ON a.ReportId = b.ReportId
+	INNER JOIN RODesign.dbo.CtCultureType c ON b.CultureId = c.CultureId
+	WHERE a.ReportId = @ReportId AND c.CultureDefault = 'Y'
+IF @CopyReportId IS NOT NULL
+BEGIN
+	SELECT @CultureId = CultureId, @CultureTypeName = CultureTypeName FROM RODesign.dbo.CtCultureType WHERE CultureDefault = 'Y'
+	SELECT @ProgramName = ProgramName FROM dbo.Report WHERE ReportId = @ReportId
+	IF NOT EXISTS (SELECT 'true' from dbo.ReportObj WHERE ReportId = @ReportId)
+	BEGIN
+		INSERT dbo.ReportObj (ReportId,ColumnName,ColumnDesc,TabIndex,ColumnFormat,PaddSize,PaddChar,DataTypeId,OperatorId,ReportCriId)
+			SELECT @ReportId,ColumnName,@ProgramName + right(space(6) + convert(varchar,TabIndex),6) + ': ' + ColumnName,TabIndex,ColumnFormat,PaddSize,PaddChar,DataTypeId,OperatorId,ReportCriId
+			FROM dbo.ReportObj WHERE ReportId = @CopyReportId
+		INSERT dbo.ReportObjHlp (ReportObjHlpDesc,ReportObjId,CultureId,ColumnHeader)
+			SELECT ColumnDesc + ' (' + @CultureTypeName + ')',ReportObjId,@CultureId,ColumnName
+			FROM dbo.ReportObj WHERE ReportId = @ReportId
+	END
+	IF NOT EXISTS (SELECT 'true' from dbo.ReportCri WHERE ReportId = @ReportId)
+	BEGIN
+		INSERT dbo.ReportCri (ReportId,ReportCriDesc,ReportGrpId,TableId,TableAbbr,ColumnName,TabIndex,DataTypeId,DataTypeSize,DisplayModeId
+			,RowSize,DdlKeyColumnName,DdlRefColumnName,RequiredValid,WhereClause,RegClause)
+			SELECT @ReportId,@ProgramName + right(space(6) + convert(varchar,TabIndex),6) + ': ' + ColumnName
+			,ReportGrpId,TableId,TableAbbr,ColumnName,TabIndex,DataTypeId,DataTypeSize,DisplayModeId
+			,RowSize,DdlKeyColumnName,DdlRefColumnName,RequiredValid,WhereClause,RegClause
+			FROM dbo.ReportCri WHERE ReportId = @CopyReportId
+		INSERT dbo.ReportCriHlp (ReportCriHlpDesc,ReportCriId,CultureId,ColumnHeader)
+			SELECT ReportCriDesc + ' (' + @CultureTypeName + ')',ReportCriId,@CultureId,ColumnName
+			FROM dbo.ReportCri WHERE ReportId = @ReportId
+	END
+END
+RETURN 0~@~55~@~2015-08-16 06:34:02.230~@~2007-05-24 15:12:17.000
+44~@~1~@~1~@~Y~@~Initialize last criteria~@~User Manager   80 [Master: After CRUD] Initialize last criteria~@~Insert last criteria template if active and new user, delete if inactive~@~80~@~IniLastCriteria~@~ScreenId,ReportId,UsrId~@~Int,Int,Int~@~null,null,UsrId1~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE IniLastCriteria
+ @ScreenId		int
+,@ReportId		int
+,@UsrId			int
+/* WITH ENCRYPTION */
+AS
+DECLARE  @sql		varchar(8000)
+	,@dbDesDatabase	varchar(50)
+SET NOCOUNT ON
+/* ScreenCriId = 0 is used to hide/show screen criteria only */
+IF @ScreenId is not null AND @ScreenId <> 0
+BEGIN
+	INSERT dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId)
+		SELECT u.UsrId, a.ScreenId, a.ScreenCriId
+		FROM dbo.ScreenCri a INNER JOIN RODesign.dbo.Usr u ON a.ScreenId = @ScreenId AND u.Active = 'Y'
+		WHERE NOT EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE b.UsrId = u.UsrId AND b.ScreenId = @ScreenId AND a.ScreenCriId = b.ScreenCriId)
+	INSERT dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId, LastCriteria)
+		SELECT a.UsrId, @ScreenId, 0, 'Y' FROM RODesign.dbo.Usr a
+		WHERE a.Active = 'Y'
+		AND EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE a.UsrId = b.UsrId AND b.ScreenId = @ScreenId AND b.ScreenCriId <> 0)
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE a.UsrId = b.UsrId AND b.ScreenId = @ScreenId AND b.ScreenCriId = 0)
+END
+ELSE
+IF @ReportId is not null AND @ReportId <> 0
+BEGIN
+	INSERT dbo.ReportLstCri (UsrId, ReportId, ReportCriId)
+		SELECT u.UsrId, a.ReportId, a.ReportCriId
+		FROM dbo.ReportCri a INNER JOIN RODesign.dbo.Usr u ON a.ReportId = @ReportId AND u.Active = 'Y'
+		WHERE NOT EXISTS (SELECT 'true' FROM dbo.ReportLstCri b WHERE b.UsrId = u.UsrId AND b.ReportId = @ReportId AND a.ReportCriId = b.ReportCriId)
+END
+ELSE
+IF EXISTS (SELECT 'true' FROM RODesign.dbo.Usr WHERE UsrId = @UsrId AND Active = 'Y')
+BEGIN
+	DECLARE sysCursor CURSOR FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
+	OPEN sysCursor
+	FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SELECT @sql = ' UPDATE ' + @dbDesDatabase + '.dbo.ScreenLstCri SET ScreenId = a.ScreenId FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
+		+ ' INNER JOIN ' + @dbDesDatabase + '.dbo.ScreenLstCri b ON a.ScreenCriId = b.ScreenCriId AND b.UsrId = ' + convert(varchar,@UsrId)
+		+ ' INSERT ' + @dbDesDatabase + '.dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId)'
+		+ ' SELECT ' + convert(varchar,@UsrId) + ', a.ScreenId, a.ScreenCriId FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
+		+ ' WHERE NOT EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE a.ScreenCriId = b.ScreenCriId AND b.UsrId = ' + convert(varchar,@UsrId) + ')'
+		+ ' INSERT ' + @dbDesDatabase + '.dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId, LastCriteria)'
+		+ ' SELECT distinct ' + convert(varchar,@UsrId) + ', a.ScreenId, 0, ''Y'' FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
+		+ ' WHERE EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE b.UsrId = ' + convert(varchar,@UsrId) + ' AND a.ScreenId = b.ScreenId AND b.ScreenCriId <> 0)'
+		+ ' AND NOT EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE b.UsrId = ' + convert(varchar,@UsrId) + ' AND a.ScreenId = b.ScreenId AND b.ScreenCriId = 0)'
+		+ ' UPDATE ' + @dbDesDatabase + '.dbo.ReportLstCri SET ReportId = a.ReportId FROM ' + @dbDesDatabase + '.dbo.ReportCri a'
+		+ ' INNER JOIN ' + @dbDesDatabase + '.dbo.ReportLstCri b ON a.ReportCriId = b.ReportCriId AND b.UsrId = ' + convert(varchar,@UsrId)
+		+ ' INSERT ' + @dbDesDatabase + '.dbo.ReportLstCri (UsrId, ReportId, ReportCriId)'
+		+ ' SELECT ' + convert(varchar,@UsrId) + ', a.ReportId, a.ReportCriId FROM ' + @dbDesDatabase + '.dbo.ReportCri a'
+		+ ' WHERE NOT EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ReportLstCri b WHERE a.ReportCriId = b.ReportCriId AND b.UsrId = ' + convert(varchar,@UsrId) + ')'
+		EXEC (@sql)
+		FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	END
+	CLOSE sysCursor
+	DEALLOCATE sysCursor
+END
+ELSE EXEC dbo.DelLastCriteria null,null,@UsrId
+RETURN 0~@~55~@~2008-02-28 20:18:03.730~@~2007-02-10 17:12:10.000
+45~@~1~@~1~@~Y~@~Erase last criteria~@~User Manager   90 [Master: After CRUD] Erase last criteria~@~Cascade delete last criteria if inactive or deleted~@~90~@~DelLastCriteria~@~ScreenId,ReportId,UsrId~@~Int,Int,Int~@~null,null,UsrId1~@~N~@~N~@~Y~@~N~@~CREATE PROCEDURE DelLastCriteria
+ @ScreenId		int
+,@ReportId		int
+,@UsrId			int
+/* WITH ENCRYPTION */
+AS
+DECLARE  @sql		varchar(8000)
+	,@dbDesDatabase	varchar(50)
+SET NOCOUNT ON
+IF @ScreenId is not null AND @ScreenId <> 0
+BEGIN
+	DELETE FROM dbo.ScreenLstCri WHERE ScreenId = @ScreenId AND ScreenCriId <> 0
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ScreenCri a WHERE a.ScreenCriId = dbo.ScreenLstCri.ScreenCriId)
+	DELETE FROM dbo.ScreenLstCri WHERE ScreenId = @ScreenId AND ScreenCriId = 0
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE b.ScreenId = @ScreenId AND b.ScreenCriId <> 0)
+END
+ELSE
+IF @ReportId is not null AND @ReportId <> 0
+BEGIN
+	DELETE FROM dbo.ReportLstCri WHERE ReportId = @ReportId
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ReportCri a WHERE a.ReportCriId = dbo.ReportLstCri.ReportCriId)
+END
+ELSE
+BEGIN
+	DECLARE sysCursor CURSOR FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
+	OPEN sysCursor
+	FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SELECT @sql = 'DELETE FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri WHERE UsrId = ' + convert(varchar,@UsrId)
+		+ ' DELETE FROM ' + @dbDesDatabase + '.dbo.ReportLstCri WHERE UsrId = ' + convert(varchar,@UsrId)
+		EXEC (@sql)
+		FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	END
+	CLOSE sysCursor
+	DEALLOCATE sysCursor
+END
+RETURN 0~@~55~@~2008-02-28 20:18:07.030~@~2007-02-10 17:12:15.000
+46~@~69~@~1~@~Y~@~Initialize Last Criteria~@~Report Criteria   90 [Master: After CRUD] Initialize Last Criteria~@~Insert if not exist in Last Criteria~@~90~@~IniLastCriteria~@~ScreenId,ReportId,UsrId~@~Int,Int,Int~@~null,ReportId97,null~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE IniLastCriteria
+ @ScreenId		int
+,@ReportId		int
+,@UsrId			int
+/* WITH ENCRYPTION */
+AS
+DECLARE  @sql		varchar(8000)
+	,@dbDesDatabase	varchar(50)
+SET NOCOUNT ON
+/* ScreenCriId = 0 is used to hide/show screen criteria only */
+IF @ScreenId is not null AND @ScreenId <> 0
+BEGIN
+	INSERT dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId)
+		SELECT u.UsrId, a.ScreenId, a.ScreenCriId
+		FROM dbo.ScreenCri a INNER JOIN RODesign.dbo.Usr u ON a.ScreenId = @ScreenId AND u.Active = 'Y'
+		WHERE NOT EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE b.UsrId = u.UsrId AND b.ScreenId = @ScreenId AND a.ScreenCriId = b.ScreenCriId)
+	INSERT dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId, LastCriteria)
+		SELECT a.UsrId, @ScreenId, 0, 'Y' FROM RODesign.dbo.Usr a
+		WHERE a.Active = 'Y'
+		AND EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE a.UsrId = b.UsrId AND b.ScreenId = @ScreenId AND b.ScreenCriId <> 0)
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE a.UsrId = b.UsrId AND b.ScreenId = @ScreenId AND b.ScreenCriId = 0)
+END
+ELSE
+IF @ReportId is not null AND @ReportId <> 0
+BEGIN
+	INSERT dbo.ReportLstCri (UsrId, ReportId, ReportCriId)
+		SELECT u.UsrId, a.ReportId, a.ReportCriId
+		FROM dbo.ReportCri a INNER JOIN RODesign.dbo.Usr u ON a.ReportId = @ReportId AND u.Active = 'Y'
+		WHERE NOT EXISTS (SELECT 'true' FROM dbo.ReportLstCri b WHERE b.UsrId = u.UsrId AND b.ReportId = @ReportId AND a.ReportCriId = b.ReportCriId)
+END
+ELSE
+IF EXISTS (SELECT 'true' FROM RODesign.dbo.Usr WHERE UsrId = @UsrId AND Active = 'Y')
+BEGIN
+	DECLARE sysCursor CURSOR FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
+	OPEN sysCursor
+	FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SELECT @sql = ' UPDATE ' + @dbDesDatabase + '.dbo.ScreenLstCri SET ScreenId = a.ScreenId FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
+		+ ' INNER JOIN ' + @dbDesDatabase + '.dbo.ScreenLstCri b ON a.ScreenCriId = b.ScreenCriId AND b.UsrId = ' + convert(varchar,@UsrId)
+		+ ' INSERT ' + @dbDesDatabase + '.dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId)'
+		+ ' SELECT ' + convert(varchar,@UsrId) + ', a.ScreenId, a.ScreenCriId FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
+		+ ' WHERE NOT EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE a.ScreenCriId = b.ScreenCriId AND b.UsrId = ' + convert(varchar,@UsrId) + ')'
+		+ ' INSERT ' + @dbDesDatabase + '.dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId, LastCriteria)'
+		+ ' SELECT distinct ' + convert(varchar,@UsrId) + ', a.ScreenId, 0, ''Y'' FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
+		+ ' WHERE EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE b.UsrId = ' + convert(varchar,@UsrId) + ' AND a.ScreenId = b.ScreenId AND b.ScreenCriId <> 0)'
+		+ ' AND NOT EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE b.UsrId = ' + convert(varchar,@UsrId) + ' AND a.ScreenId = b.ScreenId AND b.ScreenCriId = 0)'
+		+ ' UPDATE ' + @dbDesDatabase + '.dbo.ReportLstCri SET ReportId = a.ReportId FROM ' + @dbDesDatabase + '.dbo.ReportCri a'
+		+ ' INNER JOIN ' + @dbDesDatabase + '.dbo.ReportLstCri b ON a.ReportCriId = b.ReportCriId AND b.UsrId = ' + convert(varchar,@UsrId)
+		+ ' INSERT ' + @dbDesDatabase + '.dbo.ReportLstCri (UsrId, ReportId, ReportCriId)'
+		+ ' SELECT ' + convert(varchar,@UsrId) + ', a.ReportId, a.ReportCriId FROM ' + @dbDesDatabase + '.dbo.ReportCri a'
+		+ ' WHERE NOT EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ReportLstCri b WHERE a.ReportCriId = b.ReportCriId AND b.UsrId = ' + convert(varchar,@UsrId) + ')'
+		EXEC (@sql)
+		FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	END
+	CLOSE sysCursor
+	DEALLOCATE sysCursor
+END
+ELSE EXEC dbo.DelLastCriteria null,null,@UsrId
+RETURN 0~@~1~@~2007-02-10 17:08:30.450~@~2007-02-10 17:08:30.000
+47~@~69~@~1~@~Y~@~Erase Last Criteria~@~Report Criteria  100 [Master: After CRUD] Erase Last Criteria~@~Cascade delete Last Criteria~@~100~@~DelLastCriteria~@~ScreenId,ReportId,UsrId~@~Int,Int,Int~@~null,ReportId97,null~@~N~@~N~@~Y~@~N~@~CREATE PROCEDURE DelLastCriteria
+ @ScreenId		int
+,@ReportId		int
+,@UsrId			int
+/* WITH ENCRYPTION */
+AS
+DECLARE  @sql		varchar(8000)
+	,@dbDesDatabase	varchar(50)
+SET NOCOUNT ON
+IF @ScreenId is not null AND @ScreenId <> 0
+BEGIN
+	DELETE FROM dbo.ScreenLstCri WHERE ScreenId = @ScreenId AND ScreenCriId <> 0
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ScreenCri a WHERE a.ScreenCriId = dbo.ScreenLstCri.ScreenCriId)
+	DELETE FROM dbo.ScreenLstCri WHERE ScreenId = @ScreenId AND ScreenCriId = 0
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE b.ScreenId = @ScreenId AND b.ScreenCriId <> 0)
+END
+ELSE
+IF @ReportId is not null AND @ReportId <> 0
+BEGIN
+	DELETE FROM dbo.ReportLstCri WHERE ReportId = @ReportId
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ReportCri a WHERE a.ReportCriId = dbo.ReportLstCri.ReportCriId)
+END
+ELSE
+BEGIN
+	DECLARE sysCursor CURSOR FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
+	OPEN sysCursor
+	FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SELECT @sql = 'DELETE FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri WHERE UsrId = ' + convert(varchar,@UsrId)
+		+ ' DELETE FROM ' + @dbDesDatabase + '.dbo.ReportLstCri WHERE UsrId = ' + convert(varchar,@UsrId)
+		EXEC (@sql)
+		FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	END
+	CLOSE sysCursor
+	DEALLOCATE sysCursor
+END
+RETURN 0~@~1~@~2007-02-10 17:08:35.840~@~2007-02-10 17:08:35.000
+50~@~49~@~1~@~N~@~Update ColumnDesc~@~Wizard Object   50 [Detail: After CRUD] Update ColumnDesc~@~Hidden column ColumnDesc need to be updated~@~50~@~Ir_UpdWizardObjColumnDesc~@~WizardObjId~@~Int~@~WizardObjId72~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdWizardObjColumnDesc
+ @WizardObjId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.WizardObj SET ColumnDesc = b.ProgramName + right(space(6) + convert(varchar,a.TabIndex),6) + ': ' + c.ColumnName
+	FROM dbo.WizardObj a INNER JOIN dbo.Wizard b ON a.WizardId = b.WizardId INNER JOIN dbo.DbColumn c ON a.ColumnId = c.ColumnId
+	WHERE a.WizardObjId = @WizardObjId
+RETURN 0~@~55~@~2012-01-06 03:46:51.200~@~2007-02-10 17:12:46.000
+51~@~49~@~1~@~Y~@~Initialize ScreenObj~@~Wizard Object   30 [Master: After CRUD] Initialize ScreenObj~@~Initialize ScreenObj Table~@~30~@~Ir_InitWizardObj~@~WizardId,MasterTableId~@~Int,Int~@~WizardId71,MasterTableId71~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_InitWizardObj
+ @WizardId	int
+,@MasterTableId	int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @programName		varchar(50)
+	,@offset		int
+SET NOCOUNT ON
+IF NOT EXISTS (SELECT 'true' from dbo.WizardObj WHERE WizardId = @WizardId)
+BEGIN
+	SELECT @programName = ProgramName FROM dbo.Wizard WHERE WizardId = @WizardId
+	SELECT @offset = MIN(ColumnId)-1 FROM dbo.DbColumn WHERE TableId = @masterTableId
+	INSERT dbo.WizardObj (WizardId,ColumnId,ColumnDesc,TabIndex)
+		SELECT @WizardId,ColumnId,@programName + right(space(6) + convert(varchar,(ColumnId-@offset)*10),6) + ': ' + ColumnName,(ColumnId-@offset)*10
+		FROM dbo.DbColumn WHERE TableId = @masterTableId
+END
+RETURN 0~@~55~@~2012-01-06 03:46:57.813~@~2007-02-10 17:12:43.000
+58~@~53~@~2~@~Y~@~One and Only Default Template~@~Report Template   20 [Master: After CRUD] One and Only Default Template~@~Make sure only one default template~@~20~@~Cr_OneTemplateDefaultOnly~@~~@~~@~~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_OneTemplateDefaultOnly
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.Template WHERE TmplDefault = 'Y') <> 1
+BEGIN
+	RAISERROR('Cr_OneTemplateDefaultOnly: Please choose one and only one template default and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2007-02-10 17:11:58.297~@~2007-02-10 17:11:58.000
+59~@~53~@~1~@~Y~@~Erase RptTemplate~@~Report Template   10 [Master: Before CRUD] Erase RptTemplate~@~Cascade delete child table RptTemplate~@~10~@~Ir_DelRptTmpl~@~TemplateId~@~Int~@~TemplateId79~@~N~@~N~@~Y~@~Y~@~~@~55~@~2008-02-06 12:42:43.700~@~2007-02-10 17:11:54.000
+66~@~58~@~2~@~Y~@~Check Column Everyone Integrity~@~Menu Permission   10 [Master: After CRUD] Check Column Everyone Integrity~@~Check Column Everyone Consistency~@~10~@~Cr_ChkEveryone~@~MenuId~@~Int~@~MenuId39~@~N~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkEveryone
+ @MenuId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @UsrGroupId	smallint
+	,@MemberId	int
+	,@CustomerId	int
+	,@VendorId	int
+	,@AgentId	int
+	,@BrokerId	int
+	,@InvestorId	int
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND Everyone = 'Y')
+BEGIN
+	IF (SELECT COUNT('true') FROM dbo.MenuPerm WHERE MenuId = @MenuId) > 1
+	BEGIN
+		RAISERROR('Cr_ChkEveryone: Everyone YES should only have one row, please delete unnecessary row and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	SELECT @UsrGroupId = UsrGroupId, @MemberId = MemberId, @CustomerId = CustomerId, @VendorId = VendorId, @InvestorId = InvestorId
+		FROM dbo.MenuPerm WHERE MenuId = @MenuId
+	IF @UsrGroupId IS NOT NULL
+	BEGIN
+		RAISERROR('Cr_ChkEveryone: User-Group should be null for Everyone YES, please correct and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @MemberId IS NOT NULL
+	BEGIN
+		RAISERROR('Cr_ChkEveryone: Member should be null for Everyone YES, please correct and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @CustomerId IS NOT NULL
+	BEGIN
+		RAISERROR('Cr_ChkEveryone: Customer should be null for Everyone YES, please correct and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @VendorId IS NOT NULL
+	BEGIN
+		RAISERROR('Cr_ChkEveryone: Vendor should be null for Everyone YES, please correct and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @AgentId IS NOT NULL
+	BEGIN
+		RAISERROR('Cr_ChkEveryone: Agent should be null for Everyone YES, please correct and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @BrokerId IS NOT NULL
+	BEGIN
+		RAISERROR('Cr_ChkEveryone: Broker should be null for Everyone YES, please correct and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @InvestorId IS NOT NULL
+	BEGIN
+		RAISERROR('Cr_ChkEveryone: Investor should be null for Everyone YES, please correct and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+END
+ELSE
+BEGIN
+	IF EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND UsrGroupId IS NULL AND MemberId IS NULL
+		AND CustomerId IS NULL AND VendorId IS NULL AND AgentId IS NULL AND BrokerId IS NULL AND InvestorId IS NULL)
+	BEGIN
+		
+		RAISERROR('Cr_ChkEveryone: One of the permission item should be selected unless Everyone is checked, please rectify and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND UsrGroupId IS NULL) AND EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND UsrGroupId IS NOT NULL)
+	BEGIN
+		
+		RAISERROR('Cr_ChkEveryone: User-Group should be either all NULL or all NOT-NULL, please rectify and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND MemberId IS NULL) AND EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND MemberId IS NOT NULL)
+	BEGIN
+		
+		RAISERROR('Cr_ChkEveryone: Member should be either all NULL or all NOT-NULL, please rectify and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND CustomerId IS NULL) AND EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND CustomerId IS NOT NULL)
+	BEGIN
+		
+		RAISERROR('Cr_ChkEveryone: Customer should be either all NULL or all NOT-NULL, please rectify and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND VendorId IS NULL) AND EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND VendorId IS NOT NULL)
+	BEGIN
+		
+		RAISERROR('Cr_ChkEveryone: Vendor should be either all NULL or all NOT-NULL, please rectify and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND AgentId IS NULL) AND EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND AgentId IS NOT NULL)
+	BEGIN
+		
+		RAISERROR('Cr_ChkEveryone: Agent should be either all NULL or all NOT-NULL, please rectify and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND BrokerId IS NULL) AND EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND BrokerId IS NOT NULL)
+	BEGIN
+		
+		RAISERROR('Cr_ChkEveryone: Broker should be either all NULL or all NOT-NULL, please rectify and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND InvestorId IS NULL) AND EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND InvestorId IS NOT NULL)
+	BEGIN
+		
+		RAISERROR('Cr_ChkEveryone: Investor should be either all NULL or all NOT-NULL, please rectify and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+END
+RETURN 0~@~55~@~2015-03-17 17:55:12.057~@~
+67~@~59~@~1~@~Y~@~Update Filter Description~@~Screen Filters   20 [Master: After CRUD] Update Filter Description~@~Update Filter Description for easy Identification~@~20~@~Ir_UpdScreenFilterDesc~@~ScreenId,ScreenFilterId~@~Int,Int~@~ScreenId86,ScreenFilterId86~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdScreenFilterDesc
+ @ScreenId			int
+,@ScreenFilterId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.ScreenFilter SET ScreenFilterDesc = b.ProgramName + ' - ' + a.ScreenFilterName
+	FROM dbo.ScreenFilter a INNER JOIN dbo.Screen b ON a.ScreenId = b.ScreenId
+	WHERE a.ScreenFilterId = @ScreenFilterId
+UPDATE dbo.Screen SET ScreenFilter = 'AdmScreenFilter.aspx?id=181&key=' + convert(varchar,@ScreenFilterId)
+	WHERE ScreenId = @screenId
+RETURN 0~@~55~@~2009-09-15 14:55:54.440~@~2007-02-10 17:10:47.000
+79~@~10~@~1~@~Y~@~Erase from Foreign Key Table~@~Screen Object   40 [Master: Before CRUD] Erase from Foreign Key Table~@~Cascade delete unused foreign keys~@~40~@~Ir_DelDbKey~@~ScreenObjId,ColumnId,DdlKeyColumnId,DdlRefColumnId~@~Int,Int,Int,Int~@~ScreenObjId14,ColumnId14,DdlKeyColumnId14,DdlRefColumnId14~@~N~@~N~@~Y~@~Y~@~~@~55~@~2013-01-22 21:34:59.320~@~2007-02-10 17:09:34.000
+80~@~64~@~2~@~Y~@~One Default for each Entity~@~User Preference   10 [Master: After CRUD] One Default for each Entity~@~Do not allow more than one default per user system~@~10~@~CrOnePrefDefaultOnly~@~UsrId,UsrGroupId,MemberId,AgentId,BrokerId,CustomerId,InvestorId,VendorId,BorrowerId,GuarantorId,LenderId,SystemId~@~Int,SmallInt,Int,Int,Int,Int,Int,Int,Int,Int,Int,TinyInt~@~UsrId93,UsrGroupId93,MemberId93,AgentId93,BrokerId93,CustomerId93,InvestorId93,VendorId93,BorrowerId93,GuarantorId93,LenderId93,SystemId93~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE CrOnePrefDefaultOnly
+ @UsrId		int
+,@UsrGroupId	smallint
+,@MemberId	int
+,@AgentId	int
+,@BrokerId	int
+,@CustomerId	int
+,@InvestorId	int
+,@VendorId	int
+,@SystemId	tinyint
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (UsrId is not null AND UsrId = @UsrId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('CrOnePrefDefaultOnly: Please only choose one preference per User-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (UsrGroupId is not null AND UsrGroupId = @UsrGroupId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('CrOnePrefDefaultOnly: Please only choose one preference per UserGroup-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (MemberId is not null AND MemberId = @MemberId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('CrOnePrefDefaultOnly: Please only choose one preference per Member-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (AgentId is not null AND AgentId = @AgentId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('CrOnePrefDefaultOnly: Please only choose one preference per Agent-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (BrokerId is not null AND BrokerId = @BrokerId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('CrOnePrefDefaultOnly: Please only choose one preference per Broker-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (CustomerId is not null AND CustomerId = @CustomerId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('CrOnePrefDefaultOnly: Please only choose one preference per Customer-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (InvestorId is not null AND InvestorId = @InvestorId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('CrOnePrefDefaultOnly: Please only choose one preference per Investor-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE (VendorId is not null AND VendorId = @VendorId) AND ((@SystemId is not null AND SystemId = @SystemId) OR (@SystemId is null AND SystemId is null))) > 1
+BEGIN
+	RAISERROR('CrOnePrefDefaultOnly: Please only choose one preference per Vendor-System and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count('true') FROM dbo.UsrPref WHERE SystemId = @SystemId AND PrefDefault = 'Y') > 1
+BEGIN
+	RAISERROR('CrOnePrefDefaultOnly: Please choose only one User Preference Default for this system and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2018-10-24 18:32:35.547~@~2007-02-10 17:12:24.000
+81~@~69~@~2~@~Y~@~Check Default for Criteria Column~@~Report Criteria   30 [Master: After CRUD] Check Default for Criteria Column~@~Criteria Column at most one default Group~@~30~@~Cr_ChkReportGrp~@~ReportId~@~Int~@~ReportId97~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkReportGrp
+ @ReportId	Int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count(distinct a.ReportGrpId)
+	FROM dbo.ReportCri a
+	INNER JOIN dbo.ReportGrp b ON a.ReportId = @ReportId AND a.ReportGrpId = b.ReportGrpId AND b.ParentGrpId is null) > 1
+BEGIN
+	RAISERROR('Cr_ChkReportGrp: Criteria column may not have more than one default Reporting Group, please correct and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2007-02-10 17:07:59.797~@~2007-02-10 17:07:59.000
+82~@~69~@~2~@~Y~@~Verify Column Header~@~Report Criteria   50 [Master: After CRUD] Verify Column Header~@~Criteria column must have column header~@~50~@~Cr_ChkReportColHeader~@~ReportCriId~@~Int~@~ReportCriId97~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkReportColHeader
+ @ReportCriId	Int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @DataTypeSqlName	varchar(30)
+	,@DataTypeSize		smallint
+	,@DispTypeName		varchar(20)
+	,@RequiredValid		char(1)
+SET NOCOUNT ON
+IF NOT EXISTS (SELECT 'true' FROM dbo.ReportCriHlp a INNER JOIN RODesign.dbo.CtCultureType b ON a.CultureId = b.CultureId AND b.CultureDefault = 'Y'
+	WHERE a.ReportCriId = @ReportCriId)
+BEGIN
+	RAISERROR('Cr_ChkReportColHeader: Criteria column must have a default Column Heading, please rectify and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+SELECT	 @DataTypeSqlName = b.DataTypeSqlName
+	,@DataTypeSize = a.DataTypeSize
+	,@DispTypeName = c.TypeName
+	,@RequiredValid = a.RequiredValid
+	FROM dbo.ReportCri a
+	INNER JOIN RODesign.dbo.CtDataType b ON a.DataTypeId = b.DataTypeId
+	INNER JOIN RODesign.dbo.CtDisplayType c ON a.DisplayModeId = c.TypeId
+	WHERE a.ReportCriId = @ReportCriId
+IF @DataTypeSize is null AND charindex('char',@DataTypeSqlName) > 0
+BEGIN
+	RAISERROR('Cr_ChkReportColHeader: Please specify data type size for character data type and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF @RequiredValid = 'N' AND lower(@DispTypeName) = 'checkbox'
+BEGIN
+	RAISERROR('Cr_ChkReportColHeader: Please check "Required Validation" for "Check Box" display and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2007-02-10 17:08:06.530~@~2007-02-10 17:08:06.000
+83~@~65~@~1~@~Y~@~Update Report Group Index~@~Report Criteria Group   40 [Master: After CRUD] Update Report Group Index~@~Keep Report Group Index up-to-date for sorting~@~40~@~Ir_UpdReportGrpIndex~@~ReportId~@~Int~@~ReportId94~@~N~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdReportGrpIndex
+ @ReportId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @ParentGrpId		int
+	,@ReportGrpId		int
+	,@TabIndex		smallint
+/* Establish cuurent TabIndex */
+DECLARE curs CURSOR FAST_FORWARD FOR SELECT ReportGrpId FROM dbo.ReportGrp WHERE ReportId = @ReportId FOR READ ONLY
+OPEN curs
+FETCH NEXT FROM curs INTO @ReportGrpId
+WHILE @@FETCH_STATUS = 0
+BEGIN
+	SELECT @TabIndex = 0
+	EXEC Ir_UpdReportGrpIndex1 @ReportId, @ReportGrpId, @TabIndex OUTPUT
+	UPDATE dbo.ReportGrp SET TabIndex = @TabIndex WHERE ReportGrpId = @ReportGrpId
+	FETCH NEXT FROM curs INTO @ReportGrpId
+END
+CLOSE curs
+DEALLOCATE curs
+/* Find root Ids */
+DECLARE curs CURSOR FAST_FORWARD FOR
+	SELECT DISTINCT ParentGrpId FROM dbo.ReportGrp
+	WHERE ReportId = @ReportId AND ParentGrpId IN (SELECT ReportGrpId FROM dbo.ReportGrp WHERE ParentGrpId is null)
+	FOR READ ONLY
+OPEN curs
+FETCH NEXT FROM curs INTO @ParentGrpId
+WHILE @@FETCH_STATUS = 0
+BEGIN
+	EXEC dbo.Ir_UpdReportGrpIndex2 @ReportId, @ParentGrpId, '0'
+	FETCH NEXT FROM curs INTO @ParentGrpId
+END
+CLOSE curs
+DEALLOCATE curs
+RETURN 0~@~1~@~2007-02-14 09:53:14.060~@~2007-02-14 09:53:14.000
+84~@~65~@~2~@~Y~@~Check Parent Group validity~@~Report Criteria Group   30 [Master: After CRUD] Check Parent Group validity~@~Parent Group can only have one of the four Defaults~@~30~@~Cr_ChkReportParentGrp~@~ReportId~@~Int~@~ReportId94~@~N~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkReportParentGrp
+ @ReportId	Int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.ReportGrp WHERE ReportId = @ReportId) > 0 AND NOT EXISTS 
+(SELECT 'true' FROM dbo.ReportGrp a INNER JOIN dbo.ReportGrp b ON a.ReportId = @ReportId AND a.ParentGrpId = b.ReportGrpId AND b.ParentGrpId is null)
+BEGIN
+	RAISERROR('Cr_ChkReportParentGrp: Parent Group must have one and only one default group, please assign one of four default groups (*) and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count(distinct b.ReportGrpId) FROM dbo.ReportGrp a INNER JOIN dbo.ReportGrp b ON a.ReportId = @ReportId AND a.ParentGrpId = b.ReportGrpId AND b.ParentGrpId is null) > 1
+BEGIN
+	RAISERROR('Cr_ChkReportParentGrp: Parent Group must have one and only one default group, please only assign one of four default groups (*) and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+SELECT b.ReportGrpId FROM dbo.ReportGrp a INNER JOIN dbo.ReportGrp b ON a.ReportId = @ReportId AND a.ParentGrpId = b.ReportGrpId AND b.ParentGrpId is null
+UNION	-- Remove duplicates
+SELECT a.ReportGrpId FROM dbo.ReportGrp a INNER JOIN dbo.ReportCri c ON c.ReportId = @ReportId AND a.ReportGrpId = c.ReportGrpId AND a.ParentGrpId is null
+IF @@ROWCOUNT > 1
+BEGIN
+	RAISERROR('Cr_ChkReportParentGrp: Report Groups must have one and only one default group, please only assign one of four default groups (*) to both Report Groups and Report Columns and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2006-12-08 09:10:00.810~@~
+85~@~69~@~1~@~Y~@~Update Criteria Group Index~@~Report Criteria   80 [Master: After CRUD] Update Criteria Group Index~@~Keep Criteria Group Index up-to-date~@~80~@~Ir_UpdReportGrpIndex~@~ReportId~@~Int~@~ReportId97~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdReportGrpIndex
+ @ReportId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE   @ParentGrpId	int
+	, @ReportGrpId	int
+	, @ii		int
+	, @PrevPid	int
+	, @Pid		varchar(20)
+-- Use four levels get around not having recursive function.
+IF object_id('tempdb.dbo.#Cri1') is not null DROP TABLE dbo.#Cri1
+IF object_id('tempdb.dbo.#Cri2') is not null DROP TABLE dbo.#Cri2
+IF object_id('tempdb.dbo.#Cri3') is not null DROP TABLE dbo.#Cri3
+IF object_id('tempdb.dbo.#Cri4') is not null DROP TABLE dbo.#Cri4
+CREATE TABLE #Cri1 (ParentGrpId int null, ReportGrpId int not null, TabIndex smallint not null)
+CREATE TABLE #Cri2 (ParentGrpId int null, ReportGrpId int not null, TabIndex smallint not null)
+CREATE TABLE #Cri3 (ParentGrpId int null, ReportGrpId int not null, TabIndex smallint not null)
+CREATE TABLE #Cri4 (ParentGrpId int null, ReportGrpId int not null, TabIndex smallint not null)
+INSERT INTO #Cri1 SELECT b.ParentGrpId, a.ReportGrpId, MAX(a.TabIndex) FROM dbo.ReportCri a 
+	INNER JOIN dbo.ReportGrp b ON a.ReportGrpId = b.ReportGrpId WHERE a.ReportId = @ReportId GROUP BY b.ParentGrpId, a.ReportGrpId
+INSERT INTO #Cri2 SELECT b.ParentGrpId, a.ParentGrpId, MAX(a.TabIndex) FROM #Cri1 a 
+	INNER JOIN dbo.ReportGrp b ON a.ParentGrpId = b.ReportGrpId GROUP BY b.ParentGrpId, a.ParentGrpId
+INSERT INTO #Cri3 SELECT b.ParentGrpId, a.ParentGrpId, MAX(a.TabIndex) FROM #Cri2 a 
+	INNER JOIN dbo.ReportGrp b ON a.ParentGrpId = b.ReportGrpId GROUP BY b.ParentGrpId, a.ParentGrpId
+INSERT INTO #Cri4 SELECT b.ParentGrpId, a.ParentGrpId, MAX(a.TabIndex) FROM #Cri3 a 
+	INNER JOIN dbo.ReportGrp b ON a.ParentGrpId = b.ReportGrpId GROUP BY b.ParentGrpId, a.ParentGrpId
+DECLARE curs CURSOR FAST_FORWARD FOR
+SELECT a.ParentGrpId, a.ReportGrpId FROM dbo.ReportGrp a
+	LEFT OUTER JOIN #Cri1 x1 ON a.ReportGrpId = x1.ReportGrpId
+	LEFT OUTER JOIN #Cri2 x2 ON a.ReportGrpId = x2.ReportGrpId
+	LEFT OUTER JOIN #Cri3 x3 ON a.ReportGrpId = x3.ReportGrpId
+	LEFT OUTER JOIN #Cri4 x4 ON a.ReportGrpId = x4.ReportGrpId
+	WHERE a.ReportId = @ReportId
+	ORDER BY a.ParentGrpId
+	,CASE WHEN x4.TabIndex is null THEN (CASE WHEN x3.TabIndex is null THEN
+	(CASE WHEN x2.TabIndex is null THEN x1.TabIndex ELSE x2.TabIndex END) ELSE x3.TabIndex END) ELSE x4.TabIndex END
+	FOR READ ONLY
+OPEN curs
+FETCH NEXT FROM curs INTO @ParentGrpId, @ReportGrpId
+SELECT  @ii = 0, @PrevPid = null
+WHILE @@FETCH_STATUS = 0
+BEGIN
+	IF (@ParentGrpId is not null AND @PrevPid is null) OR (@ParentGrpId <> @PrevPid) SELECT @ii = 0
+	IF @ParentGrpId is null UPDATE dbo.ReportGrp SET ReportGrpIndex = convert(varchar,@ii) WHERE ReportGrpId = @ReportGrpId
+	ELSE
+	BEGIN
+		SELECT @Pid = ReportGrpIndex FROM dbo.ReportGrp WHERE ReportGrpId = @ParentGrpId
+		UPDATE dbo.ReportGrp SET ReportGrpIndex = @Pid + '.' + convert(varchar,@ii) WHERE ReportGrpId = @ReportGrpId
+	END
+	SELECT @ii = @ii + 1, @PrevPid = @ParentGrpId
+	FETCH NEXT FROM curs INTO @ParentGrpId, @ReportGrpId
+END
+CLOSE curs
+DEALLOCATE curs
+DROP TABLE dbo.#Cri1
+DROP TABLE dbo.#Cri2
+DROP TABLE dbo.#Cri3
+DROP TABLE dbo.#Cri4
+RETURN 0~@~1~@~2007-02-10 17:08:25.890~@~2007-02-10 17:08:25.000
+86~@~69~@~2~@~Y~@~Check Default for Criteria Group~@~Report Criteria   40 [Master: After CRUD] Check Default for Criteria Group~@~Parent Group at most one default group~@~40~@~Cr_ChkReportParentGrp~@~ReportId~@~Int~@~ReportId97~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkReportParentGrp
+ @ReportId	Int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.ReportGrp WHERE ReportId = @ReportId) > 0 AND NOT EXISTS 
+(SELECT 'true' FROM dbo.ReportGrp a INNER JOIN dbo.ReportGrp b ON a.ReportId = @ReportId AND a.ParentGrpId = b.ReportGrpId AND b.ParentGrpId is null)
+BEGIN
+	RAISERROR('Cr_ChkReportParentGrp: Parent Group must have one and only one default group, please assign one of four default groups (*) and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count(distinct b.ReportGrpId) FROM dbo.ReportGrp a INNER JOIN dbo.ReportGrp b ON a.ReportId = @ReportId AND a.ParentGrpId = b.ReportGrpId AND b.ParentGrpId is null) > 1
+BEGIN
+	RAISERROR('Cr_ChkReportParentGrp: Parent Group must have one and only one default group, please only assign one of four default groups (*) and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+SELECT b.ReportGrpId FROM dbo.ReportGrp a INNER JOIN dbo.ReportGrp b ON a.ReportId = @ReportId AND a.ParentGrpId = b.ReportGrpId AND b.ParentGrpId is null
+UNION	-- Remove duplicates
+SELECT a.ReportGrpId FROM dbo.ReportGrp a INNER JOIN dbo.ReportCri c ON c.ReportId = @ReportId AND a.ReportGrpId = c.ReportGrpId AND a.ParentGrpId is null
+IF @@ROWCOUNT > 1
+BEGIN
+	RAISERROR('Cr_ChkReportParentGrp: Report Groups must have one and only one default group, please only assign one of four default groups (*) to both Report Groups and Report Columns and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2007-02-10 17:08:03.140~@~2007-02-10 17:08:03.000
+87~@~67~@~2~@~Y~@~Check Global Criteria~@~Report Definition   40 [Master: After CRUD] Check Global Criteria~@~At most one Global Criteria per system~@~40~@~Cr_ChkGlobalCriteria~@~~@~~@~~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkGlobalCriteria
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.Report WHERE GlobalCriteria = 'Y') > 1
+BEGIN
+	RAISERROR('Cr_ChkGlobalCriteria: Each system may only have one Global Criteria, please verify and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2007-09-24 15:23:51.700~@~2007-02-10 17:08:49.000
+88~@~69~@~1~@~Y~@~Update Search Column~@~Report Criteria   70 [Master: After CRUD] Update Search Column~@~Update hidden column ReportCriDesc~@~70~@~Ir_UpdReportCriDesc~@~ReportCriId~@~Int~@~ReportCriId97~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdReportCriDesc
+ @ReportCriId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.ReportCri SET ReportCriDesc = b.ProgramName + right(space(6) + convert(varchar,a.TabIndex),6) + ': ' + a.ColumnName
+	FROM dbo.ReportCri a INNER JOIN dbo.Report b ON a.ReportId = b.ReportId
+	WHERE ReportCriId = @ReportCriId
+RETURN 0~@~1~@~2007-02-10 17:08:21.763~@~2007-02-10 17:08:21.000
+89~@~13~@~1~@~Y~@~Initialize ReportObjHlp Table~@~Report Object   40 [Master: After CRUD] Initialize ReportObjHlp Table~@~Insert if not exists in ReportObjHlp~@~40~@~Ir_InitReportObjHlp~@~ReportObjId~@~Int~@~ReportObjId23~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_InitReportObjHlp
+ @ReportObjId	int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @CultureId		tinyint
+	,@CultureTypeName	varchar(6)
+SET NOCOUNT ON
+SELECT @CultureId = CultureId, @CultureTypeName = CultureTypeName FROM RODesign.dbo.CtCultureType WHERE CultureDefault = 'Y'
+IF NOT EXISTS (SELECT 'true' from dbo.ReportObjHlp WHERE CultureId = @CultureId and ReportObjId = @ReportObjId)
+	INSERT dbo.ReportObjHlp (ReportObjHlpDesc,ReportObjId,CultureId,ColumnHeader)
+	SELECT ColumnDesc + ' (' + @CultureTypeName + ')',@ReportObjId,@CultureId,ColumnName
+	FROM dbo.ReportObj WHERE ReportObjId = @ReportObjId
+RETURN 0~@~1~@~2007-02-10 17:07:37.000~@~2007-02-10 17:07:37.000
+90~@~13~@~1~@~Y~@~Erase from ReportObjHlp Table~@~Report Object   10 [Master: Before CRUD] Erase from ReportObjHlp Table~@~Cascade delete ReportObjHlp~@~10~@~Ir_DelReportObjHlp~@~ReportObjId~@~Int~@~ReportObjId23~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Ir_DelReportObjHlp
+ @ReportObjId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DELETE FROM dbo.ReportObjHlp WHERE ReportObjId = @ReportObjId
+RETURN 0~@~1~@~2007-02-10 17:07:33.077~@~2007-02-10 17:07:33.000
+91~@~67~@~1~@~Y~@~Initialize Clauses~@~Report Definition   60 [Master: After CRUD] Initialize Clauses~@~Initialize calling clauses~@~60~@~Ir_InitReportClauses~@~ReportId~@~Int~@~ReportId22~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[Ir_InitReportClauses]
+ @ReportId	int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @callingParm		varchar(4000)
+	,@ProgramName		varchar(50)
+	,@ToXlsOnly		char(1)
+	,@TemplateName		varchar(50)
+	,@RegClause		varchar(1000)
+	,@ValClause		varchar(1000)
+	,@UpdClause		varchar(1000)
+	,@XlsClause		varchar(1000)
+SET NOCOUNT ON
+SELECT @callingParm = space(0)
+SELECT	 @ProgramName = ProgramName
+	,@ToXlsOnly = ToXlsOnly
+	,@TemplateName = TemplateName
+	,@RegClause = RegClause
+	,@ValClause = ValClause
+	,@UpdClause = UpdClause
+	,@XlsClause = XlsClause
+	FROM dbo.Report WHERE ReportId = @ReportId
+EXEC dbo.GetReportParm @reportId, '', '', '', '', '', @callingParm OUTPUT
+IF @RegClause is null OR @RegClause = space(0)
+	UPDATE dbo.Report SET RegClause = 'EXEC dbo._Get' + @ProgramName + 'R @Usrs, @RowAuthoritys, @UsrId, @usrName, @currCompanyId, @wClause' + @callingParm WHERE ReportId = @ReportId
+IF (@ValClause is null OR @ValClause = space(0)) AND EXISTS (SELECT 1 FROM dbo.ReportObj WHERE ReportId = @ReportId AND RptColCd = 'P')
+	UPDATE dbo.Report SET ValClause = 'EXEC dbo._Get' + @ProgramName + 'V @Usrs, @RowAuthoritys, @UsrId, @usrName, @currCompanyId, @wClause' + @callingParm WHERE ReportId = @ReportId
+IF charindex('.txt',@TemplateName) > 0 AND (@UpdClause is null OR @UpdClause = '')
+	UPDATE dbo.Report SET UpdClause = 'EXEC dbo._Get' + @ProgramName + 'U @Usrs, @RowAuthoritys, @UsrId, @usrName, @currCompanyId, @wClause' + @callingParm WHERE ReportId = @ReportId
+IF @ToXlsOnly = 'Y' AND (@XlsClause is null OR @XlsClause = '')
+	UPDATE dbo.Report SET XlsClause = 'EXEC dbo._Get' + @ProgramName + 'X @Usrs, @RowAuthoritys, @UsrId, @usrName, @currCompanyId, @wClause' + @callingParm WHERE ReportId = @ReportId
+RETURN 0~@~55~@~2007-07-27 11:34:07.047~@~2007-07-27 11:34:07.000
+92~@~69~@~1~@~Y~@~Initialize clauses~@~Report Criteria   60 [Master: After CRUD] Initialize clauses~@~Initialize calling clauses~@~60~@~Ir_InitReportCriClauses~@~ReportCriId~@~Int~@~ReportCriId97~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_InitReportCriClauses
+ @ReportCriId	int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ColumnName		varchar(50)
+	,@DisplayModeId		tinyint
+	,@RegClause		varchar(1000)
+	,@DisplayName		varchar(20)
+SET NOCOUNT ON
+SELECT	 @ColumnName = a.ColumnName
+	,@DisplayModeId = a.DisplayModeId
+	,@RegClause = a.RegClause
+	,@DisplayName = b.TypeName
+	FROM dbo.ReportCri a INNER JOIN RODesign.dbo.CtDisplayType b ON a.DisplayModeId = b.TypeId WHERE a.ReportCriId = @ReportCriId
+IF @DisplayName IN ('ComboBox','DropDownList','ListBox','RadioButtonList')
+BEGIN
+	IF @RegClause is null OR @RegClause = space(0)
+	UPDATE dbo.ReportCri SET RegClause = 'EXEC dbo._GetIn' + @ColumnName + ' @Usrs, @RowAuthoritys, @currCompanyId, @wClause' WHERE ReportCriId = @ReportCriId
+END
+ELSE
+	UPDATE dbo.ReportCri SET RegClause = '' WHERE ReportCriId = @ReportCriId
+RETURN 0~@~1~@~2007-02-12 11:23:23.403~@~2007-02-12 11:23:23.000
+93~@~58~@~1~@~Y~@~Assign Permission Upward~@~Menu Permission   20 [Master: After CRUD] Assign Permission Upward~@~Make sure permission is top down~@~20~@~Ir_AssignPermUp~@~MenuId~@~Int~@~MenuId39~@~N~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_AssignPermUp
+ @MenuId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @UsrGroupId	smallint
+	,@MemberId	int
+	,@CustomerId	int
+	,@VendorId	int
+	,@InvestorId	int
+	,@AgentId	int
+	,@BrokerId	int
+	,@ParentId	int
+SET NOCOUNT ON
+-- Do not push downward, the business rule can be difficult to define.
+IF EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @MenuId AND Everyone = 'Y')
+BEGIN
+	SELECT @ParentId = ParentId FROM dbo.Menu WHERE MenuId = @MenuId
+	WHILE @ParentId is not null
+	BEGIN
+		IF NOT EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @ParentId AND Everyone = 'Y')
+		BEGIN
+			DELETE FROM dbo.MenuPerm WHERE MenuId = @ParentId
+			INSERT dbo.MenuPerm (MenuId, Everyone) SELECT @ParentId, 'Y'
+		END
+		SELECT @ParentId = ParentId FROM dbo.Menu WHERE MenuId = @ParentId
+	END
+END
+ELSE
+BEGIN
+	DECLARE menu_cursor CURSOR FAST_FORWARD FOR
+		SELECT UsrGroupId,MemberId,CustomerId,VendorId,InvestorId,AgentId,BrokerId FROM dbo.MenuPerm WHERE MenuId = @MenuId
+		FOR READ ONLY
+	OPEN menu_cursor
+	FETCH NEXT FROM menu_cursor INTO @UsrGroupId,@MemberId,@CustomerId,@VendorId,@InvestorId,@AgentId,@BrokerId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SELECT @ParentId = ParentId FROM dbo.Menu WHERE MenuId = @MenuId
+		WHILE @ParentId is not null
+		BEGIN
+			IF NOT EXISTS (SELECT 'true' FROM dbo.MenuPerm WHERE MenuId = @ParentId AND (Everyone = 'Y' OR (
+				((UsrGroupId is null AND @UsrGroupId is null) OR UsrGroupId = @UsrGroupId) AND
+				((MemberId is null AND @MemberId is null) OR MemberId = @MemberId) AND
+				((CustomerId is null AND @CustomerId is null) OR CustomerId = @CustomerId) AND
+				((VendorId is null AND @VendorId is null) OR VendorId = @VendorId) AND
+				((InvestorId is null AND @InvestorId is null) OR InvestorId = @InvestorId) AND
+				((AgentId is null AND @AgentId is null) OR AgentId = @AgentId) AND
+				((BrokerId is null AND @BrokerId is null) OR BrokerId = @BrokerId))))
+			BEGIN
+				INSERT dbo.MenuPerm (MenuId, Everyone, UsrGroupId, MemberId, CustomerId, VendorId, InvestorId, AgentId, BrokerId)
+				SELECT @ParentId, 'N', @UsrGroupId, @MemberId, @CustomerId, @VendorId, @InvestorId, @AgentId, @BrokerId
+			END
+			SELECT @ParentId = ParentId FROM dbo.Menu WHERE MenuId = @ParentId
+		END
+		FETCH NEXT FROM menu_cursor INTO @UsrGroupId,@MemberId,@CustomerId,@VendorId,@InvestorId,@AgentId,@BrokerId
+	END
+	CLOSE menu_cursor
+	DEALLOCATE menu_cursor
+END
+RETURN 0~@~55~@~2015-03-17 17:55:06.910~@~2007-02-10 17:07:09.000
+94~@~1~@~2~@~Y~@~Check Local User~@~User Manager   50 [Master: Before CRUD] Check Local User~@~Do not add/update users from legacy system~@~50~@~CrChkLocalUsr~@~UsrId,Active~@~Int,Char~@~UsrId1,Active1~@~Y~@~Y~@~N~@~Y~@~/* ??Design only */
+CREATE PROCEDURE [dbo].[CrChkLocalUsr]
+ @UsrId		int
+,@Active		char(1)
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @LoginName	nvarchar(32)
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.Usr WHERE UsrId = @UsrId AND ExtPassword is not null AND Active = @Active)
+BEGIN
+	RAISERROR('Please do not add or modify user information from legacy system except checking Active/Inactive.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2018-10-23 22:33:41.120~@~2017-04-25 08:39:01.000
+96~@~71~@~2~@~Y~@~Check Password Confirmation~@~Change Password   10 [Master: After CRUD] Check Password Confirmation~@~Ensure re-entered password is the same~@~10~@~CrChkPwdConfirm~@~UsrId,CurrUsrId,ForcePwdChg~@~Int,Int,Char~@~UsrId1,LUser.UsrId,ForcePwdChg~@~N~@~Y~@~N~@~N~@~CREATE PROCEDURE CrChkPwdConfirm
+ @UsrId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @LoginName	nvarchar(32)
+	,@UsrPassword	varbinary(32)
+	,@ConfirmPwd	varbinary(32)
+SET NOCOUNT ON
+SELECT @LoginName = LoginName, @UsrPassword = UsrPassword, @ConfirmPwd = ConfirmPwd FROM dbo.Usr WHERE UsrId = @UsrId
+IF @UsrPassword <> @ConfirmPwd
+BEGIN
+	RAISERROR('CrChkPwdConfirm: Please confirm your password by re-entering the same new password again.',18,2) WITH SETERROR
+	RETURN 1
+END
+ELSE EXEC dbo.SetLoginStatus @LoginName, 'Y'
+RETURN 0~@~55~@~2015-11-14 19:05:32.367~@~2007-01-22 13:00:40.000
+98~@~1~@~1~@~Y~@~Erase UsrPref & UsrImpr~@~User Manager  100 [Master: After CRUD] Erase UsrPref & UsrImpr~@~Cascade delete tables UsrPref & UsrImpr~@~100~@~IrDelUsrTables~@~~@~~@~~@~N~@~N~@~Y~@~N~@~CREATE PROCEDURE IrDelUsrTables
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DELETE FROM dbo.UsrPref WHERE UsrId is not null AND NOT EXISTS (SELECT 'true' FROM dbo.Usr WHERE dbo.Usr.UsrId = dbo.UsrPref.UsrId)
+DELETE FROM dbo.UsrImpr WHERE NOT EXISTS (SELECT 'true' FROM dbo.Usr WHERE dbo.Usr.UsrId = dbo.UsrImpr.UsrId)
+RETURN 0~@~55~@~2008-02-28 20:18:11.593~@~2007-02-10 17:12:20.000
+102~@~65~@~2~@~Y~@~Prevent delete when referenced~@~Report Criteria Group   10 [Master: Before CRUD] Prevent delete when referenced~@~Prevent delete when referenced~@~10~@~Cr_NoReportDelWhenRef~@~ReportGrpId~@~Int~@~ReportGrpId94~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Cr_NoReportDelWhenRef
+ @ReportGrpId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	@ReportGrpName	nvarchar(50)
+IF EXISTS (SELECT 'true' FROM dbo.ReportCri WHERE ReportGrpId = @ReportGrpId)
+BEGIN
+	SELECT @ReportGrpName = ReportGrpName FROM dbo.ReportGrp WHERE ReportGrpId = @ReportGrpId
+	RAISERROR('Cr_NoReportDelWhenRef: Cannot delete Criteria Group: %s. Please delete all criteria referenced and try again.',18,2,@ReportGrpName) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2006-12-08 09:10:28.420~@~
+105~@~73~@~2~@~Y~@~Verify Column Header and mapping~@~Screen Criteria Defined   20 [Master: After CRUD] Verify Column Header and mapping~@~Criteria column must have column header, mapping, etc.~@~20~@~Cr_ChkScreenColHeader~@~ScreenCriId~@~Int~@~ScreenCriId104~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkScreenColHeader
+ @ScreenCriId	Int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @DispTypeName	varchar(20)
+	,@RequiredValid	char(1)
+	,@MasterTableId	int
+	,@TableId	int
+SET NOCOUNT ON
+IF NOT EXISTS (SELECT 'true' FROM dbo.ScreenCriHlp a INNER JOIN RODesign.dbo.CtCultureType b ON a.CultureId = b.CultureId AND b.CultureDefault = 'Y'
+	WHERE a.ScreenCriId = @ScreenCriId)
+BEGIN
+	RAISERROR('Cr_ChkScreenColHeader: Criteria column must have a default Column Heading, please rectify and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+SELECT	 @DispTypeName = c.TypeName
+	,@RequiredValid = a.RequiredValid
+	,@MasterTableId = e.MasterTableId
+	,@TableId = d.TableId
+	FROM dbo.ScreenCri a
+	INNER JOIN RODesign.dbo.CtDisplayType c ON a.DisplayModeId = c.TypeId
+	INNER JOIN dbo.DbColumn d ON a.ColumnId = d.ColumnId
+	INNER JOIN dbo.Screen e ON a.ScreenId = e.ScreenId
+	WHERE a.ScreenCriId = @ScreenCriId
+IF @RequiredValid = 'N' AND lower(@DispTypeName) = 'checkbox'
+BEGIN
+	RAISERROR('Cr_ChkScreenColHeader: Please check "Require Validation" for "Check Box" display and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF @MasterTableId <> @TableId
+BEGIN
+	RAISERROR('Cr_ChkScreenColHeader: Please make sure criteria column selected belongs to the master table of the selected screen and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2015-07-09 18:29:59.503~@~2007-02-10 17:10:03.000
+106~@~73~@~1~@~Y~@~Update Search Column and mapping~@~Screen Criteria Defined   30 [Master: After CRUD] Update Search Column and mapping~@~Update hidden column ScreenCriDesc and ScreenCriMap~@~30~@~Ir_UpdScreenCriDesc~@~ScreenCriId~@~Int~@~ScreenCriId104~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdScreenCriDesc
+ @ScreenCriId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.ScreenCri SET ScreenCriDesc = b.ProgramName + right(space(6) + convert(varchar,a.TabIndex),6) + ': ' + c.ColumnHeader
+	FROM dbo.ScreenCri a INNER JOIN dbo.Screen b ON a.ScreenId = b.ScreenId
+	INNER JOIN dbo.ScreenCriHlp c ON a.ScreenCriId = c.ScreenCriId
+	INNER JOIN RODesign.dbo.CtCultureType d ON c.CultureId = d.CultureId AND d.CultureDefault = 'Y'
+	WHERE a.ScreenCriId = @ScreenCriId
+RETURN 0~@~55~@~2012-01-14 14:17:51.660~@~2007-02-10 17:10:13.000
+108~@~73~@~1~@~Y~@~Initialize Last Criteria~@~Screen Criteria Defined   40 [Master: After CRUD] Initialize Last Criteria~@~Insert if not exist in Last Criteria~@~40~@~IniLastCriteria~@~ScreenId,ReportId,UsrId~@~Int,Int,Int~@~ScreenId104,null,null~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE IniLastCriteria
+ @ScreenId		int
+,@ReportId		int
+,@UsrId			int
+/* WITH ENCRYPTION */
+AS
+DECLARE  @sql		varchar(8000)
+	,@dbDesDatabase	varchar(50)
+SET NOCOUNT ON
+/* ScreenCriId = 0 is used to hide/show screen criteria only */
+IF @ScreenId is not null AND @ScreenId <> 0
+BEGIN
+	INSERT dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId)
+		SELECT u.UsrId, a.ScreenId, a.ScreenCriId
+		FROM dbo.ScreenCri a INNER JOIN RODesign.dbo.Usr u ON a.ScreenId = @ScreenId AND u.Active = 'Y'
+		WHERE NOT EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE b.UsrId = u.UsrId AND b.ScreenId = @ScreenId AND a.ScreenCriId = b.ScreenCriId)
+	INSERT dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId, LastCriteria)
+		SELECT a.UsrId, @ScreenId, 0, 'Y' FROM RODesign.dbo.Usr a
+		WHERE a.Active = 'Y'
+		AND EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE a.UsrId = b.UsrId AND b.ScreenId = @ScreenId AND b.ScreenCriId <> 0)
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE a.UsrId = b.UsrId AND b.ScreenId = @ScreenId AND b.ScreenCriId = 0)
+END
+ELSE
+IF @ReportId is not null AND @ReportId <> 0
+BEGIN
+	INSERT dbo.ReportLstCri (UsrId, ReportId, ReportCriId)
+		SELECT u.UsrId, a.ReportId, a.ReportCriId
+		FROM dbo.ReportCri a INNER JOIN RODesign.dbo.Usr u ON a.ReportId = @ReportId AND u.Active = 'Y'
+		WHERE NOT EXISTS (SELECT 'true' FROM dbo.ReportLstCri b WHERE b.UsrId = u.UsrId AND b.ReportId = @ReportId AND a.ReportCriId = b.ReportCriId)
+END
+ELSE
+IF EXISTS (SELECT 'true' FROM RODesign.dbo.Usr WHERE UsrId = @UsrId AND Active = 'Y')
+BEGIN
+	DECLARE sysCursor CURSOR FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
+	OPEN sysCursor
+	FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SELECT @sql = ' UPDATE ' + @dbDesDatabase + '.dbo.ScreenLstCri SET ScreenId = a.ScreenId FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
+		+ ' INNER JOIN ' + @dbDesDatabase + '.dbo.ScreenLstCri b ON a.ScreenCriId = b.ScreenCriId AND b.UsrId = ' + convert(varchar,@UsrId)
+		+ ' INSERT ' + @dbDesDatabase + '.dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId)'
+		+ ' SELECT ' + convert(varchar,@UsrId) + ', a.ScreenId, a.ScreenCriId FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
+		+ ' WHERE NOT EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE a.ScreenCriId = b.ScreenCriId AND b.UsrId = ' + convert(varchar,@UsrId) + ')'
+		+ ' INSERT ' + @dbDesDatabase + '.dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId, LastCriteria)'
+		+ ' SELECT distinct ' + convert(varchar,@UsrId) + ', a.ScreenId, 0, ''Y'' FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
+		+ ' WHERE EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE b.UsrId = ' + convert(varchar,@UsrId) + ' AND a.ScreenId = b.ScreenId AND b.ScreenCriId <> 0)'
+		+ ' AND NOT EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE b.UsrId = ' + convert(varchar,@UsrId) + ' AND a.ScreenId = b.ScreenId AND b.ScreenCriId = 0)'
+		+ ' UPDATE ' + @dbDesDatabase + '.dbo.ReportLstCri SET ReportId = a.ReportId FROM ' + @dbDesDatabase + '.dbo.ReportCri a'
+		+ ' INNER JOIN ' + @dbDesDatabase + '.dbo.ReportLstCri b ON a.ReportCriId = b.ReportCriId AND b.UsrId = ' + convert(varchar,@UsrId)
+		+ ' INSERT ' + @dbDesDatabase + '.dbo.ReportLstCri (UsrId, ReportId, ReportCriId)'
+		+ ' SELECT ' + convert(varchar,@UsrId) + ', a.ReportId, a.ReportCriId FROM ' + @dbDesDatabase + '.dbo.ReportCri a'
+		+ ' WHERE NOT EXISTS (SELECT ''true'' FROM ' + @dbDesDatabase + '.dbo.ReportLstCri b WHERE a.ReportCriId = b.ReportCriId AND b.UsrId = ' + convert(varchar,@UsrId) + ')'
+		EXEC (@sql)
+		FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	END
+	CLOSE sysCursor
+	DEALLOCATE sysCursor
+END
+ELSE EXEC dbo.DelLastCriteria null,null,@UsrId
+RETURN 0~@~1~@~2007-02-10 17:10:29.390~@~2007-02-10 17:10:29.000
+109~@~73~@~1~@~Y~@~Erase Last Criteria~@~Screen Criteria Defined   50 [Master: After CRUD] Erase Last Criteria~@~Cascade delete Last Criteria~@~50~@~DelLastCriteria~@~ScreenId,ReportId,UsrId~@~Int,Int,Int~@~ScreenId104,null,null~@~N~@~N~@~Y~@~N~@~CREATE PROCEDURE DelLastCriteria
+ @ScreenId		int
+,@ReportId		int
+,@UsrId			int
+/* WITH ENCRYPTION */
+AS
+DECLARE  @sql		varchar(8000)
+	,@dbDesDatabase	varchar(50)
+SET NOCOUNT ON
+IF @ScreenId is not null AND @ScreenId <> 0
+BEGIN
+	DELETE FROM dbo.ScreenLstCri WHERE ScreenId = @ScreenId AND ScreenCriId <> 0
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ScreenCri a WHERE a.ScreenCriId = dbo.ScreenLstCri.ScreenCriId)
+	DELETE FROM dbo.ScreenLstCri WHERE ScreenId = @ScreenId AND ScreenCriId = 0
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ScreenLstCri b WHERE b.ScreenId = @ScreenId AND b.ScreenCriId <> 0)
+END
+ELSE
+IF @ReportId is not null AND @ReportId <> 0
+BEGIN
+	DELETE FROM dbo.ReportLstCri WHERE ReportId = @ReportId
+		AND NOT EXISTS (SELECT 'true' FROM dbo.ReportCri a WHERE a.ReportCriId = dbo.ReportLstCri.ReportCriId)
+END
+ELSE
+BEGIN
+	DECLARE sysCursor CURSOR FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
+	OPEN sysCursor
+	FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SELECT @sql = 'DELETE FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri WHERE UsrId = ' + convert(varchar,@UsrId)
+		+ ' DELETE FROM ' + @dbDesDatabase + '.dbo.ReportLstCri WHERE UsrId = ' + convert(varchar,@UsrId)
+		EXEC (@sql)
+		FETCH NEXT FROM sysCursor INTO @dbDesDatabase
+	END
+	CLOSE sysCursor
+	DEALLOCATE sysCursor
+END
+RETURN 0~@~1~@~2007-02-10 17:10:37.390~@~2007-02-10 17:10:37.000
+110~@~67~@~1~@~Y~@~Delete old report on rename~@~Report Definition   10 [Master: Before CRUD] Delete old report on rename~@~Delete old report on rename~@~10~@~Ir_DelOldRptonRen~@~ReportId,ProgramName~@~Int,VarChar~@~ReportId22,ProgramName22~@~N~@~Y~@~N~@~Y~@~CREATE PROCEDURE Ir_DelOldRptonRen
+ @ReportId	int
+,@ProgramName	varchar(50)
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT ProgramName FROM dbo.Report WHERE ReportId = @ReportId) <> @ProgramName
+	INSERT INTO dbo.ReportDel (ReportId, ProgramName) SELECT @ReportId, @ProgramName
+RETURN 0~@~55~@~2007-09-24 15:23:57.000~@~2007-02-10 17:08:58.000
+111~@~67~@~1~@~Y~@~Delete old report on delete~@~Report Definition   20 [Master: Before CRUD] Delete old report on delete~@~Delete old report on delete~@~20~@~Ir_DelOldRptonDel~@~ReportId,ProgramName~@~Int,VarChar~@~ReportId22,ProgramName22~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Ir_DelOldRptonDel
+ @ReportId	int
+,@ProgramName	varchar(50)
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.ReportCri WHERE ReportId = @ReportId)
+BEGIN
+	RAISERROR('Ir_DelOldScronDel: Please remove all report criteria for this report then try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF EXISTS (SELECT 'true' FROM dbo.ReportObj WHERE ReportId = @ReportId)
+BEGIN
+	RAISERROR('Ir_DelOldScronDel: Please remove all report columns for this report then try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+INSERT INTO dbo.ReportDel (ReportId, ProgramName) SELECT @ReportId, @ProgramName
+RETURN 0~@~55~@~2007-09-24 15:24:00.827~@~2007-02-10 17:08:53.000
+112~@~9~@~1~@~Y~@~Delete old screen on rename~@~Screen Definition   10 [Master: Before CRUD] Delete old screen on rename~@~Delete old screen on rename~@~10~@~Ir_DelOldScronRen~@~ScreenId,ProgramName~@~Int,VarChar~@~ScreenId15,ProgramName15~@~N~@~Y~@~N~@~Y~@~CREATE PROCEDURE Ir_DelOldScronRen
+ @ScreenId	int
+,@ProgramName	varchar(50)
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @oProgramName		varchar(50)
+	,@MultiDesignDb		char(1)
+SET NOCOUNT ON
+SELECT @oProgramName = ProgramName FROM dbo.Screen WHERE ScreenId = @ScreenId
+IF @oProgramName <> @ProgramName
+BEGIN
+	EXEC RODesign.dbo.MultiDesignDb @ScreenId, @MultiDesignDb OUTPUT
+	INSERT INTO dbo.ScreenDel (ScreenId, ProgramName, MultiDesignDb) SELECT @ScreenId, @oProgramName, @MultiDesignDb
+END
+RETURN 0~@~55~@~2007-10-17 04:54:16.483~@~2007-02-10 17:11:09.000
+113~@~9~@~1~@~Y~@~Delete old screen on delete~@~Screen Definition   20 [Master: Before CRUD] Delete old screen on delete~@~Delete old screen on delete~@~20~@~Ir_DelOldScronDel~@~ScreenId,ProgramName~@~Int,VarChar~@~ScreenId15,ProgramName15~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Ir_DelOldScronDel
+ @ScreenId	int
+,@ProgramName	varchar(50)
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @MultiDesignDb		char(1)
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.ScreenObj WHERE ScreenId = @ScreenId)
+BEGIN
+	RAISERROR('Ir_DelOldScronDel: Please remove all screen columns for this screen then try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF EXISTS (SELECT 'true' FROM dbo.ServerRule WHERE ScreenId = @ScreenId)
+BEGIN
+	RAISERROR('Ir_DelOldScronDel: Please remove all server rules for this screen then try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF EXISTS (SELECT 'true' FROM dbo.WebRule WHERE ScreenId = @ScreenId)
+BEGIN
+	RAISERROR('Ir_DelOldScronDel: Please remove all web rules for this screen then try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+EXEC RODesign.dbo.MultiDesignDb @ScreenId, @MultiDesignDb OUTPUT
+INSERT INTO dbo.ScreenDel (ScreenId, ProgramName, MultiDesignDb) SELECT @ScreenId, @ProgramName, @MultiDesignDb
+RETURN 0~@~55~@~2007-10-17 04:54:19.967~@~2007-02-10 17:11:01.000
+114~@~49~@~1~@~Y~@~Delete old wizard on rename~@~Wizard Object   10 [Master: Before CRUD] Delete old wizard on rename~@~Delete old wizard on rename~@~10~@~Ir_DelOldWizonRen~@~WizardId,ProgramName~@~Int,VarChar~@~WizardId71,ProgramName71~@~N~@~Y~@~N~@~Y~@~CREATE PROCEDURE Ir_DelOldWizonRen
+ @WizardId	int
+,@ProgramName	varchar(50)
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @oProgramName	varchar(50)
+SET NOCOUNT ON
+SELECT @oProgramName = ProgramName FROM dbo.Wizard WHERE WizardId = @WizardId
+IF @oProgramName <> @ProgramName INSERT INTO dbo.WizardDel (WizardId, ProgramName) SELECT @WizardId, @oProgramName
+RETURN 0~@~55~@~2012-01-06 03:46:27.067~@~2007-02-10 17:12:37.000
+115~@~49~@~1~@~Y~@~Delete old wizard on delete~@~Wizard Object   20 [Master: Before CRUD] Delete old wizard on delete~@~Delete old wizard on delete~@~20~@~Ir_DelOldWizonDel~@~WizardId,ProgramName~@~Int,VarChar~@~WizardId71,ProgramName71~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Ir_DelOldWizonDel
+ @WizardId	int
+,@ProgramName	varchar(50)
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+INSERT INTO dbo.WizardDel (WizardId, ProgramName) SELECT @WizardId, @ProgramName
+RETURN 0~@~55~@~2012-01-06 03:46:38.870~@~2007-02-10 17:12:34.000
+118~@~1~@~2~@~Y~@~Check authority to change user group~@~User Manager   70 [Master: After CRUD] Check authority to change user group~@~Verify if authorized to assign user group~@~70~@~CrChkAuthority~@~UsrId,UsrGroupLs,RowAuthoritys~@~Int,VarChar,VarChar~@~UsrId1,UsrGroupLs1,LImpr.RowAuthoritys~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE CrChkAuthority
+ @UsrGroupId		smallint
+,@RowAuthorityId	smallint
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @LoginName	nvarchar(32)
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.UsrGroup a INNER JOIN dbo.CtRowAuthority b ON a.RowAuthorityId = b.RowAuthorityId AND a.UsrGroupId = @UsrGroupId AND b.SysAdmin = 'Y')
+AND NOT EXISTS (SELECT 'true' FROM dbo.CtRowAuthority WHERE RowAuthorityId = @RowAuthorityId AND SysAdmin = 'Y')
+BEGIN
+	RAISERROR('CrChkAuthority: Please do not assign User Group "Sys Administrator"; only Sys Administrator is authorized to do that.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2018-10-23 22:42:18.747~@~2007-02-10 17:12:05.000
+119~@~22~@~2~@~Y~@~One Sys Administrator Only~@~Authority Default (ROW)   20 [Master: After CRUD] One Sys Administrator Only~@~One System Administrator Only~@~20~@~CrOneSysAdminOnly~@~~@~~@~~@~Y~@~Y~@~Y~@~N~@~-- ??Design only:
+CREATE PROCEDURE [dbo].[CrOneSysAdminOnly]
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.VwRowAuth WHERE SysAdmin = 'Y') <> 1
+BEGIN
+	RAISERROR('CrOneSysAdminOnly: Please make sure there is one and only one Sys Administrator and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2009-08-11 11:23:41.027~@~2009-08-11 11:23:33.000
+120~@~76~@~2~@~Y~@~One object type only~@~Button Override   40 [Master: After CRUD] One object type only~@~One of screen/ report/ wizard only~@~40~@~Cr_OneObjectTypeOnly~@~ButtonHlpId~@~Int~@~ButtonHlpId116~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_OneObjectTypeOnly
+ @ButtonHlpId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ScreenId	int
+	,@ReportId	int
+	,@WizardId	int
+	,@cnt	int
+SET NOCOUNT ON
+SELECT @cnt = 0
+SELECT @ScreenId = ScreenId, @ReportId = ReportId, @WizardId = WizardId FROM dbo.ButtonHlp WHERE ButtonHlpId = @ButtonHlpId
+IF @ScreenId is not null SELECT @cnt = @cnt + 1
+IF @ReportId is not null SELECT @cnt = @cnt + 1
+IF @WizardId is not null SELECT @cnt = @cnt + 1
+IF @cnt <> 1
+BEGIN
+	RAISERROR('Cr_OneObjectTypeOnly: Please select one and only one of Screen, Report or Wizard and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2007-05-29 13:35:26.797~@~2007-05-29 13:35:26.000
+121~@~2~@~1~@~N~@~Erase delete references of column~@~Data Table and Columns   70 [Detail: Before CRUD] Erase delete references of column~@~Cascade delete references of this column~@~70~@~Ir_DelRefColumn~@~ColumnId~@~Int~@~ColumnId5~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Ir_DelRefColumn
+ @ColumnId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DELETE FROM dbo.DbKey WHERE ColumnId = @ColumnId OR RefColumnId = @ColumnId
+RETURN 0~@~55~@~2012-01-18 11:30:13.353~@~
+123~@~79~@~1~@~Y~@~Update Client Rule Description~@~Client Rule   10 [Master: After CRUD] Update Client Rule Description~@~Update Client Rule Description etc.~@~10~@~Ir_UpdClientRule~@~ClientRuleId~@~Int~@~ClientRuleId127~@~Y~@~Y~@~N~@~N~@~~@~55~@~2016-10-12 21:13:27.993~@~2007-02-10 17:04:53.000
+126~@~73~@~1~@~N~@~Update screen criteria culture properties~@~Screen Criteria Defined   80 [Detail: After CRUD] Update screen criteria culture properties~@~Update screen criteria culture properties~@~80~@~Ir_UpdScreenCriHlp~@~ScreenCriHlpId~@~Int~@~ScreenCriHlpId105~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdScreenCriHlp
+ @ScreenCriHlpId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.ScreenCriHlp SET ScreenCriHlpDesc = b.ScreenCriDesc + ' (' + c.CultureTypeName + ')'
+	FROM dbo.ScreenCriHlp a
+	INNER JOIN dbo.ScreenCri b ON a.ScreenCriId = b.ScreenCriId
+	INNER JOIN RODesign.dbo.CtCultureType c ON a.CultureId = c.CultureId
+	WHERE a.ScreenCriHlpId = @ScreenCriHlpId
+RETURN 0~@~1~@~2007-02-10 17:10:40.670~@~2007-02-10 17:10:40.000
+127~@~69~@~1~@~N~@~Update report column culture properties~@~Report Criteria  130 [Detail: After CRUD] Update report column culture properties~@~Update report column culture properties~@~130~@~Ir_UpdReportCriHlp~@~ReportCriHlpId~@~Int~@~ReportCriHlpId98~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdReportCriHlp
+ @ReportCriHlpId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.ReportCriHlp SET ReportCriHlpDesc = b.ReportCriDesc + ' (' + c.CultureTypeName + ')'
+	FROM dbo.ReportCriHlp a
+	INNER JOIN dbo.ReportCri b ON a.ReportCriId = b.ReportCriId
+	INNER JOIN RODesign.dbo.CtCultureType c ON a.CultureId = c.CultureId
+	WHERE a.ReportCriHlpId = @ReportCriHlpId
+RETURN 0~@~1~@~2007-02-10 17:08:44.983~@~2007-02-10 17:08:44.000
+128~@~10~@~1~@~Y~@~Initialize Column Labels~@~Screen Object   80 [Master: After CRUD] Initialize Column Labels~@~Initialize column labels etc. for default culture~@~80~@~Ir_InitScreenObjHlp~@~ScreenObjId~@~Int~@~ScreenObjId14~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_InitScreenObjHlp
+ @ScreenObjId	int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @CultureId		tinyint
+	,@CultureTypeName	varchar(6)
+	,@ColumnId		int
+	,@ToolTip		nvarchar(200)
+	,@ColumnName		varchar(20)
+	,@ColumnDesc		varchar(100)
+SET NOCOUNT ON
+SELECT @CultureId = CultureId, @CultureTypeName = CultureTypeName FROM RODesign.dbo.CtCultureType WHERE CultureDefault = 'Y'
+SELECT @ColumnId = ColumnId, @ColumnName = ColumnName, @ColumnDesc = ColumnDesc FROM dbo.ScreenObj WHERE ScreenObjId = @ScreenObjId
+IF NOT EXISTS (SELECT 'true' FROM dbo.ScreenObjHlp WHERE CultureId = @CultureId and ScreenObjId = @ScreenObjId)
+BEGIN
+	SELECT @ToolTip = convert(varchar(200),ColObjective) FROM dbo.DbColumn WHERE ColumnId = @ColumnId
+	INSERT dbo.ScreenObjHlp (ScreenObjHlpDesc,ScreenObjId,CultureId,ColumnHeader,ToolTip)
+		SELECT @ColumnDesc + ' (' + @CultureTypeName + ')',@ScreenObjId,@CultureId,@ColumnName,@ToolTip
+END
+ELSE
+BEGIN
+	IF EXISTS (SELECT 'true' FROM dbo.DbColumn WHERE ColumnId = @ColumnId AND ColObjective is null)
+	BEGIN
+		SELECT @ToolTip = ToolTip FROM dbo.ScreenObjHlp WHERE CultureId = @CultureId and ScreenObjId = @ScreenObjId
+		UPDATE dbo.DbColumn SET ColObjective = convert(varchar(200),@ToolTip) WHERE ColumnId = @ColumnId
+	END
+END
+RETURN 0~@~1~@~2007-02-20 18:31:44.030~@~2007-02-20 18:31:43.000
+129~@~1006~@~1~@~N~@~Update Screen Column Cultures~@~Screen Object Label   30 [Detail: After CRUD] Update Screen Column Cultures~@~Update hidden column ScreenObjHlpDesc~@~30~@~Ir_UpdScreenObjHlp~@~ScreenObjHlpId~@~Int~@~ScreenObjHlpId21~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdScreenObjHlp
+ @ScreenObjHlpId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.ScreenObjHlp SET ScreenObjHlpDesc = b.ColumnDesc + ' (' + c.CultureTypeName + ')'
+	FROM dbo.ScreenObjHlp a
+	INNER JOIN dbo.ScreenObj b ON a.ScreenObjId = b.ScreenObjId
+	INNER JOIN RODesign.dbo.CtCultureType c ON a.CultureId = c.CultureId
+	WHERE a.ScreenObjHlpId = @ScreenObjHlpId
+RETURN 0~@~55~@~2015-07-08 21:27:23.737~@~2007-02-10 17:09:38.000
+130~@~13~@~1~@~N~@~Update Report Column Cultures~@~Report Object   60 [Detail: After CRUD] Update Report Column Cultures~@~Update report columns cultures properties~@~60~@~Ir_UpdReportObjHlp~@~ReportObjHlpId~@~Int~@~ReportObjHlpId99~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdReportObjHlp
+ @ReportObjHlpId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.ReportObjHlp SET ReportObjHlpDesc = b.ColumnDesc + ' (' + c.CultureTypeName + ')'
+	FROM dbo.ReportObjHlp a
+	INNER JOIN dbo.ReportObj b ON a.ReportObjId = b.ReportObjId
+	INNER JOIN RODesign.dbo.CtCultureType c ON a.CultureId = c.CultureId
+	WHERE a.ReportObjHlpId = @ReportObjHlpId
+RETURN 0~@~1~@~2007-02-12 18:50:07.263~@~2007-02-10 17:07:48.000
+131~@~10~@~2~@~Y~@~Check column consistency~@~Screen Object   60 [Master: After CRUD] Check column consistency~@~Check column consistency for the same screen~@~60~@~Cr_ChkScreenObj~@~ScreenObjId~@~Int~@~ScreenObjId14~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkScreenObj
+ @ScreenObjId	Int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @MaxMasIndex		int
+	,@MinDetIndex		int
+	,@MasterTableId		int
+	,@DetailTableId		int
+	,@MasterTable		char(1)
+	,@DisplayName		varchar(20)
+	,@DisplayDesc		varchar(20)
+	,@RefreshOnCUD		char(1)
+	,@RequiredValid		char(1)
+	,@ColumnId		int
+	,@TabFolderId		int
+	,@TabIndex		smallint
+	,@ScreenId		int
+	,@ScreenTypeName	char(2)
+	,@DdlRefTableId		int
+	,@DdlSrtTableId		int
+	,@DdlAdnTableId		int
+	,@DdlFtrTableId		int
+	,@DdlSrtColumnId	int
+	,@DdlAdnColumnId	int
+	,@DdlFtrColumnId	int
+	,@ColumnName		varchar(20)
+	,@PrevTabIndex		smallint
+	,@ScreenGrpId		int
+	,@ParentGrpId		int
+	,@RootGrpId		int
+	,@ColumnHeight		smallint
+SET NOCOUNT ON
+SELECT	 @MasterTableId = b.MasterTableId, @DetailTableId = b.DetailTableId, @MasterTable = a.MasterTable
+	,@TabFolderId = a.TabFolderId, @TabIndex = a.TabIndex, @ScreenId = a.ScreenId, @ScreenTypeName = c.ScreenTypeName
+	,@DdlRefTableId = x1.TableId, @DdlSrtTableId = x2.TableId, @DdlAdnTableId = x3.TableId, @DdlFtrTableId = x4.TableId
+	,@DdlSrtColumnId = a.DdlSrtColumnId, @DdlAdnColumnId = a.DdlAdnColumnId, @DdlFtrColumnId = a.DdlFtrColumnId
+	,@DisplayName = d.TypeName, @DisplayDesc = d.TypeDesc
+	,@RefreshOnCUD = a.RefreshOnCUD, @RequiredValid = a.RequiredValid, @ColumnId = a.ColumnId, @ColumnHeight = a.ColumnHeight
+	FROM dbo.ScreenObj a
+	INNER JOIN dbo.Screen b ON a.ScreenId = b.ScreenId
+	INNER JOIN RODesign.dbo.CtScreenType c ON b.ScreenTypeId = c.ScreenTypeId
+	INNER JOIN RODesign.dbo.CtDisplayType d ON a.DisplayModeId = d.TypeId
+	LEFT OUTER JOIN dbo.DbColumn x1 ON a.DdlRefColumnId = x1.ColumnId
+	LEFT OUTER JOIN dbo.DbColumn x2 ON a.DdlSrtColumnId = x2.ColumnId
+	LEFT OUTER JOIN dbo.DbColumn x3 ON a.DdlAdnColumnId = x3.ColumnId
+	LEFT OUTER JOIN dbo.DbColumn x4 ON a.DdlFtrColumnId = x4.ColumnId
+	WHERE a.ScreenObjId = @ScreenObjId
+IF @RequiredValid = 'N' AND @DisplayName = 'DataGrid'
+BEGIN
+	RAISERROR('Cr_ChkScreenObj: Please make sure this DataGrid column is mandatory and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF @RequiredValid = 'Y' AND NOT EXISTS (SELECT 1 FROM dbo.AuthCol WHERE ScreenObjId = @ScreenObjId AND ColVisible = 'Y' AND ColReadOnly = 'N')
+BEGIN
+	RAISERROR('Cr_ChkScreenObj: Please make sure the column is visible and editable before setting it to manadatory.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF @ColumnId is null AND @DisplayName IN ('ComboBox','DropDownList','ListBox','RadioButtonList','DataGrid')
+BEGIN
+	RAISERROR('Cr_ChkScreenObj: Please make sure column is available in the database and try again. For DataGridLink, please add a dummy column for now.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF @DetailTableId is null	/* I1 or I3 */
+BEGIN
+	IF @MasterTable = 'N'
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please make sure column is checked as master column and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @TabFolderId is null AND @ScreenTypeName = 'I1'
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please make sure column has tab folder assigned and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @TabFolderId is not null AND @ScreenTypeName = 'I3'
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please make sure column does not have tab folder assigned and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+END
+ELSE
+BEGIN
+	IF @MasterTable = 'Y' AND @TabFolderId is null
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please make sure master table column has tab folder assigned and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @MasterTable = 'N' AND @TabFolderId is not null
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please make sure detail table column does not have tab folder assigned and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	SELECT @MaxMasIndex = max(TabIndex) FROM dbo.ScreenObj WHERE ScreenId = @ScreenId AND MasterTable = 'Y'
+	SELECT @MinDetIndex = min(TabIndex) FROM dbo.ScreenObj WHERE ScreenId = @ScreenId AND MasterTable = 'N'
+	IF (@MaxMasIndex is not null AND @MasterTable = 'N' AND @MaxMasIndex >= @TabIndex) OR (@MinDetIndex is not null AND @MasterTable = 'Y' AND @MinDetIndex <= @TabIndex)
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please make sure all master table columns are ahead of detail columns and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+
+END
+IF @DdlSrtColumnId is not null
+BEGIN
+	IF @DdlRefTableId is null
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please do not select a sort column or select an appropriate display reference column from the same table for the dropdown/combobox.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	ELSE IF @DdlRefTableId <> @DdlSrtTableId
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please select a sort column from the same table of the display reference column and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+END
+IF @DdlAdnColumnId is not null
+BEGIN
+	IF @DdlRefTableId is null
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please do not select an additional column or select an appropriate display reference column from the same table for the dropdown/combobox.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	ELSE IF @DdlRefTableId <> @DdlAdnTableId
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please select additional column from the same table of the display reference column and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+END
+IF @DdlFtrColumnId is not null
+BEGIN
+	IF @DdlFtrTableId <> @MasterTableId AND (@DetailTableId is null OR @DdlFtrTableId <> @DetailTableId)
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please select filter column only from the the master or detail table and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @DdlAdnColumnId is null
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please select an additional column from the same table of the display reference column and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+END
+SELECT @RootGrpId = b.ParentGrpId, @ScreenGrpId = b.ScreenGrpId FROM dbo.ScreenObj a INNER JOIN dbo.ScreenGrp b ON a.ScreenGrpId = b.ScreenGrpId WHERE a.ScreenObjId = @ScreenObjId
+WHILE @RootGrpId is not null
+BEGIN
+	SELECT @RootGrpId = ParentGrpId, @ScreenGrpId = ScreenGrpId FROM dbo.ScreenGrp WHERE ScreenGrpId = @RootGrpId
+END
+SELECT @RootGrpId = @ScreenGrpId
+/* Set all un-grouped columns of the same screen to the same root */
+UPDATE dbo.ScreenObj SET ScreenGrpId = @RootGrpId FROM dbo.ScreenObj a INNER JOIN dbo.ScreenGrp b ON a.ScreenGrpId = b.ScreenGrpId WHERE a.ScreenId = @ScreenId AND b.ParentGrpId is null
+DECLARE curs CURSOR FAST_FORWARD FOR
+SELECT b.ParentGrpId, b.ScreenGrpId FROM dbo.ScreenObj a INNER JOIN dbo.ScreenGrp b ON a.ScreenGrpId = b.ScreenGrpId WHERE a.ScreenId = @ScreenId FOR READ ONLY
+OPEN curs
+FETCH NEXT FROM curs INTO @ParentGrpId, @ScreenGrpId
+WHILE @@FETCH_STATUS = 0
+BEGIN
+	WHILE @ParentGrpId is not null
+	BEGIN
+		SELECT @ParentGrpId = ParentGrpId, @ScreenGrpId = ScreenGrpId FROM dbo.ScreenGrp WHERE ScreenGrpId = @ParentGrpId
+	END
+	IF @ScreenGrpId <> @RootGrpId
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please make sure the Grouping of this Column has the same root as the others and try again.',18,2) WITH SETERROR
+		CLOSE curs
+		DEALLOCATE curs
+		RETURN 1
+	END
+	FETCH NEXT FROM curs INTO @ParentGrpId, @ScreenGrpId
+END
+CLOSE curs
+DEALLOCATE curs
+DECLARE curs CURSOR FAST_FORWARD FOR
+SELECT a.ColumnName, a.TabIndex FROM dbo.ScreenObj a
+	INNER JOIN dbo.ScreenTab c ON a.TabFolderId = c.ScreenTabId
+	WHERE a.ScreenId = @ScreenId AND a.TabFolderId is not null ORDER BY c.TabFolderOrder, a.TabIndex
+	FOR READ ONLY
+OPEN curs
+FETCH NEXT FROM curs INTO @ColumnName, @TabIndex
+SELECT @PrevTabIndex = -1
+WHILE @@FETCH_STATUS = 0
+BEGIN
+	IF @TabIndex < @PrevTabIndex
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: The TabFolder of Column "%s" is out of sync with the tab order, please rectify and try again.',18,2,@ColumnName) WITH SETERROR
+		CLOSE curs
+		DEALLOCATE curs
+		RETURN 1
+	END
+	SELECT @PrevTabIndex = @TabIndex
+	FETCH NEXT FROM curs INTO @ColumnName, @TabIndex
+END
+CLOSE curs
+DEALLOCATE curs
+IF @DisplayName in ('TextBox','Calendar')
+BEGIN
+	IF @RequiredValid = 'Y' AND EXISTS (SELECT 'true' FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId AND (ErrMessage is null or ltrim(ErrMessage) = space(0)))
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please specify an error message for this mandatory %s column and try again.',18,2,@DisplayName) WITH SETERROR
+		RETURN 1
+	END
+END
+ELSE
+BEGIN
+	IF EXISTS (SELECT 'true' FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId AND ErrMessage is not null and ltrim(ErrMessage) <> space(0))
+	BEGIN
+		RAISERROR('Cr_ChkScreenObj: Please do not specify any error message for this %s column and try again.',18,2,@DisplayName) WITH SETERROR
+		RETURN 1
+	END
+END
+IF @RefreshOnCUD = 'Y' AND @DisplayName not in ('DropDownList','ComboBox')
+BEGIN
+	RAISERROR('Cr_ChkScreenObj: Please uncheck "Refresh on CUD" for this non-dropdown, non-combobox column and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+IF @ColumnHeight is null AND @DisplayDesc in ('MultiLine','DataGridLink')
+BEGIN
+	RAISERROR('Cr_ChkScreenObj: Please provide the height in px for this Multiline column or in rows for this DataGridLink column and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2007-08-15 10:39:53.707~@~2007-08-15 10:39:53.000
+132~@~14~@~1~@~Y~@~Update server rule order~@~Server Rule   20 [Master: After CRUD] Update server rule order~@~Update server rule execution order~@~20~@~Ir_UpdServerRule~@~ScreenId,CultureId~@~Int,SmallInt~@~ScreenId24,LUser.CultureId~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[Ir_UpdServerRule]
+ @ScreenId		int
+,@ServerRuleId	int
+,@CultureId		smallint
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ii		int
+	,@RuleId	int
+	,@RuleOrder	smallint
+SET NOCOUNT ON
+SELECT @RuleOrder = RuleOrder FROM dbo.ServerRule WHERE ServerRuleId = @ServerRuleId
+/* Need to reorder Tab Index */
+IF NOT (@RuleOrder is not null AND right(space(1)+convert(varchar,@RuleOrder),1) = '0')
+BEGIN
+	UPDATE dbo.ServerRule SET RuleOrder = 32757 WHERE ScreenId = @ScreenId AND RuleOrder is null
+	SELECT @ii = 1
+	DECLARE cur CURSOR FOR SELECT ServerRuleId, RuleOrder FROM dbo.ServerRule WHERE ScreenId = @ScreenId ORDER BY RuleOrder FOR READ ONLY
+	OPEN cur
+	FETCH NEXT FROM cur INTO @RuleId, @RuleOrder
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		UPDATE dbo.ServerRule SET RuleOrder = @ii
+			, RuleDesc = isnull(b.ScreenTitle,space(0)) + right(space(5)+convert(varchar,@ii * 10),5) + ': ' + a.RuleName
+			FROM dbo.ServerRule a INNER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId AND b.CultureId = @CultureId
+			WHERE a.ServerRuleId = @RuleId
+		IF @ii > 3275 SELECT @ii = 3276 ELSE SELECT @ii = @ii + 1
+		FETCH NEXT FROM cur INTO @RuleId, @RuleOrder
+	END
+	CLOSE cur
+	DEALLOCATE cur
+	UPDATE dbo.ServerRule SET RuleOrder = RuleOrder * 10 WHERE ScreenId = @ScreenId
+END
+UPDATE dbo.ServerRule SET RuleDesc = isnull(b.ScreenTitle,space(0)) + right(space(5)+convert(varchar,a.RuleOrder),5) + ': ' + a.RuleName
+	FROM dbo.ServerRule a INNER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId AND b.CultureId = @CultureId
+	WHERE a.ServerRuleId = @ServerRuleId
+RETURN 0~@~55~@~2015-08-16 05:48:17.450~@~2012-01-20 11:28:02.000
+133~@~13~@~1~@~Y~@~Update hidden columns~@~Report Object   30 [Master: After CRUD] Update hidden columns~@~Update hidden columns etc.~@~30~@~Ir_UpdReportObj~@~ReportObjId~@~Int~@~ReportObjId23~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdReportObj
+ @ReportObjId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ReportId		int
+	,@ProgramName		varchar(50)
+	,@TabIndex		smallint
+	,@ii			int
+	,@ObjId			int
+SET NOCOUNT ON
+SELECT @TabIndex = TabIndex, @ReportId = ReportId FROM dbo.ReportObj WHERE ReportObjId = @ReportObjId
+SELECT @ProgramName = ProgramName FROM dbo.Report WHERE ReportId = @ReportId
+/* Need to reorder Tab Index */
+IF NOT (@TabIndex is not null AND right(space(1)+convert(varchar,@TabIndex),1) = '0')
+BEGIN
+	UPDATE dbo.ReportObj SET TabIndex = 32757 WHERE ReportId = @ReportId AND TabIndex is null
+	SELECT @ii = 1
+	DECLARE cur CURSOR FOR SELECT ReportObjId, TabIndex FROM dbo.ReportObj WHERE ReportId = @ReportId ORDER BY TabIndex FOR READ ONLY
+	OPEN cur
+	FETCH NEXT FROM cur INTO @ObjId, @TabIndex
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		UPDATE dbo.ReportObj SET TabIndex = @ii
+			, ColumnDesc = @ProgramName + right(space(6) + convert(varchar,@ii * 10),6) + ': ' + ColumnName
+			WHERE ReportObjId = @ObjId
+		IF @ii > 3275 SELECT @ii = 3276 ELSE SELECT @ii = @ii + 1
+		FETCH NEXT FROM cur INTO @ObjId, @TabIndex
+	END
+	CLOSE cur
+	DEALLOCATE cur
+	UPDATE dbo.ReportObj SET TabIndex = TabIndex * 10 WHERE ReportId = @ReportId
+END
+UPDATE dbo.ReportObj SET ColumnDesc = @ProgramName + right(space(6) + convert(varchar,TabIndex),6) + ': ' + ColumnName WHERE ReportObjId = @ReportObjId
+RETURN 0~@~55~@~2009-09-15 15:07:30.033~@~2007-02-12 18:59:41.000
+135~@~79~@~2~@~Y~@~Check Client Rule setup~@~Client Rule   20 [Master: After CRUD] Check Client Rule setup~@~Verify all Client Rule parameters~@~20~@~Cr_ChkClientRule~@~ClientRuleId~@~Int~@~ClientRuleId127~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkClientRule
+ @ClientRuleId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ScreenObjHlpId	int
+	,@ScreenCriHlpId	int
+	,@ReportCriHlpId	int
+SET NOCOUNT ON
+SELECT @ScreenObjHlpId = ScreenObjHlpId, @ScreenCriHlpId = ScreenCriHlpId, @ReportCriHlpId = ReportCriHlpId
+	FROM dbo.ClientRule a WHERE a.ClientRuleId = @ClientRuleId
+IF @ScreenObjHlpId is null AND @ScreenCriHlpId is null AND @ReportCriHlpId is null
+BEGIN
+	RAISERROR('Cr_ChkClientRule: Please select one of the Screen Columns, Screen Criteria or Report Criteria and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2007-02-10 17:04:44.327~@~2007-02-10 17:04:44.000
+136~@~80~@~1~@~Y~@~Update Web Rule Description~@~Web Rule   20 [Master: After CRUD] Update Web Rule Description~@~Update Web Rule Description etc.~@~20~@~Ir_UpdWebRule~@~WebRuleId,CultureId~@~Int,SmallInt~@~WebRuleId128,LUser.CultureId~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[Ir_UpdWebRule]
+ @WebRuleId		int
+,@CultureId		smallint
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.WebRule SET RuleDesc = isnull(b.ScreenTitle,space(0)) + ': ' + a.RuleName
+	FROM dbo.WebRule a INNER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId AND b.CultureId = @CultureId
+	WHERE a.WebRuleId = @WebRuleId
+RETURN 0~@~55~@~2012-01-01 16:29:39.267~@~2012-01-01 16:29:39.000
+137~@~50~@~1~@~Y~@~Update Wizard Rule Description~@~Wizard Rule   10 [Master: After CRUD] Update Wizard Rule Description~@~Update Wizard Rule Description etc.~@~10~@~Ir_UpdWizardRule~@~WizardId,WizardRuleId~@~Int,Int~@~WizardId73,WizardRuleId73~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdWizardRule
+ @WizardId		int
+,@WizardRuleId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ii		int
+	,@RuleId	int
+	,@RuleOrder	smallint
+SET NOCOUNT ON
+SELECT @RuleOrder = RuleOrder FROM dbo.WizardRule WHERE WizardRuleId = @WizardRuleId
+/* Need to reorder Tab Index */
+IF NOT (@RuleOrder is not null AND right(space(1)+convert(varchar,@RuleOrder),1) = '0')
+BEGIN
+	UPDATE dbo.WizardRule SET RuleOrder = 32757 WHERE WizardId = @WizardId AND RuleOrder is null
+	SELECT @ii = 1
+	DECLARE cur CURSOR FOR SELECT WizardRuleId, RuleOrder FROM dbo.WizardRule WHERE WizardId = @WizardId ORDER BY RuleOrder FOR READ ONLY
+	OPEN cur
+	FETCH NEXT FROM cur INTO @RuleId, @RuleOrder
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		UPDATE dbo.WizardRule SET RuleOrder = @ii
+			, RuleDesc = isnull(b.WizardTitle,space(0)) + right(space(5)+convert(varchar,@ii * 10),5) + ': ' + a.RuleName
+			FROM dbo.WizardRule a INNER JOIN dbo.Wizard b ON a.WizardId = b.WizardId
+			WHERE WizardRuleId = @RuleId
+		IF @ii > 3275 SELECT @ii = 3276 ELSE SELECT @ii = @ii + 1
+		FETCH NEXT FROM cur INTO @RuleId, @RuleOrder
+	END
+	CLOSE cur
+	DEALLOCATE cur
+	UPDATE dbo.WizardRule SET RuleOrder = RuleOrder * 10 WHERE WizardId = @WizardId
+END
+UPDATE dbo.WizardRule SET RuleDesc = isnull(b.WizardTitle,space(0)) + right(space(5)+convert(varchar,a.RuleOrder),5) + ': ' + a.RuleName
+	FROM dbo.WizardRule a INNER JOIN dbo.Wizard b ON a.WizardId = b.WizardId
+	WHERE a.WizardRuleId = @WizardRuleId
+RETURN 0~@~55~@~2012-01-06 03:52:27.193~@~2007-02-12 18:58:21.000
+138~@~80~@~2~@~Y~@~Check Web Rule setup~@~Web Rule   10 [Master: After CRUD] Check Web Rule setup~@~Verify all Web Rule parameters~@~10~@~Cr_ChkWebRule~@~WebRuleId~@~Int~@~WebRuleId128~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkWebRule
+ @WebRuleId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ScreenObjId		int
+	,@ScreenCriId		int
+	,@ButtonTypeId		tinyint
+	,@EventCode		char(6)
+SET NOCOUNT ON
+SELECT @ScreenCriId = a.ScreenCriId, @ScreenObjId = a.ScreenObjId, @ButtonTypeId = a.ButtonTypeId, @EventCode = b.EventCode
+	FROM dbo.WebRule a INNER JOIN RODesign.dbo.CtEvent b ON a.EventId = b.EventId WHERE a.WebRuleId = @WebRuleId
+IF (@EventCode = 'DEFVAL' OR @EventCode = 'DEFVAG' OR @EventCode = 'ITMDTB' OR @EventCode = 'DELROG' OR @EventCode = 'ENPGLD')
+	AND NOT (@ScreenCriId is null AND @ScreenObjId is null AND @ButtonTypeId is null)
+BEGIN
+	RAISERROR('{2}',18,2) WITH SETERROR
+	RETURN 1
+END
+IF @EventCode = 'BUTCLK' AND NOT (@ScreenCriId is null AND @ScreenObjId is null AND @ButtonTypeId is not null)
+BEGIN
+	RAISERROR('{3}',18,2) WITH SETERROR
+	RETURN 1
+END
+IF @EventCode = 'SELCHG' AND NOT (@ScreenCriId is not null AND @ScreenObjId is null AND @ButtonTypeId is null)
+	 AND NOT (@ScreenCriId is null AND @ScreenObjId is not null AND @ButtonTypeId is null)
+BEGIN
+	RAISERROR('{4}',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2012-01-01 16:04:57.263~@~2007-02-10 17:12:28.000
+139~@~10~@~2~@~Y~@~Prevent erase if web rule exists~@~Screen Object   10 [Master: Before CRUD] Prevent erase if web rule exists~@~Prevent erase of a screen column if relevant web rule exists~@~10~@~Cr_RmScrObjWRule~@~ScreenObjId~@~Int~@~ScreenObjId14~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Cr_RmScrObjWRule
+ @ScreenObjId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.WebRule WHERE ScreenObjId = @ScreenObjId)
+BEGIN
+	RAISERROR('{5}',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2017-05-18 21:06:20.240~@~2007-02-10 17:05:28.000
+140~@~10~@~2~@~Y~@~Prevent erase of this column if client rule exists~@~Screen Object   20 [Master: Before CRUD] Prevent erase of this column if client rule exists~@~Prevent erase of this column if client rule exists~@~20~@~Cr_RmScrObjCRule~@~ScreenObjId~@~Int~@~ScreenObjId14~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Cr_RmScrObjCRule
+ @ScreenObjHlpId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.ClientRule WHERE ScreenObjHlpId = @ScreenObjHlpId)
+BEGIN
+	RAISERROR('{6}',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2013-01-22 22:01:19.450~@~2007-02-10 17:05:33.000
+142~@~73~@~2~@~N~@~Prevent erase if client rule exists~@~Screen Criteria Defined   70 [Detail: Before CRUD] Prevent erase if client rule exists~@~Prevent erase if client rule exists~@~70~@~Cr_RmScrCriCRule~@~ScreenCriHlpId~@~Int~@~ScreenCriHlpId105~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Cr_RmScrCriCRule
+ @ScreenCriHlpId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.ClientRule WHERE ScreenCriHlpId = @ScreenCriHlpId)
+BEGIN
+	RAISERROR('{8}',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2007-02-10 17:09:46.000~@~2007-02-10 17:09:45.000
+143~@~69~@~2~@~N~@~Prevent erase if client rule exists~@~Report Criteria  120 [Detail: Before CRUD] Prevent erase if client rule exists~@~Prevent erase if client rule exists~@~120~@~Cr_RmRptCriCRule~@~ReportCriHlpId~@~Int~@~ReportCriHlpId98~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Cr_RmRptCriCRule
+ @ReportCriHlpId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.ClientRule WHERE ReportCriHlpId = @ReportCriHlpId)
+BEGIN
+	RAISERROR('{9}',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2007-02-10 17:07:56.187~@~2007-02-10 17:07:56.000
+144~@~82~@~1~@~Y~@~Initialize version release~@~Release Tracking   10 [Master: After CRUD] Initialize version release~@~Initialize version release description and add new version if all dates assigned~@~10~@~Ir_InitAppInfo~@~AppInfoId~@~Int~@~AppInfoId135~@~N~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_InitAppInfo
+ @AppInfoId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @VersionMa	smallint
+	,@VersionMi	smallint
+	,@VersionDt	datetime
+	,@AppInfoDesc	varchar(50)
+SET NOCOUNT ON
+SELECT @VersionMa = VersionMa, @VersionMi = VersionMi, @VersionDt = VersionDt FROM dbo.AppInfo WHERE AppInfoId = @AppInfoId
+SELECT @AppInfoDesc = right(space(3)+convert(varchar,@VersionMa),4) + '.' + right(space(3)+convert(varchar,@VersionMi),4)
+	+ case when @VersionDt is null then space(0)
+	else '.' + right(convert(varchar,datepart(yy,@VersionDt)),1) + right('0'+convert(varchar,datepart(mm,@VersionDt)),2)
+	+ right('0'+convert(varchar,datepart(dd,@VersionDt)),2) end
+UPDATE dbo.AppInfo SET AppInfoDesc = @AppInfoDesc WHERE AppInfoId = @AppInfoId
+IF @VersionDt is not null
+	UPDATE dbo.AppItem
+	SET AppItemDesc =  @AppInfoDesc + ':' + ObjectTypeCd + ':' + right(space(4)+convert(varchar,ItemOrder),5) + ':' + isnull(LanguageCd,'*')
+		+ ':' + isnull(FrameworkCd,'*') + ':' + isnull(DbProviderCd,'*') + ': ' + AppItemName
+	WHERE AppInfoId = @AppInfoId
+IF NOT EXISTS (SELECT 'true' FROM dbo.AppInfo WHERE VersionDt is null)
+BEGIN
+	-- AppInfo must have one row to start cause this is not called when no row is being updated.
+	SELECT @VersionMa = max(VersionMa), @VersionMi = max(VersionMi) FROM dbo.AppInfo
+	IF @VersionMi >= 9999 SELECT @VersionMa = @VersionMa + 1, @VersionMi = 0 ELSE SELECT @VersionMi = @VersionMi + 1
+	IF @VersionMa > 9999
+	BEGIN
+		RAISERROR('Ir_InitAppInfo: Major Version Number may not exceed 9999, please try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	INSERT INTO dbo.AppInfo (AppInfoDesc, VersionMa, VersionMi)
+	SELECT right(space(3)+convert(varchar,@VersionMa),4) + '.' + right(space(3)+convert(varchar,@VersionMi),4), @VersionMa, @VersionMi
+END
+RETURN 0~@~1~@~2007-02-12 12:44:43.857~@~2007-02-12 12:44:43.000
+145~@~83~@~1~@~Y~@~Update description, etc.~@~Release Content   20 [Master: After CRUD] Update description, etc.~@~Update description, etc.~@~20~@~Ir_UpdAppItem~@~AppItemId,DbId~@~Int,TinyInt~@~AppItemId136,LCurr.DbId~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_UpdAppItem
+ @AppItemId	int
+,@DbId		tinyint
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @AppInfoId	int
+	,@ItemOrder	smallint
+	,@ObjectTypeCd	char(1)
+	,@AppInfoDesc	varchar(50)
+	,@ii		int
+	,@ItemId	int
+SET NOCOUNT ON
+SELECT @AppInfoId = AppInfoId, @ItemOrder = ItemOrder, @ObjectTypeCd = ObjectTypeCd FROM dbo.AppItem WHERE AppItemId = @AppItemId
+SELECT @AppInfoDesc = AppInfoDesc FROM dbo.AppInfo WHERE AppInfoId = @AppInfoId
+/* Reorder Execution order: Sybase do not have static cursor or create temp table in a transaction */
+IF NOT (@ItemOrder is not null AND right(space(1)+convert(varchar,@ItemOrder),1) = '0')
+BEGIN
+	UPDATE dbo.AppItem SET ItemOrder = 32757 WHERE AppInfoId = @AppInfoId AND ObjectTypeCd = @ObjectTypeCd AND ItemOrder is null
+	SELECT @ii = 1
+	DECLARE cur CURSOR FOR SELECT AppItemId, ItemOrder FROM dbo.AppItem WHERE AppInfoId = @AppInfoId AND ObjectTypeCd = @ObjectTypeCd ORDER BY ItemOrder FOR READ ONLY
+	OPEN cur
+	FETCH NEXT FROM cur INTO @ItemId, @ItemOrder
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		UPDATE dbo.AppItem SET ItemOrder = @ii
+			, AppItemDesc = @AppInfoDesc + ':' + ObjectTypeCd + ':' + right(space(4)+convert(varchar,@ii * 10),5) + ':' + isnull(LanguageCd,'*') + ':' + isnull(FrameworkCd,'*') + ':' + isnull(DbProviderCd,'*') + ': ' + AppItemName
+			WHERE AppItemId = @ItemId
+		IF @ii > 3275 SELECT @ii = 3276 ELSE SELECT @ii = @ii + 1
+		FETCH NEXT FROM cur INTO @ItemId, @ItemOrder
+	END
+	CLOSE cur
+	DEALLOCATE cur
+	UPDATE dbo.AppItem SET ItemOrder = ItemOrder * 10 WHERE AppInfoId = @AppInfoId AND ObjectTypeCd = @ObjectTypeCd
+END
+UPDATE dbo.AppItem SET
+	 AppItemDesc = @AppInfoDesc + ':' + ObjectTypeCd + ':' + right(space(4)+convert(varchar,ItemOrder),5) + ':' + isnull(LanguageCd,'*') + ':' + isnull(FrameworkCd,'*') + ':' + isnull(DbProviderCd,'*') + ': ' + AppItemName
+	,AppItemLink = 'javascript:window.open("AdmAppItem.aspx?id=213&key=' + convert(varchar,@AppItemId) + '&typ=N&sys=' + convert(varchar,@DbId) + '","AI213","scrollbars=yes,resizable=yes,width=850,height=500");'
+WHERE AppItemId = @AppItemId
+RETURN 0~@~1~@~2007-02-13 11:15:00.763~@~2007-02-13 11:15:00.000
+147~@~83~@~2~@~Y~@~Check language code, path format, etc.~@~Release Content   10 [Master: After CRUD] Check language code, path format, etc.~@~Check language code, path format, etc.~@~10~@~Cr_ChkAppItem~@~AppItemId~@~Int~@~AppItemId136~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkAppItem
+ @AppItemId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @RelativePath	varchar(100)
+SET NOCOUNT ON
+SELECT @RelativePath = RelativePath FROM dbo.AppItem WHERE AppItemId = @AppItemId
+IF @RelativePath is not null AND right(@RelativePath,1) <> '\'
+BEGIN
+	RAISERROR('Cr_ChkAppItem: Please either empty the Relative Path for current path or make sure it ends with "\" and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~1~@~2007-02-10 17:07:20.640~@~2007-02-10 17:07:20.000
+153~@~14~@~4~@~Y~@~Drop stored procedure as server rule~@~Server Rule   10 [Master: Before CRUD] Drop stored procedure as server rule~@~Drop server rule stored procedure on target database upon delete~@~10~@~Ae_DelServerRule~@~ServerRuleId~@~Int~@~ServerRuleId24~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Ae_DelServerRule
+ @ServerRuleId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ScreenId	int
+	,@ProcedureName	varchar(28)
+	,@MultiDesignDb	char(1)
+	,@AppDb		varchar(50)
+	,@DesDb		varchar(50)
+	,@dClause	varchar(4000)
+SET NOCOUNT ON
+SELECT @ScreenId = ScreenId, @ProcedureName = ProcedureName FROM dbo.ServerRule WHERE ServerRuleId = @ServerRuleId
+SELECT @MultiDesignDb = b.MultiDesignDb FROM dbo.Screen a INNER JOIN dbo.DbTable b on a.MasterTableId = b.TableId WHERE a.ScreenId = @ScreenId
+SELECT @dClause = 'IF EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = object_id(''''' + @ProcedureName + ''''') AND type=''''P'''') DROP PROCEDURE ' + @ProcedureName
+IF @MultiDesignDb = 'Y'
+BEGIN
+	DECLARE curs CURSOR FAST_FORWARD FOR SELECT dbDesDatabase FROM [[?]]Design.dbo.Systems FOR READ ONLY
+	OPEN curs FETCH NEXT FROM curs INTO @DesDb
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		EXEC (@DesDb + '.dbo.MkStoredProcedure ''' + @dClause + '''')
+		FETCH NEXT FROM curs INTO @DesDb
+	END
+	CLOSE curs
+	DEALLOCATE curs
+END
+ELSE
+BEGIN
+	EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @dClause + '''')
+END
+RETURN 0~@~55~@~2015-08-16 05:54:42.277~@~
+155~@~65~@~2~@~Y~@~Prevent infinite loop~@~Report Criteria Group   20 [Master: After CRUD] Prevent infinite loop~@~Parent Group cannnot loop back to itself~@~20~@~Cr_ChkReportGrpLoop~@~ReportGrpId~@~Int~@~ReportGrpId94~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkReportGrpLoop
+ @ReportGrpId	int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ParentGrpId	int
+	,@ii		int
+	,@Infinite	char(1)
+	,@ReportGrpName	nvarchar(50)
+SET NOCOUNT ON
+SELECT @ParentGrpId = ParentGrpId FROM dbo.ReportGrp WHERE ReportGrpId = @ReportGrpId
+IF @ParentGrpId is not null
+BEGIN
+	SELECT @ii = 0, @Infinite = 'Y'
+	WHILE @ii < 32 AND @Infinite = 'Y'
+	BEGIN
+		SELECT @ParentGrpId = ParentGrpId FROM dbo.ReportGrp WHERE ReportGrpId = @ParentGrpId
+		IF @ParentGrpId is null  SELECT @Infinite = 'N'
+		SELECT @ii = @ii + 1
+	END
+	IF @Infinite = 'Y'
+	BEGIN
+		SELECT @ReportGrpName = ReportGrpName FROM dbo.ReportGrp WHERE ReportGrpId = @ReportGrpId
+		RAISERROR('Cr_ChkReportGrpLoop: Please make sure the parent for "%s" does not lead to itself and try again.',18,2,@ReportGrpName) WITH SETERROR
+		RETURN 1
+	END
+END
+RETURN 0~@~1~@~2006-12-08 09:14:47.670~@~
+156~@~35~@~2~@~Y~@~Prevent infinite loop~@~Menu Item   20 [Master: After CRUD] Prevent infinite loop~@~Parent Group cannnot loop back to itself~@~20~@~Cr_ChkMenuLoop~@~MenuId~@~Int~@~MenuId39~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkMenuLoop
+ @MenuId	int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ParentId	int
+	,@ii		int
+	,@Infinite	char(1)
+	,@MenuName	nvarchar(50)
+SET NOCOUNT ON
+SELECT @ParentId = ParentId FROM dbo.Menu WHERE MenuId = @MenuId
+IF @ParentId is not null
+BEGIN
+	SELECT @ii = 0, @Infinite = 'Y'
+	WHILE @ii < 32 AND @Infinite = 'Y'
+	BEGIN
+		SELECT @ParentId = ParentId FROM dbo.Menu WHERE MenuId = @ParentId
+		IF @ParentId is null  SELECT @Infinite = 'N'
+		SELECT @ii = @ii + 1
+	END
+	IF @Infinite = 'Y'
+	BEGIN
+		SELECT @MenuName = MenuName FROM dbo.Menu WHERE MenuId = @MenuId
+		RAISERROR('Cr_ChkMenuLoop: Please make sure the parent for "%s" does not lead to itself and try again.',18,2,@MenuName) WITH SETERROR
+		RETURN 1
+	END
+END
+RETURN 0~@~1~@~2006-12-08 09:55:08.560~@~
+157~@~2~@~1~@~N~@~Update Data Column information by column change~@~Data Table and Columns   60 [Detail: Before CRUD] Update Data Column information by column change~@~Update Data Column information by column change~@~60~@~Ir_UpdColByCol~@~ColumnId,ColumnName~@~Int,VarChar~@~ColumnId5,ColumnName5~@~N~@~Y~@~N~@~Y~@~CREATE PROCEDURE Ir_UpdColByCol
+ @ColumnId	int
+,@ColumnName	varchar(20)
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @PrevColName	varchar(20)
+	,@ColName	varchar(20)
+	,@TableId	int
+	,@SystemId	tinyint
+	,@TableName	varchar(20)
+	,@AppDb		varchar(50)
+	,@Oid		int
+SET NOCOUNT ON
+SELECT @PrevColName = PrevColName, @ColName = ColumnName, @TableId = TableId FROM dbo.DbColumn WHERE ColumnId = @ColumnId
+SELECT @SystemId = SystemId, @TableName = TableName FROM dbo.DbTable WHERE TableId = @TableId
+SELECT @AppDb = dbAppDatabase FROM [[?]]Design.dbo.Systems WHERE SystemId = @SystemId
+SELECT @Oid = object_id(@AppDb + '.dbo.' + @TableName)
+-- PrevColName is only meaningfull in the context of the existing column in the physical database:
+IF @ColumnName <> @ColName AND @Oid is not null
+	AND EXISTS (SELECT 1 FROM dbo.syscolumns WHERE id = @Oid AND name = @ColName)
+	AND NOT (@PrevColName is not null AND ltrim(@PrevColName) <> ''
+	AND EXISTS (SELECT 1 FROM dbo.syscolumns WHERE id = @Oid AND name = @PrevColName))
+	UPDATE dbo.DbColumn SET PrevColName = @ColName WHERE ColumnId = @ColumnId
+RETURN 0~@~55~@~2011-04-08 15:07:14.407~@~
+158~@~2~@~1~@~N~@~Update Column order and default by column change~@~Data Table and Columns   90 [Detail: After CRUD] Update Column order and default by column change~@~Update Column order and default by column change~@~90~@~Ir_UpdIndByCol~@~ColumnId~@~Int~@~ColumnId5~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[Ir_UpdIndByCol]
+ @ColumnId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ii		int
+	,@ColId		int
+	,@ColumnIndex	smallint
+	,@TableId	int
+	,@DefaultValue	nvarchar(50)
+	,@NumericData	char(1)
+	,@ColumnIdentity char(1)
+	,@AllowNulls	char(1)
+SET NOCOUNT ON
+SELECT @ColumnIndex = a.ColumnIndex, @TableId = a.TableId, @DefaultValue = a.DefaultValue, @NumericData = b.NumericData
+	, @ColumnIdentity = a.ColumnIdentity, @AllowNulls = a.AllowNulls
+	FROM dbo.DbColumn a INNER JOIN RODesign.dbo.CtDataType b ON a.DataType = b.DataTypeId WHERE a.ColumnId = @ColumnId
+/* Need to reorder Tab Index */
+IF NOT (@ColumnIndex is not null AND right(space(1)+convert(varchar,@ColumnIndex),1) = '0')
+BEGIN
+	UPDATE dbo.DbColumn SET ColumnIndex = 32757 WHERE TableId = @TableId AND ColumnIndex is null
+	SELECT @ii = 1
+	DECLARE cur CURSOR FOR SELECT ColumnId, ColumnIndex FROM dbo.DbColumn WHERE TableId = @TableId ORDER BY ColumnIndex FOR READ ONLY
+	OPEN cur
+	FETCH NEXT FROM cur INTO @ColId, @ColumnIndex
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		UPDATE dbo.DbColumn SET ColumnIndex = @ii WHERE ColumnId = @ColId
+		IF @ii > 3275 SELECT @ii = 3276 ELSE SELECT @ii = @ii + 1
+		FETCH NEXT FROM cur INTO @ColId, @ColumnIndex
+	END
+	CLOSE cur
+	DEALLOCATE cur
+	UPDATE dbo.DbColumn SET ColumnIndex = ColumnIndex * 10 WHERE TableId = @TableId
+END
+-- Update Default:
+IF @DefaultValue is not null
+BEGIN
+	IF @ColumnIdentity = 'Y'
+	BEGIN
+		RAISERROR('Ir_UpdIndByCol: Please do not assign a default value to a column that is identity and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+	IF @AllowNulls = 'Y'
+	BEGIN
+		RAISERROR('Ir_UpdIndByCol: Please do not assign a default value to a column that allows null and try again.',18,2) WITH SETERROR
+		RETURN 1
+	END
+END
+RETURN 0~@~55~@~2011-04-08 15:09:30.233~@~2011-04-08 15:09:30.000
+160~@~2~@~2~@~N~@~Prevent keywords being used as column name~@~Data Table and Columns   80 [Detail: After CRUD] Prevent keywords being used as column name~@~Prevent keywords being used as column name and check for duplicates~@~80~@~Cr_ChkDbColumn~@~TableId,ColumnName~@~Int,VarChar~@~TableId3,ColumnName5~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Cr_ChkDbColumn
+ @ColumnName	varchar(20)
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF charindex('exec',@ColumnName) > 0
+BEGIN
+	RAISERROR('{10}{%s}',18,2,@ColumnName) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2012-02-29 10:58:28.027~@~2007-02-12 10:48:44.000
+161~@~87~@~2~@~Y~@~Make sure there is only one administration database~@~Systems Maintenance   10 [Master: After CRUD] Make sure there is only one administration database~@~Make sure one and only one database marked as administration database~@~10~@~CrOneAdminDbOnly~@~~@~~@~~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE CrOneAdminDbOnly
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.Systems WHERE SysProgram = 'Y') <> 1
+BEGIN
+	RAISERROR('There should only be one and only one database marked as administration database, please rectify and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~53~@~2007-04-30 08:43:21.217~@~2007-04-30 08:43:21.000
+162~@~2~@~2~@~N~@~Prevent column from being deleted when referenced~@~Data Table and Columns   50 [Detail: Before CRUD] Prevent column from being deleted when referenced~@~Do not delete if referenced by screen, etc.~@~50~@~Cr_DelDbColumn~@~ColumnId,CultureId~@~Int,SmallInt~@~ColumnId5,LUser.CultureId~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Cr_DelDbColumn
+ @ColumnId	Int
+,@CultureId TinyInt
+/* WITH ENCRYPTION */
+AS
+DECLARE  @ScreenId Int, @ScreenTitle nvarchar(50)
+SET NOCOUNT ON
+SELECT @ScreenId = ScreenId FROM dbo.ScreenObj WHERE ColumnId = @ColumnId
+IF @ScreenId is not null
+BEGIN
+	SELECT @ScreenTitle = ScreenTitle FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId AND CultureId = @CultureId
+	RAISERROR('{11}{%s}',18,2,@ScreenTitle) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2009-08-28 15:12:45.277~@~2007-06-12 17:54:43.000
+163~@~2~@~2~@~Y~@~Check Primary Keys~@~Data Table and Columns   30 [Master: After CRUD] Check Primary Keys~@~Make sure there is one and only one primary key column.~@~30~@~Cr_ChkPrimaryKey~@~TableId~@~Int~@~TableId3~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[Cr_ChkPrimaryKey]
+ @TableId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count(1) FROM dbo.DbColumn WHERE TableId = @TableId AND PrimaryKey = 'Y') <> 1
+BEGIN
+	RAISERROR('{12}',18,2) WITH SETERROR
+	RETURN 1
+END
+IF (SELECT count(1) FROM dbo.DbColumn WHERE TableId = @TableId AND ColumnIdentity = 'Y') > 1
+BEGIN
+	RAISERROR('Please make sure there is at most one identity column and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2016-10-12 21:12:44.653~@~2016-10-12 14:12:44.000
+164~@~16~@~2~@~N~@~Prevent readonly or invisible for mandatory column~@~Authority Override (COL)   10 [Detail: After CRUD] Prevent readonly or invisible for mandatory column~@~Prevent readonly or invisible for mandatory column~@~10~@~Cr_ChkAuthCol~@~ColOvrdId~@~Int~@~ColOvrdId241~@~Y~@~Y~@~N~@~N~@~~@~55~@~2015-07-16 17:52:24.683~@~2007-08-15 10:43:00.000
+165~@~67~@~2~@~Y~@~Verify margins, etc.~@~Report Definition   50 [Master: After CRUD] Verify margins, etc.~@~Verify report margins settings and AllowSelect~@~50~@~Cr_ChkReportMargins~@~ReportId~@~Int~@~ReportId22~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[Cr_ChkReportMargins]
+ @ReportId	int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @TopMargin		decimal(8,2)
+		,@BottomMargin	decimal(8,2)
+		,@LeftMargin	decimal(8,2)
+		,@RightMargin	decimal(8,2)
+		,@PageWidth		decimal(8,2)
+		,@PageHeight	decimal(8,2)
+		,@ReportTypeCd	char(1)
+		,@AllowSelect	char(1)
+SET NOCOUNT ON
+SELECT	 @TopMargin = TopMargin
+		,@BottomMargin = BottomMargin
+		,@LeftMargin = LeftMargin
+		,@RightMargin = RightMargin
+		,@PageWidth = PageWidth
+		,@PageHeight = PageHeight
+		,@ReportTypeCd = ReportTypeCd
+		,@AllowSelect = AllowSelect
+		FROM dbo.Report WHERE ReportId = @ReportId
+IF @TopMargin < 0 OR @BottomMargin < 0 OR @LeftMargin < 0 OR @RightMargin < 0
+	BEGIN RAISERROR('{14}',18,2) WITH SETERROR RETURN 1 END
+IF @PageWidth < 0 OR @PageHeight < 0
+	BEGIN RAISERROR('{15}',18,2) WITH SETERROR RETURN 1 END
+IF @PageWidth < (@LeftMargin + @RightMargin)
+	BEGIN RAISERROR('{16}',18,2) WITH SETERROR RETURN 1 END
+IF @PageHeight < (@TopMargin + @BottomMargin)
+	BEGIN RAISERROR('{17}',18,2) WITH SETERROR RETURN 1 END
+IF @AllowSelect = 'Y' AND @ReportTypeCd not in ('R','T')
+	BEGIN RAISERROR('{43}',18,2) WITH SETERROR RETURN 1 END
+RETURN 0~@~55~@~2008-07-10 09:21:52.300~@~2008-07-10 09:21:52.000
+166~@~89~@~2~@~Y~@~Prevent invalid deletion~@~Report Style   10 [Master: Before CRUD] Prevent invalid deletion~@~Check if style is used in RptCtr and RptElm and WrRptWizGen.~@~10~@~Cr_ChkRmRptStyle~@~RptStyleId,DefaultCd~@~Int,Char~@~RptStyleId167,DefaultCd167~@~N~@~N~@~Y~@~Y~@~~@~55~@~2012-07-04 08:33:59.923~@~
+167~@~90~@~1~@~Y~@~Update description, etc.~@~Report Control   30 [Master: After CRUD] Update description, etc.~@~Update description, etc.~@~30~@~Ir_UpdRptCtr~@~RptCtrId~@~Int~@~RptCtrId161~@~Y~@~Y~@~N~@~N~@~~@~55~@~2007-10-18 07:55:03.153~@~
+168~@~91~@~1~@~Y~@~Update description, etc.~@~Report Element   30 [Master: After CRUD] Update description, etc.~@~Update description, etc.~@~30~@~Ir_UpdRptElm~@~RptElmId~@~Int~@~RptElmId160~@~Y~@~Y~@~N~@~N~@~~@~55~@~2007-10-18 06:48:29.140~@~
+169~@~92~@~1~@~Y~@~Update description, etc.~@~Report Table   20 [Master: After CRUD] Update description, etc.~@~Update description, etc.~@~20~@~Ir_UpdRptTbl~@~RptTblId~@~Int~@~RptTblId162~@~Y~@~Y~@~N~@~N~@~~@~55~@~2007-10-17 11:55:32.950~@~
+170~@~91~@~2~@~Y~@~Validate element properties~@~Report Element   20 [Master: After CRUD] Validate element properties~@~Make sure all header, body and footer are properly set up.~@~20~@~Cr_ChkRptElm~@~RptElmId~@~Int~@~RptElmId160~@~Y~@~Y~@~N~@~N~@~~@~55~@~2007-10-18 07:54:49.343~@~
+171~@~91~@~2~@~Y~@~Prevent delete if referenced~@~Report Element   10 [Master: Before CRUD] Prevent delete if referenced~@~Cannot erase if referenced by RptCtr.~@~10~@~Cr_DelRptElm~@~RptElmId~@~Int~@~RptElmId160~@~N~@~N~@~Y~@~Y~@~~@~55~@~2007-10-18 07:54:44.373~@~
+172~@~90~@~2~@~Y~@~Validate control properties~@~Report Control   20 [Master: After CRUD] Validate control properties~@~Make sure all widths and heights add up to margins and report dimensions.~@~20~@~Cr_ChkRptCtr~@~RptCtrId~@~Int~@~RptCtrId161~@~Y~@~Y~@~N~@~N~@~~@~55~@~2007-10-18 07:54:20.357~@~
+174~@~95~@~2~@~Y~@~Make sure at least one column is selected as criteria and display~@~Report Generator   10 [Master: After CRUD] Make sure at least one column is selected as criteria and display~@~Prevent add/update unless at least one column is selected as criteria and display.~@~10~@~Cr_ChkRptwizCri~@~RptwizId~@~Int~@~RptwizId183~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[Cr_ChkRptwizCri]
+ @RptwizId		int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @RptwizName		nvarchar(50)
+		,@TemplateName		varchar(50)
+		,@RptwizTypeCd		char(1)
+SET NOCOUNT ON
+IF NOT EXISTS (SELECT 1 FROM dbo.RptwizDtl WHERE RptwizId = @RptwizId AND CriSelect is not null)
+BEGIN
+	RAISERROR('{28}',18,2) WITH SETERROR
+	RETURN 1
+END
+IF NOT EXISTS (SELECT 1 FROM dbo.RptwizDtl WHERE RptwizId = @RptwizId AND ColSelect is not null)
+BEGIN
+	RAISERROR('{31}',18,2) WITH SETERROR
+	RETURN 1
+END
+SELECT @RptwizName = RptwizName, @RptwizTypeCd = RptwizTypeCd, @TemplateName = TemplateName FROM dbo.Rptwiz WHERE RptwizId = @RptwizId
+IF EXISTS (SELECT 1 FROM dbo.Rptwiz WHERE RptwizName = @RptwizName AND RptwizId <> @RptwizId)
+BEGIN
+	RAISERROR('{35}',18,2) WITH SETERROR
+	RETURN 1
+END
+IF @RptwizTypeCd = 'D' AND charindex('.mht',@TemplateName) <= 0 AND charindex('.rtf',@TemplateName) <= 0 AND charindex('.txt',@TemplateName) <= 0
+BEGIN
+	RAISERROR('{38}',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2012-01-16 14:15:08.757~@~2012-01-16 14:15:08.000
+175~@~96~@~2~@~Y~@~Prevent delete when referenced~@~Report Data Category   10 [Master: Before CRUD] Prevent delete when referenced~@~Prevent delete when referenced by Rptwiz~@~10~@~Cr_NoDelCatRef~@~RptwizCatId~@~SmallInt~@~RptwizCatId181~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Cr_NoDelCatRef
+ @RptwizCatId	smallint
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.Rptwiz WHERE RptwizCatId = @RptwizCatId)
+BEGIN
+	RAISERROR('{29}',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2009-04-16 21:27:40.800~@~2009-04-16 21:27:40.000
+178~@~96~@~1~@~Y~@~Update description, etc.~@~Report Data Category   20 [Master: After CRUD] Update description, etc.~@~Update description, etc.~@~20~@~Ir_UpdRptwizCat~@~RptwizCatId~@~SmallInt~@~RptwizCatId181~@~Y~@~Y~@~N~@~N~@~~@~55~@~2009-03-31 18:09:42.693~@~
+179~@~92~@~1~@~Y~@~Update Report Generator~@~Report Table   30 [Master: After CRUD] Update Report Generator~@~Update RptWiz changeable flag.~@~30~@~Ir_UpdRptTblWiz~@~ReportId~@~Int~@~ReportId162~@~N~@~Y~@~N~@~N~@~~@~55~@~2008-01-14 11:19:40.920~@~
+180~@~92~@~1~@~N~@~Delete referencing controls~@~Report Table   50 [Detail: Before CRUD] Delete referencing controls~@~Delete report controls referencing this table cell.~@~50~@~Ir_DelRptCel~@~RptCelId~@~Int~@~RptCelId164~@~N~@~N~@~Y~@~Y~@~~@~55~@~2008-01-16 11:38:04.093~@~
+181~@~98~@~3~@~Y~@~One database server per release~@~Installer Configuration   10 [Master: After CRUD] One database server per release~@~Ensure one database server per release.~@~10~@~CrOneDbServerOnly~@~ReleaseId~@~SmallInt~@~ReleaseId191~@~Y~@~Y~@~N~@~N~@~~@~55~@~2008-01-18 17:24:05.280~@~
+182~@~98~@~1~@~Y~@~Initialize Release Details~@~Installer Configuration   20 [Master: After CRUD] Initialize Release Details~@~Initialize Release Details with Default Info.~@~20~@~IrUpdRelease~@~ReleaseId~@~SmallInt~@~ReleaseId191~@~Y~@~Y~@~N~@~N~@~~@~55~@~2008-01-18 17:25:09.373~@~
+183~@~98~@~1~@~N~@~Update run order etc.~@~Installer Configuration   30 [Detail: After CRUD] Update run order etc.~@~Update run order etc.~@~30~@~IrUpdReleaseDtl~@~ReleaseDtlId~@~Int~@~ReleaseDtlId192~@~Y~@~Y~@~N~@~N~@~~@~55~@~2008-01-18 17:26:24.107~@~
+184~@~100~@~1~@~Y~@~Update Report Generator~@~Report Chart   20 [Master: After CRUD] Update Report Generator~@~Update RptWiz changeable flag.~@~20~@~Ir_UpdRptTblWiz~@~ReportId~@~Int~@~ReportId206~@~N~@~Y~@~N~@~N~@~~@~55~@~2008-02-13 09:43:04.890~@~
+185~@~100~@~1~@~Y~@~Update description, etc.~@~Report Chart   10 [Master: After CRUD] Update description, etc.~@~Update description, etc.~@~10~@~Ir_UpdRptCha~@~RptChaId~@~Int~@~RptChaId206~@~Y~@~Y~@~N~@~N~@~~@~55~@~2008-02-13 09:43:42.547~@~
+186~@~66~@~1~@~Y~@~Update description, etc.~@~User Impersonation   10 [Master: After CRUD] Update description, etc.~@~Update description, etc.~@~10~@~Ir_UpdUsrImpr~@~UsrImprId~@~Int~@~UsrImprId95~@~Y~@~Y~@~N~@~N~@~~@~55~@~2008-03-01 15:17:17.560~@~2007-02-13 11:15:00.000
+187~@~17~@~2~@~Y~@~Prevent authorization override without a subject~@~Authority Override (ROW)   10 [Master: After CRUD] Prevent authorization override without a subject~@~Prevent authorization override without a subject~@~10~@~Cr_ChkRowOvrd~@~RowOvrdId~@~Int~@~RowOvrdId238~@~Y~@~Y~@~N~@~N~@~~@~55~@~2009-08-18 13:16:41.597~@~2007-08-15 10:43:00.000
+189~@~78~@~2~@~Y~@~Verify appropriate user groups assignment~@~Password Override Type   10 [Master: After CRUD] Verify appropriate user groups assignment~@~Make sure there is user group assigned and no duplicates.~@~10~@~CrChkOvride~@~OvrideId~@~smallint~@~OvrideId122~@~Y~@~Y~@~N~@~N~@~~@~55~@~2008-11-01 23:52:42.550~@~
+190~@~105~@~2~@~Y~@~One and only one default Client Tier~@~Client Tier   20 [Master: After CRUD] One and only one default Client Tier~@~Make sure there is one and only one default Client Tier.~@~20~@~Cr_OneDefCTier~@~~@~~@~~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2009-01-28 19:59:16.500~@~
+191~@~106~@~2~@~Y~@~One and only one default Rule Tier~@~Rule Tier   30 [Master: After CRUD] One and only one default Rule Tier~@~Make sure there is one and only one default Rule Tier.~@~30~@~Cr_OneDefRTier~@~~@~~@~~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2009-01-28 20:00:07.090~@~
+192~@~107~@~2~@~Y~@~One and only one default Data Tier~@~Data Tier   20 [Master: After CRUD] One and only one default Data Tier~@~Make sure there is one and only one default Data Tier.~@~20~@~Cr_OneDefDTier~@~~@~~@~~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2009-01-28 20:00:31.440~@~
+194~@~109~@~1~@~Y~@~Update display flag~@~Maintenance Message   10 [Master: After CRUD] Update display flag~@~Update display flag, etc.~@~10~@~Ir_UpdMaintMsg~@~MaintMsgId~@~SmallInt~@~MaintMsgId233~@~Y~@~Y~@~N~@~N~@~~@~55~@~2009-08-08 00:48:32.870~@~2007-02-10 17:05:13.000
+195~@~22~@~2~@~Y~@~Prevent delete when referenced~@~Authority Default (ROW)   10 [Master: Before CRUD] Prevent delete when referenced~@~Prevent delete when referenced by UsrGroup and clean up Row Override~@~10~@~CrChkDelRowAuth~@~RowAuthId~@~Smallint~@~RowAuthId236~@~N~@~N~@~Y~@~Y~@~-- ??Design only:
+CREATE PROCEDURE [dbo].[CrOneSysAdminOnly]
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.VwRowAuth WHERE SysAdmin = 'Y') <> 1
+BEGIN
+	RAISERROR('CrOneSysAdminOnly: Please make sure there is one and only one Sys Administrator and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2009-08-11 13:50:30.833~@~2009-08-11 11:23:33.000
+197~@~9~@~2~@~Y~@~Check for default culture~@~Screen Definition   30 [Master: After CRUD] Check for default culture~@~Check for default culture~@~30~@~Cr_ChkCulture01~@~ScreenId~@~Int~@~ScreenId15~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE dbo.Cr_ChkCulture01
+ @ScreenId	Int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @DefCultureId		smallint
+SET NOCOUNT ON
+SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
+IF NOT EXISTS (SELECT 1 FROM dbo.ScreenHlp WHERE ScreenId = @ScreenId AND CultureId = @DefCultureId)
+BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
+IF EXISTS (SELECT 1 FROM dbo.Screen WHERE ScreenId = @ScreenId AND GenerateSc = 'Y' AND GenerateSr = 'N')
+BEGIN RAISERROR('Cannot generate just the front end for the time being, please check the generate SRV as well.  Thanks.',18,2) WITH SETERROR RETURN 1 END
+RETURN 0~@~55~@~2015-07-24 16:24:39.850~@~2012-01-13 16:08:49.000
+198~@~10~@~2~@~Y~@~Check for default culture~@~Screen Object   50 [Master: After CRUD] Check for default culture~@~~@~50~@~Cr_ChkCulture02~@~ScreenObjId~@~Int~@~ScreenObjId14~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE dbo.Cr_ChkCulture02
+ @ScreenObjId	Int
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @DefCultureId		smallint
+SET NOCOUNT ON
+SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
+IF NOT EXISTS (SELECT 1 FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId AND CultureId = @DefCultureId)
+BEGIN RAISERROR('{65}',18,2) WITH SETERROR RETURN 1 END
+RETURN 0~@~55~@~2011-05-31 11:20:28.590~@~2011-05-31 11:20:28.000
+199~@~54~@~2~@~Y~@~Check for default culture~@~Screen Tab Folders   20 [Master: After CRUD] Check for default culture~@~~@~20~@~Cr_ChkCulture03~@~ScreenTabId~@~Int~@~ScreenTabId19~@~Y~@~Y~@~N~@~N~@~~@~55~@~2009-09-15 14:49:56.580~@~2007-08-15 10:39:53.000
+200~@~59~@~2~@~Y~@~Check for default culture~@~Screen Filters   10 [Master: After CRUD] Check for default culture~@~~@~10~@~Cr_ChkCulture04~@~ScreenFilterId~@~Int~@~ScreenFilterId86~@~Y~@~Y~@~N~@~N~@~~@~55~@~2009-09-15 14:55:31.873~@~2007-08-15 10:39:53.000
+201~@~67~@~2~@~Y~@~Check for default culture~@~Report Definition   30 [Master: After CRUD] Check for default culture~@~~@~30~@~Cr_ChkCulture05~@~ReportId~@~Int~@~ReportId22~@~Y~@~Y~@~N~@~N~@~~@~55~@~2009-09-15 14:59:18.770~@~2007-03-06 20:06:43.000
+202~@~69~@~2~@~Y~@~Check for default culture~@~Report Criteria   20 [Master: After CRUD] Check for default culture~@~~@~20~@~Cr_ChkCulture06~@~ReportCriId~@~Int~@~ReportCriId97~@~Y~@~Y~@~N~@~N~@~~@~55~@~2009-09-15 15:03:17.253~@~2007-03-06 20:06:43.000
+203~@~13~@~2~@~Y~@~Check for default culture~@~Report Object   20 [Master: After CRUD] Check for default culture~@~~@~20~@~Cr_ChkCulture07~@~ReportObjId~@~Int~@~ReportObjId23~@~Y~@~Y~@~N~@~N~@~~@~55~@~2009-09-15 15:06:39.763~@~2007-03-06 20:06:43.000
+204~@~73~@~2~@~Y~@~Check for default culture~@~Screen Criteria Defined   10 [Master: After CRUD] Check for default culture~@~~@~10~@~Cr_ChkCulture08~@~ScreenCriId~@~Int~@~ScreenCriId104~@~Y~@~Y~@~N~@~N~@~~@~55~@~2009-09-15 15:10:17.110~@~2007-03-06 20:06:43.000
+205~@~86~@~2~@~Y~@~Check for default culture~@~Message Center   10 [Master: After CRUD] Check for default culture~@~~@~10~@~Cr_ChkCulture09~@~MsgId~@~Int~@~MsgId146~@~Y~@~Y~@~N~@~N~@~~@~55~@~2009-09-15 15:16:47.710~@~2007-03-06 20:06:43.000
+206~@~8~@~2~@~Y~@~Check for default culture~@~Culture Translation   10 [Master: After CRUD] Check for default culture~@~~@~10~@~Cr_ChkCulture10~@~CultureTypeId~@~Int~@~CultureTypeId8~@~Y~@~Y~@~N~@~N~@~~@~55~@~2013-03-22 02:23:05.757~@~2007-03-06 20:06:43.000
+211~@~80~@~1~@~Y~@~Update screen NeedRegen by Web Rule changes~@~Web Rule   30 [Master: After CRUD] Update screen NeedRegen by Web Rule changes~@~Update screen NeedRegen if there is any Web Rule changes.~@~30~@~Ir_UpdScrNeedRegen~@~ScreenId~@~Int~@~ScreenId128~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2012-01-01 17:09:32.247~@~2012-01-01 17:09:32.000
+212~@~10~@~1~@~Y~@~Update screen NeedRegen on column changes~@~Screen Object   90 [Master: After CRUD] Update screen NeedRegen on column changes~@~Update screen NeedRegen if there is any column changes~@~90~@~Ir_UpdScrNeedRegen~@~ScreenId~@~Int~@~ScreenId14~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2012-01-06 03:35:48.310~@~2012-01-06 03:33:40.000
+213~@~9~@~1~@~Y~@~Update screen NeedRegen on screen changes~@~Screen Definition   50 [Master: After CRUD] Update screen NeedRegen on screen changes~@~Update screen NeedRegen if there is any screen updates.~@~50~@~Ir_UpdScrNeedRegen~@~ScreenId~@~Int~@~ScreenId15~@~N~@~Y~@~N~@~N~@~~@~55~@~2012-01-01 17:12:05.257~@~2007-03-06 20:06:43.000
+214~@~49~@~1~@~Y~@~Update wizard NeedRegen on column changes~@~Wizard Object   40 [Master: After CRUD] Update wizard NeedRegen on column changes~@~Update wizard NeedRegen if there is any column changes~@~40~@~Ir_UpdWizNeedRegen~@~WizardId~@~Int~@~WizardId71~@~N~@~Y~@~N~@~N~@~~@~55~@~2012-01-06 03:53:25.223~@~2012-01-06 03:33:40.000
+215~@~67~@~1~@~Y~@~Update report NeedRegen on report changes~@~Report Definition   80 [Master: After CRUD] Update report NeedRegen on report changes~@~Update report NeedRegen if there is any report updates.~@~80~@~Ir_UpdRptNeedRegen~@~ReportId~@~Int~@~ReportId22~@~N~@~Y~@~N~@~N~@~~@~55~@~2012-01-06 03:55:46.177~@~2007-03-06 20:06:43.000
+216~@~13~@~1~@~Y~@~Update report NeedRegen on column changes~@~Report Object   50 [Master: After CRUD] Update report NeedRegen on column changes~@~Update report NeedRegen if there is any column updates.~@~50~@~Ir_UpdRptNeedRegen~@~ReportId~@~Int~@~ReportId23~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2012-01-06 03:57:33.140~@~2007-03-06 20:06:43.000
+217~@~5~@~2~@~N~@~Make sure the role override is meaningful.~@~User Group   50 [Detail: After CRUD] Make sure the role override is meaningful.~@~At least one of Company, Project or System should be selected to make this override meaningful.~@~50~@~Cr_ValidGrpAuth~@~UsrGroupAuthId~@~Int~@~UsrGroupAuthId58~@~Y~@~Y~@~N~@~N~@~~@~55~@~2012-01-08 05:03:43.440~@~
+218~@~73~@~1~@~Y~@~Update screen NeedRegen on criteria changes~@~Screen Criteria Defined   60 [Master: After CRUD] Update screen NeedRegen on criteria changes~@~Update screen NeedRegen if there is any criteria changes~@~60~@~Ir_UpdScrNeedRegen~@~ScreenId~@~Int~@~ScreenId104~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2012-01-14 09:46:36.103~@~2012-01-06 03:33:40.000
+219~@~112~@~1~@~Y~@~Update custom label unique description~@~Custom Label   10 [Master: After CRUD] Update custom label unique description~@~Update custom label unique description for easy identification.~@~10~@~Ir_InitLabel~@~LabelId~@~Int~@~LabelId215~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE Ir_InitLabel
+ @LabelId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.Label SET LabelDesc = LabelCat + ': ' + LabelKey + ' (' + b.CultureTypeName + ')'
+FROM dbo.Label a INNER JOIN dbo.VwCulture b ON a.CultureId = b.CultureId
+WHERE LabelId = @LabelId
+RETURN 0~@~55~@~2012-01-16 14:37:14.370~@~2012-01-16 14:37:14.000
+221~@~69~@~1~@~Y~@~Update report NeedRegen on column changes~@~Report Criteria  110 [Master: After CRUD] Update report NeedRegen on column changes~@~Update report NeedRegen if there is any column updates.~@~110~@~Ir_UpdRptNeedRegen~@~ReportId~@~Int~@~ReportId97~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2012-02-21 17:49:09.880~@~2007-03-06 20:06:43.000
+222~@~100~@~1~@~Y~@~Update report NeedRegen on column changes~@~Report Chart   30 [Master: After CRUD] Update report NeedRegen on column changes~@~Update report NeedRegen if there is any column updates.~@~30~@~Ir_UpdRptNeedRegen~@~ReportId~@~Int~@~ReportId206~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2012-02-21 17:55:15.697~@~2007-03-06 20:06:43.000
+223~@~90~@~1~@~Y~@~Update report NeedRegen on column changes~@~Report Control   40 [Master: After CRUD] Update report NeedRegen on column changes~@~Update report NeedRegen if there is any column updates.~@~40~@~Ir_UpdRptNeedRegen~@~ReportId~@~Int~@~ReportId161~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2012-02-21 18:27:51.180~@~2007-03-06 20:06:43.000
+224~@~92~@~1~@~Y~@~Update report NeedRegen on column changes~@~Report Table   40 [Master: After CRUD] Update report NeedRegen on column changes~@~Update report NeedRegen if there is any column updates.~@~40~@~Ir_UpdRptNeedRegen~@~ReportId~@~Int~@~ReportId162~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2012-02-21 18:41:26.007~@~2007-03-06 20:06:43.000
+226~@~92~@~1~@~Y~@~Delete referencing table items and controls~@~Report Table   10 [Master: Before CRUD] Delete referencing table items and controls~@~Delete report table items and controls referencing this table item and cells.~@~10~@~Ir_DelRptTbl~@~RptTblId~@~Int~@~RptTblId162~@~N~@~N~@~Y~@~Y~@~~@~55~@~2012-03-29 16:08:52.640~@~
+227~@~90~@~1~@~Y~@~Delete referencing table items and controls~@~Report Control   10 [Master: Before CRUD] Delete referencing table items and controls~@~Delete report table items and controls referencing this table item and cells.~@~10~@~Ir_DelRptCtr~@~RptCtrId~@~Int~@~RptCtrId161~@~N~@~N~@~Y~@~Y~@~~@~55~@~2012-03-29 16:25:36.090~@~
+228~@~17~@~1~@~Y~@~Update report NeedRegen on changes~@~Authority Override (ROW)   20 [Master: After CRUD] Update report NeedRegen on changes~@~Update report NeedRegen if there is any updates.~@~20~@~Ir_UpdRptNeedRegen~@~ReportId~@~Int~@~ReportId238~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2012-04-06 16:28:54.933~@~2007-03-06 20:06:43.000
+229~@~17~@~1~@~Y~@~Update screen NeedRegen on changes~@~Authority Override (ROW)   30 [Master: After CRUD] Update screen NeedRegen on changes~@~Update screen NeedRegen if there is any updates.~@~30~@~Ir_UpdScrNeedRegen~@~ScreenId~@~Int~@~ScreenId238~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2012-04-06 16:29:59.510~@~2007-03-06 20:06:43.000
+230~@~89~@~2~@~Y~@~Prevent invalid update~@~Report Style   20 [Master: After CRUD] Prevent invalid update~@~Check if default code is duplicated.~@~20~@~Cr_ChkRptStyle~@~RptStyleId~@~Int~@~RptStyleId167~@~Y~@~Y~@~N~@~N~@~~@~55~@~2012-07-04 08:35:36.160~@~
+231~@~114~@~1~@~Y~@~Initialize page preview and make sure page name is unique~@~Static Page   20 [Master: After CRUD] Initialize page preview and make sure page name is unique~@~Initialize page preview and make sure page name is unique~@~20~@~Ir_InitStaticPg~@~StaticPgId,StaticPgNm,DbId~@~Int,VarChar,Smallint~@~StaticPgId259,StaticPgNm259,LCurr.DbId~@~Y~@~Y~@~N~@~N~@~~@~55~@~2013-04-10 03:37:55.560~@~
+232~@~1006~@~2~@~N~@~Prevent erase of this column label if client rule exists~@~Screen Object Label   10 [Detail: Before CRUD] Prevent erase of this column label if client rule exists~@~Prevent erase of this column label if client rule exists~@~10~@~Cr_RmScrObjHlpCRule~@~ScreenObjHlpId~@~Int~@~ScreenObjHlpId21~@~N~@~N~@~Y~@~Y~@~CREATE PROCEDURE Cr_RmScrObjCRule
+ @ScreenObjHlpId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.ClientRule WHERE ScreenObjHlpId = @ScreenObjHlpId)
+BEGIN
+	RAISERROR('{6}',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2015-07-08 21:24:52.150~@~2007-02-10 17:05:33.000
+233~@~114~@~1~@~Y~@~Synchronize label translation with new page name~@~Static Page   10 [Master: Before CRUD] Synchronize label translation with new page name~@~Synchronize label translation with new page name~@~10~@~Ir_UpdStaticPgNm~@~StaticPgId,StaticPgNm~@~Int,VarChar~@~StaticPgId259,StaticPgNm259~@~N~@~Y~@~N~@~Y~@~~@~55~@~2013-04-10 03:45:59.317~@~
+234~@~122~@~1~@~Y~@~Update user link to member~@~Member for SR&ED   20 [Master: After CRUD] Update user link to member~@~Update Usr link to Member~@~20~@~Ir_UpdMemberUsr~@~MemberId,UserId~@~Int,Int~@~MemberId274,UserId274~@~Y~@~Y~@~N~@~N~@~~@~55~@~2013-06-24 04:48:35.347~@~
+235~@~122~@~1~@~Y~@~Remove user link to member~@~Member for SR&ED   10 [Master: Before CRUD] Remove user link to member~@~Remove Usr link to Member~@~10~@~Ir_DelMemberUsr~@~MemberId,UserId~@~Int,Int~@~MemberId274,UserId274~@~N~@~Y~@~N~@~Y~@~~@~55~@~2013-06-24 04:45:51.297~@~
+236~@~122~@~2~@~Y~@~Prevent inappropriate deletion~@~Member for SR&ED   30 [Master: After CRUD] Prevent inappropriate deletion~@~Cannot delete unless both Usr and SredTime tables are clear~@~30~@~Cr_ChkMember~@~MemberId~@~Int~@~MemberId274~@~N~@~N~@~Y~@~N~@~~@~55~@~2013-06-24 04:49:25.817~@~
+237~@~69~@~4~@~Y~@~Change report criteria group~@~Report Criteria   10 [Master: Before CRUD] Change report criteria group~@~Change report criteria group if necessary~@~10~@~Ir_ChgReportCriGrp~@~ReportId,ReportCriId,ReportGrpId~@~Int,Int,Int~@~ReportId97,ReportCriId97,ReportGrpId97~@~Y~@~Y~@~N~@~Y~@~~@~55~@~2013-11-07 19:40:55.650~@~2007-03-06 20:06:43.000
+239~@~1001~@~1~@~Y~@~Update search description~@~Section Object   10 [Master: After CRUD] Update search description~@~Update search description, etc.~@~10~@~Ir_UpdPageObj~@~PageObjId~@~int~@~PageObjId1277~@~Y~@~Y~@~N~@~N~@~~@~55~@~2014-07-30 18:25:52.207~@~
+240~@~1006~@~1~@~N~@~Memorize Screen Column cultures~@~Screen Object Label   20 [Detail: Before CRUD] Memorize Screen Column cultures~@~Memorize Screen Column cultures if changed~@~20~@~Ir_MemScreenObjHlp~@~ScreenObjHlpId,ScreenObjId,CultureId,ColumnHeader,ToolTip,ErrMessage,TbHint~@~Int,Int,Smallint,NVarchar,NVarchar,NVarchar,NVarchar~@~ScreenObjHlpId21,ScreenObjId14,CultureId21,ColumnHeader21,ToolTip21,ErrMessage21,TbHint21~@~Y~@~Y~@~N~@~Y~@~CREATE PROCEDURE Ir_UpdScreenObjHlp
+ @ScreenObjHlpId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.ScreenObjHlp SET ScreenObjHlpDesc = b.ColumnDesc + ' (' + c.CultureTypeName + ')'
+	FROM dbo.ScreenObjHlp a
+	INNER JOIN dbo.ScreenObj b ON a.ScreenObjId = b.ScreenObjId
+	INNER JOIN RODesign.dbo.CtCultureType c ON a.CultureId = c.CultureId
+	WHERE a.ScreenObjHlpId = @ScreenObjHlpId
+RETURN 0~@~55~@~2015-07-08 21:26:16.090~@~2007-02-10 17:09:38.000
+241~@~1001~@~1~@~Y~@~Make sure relevant section is regenerated~@~Section Object   20 [Master: After CRUD] Make sure relevant section is regenerated~@~Make sure relevant section is regenerated~@~20~@~Ir_GenPageObj~@~PageObjId~@~int~@~PageObjId1277~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2017-06-14 21:38:30.883~@~
+242~@~1003~@~1~@~Y~@~Make sure relevant section is regenerated~@~Section Column Style   10 [Master: After CRUD] Make sure relevant section is regenerated~@~Make sure relevant section is regenerated~@~10~@~Ir_GenPageObj~@~~@~~@~~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2014-10-23 17:36:27.697~@~
+243~@~1004~@~1~@~Y~@~Make sure relevant section is regenerated~@~Section Row Style   10 [Master: After CRUD] Make sure relevant section is regenerated~@~Make sure relevant section is regenerated~@~10~@~Ir_GenPageObj~@~~@~~@~~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2014-10-23 17:40:14.790~@~
+244~@~1001~@~1~@~Y~@~Make sure essential stuff is present~@~Section Object   30 [Master: After CRUD] Make sure essential stuff is present~@~Make sure essential stuff is present~@~30~@~Ir_IniPageObj~@~~@~~@~~@~Y~@~Y~@~Y~@~N~@~~@~55~@~2015-01-31 01:57:39.340~@~
+245~@~118~@~1~@~Y~@~Clean up next run upon edit~@~Timed-Job Schedule   10 [Master: After CRUD] Clean up next run upon edit~@~Clean up next run upon edit~@~10~@~Ir_UpdCronJob~@~CronJobId~@~Int~@~CronJobId264~@~N~@~Y~@~N~@~N~@~~@~55~@~2015-06-10 16:26:59.013~@~
+1245~@~54~@~1~@~Y~@~Update search description~@~Screen Tab Folders   30 [Master: After CRUD] Update search description~@~~@~30~@~Ir_UpdScreenTab~@~ScreenTabId~@~Int~@~ScreenTabId19~@~Y~@~Y~@~N~@~N~@~~@~55~@~2015-06-16 19:13:25.560~@~2007-08-15 10:39:53.000
+1246~@~54~@~2~@~Y~@~Prevent deletion if referenced~@~Screen Tab Folders   10 [Master: Before CRUD] Prevent deletion if referenced~@~Prevent deletion if referenced~@~10~@~Cr_DelScreenTab~@~ScreenTabId~@~Int~@~ScreenTabId19~@~N~@~N~@~Y~@~Y~@~~@~55~@~2015-06-26 21:40:29.913~@~2007-08-15 10:39:53.000
+1247~@~106~@~2~@~Y~@~Cannot delete rule tier in use~@~Rule Tier   10 [Master: Before CRUD] Cannot delete rule tier in use~@~Cannot delete rule tier in use~@~10~@~Cr_DelRTier~@~RuleTierId~@~Tinyint~@~RuleTierId196~@~N~@~N~@~Y~@~Y~@~~@~55~@~2016-01-12 19:01:33.037~@~
+1248~@~105~@~2~@~Y~@~Cannot delete client tier in use~@~Client Tier   10 [Master: Before CRUD] Cannot delete client tier in use~@~Cannot delete client tier in use~@~10~@~Cr_DelCTier~@~ClientTierId~@~Tinyint~@~ClientTierId194~@~N~@~N~@~Y~@~Y~@~~@~55~@~2016-01-12 19:16:00.273~@~
+1249~@~107~@~2~@~Y~@~Cannot delete data tier in use~@~Data Tier   10 [Master: Before CRUD] Cannot delete data tier in use~@~Cannot delete data tier in use~@~10~@~Cr_DelDTier~@~DataTierId~@~Tinyint~@~DataTierId195~@~N~@~N~@~Y~@~Y~@~~@~55~@~2016-01-12 19:14:03.257~@~
+1250~@~86~@~1~@~Y~@~Update message description~@~Message Center   20 [Master: After CRUD] Update message description~@~~@~20~@~Ir_UpdMsg~@~MsgId~@~Int~@~MsgId146~@~Y~@~Y~@~N~@~N~@~~@~55~@~2016-05-30 18:02:11.170~@~2007-03-06 20:06:43.000
+1251~@~2~@~2~@~Y~@~Check mandatory fields~@~Data Table and Columns   10 [Master: Before CRUD] Check mandatory fields~@~Ensure mandatory fields in Cmon are not removed~@~10~@~Cr_ChkTables~@~~@~~@~~@~N~@~Y~@~N~@~Y~@~CREATE PROCEDURE Cr_ChkDupTblByName
+ @TableId	int
+,@TableName	nvarchar(20)
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF EXISTS (SELECT 'true' FROM dbo.DbTable WHERE (@TableId is null OR TableId <> @TableId) AND TableName = @tableName)
+BEGIN
+	RAISERROR('Cr_ChkDupTblByName: Table with the same name "%s" already exist, please choose another name.',18,2,@tableName) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~55~@~2016-08-25 05:58:51.203~@~2007-01-22 13:18:40.000
+1420~@~1~@~2~@~Y~@~Prevent accidental deletion~@~User Manager   40 [Master: Before CRUD] Prevent accidental deletion~@~Prevent accidental deletion of user~@~40~@~CrDelUsr~@~UsrId~@~Int~@~UsrId1~@~N~@~N~@~Y~@~Y~@~~@~55~@~2016-12-30 23:10:58.610~@~2011-08-18 12:09:21.000
+2285~@~87~@~1~@~Y~@~Sync SystemId~@~Systems Maintenance   20 [Master: After CRUD] Sync SystemId~@~Sync SystemId in *D tables~@~20~@~IrSyncSystemId~@~SystemId, FromSystemId, UpdBaseSystemId, UpdRefSystemId~@~int,int,char,char~@~SystemId45,FromSystemId,UpdBaseSystemId,UpdRefSystemId~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE CrOneAdminDbOnly
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.Systems WHERE SysProgram = 'Y') <> 1
+BEGIN
+	RAISERROR('There should only be one and only one database marked as administration database, please rectify and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+RETURN 0~@~2~@~2020-02-06 17:27:15.040~@~2007-04-30 08:43:21.000
+2358~@~76~@~4~@~Y~@~Automated audit trail - Del~@~Button Override [Master: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del76M~@~ButtonHlpId,UsrId~@~Int,Int~@~ButtonHlpId116,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~
+2359~@~76~@~4~@~Y~@~Automated audit trail - Add~@~Button Override [Master: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add76M~@~ButtonHlpId,UsrId~@~Int,Int~@~ButtonHlpId116,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~
+2360~@~76~@~4~@~Y~@~Automated audit trail - Upd~@~Button Override [Master: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd76M~@~ButtonHlpId,ScreenId,CultureId,ButtonTypeId,ButtonName,ButtonToolTip,ButtonVisible,ReportId,WizardId,ButtonLongNm,RowVisible,TopVisible,BotVisible,UsrId~@~Int,Int,SmallInt,TinyInt,NVarChar,NVarChar,Char,Int,Int,NVarChar,Char,Char,Char,Int~@~ButtonHlpId116,ScreenId116,CultureId116,ButtonTypeId116,ButtonName116,ButtonToolTip116,ButtonVisible116,ReportId116,WizardId116,ButtonLongNm116,RowVisible116,TopVisible116,BotVisible116,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~
+2361~@~5~@~4~@~Y~@~Automated audit trail - Del~@~User Group [Master: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del5M~@~UsrGroupId,UsrId~@~SmallInt,Int~@~UsrGroupId7,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~
+2362~@~5~@~4~@~Y~@~Automated audit trail - Add~@~User Group [Master: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add5M~@~UsrGroupId,UsrId~@~SmallInt,Int~@~UsrGroupId7,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~
+2363~@~5~@~4~@~Y~@~Automated audit trail - Upd~@~User Group [Master: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd5M~@~UsrGroupId,UsrGroupName,RowAuthorityId,CompanyId,UsrId~@~SmallInt,NVarChar,SmallInt,Int,Int~@~UsrGroupId7,UsrGroupName7,RowAuthorityId7,CompanyId7,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~
+2364~@~5~@~4~@~N~@~Automated audit trail - Del~@~User Group [Detail: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del5D~@~UsrGroupAuthId,UsrId~@~Int,Int~@~UsrGroupAuthId58,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~
+2365~@~5~@~4~@~N~@~Automated audit trail - Add~@~User Group [Detail: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add5D~@~UsrGroupAuthId,UsrId~@~Int,Int~@~UsrGroupAuthId58,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~
+2366~@~5~@~4~@~N~@~Automated audit trail - Upd~@~User Group [Detail: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd5D~@~UsrGroupAuthId,SystemId,SysRowAuthorityId,CompanyId,ProjectId,UsrId~@~Int,TinyInt,SmallInt,Int,Int,Int~@~UsrGroupAuthId58,SystemId58,SysRowAuthorityId58,CompanyId58,ProjectId58,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~
+2367~@~1~@~4~@~Y~@~Automated audit trail - Del~@~User Manager [Master: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del1M~@~UsrId,UsrId~@~Int,Int~@~UsrId1,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~
+2368~@~1~@~4~@~Y~@~Automated audit trail - Add~@~User Manager [Master: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add1M~@~UsrId,UsrId~@~Int,Int~@~UsrId1,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~
+2369~@~1~@~4~@~Y~@~Automated audit trail - Upd~@~User Manager [Master: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd1M~@~UsrId,UsrEmail,UsrName,CustomerId,VendorId,MemberId,Active,InvestorId,DefSystemId,AgentId,BrokerId,LoginName,FailedAttempt,LastSuccessDt,LastFailedDt,HintQuestionId,HintAnswer,DefCompanyId,DefProjectId,UsrGroupLs,CompanyLs,ProjectLs,CultureId,InternalUsr,TechnicalUsr,PwdDuration,PwdWarn,PwdNoRepeat,IPAlert,UsrMobile,LenderId,BorrowerId,GuarantorId,UsrId~@~Int,NVarChar,NVarChar,Int,Int,Int,Char,Int,TinyInt,Int,Int,NVarChar,TinyInt,DateTime,DateTime,TinyInt,NVarChar,Int,Int,VarChar,VarChar,VarChar,SmallInt,Char,Char,SmallInt,SmallInt,SmallInt,Char,VarChar,Int,Int,Int,Int~@~UsrId1,UsrEmail1,UsrName1,CustomerId1,VendorId1,MemberId1,Active1,InvestorId1,DefSystemId1,AgentId1,BrokerId1,LoginName1,FailedAttempt1,LastSuccessDt1,LastFailedDt1,HintQuestionId1,HintAnswer1,DefCompanyId1,DefProjectId1,UsrGroupLs1,CompanyLs1,ProjectLs1,CultureId1,InternalUsr1,TechnicalUsr1,PwdDuration1,PwdWarn1,PwdNoRepeat1,IPAlert1,UsrMobile1,LenderId1,BorrowerId1,GuarantorId1,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~

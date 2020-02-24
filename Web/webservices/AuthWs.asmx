@@ -45,6 +45,10 @@ public partial class AuthWs : AsmxBase
     protected override string GetDtlTableName(bool underlying = true) { throw new NotImplementedException(); }
     protected override string GetMstKeyColumnName(bool underlying = false) { throw new NotImplementedException(); }
     protected override string GetDtlKeyColumnName(bool underlying = false) { throw new NotImplementedException(); }
+    public override ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetNewMst() { throw new NotImplementedException(); }
+    public override ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetSearchList(string searchStr, int topN, string filterId, SerializableDictionary<string, string> desiredScreenCriteria){ throw new NotImplementedException(); }
+    public override ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetDtlById(string keyId, SerializableDictionary<string, string> options, int filterId){ throw new NotImplementedException(); }
+    public override ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetMstById(string keyId, SerializableDictionary<string, string> options){ throw new NotImplementedException(); }
         
     protected override DataTable _GetMstById(string pid)
     {
@@ -143,13 +147,15 @@ public partial class AuthWs : AsmxBase
     protected void SetJWTCookie(string refreshToken, bool includeHandle = true)
     {
         var context = HttpContext.Current;
-        string appPath = context.Request.ApplicationPath;
+        HttpRequest Request = context.Request;
+        string appPath = context.Request.ApplicationPath.ToUpper();
         string domain = context.Request.Url.GetLeftPart(UriPartial.Authority);
         var Response = context.Response;
+        /* below needs to be revised, FIXME 
         if (string.IsNullOrEmpty(refreshToken))
         {
-            HttpCookie refreshTokenCookie = new HttpCookie("refresh_token", null);
-            HttpCookie tokenInCookie = new HttpCookie("tokenInCookie", null);
+            HttpCookie refreshTokenCookie = new HttpCookie(appPath.Replace("/","") + "_refresh_token", null);
+            HttpCookie tokenInCookie = new HttpCookie(appPath.Replace("/", "") + "_tokenInCookie", null);
             refreshTokenCookie.Expires = DateTime.UtcNow.AddSeconds(-999);
             tokenInCookie.Expires = DateTime.UtcNow.AddSeconds(-999);
             //Response.Headers.Add("Set-Cookie", "tokenInCookie=;Max-Age=-1");
@@ -158,23 +164,25 @@ public partial class AuthWs : AsmxBase
         }
         else
         {
-            HttpCookie refreshTokenCookie = new HttpCookie("refresh_token", refreshToken);
+            HttpCookie refreshTokenCookie = new HttpCookie(appPath.Replace("/", "") + "_refresh_token", refreshToken);
             refreshTokenCookie.HttpOnly = true;
-            refreshTokenCookie.Path = appPath;
+            refreshTokenCookie.Path = "/";
+            refreshTokenCookie.Secure = Request.IsSecureConnection;
             refreshTokenCookie.Domain = domain;
             if (LUser != null && LUser.LoginName != null && includeHandle)
             {
                 var sha256 = new SHA256Managed();
                 var handle = Convert.ToBase64String(sha256.ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(LUser.LoginName))).Replace("=", "_");
-                HttpCookie tokenInCookie = new HttpCookie("tokenInCookie", handle);
+                HttpCookie tokenInCookie = new HttpCookie(appPath + "_tokenInCookie", handle);
                 tokenInCookie.HttpOnly = false;
-                tokenInCookie.Path = appPath;
+                tokenInCookie.Path = "/";
                 tokenInCookie.Domain = domain;
                 //Response.Headers.Add("Set-Cookie", string.Format("tokenInCookie={0};Path={1}", handle, appPath));
                 Response.Cookies.Add(tokenInCookie);
             }
             Response.Cookies.Add(refreshTokenCookie);
         }
+        */
     }
 
     [WebMethod(EnableSession = true)]
@@ -192,7 +200,7 @@ public partial class AuthWs : AsmxBase
         {
             return storedToken;
         };
-        Func<LoginUsr, UsrCurr, UsrImpr, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, ignoreCache) =>
+        Func<LoginUsr, UsrCurr, UsrImpr, string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, currentHandle, ignoreCache) =>
         {
             LUser = loginUsr;
             LCurr = usrCurr;
@@ -228,7 +236,7 @@ public partial class AuthWs : AsmxBase
     
     /* new stuff */
     [WebMethod(EnableSession = true)]
-    public SerializableDictionary<string, string> GetToken(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret)
+    public SerializableDictionary<string, string> GetToken(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret, string re_auth)
     {
         var context = HttpContext.Current;
         string appPath = context.Request.ApplicationPath;
@@ -241,11 +249,19 @@ public partial class AuthWs : AsmxBase
         Func<string,string> getStoredToken = (accessCode)=>{
             return storedToken;
         };
-        Func<LoginUsr, UsrCurr, UsrImpr, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, ignoreCache) =>
+        Func<LoginUsr, UsrCurr, UsrImpr, string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, currentHandle, ignoreCache) =>
         {
             LUser = loginUsr;
             LCurr = usrCurr;
             LImpr = usrImpr;
+            if (re_auth == "Y")
+            {
+                try
+                {
+                    cache.Remove(currentHandle);
+                }
+                catch { }
+            }
             return ValidateScope(ignoreCache);
         };
 
@@ -261,11 +277,16 @@ public partial class AuthWs : AsmxBase
             }
         }
         var auth = GetAuthObject();
-        var token = auth.GetToken(client_id, scope, grant_type, code, code_verifier, redirect_url, client_secret, appPath, domain, getStoredToken, validateScope);
+        var token = auth.GetToken(client_id, scope, grant_type, code, code_verifier, redirect_url, client_secret, appPath, domain, getStoredToken, validateScope, re_auth == "Y");
         if (syncCookie && token != null)
         {
             SetJWTCookie(token["refresh_token"]);
         }
+        if (re_auth == "Y")
+        {
+            LoadUsrImpr(LUser.UsrId, LCurr.DbId, LCurr.CompanyId, LCurr.ProjectId, true);
+        }
+
         return token;
         
         //System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -464,7 +485,7 @@ public partial class AuthWs : AsmxBase
                     string jwtToken = CreateLoginJWT(LUser, usr.DefCompanyId, usr.DefProjectId, usr.DefSystemId, LCurr, LImpr, appPath, 10 * 60, guid);
                     HttpContext.Current.Cache.Add(guid, jwtToken, null
                         , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 1, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
-                    var access_token = GetToken("", "", "authorization_code", guid, "", "", "");
+                    var access_token = GetToken("", "", "authorization_code", guid, "", "", "","N");
                     var accessTokenJWT = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(access_token);
                     HttpContext.Current.Cache.Remove(attemptKey);
                     if (referrer != null && referrer.PathAndQuery.StartsWith(appPath) && referrer.Host == domain)
@@ -524,10 +545,17 @@ public partial class AuthWs : AsmxBase
             //            usrInfo["UsrEmail"] = LUser.UsrEmail.ToString();
             //usrInfo["LoginName"] = LUser.LoginName.ToString();
             usrInfo["UsrName"] = LUser.UsrName.ToString();
+            // this is getting a bit dangerous now
+            usrInfo["Usrs"] = LImpr.Usrs.ToString();
             usrInfo["MemberId"] = LImpr.Members;
             usrInfo["CustomerId"] = LImpr.Customers;
             usrInfo["BorrowerId"] = LImpr.Borrowers;
             usrInfo["LenderId"] = LImpr.Lenders;
+            usrInfo["Brokers"] = LImpr.Brokers;
+            usrInfo["Guarantors"] = LImpr.Guarantors;
+            usrInfo["Agents"] = LImpr.Agents;
+            usrInfo["Investors"] = LImpr.Investors;
+            usrInfo["Vendors"] = LImpr.Vendors;
             usrInfo["CompanyId"] = LCurr.CompanyId.ToString();
             usrInfo["ProjectId"] = LCurr.ProjectId.ToString();
             usrInfo["CultureId"] = LUser.CultureId.ToString();
@@ -589,11 +617,14 @@ public partial class AuthWs : AsmxBase
     {
         Func<ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>> fn = () =>
         {
-            SwitchContext(2, LCurr.CompanyId, LCurr.ProjectId);
+            byte resetPwdSystemId = 2;
+            byte.TryParse(System.Configuration.ConfigurationManager.AppSettings["PasswordResetModule"], out resetPwdSystemId);
+            SwitchContext(resetPwdSystemId, LCurr.CompanyId, LCurr.ProjectId);
             ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>> mr = new ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>();
             var Request = HttpContext.Current.Request;
             string secret = System.Configuration.ConfigurationManager.AppSettings["ReCaptchaSecretKey"];
-            bool isHuman = true || ReCaptcha.Validate(secret, reCaptchaRequest);
+            bool bypassRecaptcha = true;
+            bool isHuman = bypassRecaptcha || ReCaptcha.Validate(secret, reCaptchaRequest);
             DataTable dt = (new LoginSystem()).GetSaltedUserInfo(0, emailAddress, emailAddress);
             Guid g = Guid.NewGuid();
             string GuidString = g.ToString();
@@ -631,7 +662,9 @@ public partial class AuthWs : AsmxBase
     {
         Func<ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>> fn = () =>
         {
-            SwitchContext(2, LCurr.CompanyId, LCurr.ProjectId);
+            byte resetPwdSystemId = 2;
+            byte.TryParse(System.Configuration.ConfigurationManager.AppSettings["PasswordResetModule"], out resetPwdSystemId);
+            SwitchContext(resetPwdSystemId, LCurr.CompanyId, LCurr.ProjectId);
             ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>> mr = new ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>();
             bool isEmailVerified = GetAuthObject().VerifySignedToken(nounce, ticketLeft, ticketRight);
             if (!isEmailVerified || string.IsNullOrEmpty(emailAddress))

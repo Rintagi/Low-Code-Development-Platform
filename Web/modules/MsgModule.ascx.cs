@@ -37,20 +37,20 @@ namespace RO.Web
 				if (Request.QueryString["typ"].ToString() == "E")
 				{
 					cImage.ImageUrl = "../Images/error.gif";
-					msg = Session["ErrMsg"].ToString();
+					msg = Session["ErrMsg"] as string;
 				}
 				else if (Request.QueryString["typ"].ToString() == "W")
 				{
 					cImage.ImageUrl = "../Images/warning.gif";
-					msg = Session["WarnMsg"].ToString();
+                    msg = Session["WarnMsg"] as string;
 				}
 				else
 				{
 					cImage.ImageUrl = "../Images/info.gif";
-					msg = Session["InfoMsg"].ToString();
+					msg = Session["InfoMsg"] as string;
 				}
-				if (msg == null) { cMessage.Text = "<script language='javascript'>this.close();</script>"; }
-				else if (base.LUser == null) { cMessage.Text = msg; }
+				if (msg == null || string.IsNullOrEmpty(msg)) { cMessage.Text = "<script language='javascript'>this.close();</script>"; }
+				else if (base.LUser == null ) { cMessage.Text = msg; }
 				else
 				{
 					string sr = msg;
@@ -85,7 +85,7 @@ namespace RO.Web
 					cMessage.Text = (new AdminSystem()).GetMsg(msg, base.LUser.CultureId, base.LUser.TechnicalUsr, base.SysConnectStr(sid), base.AppPwd(sid));
 					//}
 				}
-				if (!string.IsNullOrEmpty(Session["ErrStackTrace"] as string) && (base.LUser == null || base.LUser.TechnicalUsr == "Y"))
+				if (!string.IsNullOrEmpty(Session["ErrStackTrace"] as string) && ((base.LUser == null && Config.DeployType!="PRD") || base.LUser.TechnicalUsr == "Y"))
 				{
 					cStackTrace.Text = Session["ErrStackTrace"].ToString();
 					cStackTrace.Font.Name = "Verdana";

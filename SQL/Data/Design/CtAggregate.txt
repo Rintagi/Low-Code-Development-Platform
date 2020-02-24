@@ -1,0 +1,6 @@
+A~@~Average~@~30
+C~@~Count~@~10
+I~@~Smallest~@~50
+M~@~Largest~@~40
+N~@~N/A~@~5
+S~@~Sum~@~20

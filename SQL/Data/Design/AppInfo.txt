@@ -1,0 +1,2442 @@
+1~@~   2.   0.51020~@~2~@~0~@~2005-10-20 00:00:00.000~@~~@~~@~~@~~@~~@~
+2~@~   2.   1.51027~@~2~@~1~@~2005-10-27 00:00:00.000~@~~@~~@~~@~~@~~@~
+3~@~   2.   1.51103~@~2~@~1~@~2005-11-03 00:00:00.000~@~~@~~@~~@~~@~~@~
+4~@~   2.   1.51107~@~2~@~1~@~2005-11-07 00:00:00.000~@~~@~~@~~@~~@~~@~
+5~@~   2.   1.51114~@~2~@~1~@~2005-11-14 00:00:00.000~@~~@~~@~~@~~@~~@~
+6~@~   2.   1.51121~@~2~@~1~@~2005-11-21 00:00:00.000~@~~@~~@~~@~~@~~@~
+7~@~   2.   1.51130~@~2~@~1~@~2005-11-30 00:00:00.000~@~~@~~@~~@~~@~~@~
+8~@~   2.   2.51205~@~2~@~2~@~2005-12-05 00:00:00.000~@~~@~~@~~@~~@~~@~
+9~@~   2.   2.51209~@~2~@~2~@~2005-12-09 00:00:00.000~@~~@~~@~~@~~@~~@~
+10~@~   2.   3.51214~@~2~@~3~@~2005-12-14 00:00:00.000~@~~@~~@~~@~~@~~@~
+11~@~   2.   4.51230~@~2~@~4~@~2005-12-30 00:00:00.000~@~~@~~@~~@~~@~~@~
+12~@~   2.   4.60113~@~2~@~4~@~2006-01-13 00:00:00.000~@~~@~~@~~@~~@~~@~
+13~@~   2.   4.60118~@~2~@~4~@~2006-01-18 00:00:00.000~@~~@~~@~~@~~@~~@~
+15~@~   2.   4.60131~@~2~@~4~@~2006-01-31 00:00:00.000~@~~@~~@~~@~~@~~@~
+16~@~   2.   5.60207~@~2~@~5~@~2006-02-07 00:00:00.000~@~~@~~@~~@~~@~~@~
+17~@~   2.   6.60212~@~2~@~6~@~2006-02-12 00:00:00.000~@~~@~~@~~@~~@~~@~
+18~@~   2.   6.60215~@~2~@~6~@~2006-02-15 00:00:00.000~@~~@~~@~~@~~@~~@~
+19~@~   2.   6.60220~@~2~@~6~@~2006-02-20 00:00:00.000~@~~@~~@~~@~~@~~@~
+20~@~   2.   7.60309~@~2~@~7~@~2006-03-09 00:00:00.000~@~~@~~@~~@~~@~~@~
+21~@~   2.   8.60324~@~2~@~8~@~2006-03-24 00:00:00.000~@~~@~~@~~@~~@~~@~
+22~@~   2.   9.60407~@~2~@~9~@~2006-04-07 00:00:00.000~@~~@~~@~~@~~@~~@~
+23~@~   2.  10.60417~@~2~@~10~@~2006-04-17 00:00:00.000~@~~@~~@~~@~~@~~@~
+24~@~   2.  10.60427~@~2~@~10~@~2006-04-27 00:00:00.000~@~~@~~@~~@~~@~~@~
+25~@~   2.  10.60502~@~2~@~10~@~2006-05-02 00:00:00.000~@~~@~~@~~@~~@~~@~
+26~@~   2.  11.60509~@~2~@~11~@~2006-05-09 00:00:00.000~@~~@~~@~~@~~@~~@~
+27~@~   2.  12.60511~@~2~@~12~@~2006-05-11 00:00:00.000~@~~@~~@~~@~~@~~@~
+28~@~   2.  13.60523~@~2~@~13~@~2006-05-23 00:00:00.000~@~~@~~@~~@~~@~~@~
+29~@~   2.  14.60604~@~2~@~14~@~2006-06-04 00:00:00.000~@~~@~~@~~@~~@~~@~
+30~@~   2.  15.60610~@~2~@~15~@~2006-06-10 00:00:00.000~@~~@~~@~~@~~@~~@~
+31~@~   2.  16.60621~@~2~@~16~@~2006-06-21 00:00:00.000~@~~@~~@~~@~~@~~@~
+32~@~   2.  17.60726~@~2~@~17~@~2006-07-26 00:00:00.000~@~~@~~@~~@~~@~~@~
+33~@~   2.  18.60730~@~2~@~18~@~2006-07-30 00:00:00.000~@~~@~~@~~@~~@~~@~
+34~@~   2.  19.60905~@~2~@~19~@~2006-09-05 00:00:00.000~@~~@~~@~Add to Web.config:
+key="WebTitle" value="??"
+~@~~@~~@~
+35~@~   2.  19.60911~@~2~@~19~@~2006-09-11 00:00:00.000~@~~@~~@~~@~~@~~@~
+36~@~   2.  20.60918~@~2~@~20~@~2006-09-18 00:00:00.000~@~~@~~@~Add to Web.config:
+key="BackupPath" value="E:\Backup\"
+key="AppNameSpace" value="RO"
+key="DeployType" value="DEV"
+key="WsPassword" value="HJGY545646hgshEE33hb"
+key="ClientTierPath" value="C:\Inetpub\wwwroot\RO\Web\"
+key="CLanguageCd" value="C"
+key="CFrameworkCd" value="1"
+key="RuleTierPath" value="E:\Documents Business\RoboCoder\DotNet\RO\"
+key="RLanguageCd" value="C"
+key="RFrameworkCd" value="1"
+key="DProviderCd" value="M"~@~~@~~@~
+37~@~   2.  20.60920~@~2~@~20~@~2006-09-20 00:00:00.000~@~~@~~@~~@~~@~~@~
+38~@~   2.  20.60928~@~2~@~20~@~2006-09-28 00:00:00.000~@~~@~~@~~@~~@~~@~
+39~@~   2.  20.61014~@~2~@~20~@~2006-10-14 00:00:00.000~@~~@~~@~~@~~@~~@~
+40~@~   2.  20.61018~@~2~@~20~@~2006-10-18 00:00:00.000~@~~@~~@~Add to Web.config:
+<httpRuntime executionTimeout="7200" maxRequestLength="32768" />~@~~@~~@~
+41~@~   2.  20.61022~@~2~@~20~@~2006-10-22 00:00:00.000~@~~@~Copy tables Custom and CustomDtl from RODesign and generate~@~~@~~@~~@~
+42~@~   2.  22.61110~@~2~@~22~@~2006-11-10 00:00:00.000~@~~@~In user preference, remove width and height from PgBanner2 and adjust Banner* with "Padding: 0px 0px 3px 0px".~@~All custom .ascx.cs must change "SetBehavior" to "SetFoldBehavior".
+
+All custom .aspx must extract "onbeforeunload" from body tag to head tag.
+
+In Default.css,
+add "color: Blue; background-color: Transparent;" to InpLabel, etc.
+
+and add:
+/* Do not set width and height to PgBanner2 as this is a filler */
+after removing width and height from PgBanner2
+
+and replace "width: 65px; height: 23px;" from ActButton with "white-space: nowrap; width: 70px; height: 22px; padding-bottom: 20px;"
+
+remove all "cursor:hand"
+
+and add "px" to all numeric pixels and remove height=20 from Inp*
+
+and replace the following:
+.MenuCell
+{
+	border-left: Groove 1 white; border-right: Ridge 1 white;
+	background-color: #213a65;
+}
+.MenuButton,.MenuButtonSelected
+{
+	font-size: 11px; font-family: Tahoma; text-align: center; text-decoration: none;
+	height: 18px; width: 100%;
+	color:White;
+}
+.MenuButton:hover
+{
+	color: yellow;
+}
+.MenuButtonSelected
+{
+	color: Lime;
+}
+by:
+/* Top Menu */
+.TpMenu,.TpMenuItem,.TpMenuSelected,.TpMenuDdlItem,.TpMenuDdlSelected
+{
+	font-family: Tahoma,Times New Roman;
+	font-size: 11px;
+	text-decoration: none;
+	width: 100%;
+}
+/* Top Menu - Static */
+.TpMenu,.TpMenuItem,.TpMenuSelected
+{
+	text-align: center;
+	color: White; background-color: #213a65;
+	height: 18px;
+}
+/* Top Menu - Dynamic */
+.TpMenuDdlItem,.TpMenuDdlSelected
+{
+	color: Black; background-color: Silver;
+	height: 17px;
+	padding-left: 5px; padding-right: 15px;
+}
+.TpMenu
+{
+	border: Solid 1px #213a65;
+}
+.TpMenuItem
+{
+	border-left: Groove 1px White;  border-right: Groove 1px White;
+}
+.TpMenu:hover,.TpMenuItem:hover,.TpMenuDdlItem:hover
+{
+	color: Yellow; background-color: Gray;
+}
+.TpMenuSelected,.TpMenuDdlSelected
+{
+	color: #98b3dc;
+}
+.MenuBanner
+{
+	width: 0px;
+	vertical-align: top;
+	background-color: #98b3dc;
+}
+.TvMenu,.TvMenuNode,.TvMenuSelected
+{
+	font-family: Tahoma,Times New Roman;
+	color: Black;
+	font-size: 11px;
+	text-decoration: none;
+	border-style: none;
+}
+.TvMenuNode:hover
+{
+	color: yellow;
+}
+.TvMenuSelected
+{
+	color: White;
+}~@~~@~~@~
+43~@~   2.  22.61113~@~2~@~22~@~2006-11-13 00:00:00.000~@~~@~~@~~@~~@~~@~
+44~@~   2.  22.61118~@~2~@~22~@~2006-11-18 00:00:00.000~@~~@~~@~~@~~@~~@~
+45~@~   2.  22.61128~@~2~@~22~@~2006-11-28 00:00:00.000~@~~@~~@~~@~~@~~@~
+47~@~   2.  22.61201~@~2~@~22~@~2006-12-01 00:00:00.000~@~~@~~@~~@~~@~~@~
+48~@~   2.  23.61221~@~2~@~23~@~2006-12-21 00:00:00.000~@~~@~~@~~@~~@~~@~
+49~@~   2.  24.70108~@~2~@~24~@~2007-01-08 00:00:00.000~@~~@~~@~Add to Web.config:<add key="BuildExe" value="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"/>~@~~@~~@~
+50~@~   2.  24.70122~@~2~@~24~@~2007-01-22 00:00:00.000~@~~@~~@~~@~~@~~@~
+52~@~   2.  24.70129~@~2~@~24~@~2007-01-29 00:00:00.000~@~~@~~@~~@~~@~~@~
+53~@~   2.  24.70219~@~2~@~24~@~2007-02-19 00:00:00.000~@~~@~~@~~@~~@~~@~
+54~@~   2.  25.70313~@~2~@~25~@~2007-03-13 00:00:00.000~@~~@~~@~Add to Default.css:
+.InpCtr,.InpCtrLn {text-align: center;}
+.FilterGrdTbl
+{
+	background-color: gainsboro;
+	width: 35%;
+	text-align: center;
+	vertical-align: top;
+	color: #660099;
+	font-family: Arial, 'Times New Roman' , Tahoma;
+	font-size: 12px;
+}~@~~@~~@~
+55~@~   2.  25.70326~@~2~@~25~@~2007-03-26 00:00:00.000~@~~@~~@~~@~~@~~@~
+56~@~   2.  26.70410~@~2~@~26~@~2007-04-10 00:00:00.000~@~~@~~@~~@~~@~~@~
+57~@~   2.  27.70501~@~2~@~27~@~2007-05-01 00:00:00.000~@~~@~~@~Upgrade the following s.proc. to all application databases:
+ALTER PROCEDURE dbo.MkStoredProcedure
+  @spString1	varchar(8000)
+, @spString2	varchar(8000) = ''
+, @spString3	varchar(8000) = ''
+, @spString4	varchar(8000) = ''
+, @spString5	varchar(8000) = ''
+, @spString6	varchar(8000) = ''
+, @spString7	varchar(8000) = ''
+, @spString8	varchar(8000) = ''
+/* WITH ENCRYPTION */
+AS
+-- Although PRINT will only print a maximum of 8000 characters, EXEC will execute more than 8000 characters if concatenated as follow.
+EXEC ('SET QUOTED_IDENTIFIER ON SET ANSI_NULLS ON')
+EXEC (@spString1 + @spString2 + @spString3 + @spString4 + @spString5 + @spString6 + @spString7 + @spString8)
+EXEC ('SET QUOTED_IDENTIFIER OFF')
+RETURN 0
+
+Add to Web.config:
+<add key="OrdUrl" value="http://localhost/ww/Anonymous.aspx" />
+<add key="SslUrl" value="http://localhost/ww/Default.aspx" />~@~~@~~@~
+58~@~   2.  28.70517~@~2~@~28~@~2007-05-17 00:00:00.000~@~~@~Copy AjaxControlToolkit.dll to web/bin directory;
+Make sure all width and height have suffix such as "px" in css and user preference;~@~Default.css:
+add
+.CriPanel
+{
+	padding: 5px;
+}
+.TabPanel
+{
+	padding: 10px;
+}
+.PanelItem
+{
+	padding-left: 5px;
+	padding-bottom: 1px;
+}
+Remove from GrdHead...
+	text-align: center;
+	margin-left: 5px; margin-right: 5px;
+Remove from .GrdFoot:
+	text-align: right;
+Remove from .GrdNwrLb,.GrdNwrLn
+	text-align: left;
+Remove
+.GrdTxtLb,.GrdTxtLn
+{
+	text-align: left;
+}
+.GrdBoxLb,.GrdBoxLn
+{
+	text-align: center;
+}
+.GrdNumLb,.GrdNumLn
+{
+	text-align: right;
+}
+Add "padding-left: 3px; padding-right: 3px;" to
+1. .InpCtr,.InpTxt,.InpNum,.InpDdl,.InpCtrLn,.InpTxtLn,.InpNumLn,.InpDdlLn
+2. .GrdHead,.GrdSel,.GrdFoot,.GrdTxtLb,.GrdBoxLb,.GrdNumLb,.GrdNwrLb,.GrdTxtLn,.GrdBoxLn,.GrdNumLn,.GrdNwrLn
+3. .GrdTxt,.GrdBox,.GrdNum,.GrdDdl,.GrdAlt
+
+Change Web.config:
+Add before <AppSettings>:
+	<configSections>
+		<sectionGroup name="system.web.extensions" type="System.Web.Configuration.SystemWebExtensionsSectionGroup, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+			<sectionGroup name="scripting" type="System.Web.Configuration.ScriptingSectionGroup, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+				<section name="scriptResourceHandler" type="System.Web.Configuration.ScriptingScriptResourceHandlerSection, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" requirePermission="false" allowDefinition="MachineToApplication"/>
+				<sectionGroup name="webServices" type="System.Web.Configuration.ScriptingWebServicesSectionGroup, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					<section name="jsonSerialization" type="System.Web.Configuration.ScriptingJsonSerializationSection, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" requirePermission="false" allowDefinition="Everywhere"/>
+					<section name="profileService" type="System.Web.Configuration.ScriptingProfileServiceSection, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" requirePermission="false" allowDefinition="MachineToApplication"/>
+					<section name="authenticationService" type="System.Web.Configuration.ScriptingAuthenticationServiceSection, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" requirePermission="false" allowDefinition="MachineToApplication"/>
+				</sectionGroup>
+			</sectionGroup>
+		</sectionGroup>
+	</configSections>
+Replace everything after Globalization with:
+		<httpModules>
+			<add name="ScriptModule" type="System.Web.Handlers.ScriptModule, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+		</httpModules>
+		<pages smartNavigation="false">
+			<controls>
+				<add tagPrefix="asp" namespace="System.Web.UI" assembly="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+			</controls>
+		</pages>
+		<httpHandlers>
+			<remove verb="*" path="*.asmx"/>
+			<add verb="*" path="*.asmx" validate="false" type="System.Web.Script.Services.ScriptHandlerFactory, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+			<add verb="*" path="*_AppService.axd" validate="false" type="System.Web.Script.Services.ScriptHandlerFactory, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+			<add verb="GET,HEAD" path="ScriptResource.axd" type="System.Web.Handlers.ScriptResourceHandler, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" validate="false"/>
+			<add path="CrystalImageHandler.aspx" verb="GET" type="CrystalDecisions.Web.CrystalImageHandler, CrystalDecisions.Web, Version=10.2.3600.0, Culture=neutral, PublicKeyToken=692fbea5521e1304"/>
+			<add path="Reserved.ReportViewerWebControl.axd" verb="*" type="Microsoft.Reporting.WebForms.HttpHandler, Microsoft.ReportViewer.WebForms, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" validate="false"/>
+		</httpHandlers>
+	</system.web>
+	<system.webServer>
+		<validation validateIntegratedModeConfiguration="false"/>
+		<modules>
+			<add name="ScriptModule" preCondition="integratedMode" type="System.Web.Handlers.ScriptModule, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+		</modules>
+		<handlers>
+			<remove name="WebServiceHandlerFactory-Integrated"/>
+			<add name="ScriptHandlerFactory" verb="*" path="*.asmx" preCondition="integratedMode" type="System.Web.Script.Services.ScriptHandlerFactory, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+			<add name="ScriptHandlerFactoryAppServices" verb="*" path="*_AppService.axd" preCondition="integratedMode" type="System.Web.Script.Services.ScriptHandlerFactory, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+			<add name="ScriptResource" preCondition="integratedMode" verb="GET,HEAD" path="ScriptResource.axd" type="System.Web.Handlers.ScriptResourceHandler, System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
+		</handlers>
+	</system.webServer>
+</configuration>~@~~@~~@~
+60~@~   2.  29.70525~@~2~@~29~@~2007-05-25 00:00:00.000~@~~@~~@~~@~~@~~@~
+61~@~   2.  30.70608~@~2~@~30~@~2007-06-08 00:00:00.000~@~~@~Add redirection to end of all web rules that uses Session[InfoMsg] or Session[ErrMsg].~@~Create folder InetPub/RO2/Web and assign all rights to NETWORK SERVICE
+Create Virtual directory RO2
+Create ROTmplD database
+Run ASPAJAXExtSetup.msi
+Unzip the AjaxControlToolkit.zip file to C:\Program Files\Microsoft ASP.NET\ASP.NET 2.0 AJAX Extensions\
+Copy Samplewebsite\Bin\AjaxControlToolKit.dll to Binaries\
+Copy AjaxControlToolKit.dll to ..\Web\bin\
+When upgrading application development: 1. include four AdmSystems... files to VS projects; 2. Create directory Web\PrecompiledWeb\NL2 and assign all rights to NETWORK SERVICE~@~~@~~@~
+62~@~   2.  31.70615~@~2~@~31~@~2007-06-15 00:00:00.000~@~~@~~@~~@~~@~~@~
+63~@~   2.  31.70625~@~2~@~31~@~2007-06-25 00:00:00.000~@~~@~~@~~@~~@~~@~
+64~@~   2.  33.70701~@~2~@~33~@~2007-07-01 00:00:00.000~@~~@~~@~~@~~@~~@~
+65~@~   2.  34.70711~@~2~@~34~@~2007-07-11 00:00:00.000~@~~@~Add Project to Sybase java functions fKeyHier and fKeyRecu.
+Change all master.dbo.xp_sendmail to ??Design.dbo.pSendMail.~@~Create table Project in ??Cmon database.~@~~@~~@~
+67~@~   2.  34.70713~@~2~@~34~@~2007-07-13 00:00:00.000~@~~@~Copy Web/images/ArrowUp.gif and Web/images/ArrowDn.gif~@~~@~~@~~@~
+68~@~   2.  35.70717~@~2~@~35~@~2007-07-17 00:00:00.000~@~~@~~@~~@~~@~~@~
+69~@~   2.  36.70731~@~2~@~36~@~2007-07-31 00:00:00.000~@~~@~Add ReportService2005 Web Reference: RptServWs.~@~Add to Web.config:
+1. before WsPassword:
+		<add key="WsDomain" value="RND08"/>
+		<add key="WsUserName" value="WsRptUser"/>
+2. In <assemblies>:
+<add assembly="Microsoft.ReportViewer.WebForms, Version=8.0.0.0, Culture=neutral, PublicKeyToken=B03F5F7F11D50A3A"/>~@~~@~~@~
+70~@~   2.  36.70821~@~2~@~36~@~2007-08-21 00:00:00.000~@~~@~~@~Remove the followings 4 lines from Web.config:
+assembly="office
+assembly="Microsoft.Office.Interop.Excel
+assembly="Microsoft.Vbe.Interop
+key="EnableWebExcel
+
+Exclude "Microsoft.Office.Interop.Excel" from BusinessRules project reference;
+
+Remove Microsoft.Office.Interop.Excel.dll and Microsoft.Vbe.Interop.dll from C:\windows\system32;~@~~@~~@~
+71~@~   2.  37.70822~@~2~@~37~@~2007-08-22 00:00:00.000~@~~@~~@~~@~~@~~@~
+72~@~   2.  37.70910~@~2~@~37~@~2007-09-10 00:00:00.000~@~~@~~@~~@~~@~~@~
+73~@~   2.  37.70915~@~2~@~37~@~2007-09-15 00:00:00.000~@~~@~~@~~@~~@~~@~
+74~@~   2.  38.70921~@~2~@~38~@~2007-09-21 00:00:00.000~@~~@~Add <add key="PromptMsg" value="false"/> to Web.config.
+Copy images/InsRow.gif and images/Xclaim.gif~@~~@~~@~~@~
+75~@~   2.  39.70926~@~2~@~39~@~2007-09-26 00:00:00.000~@~~@~Change images, Default.css and Web rules.~@~Add image CopySave.gif;
+Change images Insert.gif to Copy.gif;
+Change images Update.gif to Save.gif;
+Change images Blank.gif to NewSave.gif;
+
+Change .ActButton's width to 80px in Default.css;
+
+Change all references in web rules from cUpdateButton to cSaveButton;~@~~@~~@~
+76~@~   2.  40.71009~@~2~@~40~@~2007-10-09 00:00:00.000~@~~@~Copy Tofworld2.gif and modify all user preference css according to new styles for banners.~@~Remove the following from Default.css:
+LoginCtr, LoginImg, LoginLnk, PgBanner, PgBanner1, PgBanner2, PgBanner3, Banner
+
+Add the following to Default.css:
+/* TopLeft, TopMiddle and TopRight combine to form the very top banner above the login */
+.TopLeft
+{
+	display: none;
+}
+.TopMiddle
+{
+	display: none;
+}
+.TopRight
+{
+	display: none;
+}
+/* LogLeft, LogMiddle and LogRight combine to form the login banner just under the Top... */
+.LogLeft
+{
+	height: 60px;
+	vertical-align: top;
+	background-image: url('images/banner/bkgtop2.jpg');
+	background-repeat: repeat;
+}
+/* Do not set width to LogMiddle as this is a filler */
+.LogMiddle
+{
+	height: 60px;
+	vertical-align: top;
+	background-image: url('images/banner/bkgtop2.jpg');
+}
+.LogRight
+{
+	width: 60px;
+	height: 60px;
+	background-image: url('images/banner/Tofworld2.gif');
+	background-repeat: no-repeat;
+}
+/* BotLeft, BotMiddle and BotRight combine to form the bottom banner just under the Log... and above the top menu */
+.BotLeft
+{
+	display: none;
+}
+.BotMiddle
+{
+	display: none;
+}
+.BotRight
+{
+	display: none;
+}
+/* BanLeft, BanMiddle and BanRight combine to form the banner just under the top menu */
+.BanLeft
+{
+	display: none;
+}
+.BanMiddle
+{
+	display: none;
+}
+.BanRight
+{
+	display: none;
+}~@~~@~~@~
+77~@~   2.  41.71018~@~2~@~41~@~2007-10-18 00:00:00.000~@~~@~Remove AdmRptTblModule.ascx.* and AdmRptTblReport.rpt from Web\Reports\directory and AdmRptTbl.* from other directories.~@~~@~~@~~@~
+78~@~   2.  42.71020~@~2~@~42~@~2007-10-20 00:00:00.000~@~~@~~@~~@~~@~~@~
+79~@~   2.  43.71029~@~2~@~43~@~2007-10-29 00:00:00.000~@~~@~~@~~@~~@~~@~
+80~@~   2.  44.71110~@~2~@~44~@~2007-11-10 00:00:00.000~@~~@~Add column "CompanyId smallint not null" to table Project.~@~~@~~@~~@~
+81~@~   3.   0.71119~@~3~@~0~@~2007-11-19 00:00:00.000~@~~@~~@~~@~~@~~@~
+82~@~   3.   1.71130~@~3~@~1~@~2007-11-30 00:00:00.000~@~~@~Add to Web.config and Default.css the following:~@~Web.config:
+<add key="MandatoryChar" value="*"/>
+<add key="ReadOnlyBColor" value="WhiteSmoke"/>
+
+Default.css:
+Add to .InpLabel {text-align: right;}
+Add to .TvMenu .TvMenuItem
+Add
+/* Side Menu - Float */
+.TvMenuItem
+{
+	height: 25px;
+}~@~~@~~@~
+83~@~   3.   2.71212~@~3~@~2~@~2007-12-12 00:00:00.000~@~~@~~@~~@~~@~~@~
+84~@~   3.   3.80102~@~3~@~3~@~2008-01-02 00:00:00.000~@~~@~~@~Change Default.css:
+.GrdTxt,.GrdBox,.GrdNum,.GrdDdl,.GrdAlt,.GrdItm
+{
+	text-align: left;
+	font-size: 11px;
+	color: #660099;
+	font-family: Verdana, Arial, 'Times New Roman' , Tahoma;
+	background-color: White;
+	padding-left: 3px; padding-right: 3px;
+}
+.GrdBox,.GrdDdl
+{
+	height: 19px;
+}
+.GrdBox
+{
+	text-align: center;
+}
+.GrdTxt,.GrdNum
+{
+	height: 13px;
+}
+.GrdNum
+{
+	text-align: right;
+}
+.GrdAlt,.GrdItm
+{
+	height: 20px;
+}
+.GrdAlt
+{
+	background-color: #F5F5F5;
+}~@~~@~~@~
+85~@~   3.   4.80107~@~3~@~4~@~2008-01-07 00:00:00.000~@~~@~~@~~@~~@~~@~
+86~@~   3.   5.80115~@~3~@~5~@~2008-01-15 00:00:00.000~@~~@~Add System.Configuration as reference to Common project.~@~~@~~@~~@~
+87~@~   3.   6.80121~@~3~@~6~@~2008-01-21 00:00:00.000~@~~@~Add the following tables to ??Design:
+ClientTier, DataTier, Entity, Release, ReleaseDtl, RuleTier.~@~Add Access?, Common?, Facade?, Rule? where ? is the SystemId;
+Add references Common?, Common3 and SystemFramewk to Access?;
+Add references SystemFramewk to Common?;
+Add references Access?, Common?, Rule?, Common3 and Rule3 to Facade?;
+Add references Access?, Common? and Common3 to Rule?;
+Add references Common? and Facade? to Web~@~~@~~@~
+88~@~   3.   7.80129~@~3~@~7~@~2008-01-29 00:00:00.000~@~~@~~@~~@~~@~~@~
+89~@~   3.   8.80207~@~3~@~8~@~2008-02-07 00:00:00.000~@~~@~Make sure all table dbo.ReportTmpl is backed up and a special program is written to convert all the rtf ntext to binary in table dbo.RptTemplate.~@~~@~~@~~@~
+90~@~   3.   8.80221~@~3~@~8~@~2008-02-21 00:00:00.000~@~~@~~@~Script all stored procedures and look for key word "java"; Remove from all DataGridLink updates the word "javascript:" and add "return false;" to the end.
+Make sure a script similar to the following is also ran in Release Content to clean up historical DataGridLink:
+"UPDATE dbo.AppItem SET AppItemLink = replace(AppItemLink,'javascript:',space(0)) + ' return false;' WHERE charindex('return false;',AppItemLink) = 0"~@~~@~~@~
+91~@~   3.   9.80313~@~3~@~9~@~2008-03-13 00:00:00.000~@~~@~~@~~@~~@~~@~
+92~@~   3.  10.80326~@~3~@~10~@~2008-03-26 00:00:00.000~@~~@~~@~~@~~@~~@~
+93~@~   3.  11.80415~@~3~@~11~@~2008-04-15 00:00:00.000~@~~@~Add Application Service Database to SQL Server:~@~1. Run cmd:
+C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\aspnet_regsql.exe  -E -S localhost -A all
+2. Insert to Web.config just below AppSettings:
+	<connectionStrings>
+		<clear/>
+		<add name="LocalSQLServer" connectionString="Server=RND08;Database=aspnetdb;trusted_connection=no;User ID=Persona;password=Persona"/>
+	</connectionStrings>
+3. Add login and user "Persona" to database "aspnetdb" to own and run everything~@~~@~~@~
+94~@~   3.  12.80707~@~3~@~12~@~2008-07-07 00:00:00.000~@~~@~Add to Web.config:
+<add key="SmtpServer" value="pop.robocoder.com"/>~@~Delete DeployMgr*.* and DeplyWs*.* from development client.
+
+Modify Web.config:
+<add key="BuildExe" value="C:\WINDOWS\Microsoft.NET\Framework\v3.5\msbuild.exe"/>
+<add key="CFrameworkCd" value="3"/>
+<add key="RFrameworkCd" value="3"/>
+
+Add the following to Default.css:
+/* Vertical Menu */
+.VrMenu,.VrMenuItem,.VrMenuSelected,.VrMenuHover,.VrMenuDdlItem,.VrMenuDdlSelected,.VrMenuDdlHover
+{
+	text-align: left;
+	font-family: Verdana, 'Times New Roman', Tahoma;
+	font-size: 10pt;
+	text-decoration: none;
+	padding-right : 5px;
+	padding-left : 5px;
+	width: 100%;
+}
+/* Vertical Menu - Static */
+.VrMenu
+{
+	border-top : solid 1px #A4AAB9;
+	border-left : solid 1px #A4AAB9;
+	border-right : solid 1px #A4AAB9;
+	background-color : #F4F4F4;
+	height: 30px;
+}
+.VrMenuItem,.VrMenuSelected,.VrMenuHover
+{
+	color: #333333; 
+	background-color: White;
+	height: 30px;
+}
+.VrMenuItem
+{
+	padding : 3px;
+	border-bottom : solid 1px #D4DDF2;
+}
+.VrMenuHover
+{
+	background-color: #DAE7FC;
+}
+/* Vertical Menu - Dynamic */
+.VrMenuDdlItem,.VrMenuDdlSelected,.VrMenuDdlHover
+{
+	color: Black;
+	height: 30px;
+	padding: 3px;
+	border-bottom : solid 1px White;
+	border-top : solid 1px White;
+}~@~~@~~@~
+95~@~   3.  13.80714~@~3~@~13~@~2008-07-14 00:00:00.000~@~~@~~@~~@~~@~~@~
+96~@~   3.  14.80717~@~3~@~14~@~2008-07-17 00:00:00.000~@~~@~~@~~@~~@~~@~
+97~@~   3.  14.80721~@~3~@~14~@~2008-07-21 00:00:00.000~@~~@~~@~~@~~@~~@~
+98~@~   3.  15.80724~@~3~@~15~@~2008-07-24 00:00:00.000~@~~@~~@~~@~~@~~@~
+99~@~   3.  16.80819~@~3~@~16~@~2008-08-19 00:00:00.000~@~~@~~@~~@~~@~~@~
+100~@~   3.  17.80825~@~3~@~17~@~2008-08-25 00:00:00.000~@~~@~~@~In Web.config:
+1. change all 8.0.0.0 of ReportViewer to 9.0.0.0;
+2. Add the following:
+<add key="WsBaseUrl" value="http://RND08S"/>
+<add key="WsdlExe" value="C:\Program Files\Microsoft SDKs\Windows\v6.1\Bin\wsdl.exe"/>
+
+Remove Web Reference RptServWs
+
+Add References of ReportViewer.Common and ReportViewer.WebForms to GAC;~@~~@~~@~
+101~@~   3.  18.80908~@~3~@~18~@~2008-09-08 00:00:00.000~@~~@~Add user "WsUser" to Web Service server and add ??Ws as virtual directory to Web Service IIS~@~In Web.config, add the following:
+    <add key="Architect" value="W"/>  <!-- W is Web Services, D is Direct Facade -->
+    <add key="WsRptBaseUrl" value="http://RND08S/ReportServer/ReportService2005.asmx"/>
+    <add key="WsRptDomain" value="RND08S"/>
+    <add key="WsRptUserName" value="WsRptUser"/>
+    <add key="WsRptPassword" value="HJGY545646hgshEE33hb"/>
+
+Add new projects "Service?" and add the following references:
+1. Facade?
+2. Common?
+3. System.Web
+4. System.Web.Services
+
+Add references of all "Service?" to web.~@~~@~~@~
+102~@~   3.  18.80911~@~3~@~18~@~2008-09-11 00:00:00.000~@~~@~~@~~@~~@~~@~
+103~@~   3.  18.80917~@~3~@~18~@~2008-09-17 00:00:00.000~@~~@~~@~~@~~@~~@~
+104~@~   3.  19.80922~@~3~@~19~@~2008-09-22 00:00:00.000~@~~@~~@~~@~~@~~@~
+105~@~   3.  20.81008~@~3~@~20~@~2008-10-08 00:00:00.000~@~~@~~@~~@~~@~~@~
+106~@~   3.  20.81012~@~3~@~20~@~2008-10-12 00:00:00.000~@~~@~~@~~@~~@~~@~
+107~@~   3.  21.81016~@~3~@~21~@~2008-10-16 00:00:00.000~@~~@~~@~~@~~@~~@~
+108~@~   3.  22.81027~@~3~@~22~@~2008-10-27 00:00:00.000~@~~@~~@~~@~~@~~@~
+109~@~   3.  23.81028~@~3~@~23~@~2008-10-28 00:00:00.000~@~~@~~@~~@~~@~~@~
+110~@~   3.  24.81101~@~3~@~24~@~2008-11-01 00:00:00.000~@~~@~~@~~@~~@~~@~
+111~@~   3.  25.81121~@~3~@~25~@~2008-11-21 00:00:00.000~@~~@~~@~Execute the following in all application databases:
+ALTER PROCEDURE dbo.MkStoredProcedure
+  @spString1	varchar(max)
+, @spString2	varchar(max) = ''
+, @spString3	varchar(max) = ''
+, @spString4	varchar(max) = ''
+, @spString5	varchar(max) = ''
+, @spString6	varchar(max) = ''
+, @spString7	varchar(max) = ''
+, @spString8	varchar(max) = ''
+/* WITH ENCRYPTION */
+AS
+-- Although PRINT will only print a maximum of max characters, EXEC will execute more than max characters if concatenated as follow.
+EXEC ('SET QUOTED_IDENTIFIER ON SET ANSI_NULLS ON')
+EXEC (@spString1 + @spString2 + @spString3 + @spString4 + @spString5 + @spString6 + @spString7 + @spString8)
+EXEC ('SET QUOTED_IDENTIFIER OFF')
+RETURN 0~@~~@~~@~
+112~@~   3.  26.81201~@~3~@~26~@~2008-12-01 00:00:00.000~@~~@~~@~~@~~@~~@~
+113~@~   3.  27.81209~@~3~@~27~@~2008-12-09 00:00:00.000~@~~@~~@~~@~~@~~@~
+114~@~   3.  28.81215~@~3~@~28~@~2008-12-15 00:00:00.000~@~~@~~@~~@~~@~~@~
+115~@~   3.  29.81219~@~3~@~29~@~2008-12-19 00:00:00.000~@~~@~~@~Add to Default.css:
+/* Rating */
+.ratingStar {
+    font-size: 0pt;
+    width: 13px;
+    height: 12px;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+    display: block;
+    background-repeat: no-repeat;
+}
+
+.filledRatingStar {
+    background-image: url(Images/FilledStar.png);
+
+}
+
+.emptyRatingStar {
+    background-image: url(Images/EmptyStar.png);
+}
+
+.savedRatingStar {
+    background-image: url(Images/SavedStar.png);
+}~@~~@~~@~
+116~@~   3.  30.81229~@~3~@~30~@~2008-12-29 00:00:00.000~@~~@~~@~~@~~@~~@~
+117~@~   3.  31.90107~@~3~@~31~@~2009-01-07 00:00:00.000~@~~@~~@~In User Group Management detail, please make sure authorizations are not specific to Administration or System Administrator may not function as desired when more than one user group is assigned to a user.~@~~@~~@~
+118~@~   3.  32.90114~@~3~@~32~@~2009-01-14 00:00:00.000~@~~@~~@~~@~~@~~@~
+119~@~   3.  33.90120~@~3~@~33~@~2009-01-20 00:00:00.000~@~~@~~@~~@~~@~~@~
+120~@~   3.  34.90127~@~3~@~34~@~2009-01-27 00:00:00.000~@~~@~~@~~@~~@~~@~
+121~@~   3.  35.90129~@~3~@~35~@~2009-01-29 00:00:00.000~@~~@~~@~~@~~@~~@~
+122~@~   3.  36.90208~@~3~@~36~@~2009-02-08 00:00:00.000~@~~@~~@~~@~~@~~@~
+123~@~   3.  36.90211~@~3~@~36~@~2009-02-11 00:00:00.000~@~~@~~@~~@~~@~~@~
+124~@~   3.  37.90225~@~3~@~37~@~2009-02-25 00:00:00.000~@~~@~~@~~@~~@~~@~
+125~@~   3.  38.90306~@~3~@~38~@~2009-03-06 00:00:00.000~@~~@~~@~~@~~@~~@~
+126~@~   3.  39.90313~@~3~@~39~@~2009-03-13 00:00:00.000~@~~@~~@~~@~~@~~@~
+127~@~   3.  40.90401~@~3~@~40~@~2009-04-01 00:00:00.000~@~~@~~@~~@~~@~~@~
+128~@~   3.  41.90407~@~3~@~41~@~2009-04-07 00:00:00.000~@~~@~~@~~@~~@~~@~
+129~@~   3.  42.90413~@~3~@~42~@~2009-04-13 00:00:00.000~@~~@~~@~~@~~@~~@~
+130~@~   3.  43.90417~@~3~@~43~@~2009-04-17 00:00:00.000~@~~@~~@~~@~~@~~@~
+131~@~   3.  44.90429~@~3~@~44~@~2009-04-29 00:00:00.000~@~~@~~@~~@~~@~~@~
+132~@~   3.  50.90506~@~3~@~50~@~2009-05-06 00:00:00.000~@~~@~~@~~@~~@~~@~
+133~@~   3.  51.90507~@~3~@~51~@~2009-05-07 00:00:00.000~@~~@~~@~~@~~@~~@~
+134~@~   3.  52.90512~@~3~@~52~@~2009-05-12 00:00:00.000~@~~@~~@~~@~~@~~@~
+135~@~   3.  53.90522~@~3~@~53~@~2009-05-22 00:00:00.000~@~~@~~@~Replace C:\InetPub\wwwroot\??\Web\Images\Button\EdgeL.jpg, EdgeR.jpg, and filler.jpg with .gif.
+Change reference in Default.css from filler.jpg to filler.gif.~@~~@~~@~
+136~@~   3.  54.90527~@~3~@~54~@~2009-05-27 00:00:00.000~@~~@~Update all "Release preparation" header information at least once.~@~Replace the followings on all web rules to all code-generated screens:
+base.SysConnectionString -> LcSysConnString
+base.AppConnectionString -> LcAppConnString
+base.AppPassword -> LcAppPw~@~~@~~@~
+137~@~   3.  55.90610~@~3~@~55~@~2009-06-10 00:00:00.000~@~~@~~@~For all custom programs and web rules:
+1. Add 'bErrNow.Value = "Y";' in front of Session["ErrMsg"] = ...;
+2. Add 'bInfoNow.Value = "Y";' in front of Session["InfoMsg"] = ...;
+3. Add try {} catch { catch (Exception err) { bErrNow.Value = "N"; Session["ErrMsg"] = err.Message; } to all calls to ..Facade(), ..System(), and ..Webrule().~@~~@~~@~
+138~@~   3.  56.90618~@~3~@~56~@~2009-06-18 00:00:00.000~@~~@~Copy images\indicator.gif.~@~~@~~@~~@~
+139~@~   3.  57.90623~@~3~@~57~@~2009-06-23 00:00:00.000~@~~@~~@~Add the following to Default.css:
+.AjaxSpinner
+{
+	background-color: white;
+	border-width:1px;
+	border-style:solid;
+	position:absolute;
+	width:200px;
+	height:68px;
+}~@~~@~~@~
+140~@~   3.  58.90626~@~3~@~58~@~2009-06-26 00:00:00.000~@~~@~~@~~@~~@~~@~
+141~@~   4.   0.90706~@~4~@~0~@~2009-07-06 00:00:00.000~@~~@~~@~In deployment preparation (Prepare Release), add "MenuPrm |" to Objects Exempted of "PDT" and "PTY" to prevent overriding existing permission settings.~@~~@~~@~
+142~@~   4.   1.90717~@~4~@~1~@~2009-07-17 00:00:00.000~@~~@~~@~~@~~@~~@~
+143~@~   4.   2.90729~@~4~@~2~@~2009-07-29 00:00:00.000~@~~@~Remove all "Using RoboCoder.WebControls";
+Replace all "ComboBox" declaration with "RoboCoder.WebControls.ComboBox";
+
+In Default.css:
+1. Change "padding-left:3px; padding-right:3px;" from InpTxt ... etc. to "padding-left:2px;";
+2. Remove .PanelItem and .CriPanel and
+3. Add
+.Mandatory
+{
+	color:Red;
+}
+.DefGrp
+{
+	padding-top: 1px;
+	padding-left: 10px;
+	padding-bottom: 2px;
+}
+.GrpLabel
+{
+	text-align:right;
+}
+.GrpContent
+{
+	text-align:left;
+}
+.GrpLabel080 {text-align:right; width:80px;}
+.GrpLabel100 {text-align:right; width:100px;}
+.GrpLabel120 {text-align:right; width:120px;}
+.GrpLabel140 {text-align:right; width:140px;}
+.GrpLabel160 {text-align:right; width:160px;}
+.HelpPopup
+{
+       width:450px;
+       height:150px;
+       border : solid 1px #FFA600;
+       background-color: #FAF0BE;
+       padding : 3px;
+       text-align : left;
+}
+.HelpTitle
+{
+       font-size: 8.5pt;
+       font-weight: bold;
+       font-family: Verdana;
+       color : #000000;
+}
+.HelpMsg
+{
+       font-size: 8.5pt;
+       font-style : italic;
+       font-family: Verdana;
+       color : #000000;
+       width:445px;
+       height:135px;
+       clear:right;
+       padding-right:5px;
+       overflow-x:hidden;
+       overflow-y:scroll;
+}
+.PageBackground
+{
+/*
+       background-image:url('images/special/spheres.jpg');
+       background-position:center;
+       background-repeat:no-repeat;
+       background-color:#FFFFFF;
+*/
+}
+.ExpandPopup
+{
+       width:615px;
+       height:430px;
+       border : solid 1px #FFA600;
+       background-color: #FAF0BE;
+       padding : 3px;
+       text-align : left;
+       z-index:10;
+       position:absolute;
+       top:100px;
+       left:100px;
+       padding:5px;
+}
+.modalBackground 
+{
+       background-color:Gray;
+       filter:alpha(opacity=40);
+       opacity:0.4;
+       z-index:9;
+       top:0px;
+       left:0px;
+       width:100%;
+       height:200px;
+       position:absolute;
+}~@~1. Stabilize page dirty indicator;
+2. Add popup larger textbox icon for multiline less than 500x200;
+3. Make our apps work on Firefox and Safari;
+4. Remove dependency on label width;
+5. Add CSS overrides to groups and group label/content;
+6. Add "Robocoder.WebControls." to ComboBox to allow upgrade to latest Ajax control toolkit;~@~~@~~@~
+144~@~   4.   3.90806~@~4~@~3~@~2009-08-06 00:00:00.000~@~~@~In Web.config, update codedom:
+	<system.codedom>
+		<compilers>
+			<compiler language="c#;cs;csharp" extension=".cs" type="Microsoft.CSharp.CSharpCodeProvider,System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" warningLevel="4" compilerOptions="/d:DEBUG;TRACE">
+				<providerOption name="CompilerVersion" value="v3.5"/>
+				<providerOption name="WarnAsError" value="false"/>
+			</compiler>
+		</compilers>
+	</system.codedom>
+
+In Default.css, add:
+.HomeTabS
+{
+       width:49%; height:220px;
+}
+.HomeTabW
+{
+       width:100%; height:220px;
+}
+.HomeTab h3
+{
+       background-color:#012A7C;
+       padding:3px;
+       color:#FFFFFF;
+       font-size:9pt;
+       font-family: Verdana;
+}
+.HomeTab ul
+{
+       list-style-type:none;
+       margin:5px;
+}
+.HomeHeader
+{
+       font-family:Verdana;
+       font-weight:bold;
+       font-size:9pt; color:#FFFFFF;
+       background-color:#012A7C;
+       padding:3px;
+}
+.HomeSection
+{
+       border-bottom:solid 1px #9EBBD9;
+}
+.HomeSection span
+{
+       font-weight:bold;
+       font-size:9pt;
+}
+.HomeSection a
+{
+       color:Blue;
+}
+.PassPoor, .PassWeak, .PassAvg, .PassStr, .PassEx
+{
+       font-family:Verdana;
+       font-weight:bold;
+       font-size:8pt;
+       background-color:#F4F4F4;
+}
+.PassPoor
+{
+       color:Red;
+}
+.PassWeak
+{
+       color:Red;
+}
+.PassAvg
+{
+       color:Orange;
+}
+.PassStr
+{
+       color:Green;
+}
+.PassEx
+{
+       color:Green;
+}
+.Special
+{
+	background-position: left center;
+	background-repeat:no-repeat;
+}
+.ErrLst .Col1 
+{
+    width: 20%;
+}
+.ErrLst tr.RowBreak td.Col1
+{
+	color:Red;
+	border-top:solid 1px;
+	vertical-align: top;
+}
+.ErrLst tr.RowBreak td
+{
+	border-top:solid 1px;
+}~@~1. Enable server errors to be deferred;
+2. Personalized home page design available in User Preference;~@~~@~~@~
+145~@~   4.   4.90808~@~4~@~4~@~2009-08-08 00:00:00.000~@~43~@~Add to Web.config:
+    <add key="AdminLoginOnly" value="N"/>  <!-- Y is Yes as maintenance mode, N is default -->
+
+Add to Default.css:
+.MaintMsg
+{
+	color:Red;
+	font-size: 11pt;
+	font-family: Verdana, 'Times New Roman';
+	height: 300px; width: 500px;
+	padding: 40px;
+	overflow-x:hidden;
+	overflow-y:hidden;
+}~@~1. Only administrators can login during maintenance mode and show maintenance message page;
+2. Add maintenance message control;
+3. Display selected maintenance message on production system only;
+4. Make home page labels wrap around;~@~~@~~@~
+146~@~   4.   4.90811~@~4~@~4~@~2009-08-11 00:00:00.000~@~~@~Change all custom programs to:
+1. Replace all GetAuthRowByLevel() by GetAuthRow();
+
+Delete the followings from the Web Service directory:
+AdmAuthRowRptWs.asmx
+AdmAuthRowWs.asmx
+AdmCtRowAuthorityWs.asmx
+
+Delete the followings from the Web directory:
+AdmAuthRow.aspx*
+AdmAuthRowRpt.aspx*
+AdmCtRowAuthority.aspx*
+AdmAuthRowModule.ascx*
+AdmAuthRowRptModule.ascx*
+AdmCtRowAuthorityModule.ascx*~@~1. Redesign the Row Authorization architecture to enable ease of configuration;~@~~@~~@~
+147~@~   4.   5.90819~@~4~@~5~@~2009-08-19 00:00:00.000~@~~@~Change all custom programs to:
+1. Screen ASCX: change function ChkExpNow();
+2. For Crystal Reports ASCX.CS: add Page_Unload;
+3. Replace all GetAuthColByLevel() by GetAuthCol();
+4. Replace GetScreenObjHlp() by GetScreenLabel();
+5. Replace GetAuthRowByLevel() by GetAuthRow();
+6. Replace GetAuthColExport() by GetAuthExp();
+
+In Web.config, add:
+<add key="PwdExpDays" value="60" />
+
+In Default.css, add:
+.WarnMsg
+{
+	color:red;
+	font-size: 11pt;
+	font-weight:bold;
+	font-family: Verdana, 'Times New Roman';
+}~@~1. Redesign the Column Authorization architecture to enable ease of configuration;
+2. Enhance the mechanism in screen export;
+3. Perform garbage collection on Crystal Reports;
+4. Add WebTitle to browser's title;
+5. Add password expiry warning;
+6. Improve performance by server-side Viewstate managment;~@~~@~~@~
+148~@~   4.   6.90821~@~4~@~6~@~2009-08-21 00:00:00.000~@~45~@~Upgrade Default.cs and Utils.cs on the installer.
+Copy Cancelled.gif and CheckMark.gif to images directory.~@~1. Encrypt stored procedures in installer;
+2. Allow one-click preparation of installer;~@~~@~~@~
+149~@~   4.   7.90828~@~4~@~7~@~2009-08-28 00:00:00.000~@~~@~Remove:
+AdmCtCultureTypeWs.asmx
+AdmCtCultureType.aspx*
+AdmCtCultureTypeModule.ascx*~@~1. Make password change and hint question change multilingual;
+2. Enable application developer to add their own culture translations;
+3. Hide all source code in production via precompile;~@~~@~~@~
+150~@~   4.   8.90909~@~4~@~8~@~2009-09-09 00:00:00.000~@~~@~~@~1. Automate conversion from Crystal Reporting to SQL Reporting Service.~@~~@~~@~
+151~@~   4.   9.90911~@~4~@~9~@~2009-09-11 00:00:00.000~@~52~@~Change all Custom programs:
+1. "Utils.GetSheetNames" to "(new XLSImport()).GetSheetNames";
+
+In the installer:
+1. Add ", string XlsPath" argument to all InstCln? procedures;~@~1. Fix errors on SQL Reportings.
+2. Externalize XLS import via web services;~@~~@~~@~
+152~@~   4.  10.90916~@~4~@~10~@~2009-09-16 00:00:00.000~@~~@~~@~1. Enhance screen criteria handling;
+2. Make sure default culture is present for many hlp tables;~@~~@~~@~
+153~@~   4.  11.90925~@~4~@~11~@~2009-09-25 00:00:00.000~@~54~@~In all custom programs ascx, add  class="BannerGrp";
+
+In Default.css, add:
+.TrMenuItem
+{
+       cursor:pointer;
+}
+
+In Default.css, Change:
+.DefGrp
+{
+}
+.GrpLabel
+{
+	padding: 1px 5px 1px 5px;
+	text-align:right;
+}
+.GrpContent
+{
+	padding: 1px 5px 1px 5px;
+	text-align:left;
+}
+.GrpLabel080 {text-align:right; width:80px; padding: 1px 5px 1px 5px;}
+.GrpLabel100 {text-align:right; width:100px; padding: 1px 5px 1px 5px;}
+.GrpLabel120 {text-align:right; width:120px; padding: 1px 5px 1px 5px;}
+.GrpLabel140 {text-align:right; width:140px; padding: 1px 5px 1px 5px;}
+.GrpLabel160 {text-align:right; width:160px; padding: 1px 5px 1px 5px;}
+
+/* Top Menu */
+.TpMenu,.TpMenuItem,.TpMenuSelected,.TpMenuHover,.TpMenuDdlItem,.TpMenuDdlSelected,.TpMenuDdlHover
+{
+	font-family: helvetica, Verdana, 'Times New Roman';
+	font-size: 10pt;
+	text-decoration: none;
+	padding-left : 5px;	padding-right : 5px;
+	width: 100%;
+}
+/* Top Menu - Static */
+.TpMenu,.TpMenuItem,.TpMenuSelected,.TpMenuHover
+{
+	text-align: left;
+	color: black; background-color: #e9af00;
+	height: 25px;
+}
+.TpMenu
+{
+	border: Solid 1px white;
+}
+.TpMenuItem
+{
+	border-left: Solid 1px White;  border-right: Solid 1px #e9af00;
+}
+.TpMenuHover
+{
+	background-color: #F3D11A;
+}
+.TpMenuSelected
+{
+	color: white;
+}
+/* Top Menu - Dynamic */
+.TpMenuDdl,.TpMenuDdlItem,.TpMenuDdlSelected
+{
+	background-color: #e9af00;
+}
+.TpMenuDdlItem,.TpMenuDdlSelected,.TpMenuDdlHover
+{
+	color: black;
+	height: 30px;
+	padding: 3px 10px 3px 5px;
+	border-bottom : solid 1px White; border-top : solid 1px White;
+}
+.TpMenuDdlHover
+{
+	background-color: #F3D11A;
+}
+/* Vertical Menu */
+.VrMenu,.VrMenuItem,.VrMenuSelected,.VrMenuHover,.VrMenuDdlItem,.VrMenuDdlSelected,.VrMenuDdlHover
+{
+	text-align: left;
+	font-family: helvetica, Verdana, 'Times New Roman';
+	font-size: 10pt;
+	text-decoration: none;
+	padding-right : 5px; padding-left : 5px;
+	width: 100%;
+}
+/* Vertical Menu - Static */
+.VrMenu
+{
+	border-top : solid 1px #A4AAB9;
+	border-left : solid 1px #A4AAB9;
+	border-right : solid 1px #A4AAB9;
+	background-color : white;
+	height: 30px;
+}
+.VrMenuItem,.VrMenuSelected,.VrMenuHover
+{
+	color: #333333; 
+	background-color: White;
+	padding-left : 5px;	padding-right : 5px;
+	height: 30px;
+}
+.VrMenuItem
+{
+	padding: 3px 10px 3px 10px;
+	border-bottom : solid 1px #D4DDF2;
+}
+.VrMenuHover
+{
+	background-color: #F3D11A;
+}
+/* Vertical Menu - Dynamic */
+.VrMenuDdl,.VrMenuDdlItem,.VrMenuDdlSelected
+{
+	background-color: #e9af00;
+}
+.VrMenuDdlItem,.VrMenuDdlSelected,.VrMenuDdlHover
+{
+	color: Black;
+	height: 30px;
+	padding: 3px 10px 3px 10px;
+	border-bottom : solid 1px White; border-top : solid 1px White;
+}
+.VrMenuDdlHover
+{
+	background-color: #F3D11A;
+}
+/* Tree Menu */
+.TvMenu,.TvMenuNode,.TvMenuItem,.TvMenuSelected
+{
+	font-family: helvetica, Verdana, 'Times New Roman';
+	color: Black;
+	font-size: 10pt;
+	text-decoration: none;
+	border-style: none;
+	height: 30px;
+}
+.TvMenuNode:hover
+{
+	color: yellow;
+}
+.TvMenuSelected
+{
+	color: black;
+}
+.BannerGrp
+{
+	font-family: helvetica, Verdana, 'Times New Roman';
+	background-color: #F5FFFA;
+}
+.BannerNam
+{
+	vertical-align: top;
+	padding: 8px;
+	font-size: 11pt;
+	float:left;
+}
+.BannerRtn
+{
+	padding: 8px;
+	float:right;
+}
+.BannerBtn
+{
+	padding: 8px;
+	float:right;
+}~@~1. Stabilize and make vertical menu more user friendly;
+2. Deal with IE8 problems on padding;
+3. Change menu appearancecs;
+4. Realign banner buttons for IE8;
+5. Add calendar capability to data grid;~@~~@~~@~
+154~@~   4.  12.91014~@~4~@~12~@~2009-10-14 00:00:00.000~@~~@~In Web.config: Change sessionState mode="StateServer" instead of "InProc" if desired.
+In Default.css: Add "z-index: 999;" to ".TpMenuDdlItem,.TpMenuDdlSelected,.TpMenuDdlHover" and ".VrMenuDdl,.VrMenuDdlItem,.VrMenuDdlSelected".~@~1. Fix SqlReport error when switching from one system to another;
+2. Add "nolock" to all GetLis and GetExp s.procs;
+3. Make sure PgDirty stays on after error message prompted;
+4. Catch non-unique key cases on import;
+5. Enable multiple screens/reports from different systems to operate on IE8 and Firefox;
+6. Enable sessions to be scaled by making sure they are serializable;
+7. Fix menu fly-out showing "server error" on heavy page loading;
+8. Enable SQL Server sent email by selectable accounts;~@~~@~~@~
+155~@~   4.  13.91022~@~4~@~13~@~2009-10-22 00:00:00.000~@~55~@~In all stored procedures that utilize the message centre, make sure the following codes are applied:
+DECLARE @sys varchar(10)
+SELECT @sys = convert(varchar,SystemId) FROM ??Design.dbo.Systems WHERE dbAppDatabase = DB_NAME()
+RAISERROR('|%s|{1}',18,2,@sys) WITH SETERROR
+
+In FooterModule.ascx.cs, if appropriate add:
+			string RbtVersion = (new LoginSystem()).GetRbtVersion();
+			if (!IsPostBack && RbtVersion != null)
+			{
+				try
+				{
+					byte sid = byte.Parse(((DropDownList)Page.Master.FindControl("ModuleLogin").FindControl("SystemsList")).SelectedValue);
+					cFooterLabel.Text = "&#169;1999-2009 robocoder corporation. All rights reserved (V" + (new LoginSystem()).GetAppVersion(base.SysConnectStr(sid), base.AppPwd(sid)) + " by R" + RbtVersion + "). Protected by U.S. Patent 6,876,314.";
+				}
+				catch { }
+			}~@~~@~~@~~@~
+156~@~   4.  14.91027~@~4~@~14~@~2009-10-27 00:00:00.000~@~~@~For all Document Imaging UpLoad tables, enlarge DocName and MimeType to nvarchar(100) and varchar(100) respectively.
+In Web.config add "<sessionPageState historySize="50" />".
+All custom screens add:
+"<asp:TextBox ID="bViewState" runat="server" Visible="false" />" to ascx; and
+"			if (!IsPostBack)	// Test for Viewstate being lost.
+			{
+				bViewState.Text = "Y";
+				string xx = Session["Idle:" + Request.Url.PathAndQuery] as string;
+				if (xx == "Y")
+				{
+					Session.Remove("Idle:" + Request.Url.PathAndQuery);
+					bInfoNow.Value = "Y"; Session["InfoMsg"] = "Page has been idled past preset limit and no longer valid, please be notified that it has been reloaded.";
+				}
+			}
+			else if (string.IsNullOrEmpty(bViewState.Text))		// Viewstate is lost.
+			{
+				Session["Idle:" + Request.Url.PathAndQuery] = "Y";
+				Response.Redirect(Request.Url.PathAndQuery);
+			}
+" to ascx.cs.~@~1. Add condition "!Request.IsAuthenticated" to CheckAuthenticated();
+2. Enable viewstate in session;~@~~@~~@~
+157~@~   4.  15.91030~@~4~@~15~@~2009-10-30 00:00:00.000~@~~@~~@~1. Change all text and ntext datatypes to varchar(max) and nvarchar(max).
+2. Replace weird characters from automatical translation engine;~@~~@~~@~
+158~@~   4.  16.91102~@~4~@~16~@~2009-11-02 00:00:00.000~@~~@~Make <authentication mode="Forms"><forms name=".SecuAuth" unique by adding namespace.~@~1. Fix error not displyed on automated langauge translation;
+2. Make multiple applications capable of operating at the same time;~@~~@~~@~
+159~@~   4.  17.91104~@~4~@~17~@~2009-11-04 00:00:00.000~@~~@~~@~1. Address combobox focus problem;
+2. Make checkboxall works according to spec;
+3. Resolve GetLis s.proc. on pull-column issue;~@~~@~~@~
+160~@~   4.  18.91109~@~4~@~18~@~2009-11-09 00:00:00.000~@~~@~~@~1. Validate proper row authority behaviors;~@~~@~~@~
+161~@~   4.  19.91123~@~4~@~19~@~2009-11-23 00:00:00.000~@~~@~~@~1. Add password strength security handling;
+2. Upgrade calendar controls;~@~~@~~@~
+162~@~   4.  20.91208~@~4~@~20~@~2009-12-08 00:00:00.000~@~~@~In Web.config, add:
+<add key="CookieHttpOnly" value="true" />	<!-- More secure when true. Currently only false for embedded media player. -->
+
+Also add cookieName="ASP.NET_WWSessionId" to sessionState.
+
+In Configure installer, exempt the following:
+UtRptMemCri |UtRptMemCriDtl |UtRptMemFld |UtReport |UtReportDel |UtReportHlp |UtReportCri |UtReportCriHlp |UtReportObj |UtReportObjHlp |UtRptElm |UtRptCel |UtRptTbl |UtRptCha |UtRptCtr |UtReportLstCri |UtRptMemCri |UtRptMemCriDtl |Rptwiz |RptwizDtl |DshAvail |DshFld |DshFldDtl~@~1. Make Report Generator user-oriented;
+2. Make Download module works on file as well;
+3. Make sure CalendarExtendar is disabled when target is readonly;
+4. Default date/datetime criteria in user-generated reports to dropdown calendar style;~@~~@~~@~
+163~@~   4.  21.91217~@~4~@~21~@~2009-12-17 00:00:00.000~@~~@~~@~1. Make sure list search criteria is cleared on every new search;~@~~@~~@~
+164~@~   4.  22.91224~@~4~@~22~@~2009-12-24 00:00:00.000~@~~@~~@~1. Add HtmlEditor as display type;~@~~@~~@~
+165~@~   4.  23.00820~@~4~@~23~@~2010-08-20 00:00:00.000~@~~@~Add to Web.config:
+<add key="MailProfile" value="RobotMail" />
+<add key="RptServerUrl" value="http://RND08/ReportServer" />
+
+Add class="BtnTbl" to all ascx and Default.css.~@~Replace all “Session["ErrMsg"] =” and “Session["InfoMsg"] =” with “PreMsgPopup(?) in all web rules.
+
+For all custom programs, do the following:
+In ASCX, remove:
+1.	Sys.WebForms.PageRequestManager.getInstance().add_endRequest(ChkErrNow)
+2.	Sys.WebForms.PageRequestManager.getInstance().add_endRequest(ChkInfoNow)
+3.	function ChkErrNow() {…}
+4.	function ChkInfoNow() {…}
+
+and add before the last “</ContentTemplate></asp:UpdatePanel>”:
+<asp:Button ID="cMsgPopupButton" runat="server" style="display:none;" OnClientClick="return false;"/>
+<asp:Panel ID="cMsgPanel" runat="server" style="display:none;" CssClass="MsgPopup">
+<table cellpadding="5px" cellspacing="0" border="0" class="MsgPopupTbl">
+<tr>
+    <td align="right" colspan="2"><asp:ImageButton ID="cMsgCloseButton" ImageUrl="~/images/Help_x.jpg" runat="server" OnClientClick="$find('cMsgPopup').hide(); return false;"  CausesValidation="false" style="cursor:hand;"/></td>
+</tr>
+<tr valign="top" align="left">
+    <td style="padding-left:20px;"><asp:Image id="cMsgClsImage" runat="server" /></td>
+    <td class="MsgPopupContent"><asp:Label ID="cMsg" runat="server" /></td>
+</tr>
+</table>
+</asp:Panel>
+<ajwc:ModalPopupExtender BehaviorID="cMsgPopup" ID="cMsgPopup" runat="server" TargetControlID="cMsgPopupButton" PopupControlID="cMsgPanel" CancelControlID="cMsgCloseButton"  BackgroundCssClass="modalBackground" Drag="true" PopupDragHandleControlID="cMsgPanel" />
+
+In ASCX.CS,
+1.	Replace all “Session["ErrMsg"] =” and “Session["InfoMsg"] =” with “PreMsgPopup(?)”;
+2.	Add:
+3.	        private void PreMsgPopup(string msg)
+4.	        {
+5.	            cMsg.Text = msg;
+6.	            if (bErrNow.Value == "Y") { cMsgClsImage.ImageUrl = "~/Images/error.gif"; bErrNow.Value = "N"; }
+7.	            else if (bInfoNow.Value == "Y") { cMsgClsImage.ImageUrl = "~/Images/info.gif"; bInfoNow.Value = "N"; }
+8.	            else { cMsgClsImage.ImageUrl = "~/Images/warning.gif"; }
+9.	            cMsgPopup.Show();
+10.	        }
+
+In Default.css, add:
+1.	.MsgPopup 
+2.	{
+3.	width:50%;
+4.	background: white;
+5.	min-height: 100px;
+6.	cursor:move;
+7.	border: solid 5px blue;
+8.	}
+9.	.MsgPopupTbl
+10.	{
+11.	width:100%;
+12.	}
+13.	.MsgPopupContent
+14.	{
+padding: 0px 20px 30px 30px;
+font-family: calibri, sans-serif;
+font-size: 18px;
+15.	}
+#cClientFocusButton
+{
+    /* this is a hidden button(should be display:none but is using visibility:hidden which takes up space in IE we must force it to nothing here, 2010.5.18 gary */
+    height:0px;
+    width:0px;
+}
+.BtnTbl
+{
+   border-spacing: 0px;
+   border-collapse: collapse;
+   padding: 0px;
+   border: none 0px white;
+}
+.BtnTbl tr td
+{
+    padding: 0px;
+}
+.BannerBtn
+{
+    /* this is a div wrapping the buttons which we want it tug to the right side in both IE 7 and 8(chrome/firefox ...)
+     * and float is the correct way, rather than text align */
+    float:right;
+}
+
+.BannerBtn table tbody tr td
+{
+    vertical-align:middle;
+}
+
+.BannerBtn table tbody tr td table
+{
+    margin: 2px;
+}~@~~@~~@~
+166~@~   4.  24.00910~@~4~@~24~@~2010-09-10 00:00:00.000~@~~@~~@~~@~~@~~@~
+167~@~   4.  25.01125~@~4~@~25~@~2010-11-25 00:00:00.000~@~~@~~@~~@~~@~~@~
+168~@~   5.   1.10201~@~5~@~1~@~2011-02-01 00:00:00.000~@~~@~~@~Replaced Prototype with Jquery.~@~~@~~@~
+169~@~   5.   2.10208~@~5~@~2~@~2011-02-08 00:00:00.000~@~~@~~@~Make sure code is generated correctly on "Spreadsheet Only" Crystal report generation.~@~~@~~@~
+170~@~   5.   3.10213~@~5~@~3~@~2011-02-13 00:00:00.000~@~~@~~@~1. Replaced "cursor:hand" with "cursor:pointer";
+2. Fixed compilation warning;
+3. Enhanced usability of unexpected error message for CSS3 compatible browsers;
+In default.css, add:
+input[type="button"]	/* IE needs inline style, this has no effect on IE */
+{
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.85);
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#bbb));
+	background-image: -moz-linear-gradient(0 100% 90deg, #fff, #bbb);
+	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+}
+input[type="button"]:hover	/* IE needs inline style, this has no effect on IE */
+{
+	-webkit-box-shadow: 0 0px 5px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0 0px 5px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 0px 5px rgba(0, 0, 0, 0.5);
+}~@~~@~~@~
+171~@~   5.   4.10221~@~5~@~4~@~2011-02-21 00:00:00.000~@~~@~Add 3.5 references to development web environment:
+1.System.core v3.5; 2.System.Data.DataSetExtension v3.5;~@~1. Remove dependency on Sql Reporting Service:
+1.1. In Web.config, remove "<add key="RptServerUrl" value="http://servername/ReportServer"/>";
+1.2. In App_code, remove "ReportingService2005.cs";
+1.3. Replace Default.cs and Utils.cs in Installer Deploy/?? directory;
+2. Replace existing menu structure with JQuery:
+2.1. In Default.css, remove all tags that has "menu" in it;
+2.2. Copy all icons from images/menu directory;
+3. Fix import count issue;~@~~@~~@~
+172~@~   5.   5.10225~@~5~@~5~@~2011-02-25 00:00:00.000~@~~@~~@~1. Address minor issues caused by the removal of SQL Reporting Service server dependency.
+2. Fix error msg not poping on file load;
+3. Add ";" to "&nbsp" on all ascs;
+4. Improve LoginModule;
+5. Enhance Top Menu smoothness on IE;~@~~@~~@~
+173~@~   5.   6.10228~@~5~@~6~@~2011-02-28 00:00:00.000~@~~@~~@~1. Enhance speed on new menu display;~@~~@~~@~
+174~@~   5.   7.10310~@~5~@~7~@~2011-03-10 00:00:00.000~@~~@~~@~1. Remove obsolete "ics=" and introduce "mcs=" for reports to cross systems. eg. In miscellaneous "SqlReport.aspx?rpt=1&csy=2&mcs=4" means runs report #1 from the system 4 even though the selected system is currently 2. "mcs=" is defaulted to "csy=" when absent.~@~~@~~@~
+175~@~   5.   8.10317~@~5~@~8~@~2011-03-17 00:00:00.000~@~~@~~@~Installer upgrade:
+1. Upgrade Default.cs;
+2. Include in project an empty Item.cs;
+3. Duplicate Production (no source) and Deployment with source code into different installers;
+4. Clean up redundant Item???,cs and remove redundant directories;
+5. Add Entity, Client, Rule and Data tiers to point to the correct installer;
+6. Reference configurations to use the correct entity and tiers;~@~~@~~@~
+176~@~   5.   9.10417~@~5~@~9~@~2011-04-17 00:00:00.000~@~~@~~@~1. Remove single quotes applied automatically to non-numeric column default because it can be a function;~@~~@~~@~
+177~@~   5.  10.10503~@~5~@~10~@~2011-05-03 00:00:00.000~@~~@~~@~1. Add "Icon URL" capture to menu items;
+2. Add more menu options;
+3. Add constraints to force entry of error message on mask existence; Please run the following script on every databse ended with a "D" to find columns that requires error message to be filled:
+"select a.* from dbo.ScreenObj a INNER JOIN dbo.ScreenObjHlp b ON a.ScreenObjId = b.ScreenObjId
+WHERE b.CultureId = 1 AND b.ErrMessage is null AND (a.MaskValid is not null OR a.RangeValidType is not NULL)"
+4. Technical user do not see detail error message;
+5. Change column authorization screen object to combobox from dropdown;~@~~@~~@~
+178~@~   5.  11.10505~@~5~@~11~@~2011-05-05 00:00:00.000~@~~@~~@~1. Change menu IconUrl to access .png instead of .ico;~@~~@~~@~
+179~@~   5.  12.10511~@~5~@~12~@~2011-05-11 00:00:00.000~@~~@~~@~1. Introduce "ssd=" to url to enable Company and Project to be independent in multiple tabs situation, works in window.open and hyperlink too;~@~~@~~@~
+180~@~   5.  13.10622~@~5~@~13~@~2011-06-22 00:00:00.000~@~~@~1. Change GetLabel function add LabelCat as parameter; Need regeneration and manually correct custom programs.
+2. Removed FooterLabel from ModuleBase. Need to manually remove all references.
+3. Chrome requires all images to have a url onload, need to regenerate and manually add src or ImageUrl to image tags on custom programs.
+4. Change all "rcasp:ActButton" in custom programs to "asp:Button  CssClass="small blue button""~@~1. Removed table structure from modal message popup on screens;
+2. Fixed LCurr.DbId issue, any Grid Links created after Jan 2011 needs to be updated again for proper popup;
+3. Add constraints to make sure Modified-by-on and Input-by-on properties are setup properly;
+4. Add label translation to auto-translator;
+5. Reformat Login Module;
+6. Replace ActButton with CSS3 button;
+7. Make Login process a little more secure by delaying the display of certain error message;
+8. Replace all (char)13 with Environment.NewLine;
+9. Do not update InputBy on machine generated row in grid;
+10. Reformat Footer Module, still not deployed;
+11. Add NDEV deployment scheme;
+12. Add Automatic Precompilation upon deployment packaging;~@~~@~~@~
+181~@~   5.  14.10707~@~5~@~14~@~2011-07-07 00:00:00.000~@~~@~1. Add BorderWidth to all DataGridLink's screen group in Screen Columns;
+2. Remove "div.crystalstyle div {overflow:hidden;}" from application.css so that Crystal Reports can be viewed in higher level browsers;
+3. Add application.css and anonymous.css to C:/inetpub/wwwroot/??/web/css directory where ?? is the application namespace; the former is used by default.master and the latter is used by index.master;~@~1. CSS class ".Page" is replaced by ".breadcrumb-container";
+2. BannerModule is removed;~@~~@~~@~
+182~@~   5.  15.10718~@~5~@~15~@~2011-07-18 00:00:00.000~@~~@~~@~1. Make width more flexible;
+2. Keep grid within boundary;
+3. Style screen group and report criteria groups properly;~@~~@~~@~
+183~@~   5.  16.10722~@~5~@~16~@~2011-07-22 00:00:00.000~@~~@~1. Add the following to web.config:
+<add key="PmtUrl" value="http://www.robocoder.com/index.aspx"/>~@~1. Fix focus issue by replacing Microsoft Ajax popup with Jquery;
+2. Speed up code generation by separating the compile process;
+3. You may set min-width and max-width on .form;~@~~@~~@~
+184~@~   5.  17.10802~@~5~@~17~@~2011-08-02 00:00:00.000~@~~@~1. Remove Microsoft.ReportViewer.Common, Microsoft.ReportViewer.WebForms, and Microsoft.ReportViewer.ProcessingObjectModel 9.0.0.0;
+2. Add Microsoft.ReportViewer.Common and Microsoft.ReportViewer.WebForms 10.0.0.0;
+3. Correct remaining references from 9.0.0.0 to 10.0.0.0 in web.config;~@~1. Upgraded SQL Reporting Services to 10.0.0.0 and removed spinner;~@~~@~~@~
+185~@~   5.  18.10818~@~5~@~18~@~2011-08-18 00:00:00.000~@~~@~1. For all custom programs that uses combobox, add ", 0, string.Empty" parameters as fillers for ", TopN, FilterTxt" to GetLis.., GetDdl.., and GetScreenIn;~@~1. Add plumbing for new auto-complete combobox;~@~~@~~@~
+186~@~   5.  19.10824~@~5~@~19~@~2011-08-24 00:00:00.000~@~~@~~@~1. HelpModule using new UI;
+2. Reintroduce MsgCentre resolution to s.proc raiseerror;~@~~@~~@~
+187~@~   5.  20.10905~@~5~@~20~@~2011-09-05 00:00:00.000~@~~@~~@~1. Change several server rules to ensure datagrid and tabfolder screens can be changed to each other easily.~@~~@~~@~
+188~@~   5.  21.10914~@~5~@~21~@~2011-09-14 00:00:00.000~@~~@~~@~1. Add option to select AutoComplete or Combobox as search mode to screen;
+2. Add new styling;
+3. Add new menu options;~@~~@~~@~
+189~@~   5.  22.10920~@~5~@~22~@~2011-09-20 00:00:00.000~@~~@~In Web.config: Replace <compilation debug="true" defaultLanguage="c#"> with
+<compilation debug="true" defaultLanguage="c#" batch="false" numRecompilesBeforeAppRestart="500">~@~1. Enhance speed and user experience in code generation across systems;
+2. Minor fine tuning on edit popup and automcomplete;~@~~@~~@~
+190~@~   6.   0.10928~@~6~@~0~@~2011-09-28 00:00:00.000~@~~@~~@~1. Add simple rhs flyout menu option;~@~~@~~@~
+191~@~   6.   1.11006~@~6~@~1~@~2011-10-06 00:00:00.000~@~~@~~@~1. Make sure enter upon a prompt does not log out (ClientRule.js);
+2. Minor enhancements on multi-lingual handling;
+3. GetMenu full utilization on javascript:window.open;
+4. New button work on single record case;~@~~@~~@~
+192~@~   6.   2.11011~@~6~@~2~@~2011-10-11 00:00:00.000~@~~@~~@~1. Enlarge LabelText in table Label to nvarchar(max);
+2. Make sure error shows up on s.proc. failure;
+3. Proper decode translated contents;~@~~@~~@~
+193~@~   6.   3.11013~@~6~@~3~@~2011-10-13 00:00:00.000~@~~@~In Web.config, add <add key="GoogleAPIKey" value=""/> where value is the encrypted Google API that you obtained from registering with Google Project;~@~1. Add paid Google translation mechanism;
+2. Minor fine tuning to deployment module;
+3. Enhanced browser experience on multilingual preferences;~@~~@~~@~
+194~@~   6.   4.11017~@~6~@~4~@~2011-10-17 00:00:00.000~@~~@~~@~1. Return the first locale found when browser preference is a two-character language code;
+2. Added Portuguese, Spanish, Turkish, Russian and Japanese languages translation;
+3. Add MasterPageFile option to Screen Definition so developers can change skin for their screens;
+4. Address an update issue re TabFolderId while updating a screen;~@~~@~~@~
+195~@~   6.   5.11024~@~6~@~5~@~2011-10-24 00:00:00.000~@~~@~~@~1. Consolidate delpoyment of applications to one installer only;~@~~@~~@~
+196~@~   6.   6.11027~@~6~@~6~@~2011-10-27 00:00:00.000~@~~@~~@~1. Addressed combobox spacing issues;
+2. Access denied on items not mentioned/accessible by menu;
+3. Single production deployment package;~@~~@~~@~
+197~@~   6.   7.11109~@~6~@~7~@~2011-11-09 00:00:00.000~@~~@~~@~1. Refactor SetUsrImpersonation() to ModuleBase.cs;
+2. Standardize grid edit UI to tab folder style;
+3. Added ribbon css style;~@~~@~~@~
+198~@~   6.   8.11202~@~6~@~8~@~2011-12-02 00:00:00.000~@~~@~~@~1. Replace s.proc WrEmailMaintMsg (SQL Server smtp) with WrGetActiveEmails (smtp relay);~@~~@~~@~
+199~@~   6.   9.20103~@~6~@~9~@~2012-01-03 00:00:00.000~@~~@~1. In all .master replace <form ...> with <form id="iForm" method="post" enctype="multipart/form-data" runat="server" defaultbutton="DoNothing"><asp:Button ID="DoNothing" runat="server" Enabled="false" style="display:none;" />
+2. Delete production's Web/bin directory before this deployment.
+3. Make sure all existing Advanced Rule is taken care of, then remove all superfluous Facade, Rule, Access and Common.Data programs;~@~1. Disable return key on all pages;
+2. Consolidate dlls in PreCompiledWeb's bin;
+3. Eliminate all generated Facade, Rule and Access layers;
+4. Move generated common.data to ascx.cs;
+5. Flag when changes on web rule and screen column, then automatically regenerate on page_init;
+6. Add web rule to generate programs upon new screen;~@~~@~~@~
+200~@~   6.  10.20109~@~6~@~10~@~2012-01-09 00:00:00.000~@~~@~~@~~@~~@~~@~
+201~@~   6.  11.20113~@~6~@~11~@~2012-01-13 00:00:00.000~@~~@~In table UsrGroup, make sure there is a UsrGroupId = 1 for Rintagi Analyst.~@~1. Prevent web rule from being accessed for UsrGroup:Rintagi Analyst;
+2. Prevent server rule from being pushed to database by UsrGroup:Rintagi Analyst;
+3. Allow screen to generate only front or back end;
+4. Fix user preference non-existence error;
+5. Rebuild Report Generator;
+6. Automate screen criteria mapping and reordering;~@~~@~~@~
+202~@~   6.  12.20117~@~6~@~12~@~2012-01-17 00:00:00.000~@~~@~~@~1. Added custom label screen;
+2. Added server rule to automatically add virtual foreign key (if needed) on screen column add/update;~@~~@~~@~
+203~@~   6.  13.20118~@~6~@~13~@~2012-01-18 00:00:00.000~@~~@~~@~~@~~@~~@~
+204~@~   6.  14.20120~@~6~@~14~@~2012-01-20 00:00:00.000~@~~@~~@~~@~~@~~@~
+205~@~   6.  15.20127~@~6~@~15~@~2012-01-27 00:00:00.000~@~~@~Add the following to web.config:
+    <!-- NewUrl is the IIS site name needed for rintagi.com to create new app. It should be something like app.rintagi.com on production. -->
+    <add key="NewUrl" value="app.rcdev02"/>~@~1. Make autocomplete available for detail grid;
+2. Separate key file for encryption key;
+3. New app can specify IIS site name;~@~~@~~@~
+206~@~   6.  16.20201~@~6~@~16~@~2012-02-01 00:00:00.000~@~~@~~@~~@~~@~~@~
+207~@~   6.  17.20208~@~6~@~17~@~2012-02-08 00:00:00.000~@~~@~Change SpecialModule.ascx.cs to access user manual from help/... instead of data/help/...~@~1. Enforce rules in links, images, and buttons;
+2. Change all combobox to autocomplete;
+3. Move data/help to the same folder level as data so it can be deployed on dev;
+4. Disable report criteria favorite for now;
+5. Disable cancel and return buttons for popup;~@~~@~~@~
+208~@~   6.  18.20214~@~6~@~18~@~2012-02-14 00:00:00.000~@~~@~1. Remove Web.dll from production's Web/bin/ directory;
+2. Change all references from DnLoadSystem to AdminSystem;~@~1. Remove dependency on popup for document management and Upload;
+2. Do not merge dll to web.dll anymore;
+3. Address radiobutton styling issue on IE;~@~~@~~@~
+209~@~   6.  19.20215~@~6~@~19~@~2012-02-15 00:00:00.000~@~~@~~@~1. Ignore "*" when searching autocomplete;
+2. Reduce deployment package size;
+3. Select first item on tab if not selected on autocomplete;~@~~@~~@~
+210~@~   6.  20.20224~@~6~@~20~@~2012-02-24 00:00:00.000~@~~@~~@~1. Add regen triggers to report stuffs;~@~~@~~@~
+211~@~   6.  21.20228~@~6~@~21~@~2012-02-28 00:00:00.000~@~~@~1. Change CompanyId and ParentId from smallint to int in Company table.~@~1. Eliminated the need of ???Desc in permission managed tables;
+2. Make autocomplete refresh on every search click;~@~~@~~@~
+212~@~   6.  22.20229~@~6~@~22~@~2012-02-29 00:00:00.000~@~~@~~@~1. Replace unique index on DbColumn with friendly message.
+2. Add constraint to prevent DdlRef column being used improperly.
+3. Make AutoComplete works in pull-up;
+4. Adjust width of pull-up display columns;~@~~@~~@~
+213~@~   6.  23.20303~@~6~@~23~@~2012-03-03 00:00:00.000~@~~@~~@~1. Miscellaneous autocomplete enhancements;
+2. Prevent automatic deletion of foreign key when in use;~@~~@~~@~
+214~@~   6.  24.20306~@~6~@~24~@~2012-03-06 00:00:00.000~@~~@~~@~1. Check to make sure all screen columns having the same root and try again;
+2. Enable multi-column initialization of screen columns;
+3. Make AutoComplete flip its list position appropriately;~@~~@~~@~
+215~@~   6.  25.20309~@~6~@~25~@~2012-03-09 00:00:00.000~@~~@~Remove the last boolean calling parameter from all Set... function call in all WebRules.~@~1. Minor css changes;
+2. Add "using System.Linq" to generated ascx.cs;
+3. Fix autocomplete not refreshing on row change;~@~~@~~@~
+216~@~   6.  26.20312~@~6~@~26~@~2012-03-12 00:00:00.000~@~~@~~@~1. Select the record added or updated rigth after on a popup with key;
+2. Optimize autocomplete retrieval for screen columns;
+3. Prevent "Combobox" from beign selected for screen column display mode;~@~~@~~@~
+217~@~   6.  27.20313~@~6~@~27~@~2012-03-13 00:00:00.000~@~~@~~@~1. Make filter on Autocomplete works properly and undo;~@~~@~~@~
+218~@~   6.  28.20314~@~6~@~28~@~2012-03-14 00:00:00.000~@~~@~~@~1. Take care of EnableSsl in LoginModule;
+2. Enable background color of Autocomplete;~@~~@~~@~
+219~@~   6.  29.20316~@~6~@~29~@~2012-03-16 00:00:00.000~@~~@~~@~1. Make adjustment to quick filter on popup;
+2. Change Autocomplete to delay 100ms;
+3. Right-justify numeric labels;~@~~@~~@~
+220~@~   6.  30.20318~@~6~@~30~@~2012-03-18 00:00:00.000~@~~@~~@~1. Address an issue of search_script passing "key=" even when "col=" is deliberately not entered in ColumnLink;
+2. Remove "frm=" and "pkey=" in search_script which was used by upload.aspx which is obsolete;~@~~@~~@~
+221~@~   6.  31.20320~@~6~@~31~@~2012-03-20 00:00:00.000~@~~@~~@~1. Fix a problem in screen grouping GetObjScreenGrp;
+2. Adjust spinner position;~@~~@~~@~
+222~@~   6.  32.20322~@~6~@~32~@~2012-03-22 00:00:00.000~@~~@~~@~1. Fix document imaging issue on multidesign database programs;~@~~@~~@~
+223~@~   6.  33.20323~@~6~@~33~@~2012-03-23 00:00:00.000~@~~@~~@~1. Make sure grid autocomplete filter on tab-folder column;
+2. Do not validate page on delete;~@~~@~~@~
+224~@~   6.  34.20324~@~6~@~34~@~2012-03-24 00:00:00.000~@~~@~~@~1. Add class "TopDiv" to LoginModule;~@~~@~~@~
+225~@~   6.  35.20328~@~6~@~35~@~2012-03-28 00:00:00.000~@~~@~~@~1. Add screen group col4;
+2. Change investor to autocomplete in user manager;~@~~@~~@~
+226~@~   6.  36.20330~@~6~@~36~@~2012-03-30 00:00:00.000~@~~@~~@~1. Add regex to prevent punctuation in report control name;
+2. Add constraints to prevent bad deletions from report control and report table;
+3. Fine tune deployment to include inline scripts;
+3. Validate mandatory criteria;~@~~@~~@~
+227~@~   6.  37.20403~@~6~@~37~@~2012-04-03 00:00:00.000~@~~@~~@~1. Make sure radiobutton triggers selectedindexchange properly;
+2. Change many columns to AutoComplete in User Preference;
+3. Make sure dynamic image can be displayed if given full path in SQL reporting;
+4. Make sure CelNum of RptTbl has the correct reference after trasfer from report generator;~@~~@~~@~
+228~@~   6.  38.20409~@~6~@~38~@~2012-04-09 00:00:00.000~@~~@~~@~1. Add And/Or to row authority override;~@~~@~~@~
+229~@~   6.  39.20410~@~6~@~39~@~2012-04-10 00:00:00.000~@~~@~~@~1. Make sure ScreenGrp has all the necessary columns for code gen;
+2. Make Gridfooter summary sensitive to demical places;
+3. Make sure disabled textbox cannot be focus on;~@~~@~~@~
+230~@~   6.  40.20416~@~6~@~40~@~2012-04-16 00:00:00.000~@~~@~~@~1. Make sure ShortDateTime display-type works;
+2. Address a deployment script on ScreenGrp;
+3. Enable table function name establishment;
+4. Change VwMenu to fMenu;~@~~@~~@~
+231~@~   6.  41.20417~@~6~@~41~@~2012-04-17 00:00:00.000~@~~@~~@~1. Clean up GenScreenRule;~@~~@~~@~
+232~@~   6.  42.20418~@~6~@~42~@~2012-04-18 00:00:00.000~@~~@~~@~1. Address ColumnLink case sensitive issue;
+2. Add primary key capability to column link;~@~~@~~@~
+233~@~   6.  43.20420~@~6~@~43~@~2012-04-20 00:00:00.000~@~~@~Global replace ContentPlaceHolderID="MasterHolder" by ContentPlaceHolderID="MHR" for custom programs after regeneration;~@~1. Add JQuery Calendar;
+2. Add field level confirm with cancel capability;
+3. Optimize postback data size;~@~~@~~@~
+234~@~   6.  44.20425~@~6~@~44~@~2012-04-25 00:00:00.000~@~~@~~@~1. Make sure datapicker, checkbox, radiobutton, star, progressbar focus on next tabable field;
+2. Add focus borders;
+3. Ignore confirm for Document Imaging;~@~~@~~@~
+235~@~   6.  45.20518~@~6~@~45~@~2012-05-18 00:00:00.000~@~~@~~@~1. Adjust data dictionary report;
+2. Change custom label description;
+3. Add legend and fieldset to criteria;
+4. Miscellaneous enhancements;
+5. Adjust z-index for menu and autocomplete;~@~~@~~@~
+236~@~   6.  46.20522~@~6~@~46~@~2012-05-22 00:00:00.000~@~~@~~@~1. Make screen and report criteria display more developer and user friendly.~@~~@~~@~
+237~@~   6.  47.20525~@~6~@~47~@~2012-05-25 00:00:00.000~@~~@~~@~1. Enhance Usage and user reports;~@~~@~~@~
+238~@~   6.  48.20529~@~6~@~48~@~2012-05-29 00:00:00.000~@~~@~~@~1. Change prefix to criteria column from "c" to "x";~@~~@~~@~
+239~@~   6.  49.20606~@~6~@~49~@~2012-06-06 00:00:00.000~@~~@~~@~1. Address datetime default value issue in Screen Column;
+2. Notify correct count of imported rows of data;
+3. When the rows retrieved is less than total count in a criteria dropdown, etc., it is deemed mandatory regardless;~@~~@~~@~
+240~@~   6.  50.20608~@~6~@~50~@~2012-06-08 00:00:00.000~@~~@~~@~1. Address "multidesigndb" issue on Screen Criteria;~@~~@~~@~
+241~@~   6.  51.20610~@~6~@~51~@~2012-06-10 00:00:00.000~@~~@~Copy stored procedure MkStoredProcedure from ??Design to all app db;~@~1. Add unique index column to Data Table & Column;
+2. Address readonly issue on document imaging and upload;
+3. Make sure grid imageLink and ImagePopup can display selective images and links at the same time;~@~~@~~@~
+242~@~   6.  52.20625~@~6~@~52~@~2012-06-25 00:00:00.000~@~~@~~@~1. Remove invalid wildcard characters "*" and "%" in the middle of an expression from grid filter to avoid error message;
+2. Deploy view table;
+3. Autocomplete search-for-record pulls direct from criteria;
+4. Firefox confirm issue;
+5. Login ssl detection;
+6. Synchronize view on DbTable;~@~~@~~@~
+243~@~   6.  53.20627~@~6~@~53~@~2012-06-27 00:00:00.000~@~~@~~@~1. Address sql reporting autocomplete issue.~@~~@~~@~
+244~@~   6.  54.20629~@~6~@~54~@~2012-06-29 00:00:00.000~@~~@~~@~1. Right-align grid labels properly;
+2. Save button moved to left most;
+3. Make sure hourglass work properly on autocomplete;~@~~@~~@~
+245~@~   6.  55.20703~@~6~@~55~@~2012-07-03 00:00:00.000~@~~@~~@~Address a layout issue on AutoComplete when run in Chrome;~@~~@~~@~
+246~@~   6.  56.20715~@~6~@~56~@~2012-07-15 00:00:00.000~@~~@~Add to Web.config:
+<!-- Limit image uploaded to DB (Document Imaging) in threshold size (kbytes) and width (pixels). -->
+<add key="ImgThreshold" value="800"/>~@~1. shrink image size down to system specific threshold pixel or less in width when the image uploaded to database is greater than that threshold in kbytes;~@~~@~~@~
+247~@~   6.  57.20727~@~6~@~57~@~2012-07-27 00:00:00.000~@~~@~~@~1. Address the undesirable memory expansion of image reduction in document imaging;
+2. Clean up "../" with "~/" for relative path;
+3. Make Image Button more user friendly;
+4. Addressed non-numeric key in Autocomplete issue;~@~~@~~@~
+248~@~   6.  58.20810~@~6~@~58~@~2012-08-10 00:00:00.000~@~~@~~@~~@~~@~~@~
+249~@~   6.  59.20813~@~6~@~59~@~2012-08-13 00:00:00.000~@~~@~~@~~@~~@~~@~
+250~@~   6.  60.20824~@~6~@~60~@~2012-08-24 00:00:00.000~@~~@~~@~1. Remove redundant ImageButtons and enable button image to be altered via css;~@~~@~~@~
+251~@~   6.  61.20828~@~6~@~61~@~2012-08-28 00:00:00.000~@~~@~Change Web.config: loginUrl="MyAccount.aspx";~@~1. Make all screen/report/wizard embed-able;
+2. Make login/forgot pwd independent of master;
+3. Make master page part of a theme;
+4. Anonymous access option;~@~~@~~@~
+252~@~   6.  62.20829~@~6~@~62~@~2012-08-29 00:00:00.000~@~~@~~@~~@~~@~~@~
+253~@~   6.  63.20831~@~6~@~63~@~2012-08-31 00:00:00.000~@~~@~~@~1. Address a few ssl issues;
+2. Address a few report generator issues;~@~~@~~@~
+254~@~   6.  64.20912~@~6~@~64~@~2012-09-12 00:00:00.000~@~~@~~@~~@~~@~~@~
+255~@~   6.  65.20913~@~6~@~65~@~2012-09-13 00:00:00.000~@~~@~~@~~@~~@~~@~
+256~@~   6.  66.20919~@~6~@~66~@~2012-09-19 00:00:00.000~@~~@~1. Change column CompanyName in Cmon.dbo.Company to CompanyDesc if it does not already exists.
+2. Change column ProjectName in Cmon.dbo.Project to ProjectDesc if it does not already exists.
+3. select * from DbColumn where ColumnName = 'CompanyName' or ColumnName = 'ProjectName'
+4. select * from ReportCri where DdlRefColumnName = 'CompanyName' or DdlSrtColumnName = 'CompanyName' or DdlRefColumnName = 'ProjectName' or DdlSrtColumnName = 'ProjectName'
+5. select * from ReportObj where ColumnName = 'CompanyName' or ColumnName = 'ProjectName'
+6. After regeneration, look for CompanyName and ProjectName in business rules;~@~1. Change Company and Project tables to use ..Desc instead of ..Name for backward compatibility;
+2. Address DB column name change not capturing previous column issue;~@~~@~~@~
+257~@~   6.  67.20921~@~6~@~67~@~2012-09-21 00:00:00.000~@~~@~~@~1. Make SearchId in table Screen compatible with ColumnId in DbColumn;
+2. Check if SearchId is using the column before deleting it;
+3. Enable Combine Assemblies option;
+4. Enable inline CSS option by column;
+5. Enable upload path option;~@~~@~~@~
+258~@~   6.  68.20922~@~6~@~68~@~2012-09-22 00:00:00.000~@~~@~~@~1. Address CSS and autocomplete issues.~@~~@~~@~
+259~@~   6.  69.20926~@~6~@~69~@~2012-09-26 00:00:00.000~@~~@~~@~1. Address a minor grid update issue;
+2. Add static page accessories;
+3. Hanlde select-all in report criteria for both Crystal and SQL Reporting;~@~~@~~@~
+260~@~   6.  70.20927~@~6~@~70~@~2012-09-27 00:00:00.000~@~~@~~@~~@~~@~~@~
+261~@~   6.  71.20928~@~6~@~71~@~2012-09-28 00:00:00.000~@~~@~~@~1. Addressed multi-ligual issues on account and profile;~@~~@~~@~
+262~@~   7.   1.21001~@~7~@~1~@~2012-10-01 00:00:00.000~@~~@~~@~1. Addressed a problem on the ordering of ID in tab folder;
+2. Addressed a problem on index recreation in Table & Column;~@~~@~~@~
+263~@~   7.   2.21003~@~7~@~2~@~2012-10-03 00:00:00.000~@~~@~Add the following to the end of Web.config before </configuration>:
+  <system.web.extensions>
+    <scripting>
+      <webServices>
+        <jsonSerialization maxJsonLength="500000"/>
+      </webServices>
+    </scripting>
+  </system.web.extensions>~@~1. Autocomplete adds "100 more ....";
+2. No need for autopostback in "ColumnLink" popup;~@~~@~~@~
+264~@~   7.   3.21005~@~7~@~3~@~2012-10-05 00:00:00.000~@~~@~~@~1. Address AddData ID column issue;
+2. Add UsageDt, ModifiedOn and InputOn UTC time zone sensitive capability;~@~~@~~@~
+265~@~   7.   4.21011~@~7~@~4~@~2012-10-11 00:00:00.000~@~~@~~@~1. Add grid wrapping under previous column capability;~@~~@~~@~
+266~@~   7.   5.21018~@~7~@~5~@~2012-10-18 00:00:00.000~@~~@~~@~1. Enable Grid Grouping;
+2. Fine tune non-mandatory ListBox;~@~~@~~@~
+267~@~   7.   6.21024~@~7~@~6~@~2012-10-24 00:00:00.000~@~~@~~@~1. Arrange columns on several screens for ease of entry.~@~~@~~@~
+268~@~   7.   7.21107~@~7~@~7~@~2012-11-07 00:00:00.000~@~~@~~@~1. Fine tune foregin key deletion business rule upon screen column removal;
+2. Address image pullup issues for both tab folder and grid;~@~~@~~@~
+269~@~   7.   8.21115~@~7~@~8~@~2012-11-15 00:00:00.000~@~~@~~@~1. Fix checkbox wrap under issue (revised grid grouping);
+2. Add timer capability (cron task);
+3. Restore filter by Tab's primary key feature in autocomplete;
+4. Zap autocomplete session datatable for import;
+5. Make action button to follow AuthRow;
+6. Proper mime on report stream;~@~~@~~@~
+270~@~   7.   9.21121~@~7~@~9~@~2012-11-21 00:00:00.000~@~~@~~@~1. Adding helpful link and descriptions toTable & Column Screen;~@~~@~~@~
+271~@~   7.  10.21122~@~7~@~10~@~2012-11-22 00:00:00.000~@~~@~Need to regenerate all codes.~@~1. Address locale/culture and datetime field special case;
+2. Add client-side confirm popup to ClientRule.js;
+3. Enhance performance on AutoComplete;
+4. Address web rule locale interface issue;
+5. Add new menu option used by Rintagi.com~@~~@~~@~
+272~@~   7.  11.21126~@~7~@~11~@~2012-11-26 00:00:00.000~@~~@~~@~1. Remove Data Types: Image, Real, SmallDateTime, NText, Text;
+2. Report "Anonymous" login missing for firing Time-Job Schedule;~@~~@~~@~
+273~@~   7.  12.21210~@~7~@~12~@~2012-12-10 00:00:00.000~@~~@~~@~1. Error messages display enhancements;
+2. Watermark enabled;
+3. Enable default value to be applied before/after and null/always;~@~~@~~@~
+274~@~   7.  13.21212~@~7~@~13~@~2012-12-12 00:00:00.000~@~~@~~@~1. Add default handling behaviors;
+2. Fix a problem on report's double calendar criteria;
+3. Add print functionality to prompt messages;~@~~@~~@~
+275~@~   7.  13.21213~@~7~@~13~@~2012-12-13 00:00:00.000~@~~@~~@~1. Add three UTC datetime display types;
+2. Transform InputBy, InputOn, ModifiedBy, ModifiedOn to new display types and modes;~@~~@~~@~
+276~@~   7.  14.21214~@~7~@~14~@~2012-12-14 00:00:00.000~@~~@~~@~1. Change the display of multiline textbox to free height;
+2. Address a UTC conversion issue;~@~~@~~@~
+277~@~   7.  15.21215~@~7~@~15~@~2012-12-15 00:00:00.000~@~~@~~@~1. Fix delete button not permission managed issue;~@~~@~~@~
+278~@~   7.  16.21218~@~7~@~16~@~2012-12-18 00:00:00.000~@~~@~~@~~@~~@~~@~
+279~@~   7.  17.21220~@~7~@~17~@~2012-12-20 00:00:00.000~@~~@~Regenerate all screens after upgrade.~@~1. Enhanced multilingual handling on static pages;~@~~@~~@~
+280~@~   7.  18.21221~@~7~@~18~@~2012-12-21 00:00:00.000~@~~@~~@~~@~~@~~@~
+281~@~   7.  19.30109~@~7~@~19~@~2013-01-09 00:00:00.000~@~~@~Regen all screens and reports after upgrade.~@~1. fix firefox double postback in autocomplete;
+2. add getfocusid and fix adjust_height in IE for non-active tab;
+3. add module transfer functionality to deploy
+4. fix content-disposition for firefox (space in file name);
+5. enforce mandatory criteria in screen (textbox only, '~' as default for general textbox and today's date for date related field~@~~@~~@~
+1281~@~   7.  20.30117~@~7~@~20~@~2013-01-17 00:00:00.000~@~~@~Regenerate all screens after upgrade.~@~1. Make TrimOnEntry work on Screen Column;
+~@~~@~~@~
+2281~@~   7.  21.30122~@~7~@~21~@~2013-01-22 00:00:00.000~@~~@~Regenerate all screens.~@~1. Address hidden or readonly fields being mandatory issue;
+2. Address foreign key being deleted issue;
+3. Take care of client rule existence test;
+3. Add app transfer ability;~@~~@~~@~
+2282~@~   7.  22.30130~@~7~@~22~@~2013-01-30 00:00:00.000~@~~@~~@~1. Add Draggable Menu;~@~~@~~@~
+2283~@~   7.  23.30207~@~7~@~23~@~2013-02-07 00:00:00.000~@~~@~Regenerate all screens.~@~1. Enhance the useability of Data Table and Column screen;
+2. Add additional hidden placeholder on top of screen for custom use;
+3. Lock Rintagi down on specified IP inside web.config only;~@~~@~~@~
+2284~@~   7.  24.30213~@~7~@~24~@~2013-02-13 00:00:00.000~@~~@~~@~1. Enable client rule to function well in multiple tabs;
+2. Expand the script override to 500 characters;~@~~@~~@~
+2285~@~   7.  25.30225~@~7~@~25~@~2013-02-25 00:00:00.000~@~~@~Regenerate all screens.~@~1. Enable MyAccount to use another PageMaster via "m=" on url;
+2. Make data-grid rows show up even when DDL not found;~@~~@~~@~
+2286~@~   7.  26.30226~@~7~@~26~@~2013-02-26 00:00:00.000~@~~@~Regenerate all screens and reports.~@~1. Expand ProjectId to int from smallint throughout the entire system;
+~@~~@~~@~
+2287~@~   7.  27.30305~@~7~@~27~@~2013-03-05 00:00:00.000~@~~@~Regenerate all screens.~@~1. Address cross-database table update and display for image upload;
+~@~~@~~@~
+3287~@~   7.  28.30307~@~7~@~28~@~2013-03-07 00:00:00.000~@~~@~Regenerate all screens.~@~1. Hide redundant button on readonly radio-button;
+2. Fix Radiobutton not declare properly in Grid_UpdateCommand;
+3. Enable Data Table & Column to accept view or function to contain script;
+~@~~@~~@~
+3288~@~   7.  29.30311~@~7~@~29~@~2013-03-11 00:00:00.000~@~~@~Regenerate all screens.~@~1. Make sure overriding style works on all kinds of hyperlinks;
+2. Allow ImageLink and ImagePopup to use Default Value as imageUrl;~@~~@~~@~
+3289~@~   7.  30.30312~@~7~@~30~@~2013-03-12 00:00:00.000~@~~@~Regenerate all screens.~@~1. Change ClientRule.js to restore tab to next row functionality;
+2. Remove redundant tooltips on grid elements;
+3. Correct right-justified grid labels layout;
+~@~~@~~@~
+3290~@~   7.  31.30313~@~7~@~31~@~2013-03-13 00:00:00.000~@~~@~~@~1. Expand size of screen column's columns esp. ContentCSS;
+~@~~@~~@~
+3291~@~   7.  32.30315~@~7~@~32~@~2013-03-15 00:00:00.000~@~~@~~@~1. Expand alternative button name on Button Override;
+2. Change prompts to look better;
+3. Make sure action button's head space is reserved for proper alignment;
+4. Makes sure action button click event is generated properly;
+~@~~@~~@~
+3292~@~   7.  33.30326~@~7~@~33~@~2013-03-26 00:00:00.000~@~~@~~@~1. Make sure ScreenHlp and ScreenObjHlp are returning info from default culture even when desired culture not found;
+2. Remove AtCulture tables;
+3. Remove column CultureTypeSrt from CtCulture table;
+4. Add columns CountryCd, CurrencyCd, and ToTranslate to CtCulture table;
+5. Add all available cultures to CtCulture;
+6. Add CtCountryTable and fill with all valid ISO country code;
+7. Add bulk currency translate mechanism to Culture translation;
+8. Add automatic currency translate mechanism to all currency field in Tab Folder eg. Release Tracking;
+~@~~@~en-US~@~1020.0000
+3293~@~   7.  34.30327~@~7~@~34~@~2013-03-27 00:00:00.000~@~~@~~@~1. Add automatic currency translate mechanism to all currency field in grid eg. User Impersonation;
+2. Make language handling more object oriented;
+~@~~@~en-GB~@~2588.7300
+3294~@~   7.  35.30405~@~7~@~35~@~2013-04-05 00:00:00.000~@~~@~~@~1. Refactoring SendEmail functionality into ModuleBase;
+2. Address a superfluous onlick issue on EditItemTemplate of ImageButton;
+3. Add display type "Token Input";
+4. Add constraint to StarRating;
+5. Address an issue with count on datetime column;
+6. Do not allow search on non-dynamic grid columns;
+~@~~@~en-US~@~
+3295~@~   7.  36.30411~@~7~@~36~@~2013-04-11 00:00:00.000~@~~@~~@~1. Make sure labels synchronize with static page name change;
+2. Add button to remove translated labels;
+~@~~@~en-US~@~
+3296~@~   7.  37.30415~@~7~@~37~@~2013-04-15 00:00:00.000~@~~@~Check css/, scripts/ and any other static file directories having Web.config file for short live cache setting:
+<configuration>
+    <system.webServer>
+        <staticContent>
+            <clientCache cacheControlMode="UseMaxAge" cacheControlMaxAge="04:00:00" />
+        </staticContent>
+    </system.webServer>
+</configuration>~@~Miscellaneous enhancements;~@~~@~en-US~@~
+3297~@~   7.  38.30501~@~7~@~38~@~2013-05-01 00:00:00.000~@~~@~~@~1. Add a view to Usr table for dropdown, etc. to avoid being filtered by CultureId;
+2. Minor enhancements;
+~@~~@~en-US~@~
+3298~@~   7.  39.30513~@~7~@~39~@~2013-05-13 00:00:00.000~@~~@~Remove "MailProfile" from Web.config.~@~1. Config.MailProfile removed;
+2. Store-procedure pSendMail removed;
+3. Password-change send-email via base.SendEmail;
+4. Stored-procedures AeEmailPwdChg and SetNewPwd removed;
+~@~~@~en-US~@~
+3299~@~   7.  40.30523~@~7~@~40~@~2013-05-23 00:00:00.000~@~~@~If "(new AdminSystem()).AddData(1,..." is used in custom web rule, AdmUsr's MakeColumns must be verified against this version.~@~1. Fix encryption issue with s.proc. IsValidOvride;
+2. Enhance MyAccountModule;
+3. Added report type E for Excel merging;
+~@~~@~en-US~@~
+3300~@~   7.  41.30527~@~7~@~41~@~2013-05-27 00:00:00.000~@~~@~~@~1. Fixed CronJob via Global.asax.cs;
+2. Take care of inactive users upon forget-password;
+~@~~@~en-US~@~
+3301~@~   7.  42.30612~@~7~@~42~@~2013-06-12 00:00:00.000~@~~@~~@~1. Enable easier search for menu item for permission management;
+~@~~@~en-US~@~
+3302~@~   7.  43.30624~@~7~@~43~@~2013-06-24 00:00:00.000~@~~@~Add tables Member and SredTime to ??Cmon database manually;~@~1. Correct Lines 5842 and 6150 of GenScreenRule for Image pull-up issue;
+2. Added SR&ED tracking capability;
+3. Add help description to client rule scripting;
+4. Add handling for cross database category in MkReportReg;
+5. Minor condition change in SetFoldBehavior in ModuleBase;
+6. TextArea should not display expand icon when readonly or invisible;
+7. Fix an issue with chart transferring from report generator to permanent report;
+8. Add sorting capability when grid header is hidden;
+~@~~@~en-US~@~
+3303~@~   7.  44.30626~@~7~@~44~@~2013-06-26 00:00:00.000~@~~@~~@~1. Enable code generation on ??View database;
+2. Add checkbox "View Only" to Screen Definition for view only screens;
+~@~~@~en-US~@~
+3304~@~   7.  45.30702~@~7~@~45~@~2013-07-02 00:00:00.000~@~~@~~@~1. Make icons for database interaction appears on production ??View database;
+2. Fix issue in GetButtonHlp s.proc;
+3. Hide import buttons for View only Screens;
+4. Hide and show appropriate fields depending on Screen Type on Screen Definition;
+5. Fix a problem on report generator on function;
+6. Minor enhancements to MyAccount;
+7. Initialize ReportGrp table via new s.proc SetRptGrp;~@~~@~en-US~@~
+4304~@~   7.  46.30704~@~7~@~46~@~2013-07-04 00:00:00.000~@~~@~~@~1. Address minor issues on view only screens generation;~@~~@~en-US~@~
+4305~@~   8.   0.30719~@~8~@~0~@~2013-07-19 00:00:00.000~@~~@~~@~1. Address an issue in MkReportReg on Dashboard;
+2. Change dropdowns in Report Category to Autocomplete;
+3. Enhancement to view-only screen authorities;~@~~@~en-US~@~
+4306~@~   8.   1.30723~@~8~@~1~@~2013-07-23 00:00:00.000~@~~@~~@~1. Use enter-key to save mouse-click on grid navigation bar;~@~~@~en-US~@~
+4307~@~   8.   2.30729~@~8~@~2~@~2013-07-29 00:00:00.000~@~~@~~@~1. Enhance the usability of Static Pages;~@~~@~en-US~@~
+4308~@~   8.   3.30813~@~8~@~3~@~2013-08-13 00:00:00.000~@~~@~~@~1. Do not delete custom s.proc upon report deletion;
+2. Add order to screen filter description for easy search;
+3. Add reset button to language selection;
+4. Fix a problem with ImageLink;
+~@~~@~en-US~@~
+4309~@~   8.   4.30816~@~8~@~4~@~2013-08-16 00:00:00.000~@~~@~~@~1. Make sure grid sort went back to default when empty is re-selected;
+2. Make sure DateUTC in screen criteria is handled properly;~@~~@~en-US~@~
+4310~@~   8.   5.30916~@~8~@~5~@~2013-09-16 00:00:00.000~@~~@~~@~1. Add top with two-level horizontal sub-menu;
+2. Fix a menu draggable issue;
+3. Fix a SearchLink issue;
+4. MaskValid in ScreenObj increased to varchar(100);
+~@~~@~en-US~@~
+4311~@~   8.   6.30930~@~8~@~6~@~2013-09-30 00:00:00.000~@~~@~~@~1. Hide LoginName and Trash icon in attachment when readonly;
+2. When No Add and No Update, disable all columns;
+3. Prompt for "terms of service" when new user set password;
+~@~~@~en-US~@~
+4312~@~   8.   7.31002~@~8~@~7~@~2013-10-02 00:00:00.000~@~~@~~@~1. Fix a problem on LoginAccess about link generation due to culture;
+2. Enhance UX on search box;
+~@~~@~en-US~@~
+4313~@~   8.   8.31004~@~8~@~8~@~2013-10-04 00:00:00.000~@~~@~Add to Web.config: <add key="MasterPgFile" value="Default.master"/>
+~@~Add flexibility to set a default master page file in Web.config;
+* fix column position for date fields in grid import, fix aggrgrid row count calculation, fix getsalteduser password handling, pass row authority to getauthcol, fix column override in grid for button/image button. add output excel template feature for wizard/grid import.
+* imported excel template merge to handle multiple sheet and grouping/filtering, add excel import template feature to wizard/grid import, anonymous login observe csy=?
+* escape SQL LIKE operator special characters in search string(%,_,[). better delete and save guard in screen object
+~@~~@~en-US~@~
+4314~@~   8.   9.31011~@~8~@~9~@~2013-10-11 00:00:00.000~@~~@~~@~Many miscellaneous minor enhancements;
+~@~~@~en-US~@~
+5314~@~   8.  10.31022~@~8~@~10~@~2013-10-22 00:00:00.000~@~~@~~@~1. Automatically capture deleted contents and track DeletedBy and DeletedOn;
+2. Fix a problem in WebControl;~@~~@~zh-CN~@~
+5315~@~   8.  11.31029~@~8~@~11~@~2013-10-29 00:00:00.000~@~~@~~@~1. Finalize automatic capture of deleted contents and track DeletedBy and DeletedOn;
+2. Address a few miscellaneous issues;~@~~@~en-US~@~
+5316~@~   8.  12.31030~@~8~@~12~@~2013-10-30 00:00:00.000~@~~@~Regenerate all screens.~@~1. Fix a couple of errors.~@~~@~en-US~@~
+5317~@~   8.  13.31101~@~8~@~13~@~2013-11-01 00:00:00.000~@~~@~Need to regenerate all screens.~@~1. Fine tuning;~@~~@~en-US~@~
+5318~@~   8.  14.31113~@~8~@~14~@~2013-11-13 00:00:00.000~@~~@~In Web.config:
+  <add key="GoogleClientId" value="" />
+  <add key="FacebookAppId" value=""/>  ~@~1. Make image display more efficient and independent of dbid;
+2. Enable screen and report criteria to change group when all groupings are the same;
+3. Disable autopostback on all report criteria to resolve a focus issue;
+4. Add Google and Facebook logins;
+~@~~@~en-US~@~
+5319~@~   8.  15.31114~@~8~@~15~@~2013-11-14 00:00:00.000~@~~@~Make sure " |UsrProvider" is in "Objects Exempted" of ??Design in Deployment Configuration.~@~1. Address an issue on new deployment caused by Sred view and function;
+2. Miscellaneous bug fixes;~@~~@~en-US~@~
+5320~@~   8.  16.31120~@~8~@~16~@~2013-11-20 00:00:00.000~@~~@~Regenerate all screens and reports.~@~1. Address Facebook error;
+2. Enable extra free license key;~@~~@~en-US~@~
+5321~@~   8.  17.31202~@~8~@~17~@~2013-12-02 00:00:00.000~@~~@~~@~1. Temporary remove the ability to deactivate own's account in MyAccount;
+~@~~@~en-US~@~
+5322~@~   8.  18.31211~@~8~@~18~@~2013-12-11 00:00:00.000~@~~@~~@~1. Restore s.procs “Ir_ChgReportCriGrp” and “Ir_ChgScreenCriGrp” to ROCmonD;~@~~@~en-US~@~
+5323~@~   8.  19.31223~@~8~@~19~@~2013-12-23 00:00:00.000~@~~@~In Web.Config: <add key="SignUpUrl" value=""/>~@~1. Fix a few minor issues including datepicker.
+2. Enable sign up when needed on MyAccount;~@~~@~en-US~@~
+5324~@~   8.  20.31227~@~8~@~20~@~2013-12-27 00:00:00.000~@~~@~1. Regenerate all screens, and
+2. Add to Web.config:
+    <!-- Example Complexity: Minimum 8 characters and at least one digit, one capital, one lower case and one symbol eg.".{8,32}|[0-9]|[a-z]|[A-Z]|[^0-9a-zA-Z]" -->
+    <add key="PasswordComplexity" value =""/>~@~1. Enforce password policy;
+2. Make sure same email can be shared by multiple logins;~@~~@~en-US~@~
+5325~@~   8.  21.40117~@~8~@~21~@~2014-01-17 00:00:00.000~@~~@~~@~Several miscellaneous bugs fixing relating to login; ~@~~@~en-US~@~
+5326~@~   8.  22.40123~@~8~@~22~@~2014-01-23 00:00:00.000~@~~@~~@~Minor enhancement on data import.~@~~@~en-US~@~
+5327~@~   8.  23.40317~@~8~@~23~@~2014-03-17 00:00:00.000~@~~@~~@~1. Responsive menu;~@~~@~en-US~@~
+5328~@~   8.  24.40325~@~8~@~24~@~2014-03-25 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+5329~@~   8.  25.40327~@~8~@~25~@~2014-03-27 00:00:00.000~@~~@~~@~1. Menu enhancement.
+2. Bring Jquery up-to-date.
+3. CSS update for client-side charting.~@~~@~en-US~@~
+5330~@~   8.  26.40330~@~8~@~26~@~2014-03-30 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+5331~@~   8.  27.40415~@~8~@~27~@~2014-04-15 00:00:00.000~@~~@~~@~Interim for development purpose.~@~~@~en-US~@~
+5332~@~   8.  28.40423~@~8~@~28~@~2014-04-23 00:00:00.000~@~~@~For Windows 8 or Server 2012 and Dotnet 4.0 and above:
+In Web.config
+1. add:
+  <startup useLegacyV2RuntimeActivationPolicy="true">
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
+  </startup>
+2. Change:
+Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304
+to
+Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304
+3. Add
+requestValidationMode="2.0" to httpruntime.~@~Dotnet 4.0 implementation.~@~~@~en-US~@~
+5333~@~   8.  29.40425~@~8~@~29~@~2014-04-25 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+5334~@~   8.  30.40429~@~8~@~30~@~2014-04-29 00:00:00.000~@~~@~Remove programs:
+AdmAtCulture*
+AdmCustom*
+AdmCustomDtl*
+AdmPage*
+AdmScreenGrp*
+GenCustom*
+~@~~@~~@~en-US~@~
+5335~@~   8.  31.40502~@~8~@~31~@~2014-05-02 00:00:00.000~@~~@~~@~1. More Ajax look and feel;
+2. Autocomplete more efficient;
+3. Excel import improvement;
+4. IE 10 compatibility;
+5. Improved tab-folder;
+6. Mobile dialog;
+7. Starrating and menu UI adjustment;
+8. Wartermark CSS changes;~@~~@~en-US~@~
+5336~@~   8.  32.40506~@~8~@~32~@~2014-05-06 00:00:00.000~@~~@~Add “loginUrl="MyAccount.aspx?typ=N"” to web.config.~@~1. Remove embed.master and blank.master;
+2. iFrame improvement;
+3. Add Label content;~@~~@~en-US~@~
+5337~@~   8.  33.40507~@~8~@~33~@~2014-05-07 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+5338~@~   8.  34.40509~@~8~@~34~@~2014-05-09 00:00:00.000~@~~@~~@~1. Draggable menu;
+2. Responsive MyAccount;~@~~@~en-US~@~
+5339~@~   8.  35.40512~@~8~@~35~@~2014-05-12 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+5340~@~   8.  36.40514~@~8~@~36~@~2014-05-14 00:00:00.000~@~~@~~@~1. Miscellaneous bug fixes for a stable version;
+2. Make genreport works on Crystal;~@~~@~en-US~@~
+5341~@~   8.  37.40521~@~8~@~37~@~2014-05-21 00:00:00.000~@~~@~~@~1. Add usage calendar to User Manager;
+2. Enhance Hyperlinks handling;
+3. Cosmetic improvements on MyAccount, StarRating, Special Calendar, etc.;
+~@~~@~en-US~@~
+5342~@~   8.  38.40523~@~8~@~38~@~2014-05-23 00:00:00.000~@~~@~~@~1. Allow quotes in Default Value;
+2. Fix an issue on criteria change;~@~~@~en-US~@~
+5343~@~   8.  39.40528~@~8~@~39~@~2014-05-28 00:00:00.000~@~~@~~@~1. Miscellaneous bug fixes on HyperLinks, etc.
+2. Button management redesign;~@~~@~en-US~@~
+5344~@~   8.  40.40529~@~8~@~40~@~2014-05-29 00:00:00.000~@~~@~~@~1. Add Criteria change event to WebRule;
+2. Cosmetic changes;~@~~@~en-US~@~
+5345~@~   8.  41.40529~@~8~@~41~@~2014-05-29 00:00:00.000~@~~@~~@~1. Fine tuning.~@~~@~en-US~@~
+5346~@~   8.  42.40530~@~8~@~42~@~2014-05-30 00:00:00.000~@~~@~~@~1. Make calendar display and label-vertical responsive;
+2. Redo help icon as ImageButton;
+~@~~@~en-US~@~
+5347~@~   8.  43.40601~@~8~@~43~@~2014-06-01 00:00:00.000~@~~@~~@~1. Add capability to grant/deny access to customers, vendors, ???, etc. by looking for ??Cmon.dbo.???Usr table;
+~@~~@~en-US~@~
+5348~@~   8.  44.40602~@~8~@~44~@~2014-06-02 00:00:00.000~@~~@~~@~1. Solve problems on Combobox Popup, Calendar display and More button, etc.;
+~@~~@~en-US~@~
+5349~@~   8.  45.40603~@~8~@~45~@~2014-06-03 00:00:00.000~@~~@~~@~1. Miscellaneous fixes;~@~~@~en-US~@~
+5350~@~   8.  46.40604~@~8~@~46~@~2014-06-04 00:00:00.000~@~~@~~@~1. Redesign popup screens;
+~@~~@~en-US~@~
+5351~@~   8.  47.40606~@~8~@~47~@~2014-06-06 00:00:00.000~@~~@~~@~1. Many cosmetic enhancements;
+2. Header redesign;~@~~@~en-US~@~
+5352~@~   8.  48.40613~@~8~@~48~@~2014-06-13 00:00:00.000~@~~@~In Web.config add: <add key="PasswordHelpMsg" value=""/>~@~~@~~@~en-US~@~
+5353~@~   8.  49.40618~@~8~@~49~@~2014-06-18 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+5354~@~   8.  50.40622~@~8~@~50~@~2014-06-22 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+5355~@~   8.  51.40627~@~8~@~51~@~2014-06-27 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+5356~@~   8.  52.40630~@~8~@~52~@~2014-06-30 00:00:00.000~@~~@~~@~Cosmetic issue with autocomplete addressed;~@~~@~en-US~@~
+5357~@~   8.  53.40702~@~8~@~53~@~2014-07-02 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+5358~@~   8.  54.40725~@~8~@~54~@~2014-07-25 00:00:00.000~@~~@~Need to regenerate everything and change manual cssclass g- to rg-, c- to rc-.~@~1. Add memorize translation functionality;
+2. Expand ColumnName to 50 characters;
+3. Finalize Header/Footer/Sides and Landing page design;~@~~@~en-US~@~
+5359~@~   8.  55.40810~@~8~@~55~@~2014-08-10 00:00:00.000~@~~@~Remove key="MobileImage" from Web.config.
+Exclude GenCustom*.*;~@~1. Dialog box for internal link;
+2. Make header and footer, etc. static;
+3. Enable full control of sections from User Preference;~@~~@~en-US~@~
+5360~@~   8.  56.40812~@~8~@~56~@~2014-08-12 00:00:00.000~@~~@~~@~1. Minor enhancement on Popup Calendar.~@~~@~en-US~@~
+5361~@~   8.  57.40815~@~8~@~57~@~2014-08-15 00:00:00.000~@~~@~~@~1. Enhancements on Calendar Display;~@~~@~en-US~@~
+5362~@~   8.  58.40910~@~8~@~58~@~2014-09-10 00:00:00.000~@~~@~1. Specify body.PageBackground in Application.Css and/or user preference.
+2. In User Preference, replace ".Form" with ".grid-pad".~@~1. Code generated sections.~@~~@~en-US~@~
+5363~@~   8.  59.40916~@~8~@~59~@~2014-09-16 00:00:00.000~@~~@~~@~Fine tune Sections generation.~@~~@~en-US~@~
+5364~@~   8.  60.40930~@~8~@~60~@~2014-09-30 00:00:00.000~@~~@~~@~1. SearchLink dialog enhancements;
+2. Title 1-5 columns;
+3. Minor bug fixes;
+4. Take care of "~/";~@~~@~en-US~@~
+5365~@~   8.  61.41002~@~8~@~61~@~2014-10-02 00:00:00.000~@~~@~~@~1. Time job schedule UTC;
+2. Mobile menu fine tuning;
+3. Genwizard enhancement;
+4. Default value test for quotes;~@~~@~en-US~@~
+5366~@~   8.  62.41027~@~8~@~62~@~2014-10-27 00:00:00.000~@~~@~~@~1. Stop login after 5 unsuccessful attempts.
+~@~~@~en-US~@~
+5367~@~   8.  63.41107~@~8~@~63~@~2014-11-07 00:00:00.000~@~~@~~@~1. Stop login after 5 unsuccessful attempts regardless of login name found or not;
+2. Mobile stack labels on top always;
+~@~~@~en-US~@~
+5368~@~   8.  64.41117~@~8~@~64~@~2014-11-17 00:00:00.000~@~~@~~@~1. Make sure ImageButton with a url base column can be saved;
+2. Address a color and font-weight inherent issue;
+3. Make all fields top-aligned in criteria;
+4. Error message to be prompted properly in import wizard;
+5. Ignore changes when grid header for sorting is clicked;
+6. Accept "%" from Excel import to grid and wizard;
+~@~~@~en-US~@~
+5369~@~   8.  65.41125~@~8~@~65~@~2014-11-25 00:00:00.000~@~~@~~@~1. Menu IDE added;
+~@~~@~en-US~@~
+5370~@~   8.  66.41126~@~8~@~66~@~2014-11-26 00:00:00.000~@~~@~Need to regenerate all screens.~@~1. Modify s.proc. "_GetAdmRptUsageR" to allow "all companies" users to access usage report data;
+2. Address ImageButton saving "~/" on empty image;
+3. Address grid Cancel issue on Chrome;
+~@~~@~en-US~@~
+5371~@~   8.  67.41204~@~8~@~67~@~2014-12-04 00:00:00.000~@~~@~Need to regen all screens.~@~1. Fix an issue with autocomplete and dropdown not prompting for dirty flag on lose-focus when there is a search-link;
+2. Change DataGrid to ListView:
+.EditItemIndex					-> .EditIndex
+e.Item.DataSetIndex			-> GetDataItemIndex(e.ItemIndex)
+DataGridCommandEventArgs		-> ListViewCommandEventArgs
+DataGridSortCommandEventArgs	-> ListViewSortEventArgs
+DataGridPageChangedEventArgs	-> PagePropertiesChangingEventArgs
+Grid.PageSize					-> GridDataPager.PageSize
+3. Fix an issue on export txt;
+4. Menu IDE enhanced;
+5. Fine tune New Listview;~@~~@~en-US~@~
+5372~@~   8.  68.41210~@~8~@~68~@~2014-12-10 00:00:00.000~@~~@~~@~1. Make sure tool-tip is working for new grid;
+2. Add hide-on-tablet/mobile capability;
+3. Restructure navigation bar for grid;~@~~@~en-US~@~
+6372~@~   8.  69.41220~@~8~@~69~@~2014-12-20 00:00:00.000~@~~@~Regenerate all screens;~@~1. Remove superfluous row on grid;
+2. Make sure default value is applied to grid import only when both key and look-up description are empty;
+3. Remove "Grid_AddNew" function;
+4. Enable direct PDF, WORD and EXCEL launch for SQL Reporting;
+~@~~@~en-US~@~
+6373~@~   8.  70.41231~@~8~@~70~@~2014-12-31 00:00:00.000~@~~@~~@~1. Mobile header and footer enhancements;
+2. Disable zoom-in textbox on mobile;
+3. Responsive grid;
+4. Grid fields hide on tablet or mobile;~@~~@~en-US~@~
+6374~@~   9.   1.50105~@~9~@~1~@~2015-01-05 00:00:00.000~@~~@~Generate all screens.~@~~@~~@~en-US~@~
+6375~@~   9.   2.50109~@~9~@~2~@~2015-01-09 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+6376~@~   9.   3.50114~@~9~@~3~@~2015-01-14 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+6377~@~   9.   4.50116~@~9~@~4~@~2015-01-16 00:00:00.000~@~~@~Regenerate all screens and compile; "return" within "cSaveButton_Click" in web rules need to be manually taken care of.~@~1. Better error handling if replace web rules "cSaveButton_Click" with "Try { SaveDb..}" when another message or action is involved.
+2. Enable grid to be side by side tab-folder;
+~@~~@~en-US~@~
+6378~@~   9.   5.50120~@~9~@~5~@~2015-01-20 00:00:00.000~@~~@~~@~Fix a couple of issues on mobile display.~@~~@~en-US~@~
+6379~@~   9.   6.50127~@~9~@~6~@~2015-01-27 00:00:00.000~@~~@~~@~1. Fix "more" display issues on mobile;
+2. Fix edit issue on grid when no column is editable;
+3. Remove obsolete codes;~@~~@~en-US~@~
+6380~@~   9.   7.50128~@~9~@~7~@~2015-01-28 00:00:00.000~@~~@~~@~1. Make sure Autocomplete can pull up other fields;
+2. Make data entry independent of background images;~@~~@~en-US~@~
+6381~@~   9.   8.50129~@~9~@~8~@~2015-01-29 00:00:00.000~@~~@~~@~1. Minor glitch fixes when column name on screen object is not the same as database column name;~@~~@~en-US~@~
+6382~@~   9.   9.50130~@~9~@~9~@~2015-01-30 00:00:00.000~@~~@~~@~1. Fix a webrule on Menu Permission;
+2. Change an icon for report generation screen;
+3. Added server rule to make sure a menu exists for navigation;
+~@~~@~en-US~@~
+6383~@~   9.  10.50204~@~9~@~10~@~2015-02-04 00:00:00.000~@~~@~~@~1. Minor enhancements;
+2. Make grid available on designated tabfolder;
+3. Remove obsolete columns on table Screen;
+4. Enable tabfolder search on on complex sql to avoid the need to create a permanent column ...Desc for that purpose;
+~@~~@~en-US~@~
+6384~@~   9.  11.50206~@~9~@~11~@~2015-02-06 00:00:00.000~@~~@~Regen all screens.~@~1. Expanded watermark, etc. meta-data to 1000 characters;
+2. Make controls more consistent in appearance;
+3. Fix a Grid-only issue;
+4. Enhance image upload on grid;
+5. Add watermark to multilingual translation;~@~~@~en-US~@~
+6385~@~   9.  12.50211~@~9~@~12~@~2015-02-11 00:00:00.000~@~~@~~@~Take care of a few cosmetic issues and comments on code to indicate web rule locations.~@~~@~en-US~@~
+6386~@~   9.  13.50213~@~9~@~13~@~2015-02-13 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+6387~@~   9.  14.50214~@~9~@~14~@~2015-02-14 00:00:00.000~@~~@~~@~1. Bug fix on menu permission;
+2. Add permission listing report;~@~~@~en-US~@~
+6388~@~   9.  15.50217~@~9~@~15~@~2015-02-17 00:00:00.000~@~~@~~@~1. Make generated wizards responsive;
+~@~~@~en-US~@~
+6389~@~   9.  16.50228~@~9~@~16~@~2015-02-28 00:00:00.000~@~~@~~@~1. To fix a special menu indexing issue on Menu IDE;
+2. Minor CSS changes;~@~~@~en-US~@~
+7389~@~   9.  17.50302~@~9~@~17~@~2015-03-02 00:00:00.000~@~~@~Need to regen all screens and reports.~@~1. Fixed the Section Objects not generated unless you update each row issue;
+2. Fixed the col and row issues on header generation;
+3. Fixed ListBox height issue;~@~~@~en-US~@~
+7390~@~   9.  18.50303~@~9~@~18~@~2015-03-03 00:00:00.000~@~~@~~@~1. Fix an issue relating to social at footer;
+2. Adjust mega menu option fonts;~@~~@~en-US~@~
+7391~@~   9.  19.50309~@~9~@~19~@~2015-03-09 00:00:00.000~@~~@~~@~1. Hide the Insert Row button if the Save Button is invisible;
+2. Make Tablet's header and buttons behave like mobile;~@~~@~en-US~@~
+7392~@~   9.  20.50310~@~9~@~20~@~2015-03-10 00:00:00.000~@~~@~Regenerate all screens.~@~1. Fix an issue on "hide the Insert Row button if the Save Button is invisible";~@~~@~en-US~@~
+7393~@~   9.  21.50311~@~9~@~21~@~2015-03-11 00:00:00.000~@~~@~~@~1. Add "Active User Only" to Permission Report;~@~~@~en-US~@~
+8393~@~   9.  22.50312~@~9~@~22~@~2015-03-12 00:00:00.000~@~~@~~@~1. Address an issue on report writer;
+2. Enhance Permission report;~@~~@~en-US~@~
+8394~@~   9.  23.50313~@~9~@~23~@~2015-03-13 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+8395~@~   9.  24.50315~@~9~@~24~@~2015-03-15 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+8396~@~   9.  25.50317~@~9~@~25~@~2015-03-17 00:00:00.000~@~~@~Need to regenerate all screens.~@~1. Address image re-sizing;
+2. Change business rule to have height over width in order to keep proportion;
+3. Address IE min-height issue on MyAccount;
+4. Improve messaging on Report Generation;
+5. Improve performance on DeleteButton_clicked;~@~~@~en-US~@~
+8397~@~   9.  26.50325~@~9~@~26~@~2015-03-25 00:00:00.000~@~~@~Add the following to Web.config:
+    <add key="WsConverterUrl" value="http://localhost/WsXls/convert.asmx"/>
+    <add key="WsConverterKey" value="8ED086ED-DFE5-4127-86B7-FF4CD3E28ABD"/>
+~@~1. Enhanced Signup link on MyAccount;
+2. Fix an indexing issue on Menu IDE;
+3. Add "&msy=" to querystring to selected Menu to be display;
+4. To convert Excel XML to true XLS format (eliminate dialog and enable usage on mobile devices);
+5. Enable download encryption on file name;~@~~@~en-US~@~
+8398~@~   9.  27.50327~@~9~@~27~@~2015-03-27 00:00:00.000~@~~@~~@~1. Fix an error on switching system;
+2. Minor cosmetic changes;
+3. Move GetIp function from AccountModule to ModuleBase;~@~~@~en-US~@~
+8399~@~   9.  28.50329~@~9~@~28~@~2015-03-29 00:00:00.000~@~~@~~@~1. Add IP Alert option to user manager;
+~@~~@~en-US~@~
+8400~@~   9.  29.50330~@~9~@~29~@~2015-03-30 00:00:00.000~@~~@~~@~1. Add user friendly hints to password changes;
+2. Enhance "change password" module to make it easy for administrator;
+3. Add exe handler for proper download;~@~~@~en-US~@~
+8401~@~   9.  30.50401~@~9~@~30~@~2015-04-01 00:00:00.000~@~~@~~@~1. Interpret password duration properly in MyAccount;
+2. Address an issue on facebook signin;~@~~@~en-US~@~
+8402~@~   9.  31.50402~@~9~@~31~@~2015-04-02 00:00:00.000~@~~@~~@~1. New deployment issues addressed;~@~~@~en-US~@~
+8403~@~   9.  32.50403~@~9~@~32~@~2015-04-03 00:00:00.000~@~~@~~@~1. Address hyperlink issue on grid;
+2. Address artificial textbox display on grid;~@~~@~en-US~@~
+8404~@~   9.  33.50407~@~9~@~33~@~2015-04-07 00:00:00.000~@~~@~~@~1. Address a few issues on grid edit;
+2. Address login-name issues;~@~~@~en-US~@~
+8405~@~   9.  34.50413~@~9~@~34~@~2015-04-13 00:00:00.000~@~~@~~@~1. Add unique index to safeguard duplicate login-name;
+2. Make default page authorized users access only;
+3. Add criteria "Contains" to permission report;~@~~@~en-US~@~
+8406~@~   9.  35.50414~@~9~@~35~@~2015-04-14 00:00:00.000~@~~@~~@~1. Enhancement to calendar to add text to top-right corner;~@~~@~en-US~@~
+8407~@~   9.  36.50514~@~9~@~36~@~2015-05-14 00:00:00.000~@~~@~~@~1. Add background image to calendar display;
+2. Address an issue with Criteria when transforming a easy generated report to a formal report;
+3. Address an aggregate issue;
+4. Address a filtering issue on combobox;
+~@~~@~en-US~@~
+8408~@~   9.  37.50520~@~9~@~37~@~2015-05-20 00:00:00.000~@~~@~~@~1. Prevent signature from being used on a grid;
+2. Fix a problem on password vs varbinary conversion on signature;~@~~@~en-US~@~
+8409~@~   9.  38.50522~@~9~@~38~@~2015-05-22 00:00:00.000~@~~@~~@~1. Address an issue on grid import when spreadsheet has blanks trailing;
+2. Address I2 screen signature generation;
+3. Remove redundant s.proc name from RAISEERROR;~@~~@~en-US~@~
+8410~@~   9.  39.50529~@~9~@~39~@~2015-05-29 00:00:00.000~@~~@~~@~1. Address an issue on ColumnLink for ImageButton;
+2. Clean up redundancy;~@~~@~en-US~@~
+8411~@~   9.  40.50602~@~9~@~40~@~2015-06-02 00:00:00.000~@~~@~~@~1. Change screen criteria url mapping to zero-based to be consistent with SQL reporting;~@~~@~en-US~@~
+8412~@~   9.  41.50608~@~9~@~41~@~2015-06-08 00:00:00.000~@~~@~~@~1. Addressed an issue on Signature;~@~~@~en-US~@~
+8413~@~   9.  42.50611~@~9~@~42~@~2015-06-11 00:00:00.000~@~~@~~@~1. Clean up next run upon edit on time-job scheduler;
+2. Address an issue with invalid file path on importing;
+3. Remove the ability to click anywhere to check and CheckBox;~@~~@~en-US~@~
+8414~@~   9.  43.50616~@~9~@~43~@~2015-06-16 00:00:00.000~@~~@~~@~1. Do not display the content of a hyperlink in a grid if the field is disabled;
+2. Make import worksheet drop-down auto-sized;
+3. Tab Folder reinvented;~@~~@~en-US~@~
+8415~@~   9.  44.50617~@~9~@~44~@~2015-06-17 00:00:00.000~@~~@~~@~1. Add six s.proc for Screen Object IDE web services;
+2. Fix grid-only screen creation issue with respect to tab folder;~@~~@~en-US~@~
+8416~@~   9.  45.50619~@~9~@~45~@~2015-06-19 00:00:00.000~@~~@~~@~1. Prevent double-click on any buttons;
+~@~~@~en-US~@~
+8417~@~   9.  46.50709~@~9~@~46~@~2015-07-09 00:00:00.000~@~~@~~@~1. Take care of overwrite situation in document imaging;
+2. Implement phase I of Object IDE;
+3. Merge screen criteria with mapping;
+4. Add redundant button "Preview" for advanced use;
+5. Make Menu IDE more object oriented;~@~~@~en-US~@~
+8418~@~   9.  47.50720~@~9~@~47~@~2015-07-20 00:00:00.000~@~~@~~@~1. Display the Sign-out button permanently on web header;
+2. Fine tune the script handling on Link Header and Link Social;
+3. Change column authority to conform to new Object IDE;
+4. Make screen printing better;
+5. Enhance Object IDE;
+6. Address dialog auto-close issue;~@~~@~en-US~@~
+8419~@~   9.  48.50727~@~9~@~48~@~2015-07-27 00:00:00.000~@~~@~~@~1. Automate code table creation;
+2. Many minor enhancements;~@~~@~en-US~@~
+8420~@~   9.  49.50730~@~9~@~49~@~2015-07-30 00:00:00.000~@~~@~~@~1. fix cronjob UTC issue, sql reporting revision about excel merge, better more... in autocomplete. re-gen Button override to test. web.config snapshot;
+2. fix grid sorting becomes 'change'(need re-gen all screen), change SP MkReportReg to handle using function with parameter as view for report generator. MkReportReg needs new function BreakString;
+3. Remove unused MyReport and MyDashboard items;~@~~@~en-US~@~
+8421~@~   9.  50.50806~@~9~@~50~@~2015-08-06 00:00:00.000~@~~@~~@~1. Enhance Object IDE ordering;
+2. Add tracking for User Impersonation;~@~~@~en-US~@~
+8422~@~   9.  51.50808~@~9~@~51~@~2015-08-08 00:00:00.000~@~~@~~@~1. On ScreenObj "Hide on Mobile and Tablet" checkboxes unchecked and non-editable when MaterTable is checked;
+2. On ScreenObj default MaterTable by the field selected;
+~@~~@~en-US~@~
+8423~@~   9.  52.50810~@~9~@~52~@~2015-08-10 00:00:00.000~@~~@~Need to remove two web rules from each screen that has: 1. Initialize the Save & Close Button; 2. Save & Close;~@~1. Add Save&Close button;~@~~@~en-US~@~
+8424~@~   9.  53.50814~@~9~@~53~@~2015-08-14 00:00:00.000~@~~@~~@~1. Make Object IDE ordering more efficient and effective;
+2. Enlarge TableName to 50 characters;
+3. Fix an issue with Hide On Mobile visibility;
+4. Address a couple of minor issues on Object IDE;
+5. Allow Skip CRUD server rule;
+6. Add pre-commit absolutely last server rules;
+7. fix GRID corner cases in filter/sorting;
+8. make combine assembly works in .NET 4;~@~~@~en-US~@~
+8425~@~   9.  54.50816~@~9~@~54~@~2015-08-16 00:00:00.000~@~~@~Change historySize in Web.config to 100 entries. Regenerate all screens and reports.~@~1. Order server rules according to execution order;
+2. Fix copy-report issue;
+~@~~@~en-US~@~
+8426~@~   9.  55.50908~@~9~@~55~@~2015-09-08 00:00:00.000~@~~@~~@~1. Add rules to Ir_DelScrOnDel, Ir_DelRptOnDel, and Ir_DelWizOnDel to take care of menu cleaning;
+2. Dialog bug fix;~@~~@~en-US~@~
+8427~@~   9.  56.50909~@~9~@~56~@~2015-09-09 00:00:00.000~@~~@~~@~1. add client/rule tier file deletion to deployment, add criteria filtering, enhance report excel template merge to support xlsx;~@~~@~en-US~@~
+8428~@~   9.  57.50915~@~9~@~57~@~2015-09-15 00:00:00.000~@~~@~~@~1. Make chart and gauge more presentable (landscape) in Report Generator;
+2. Make UtReportCri the same as ReportCri;
+3. Addressed enb=N showing Save&Close button issue;
+4. Make sure all popups are directed to the specified row;~@~~@~en-US~@~
+8429~@~   9.  58.50921~@~9~@~58~@~2015-09-21 00:00:00.000~@~~@~~@~1. Make sure tablename can accommodate function with many parameters; ~@~~@~en-US~@~
+9429~@~   9.  59.50922~@~9~@~59~@~2015-09-22 00:00:00.000~@~~@~~@~1. Fine tuning.~@~~@~en-US~@~
+9430~@~   9.  60.51005~@~9~@~60~@~2015-10-05 00:00:00.000~@~~@~~@~1. Many miscellaneous enhancements;
+2. Show hints on Time Job Schedules;~@~~@~en-US~@~
+9431~@~   9.  61.51009~@~9~@~61~@~2015-10-09 00:00:00.000~@~~@~~@~1. Add constraint to make sure width is present for Document control;
+2. Fix an error messaging issue on Object IDE;
+3. Add credit card expiry date mask client stock rule;
+~@~~@~en-US~@~
+9432~@~   9.  62.51021~@~9~@~62~@~2015-10-21 00:00:00.000~@~~@~~@~1. Remove credit card expiry date mask client stock rule in spite of a better UX solution;
+2. Address a Firefox issue on Autocomplete focus;
+3. Change SearchLink to take care of image and txt popup;
+4. Enhancement keyboard handling on mobile;
+5. Resolved Pdf showing blank on Chrome due report viewer version 10;
+6. Resolved Autocomplete issue on Firefox;~@~~@~en-US~@~
+9433~@~   9.  63.51026~@~9~@~63~@~2015-10-26 00:00:00.000~@~~@~~@~1. Restructure Menu IDE to mimic Object IDE;~@~~@~en-US~@~
+9434~@~   9.  64.51112~@~9~@~64~@~2015-11-12 00:00:00.000~@~~@~~@~1. Correct the last server rule ordering;
+2. Correct Autocomplete;
+3. Default culture header for Object IDE when absent;
+4. Enable muti-signatures;~@~~@~en-US~@~
+9435~@~   9.  65.51114~@~9~@~65~@~2015-11-14 00:00:00.000~@~~@~~@~1. Add unique key to DbTable;
+2. Add option to prevent password change on next login;
+3. Run InitMaster first on List_SelectedIndexChange;~@~~@~en-US~@~
+9436~@~   9.  66.51123~@~9~@~66~@~2015-11-23 00:00:00.000~@~~@~~@~1. Add dynamic system to Ir_InitReportObj for backdoor copy report from another subsystem;~@~~@~en-US~@~
+9437~@~   9.  67.51123~@~9~@~67~@~2015-11-23 00:00:00.000~@~~@~~@~1. Address RptCel not created when copying using Ir_InitReportObj;
+~@~~@~en-US~@~
+9438~@~   9.  68.51125~@~9~@~68~@~2015-11-25 00:00:00.000~@~~@~~@~1. Add Paypal and Square functionalities;~@~~@~en-US~@~
+9439~@~   9.  69.51202~@~9~@~69~@~2015-12-02 00:00:00.000~@~~@~~@~1. Address an error on OnItemUpdating;~@~~@~en-US~@~
+9440~@~   9.  70.51216~@~9~@~70~@~2015-12-16 00:00:00.000~@~~@~~@~1. Add attachment to sendemail;~@~~@~en-US~@~
+9441~@~  10.   1.51229~@~10~@~1~@~2015-12-29 00:00:00.000~@~~@~1. Change App-pool to Integrated;
+2. Make sure both Form and Windows Authentication are enabled;
+3. Add to Web.config:
+    <!-- key to encrypt sensitive columns of EncryptedTextBox (recommend 10 random characters) -->
+    <add key="SecuredColumnKey" value="123" />
+    <!-- office 365 integrated login (Get ClientId and Secret from Azure Portal) -->
+    <add key="AzureAPIClientId" value="" />
+    <add key="AzureAPISecret" value="" />
+    <add key="AzureAPIRedirectUrl" value="http://localhost/ro/myaccount.aspx" />
+    <!-- Windows integrated login-->
+    <add key="TrustedLoginFederationUrl" value="integrated" />~@~1. New Object IDE;
+2. More view-only choices;~@~~@~en-US~@~
+9442~@~  10.   2.51231~@~10~@~2~@~2015-12-31 00:00:00.000~@~~@~~@~1. Minor enhancements on Object IDE;
+2. Expand on email script;
+~@~~@~en-US~@~
+9443~@~  10.   3.60101~@~10~@~3~@~2016-01-01 00:00:00.000~@~~@~~@~1. Hide GroupRow and GroupCol on Screen Object on easy mode;~@~~@~en-US~@~
+9444~@~  10.   4.60104~@~10~@~4~@~2016-01-04 00:00:00.000~@~~@~~@~Fine tuning.~@~~@~en-US~@~
+9445~@~  10.   5.60107~@~10~@~5~@~2016-01-07 00:00:00.000~@~~@~~@~1. Fix an error on autocomplete for report criteria;~@~~@~en-US~@~
+9446~@~  10.   6.60113~@~10~@~6~@~2016-01-13 00:00:00.000~@~~@~Add the following to <system.webServer><handlers> in Web.config:
+      <add name="ReportViewerWebControlHandler" verb="*" path="Reserved.ReportViewerWebControl.axd" type="Microsoft.Reporting.WebForms.HttpHandler, Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" preCondition="integratedMode" />
+~@~1. Prevent the three tiers from being deleted if in use by installer configuration;
+2. Minor fix for getcustservice call, minor fix for object IDE, add self invocation mechanism;
+3. Fix client rule not generated for grid items;~@~~@~en-US~@~
+9447~@~  10.   7.60115~@~10~@~7~@~2016-01-15 00:00:00.000~@~~@~~@~1. Deployment can change namespace on PDT;
+2. Add signup functionality;~@~~@~en-US~@~
+9448~@~  10.   8.60121~@~10~@~8~@~2016-01-21 00:00:00.000~@~~@~~@~1. refactor automatic login codes(used in registration as well);
+2. show mandatory in object IDE;
+3. change EncryptedTextBox to use "*";
+4. add QRCode library;
+5. add google authenticator (2 factor authentication via mobile apps);
+~@~~@~en-US~@~
+9449~@~  10.   9.60127~@~10~@~9~@~2016-01-27 00:00:00.000~@~~@~~@~1. Get rid of the requirement of visibility to receive a value in grid for web rules;
+2. Disable client side validators and force validpage() on "Add Row";~@~~@~en-US~@~
+9450~@~  10.  10.60128~@~10~@~10~@~2016-01-28 00:00:00.000~@~~@~~@~1. Make sure column objective is populated by tooltips when empty;
+2. Address Object IDE mandatory flag issue;
+3. Profile change to enable responsive design;~@~~@~en-US~@~
+9451~@~  10.  11.60204~@~10~@~11~@~2016-02-04 00:00:00.000~@~~@~~@~1. Minor enhancements to menu IDE and object IDE;
+2. Perform IgnoreConfirm() on invisible buttons;~@~~@~en-US~@~
+9452~@~  10.  12.60213~@~10~@~12~@~2016-02-13 00:00:00.000~@~~@~~@~1. Change CmonD's ntext field to nvarchar(max);
+2. Fix a minor issue on import via code gen;~@~~@~en-US~@~
+10452~@~  10.  13.60306~@~10~@~13~@~2016-03-06 00:00:00.000~@~~@~~@~1. Added filter "All" to SR&ED time entry;
+2. Minor enhancement to s.proc “Ir_InitScreenObj”;
+3. Client Rule screen redesign;
+4. Minor enhancements to code gen;~@~~@~en-US~@~
+10453~@~  10.  14.60314~@~10~@~14~@~2016-03-14 00:00:00.000~@~~@~~@~1. Address an issue on Program Listing and Message Listing reports;~@~~@~en-US~@~
+10454~@~  10.  15.60318~@~10~@~15~@~2016-03-18 00:00:00.000~@~~@~~@~1. Minor improvements.~@~~@~en-US~@~
+10455~@~  10.  16.60327~@~10~@~16~@~2016-03-27 00:00:00.000~@~~@~~@~1. Add footer hint to User Preference screen;
+2. Add update description functionality to renaming screens and reports;~@~~@~en-US~@~
+10456~@~  10.  17.60404~@~10~@~17~@~2016-04-04 00:00:00.000~@~~@~Need to regenerate all screens;~@~1. Enhancements to Modulebase and MyAccountModule;
+2. Fix an issue with empty mandatory data criteria;~@~~@~en-US~@~
+10457~@~  10.  18.60407~@~10~@~18~@~2016-04-07 00:00:00.000~@~~@~~@~1. Miscellaneous enhancements on AccountModule and ObjectIde;
+2. Fix an issue on GetScreenLisI1ById and GetScreenLisI2ById;
+~@~~@~en-US~@~
+10458~@~  10.  19.60413~@~10~@~19~@~2016-04-13 00:00:00.000~@~~@~~@~1. Minor improvement on screen criteria error handling;~@~~@~en-US~@~
+10459~@~  10.  20.60608~@~10~@~20~@~2016-06-08 00:00:00.000~@~~@~Add to Web.config:
+<section name="crystalReportViewer" type="System.Configuration.NameValueSectionHandler"/>
+
+<!-- whether to enforce two factor authentication at system level, default N for no -->
+<add key="EnableTwoFactorAuth" value="N" />
+
+<crystalReportViewer>
+    <add key="ResourceUri" value="/aspnet_client/system_web/4_0_30319/crystalreportviewers13/" />
+</crystalReportViewer>
+~@~1. Add server rule Ir_UpdMsg and hide MsgName;
+2. Make sure same DB field can appear multiple times as different names on a screen;
+3. object IDE fixes, two factor auth, better info in WIP release content/waiting for re-gen, check auth on gen screen/report/wizard, dashboard layout js, cleanup so myaccount is configurable in web.config, minor calendar fix for date format like '2016.3.1', add jquery multiselect plugin for listbox and searchable listbox, enhance static page translation helper to include original message in page, minor fix to myaccount password expiry, alternative for crystal report viewer setup, refresh company/project list on login(for restricted user defined in user manager)
+4. OTP, second factor auth, extra column for server rule temp table, fix non-db column change event webrule generation, better info for WIP release content/outstanding re-gen, add 'no-op' criteria(for dashboard). clean up so myaccount is configurable in web.config, add jquery multiselect plugin for listbox and revise system to support searchable listbox also enhance screen criteria to support comparing two list(additional ctOperator), object IDE to be language aware, screenobj getdll column name fix, datagrid control pager fix, genumenu to support grand in no access module, dbkey removal bug fix.~@~~@~en-US~@~
+10460~@~  10.  21.60624~@~10~@~21~@~2016-06-24 00:00:00.000~@~~@~~@~1. Refined listbox/multiselect widget, rename largelistbox to autolistbox;
+2. Rename largelistbox to autolistbox, add default columnscale for float/money(sync from db would leave empty), refine list on list criteria code generation;
+3. Hide Column Height on Autocomplete and AutoListbox;~@~~@~en-US~@~
+10461~@~  10.  22.60628~@~10~@~22~@~2016-06-28 00:00:00.000~@~~@~Replace "BuildExe" in Web.config:
+    <add key="BuildExe" value="C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\msbuild.exe" />
+~@~1. Refine multiselect again for alignments/bottom flipping, use .net 4 msbuild;
+2. Remove unused variable in generated installer .cs file;
+3. Fine tuning listbox;~@~~@~en-US~@~
+10462~@~  10.  23.60630~@~10~@~23~@~2016-06-30 00:00:00.000~@~~@~~@~Fine tuning of AutoListbox;~@~~@~en-US~@~
+10463~@~  10.  24.60704~@~10~@~24~@~2016-07-04 00:00:00.000~@~~@~~@~1. Resolved typ=N hidden in returnURL;
+2. Fine tune ListBox;
+~@~~@~en-US~@~
+10464~@~  10.  25.60708~@~10~@~25~@~2016-07-08 00:00:00.000~@~~@~~@~1. Fix a problem on AutoListBox on grid only screen;~@~~@~en-US~@~
+10465~@~  10.  26.60726~@~10~@~26~@~2016-07-26 00:00:00.000~@~~@~~@~1. Address a few issues on permission management;
+2. Make sure CheckBox not mandatory;~@~~@~en-US~@~
+10466~@~  10.  27.60814~@~10~@~27~@~2016-08-14 00:00:00.000~@~~@~~@~1. Fix a problem on listbox;
+2. Addressed several issues on deployment;~@~~@~en-US~@~10.0000
+10467~@~  10.  28.60815~@~10~@~28~@~2016-08-15 00:00:00.000~@~~@~~@~1. revise installer generation code to handle cross db dependency better, make default value of DateTime.Today etc. works for all datetime type(including in grid)
+~@~~@~en-US~@~
+10468~@~  10.  29.60825~@~10~@~29~@~2016-08-25 00:00:00.000~@~~@~~@~* fix a bug in crob job next run date calculation, revised installer generation logic to handle integrated windows authentication(for enterprise customers) and revise installer templates to better handle developer setup with plain windows rather windows server. change button causesvalidation to true to handle proper watermark unwind, change ddl filtering to support list of values,fix WrAddMenu when there is no menu item, add DdlFtrDataType to GetScreenCriteria for list of value filtering
+* bug fix for multiselect jquery widget to better handle firefox and the '...' options, revised two factor UX in myaccount, fix autocomplete usage for listbox, fix watermark undo on postback, fix menu ide when there is no menu item, fix listbox height issue when it is initially hidden.~@~~@~en-US~@~
+10469~@~  10.  30.60826~@~10~@~30~@~2016-08-26 00:00:00.000~@~~@~~@~1. Static page enhancement;
+2. Css on mobile More button fix;
+3. Add ability to handle one to many filtering;~@~~@~en-US~@~
+10470~@~  10.  31.61014~@~10~@~31~@~2016-10-14 00:00:00.000~@~~@~Add following comment to Web.config:
+    <!-- localhost.RunApp is temporary disabled; A valid RintagiLicense is required for External installation to create deployment package for multiple environment; -->~@~1. address a "delete grid line" issue caused by the watermark fix;
+2. add cloning feature to screen; (Added fNullInt(),fNullCha() to ??Design; Added multidesign fColumn() and WrCloneScreen);
+3. enable one-environment for external installation;
+4. minor fixes for reporting listbox critieria;
+~@~~@~en-US~@~
+10471~@~  10.  32.61030~@~10~@~32~@~2016-10-30 00:00:00.000~@~~@~Replace custom webrule calling GetCustService by: "base.SysCustServEmail(base.LCurr.SystemId);" and "base.SysAdminEmail(base.LCurr.SystemId);"
+~@~1. Replaced the functionality of GetCustService by base.SysCustServEmail and base.SysAdminEmail;
+2. Enable hiding of systems to users by checking it inactive;
+3. Add client rule transformation to cloning;
+4. Add signup template to platform;~@~~@~en-US~@~
+10472~@~  10.  33.61102~@~10~@~33~@~2016-11-02 00:00:00.000~@~~@~~@~1. Miscellaneous fixes on listbox, etc.;~@~~@~en-US~@~
+10473~@~  10.  34.61107~@~10~@~34~@~2016-11-07 00:00:00.000~@~~@~~@~1. Address an issue with calendar by modifying ClientRule.js;~@~~@~en-US~@~
+10474~@~  10.  35.61123~@~10~@~35~@~2016-11-23 00:00:00.000~@~~@~~@~1. Cosmetic change to User Preference, popup, and drill down icon;
+2. UsrGroup standardization;
+3. add generic license testing mechanism, enhance google/windows/microsoft/facebook login integration;
+4. fixed date and datetime widget client side reformatting logic that breaks criteria auto postback assumption;
+5. popup dialog size change;
+6. general instruction for enabling SSO features;
+~@~~@~en-US~@~
+10475~@~  10.  36.61125~@~10~@~36~@~2016-11-25 00:00:00.000~@~~@~~@~1. Minor adjustments to permission management;
+2. add sql report menu access control, force login popup to work around popup blocker, usage calendar should show current module rather than just design;
+~@~~@~en-US~@~
+10476~@~  10.  37.61207~@~10~@~37~@~2016-12-07 00:00:00.000~@~~@~~@~1. Expand the capability of access to LUser, LCurr and Limpr info to Client Tier;
+2. Fix tab not visible issue on grid;
+3. Add automated audit trail capability;~@~~@~en-US~@~
+10477~@~  10.  38.61208~@~10~@~38~@~2016-12-08 00:00:00.000~@~~@~~@~1. Fixed a couple of issues with respect to automated audit;~@~~@~en-US~@~
+10478~@~  10.  39.61215~@~10~@~39~@~2016-12-15 00:00:00.000~@~~@~~@~1. Fix clone screen not extended to other databases;
+2. Fix object IDE tab display issue for Grid;
+3. Add paypal payment and payout sample screen;
+4. Fix login screen customization (as found in RG);
+5. Minor change to license acquisition url;
+6. Fix excel template reporting when non-date is treated as date;
+7. Fix a corner case for searchable listbox in criteria section;
+8. Deployment package changes and on anonymous user;
+~@~~@~en-US~@~
+10479~@~  10.  40.70102~@~10~@~40~@~2017-01-02 00:00:00.000~@~~@~~@~1. Fix a ClientRule.js issue affecting Facebook login;
+2. Addressed an issue in MyaccountModule.ascx.cs;
+3. Prevent invalid deletion of user;
+4. Miscellaneous configurations on Usr Admin;
+5. Make MkScrAudit work on User Manager screen;~@~~@~en-US~@~
+10480~@~  10.  41.70116~@~10~@~41~@~2017-01-16 00:00:00.000~@~~@~~@~1. Fix multi-design-db audit-trail issue;~@~~@~en-US~@~
+10481~@~  10.  42.70123~@~10~@~42~@~2017-01-23 00:00:00.000~@~~@~~@~1. Hide system module if not multidesigndb or only one system;
+2. Fine tune MkScrAudit;
+3. Fix decimal scale issue in Screen Audit;~@~~@~en-US~@~
+10482~@~  10.  43.70127~@~10~@~43~@~2017-01-27 00:00:00.000~@~~@~~@~1. Add popup capability to menu items;~@~~@~en-US~@~
+10483~@~  10.  44.70203~@~10~@~44~@~2017-02-03 00:00:00.000~@~~@~~@~1. Add email checking to make sure it is no more than 1 email per second and no more than 8000 per day;~@~~@~en-US~@~
+10484~@~  10.  45.70207~@~10~@~45~@~2017-02-07 00:00:00.000~@~~@~~@~1. Fix limitation of looping in Sendemail;~@~~@~en-US~@~
+10485~@~  10.  46.70209~@~10~@~46~@~2017-02-09 00:00:00.000~@~~@~~@~1. Add an overload to SendEmail so smtp can be override at ease;~@~~@~en-US~@~
+10486~@~  10.  47.70210~@~10~@~47~@~2017-02-10 00:00:00.000~@~~@~~@~1. Include Config.WebTitle in the title of all SendEmails in MyAccountModule.cs;
+2. Prevent dashboards contents in dev to override productions';~@~~@~en-US~@~
+10487~@~  10.  48.70303~@~10~@~48~@~2017-03-03 00:00:00.000~@~~@~Add to Web.config:
+<add key="TechSuppEmail" value="xyz@robocoder.com"/> <!-- fatal system errors goes here, even during development -->
+Add to Default.master:
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">~@~1. Append SystemId to end of system description on System Maintenance Screen;
+2. Add code snippet to pop up a modal window from a grid;
+3. Enlarge ButtonName to 50 characters;
+4. Add criteria to Culture Translation;
+5. Add multi-users column to enhance permission management;
+6. Add automated workflow status display type;
+7. Fix a problem on forgot password;
+8. Deployment will take care of the D's view tables;
+9. Enlarge miscellaneous link on menu;
+10. Change menu permission to autocomplete;
+11. Client-side line chart enhancement;
+12. Social media meta-tag;
+13. Change partial-postback image upload to client-side;~@~~@~en-US~@~
+10488~@~  10.  49.70327~@~10~@~49~@~2017-03-27 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+10489~@~  10.  50.70327~@~10~@~50~@~2017-03-27 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+10490~@~  10.  51.70330~@~10~@~51~@~2017-03-30 00:00:00.000~@~~@~~@~1. Fix an issue on image upload for grid;
+2. Workflow automation;
+3. Enhance datetime picker;
+4. Fix an issue on cloning screen;~@~~@~en-US~@~
+10491~@~  10.  52.70410~@~10~@~52~@~2017-04-10 00:00:00.000~@~~@~~@~1. Add phone connection to VOIP capability;~@~~@~en-US~@~
+10492~@~  10.  53.70428~@~10~@~53~@~2017-04-28 00:00:00.000~@~~@~~@~1. Add a SearchLink popup button to GridLink display;
+2. Fix a deployment issue on views;~@~~@~en-US~@~
+10493~@~  10.  54.70503~@~10~@~54~@~2017-05-03 00:00:00.000~@~~@~~@~1. Make XLSImport.asmx filter out XML invalid characters.
+2. Add type checking to grid import;
+3. Fix grid search on date data;~@~~@~en-US~@~
+11493~@~  10.  55.70505~@~10~@~55~@~2017-05-05 00:00:00.000~@~~@~~@~1. Make sure underlying data model is datetime if the display mode is assigned datetime;
+2. Make sure buttons are responsive on various devices;~@~~@~en-US~@~
+11494~@~  10.  56.70510~@~10~@~56~@~2017-05-10 00:00:00.000~@~~@~~@~1. Enhance search metadata for tab-folder;
+2. Add results found counter to grid;~@~~@~en-US~@~
+11495~@~  10.  57.70515~@~10~@~57~@~2017-05-15 00:00:00.000~@~~@~~@~1. Autocomplete enhancement to include search on one more field and add images;
+2. Enhance document imaging;~@~~@~en-US~@~
+11496~@~  10.  58.70518~@~10~@~58~@~2017-05-18 00:00:00.000~@~~@~~@~1. Apply latest autocomplete enhancement to all administrative tab-folder screens.~@~~@~en-US~@~
+11497~@~  10.  59.70524~@~10~@~59~@~2017-05-24 00:00:00.000~@~~@~~@~1. Fix a bug in Autocomplete for reporting.~@~~@~en-US~@~
+11498~@~  10.  60.70606~@~10~@~60~@~2017-06-06 00:00:00.000~@~~@~~@~1. Make SearchTableId and SearchId nullable for grid only screen;
+2. Add data model via spreadsheet sampling functionality;
+3. Add search counter for tab-folder;~@~~@~en-US~@~
+11499~@~  10.  61.70614~@~10~@~61~@~2017-06-14 00:00:00.000~@~~@~~@~1. Add buttons in Section Object to generate or regenerate the Default/Header/Footer/Sidebar content immediately when content has been changed and not empty;
+2. Fixed an issue on static page description update;~@~~@~en-US~@~
+11500~@~  10.  62.70620~@~10~@~62~@~2017-06-20 00:00:00.000~@~~@~Manually add 1st parameter "D", "H", "F", "S" to CreateProgram() in four *Module.ascx.cs: Deafult, Header, Footer, Sidebar respectively; Regenerate all four modules in Section Object;
+In default.master: replace section.css with the following:
+    <!-- *.css is user indirect controlled. Users change PageObj etc. to regenerate this. -->
+    <link type="text/css" rel="Stylesheet" href="css/sectionH.css" />
+    <link type="text/css" rel="Stylesheet" href="css/sectionF.css" />
+    <link type="text/css" rel="Stylesheet" href="css/sectionD.css" />
+    <link type="text/css" rel="Stylesheet" href="css/sectionS.css" />~@~1. Reorder server rule;
+2. Split section.css into four css;~@~~@~en-US~@~
+11501~@~  10.  63.80312~@~10~@~63~@~2018-03-12 00:00:00.000~@~~@~~@~1. Enable regeneration of section objects regardless whether there are changes;~@~~@~en-US~@~
+11502~@~  10.  64.80328~@~10~@~64~@~2018-03-28 00:00:00.000~@~~@~~@~1. Add error notification on upload of filename over 100 characters;~@~~@~en-US~@~
+11503~@~  10.  65.80501~@~10~@~65~@~2018-05-01 00:00:00.000~@~~@~~@~1. Enhance image button UX on grid for both grid-only and tab-folder plus grid;~@~~@~en-US~@~
+11504~@~  10.  66.80704~@~10~@~66~@~2018-07-04 00:00:00.000~@~~@~~@~1. Image upload should be independent of where is it being called;~@~~@~en-US~@~
+11505~@~  10.  67.80921~@~10~@~67~@~2018-09-21 00:00:00.000~@~~@~~@~1. Add mobile first button positioning and styles.~@~~@~en-US~@~
+11506~@~  10.  68.81002~@~10~@~68~@~2018-10-02 00:00:00.000~@~~@~~@~1. Make total count more efficient by changing GetScreenLisI1ById, and GetScreenLisI2ById.
+2. Fix an error on WrInsButtonHlp;~@~~@~en-US~@~
+11507~@~  10.  69.81011~@~10~@~69~@~2018-10-11 00:00:00.000~@~~@~~@~Add columns SearchIdR and SearchDtlIdR to table Screen.~@~~@~en-US~@~
+11508~@~  10.  70.81013~@~10~@~70~@~2018-10-13 00:00:00.000~@~~@~~@~1. Add buttons for Mobile first design; generic custom labels, columns for Screen Object, etc.~@~~@~en-US~@~
+11509~@~  10.  71.81014~@~10~@~71~@~2018-10-14 00:00:00.000~@~~@~~@~1. Move six fields (NoMasterMsg, NoDetailMsg, AddMasterMsg, AddDetailMsg, MasterFoundMsg, DetailFoundMsg) from custom labels to ScreenHlp; also changed GetScreenHlp;
+2. Add ResizeWidth and ResizeHeight to GetScreenColumns;
+~@~~@~en-US~@~
+11510~@~  10.  72.81017~@~10~@~72~@~2018-10-17 00:00:00.000~@~~@~~@~1. Minor bug fixes;~@~~@~en-US~@~
+11511~@~  10.  73.81018~@~10~@~73~@~2018-10-18 00:00:00.000~@~~@~~@~1. Add more global custom labels;~@~~@~en-US~@~
+11512~@~  10.  74.81022~@~10~@~74~@~2018-10-22 00:00:00.000~@~~@~~@~1. Resize applied to UploadModule.ascx.cs and generated code;~@~~@~en-US~@~
+11513~@~  10.  75.81024~@~10~@~75~@~2018-10-24 00:00:00.000~@~~@~Need to regenerate all screens and all reports.~@~1. Add three permission fields: Borrower, Guarantor, Lender to Usr and UsrPref.~@~~@~en-US~@~
+11514~@~  10.  76.90115~@~10~@~76~@~2019-01-15 00:00:00.000~@~~@~~@~1. Add Borrowers, Guarantors and Lenders to GetCallParam in AdminAccess.~@~~@~en-US~@~
+11515~@~  10.  77.90308~@~10~@~77~@~2019-03-08 00:00:00.000~@~~@~~@~1. Improved performance on grid images.~@~~@~en-US~@~
+11516~@~  10.  78.90513~@~10~@~78~@~2019-05-13 00:00:00.000~@~~@~~@~1. Add preliminary reactJS code generation resources;~@~~@~en-US~@~
+11517~@~  10.  79.90531~@~10~@~79~@~2019-05-31 00:00:00.000~@~~@~~@~1. Add column length and data type to GetScreenLabel SP;
+2. Add LenderId, BorrowerId & GuarantorId to VwPermKey view table and GetCallParam function call;
+3. Allow uploading all doc types to grid;
+4. Multiple Image/Document uploads to grid;
+5. New Adm Screens (ReactRule & AsmxRule);~@~~@~en-US~@~
+11518~@~  10.  80.90627~@~10~@~80~@~2019-06-27 00:00:00.000~@~~@~~@~Miscellaneous enhancements including FX rates from NewtonSoft;~@~~@~en-US~@~
+11519~@~  10.  81.90709~@~10~@~81~@~2019-07-09 00:00:00.000~@~~@~~@~1. Miscellaneous changes on image related code;~@~~@~en-US~@~
+11520~@~  10.  82.90820~@~10~@~82~@~2019-08-20 00:00:00.000~@~~@~~@~1. Preparation for React code gen;~@~~@~en-US~@~
+11521~@~  10.  83.90829~@~10~@~83~@~2019-08-29 00:00:00.000~@~~@~~@~1. Expand Webrule screen to capture 4 more rules for mobile-first.~@~~@~en-US~@~
+11522~@~  10.  84.90913~@~10~@~84~@~2019-09-13 00:00:00.000~@~~@~1. Add " |rintagi.js" to Objects Exempted in Configure Installer's PDT;
+2. Install https://www.iis.net/downloads/microsoft/url-rewrite;
+3. Add the following line to <DefaultDocument>:
+        <add value="index.html"/>
+4. Add the following lines to after <DefaultDocument>:
+    <!-- this is for custom mime type, for fontawesome in this case -->
+    <staticContent>
+      <remove fileExtension=".woff2"/>
+      <mimeMap fileExtension=".woff2" mimeType="font/woff2"/>
+    </staticContent>
+    <httpProtocol>
+      <customHeaders>
+        <remove name="X-Powered-By"/>
+        <add name="X-Frame-Options" value="SAMEORIGIN"/>
+        <add name="Access-Control-Allow-Credentials" value="true"/>
+        <add name="Access-Control-Allow-Methods" value="GET, HEAD, POST, OPTIONS"/>
+        <add name="Access-Control-Allow-Origin" value="*"/>
+        <add name="Access-Control-Allow-Credential" value="true"/>
+        <add name="Access-Control-Allow-Headers" value="Origin, Access-Control-Allow-Origin, Content-Type,Accept-Encoding, Accept,Authorization,X-RintagiScope,X-Authorization"/>
+        <add name="Access-Control-Max-Age" value="86400"/>
+      </customHeaders>
+    </httpProtocol>
+    <httpCompression>
+      <dynamicTypes>
+        <!-- on IIS 8.5, system32\inetsrv\config\applicationhost.config needs to be changed manually to handle this, IIS 10 onward is fine overriding here -->
+        <add mimeType="application/json" enabled="true"/>
+        <add mimeType="application/json; charset=UTF-8" enabled="true"/>
+      </dynamicTypes>
+    </httpCompression>
+    <rewrite>
+      <rules>
+        <clear/>
+        <rule name="React_bundle_proxy" stopProcessing="true">
+          <match url="(static|runtime|img)/(.*)"/>
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true"/>
+            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true"/>
+          </conditions>
+          <action type="Rewrite" url="http://localhost:3000/{R:1}/{R:2}"/>
+        </rule>
+        <rule name="React_loadcss_proxy" enabled="true" stopProcessing="true">
+          <match url="^load.css"/>
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true"/>
+          </conditions>
+          <action type="Rewrite" url="http://localhost:3000/{R:0}" appendQueryString="false" logRewrittenUrl="true"/>
+        </rule>
+        <rule name="FT_dev_reactproxy" stopProcessing="true">
+          <match url="reactproxy/?(.*)"/>
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false"/>
+          <action type="Rewrite" url="http://localhost:3000/{R:1}"/>
+        </rule>
+        <rule name="react_ending_slash" enabled="false" stopProcessing="true">
+          <match url="react/([^/#]*)(#?[^/]*)$"/>
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true"/>
+          </conditions>
+          <action type="Redirect" url="react/{R:1}/{R:2}"/>
+        </rule>
+        <rule name="react_static_production" enabled="false" stopProcessing="true">
+          <match url="react/([^/]*/?)(.*)"/>
+          <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true"/>
+          </conditions>
+          <action type="Rewrite" url="react/{R:1}/index.html"/>
+        </rule>
+      </rules>
+    </rewrite>~@~~@~~@~en-US~@~
+11523~@~  10.  85.91018~@~10~@~85~@~2019-10-18 00:00:00.000~@~~@~~@~Re-release on GitHub.~@~~@~en-US~@~
+11524~@~  10.  86.91121~@~10~@~86~@~2019-11-21 00:00:00.000~@~~@~~@~1. track source IP for fatal error(for intruder detection)
+2. revise React template layout
+3. enhance React code structure to support custom redux code and/or non-generated page
+3. fix potential SQL injection in Screen Get List SP
+4. fix for React to better handling async nature of Formik value change
+5. enhance installer/deployment mechanism for reduce time/size and other corner cases
+6. restrict detail error reporting for anonymous user(for intruder deterrence)~@~~@~en-US~@~
+11525~@~  10.  87.91128~@~10~@~87~@~2019-11-28 00:00:00.000~@~~@~~@~1. enhance to handle mesh(cross server/namespace with different db credentials in dbo.Systems)
+2. re-gen all screen because of (1) which also harden system for SQL code injections~@~~@~en-US~@~
+11526~@~  10.  88.91129~@~10~@~88~@~2019-11-29 00:00:00.000~@~~@~~@~1. revised react template and associated generation program~@~~@~en-US~@~
+11527~@~  10.  89.91202~@~10~@~89~@~2019-12-02 00:00:00.000~@~~@~~@~1. include Borrower/Lender/Guarantor in Impersonation during login in
+2. better error tracing on which machine the error occurred
+3. handle race condition of MkGetScreenIn(on rapid firing asmx usage in React)
+4. React css change to handle multiple page bottom button layout~@~~@~en-US~@~
+11528~@~  10.  90.91203~@~10~@~90~@~2019-12-03 00:00:00.000~@~~@~~@~1. better error tracing for mis-configured web service JSON content size
+~@~~@~en-US~@~
+11529~@~  10.  91.91205~@~10~@~91~@~2019-12-05 00:00:00.000~@~~@~~@~1. add license management screen(and associated helper functions)
+2. fix searchlink js on newer browser~@~~@~en-US~@~
+11530~@~  10.  92.91210~@~10~@~92~@~2019-12-10 00:00:00.000~@~~@~~@~1. another try at fixing race condition on dynamic Criteria GetDdl generation
+2. preserve legacy version of file input control for generated code
+3. better default for installer for two tier setup~@~~@~en-US~@~
+11531~@~  10.  93.91212~@~10~@~93~@~2019-12-12 00:00:00.000~@~~@~~@~1. enhancement to handle multiple web service behind load balancer(stateless web service login process)~@~~@~en-US~@~
+11532~@~  10.  94.91218~@~10~@~94~@~2019-12-18 00:00:00.000~@~~@~~@~1. revise MkGetScreenIn logic to handle race condition of SQL Server DROP/CREATE SP limitation
+2. revise installer package for new directory layout requirement
+3. enhance licensing code for fully licensed RO
+4. revise to be compatible with VS 2012
+5. revise installer versioning~@~~@~en-US~@~
+11533~@~  10.  95.00102~@~10~@~95~@~2020-01-02 00:00:00.000~@~~@~~@~1. fix typo in GetScreenLisCri call of RODesign.dbo.fSanitizeKeyVal
+2. enhance installer security
+3. resurrect legacy dropdown an fileinput control for React(co-exist with generated code)
+4. fix various react generated code issue about incomplete change of name, correct systemid for asmx and use of legacy fileinput/drodown functions)
+5. allow re-mapping of project root from C: to some other drives
+6. put in react logic for cross module copy and shared components auto update
+7. force MkGetScreenIn to always re-gen GetScreenIn SP~@~~@~en-US~@~
+11534~@~  10.  96.00106~@~10~@~96~@~2020-01-06 00:00:00.000~@~~@~~@~1. cleanup inconsistent line break usage for .cs and SP to make them more git friendly(more effective diff to review changes)~@~~@~en-US~@~
+11535~@~  10.  97.00107~@~10~@~97~@~2020-01-07 00:00:00.000~@~~@~~@~1. split out encryption functionality for easier upgrade from different RO instance~@~~@~en-US~@~
+11536~@~  10.  98.00113~@~10~@~98~@~2020-01-13 00:00:00.000~@~~@~~@~1. add checklist control for React, proper user redux handling for password reset in React, cleanup remembered 'current' record on save/delete, better prestart/prebuild(shared react js update) script to preserve local changes.
+2. consolidate Redirection treatment for proper handling of behind proxy server setup, revise cronjob handling for sitting behind proxy, add better tracing capability for behind proxy setup
+3. improve react generator to handle screen with primary key which is not identity column
+4. fix WIP probing(non-released for installer preparation) code because of the 'imported module'(non-local controlled) fix
+5. This build requires re-gen of all screen/report/wizard(both asp.net and react)
+~@~~@~en-US~@~
+11537~@~  10.  99.00114~@~10~@~99~@~2020-01-14 00:00:00.000~@~~@~~@~1. change react generator to handle primary key is not identity, screen without criteria and action button component
+2. further cleanup name space management behind proxy(for React related token sync)
+3. export VwAppItem for GIT
+4. change screen generation to create Criteria Ddl
+5. revise prestart/prebuild script example for local site file update~@~~@~en-US~@~
+11538~@~  10. 100.00115~@~10~@~100~@~2020-01-15 00:00:00.000~@~~@~~@~1. React generated code formatting improvement
+2. Generate generic js function shorthand in react js service api layer(for compatibility)~@~~@~en-US~@~
+11539~@~  11. 101.00115~@~11~@~101~@~2020-01-15 00:00:00.000~@~~@~~@~1. export design meta data for git tracking
+2. minor react generated code formatting change~@~~@~en-US~@~
+11540~@~  11. 102.00116~@~11~@~102~@~2020-01-16 00:00:00.000~@~~@~~@~1. enhance SP/View deployment to avoid DROP to reduce transient failure during upgrade
+2. handle 'special' image content in react as visual replacement of 'nothing'~@~~@~en-US~@~
+11541~@~  11. 103.00119~@~11~@~103~@~2020-01-19 00:00:00.000~@~~@~~@~1. enhancement to deployment system to support incremental module installation/upgrade
+2. better support for two tier backup in installer~@~~@~en-US~@~
+11542~@~  11. 104.00120~@~11~@~104~@~2020-01-20 00:00:00.000~@~~@~~@~1. further refinement to install backup process to handle restricted SQL login credential right(on creating backup directory via xp_create_subdir)~@~~@~en-US~@~
+11543~@~  11. 105.00121~@~11~@~105~@~2020-01-21 00:00:00.000~@~~@~~@~1. fold in Xls import(from external website)
+2. always ignore local tables(Usr, Deleted etc) for installer(non-N) setup for Design and *D databases
+3. remove dependency about Sybase configuration~@~~@~en-US~@~
+11544~@~  11. 106.00122~@~11~@~106~@~2020-01-22 00:00:00.000~@~~@~~@~1. better react module logout handling
+2. suppress successful app start message
+3. minor optimization for installer DB upgrade change ~@~~@~en-US~@~
+11545~@~  11. 107.00123~@~11~@~107~@~2020-01-23 00:00:00.000~@~~@~~@~1. enhancement to installation process~@~~@~en-US~@~
+11546~@~  11. 108.00124~@~11~@~108~@~2020-01-24 00:00:00.000~@~~@~~@~1. enhance LImpr redundant value handling
+2. further enhancement to installer for *D view deployment~@~~@~en-US~@~
+11547~@~  11. 109.00125~@~11~@~109~@~2020-01-25 00:00:00.000~@~~@~~@~Year of Rat Release~@~~@~en-US~@~
+11548~@~  11. 110.00127~@~11~@~110~@~2020-01-27 00:00:00.000~@~~@~~@~1. Minor enhancement to telemetry reporting on error
+2. cleanup default installer configuration(NDEV) 
+3. remove unnecessary left over for Sybase related entries in installer configuration
+4. different default DB table exclusion list in deployment for metadata(RO vs non-RO)
+5. sample installer configuration for deploying 'local' metadata(Entity or Usr etc.) for setup synchronization~@~~@~en-US~@~
+11549~@~  11. 111.00128~@~11~@~111~@~2020-01-28 00:00:00.000~@~~@~~@~1. Fix MkGetScreenIn in ROCmonD/RODesign that execute in the wrong DB for non-multiDB(thus would fail for first time create for application modules)~@~~@~en-US~@~
+11550~@~  11. 112.00130~@~11~@~112~@~2020-01-30 00:00:00.000~@~~@~~@~1. generate 'Document' display type for React
+2. fix license control for # of Company/Project to exclude counting empty row~@~~@~en-US~@~
+11551~@~  11. 113.00201~@~11~@~113~@~2020-02-01 00:00:00.000~@~~@~~@~1. enhance react generator to handle Document and ImageButton code generation for api layer(web service js and asmx)~@~~@~en-US~@~
+11552~@~  11. 114.00203~@~11~@~114~@~2020-02-03 00:00:00.000~@~~@~~@~1. block saving on primary key change in tab folder with/without grid screen
+2. add configurable cronjob url and improve deployment process to generalize local web.config change from leaking to new installation~@~~@~en-US~@~
+11553~@~  11. 115.00206~@~11~@~115~@~2020-02-06 00:00:00.000~@~~@~~@~1. improved deployment process for incremental module addition
+2. improved cronjob handling with customizable url(for proxy/load balancing)
+3. add systemId change functionality for module 'move'(from one systemId to another), feature hidden~@~~@~en-US~@~
+11554~@~  11. 116.00207~@~11~@~116~@~2020-02-07 00:00:00.000~@~~@~~@~1. minor cleanup for installer template project~@~~@~en-US~@~
+11555~@~  11. 117.00209~@~11~@~117~@~2020-02-09 00:00:00.000~@~~@~~@~1. improved proxy handling
+2. add sample cronjob invocation code demo~@~~@~en-US~@~
+11556~@~  11. 118.00210~@~11~@~118~@~2020-02-10 00:00:00.000~@~~@~~@~1. improved compatibility with setup behind proxy
+2. add sample cronjob status tracking
+3. formatting of money field in react~@~~@~en-US~@~
+11557~@~  11. 119.00211~@~11~@~119~@~2020-02-11 00:00:00.000~@~~@~~@~1. fix path issue with self invoke when not configured as 'default web site' apps
+2. fix ionic zip library not handling left over from failed operation(.tmp file)~@~~@~en-US~@~
+11558~@~  11. 120.00212~@~11~@~120~@~2020-02-12 00:00:00.000~@~~@~~@~1. remove compilation warnings from generated code and some hand coded sources~@~~@~en-US~@~
+11559~@~  11. 121.00219~@~11~@~121~@~2020-02-19 00:00:00.000~@~~@~~@~1. better handling of display format for React screen(2 decimal money etc.)
+2. pretty format generated mstlist/mstrecord js to comform to VS code standard(2 space tab)
+3. more robust caching invalidation of UsrImpr in web service layer(handling client side induced user role change)
+4. generate embedded image upload functionality for master record
+5. only generate embedded image upload functionality in web service layer when screen contains image buttons(and separate detail image button from master record ones)
+6. handle SVG image format
+7. improved git integration to track remote branch
+8. client side error tracing of multi-doc upload issues(unhandled exception like server side error)
+9. only export design(*D) metadata for source control purpose when elected(via existence of RuleTier/SQL/Data/ directory)~@~~@~en-US~@~
+11560~@~  11. 122~@~11~@~122~@~~@~~@~~@~~@~~@~~@~

@@ -104,7 +104,7 @@ namespace RO.Web
             {
                 return refresh_token;
             };
-            Func<LoginUsr, UsrCurr, UsrImpr, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, ignoreCache) =>
+            Func<LoginUsr, UsrCurr, UsrImpr,string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, currentHandle, ignoreCache) =>
             {
                 LUser = loginUsr;
                 LCurr = usrCurr;
@@ -121,14 +121,19 @@ namespace RO.Web
             var context = HttpContext.Current;
             var auth = GetAuthObject();
             string guid = Guid.NewGuid().ToString();
-            string appPath = HttpContext.Current.Request.ApplicationPath;
+            string xForwardedFor = HttpContext.Current.Request.Headers["X-Forwarded-For"];
+            string appPath = 
+                    !string.IsNullOrEmpty(xForwardedFor) 
+                    && !string.IsNullOrEmpty(Config.ExtBasePath) 
+                        ? Config.ExtBasePath 
+                        : HttpContext.Current.Request.ApplicationPath;
             string domain = context.Request.Url.GetLeftPart(UriPartial.Authority);
             string jwtToken = auth.CreateLoginJWT(LUser, LUser.DefCompanyId, LUser.DefProjectId, LUser.DefSystemId, LCurr, LImpr, appPath, 10 * 60, guid);
             Func<string, string> getStoredToken = (accessCode) =>
             {
                 return jwtToken;
             };
-            Func<LoginUsr, UsrCurr, UsrImpr, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, ignoreCache) =>
+            Func<LoginUsr, UsrCurr, UsrImpr, string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, currentHandle, ignoreCache) =>
             {
                 //LUser = loginUsr;
                 //LCurr = usrCurr;
@@ -138,16 +143,19 @@ namespace RO.Web
             var access_token = auth.GetToken("", "", "authorization_code", guid, "", "", "", appPath, domain, getStoredToken, validateScope);
             var sha256 = new SHA256Managed();
             var handle = Convert.ToBase64String(sha256.ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(LUser.LoginName))).Replace("=","_");
-            HttpCookie tokenInCookie = new HttpCookie((appPath??"/").Substring(1) + "_" + "tokenInCookieJS", handle);
-            HttpCookie refreshTokenCookie = new HttpCookie((appPath ?? "/").Substring(1) + "_" + "tokenJS", access_token["refresh_token"]);
+            /* convention must match clientRule.js(and React side) */
+            HttpCookie tokenInCookie = new HttpCookie((appPath??"/").Substring(1).ToUpper().Replace("/","") + "_" + "tokenInCookieJS", handle);
+            HttpCookie refreshTokenCookie = new HttpCookie((appPath ?? "/").Substring(1).ToUpper().Replace("/", "") + "_" + "tokenJS", access_token["refresh_token"]);
             tokenInCookie.HttpOnly = false;
-            //tokenInCookie.Path = appPath;
+            tokenInCookie.Path = "/"; // must be root to cater for browser case sensitivity oddity we use app path prefix to avoid name space conflicts
             tokenInCookie.Expires = DateTime.Now.AddMinutes(2);
+            tokenInCookie.Secure = IsSecureConnection();
             //tokenInCookie.Domain = domain;
             refreshTokenCookie.HttpOnly = false;
-            //refreshTokenCookie.Path = appPath;
+            refreshTokenCookie.Path = "/"; // must be root to cater for browser case sensitivity oddity we use app path prefix to avoid name space conflicts
             //refreshTokenCookie.Domain = domain;
             refreshTokenCookie.Expires = DateTime.Now.AddMinutes(2);
+            refreshTokenCookie.Secure = IsSecureConnection();
             Response.Cookies.Add(tokenInCookie);
             Response.Cookies.Add(refreshTokenCookie);
 
@@ -169,25 +177,32 @@ namespace RO.Web
             {
                 TwoFactorAuthenticationPanel.Visible = Config.EnableTwoFactorAuth == "Y";
                 string extAppDomainUrl = 
-                    !string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"]) 
-                        ? System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"] 
+                    !string.IsNullOrWhiteSpace(Config.ExtBaseUrl) && !string.IsNullOrEmpty(Request.Headers["X-Forwarded-For"])
+                        ? Config.ExtBaseUrl 
                         : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
                 cAppDomainUrl.Text = extAppDomainUrl.EndsWith("/") ? extAppDomainUrl.Substring(0,extAppDomainUrl.Length - 1) : extAppDomainUrl ;
                 if (base.SystemsList == null) { base.SystemsDict = (new LoginSystem()).GetSystemsList(string.Empty, string.Empty); }    // Instantiate base.SystemsList.
-                if (!Request.IsLocal && Config.EnableSsl)
+                if (!Request.IsLocal 
+                    && (Config.EnableSsl 
+                        || (IsProxy() && Config.ExtBaseUrl.ToLower().StartsWith("https:"))))
                 {
-                    string sessionCookieName = "ASP.NET_" + Config.AppNameSpace + "SessionId";
+                    System.Web.Configuration.SessionStateSection SessionSettings = ConfigurationManager.GetSection("system.web/sessionState") as System.Web.Configuration.SessionStateSection;
+                    string sessionCookieName = SessionSettings != null ? SessionSettings.CookieName : null;
                     HttpCookie sessionCookie = Response.Cookies[sessionCookieName];
                     if (Request.Cookies["secureChannel"] == null)
                     {
                         HttpCookie x = new HttpCookie("secureChannel", "test");
                         x.Secure = true;
+                        x.HttpOnly = true;
                         Response.AppendCookie(x);
+                        HttpCookie y = new HttpCookie("secureChannelResult", "test");
+                        y.Secure = true;
+                        y.HttpOnly = true;
                         if (sessionCookie != null)
                         {
-                            Response.Cookies.Remove(sessionCookieName);
+                            Response.Cookies[sessionCookieName].Expires = new DateTime(1900, 1, 1);
                         }
-                        Response.Redirect(Request.Url.AbsoluteUri.Replace("http://", "https://"));
+                        this.Redirect(Request.Url.AbsoluteUri.Replace("http://", "https://"));
                     }
                     if (sessionCookie != null)
                     {
@@ -717,7 +732,8 @@ namespace RO.Web
                         string from = base.SysCustServEmail(3);
                         var reset_url1 = GetResetLoginUrl(usr.UsrId.ToString(), "", "", "k", "&ip=" + HttpUtility.UrlEncode(GetVisitorIPAddress()), null, null);
                         var reset_url2 = GetResetLoginUrl(usr.UsrId.ToString(), "", "", "j", "", null, null);
-                        string sBody = "Someone recently tried to login to your account at <b>" + Request.Url.Host + Request.Url.AbsolutePath + "</b> from an unrecognized IP location <b>" + GetVisitorIPAddress() + "</b>.<br /><br />You may choose to ignore this message or click <a href=" + reset_url1.Value + ">YES</a> if this IP Address location will be used again or click <a href=" + reset_url2.Value + ">NO</a> to reset your password immediately.";
+                        string machineName = Environment.MachineName;
+                        string sBody = "Someone recently tried to login to your account at <b>" + ResolveUrlCustom(Request.Url.AbsolutePath,false,true) + string.Format("(On Server {0})",machineName) + "</b> from an unrecognized IP location <b>" + GetVisitorIPAddress() + "</b>.<br /><br />You may choose to ignore this message or click <a href=" + reset_url1.Value + ">YES</a> if this IP Address location will be used again or click <a href=" + reset_url2.Value + ">NO</a> to reset your password immediately.";
                         try
                         {
                             base.SendEmail("Review Recent Login", sBody, usr.UsrEmail, from, from, Config.WebTitle + " Customer Care", true);
@@ -749,8 +765,8 @@ namespace RO.Web
                             HttpContext.Current.User = new GenericPrincipal(new FormsIdentity(Ticket), null);
                             string returnURL = Request["ReturnUrl"];
 
-                            if (!string.IsNullOrEmpty(returnURL) && !returnURL.StartsWith(FormsAuthentication.LoginUrl)) Response.Redirect(Request["ReturnUrl"]);
-                            else Response.Redirect("Default.aspx");
+                            if (!string.IsNullOrEmpty(returnURL) && !returnURL.StartsWith(FormsAuthentication.LoginUrl)) this.Redirect(Request["ReturnUrl"]);
+                            else this.Redirect("Default.aspx");
                         }
                         else
                             FormsAuthentication.RedirectFromLoginPage(usr.LoginName, false);
@@ -844,7 +860,7 @@ namespace RO.Web
                 {
                 }
 
-                Response.Redirect(Config.SslUrl);
+                this.Redirect(Config.SslUrl);
             }
         }
 
@@ -1053,7 +1069,7 @@ namespace RO.Web
                 string randomIV = Guid.NewGuid().ToString().Replace("-", "");
                 string ticket = WindowLoginRegisterTicket(randomIV);
                 Session["LoginTokenTicket" + ticket] = randomIV;
-                Response.Redirect(loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "LoginTokenTicket=" + System.Web.HttpUtility.UrlEncode(ticket) + "&ReturnUrl=" + System.Web.HttpUtility.UrlEncode(myUrl));
+                this.Redirect(loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "LoginTokenTicket=" + System.Web.HttpUtility.UrlEncode(ticket) + "&ReturnUrl=" + System.Web.HttpUtility.UrlEncode(myUrl));
                 //string accessToken = cFacebookAccessToken.Text;
                 //Dictionary<string, object> profile = GetFacebookProfile(accessToken);
                 //if (!string.IsNullOrEmpty(windowsLoginName))
@@ -1083,12 +1099,12 @@ namespace RO.Web
                     + "&prompt=consent"
                     + "&state=" + System.Web.HttpUtility.UrlEncode(state);
             Session[state] = new Dictionary<string, string>();
-            Response.Redirect(loginUrl);
+            this.Redirect(loginUrl);
         }
 
         public void CancelLoginBtn_Click(object sender, System.EventArgs e)
         {
-            Response.Redirect("~/MyAccount.aspx?typ=" + Request.QueryString["typ"].ToString());
+            this.Redirect("~/MyAccount.aspx?typ=" + Request.QueryString["typ"].ToString());
         }
 
         public void PickLoginBtn_Click(object sender, System.EventArgs e)
@@ -1127,6 +1143,10 @@ namespace RO.Web
             {
                 cRedirectParent.Value = Config.SslUrl;
             }
+            else if (success && bBlocked && IsProxy())
+            {
+                this.Redirect(Request.QueryString["ReturnUrl"]);
+            }
         }
         public void ForgetBtn_Click(object sender, System.EventArgs e)
         {
@@ -1153,7 +1173,7 @@ namespace RO.Web
                     sb.Append("<br /><strong><a href=\"").Append(reset_url.Value).Append("\">").Append(reset_url.Value).Append("</a></strong><br /><br />");
                     sb.Append("<strong>").Append(loginName).Append("</strong>&nbsp;");
                     sb.Append(TranslateItem(dtLabel.Rows, "ResetPwdEmailMsg2"));
-                    string host = Request.Url.Host;
+                    string host = Request.Headers["X-Forwarded-Host"] ?? Request.Url.Host;
                     try
                     {
                         string from = base.SysCustServEmail(3);
@@ -1213,7 +1233,7 @@ namespace RO.Web
                             string from = base.SysCustServEmail(3);
                             string subject = TranslateItem(GetLabels().Rows, "ProfileChangedEmailSubject");
                             string body = TranslateItem(GetLabels().Rows, "ProfileChangedEmailBody");
-                            string site = Request.Url.Scheme + "://" + Request.Url.Host + "/" + Request.ApplicationPath + " (" + Config.WebTitle + ")";
+                            string site = GetSiteUrl(true);
                             if (!string.IsNullOrEmpty(oldEmail))
                             {
                                 NotifyUser(subject, body, oldEmail, from);
@@ -1631,7 +1651,7 @@ namespace RO.Web
            
         }
 
-        protected void RememberOTP(int days = 1)
+        protected void RememberOTP(int days = 90)
         {
             Dictionary<string, string> otp = new Dictionary<string, string>();
             string secret = new LoginSystem().WrGetUsrOTPSecret(LUser.UsrId);
@@ -1716,7 +1736,7 @@ namespace RO.Web
                 string from = base.SysCustServEmail(3);
                 string subject = TranslateItem(GetLabels().Rows, "ProfileChangedEmailSubject");
                 string body = string.Format(TranslateItem(GetLabels().Rows, "LoginLinkAddedEmailBody"), LUser.LoginName, providers[ProviderCd], LoginName);
-                string site = Request.Url.Scheme + "://" + Request.Url.Host + "/" + Request.ApplicationPath + " (" + Config.WebTitle + ")";
+                string site = GetSiteUrl(true);
                 if (!string.IsNullOrEmpty(LUser.UsrEmail))
                 {
                     NotifyUser(subject, body, LUser.UsrEmail, from);
@@ -1745,7 +1765,7 @@ namespace RO.Web
                 string from = base.SysCustServEmail(3);
                 string subject = TranslateItem(GetLabels().Rows, "ProfileChangedEmailSubject");
                 string body = string.Format(TranslateItem(GetLabels().Rows, "LoginLinkRemovedEmailBody"), providers[ProviderCd], LoginName, LUser.LoginName);
-                string site = Request.Url.Scheme + "://" + Request.Url.Host + "/" + Request.ApplicationPath + " (" + Config.WebTitle + ")";
+                string site = GetSiteUrl(true);
                 if (!string.IsNullOrEmpty(LUser.UsrEmail))
                 {
                     NotifyUser(subject, body, LUser.UsrEmail, from);

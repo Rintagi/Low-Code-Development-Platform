@@ -1,0 +1,15 @@
+1~@~TinyInt~@~TinyInt~@~Byte~@~Numeric~@~Numeric~@~Integer~@~8-bit (0 through 255)~@~Y~@~N~@~1
+2~@~SmallInt~@~SmallInt~@~Int16~@~Numeric~@~Numeric~@~Integer~@~16-bit (-32,768 through 32,767)~@~Y~@~N~@~1
+3~@~Int~@~Int~@~Int32~@~Numeric~@~Numeric~@~Integer~@~32-bit (-2,147,483,648 through 2,147,483,647)~@~Y~@~N~@~1
+4~@~BigInt~@~BigInt~@~Int64~@~Numeric~@~Numeric~@~Integer~@~64-bit (-9223372036854775808 through 9223372036854775807)~@~Y~@~N~@~1
+6~@~Float~@~Float~@~Double~@~Double~@~Double~@~Float~@~64-bit (-1.79E + 308 through 1.79E + 308)~@~Y~@~N~@~1
+7~@~Money~@~Money~@~Double~@~Currency~@~Currency~@~Float~@~64-bit (-922,337,203,685,477.5808 through 922,337,203,685,477.5807)~@~Y~@~N~@~16
+8~@~Binary~@~Binary~@~Byte[]~@~Binary~@~Binary~@~String~@~8-bit fixed arrays~@~N~@~N~@~1
+9~@~VarBinary~@~VarBinary~@~Byte[]~@~VarBinary~@~VarBinary~@~String~@~8-bit dynamic arrays~@~N~@~N~@~1
+10~@~NChar~@~NChar~@~String~@~Char~@~WChar~@~String~@~16-bit fixed Unicode characters string~@~N~@~Y~@~1
+11~@~NVarChar~@~NVarChar~@~String~@~VarChar~@~VarWChar~@~String~@~16-bit dynamic Unicode character string~@~N~@~Y~@~1
+12~@~DateTime~@~DateTime~@~DateTime~@~DBTimeStamp~@~DBTimeStamp~@~DateTime~@~Date and time~@~N~@~N~@~33
+14~@~Char~@~Char~@~String~@~Char~@~Char~@~String~@~16-bit fixed Unicode characters string~@~N~@~N~@~4
+15~@~VarChar~@~VarChar~@~String~@~VarChar~@~VarChar~@~String~@~16-bit dynamic Unicode characters string~@~N~@~N~@~1
+18~@~Decimal~@~Decimal~@~Double~@~Decimal~@~Decimal~@~Float~@~64-bit (-1.79E + 308 through 1.79E + 308)~@~Y~@~N~@~1
+21~@~Date~@~DateTime~@~DateTime~@~DBDate~@~DBDate~@~DateTime~@~Date only with time always 0~@~N~@~N~@~33

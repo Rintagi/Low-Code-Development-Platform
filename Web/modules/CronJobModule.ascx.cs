@@ -25,7 +25,10 @@ public partial class CronJobModule : RO.Web.ModuleBase
     {
         try
         {
-            string url = jobLink.StartsWith("http") ? jobLink : baseUrl + "/" + jobLink + (jobLink.Contains("?") ? "&" : "?") + "jid=" + jobId.ToString() + "&cron=" + Application.GetHashCode().ToString();
+            string jobUrl = jobLink.StartsWith("http") ? jobLink : baseUrl + "/" + jobLink + (jobLink.Contains("?") ? "&" : "?");
+            string url = jobUrl + "jid=" + jobId.ToString() + "&cron=" + Application.GetHashCode().ToString();
+            bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+
             HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
             wr.CookieContainer = new CookieContainer();
             wr.BeginGetResponse(x =>
@@ -63,36 +66,75 @@ public partial class CronJobModule : RO.Web.ModuleBase
                                     dv.RowFilter = "SystemId = " + systemId;
                                     if (dv.Count > 0)
                                     {
-                                        string connStr = Config.GetConnStr(dv[0]["dbAppProvider"].ToString(), dv[0]["ServerName"].ToString(), dv[0]["dbDesDatabase"].ToString(), "", dv[0]["dbAppUserId"].ToString());
-                                        (new AdminSystem()).UpdCronJobStatus(jobId, DateTime.Now.ToString() + " - " + we.Message, connStr, dv[0]["dbAppPassword"].ToString());
+                                        string connStr = Config.GetConnStr(dv[0]["dbAppProvider"].ToString(), dv[0]["ServerName"].ToString()
+                                            , dv[0]["dbDesDatabase"].ToString(), ""
+                                            , dv[0]["dbAppUserId"].ToString());
+                                        (new AdminSystem()).UpdCronJobStatus(jobId, 
+                                            DateTime.Now.ToUniversalTime().ToString() + " - " + we.Message + "(" + jobUrl + ")"
+                                            , connStr
+                                            , singleSQLCredential ? Config.DesPassword : dv[0]["dbAppPassword"].ToString());
                                     }
                                 }
+                                else if (status >= 300)
+                                {
+                                    throw new Exception("redirect " + url);
+                                }
                             }
-                            catch { }
+                            catch {
+                                throw;
+                            }
                         }
                         else
                         {
+                            throw new Exception("no response code from web request " + url, we);
                             // no http status code available
                         }
                     }
                     else
                     {
+                        throw new Exception("other error web request " + url, we);
                         // no http status code available
                     }
                 }
-                catch (Exception e) { }
+                catch (Exception e) {
+                    if (e == null) throw;
+                }
             }, wr);
         }
-        catch (Exception e1) { }
+        catch (Exception e1) {
+            if (e1 == null) throw;
+            try
+            {
+                ErrorTrace(e1, "warning");
+            }
+            catch { }
+        }
 
     }
     private void RunJobs()
     {
-        string http = (Config.EnableSsl ? "https" : "http")
+        string xForwardedFor = HttpContext.Current.Request.Headers["X-Forwarded-For"];
+        string xForwardedProto = HttpContext.Current.Request.Headers["X-Forwarded-Proto"];
+        string xForwardedHost = HttpContext.Current.Request.Headers["X-Forwarded-Host"];
+        string appPath =
+                !string.IsNullOrEmpty(xForwardedFor)
+                && !string.IsNullOrEmpty(Config.ExtBasePath)
+                    ? Config.ExtBasePath
+                    : HttpContext.Current.Request.ApplicationPath;
+        string http = ((Request.IsSecureConnection) ? "https" : "http")
                     + (Request.Url.IsDefaultPort ? "://" : ":" + Request.Url.Port.ToString() + "//")
                     + Request.Url.Host;
-        string baseUrl = http + HttpRuntime.AppDomainAppVirtualPath;
-        string myUrl = http + Request.Url.AbsolutePath;
+        string cronjobBaseUrl =
+                !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"])
+                ? System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"]
+                : (!string.IsNullOrEmpty(Config.IntBaseUrl) ? Config.IntBaseUrl
+                : ""
+                );
+        string baseUrl = !string.IsNullOrEmpty(cronjobBaseUrl) 
+                ? cronjobBaseUrl
+                : http + (HttpRuntime.AppDomainAppVirtualPath == "/" ? "" : HttpRuntime.AppDomainAppVirtualPath) 
+                ;
+        string myUrl = string.IsNullOrEmpty(cronjobBaseUrl) ? http + Request.Url.AbsolutePath : cronjobBaseUrl + "/CronJob.aspx";
         Func<DateTime> currentTime = () => DateTime.Parse(DateTime.Now.ToUniversalTime().ToString("g"));    // strip to minute for comparison.
         Action jobTask = () =>
         {
@@ -112,12 +154,16 @@ public partial class CronJobModule : RO.Web.ModuleBase
                     Dictionary<string, string> links = new Dictionary<string, string>();
                     DateTime now = currentTime();
                     string admEmail = base.SysAdminEmail(3);
+                    List<Tuple<Exception, Dictionary<string, string>>> errorList = new List<Tuple<Exception, Dictionary<string, string>>>();
+                    bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+
                     try
                     {
                         foreach (DataRow dr in SystemList.Rows)
                         {
                             string connStr = Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", dr["dbAppUserId"].ToString());
-                            DataTable dtJobs = (new AdminSystem()).GetCronJob(null,string.Empty, connStr, dr["dbAppPassword"].ToString());
+                            DataTable dtJobs = (new AdminSystem()).GetCronJob(null,string.Empty, connStr
+                                , singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString());
                             dtJobs.DefaultView.Sort = "NextRun, Year, Month, Day, Hour, Minute";
                             foreach (DataRowView drvJob in dtJobs.DefaultView)
                             {
@@ -132,9 +178,23 @@ public partial class CronJobModule : RO.Web.ModuleBase
                                         //links.Add(jobLink, jobLink);
                                         try
                                         {
-                                            base.UpdCronStatus((int)drvJob["CronJobId"], true, connStr, dr["dbAppPassword"].ToString());
+                                            base.UpdCronStatus((int)drvJob["CronJobId"], true, connStr
+                                                ,singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString());
                                         }
-                                        catch { }
+                                        catch (Exception ex) {
+                                            try
+                                            {
+                                                string errorMsg = string.Format("Cronjob update status error for {0}({1})", jobLink, drvJob["CronJobId"].ToString());
+                                                ErrorTrace(new Exception(errorMsg, ex), "error");
+                                            }
+                                            catch { }
+                                            //var d = new Dictionary<string,string>(){
+                                            //    {"CronJobId", drvJob["CronJobId"].ToString()},
+                                            //    {"JobLink", jobLink},
+                                            //    {"Error",errorMsg},
+                                            //};
+                                            //errorList.Add(new Tuple<Exception, Dictionary<string, string>>(ex, d));
+                                        }
                                     }
                                 }
                                 else
@@ -152,9 +212,24 @@ public partial class CronJobModule : RO.Web.ModuleBase
                                             {
                                                 try
                                                 {
-                                                    base.UpdCronStatus((int)drvJob["CronJobId"], connStr, dr["dbAppPassword"].ToString());
+                                                    base.UpdCronStatus((int)drvJob["CronJobId"], connStr
+                                                        , singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString());
                                                 }
-                                                catch { }
+                                                catch (Exception ex)
+                                                {
+                                                    try
+                                                    {
+                                                        string errorMsg = string.Format("Cronjob update status error for {0}({1})", jobLink, drvJob["CronJobId"].ToString());
+                                                        ErrorTrace(new Exception(errorMsg, ex), "error");
+                                                    }
+                                                    catch { }
+                                                    //var d = new Dictionary<string, string>(){
+                                                    //    {"CronJobId", drvJob["CronJobId"].ToString()},
+                                                    //    {"JobLink", jobLink},
+                                                    //    {"Error",string.Format("Cronjob update status error for {0}({1})", jobLink, drvJob["CronJobId"].ToString())},
+                                                    //};
+                                                    //errorList.Add(new Tuple<Exception, Dictionary<string, string>>(ex, d));
+                                                }
                                             }
                                         }
 
@@ -202,7 +277,22 @@ public partial class CronJobModule : RO.Web.ModuleBase
                             }
                         }
                     }
-                    catch (Exception er) { }
+                    catch (Exception er) 
+                    {
+                        try
+                        {
+                            string errorMsg = string.Format("Cronjob invoke error");
+                            ErrorTrace(new Exception(errorMsg, er), "error");
+                        }
+                        catch { }
+
+                        //var d = new Dictionary<string, string>(){
+                        //                                {"CronJobId", null},
+                        //                                {"JobLink", null},
+                        //                                {"Error",string.Format("Cronjob invoke error {0} {1}", er.Message, er.StackTrace)},
+                        //                            };
+                        //errorList.Add(new Tuple<Exception, Dictionary<string, string>>(er, d));
+                    }
                     
                     DateTime nextMin = currentTime().AddMinutes(2);
                     if (jobsRun.Count > 0 && !string.IsNullOrEmpty(admEmail)) 
@@ -242,13 +332,31 @@ public partial class CronJobModule : RO.Web.ModuleBase
                     try
                     {
                         HttpWebResponse resp = (HttpWebResponse) wr.GetResponse();
-                        if (((int) resp.StatusCode) <= 300) break;
+                        if (((int)resp.StatusCode) <= 300)
+                        {
+                            // trumpline, i.e. we kill ourself and like the next invoke take over
+                            break;
+                        }
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        try
+                        {
+                            string errorMsg = string.Format("Cronjob refresh error {0}", myUrl);
+                            ErrorTrace(new Exception(errorMsg, ex), "error");
+                        }
+                        catch { }
+                    }
                 }
             }
             catch (Exception e)
             {
+                try
+                {
+                    string errorMsg = string.Format("Cronjob daemon error {0}", myUrl);
+                    ErrorTrace(new Exception(errorMsg, e), "error");
+                }
+                catch { }
             }
             finally 
             {
@@ -271,7 +379,11 @@ public partial class CronJobModule : RO.Web.ModuleBase
         {
             string myHash = Convert.ToBase64String(new System.Security.Cryptography.MD5CryptoServiceProvider().ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword)));
             string hash = HttpUtility.HtmlDecode(Request.QueryString["hash"] ?? "");
-            if (hash != myHash) return;
+            if (hash != myHash)
+            {
+                throw new Exception("cronjob hash signature not match");
+                //return;
+            }
         }
 
         RunJobs();

@@ -3,8 +3,9 @@
 import { naviPath } from '../../helpers/utils'
 import MstList from './MstList';
 import MstRecord from './MstRecord';
-    import DtlList from './DtlList';
-                                  import DtlRecord from './DtlRecord';
+
+import DtlList from './DtlList';
+import DtlRecord from './DtlRecord';
 /* react router match by order of appearance in list so make sure wider match comes last, use order to control display order */
 export const pagesRoutes = [
   {
@@ -16,31 +17,32 @@ export const pagesRoutes = [
     isPublic: false,
     type: 'MstRecord',
     order: 2,
+    screenId: 73
+  },
+
+  {
+    path: '/AdmScreenCri/:mstId?/DtlList/:dtlId?',
+    name: 'Detail List',
+    short: 'DetailList',
+    component: DtlList,
+    icon: 'list-ul',
+    isPublic: false,
+    type: 'DtlList',
+    order: 3,
     screenId : 73
   },
-   
-                    {
-                        path: '/AdmScreenCri/:mstId?/DtlList/:dtlId?',
-                        name: 'Detail List',
-                        short: 'DetailList',
-                        component: DtlList,
-                        icon: 'list-ul',
-                        isPublic: false,
-                        type: 'DtlList',
-                        order: 3,
-                        screenId : 73
-                      },
-                      {
-                        path: '/AdmScreenCri/:mstId?/Dtl/:dtlId?',
-                        name: 'Detail Record',
-                        short: 'DetailRecord',
-                        component: DtlRecord,
-                        icon: 'picture-o',
-                        isPublic: false,
-                        type: 'DtlRecord',
-                        order: 4,
-                        screenId : 73
-                      },
+  {
+    path: '/AdmScreenCri/:mstId?/Dtl/:dtlId?',
+    name: 'Detail Record',
+    short: 'DetailRecord',
+    component: DtlRecord,
+    icon: 'picture-o',
+    isPublic: false,
+    type: 'DtlRecord',
+    order: 4,
+    screenId: 73
+  },
+
   {
     path: '/AdmScreenCri/:mstId?',
     name: 'Master List',
@@ -52,7 +54,7 @@ export const pagesRoutes = [
     order: 1,
     inMenu: true,
     menuLabel: 'AdmScreenCri',
-    screenId : 73
+    screenId: 73
   },
 ]
 
@@ -76,4 +78,3 @@ export function getNaviBar(type, mst, dtl, label) {
       }
     });
 }
-            

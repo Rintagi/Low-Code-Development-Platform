@@ -1,0 +1,13 @@
+1~@~RpHead~@~Report Header
+2~@~RpFoot~@~Report Footer
+3~@~PgHead~@~Page Header
+4~@~PgFoot~@~Page Footer
+5~@~Detail~@~Detail
+11~@~G1Head~@~Group1 Header
+12~@~G2Head~@~Group2 Header
+13~@~G3Head~@~Group3 Header
+14~@~G4Head~@~Group4 Header
+21~@~G1Foot~@~Group1 Footer
+22~@~G2Foot~@~Group2 Footer
+23~@~G3Foot~@~Group3 Footer
+24~@~G4Foot~@~Group4 Footer

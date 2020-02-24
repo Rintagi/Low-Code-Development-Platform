@@ -11,15 +11,15 @@ import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
-import FileInputField from '../../components/custom/FileInput';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import DropdownField from '../../components/custom/DropdownField';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import {isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
-import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
 import { getNaviBar } from './index';
@@ -30,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class DtlRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmUsrGroup || {});
+    this.GetReduxState = () => (this.props.AdmUsrGroup || {});
     this.blocker = null;
     this.titleSet = false;
     this.SystemName = 'FintruX';
@@ -45,8 +45,8 @@ class DtlRecord extends RintagiScreen {
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
     this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
-    this.FileUploadChange = this.FileUploadChange.bind(this);
-//    this.BGlChartId65InputChange = this.BGlChartId65InputChange.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
 
@@ -63,12 +63,12 @@ class DtlRecord extends RintagiScreen {
       isMobile: false
     }
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
   }
-  
+
   mediaqueryresponse(value) {
     if (value.matches) { // if media query matches
       this.setState({ isMobile: true });
@@ -79,7 +79,7 @@ class DtlRecord extends RintagiScreen {
   }
 
 
-/* ReactRule: Detail Record Custom Function */
+  /* ReactRule: Detail Record Custom Function */
   /* ReactRule End: Detail Record Custom Function */
 
   ValidatePage(values) {
@@ -87,7 +87,7 @@ class DtlRecord extends RintagiScreen {
     const columnLabel = (this.props.AdmUsrGroup || {}).ColumnLabel || {};
     const regex = new RegExp(/^-?(?:\d+|\d{1,3}(?:\d{3})+)(?:(\.|,)\d+)?$/);
     /* standard field validation */
-if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthorityId58 = (columnLabel.SysRowAuthorityId58 || {}).ErrMessage;}
+    if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthorityId58 = (columnLabel.SysRowAuthorityId58 || {}).ErrMessage; }
     return errors;
   }
 
@@ -96,7 +96,7 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
 
     this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting });
     const ScreenButton = this.state.ScreenButton || {};
-/* ReactRule: Detail Record Save */
+    /* ReactRule: Detail Record Save */
     /* ReactRule End: Detail Record Save */
 
     this.props.SavePage(
@@ -105,12 +105,12 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
       [
         {
           UsrGroupAuthId58: values.cUsrGroupAuthId58 || null,
-          CompanyId58: (values.cCompanyId58|| {}).value || '',
-          ProjectId58: (values.cProjectId58|| {}).value || '',
-          Filler: values.cFiller|| '',
+          CompanyId58: (values.cCompanyId58 || {}).value || '',
+          ProjectId58: (values.cProjectId58 || {}).value || '',
+          Filler: values.cFiller || '',
           MoreInfo: values.cMoreInfo || '',
-          SystemId58: (values.cSystemId58|| {}).value || '',
-          SysRowAuthorityId58: (values.cSysRowAuthorityId58|| {}).value || '',
+          SystemId58: (values.cSystemId58 || {}).value || '',
+          SysRowAuthorityId58: (values.cSysRowAuthorityId58 || {}).value || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cUsrGroupAuthId58 ? 'upd' : 'add'),
         }
       ],
@@ -120,8 +120,8 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
       }
     )
   }
- 
-   /* standard screen button actions */
+
+  /* standard screen button actions */
   CopyRow({ mst, dtl, dtlId, useMobileView }) {
     const AdmUsrGroupState = this.props.AdmUsrGroup || {};
     const auxSystemLabels = AdmUsrGroupState.SystemLabel || {};
@@ -132,8 +132,8 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
         if (currDtlId) {
           this.props.AddDtl(mst.UsrGroupId7, currDtlId);
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', mst, {}, this.props.AdmUsrGroup.Label);
-            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'Dtl', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', mst, {}, this.props.AdmUsrGroup.Label);
+            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'DtlRecord', '/'), '_'));
           }
           else {
             if (this.props.OnCopy) this.props.OnCopy();
@@ -143,7 +143,7 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
           this.setState({ ModalOpen: true, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
         }
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   }
@@ -227,7 +227,7 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
     return revisedState;
   }
 
- confirmUnload(message, callback) {
+  confirmUnload(message, callback) {
     const AdmUsrGroupState = this.props.AdmUsrGroup || {};
     const auxSystemLabels = AdmUsrGroupState.SystemLabel || {};
     const confirm = () => {
@@ -238,9 +238,9 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
     }
     this.setState({ ModalOpen: true, ModalSuccess: confirm, ModalCancel: cancel, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: message });
   }
-  
+
   setDirtyFlag(dirty) {
-   /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
+    /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
     if (dirty) {
       if (this.blocker) unregisterBlocker(this.blocker);
       this.blocker = this.confirmUnload;
@@ -264,7 +264,7 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
     if (!suppressLoadPage) {
       const { mstId, dtlId } = { ...this.props.match.params };
       if (!(this.props.AdmUsrGroup || {}).AuthCol || true)
-        this.props.LoadPage('Item', { mstId : mstId || '_', dtlId:dtlId || '_' });
+        this.props.LoadPage('Item', { mstId: mstId || '_', dtlId: dtlId || '_' });
     }
     else {
       return;
@@ -273,13 +273,13 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
   componentDidUpdate(prevprops, prevstates) {
     const currReduxScreenState = this.props.AdmUsrGroup || {};
 
-    if(!this.props.suppressLoadPage) {
-      if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!this.props.suppressLoadPage) {
+      if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
         const _this = this;
         setTimeout(() => _this.props.setSpinner(false), 500);
       }
     }
-    
+
     this.SetPageTitle(currReduxScreenState);
     if (prevstates.key !== (currReduxScreenState.EditDtl || {}).key) {
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveCloseDtl') {
@@ -287,7 +287,7 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
         const currDtl = (currReduxScreenState.EditDtl);
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
 
-        const naviBar = getNaviBar('Dtl', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('DtlRecord', currMst, currDtl, currReduxScreenState.Label);
         const dtlListPath = getDefaultPath(getNaviPath(naviBar, 'DtlList', '/'));
 
         this.props.history.push(dtlListPath);
@@ -321,13 +321,15 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
     const DetailRecSubtitle = ((screenHlp || {}).DetailRecSubtitle || '');
     const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
+    const selectList = AdmUsrGroupReduxObj.SearchListToSelectList(AdmUsrGroupState);
+    const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
     const screenButtons = AdmUsrGroupReduxObj.GetScreenButtons(AdmUsrGroupState) || {};
     const auxLabels = AdmUsrGroupState.Label || {};
     const auxSystemLabels = AdmUsrGroupState.SystemLabel || {};
     const columnLabel = AdmUsrGroupState.ColumnLabel || {};
     const currMst = AdmUsrGroupState.Mst;
     const currDtl = AdmUsrGroupState.EditDtl;
-    const naviBar = getNaviBar('Dtl', currMst, currDtl, screenButtons);
+    const naviBar = getNaviBar('DtlRecord', currMst, currDtl, screenButtons);
     const authCol = this.GetAuthCol(AdmUsrGroupState);
     const authRow = (AdmUsrGroupState.AuthRow || [])[0] || {};
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -335,32 +337,18 @@ if (isEmptyId((values.cSysRowAuthorityId58 || {}).value)) { errors.cSysRowAuthor
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const CompanyId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.CompanyId58(AdmUsrGroupState);
-const CompanyId58 = currDtl.CompanyId58;
-const ProjectId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.ProjectId58(AdmUsrGroupState);
-const ProjectId58 = currDtl.ProjectId58;
-const Filler = currDtl.Filler;
-const MoreInfo = currDtl.MoreInfo;
-const SystemId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.SystemId58(AdmUsrGroupState);
-const SystemId58 = currDtl.SystemId58;
-const SysRowAuthorityId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.SysRowAuthorityId58(AdmUsrGroupState);
-const SysRowAuthorityId58 = currDtl.SysRowAuthorityId58;
-// custome image upload code
-//    const TrxDetImg65 = currDtl.TrxDetImg65 ? (currDtl.TrxDetImg65.startsWith('{') ? JSON.parse(currDtl.TrxDetImg65) : { fileName: '', mimeType: 'image/jpeg', base64: currDtl.TrxDetImg65 }) : null;
-//    const TrxDetImg65FileUploadOptions = {
-//      CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
-//      DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
-//      MaxImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ResizeWidth,
-//        Height:(columnLabel.TrxDetImg65 || {}).ResizeHeight,
-//      },
-//      MinImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ColumnSize,
-//        Height:(columnLabel.TrxDetImg65 || {}).ColumnHeight,
-//      },
-//    }
-/* ReactRule: Detail Record Render */
-/* ReactRule End: Detail Record Render */
+    const CompanyId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.CompanyId58(AdmUsrGroupState);
+    const CompanyId58 = currDtl.CompanyId58;
+    const ProjectId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.ProjectId58(AdmUsrGroupState);
+    const ProjectId58 = currDtl.ProjectId58;
+    const Filler = currDtl.Filler;
+    const MoreInfo = currDtl.MoreInfo;
+    const SystemId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.SystemId58(AdmUsrGroupState);
+    const SystemId58 = currDtl.SystemId58;
+    const SysRowAuthorityId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.SysRowAuthorityId58(AdmUsrGroupState);
+    const SysRowAuthorityId58 = currDtl.SysRowAuthorityId58;
+    /* ReactRule: Detail Record Render */
+    /* ReactRule End: Detail Record Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -378,12 +366,13 @@ const SysRowAuthorityId58 = currDtl.SysRowAuthorityId58;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cCompanyId58: CompanyId58List.filter(obj => { return obj.key === currDtl.CompanyId58 })[0],
-                  cProjectId58: ProjectId58List.filter(obj => { return obj.key === currDtl.ProjectId58 })[0],
-                  cFiller: currDtl.Filler || '',
-                  cMoreInfo: currDtl.MoreInfo || '',
-                  cSystemId58: SystemId58List.filter(obj => { return obj.key === currDtl.SystemId58 })[0],
-                  cSysRowAuthorityId58: SysRowAuthorityId58List.filter(obj => { return obj.key === currDtl.SysRowAuthorityId58 })[0],
+                    cUsrGroupAuthId58: currDtl.UsrGroupAuthId58 || '',
+                    cCompanyId58: CompanyId58List.filter(obj => { return obj.key === currDtl.CompanyId58 })[0],
+                    cProjectId58: ProjectId58List.filter(obj => { return obj.key === currDtl.ProjectId58 })[0],
+                    cFiller: formatContent(currDtl.Filler || '', 'TextBox'),
+                    cMoreInfo: formatContent(currDtl.MoreInfo || '', 'HyperPopUp'),
+                    cSystemId58: SystemId58List.filter(obj => { return obj.key === currDtl.SystemId58 })[0],
+                    cSysRowAuthorityId58: SysRowAuthorityId58List.filter(obj => { return obj.key === currDtl.SysRowAuthorityId58 })[0],
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -420,7 +409,7 @@ const SysRowAuthorityId58 = currDtl.SysRowAuthorityId58;
                                   <ButtonGroup className='btn-group--icons'>
                                     <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
                                     {
-                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).UsrGroupId7,currDtl.UsrGroupAuthId58)).length > 0 &&
+                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).UsrGroupId7, currDtl.UsrGroupAuthId58)).length > 0 &&
                                       <DropdownToggle className='mw-50' outline>
                                         <i className='fa fa-ellipsis-h icon-holder'></i>
                                         {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
@@ -432,7 +421,7 @@ const SysRowAuthorityId58 = currDtl.SysRowAuthorityId58;
                                     <DropdownMenu right className={`dropdown__menu dropdown-options`}>
                                       {
                                         dropdownMenuButtonList.filter(v => !v.expose).map(v => {
-                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).UsrGroupId7,currDtl.UsrGroupAuthId58)) return null;
+                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).UsrGroupId7, currDtl.UsrGroupAuthId58)) return null;
                                           return (
                                             <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, submitForm, mst: currMst, dtl: currDtl, useMobileView })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
                                         })
@@ -445,159 +434,176 @@ const SysRowAuthorityId58 = currDtl.SysRowAuthorityId58;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          <div className='form__form-group'>
+                            <div className='form__form-group-narrow'>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                           <div className='w-100'>
                             <Row>
-            {(authCol.CompanyId58 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.CompanyId58 || {}).ColumnHeader} {(columnLabel.CompanyId58 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.CompanyId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CompanyId58 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cCompanyId58'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cCompanyId58')}
-value={values.cCompanyId58}
-options={CompanyId58List}
-placeholder=''
-disabled = {(authCol.CompanyId58 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cCompanyId58 && touched.cCompanyId58 && <span className='form__form-group-error'>{errors.cCompanyId58}</span>}
-</div>
-</Col>
-}
-{(authCol.ProjectId58 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ProjectId58 || {}).ColumnHeader} {(columnLabel.ProjectId58 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ProjectId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ProjectId58 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cProjectId58'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cProjectId58')}
-value={values.cProjectId58}
-options={ProjectId58List}
-placeholder=''
-disabled = {(authCol.ProjectId58 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cProjectId58 && touched.cProjectId58 && <span className='form__form-group-error'>{errors.cProjectId58}</span>}
-</div>
-</Col>
-}
-{(authCol.Filler || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.Filler || {}).ColumnHeader} {(columnLabel.Filler || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.Filler || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Filler || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cFiller'
-disabled = {(authCol.Filler || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cFiller && touched.cFiller && <span className='form__form-group-error'>{errors.cFiller}</span>}
-</div>
-</Col>
-}
-{(authCol.FillerBtn || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.FillerBtn || {}).ColumnHeader} {(columnLabel.FillerBtn || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.FillerBtn || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.FillerBtn || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.MoreInfo || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.MoreInfo || {}).ColumnHeader} {(columnLabel.MoreInfo || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.MoreInfo || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MoreInfo || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cMoreInfo'
-disabled = {(authCol.MoreInfo || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cMoreInfo && touched.cMoreInfo && <span className='form__form-group-error'>{errors.cMoreInfo}</span>}
-</div>
-</Col>
-}
-{(authCol.SystemId58 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.SystemId58 || {}).ColumnHeader} {(columnLabel.SystemId58 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.SystemId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SystemId58 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cSystemId58'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cSystemId58')}
-value={values.cSystemId58}
-options={SystemId58List}
-placeholder=''
-disabled = {(authCol.SystemId58 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cSystemId58 && touched.cSystemId58 && <span className='form__form-group-error'>{errors.cSystemId58}</span>}
-</div>
-</Col>
-}
-{(authCol.SysRowAuthorityId58 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.SysRowAuthorityId58 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.SysRowAuthorityId58 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.SysRowAuthorityId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SysRowAuthorityId58 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cSysRowAuthorityId58'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cSysRowAuthorityId58')}
-value={values.cSysRowAuthorityId58}
-options={SysRowAuthorityId58List}
-placeholder=''
-disabled = {(authCol.SysRowAuthorityId58 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cSysRowAuthorityId58 && touched.cSysRowAuthorityId58 && <span className='form__form-group-error'>{errors.cSysRowAuthorityId58}</span>}
-</div>
-</Col>
-}
+                              {(authCol.CompanyId58 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.CompanyId58 || {}).ColumnHeader} {(columnLabel.CompanyId58 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.CompanyId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CompanyId58 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cCompanyId58'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cCompanyId58')}
+                                          value={values.cCompanyId58}
+                                          options={CompanyId58List}
+                                          placeholder=''
+                                          disabled={(authCol.CompanyId58 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cCompanyId58 && touched.cCompanyId58 && <span className='form__form-group-error'>{errors.cCompanyId58}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ProjectId58 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ProjectId58 || {}).ColumnHeader} {(columnLabel.ProjectId58 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ProjectId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ProjectId58 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cProjectId58'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cProjectId58')}
+                                          value={values.cProjectId58}
+                                          options={ProjectId58List}
+                                          placeholder=''
+                                          disabled={(authCol.ProjectId58 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cProjectId58 && touched.cProjectId58 && <span className='form__form-group-error'>{errors.cProjectId58}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.Filler || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.Filler || {}).ColumnHeader} {(columnLabel.Filler || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.Filler || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.Filler || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cFiller'
+                                          disabled={(authCol.Filler || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cFiller && touched.cFiller && <span className='form__form-group-error'>{errors.cFiller}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.FillerBtn || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.FillerBtn || {}).ColumnHeader} {(columnLabel.FillerBtn || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.FillerBtn || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.FillerBtn || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {false && (authCol.MoreInfo || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.MoreInfo || {}).ColumnHeader} {(columnLabel.MoreInfo || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.MoreInfo || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.MoreInfo || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cMoreInfo'
+                                          disabled={(authCol.MoreInfo || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cMoreInfo && touched.cMoreInfo && <span className='form__form-group-error'>{errors.cMoreInfo}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.SystemId58 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.SystemId58 || {}).ColumnHeader} {(columnLabel.SystemId58 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.SystemId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SystemId58 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cSystemId58'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cSystemId58')}
+                                          value={values.cSystemId58}
+                                          options={SystemId58List}
+                                          placeholder=''
+                                          disabled={(authCol.SystemId58 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cSystemId58 && touched.cSystemId58 && <span className='form__form-group-error'>{errors.cSystemId58}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.SysRowAuthorityId58 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.SysRowAuthorityId58 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.SysRowAuthorityId58 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.SysRowAuthorityId58 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SysRowAuthorityId58 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cSysRowAuthorityId58'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cSysRowAuthorityId58')}
+                                          value={values.cSysRowAuthorityId58}
+                                          options={SysRowAuthorityId58List}
+                                          placeholder=''
+                                          disabled={(authCol.SysRowAuthorityId58 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cSysRowAuthorityId58 && touched.cSysRowAuthorityId58 && <span className='form__form-group-error'>{errors.cSysRowAuthorityId58}</span>}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mb-0'>
@@ -613,7 +619,7 @@ disabled = {(authCol.SysRowAuthorityId58 || {}).readonly ? 'disabled': '' }/>
                                     bottomButtonList
                                       .filter(v => v.expose)
                                       .map((v, i, a) => {
-                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).UsrGroupId7,currDtl.UsrGroupAuthId58)) return null;
+                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).UsrGroupId7, currDtl.UsrGroupAuthId58)) return null;
                                         const buttonCount = a.length;
                                         const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
@@ -657,10 +663,9 @@ const mapDispatchToProps = (dispatch) => (
     { AddDtl: AdmUsrGroupReduxObj.AddDtl.bind(AdmUsrGroupReduxObj) },
     { SavePage: AdmUsrGroupReduxObj.SavePage.bind(AdmUsrGroupReduxObj) },
 
-  { setTitle: setTitle },
+    { setTitle: setTitle },
     { setSpinner: setSpinner },
   ), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
-

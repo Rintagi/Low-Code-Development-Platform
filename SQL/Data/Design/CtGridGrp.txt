@@ -1,0 +1,3 @@
+I~@~Side-by-Side
+N~@~No Grouping
+Y~@~Under Previous

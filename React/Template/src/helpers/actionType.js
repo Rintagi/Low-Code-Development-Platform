@@ -8,6 +8,7 @@ export class AsyncActionType {
         this.SUCCEEDED = prefixedActionType+'.SUCCEEDED';
         this.FAILED = prefixedActionType+'.FAILED';
         this.ENDED = prefixedActionType+'.ENDED';
+        this.CACHED = prefixedActionType+'.CACHED';
     }
     bindActionReducer(reducers,async) {
         const combined = typeof reducers === "function";
@@ -17,6 +18,7 @@ export class AsyncActionType {
                 [this.SUCCEEDED]:combined ? reducers : reducers.SUCCEEDED,
                 [this.FAILED]:combined ? reducers : reducers.FAILED,
                 [this.ENDED]:combined ? reducers : reducers.ENDED,
+                [this.CACHED]:combined ? reducers : reducers.CACHED,
             }
         }
         else {

@@ -78,11 +78,13 @@
     "react-dropdown": "1.6.2",
     "react-dropzone": "4.3.0",
     "react-google-maps": "9.4.5",
+    "react-google-recaptcha": "2.0.1",
     "react-highcharts": "16.0.2",
     "react-highlight": "0.10.0",
     "react-images": "0.5.19",
     "react-input-mask": "1.2.2",
     "react-notification-system": "0.2.17",
+    "react-popper": "1.0.2",
     "react-redux": "5.0.7",
     "react-router": "4.3.1",
     "react-router-dom": "4.3.1",
@@ -118,11 +120,14 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
+    "prestart": "echo 'calling presetart' && node scripts/prestart.js",
     "start": "node scripts/start.js",
+    "prebuild": "echo 'calling prebuild' && node scripts/prebuild.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "devDependencies": {
+    "cpx": "1.5.0",
     "node-sass": "4.9.4",
     "sass-loader": "6.0.7"
   },

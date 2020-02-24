@@ -1,5 +1,5 @@
 
-import {fetchData,getAccessControlInfo, getAccessScope, baseUrl} from './webAPIBase';
+import { fetchData, getAccessControlInfo, getAccessScope, baseUrl } from './webAPIBase';
 
 let activeScope = {};
 
@@ -10,9 +10,9 @@ export function setAccessScope(scope) {
     }
 }
 
-export function GetAuthCol(accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetAuthCol'
-        ,{
+export function GetAuthCol(accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetAuthCol'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -22,9 +22,9 @@ export function GetAuthCol(accessScope){
         }
     )
 }
-export function GetAuthRow(accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetAuthRow'
-        ,{
+export function GetAuthRow(accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetAuthRow'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -35,9 +35,9 @@ export function GetAuthRow(accessScope){
     )
 
 }
-export function GetScreenLabel(accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetScreenLabel'
-        ,{
+export function GetScreenLabel(accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetScreenLabel'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -49,12 +49,12 @@ export function GetScreenLabel(accessScope){
 
 }
 
-export function GetLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetLabels'
-        ,{
+export function GetLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -63,12 +63,12 @@ export function GetLabels(labelCat,accessScope){
     )
 }
 
-export function GetSystemLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetSystemLabels'
-        ,{
+export function GetSystemLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetSystemLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -77,9 +77,9 @@ export function GetSystemLabels(labelCat,accessScope){
     )
 }
 
-export function GetScreenButtonHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetScreenButtonHlp'
-        ,{
+export function GetScreenButtonHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetScreenButtonHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -89,9 +89,9 @@ export function GetScreenButtonHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetScreenHlp'
-        ,{
+export function GetScreenHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetScreenHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -101,9 +101,9 @@ export function GetScreenHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenCriteria(accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetScreenCriteria'
-        ,{
+export function GetScreenCriteria(accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -113,9 +113,9 @@ export function GetScreenCriteria(accessScope){
         }
     )
 }
-export function GetNewMst(accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetNewMst'
-        ,{
+export function GetNewMst(accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetNewMst'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -125,9 +125,9 @@ export function GetNewMst(accessScope){
         }
     )
 }
-export function GetNewDtl(accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetNewDtl'
-        ,{
+export function GetNewDtl(accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetNewDtl'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -137,9 +137,9 @@ export function GetNewDtl(accessScope){
         }
     )
 }
-export function GetScreenFilter(accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetScreenFilter'
-        ,{
+export function GetScreenFilter(accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetScreenFilter'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -149,9 +149,119 @@ export function GetScreenFilter(accessScope){
         }
     )
 }
-export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetColumnContent'
-        ,{
+export function GetAdmSystems87List(searchStr, topN, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetAdmSystems87List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    searchStr: searchStr || '',
+                    topN: topN || 0,
+                    filterId: ('' + (filterId || 0)),
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export const GetSearchList = GetAdmSystems87List;
+export function GetAdmSystems87ById(keyId, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetAdmSystems87ById'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    keyId: keyId || '',
+                    options: {
+                        CurrentScreenCriteria: JSON.stringify({}),
+                    },
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export const GetMstById = GetAdmSystems87ById;
+export function GetAdmSystems87DtlById(keyId, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetAdmSystems87DtlById'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    keyId: keyId || '',
+                    options: {
+                        CurrentScreenCriteria: JSON.stringify({}),
+                    },
+                    filterId: filterId || 0,
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export const GetDtlById = GetAdmSystems87DtlById;
+export function LoadInitPage(options, accessScope) {
+    const reqJson = JSON.stringify({
+        options: options
+    });
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/LoadInitPage'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function SaveData(mst, dtl, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mst: mst || {},
+        dtl: dtl || [],
+        options: options || {}
+    });
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/SaveData'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function DelMst(mst, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mst: mst,
+        options: options
+    });
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/DelMst'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function SetScreenCriteria(criteriaValues, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/SetScreenCriteria'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    criteriaValues: criteriaValues
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetColumnContent'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     mstId: mstId || '',
@@ -166,77 +276,17 @@ export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColum
         }
     )
 }
-export function GetAdmSystems87List(searchStr, topN, filterId,accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetAdmSystems87List'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    searchStr: searchStr || '',
-                    topN: topN || 0,
-                    filterId: ('' +  (filterId || 0)),
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function GetAdmSystems87ById(keyId,accessScope){   
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetAdmSystems87ById'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    keyId: keyId || '',
-                    options: {
-                        currentScreenCriteria : JSON.stringify({}),
-                    },
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function GetAdmSystems87DtlById(keyId,filterId,accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/GetAdmSystems87DtlById'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    keyId: keyId || '',
-                    options: {
-                        currentScreenCriteria : JSON.stringify({}),
-                    },
-                    filterId: filterId || 0,
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
 
-export function LoadInitPage(options,accessScope) {
+export function GetEmbeddedDoc(mstId, dtlId, isMaster, screenColumnName, accessScope) {
     const reqJson = JSON.stringify({
-        options: options
+        mstId: mstId || '',
+        dtlId: dtlId || '',
+        isMaster: isMaster,
+        columnName: screenColumnName || '',
+        screenColumnName: screenColumnName || '',
     });
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/LoadInitPage'
-        ,{
-            requestOptions: {
-                body: reqJson,
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function SaveData(mst,dtl,options,accessScope){
-    const reqJson = JSON.stringify({
-        mst: mst,
-        dtl: dtl,
-        options: options
-    });
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/SaveData'
-        ,{
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetColumnContent'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -246,13 +296,17 @@ export function SaveData(mst,dtl,options,accessScope){
     )
 }
 
-export function DelMst(mst,options,accessScope){
+export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJson, options, accessScope) {
     const reqJson = JSON.stringify({
-        mst: mst,
-        options: options
+        mstId: mstId || '',
+        dtlId: dtlId || '',
+        isMaster: isMaster,
+        screenColumnName: screenColumnName || '',
+        docJson: docJson || '',
+        options: options || {},
     });
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/DelMst'
-        ,{
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/AddDocColumnContent'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -262,19 +316,9 @@ export function DelMst(mst,options,accessScope){
     )
 }
 
-export function SetScreenCriteria(criteriaValues, accessScope){
-    return fetchData(baseUrl+'/AdmSystemsWs.asmx/SetScreenCriteria'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    criteriaValues: criteriaValues
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
+/*screen criteria dll and screen dropdownlist/autocomplete*/
 
-/*screen criteria dll and screen dropdownlist/autocomplete*/           
-            /* ReactRule: Service Custom Function *//* ReactRule End: Service Custom Function */
+/* ReactRule: Service Custom Function */
+
+
+/* ReactRule End: Service Custom Function */

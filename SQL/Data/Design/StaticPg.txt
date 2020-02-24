@@ -1,0 +1,74 @@
+1~@~Testing Sample static page (SamplePg)~@~SamplePg~@~Testing [[pgTitle]]~@~~@~p.xx { font-size:4pt;}~@~$(document).ready(function() { alert("Just a Test!");});~@~<p id="sample">[[ERR]]!</p><br />
+<p class="xx">4pt test</p><br />
+<img src="dev/AdmStaticFi_3/gauge01.gif" />
+<p>[[0001]]</p>
+<p>[[0002]]</p>~@~static.master~@~1~@~1~@~showpage.aspx?pg=1&csy=3
+2~@~Home Page (HomePg)~@~HomePg~@~Home Page~@~~@~~@~~@~<div class="HideBgImgOnMobile PageObj33">
+<div class="r-table rg-1-12 SctGrpRow1"><div class="r-tr">
+    <div class="r-td rc-1-12 SctGrpCol6">
+        <div class="SctGrpDiv6">
+        <div class="PageObj30">
+            <p class="PageLnk58">[[0003]]<!--Enable Everyone to Build--></p>
+            <p class="PageLnk58">[[0004]]<!--Great Mission-Critical Systems That Last--></p>
+        </div>
+        </div>
+        <div class="SctGrpDiv6">
+        <div class="PageObj31">
+            <p class="PageLnk59">[[0002]]<!--On Future-Proof Enterprise Application Development Platform--></p>
+        </div>
+        </div>
+    </div>
+</div></div>
+</div>~@~default.master~@~~@~~@~showpage.aspx?pg=2&csy=3
+3~@~Workflow (Workflow)~@~Workflow~@~Workflow~@~~@~~@~~@~<div style='text-align: center;'><img src='images/workflow/Workflow.jpg' ></div>~@~~@~~@~~@~showpage.aspx?pg=3&csy=3
+4~@~Footer  (Footer2)~@~Footer2~@~Footer [[pgTitle]]~@~~@~p.xx { font-size:4pt;}~@~$(document).ready(function() { alert("Just a Test!");});~@~            <div class="footer-v8">
+                <footer class="footer">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 column-one md-margin-bottom-50">
+                                <h2>Headquarters</h2>
+                                <p>24 Hyde Park Drive, Richmond Hill <br />ON, L4B 1V1, Canada</p>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 md-margin-bottom-50">
+                                <h2>Email Address</h2>
+                                <a href="mailto:info@paulng.com">info@paulng.com</a>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 md-margin-bottom-50">
+                                <h2>Phone</h2>
+                                <!-- Latest News -->
+                                <a href="tel:(416) 606-8332">(416) 606-8332</a>
+                                <!-- End Latest News -->
+                            </div>
+
+                            <div class="col-md-3 col-sm-6">
+                                <h2>Social Network</h2>
+                                <!-- Social Icons -->
+                                <ul class="social-icon-list margin-bottom-20">
+                                    <p>Wechat: sifupaulng88<br />
+                                    WhatsApp: 6478688332</p>
+                                    <!--<li><a href="#"><i class="rounded-x fa fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="rounded-x fa fa-facebook"></i></a></li>
+                                    <li><a href="#"><i class="rounded-x fa fa-linkedin"></i></a></li>
+                                    <li><a href="#"><i class="rounded-x fa fa-google-plus"></i></a></li>
+                                    <li><a href="#"><i class="rounded-x fa fa-dribbble"></i></a></li>
+                                    -->
+                                </ul>
+                                <!-- End Social Icons -->
+                            </div>
+                        </div>
+                        <!--/end row-->
+                    </div>
+                    <!--/end container-->
+                </footer>
+
+                <footer class="copyright">
+                    <div class="container">
+                        <ul class="list-inline terms-menu">
+                            <li>Designed and Developed By <a href="https://www.robocoder.com" style="color: #e67e22;" target="_blank">Robocoder Corporation</a>. <p class="provider">Powered by<a href="https://www.rintagi.com" style="color: #e67e22;" target="_blank"> Rintagi</a>.</p></li>
+                        </ul>
+                    </div>
+                    <!--/end container-->
+                </footer>
+            </div>~@~static.master~@~1~@~1~@~showpage.aspx?pg=4&csy=3

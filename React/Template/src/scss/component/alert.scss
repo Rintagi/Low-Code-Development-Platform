@@ -132,7 +132,8 @@
 
   &.alert--neutral {
     background-color: transparent;
-    border-color: #f2f4f7;
+    border-color: #f0f1f6;
+    border-radius: 5px;
 
     p {
       @include themify($themes) {

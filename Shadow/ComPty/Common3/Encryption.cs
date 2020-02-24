@@ -7,6 +7,7 @@ namespace RO.Common3
     using System.Security.Cryptography.X509Certificates;
     using System.Net;
     using System.IO;
+    using System.Collections.Generic;
 
     public class Encryption: Key
     {
@@ -114,6 +115,18 @@ namespace RO.Common3
         public Tuple<string, string, string> EncodeLicenseString(string licenseJSON, string installID, string appId, bool encrypt, bool perInstance, string signerFile = null)
         {
             return new Tuple<string, string, string>("", "", "");
+        }
+        public Tuple<string, bool, string> DecodeLicenseString(string licenseString)
+        {
+            return new Tuple<string, bool, string>("", false, "");
+        }
+        public Dictionary<string, Dictionary<string, string>> DecodeLicenseDetail(string licenseJSON)
+        {
+            return null;
+        }
+        public string RenewLicense(string LicenseServerEndPoint = null)
+        {
+            return null;
         }
         protected string DecryptString(string inStr, string inKey)
         {

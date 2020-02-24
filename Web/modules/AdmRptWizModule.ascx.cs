@@ -255,7 +255,8 @@ namespace RO.Web
 			}
 			else if (string.IsNullOrEmpty(bViewState.Text))		// Viewstate is lost.
 			{
-				Session["Idle:" + Request.Url.PathAndQuery] = "Y"; Response.Redirect(Request.Url.PathAndQuery);
+				Session["Idle:" + Request.Url.PathAndQuery] = "Y"; 
+                this.Redirect(Request.Url.PathAndQuery);
 			}
             if (!string.IsNullOrEmpty(cCurrentTab.Value))
             {
@@ -1381,7 +1382,7 @@ namespace RO.Web
             if (dtSel != null && cSelColumnId66.SelectedIndex >= 0)
             {
                 bool bHasGC = false;
-                bool bHasG1 = false;
+                //bool bHasG1 = false;
                 bool bHasG2 = false;
                 bool bHasG3 = false;
                 bool bHasErr = false;
@@ -1391,7 +1392,8 @@ namespace RO.Web
                 {
                     if ((drdSel[0].ToString() == cSelColumnId66.SelectedValue && cRptGroup.SelectedValue == "1") || (drdSel[0].ToString() != cSelColumnId66.SelectedValue && drdSel[3].ToString().StartsWith("[1]")))
                     {
-                        bHasG1 = true; if (bHasG2 || bHasG3 || bHasGC) { bHasErr = true; break; }
+                        //bHasG1 = true;
+                        if (bHasG2 || bHasG3 || bHasGC) { bHasErr = true; break; }
                     }
                     else if ((drdSel[0].ToString() == cSelColumnId66.SelectedValue && cRptGroup.SelectedValue == "2") || (drdSel[0].ToString() != cSelColumnId66.SelectedValue && drdSel[3].ToString().StartsWith("[2]")))
                     {
@@ -3502,7 +3504,7 @@ namespace RO.Web
                         if (drvAdd["ColumnId184"].ToString() == drd["ColumnId44"].ToString())
                         {
                             if (drd["ColumnId44Text"].ToString().IndexOf("[ASC] ") >= 0) { drvAdd["ColSort184"] = ii; } else { drvAdd["ColSort184"] = -ii; }
-                            if (!bAdd && drd["RptwizDtlId"] != string.Empty && drvAdd["RptwizDtlId184"].ToString() == string.Empty) { drvAdd["RptwizDtlId184"] = drd["RptwizDtlId"]; }
+                            if (!bAdd && drd["RptwizDtlId"].ToString() != string.Empty && drvAdd["RptwizDtlId184"].ToString() == string.Empty) { drvAdd["RptwizDtlId184"] = drd["RptwizDtlId"]; }
                             bFound = true; break;
                         }
                     }
@@ -3526,12 +3528,12 @@ namespace RO.Web
                     bFound = false;
                     foreach (DataRowView drvAdd in dvAdd)
                     {
-                        if (drvAdd["ColumnId184"].ToString() == drd["ColumnId77"].ToString() && drvAdd["CriOperName184"] == string.Empty)
+                        if (drvAdd["ColumnId184"].ToString() == drd["ColumnId77"].ToString() && drvAdd["CriOperName184"].ToString() == string.Empty)
                         {
                             drvAdd["CriOperName184"] = drd["OperatorName"];
                             drvAdd["CriSelect184"] = ii;
                             drvAdd["CriHeader184"] = drd["ColumnId77Text"].ToString().Substring(drd["ColumnId77Text"].ToString().IndexOf("] ") + 2).Trim();
-                            if (!bAdd && drd["RptwizDtlId"] != string.Empty && drvAdd["RptwizDtlId184"].ToString() == string.Empty) { drvAdd["RptwizDtlId184"] = drd["RptwizDtlId"]; }
+                            if (!bAdd && drd["RptwizDtlId"].ToString() != string.Empty && drvAdd["RptwizDtlId184"].ToString() == string.Empty) { drvAdd["RptwizDtlId184"] = drd["RptwizDtlId"]; }
                             bFound = true; break;
                         }
                     }

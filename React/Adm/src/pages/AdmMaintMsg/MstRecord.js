@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmMaintMsg || {});
+    this.GetReduxState = () => (this.props.AdmMaintMsg || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'MaintMsgId233';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,59 +87,53 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+  EmailUsers({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
+    return function (evt) {
+      this.OnClickColumeName = 'EmailUsers';
+      //Enter Custom Code here, eg: submitForm();
+      evt.preventDefault();
+    }.bind(this);
+  }
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
     const columnLabel = (this.props.AdmMaintMsg || {}).ColumnLabel || {};
     /* standard field validation */
-if (!values.cMaintMsgName233) { errors.cMaintMsgName233 = (columnLabel.MaintMsgName233 || {}).ErrMessage;}
-if (!values.cMaintMessage233) { errors.cMaintMessage233 = (columnLabel.MaintMessage233 || {}).ErrMessage;}
+    if (!values.cMaintMsgName233) { errors.cMaintMsgName233 = (columnLabel.MaintMsgName233 || {}).ErrMessage; }
+    if (!values.cMaintMessage233) { errors.cMaintMessage233 = (columnLabel.MaintMessage233 || {}).ErrMessage; }
     return errors;
   }
 
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmMaintMsg || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmMaintMsg,
         {
-          MaintMsgId233: values.cMaintMsgId233|| '',
-          MaintMsgName233: values.cMaintMsgName233|| '',
-          MaintMessage233: values.cMaintMessage233|| '',
+          MaintMsgId233: values.cMaintMsgId233 || '',
+          MaintMsgName233: values.cMaintMsgName233 || '',
+          MaintMessage233: values.cMaintMessage233 || '',
           ShowOnLogin233: values.cShowOnLogin233 ? 'Y' : 'N',
-          LastEmailDt233: values.cLastEmailDt233|| '',
+          LastEmailDt233: values.cLastEmailDt233 || '',
         },
         [],
         {
@@ -176,12 +173,12 @@ if (!values.cMaintMessage233) { errors.cMaintMessage233 = (columnLabel.MaintMess
       const fromMstId = mstId || (mst || {}).MaintMsgId233;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmMaintMsg.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmMaintMsg.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmMaintMsg.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -263,7 +260,7 @@ if (!values.cMaintMessage233) { errors.cMaintMessage233 = (columnLabel.MaintMess
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmMaintMsg || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -287,7 +284,7 @@ if (!values.cMaintMessage233) { errors.cMaintMessage233 = (columnLabel.MaintMess
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -316,6 +313,7 @@ if (!values.cMaintMessage233) { errors.cMaintMessage233 = (columnLabel.MaintMess
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmMaintMsgReduxObj.GetScreenButtons(AdmMaintMsgState) || {};
     const itemList = AdmMaintMsgState.Dtl || [];
@@ -327,22 +325,25 @@ if (!values.cMaintMessage233) { errors.cMaintMessage233 = (columnLabel.MaintMess
     const authRow = (AdmMaintMsgState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmMaintMsg || {}).Mst || {});
     const currDtl = ((this.props.AdmMaintMsg || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.MaintMsgId233));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.MaintMsgId233));
     const selectList = AdmMaintMsgReduxObj.SearchListToSelectList(AdmMaintMsgState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const MaintMsgId233 = currMst.MaintMsgId233;
-const MaintMsgName233 = currMst.MaintMsgName233;
-const MaintMessage233 = currMst.MaintMessage233;
-const ShowOnLogin233 = currMst.ShowOnLogin233;
-const LastEmailDt233 = currMst.LastEmailDt233;
+
+    const MaintMsgId233 = currMst.MaintMsgId233;
+    const MaintMsgName233 = currMst.MaintMsgName233;
+    const MaintMessage233 = currMst.MaintMessage233;
+    const ShowOnLogin233 = currMst.ShowOnLogin233;
+    const LastEmailDt233 = currMst.LastEmailDt233;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -360,11 +361,11 @@ const LastEmailDt233 = currMst.LastEmailDt233;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cMaintMsgId233: MaintMsgId233 || '',
-                  cMaintMsgName233: MaintMsgName233 || '',
-                  cMaintMessage233: MaintMessage233 || '',
-                  cShowOnLogin233: ShowOnLogin233 === 'Y',
-                  cLastEmailDt233: LastEmailDt233 || new Date(),
+                    cMaintMsgId233: formatContent(MaintMsgId233 || '', 'TextBox'),
+                    cMaintMsgName233: formatContent(MaintMsgName233 || '', 'TextBox'),
+                    cMaintMessage233: formatContent(MaintMessage233 || '', 'MultiLine'),
+                    cShowOnLogin233: ShowOnLogin233 === 'Y',
+                    cLastEmailDt233: LastEmailDt233 || new Date(),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -426,129 +427,158 @@ const LastEmailDt233 = currMst.LastEmailDt233;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.MaintMsgId233 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.MaintMsgId233 || {}).ColumnHeader} {(columnLabel.MaintMsgId233 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.MaintMsgId233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MaintMsgId233 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cMaintMsgId233'
-disabled = {(authCol.MaintMsgId233 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cMaintMsgId233 && touched.cMaintMsgId233 && <span className='form__form-group-error'>{errors.cMaintMsgId233}</span>}
-</div>
-</Col>
-}
-{(authCol.MaintMsgName233 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.MaintMsgName233 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MaintMsgName233 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.MaintMsgName233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MaintMsgName233 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cMaintMsgName233'
-disabled = {(authCol.MaintMsgName233 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cMaintMsgName233 && touched.cMaintMsgName233 && <span className='form__form-group-error'>{errors.cMaintMsgName233}</span>}
-</div>
-</Col>
-}
-{(authCol.MaintMessage233 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.MaintMessage233 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MaintMessage233 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.MaintMessage233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.MaintMessage233 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cMaintMessage233'
-disabled = {(authCol.MaintMessage233 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cMaintMessage233 && touched.cMaintMessage233 && <span className='form__form-group-error'>{errors.cMaintMessage233}</span>}
-</div>
-</Col>
-}
-{(authCol.ShowOnLogin233 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cShowOnLogin233'
-onChange={handleChange}
-defaultChecked={values.cShowOnLogin233}
-disabled={(authCol.ShowOnLogin233 || {}).readonly || !(authCol.ShowOnLogin233 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.ShowOnLogin233 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.ShowOnLogin233 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ShowOnLogin233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ShowOnLogin233 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
-{(authCol.LastEmailDt233 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.LastEmailDt233 || {}).ColumnHeader} {(columnLabel.LastEmailDt233 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.LastEmailDt233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LastEmailDt233 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DatePicker
-name='cLastEmailDt233'
-onChange={this.DateChange(setFieldValue, setFieldTouched, 'cLastEmailDt233', false)}
-onBlur={this.DateChange(setFieldValue, setFieldTouched, 'cLastEmailDt233', true)}
-value={values.cLastEmailDt233}
-selected={values.cLastEmailDt233}
-disabled = {(authCol.LastEmailDt233 || {}).readonly ? true: false }/>
-</div>
-}
-{errors.cLastEmailDt233 && touched.cLastEmailDt233 && <span className='form__form-group-error'>{errors.cLastEmailDt233}</span>}
-</div>
-</Col>
-}
-{(authCol.EmailUsers || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.EmailUsers || {}).ColumnHeader} {(columnLabel.EmailUsers || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.EmailUsers || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.EmailUsers || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
+                              {(authCol.MaintMsgId233 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.MaintMsgId233 || {}).ColumnHeader} {(columnLabel.MaintMsgId233 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.MaintMsgId233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.MaintMsgId233 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cMaintMsgId233'
+                                          disabled={(authCol.MaintMsgId233 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cMaintMsgId233 && touched.cMaintMsgId233 && <span className='form__form-group-error'>{errors.cMaintMsgId233}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.MaintMsgName233 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.MaintMsgName233 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MaintMsgName233 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.MaintMsgName233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.MaintMsgName233 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cMaintMsgName233'
+                                          disabled={(authCol.MaintMsgName233 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cMaintMsgName233 && touched.cMaintMsgName233 && <span className='form__form-group-error'>{errors.cMaintMsgName233}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.MaintMessage233 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.MaintMessage233 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.MaintMessage233 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.MaintMessage233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.MaintMessage233 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cMaintMessage233'
+                                          disabled={(authCol.MaintMessage233 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cMaintMessage233 && touched.cMaintMessage233 && <span className='form__form-group-error'>{errors.cMaintMessage233}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ShowOnLogin233 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cShowOnLogin233'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cShowOnLogin233}
+                                        disabled={(authCol.ShowOnLogin233 || {}).readonly || !(authCol.ShowOnLogin233 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.ShowOnLogin233 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.ShowOnLogin233 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.ShowOnLogin233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ShowOnLogin233 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.LastEmailDt233 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.LastEmailDt233 || {}).ColumnHeader} {(columnLabel.LastEmailDt233 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.LastEmailDt233 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.LastEmailDt233 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmMaintMsgState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DatePicker
+                                          name='cLastEmailDt233'
+                                          onChange={this.DateChange(setFieldValue, setFieldTouched, 'cLastEmailDt233', false)}
+                                          onBlur={this.DateChange(setFieldValue, setFieldTouched, 'cLastEmailDt233', true)}
+                                          value={values.cLastEmailDt233}
+                                          selected={values.cLastEmailDt233}
+                                          disabled={(authCol.LastEmailDt233 || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.cLastEmailDt233 && touched.cLastEmailDt233 && <span className='form__form-group-error'>{errors.cLastEmailDt233}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              <Col lg={6} xl={6}>
+                                <div className='form__form-group'>
+                                  <div className='d-block'>
+                                    {(authCol.EmailUsers || {}).visible &&
+                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                        disabled={(authCol.EmailUsers || {}).readonly || !(authCol.EmailUsers || {}).visible}
+                                        onClick={this.EmailUsers({ naviBar, submitForm, currMst })} >
+                                        {auxLabels.EmailUsers || (columnLabel.EmailUsers || {}).ColumnName}
+                                      </Button>}
+                                  </div>
+                                </div>
+                              </Col>
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -608,9 +638,6 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmMaintMsgReduxObj.SavePage.bind(AdmMaintMsgReduxObj) },
     { DelMst: AdmMaintMsgReduxObj.DelMst.bind(AdmMaintMsgReduxObj) },
     { AddMst: AdmMaintMsgReduxObj.AddMst.bind(AdmMaintMsgReduxObj) },
-//    { SearchMemberId64: AdmMaintMsgReduxObj.SearchActions.SearchMemberId64.bind(AdmMaintMsgReduxObj) },
-//    { SearchCurrencyId64: AdmMaintMsgReduxObj.SearchActions.SearchCurrencyId64.bind(AdmMaintMsgReduxObj) },
-//    { SearchCustomerJobId64: AdmMaintMsgReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmMaintMsgReduxObj) },
 
     { showNotification: showNotification },
     { setTitle: setTitle },
@@ -619,5 +646,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

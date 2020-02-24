@@ -131,13 +131,16 @@ namespace RO.Web
                             }
                             catch (Exception ex)
                             {
-                                try
+                                if (ex != null)
                                 {
-                                    content = (byte[])dt.Rows[0][0];
-                                    Response.ContentType = "image/jpeg";
-                                    Response.AppendHeader("Content-Disposition", contentDisposition + "; Filename=");
+                                    try
+                                    {
+                                        content = (byte[])dt.Rows[0][0];
+                                        Response.ContentType = "image/jpeg";
+                                        Response.AppendHeader("Content-Disposition", contentDisposition + "; Filename=");
+                                    }
+                                    catch { }
                                 }
-                                catch { }
                             }
                             Response.Flush();
                             Response.BinaryWrite(content);
@@ -208,7 +211,7 @@ namespace RO.Web
                                 {
                                     string loginUrl = System.Web.Security.FormsAuthentication.LoginUrl;
                                     if (string.IsNullOrEmpty(loginUrl)) { loginUrl = "MyAccount.aspx"; }
-                                    Response.Redirect(loginUrl + (loginUrl.IndexOf('?') > 0 ? "&" : "?") + "wrn=1&ReturnUrl=" + Server.UrlEncode(Request.Url.PathAndQuery));
+                                    this.Redirect(loginUrl + (loginUrl.IndexOf('?') > 0 ? "&" : "?") + "wrn=1&ReturnUrl=" + Server.UrlEncode(Request.Url.PathAndQuery));
                                 }
                                 else
                                 {

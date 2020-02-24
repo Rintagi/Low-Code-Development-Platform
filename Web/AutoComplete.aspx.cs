@@ -259,13 +259,14 @@ namespace RO.Web
                 dt = (new AdminSystem()).GetScreenIn(screenId.ToString(), sp, CriCnt, requiredValid, topN,
                 searchStr.StartsWith("**") ? "" : searchStr, !searchStr.StartsWith("**"), searchStr.StartsWith("**") ? searchStr.Substring(2) : "", ui, uc,
                 isSys != "N" ? null : (string)(string.IsNullOrEmpty(conn) ? dSys[KEY_AppConnectStr] : Session[conn]),
-                isSys != "N" ? null : dSys[KEY_AppPwd]);
+                isSys != "N" ? null : (string)(string.IsNullOrEmpty(conn) ? dSys[KEY_AppPwd] : Session[conn + "Pwd"] ?? dSys[KEY_AppPwd]));
             }
             else
             {
                 dt = (new AdminSystem()).GetDdl(screenId, getLisMethod, bAddNew, !searchStr.StartsWith("**"), topN, searchStr.StartsWith("**") ? searchStr.Substring(2) : "",
                     isSys != "N" ? null : (string)(string.IsNullOrEmpty(conn) ? dSys[KEY_AppConnectStr] : Session[conn]),
-                    isSys != "N" ? null : dSys[KEY_AppPwd], searchStr.StartsWith("**") ? "" : searchStr, ui, uc);
+                    isSys != "N" ? null : (string)(string.IsNullOrEmpty(conn) ? dSys[KEY_AppPwd] : Session[conn + "Pwd"] ?? dSys[KEY_AppPwd]), 
+                    searchStr.StartsWith("**") ? "" : searchStr, ui, uc);
             }
             return dt;
         }
@@ -314,7 +315,8 @@ namespace RO.Web
             UsrImpr ui = (UsrImpr)Session[KEY_CacheLImpr];
             LoginUsr usr = (LoginUsr)Session[KEY_CacheLUser];
             DataSet ds = (DataSet)Session[criValKey] ?? MakeScrCriteria(dvCri, GetLastScrCriteria(ssd, systemId, screenId, dvCri));
-            DataTable dt = (new AdminSystem()).GetLis(screenId, getLisMethod, true, "Y", topN, isSys != "N" ? (string)null : (string)(string.IsNullOrEmpty(conn) ? dSys[KEY_AppConnectStr] : Session[conn]), isSys != "N" ? null : dSys[KEY_AppPwd],
+            DataTable dt = (new AdminSystem()).GetLis(screenId, getLisMethod, true, "Y", topN, isSys != "N" ? (string)null : (string)(string.IsNullOrEmpty(conn) ? dSys[KEY_AppConnectStr] : Session[conn]),
+                isSys != "N" ? null : (string)(string.IsNullOrEmpty(conn) ? dSys[KEY_AppPwd] : Session[conn + "Pwd"] ?? dSys[KEY_AppPwd]),
                 string.IsNullOrEmpty(filterId) ? 0 : int.Parse(filterId),searchStr.StartsWith("**") ? searchStr.Substring(2) : "",searchStr.StartsWith("**") ? "" : searchStr,
                 dvCri,ui,uc,ds);
             return dt;
@@ -372,11 +374,13 @@ namespace RO.Web
             List<string> suggestion = new List<string>();
             List<string> key = new List<string>();
             int total = 0;
+            bool extendedContent = false;
+
             DataTable dtSuggest = GetDdl(csy, context["ssd"], context["method"], context["addnew"] == "Y", csy, screenId, query, context["conn"], context["isSys"], context.ContainsKey("sp") ? context["sp"] : "", context.ContainsKey("requiredValid") ? context["requiredValid"] : "", (context.ContainsKey("refCol") && !string.IsNullOrEmpty(context["refCol"])) || (context.ContainsKey("pMKeyCol") && !string.IsNullOrEmpty(context["pMKeyCol"])) ? 0 : topN);
             string keyF = context["mKey"].ToString();
             string valF = context.ContainsKey("mVal") ? context["mVal"] : keyF + "Text";
             string tipF = context.ContainsKey("mTip") ? context["mTip"] : "";
-            string imgF = context.ContainsKey("mImg") && false ? context["mImg"] : "";
+            string imgF = context.ContainsKey("mImg") && extendedContent ? context["mImg"] : "";
             total = dtSuggest.Rows.Count;
             List<Dictionary<string, string>> results = new List<Dictionary<string, string>>();
             Dictionary<string, string> Choices = new Dictionary<string, string>();
@@ -456,7 +460,7 @@ namespace RO.Web
             foreach (DataRowView drv in dtSuggest.DefaultView)
             {
                 string ss = drv[keyF].ToString().Trim();
-                if (true || ss != string.Empty)
+                if (ss == string.Empty || ss != string.Empty)
                 {
                     if (Choices.ContainsKey(ss) || (query.StartsWith(doublestar) && !DesiredKeys.Contains(ss) && !DesiredKeys.Contains("'" + ss + "'")))
                     {
@@ -522,11 +526,13 @@ namespace RO.Web
             List<string> suggestion = new List<string>();
             List<string> key = new List<string>();
             int total = 0;
+            bool extendedContent = false;
+
             DataTable dtSuggest = GetRptCriDdl(csy, context["ssd"], context["method"], context["addnew"] == "Y", csy, genPrefix, rptId.ToString(), rptCriId, query, context["conn"], context["isSys"], context.ContainsKey("sp") ? context["sp"] : "", context.ContainsKey("requiredValid") ? context["requiredValid"] : "", context.ContainsKey("refCol") && !string.IsNullOrEmpty(context["refCol"]) ? 0 : topN);
             string keyF = context["mKey"].ToString();
             string valF = context.ContainsKey("mVal") ? context["mVal"] : keyF + "Text";
             string tipF = context.ContainsKey("mTip") ? context["mTip"] : "";
-            string imgF = context.ContainsKey("mImg") && false ? context["mImg"] : "";
+            string imgF = context.ContainsKey("mImg") && extendedContent ? context["mImg"] : "";
             total = dtSuggest.Rows.Count;
             List<Dictionary<string, string>> results = new List<Dictionary<string, string>>();
             Dictionary<string, string> Choices = new Dictionary<string, string>();
@@ -574,7 +580,7 @@ namespace RO.Web
             foreach (DataRowView drv in dtSuggest.DefaultView)
             {
                 string ss = drv[keyF].ToString().Trim();
-                if (true || ss != string.Empty)
+                if (ss == string.Empty || ss != string.Empty)
                 {
                     if (Choices.ContainsKey(ss) || (query.StartsWith(doublestar) && !DesiredKeys.Contains(ss) && !DesiredKeys.Contains("'" + ss + "'")))
                     {
@@ -653,11 +659,12 @@ namespace RO.Web
             List<string> suggestion = new List<string>();
             List<string> key = new List<string>();
             int total = 0;
+            bool extendedContent = false;
             DataTable dtSuggest = GetDdlRptMemCri(csy, context["ssd"], context["method"], context["addnew"] == "Y", csy, genPrefix, rptId, query, context["conn"], context["isSys"], context.ContainsKey("sp") ? context["sp"] : "", context.ContainsKey("requiredValid") ? context["requiredValid"] : "", topN);
             string keyF = context["mKey"].ToString();
             string valF = context.ContainsKey("mVal") ? context["mVal"] : keyF + "Text";
             string tipF = context.ContainsKey("mTip") ? context["mTip"] : "";
-            string imgF = context.ContainsKey("mImg") && false ? context["mImg"] : "";
+            string imgF = context.ContainsKey("mImg") && extendedContent ? context["mImg"] : "";
             total = dtSuggest.Rows.Count;
             List<Dictionary<string, string>> results = new List<Dictionary<string, string>>();
             Dictionary<string, string> Choices = new Dictionary<string, string>();
@@ -705,7 +712,7 @@ namespace RO.Web
             foreach (DataRowView drv in dtSuggest.DefaultView)
             {
                 string ss = drv[keyF].ToString().Trim();
-                if (true || ss != string.Empty)
+                if (ss == string.Empty || ss != string.Empty)
                 {
                     if (Choices.ContainsKey(ss) || (query.StartsWith(doublestar) && !DesiredKeys.Contains(ss) && !DesiredKeys.Contains("'" + ss + "'")))
                     {
@@ -914,13 +921,14 @@ namespace RO.Web
             List<string> suggestion = new List<string>();
             List<string> key = new List<string>();
             int total = 0;
+            bool extendedContent = false;
             DataTable dtSuggest = GetLis(csy, context["ssd"], context["method"], csy, screenId, query, context["filter"], context["conn"], context["isSys"], topN);
             string keyF = context["mKey"].ToString();
             string valF = context.ContainsKey("mVal") ? context["mVal"] : keyF + "Text";
-            string dtlF = context.ContainsKey("mDtl") && false ? context["mDtl"] : (dtSuggest.Columns.Contains(keyF + "Dtl") ? keyF + "Dtl" : "");
-            string tipF = context.ContainsKey("mTip") && false ? context["mTip"] : (dtSuggest.Columns.Contains(keyF + "Dtl") ? keyF + "Dtl" : "");
-            string imgF = context.ContainsKey("mImg") && false ? context["mImg"] : (dtSuggest.Columns.Contains(keyF + "Img") ? keyF + "Img" : "");
-            string iconUrlF = context.ContainsKey("mIconUrl") && false ? context["mIconUrl"] : (dtSuggest.Columns.Contains(keyF + "Url")  ? keyF + "Url" : "");
+            string dtlF = context.ContainsKey("mDtl") && extendedContent ? context["mDtl"] : (dtSuggest.Columns.Contains(keyF + "Dtl") ? keyF + "Dtl" : "");
+            string tipF = context.ContainsKey("mTip") && extendedContent ? context["mTip"] : (dtSuggest.Columns.Contains(keyF + "Dtl") ? keyF + "Dtl" : "");
+            string imgF = context.ContainsKey("mImg") && extendedContent ? context["mImg"] : (dtSuggest.Columns.Contains(keyF + "Img") ? keyF + "Img" : "");
+            string iconUrlF = context.ContainsKey("mIconUrl") && extendedContent ? context["mIconUrl"] : (dtSuggest.Columns.Contains(keyF + "Url")  ? keyF + "Url" : "");
             bool hasDtlColumn = dtSuggest.Columns.Contains(keyF + "Dtl");
             bool hasIconColumn = dtSuggest.Columns.Contains(keyF + "Url");
             bool hasImgColumn = dtSuggest.Columns.Contains(keyF + "Img");
@@ -995,15 +1003,16 @@ namespace RO.Web
             List<string> suggestion = new List<string>();
             List<string> key = new List<string>();
             int total = 0;
+            bool extendedContent = false;
 
             /* where the actual wiring of data starts */
             DataTable dtSuggest = GetLis(csy, context["ssd"], context["method"], csy, screenid, query, "", "", "N", 0);
             string keyF = context["mKey"].ToString() + context["mTblId"].ToString();
             string valF = context.ContainsKey("mVal") ? context["mVal"] : keyF + "Text";
-            string tipF = context.ContainsKey("mTip") && false ? context["mTip"] : (dtSuggest.Columns.Contains(keyF + "Dtl") ? keyF + "Dtl" : "");
-            string dtlF = context.ContainsKey("mDtl") && false ? context["mDtl"] : (dtSuggest.Columns.Contains(keyF + "Dtl") ? keyF + "Dtl" : "");
-            string imgF = context.ContainsKey("mImg") && false ? context["mImg"] : (dtSuggest.Columns.Contains(keyF + "Img") ? keyF + "Img" : "");
-            string iconUrlF = context.ContainsKey("mIconUrl")  && false ? context["mIconUrl"] : (dtSuggest.Columns.Contains(keyF + "Url") ? keyF + "Url" : "");
+            string tipF = context.ContainsKey("mTip") && extendedContent ? context["mTip"] : (dtSuggest.Columns.Contains(keyF + "Dtl") ? keyF + "Dtl" : "");
+            string dtlF = context.ContainsKey("mDtl") && extendedContent ? context["mDtl"] : (dtSuggest.Columns.Contains(keyF + "Dtl") ? keyF + "Dtl" : "");
+            string imgF = context.ContainsKey("mImg") && extendedContent ? context["mImg"] : (dtSuggest.Columns.Contains(keyF + "Img") ? keyF + "Img" : "");
+            string iconUrlF = context.ContainsKey("mIconUrl")  && extendedContent ? context["mIconUrl"] : (dtSuggest.Columns.Contains(keyF + "Url") ? keyF + "Url" : "");
             total = dtSuggest.Rows.Count;
             List<Dictionary<string, string>> results = new List<Dictionary<string, string>>();
             Dictionary<string, string> Choices = new Dictionary<string, string>();

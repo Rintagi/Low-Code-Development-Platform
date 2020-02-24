@@ -1,0 +1,2612 @@
+5~@~1~@~Default to appropriate events for Screen Columns~@~Web Rule: Default to appropriate events for Screen Columns~@~Default to appropriate events for Screen Columns~@~80~@~1287~@~~@~1~@~if ("1".IndexOf(cEventId128.SelectedValue) < 0) {SetEventId128(cEventId128,"1");}~@~~@~~@~~@~~@~~@~~@~~@~
+6~@~1~@~Default to appropriate events for buttons~@~Web Rule: Default to appropriate events for buttons~@~Default to appropriate events only for buttons~@~80~@~1288~@~~@~1~@~            if ("6".IndexOf(cEventId128.SelectedValue) < 0) {SetEventId128(cEventId128,"6");}~@~~@~~@~~@~~@~~@~~@~~@~
+9~@~2~@~Prevent production access to stored procedure, also Rintai Paas Analyst~@~Server Rule: Prevent production access to stored procedure, also Rintai Paas Analyst~@~Make server rule content readonly on production system and for Rintagi Analyst plus confirm message.~@~14~@~~@~~@~9~@~if (Config.DeployType == "PRD" || LImpr.UsrGroups == "1") {cRuleCode24.Enabled = false;}
+				else
+				{
+					if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncByDb.Attributes["OnClick"] += "return confirm('Proceed to obtain stored procedure from the physical database for sure?');";}
+					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSyncToDb.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncToDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize stored procedure to physical database for sure?');";}
+				}~@~~@~~@~~@~~@~~@~~@~~@~
+12~@~4~@~Synchronize by the physical database~@~Data Table and Columns: Synchronize by the physical database~@~Synchronize by the physical database~@~2~@~1402~@~~@~1~@~			string tid = cAdmDbTable2List.SelectedValue;
+			WebRule wr = new WebRule();
+			if (cTableName3.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please enter the table name to synchronize from and try again."); }
+			else if (cSystemId3.SelectedValue == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please select the system to synchronize from and try again."); }
+			else if (cVirtualTbl3.Checked)
+			{
+				if (cTableId3.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add this virtual table first then try again."); }
+				else
+				{
+					string err = wr.WrGetVirtualTbl(tid, base.LCurr.DbId, Session[KEY_sysConnectionString].ToString(), LcAppPw);
+					if (err.IndexOf("Error:") >= 0) { bErrNow.Value = "Y"; PreMsgPopup(err); }
+					else if (err != string.Empty)
+					{
+						cVirtualSql3.Text = err;
+						cLastSyncDt3.Text = DateTime.Now.ToString("d", new System.Globalization.CultureInfo(base.LUser.Culture)) + " " + DateTime.Now.ToString("hh:mm", new System.Globalization.CultureInfo(base.LUser.Culture));
+                        try
+                        {
+                            SaveDb(sender, new EventArgs());
+                            bInfoNow.Value = "Y"; PreMsgPopup("Virtual table synchronized by the table-valued function successfully, please update the individual columns manually.");
+                        }
+                        catch (Exception er) { bErrNow.Value = "Y"; PreMsgPopup(er.Message); return; }
+					}
+				}
+			}
+			else
+			{
+				tid = wr.WrSyncByDb(LUser.UsrId, byte.Parse(cSystemId3.SelectedValue), byte.Parse(cSystemId.SelectedValue), cTableId3.Text, cTableName3.Text, cTableDesc3.Text, cMultiDesignDb3.Checked, LcSysConnString, LcAppPw);
+				if (cTableId3.Text == string.Empty) {Session.Remove(KEY_dtAdmDbTable2List);}
+				if (tid.IndexOf("Error:") >= 0) { bErrNow.Value = "Y"; PreMsgPopup(tid); tid = cAdmDbTable2List.SelectedValue; }
+				else { bInfoNow.Value = "Y"; PreMsgPopup("Data table and columns synchronized by the physical database successfully."); }
+			}
+			bPgDirty.Value = "N"; cPgDirty.Style["display"] = "none"; PopAdmDbTable2List(sender, e, false, tid.ToString());~@~~@~~@~~@~~@~~@~~@~~@~
+13~@~1~@~Confirm message for Synchronization icons~@~Data Table and Columns: Confirm message for Synchronization icons~@~Customize confirm message for Synchronization icons~@~2~@~~@~~@~9~@~                if (cBtnScan.Attributes["OnClick"] == null || cBtnScan.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cBtnScan.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+                if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSyncByDb.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+                if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncByDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize by physical database for sure?');";}
+                if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncToDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize to physical database for sure?');";}
+                HideShowIcons(sender, e); HideShowUpload(true);~@~~@~~@~~@~~@~~@~~@~~@~
+15~@~4~@~Initialization~@~Data Table and Columns: Initialization~@~Initialization~@~2~@~~@~~@~11~@~            HideShowUpload(true);
+            if (LCurr.DbId == 3) { cMultiDesignDb3.Enabled = true; } else { cMultiDesignDb3.Enabled = false; }
+            /* Automate code table screen creation: */
+            if (cTableId3.Text == string.Empty) { 
+                cAnalToDb.Style.Add("display","none"); cModelSample.Style.Remove("display");
+            }
+            else
+            {
+                cAnalToDb.Style.Remove("display"); cModelSample.Style.Add("display", "none");
+                string key = (new RO.WebRules.WebRule()).WrGetScreenId("Ct" + cTableName3.Text, (string)Session[KEY_sysConnectionString], LcAppPw);
+                string cid = string.IsNullOrEmpty(key) ? "&cid=" + cTableId3.Text : string.Empty;
+                cAnalToDb.Attributes["onclick"] = "if (confirm('Proceed to create/retrieve a grid-only screen for this code table for sure?')) { SearchLink('AdmScreen.aspx?typ=N&ctb=Ct" + cTableName3.Text + cid + "','','',''); return false; }";
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+16~@~4~@~Synchronize to the physical database~@~Data Table and Columns: Synchronize to the physical database~@~Synchronize to the physical database and post changes to next release~@~2~@~1405~@~~@~1~@~			string err = string.Empty;
+			WebRule wr = new WebRule();
+			if (cTableId3.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please select a table to synchronize and try again."); }
+			else if (cSystemId3.SelectedValue != cSystemId.SelectedValue) {bErrNow.Value = "Y"; PreMsgPopup("Synchronization to Physical Database is only available to tables defined within its own environment.");}
+			else if (cVirtualTbl3.Checked)
+			{
+				if (cVirtualSql3.Text.Trim() == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add the SQL to create the desired table-valued function and try again."); }
+				else
+				{
+					DataView dv = new DataView(wr.WrGetDbTableSys(cTableId3.Text, base.LCurr.DbId, Session[KEY_sysConnectionString].ToString(), LcAppPw));
+					foreach (DataRowView drv in dv)
+					{
+						err = wr.WrSyncFunc(cTableName3.Text, cVirtualSql3.Text, Config.GetConnStr(drv["dbProvider"].ToString(), drv["dbServer"].ToString(), drv["dbDatabase"].ToString(), "", drv["dbUserId"].ToString()), LcAppPw);
+						if (err != string.Empty) { break; }
+					}
+					if (err != string.Empty) { bErrNow.Value = "Y"; PreMsgPopup(err); }
+					else 
+					{
+						cLastSyncDt3.Text = DateTime.Now.ToString("d", new System.Globalization.CultureInfo(base.LUser.Culture)) + " " + DateTime.Now.ToString("hh:mm", new System.Globalization.CultureInfo(base.LUser.Culture));
+                        try
+                        {
+                            SaveDb(sender, new EventArgs());
+                            bInfoNow.Value = "Y"; PreMsgPopup("Virtual table synchronized to the physical database successfully.");
+                        }
+                        catch (Exception er) { bErrNow.Value = "Y"; PreMsgPopup(er.Message); return; }
+					}
+				}
+			}
+			else
+			{
+				err = wr.WrSyncToDb(LCurr.DbId, cTableId3.Text, cTableName3.Text, cMultiDesignDb3.Checked, LcSysConnString, LcAppPw);
+				if (err != string.Empty) { bErrNow.Value = "Y"; PreMsgPopup(err); }
+				else { bInfoNow.Value = "Y"; PreMsgPopup("Data table and columns synchronized to the physical database successfully."); }
+			}
+			bPgDirty.Value = "N"; cPgDirty.Style["display"] = "none"; PopAdmDbTable2List(sender, e, false, cAdmDbTable2List.SelectedValue);~@~~@~~@~~@~~@~~@~~@~~@~
+17~@~4~@~Synchronize to the physical database~@~Server Rule: Synchronize to the physical database~@~Synchronize s.proc. to the physical database immdediately~@~14~@~1418~@~~@~1~@~            string err = string.Empty;
+			if (Config.AppNameSpace != "RO" && base.LCurr.DbId == 3) { bErrNow.Value = "Y"; PreMsgPopup("Please do not synchronize this administration stored procedure to physical database."); }
+			else if (cServerRuleId24.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add this server rule first then try again."); }
+			else if (cRuleCode24.Text.Trim() == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add the stored procedure above and try again."); }
+			else if (LImpr.UsrGroups == "1") { bInfoNow.Value = "Y"; PreMsgPopup("This function is temporary blocked from your access.  Please contact administrator if you have any quesitons."); }
+			else
+			{
+				WebRule wr = new WebRule();
+				DataView dv = new DataView(wr.WrGetSvrRuleSys(cScreenId24.SelectedValue, base.LCurr.DbId, Session[KEY_sysConnectionString].ToString(), LcAppPw));
+				foreach (DataRowView drv in dv)
+				{
+					err = wr.WrSyncProc(cProcedureName24.Text, cRuleCode24.Text, Config.GetConnStr(drv["dbProvider"].ToString(), drv["dbServer"].ToString(), drv["dbDatabase"].ToString(), "", drv["dbUserId"].ToString()), LcAppPw);
+					if (err != string.Empty) { break; }
+				}
+				if (err != string.Empty) { bErrNow.Value = "Y"; PreMsgPopup(err); }
+				else
+				{
+					cLastGenDt24.Text = wr.WrUpdSvrRule(cServerRuleId24.Text, Session[KEY_sysConnectionString].ToString(), LcAppPw);
+                    try
+                    {
+                        SaveDb(sender, new EventArgs());
+                        bInfoNow.Value = "Y"; PreMsgPopup("Stored procedure synchronized to the physical database successfully.");
+                    }
+                    catch (Exception er) { bErrNow.Value = "Y"; PreMsgPopup(er.Message); return; }
+				}
+			}~@~~@~~@~~@~~@~~@~~@~~@~
+18~@~4~@~Obtain sp from the physical database~@~Server Rule: Obtain sp from the physical database~@~Obtain stored procedure from the physical database~@~14~@~1420~@~~@~1~@~string ss = string.Empty;
+			if (Config.AppNameSpace != "RO" && base.LCurr.DbId == 3) { bErrNow.Value = "Y"; PreMsgPopup("Please do not manipulate this administration stored procedure."); }
+			else if (cServerRuleId24.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add this server rule first then try again."); }
+			else
+			{
+				WebRule wr = new WebRule();
+				try
+				{
+					ss = wr.WrGetSvrRule(cServerRuleId24.Text, base.LCurr.DbId, Session[KEY_sysConnectionString].ToString(), LcAppPw);
+				}
+				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				if (ss != string.Empty)
+				{
+					cRuleCode24.Text = ss;
+					try
+					{
+						ss = wr.WrUpdSvrRule(cServerRuleId24.Text, Session[KEY_sysConnectionString].ToString(), LcAppPw);
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+					cLastGenDt24.Text = ss; cSaveButton_Click(sender, new EventArgs());
+				}
+			}~@~~@~~@~~@~~@~~@~~@~~@~
+20~@~4~@~Tanslate from default culture to selected culture~@~Culture Translation: Tanslate from default culture to selected culture~@~Tanslate all not-yet-translated items from default culture to selected culture.~@~8~@~~@~51~@~14~@~            if (string.IsNullOrEmpty(cAdmCtCulture8List.SelectedValue) || string.IsNullOrEmpty(cCultureTypeId8.Text) || string.IsNullOrEmpty(cCultureTypeName8.Text))
+			{
+				bInfoNow.Value = "Y"; PreMsgPopup("Please select an existing culture to translate and try again.");
+			}
+			else if (!Config.DoubleByteDb)
+			{
+				bInfoNow.Value = "Y"; PreMsgPopup("Target database cannot handle unicode translation, please contact administrator and try again.");
+			}
+			else if (cCultureDefault8.Checked)
+			{
+				bInfoNow.Value = "Y"; PreMsgPopup("Please do not attempt to translate from default culture to itself.");
+			}
+			else if (!cToTranslate8.Checked)
+			{
+				bInfoNow.Value = "Y"; PreMsgPopup("Please check 'To Translate' and try again.");
+			}
+            else if (this.Application["TranslateON"] != null && this.Application["TranslateON"].ToString() == "Y")
+			{
+				bInfoNow.Value = "Y"; PreMsgPopup("Translation has already started and still in progress.  Please try again later.");
+			}
+			else
+			{
+				if (this.Application["TranslateON"] == null) { this.Application.Add("TranslateON", "Y"); } else { this.Application["TranslateON"] = "Y"; }
+				if (this.Application["CultureTypeId"] == null) { this.Application.Add("CultureTypeId", cCultureTypeId8.Text); } else { this.Application["CultureTypeId"] = cCultureTypeId8.Text; }
+				if (this.Application["CultureTypeName"] == null) { this.Application.Add("CultureTypeName", cCultureTypeName8.Text.Trim()); } else { this.Application["CultureTypeName"] = cCultureTypeName8.Text.Trim(); }
+				if (this.Application["AppPassword"] == null) { this.Application.Add("AppPassword", LcAppPw); } else { this.Application["AppPassword"] = LcAppPw; }
+				if (this.Application["TrnlStartTime"] == null) { this.Application.Add("TrnlStartTime", DateTime.Now.ToString("F")); } else { this.Application["TrnlStartTime"] = DateTime.Now.ToString("F"); }
+				string x = this.Application.GetHashCode().ToString();
+				System.Web.Caching.Cache c = Context.Cache;
+				DateTime now = DateTime.Now;
+				CacheHolder ch = new CacheHolder(c, now, 1);	// Every 1 second.
+				StartCountDown(ch);
+				bInfoNow.Value = "Y"; PreMsgPopup("Translation has started.  This translation engine requires internet connection and may take several hours.  Please check back later for status. Thank you for your patience.");
+			}
+~@~~@~~@~~@~~@~~@~~@~~@~
+23~@~4~@~Add physical databases~@~Systems Maintenance: Add physical databases~@~Add physical application and design databases immediately~@~87~@~1450~@~~@~1~@~            if (!string.IsNullOrEmpty(cdbAppDatabase45.Text))
+            {
+                RO.Rule3.Deploy deploy = new RO.Rule3.Deploy();
+                string module = new Regex("^" + Config.AppNameSpace).Replace(cdbAppDatabase45.Text, "");
+                deploy.TransferModule(Config.DesServer, Config.DesUserId, Config.DesPassword, Config.AppNameSpace + "Cmon", Config.AppNameSpace, "Cmon", null, null, Config.DesServer, Config.DesUserId, Config.DesPassword, Config.AppNameSpace, module, true, Config.AppNameSpace != "RO", false);
+                bInfoNow.Value = "Y"; PreMsgPopup("Physical application and design databases have been created successfully.");
+            }
+            else
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("Application database and design database cannot be empty, please try again.");
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+25~@~2~@~Prevent production access to stored procedure~@~Report Definition: Prevent production access to stored procedure~@~Make server rule content readonly on production system and add confirm message~@~67~@~~@~~@~9~@~if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled = false; cUpdCode22.Enabled = false; cXlsCode22.Enabled = false;}
+				else
+				{
+					if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncByDb.Attributes["OnClick"] += "return confirm('Proceed to obtain stored procedures from the physical database for sure?');";}
+					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSyncToDb.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncToDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize stored procedures to physical database for sure?');";}
+				}~@~~@~~@~~@~~@~~@~~@~~@~
+26~@~4~@~Obtain s.procs from the physical database~@~Report Definition: Obtain s.procs from the physical database~@~Obtain stored procedures from the physical database~@~67~@~1473~@~~@~1~@~            WebRule wr = new WebRule();
+			string err = string.Empty;
+			if (Config.AppNameSpace != "RO" && base.LCurr.DbId == 3) { bErrNow.Value = "Y"; PreMsgPopup("Please do not manipulate these administration stored procedures."); }
+			else if (cReportId22.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add this report definition first then try again."); }
+			else
+			{
+				string sproc = string.Empty;
+				string[] arr;
+				arr = cRegClause22.Text.Split(' ');
+				if (arr.Length >= 2 && arr[0].ToString().IndexOf("EXEC") >= 0)
+				{
+					err = wr.WrGetRptProc(arr[1].ToString().Replace("dbo.",string.Empty), base.LCurr.DbId, Session[KEY_sysConnectionString].ToString(), LcAppPw);
+					if (err.IndexOf("Error:") >= 0) { bErrNow.Value = "Y"; PreMsgPopup(err); } else if (err != string.Empty) { cRegCode22.Text = err; }
+				}
+				arr = cValClause22.Text.Split(' ');
+				if (arr.Length >= 2 && arr[0].ToString().IndexOf("EXEC") >= 0)
+				{
+					err = wr.WrGetRptProc(arr[1].ToString().Replace("dbo.", string.Empty), base.LCurr.DbId, Session[KEY_sysConnectionString].ToString(), LcAppPw);
+					if (err.IndexOf("Error:") >= 0) { bErrNow.Value = "Y"; PreMsgPopup(err); } else if (err != string.Empty) { cValCode22.Text = err; }
+				}
+				arr = cUpdClause22.Text.Split(' ');
+				if (arr.Length >= 2 && arr[0].ToString().IndexOf("EXEC") >= 0)
+				{
+					err = wr.WrGetRptProc(arr[1].ToString().Replace("dbo.", string.Empty), base.LCurr.DbId, Session[KEY_sysConnectionString].ToString(), LcAppPw);
+					if (err.IndexOf("Error:") >= 0) { bErrNow.Value = "Y"; PreMsgPopup(err); } else if (err != string.Empty) { cUpdCode22.Text = err; }
+				}
+				arr = cXlsClause22.Text.Split(' ');
+				if (arr.Length >= 2 && arr[0].ToString().IndexOf("EXEC") >= 0)
+				{
+					err = wr.WrGetRptProc(arr[1].ToString().Replace("dbo.", string.Empty), base.LCurr.DbId, Session[KEY_sysConnectionString].ToString(), LcAppPw);
+					if (err.IndexOf("Error:") >= 0) { bErrNow.Value = "Y"; PreMsgPopup(err); } else if (err != string.Empty) { cXlsCode22.Text = err; }
+				}
+				if (bErrNow.Value == "N")
+				{
+					err = wr.WrUpdRptProc(cReportId22.Text, Session[KEY_sysConnectionString].ToString(), LcAppPw);
+					if (err.IndexOf("Error:") >= 0) { bErrNow.Value = "Y"; PreMsgPopup(err); }
+					else
+                    {
+                        cLastGenDt22.Text = err;
+                        try
+                        {
+                            SaveDb(sender, new EventArgs());
+                            bInfoNow.Value = "Y"; PreMsgPopup("Stored procedures retrieved successfully from physical database.");
+                        }
+                        catch (Exception er) { bErrNow.Value = "Y"; PreMsgPopup(er.Message); return; }
+                    }
+				}
+			}~@~~@~~@~~@~~@~~@~~@~~@~
+27~@~4~@~Synchronize to the physical database~@~Report Definition: Synchronize to the physical database~@~Synchronize all stored procedures to the physical database immdediately~@~67~@~1474~@~~@~1~@~            string err = string.Empty;
+			if (Config.AppNameSpace != "RO" && base.LCurr.DbId == 3) { bErrNow.Value = "Y"; PreMsgPopup("Please do not synchronize these administration stored procedures to physical database."); }
+			else if (cReportId22.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add this report definition first then try again."); }
+			else if (cRegClause22.Text != string.Empty && cRegCode22.Text.Trim() == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add the stored procedure for Regular Fields and try again."); }
+			else if (cValClause22.Text != string.Empty && cValCode22.Text.Trim() == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add the stored procedure for Parameters and try again."); }
+			else if (cUpdClause22.Text != string.Empty && cUpdCode22.Text.Trim() == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add the stored procedure for Update and try again."); }
+			else if (cXlsClause22.Text != string.Empty && cXlsCode22.Text.Trim() == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add the stored procedure for Excel and try again."); }
+			else
+			{
+				WebRule wr = new WebRule();
+				DataView dv = new DataView(wr.WrGetReportApp(base.LCurr.DbId, Session[KEY_sysConnectionString].ToString(), LcAppPw));
+				string[] arr;
+				arr = cRegClause22.Text.Split(' ');
+				if (arr.Length >= 2 && arr[0].ToString().IndexOf("EXEC") >= 0)
+				{
+					err = wr.WrSyncProc(arr[1].ToString(), cRegCode22.Text, Config.GetConnStr(dv[0]["dbProvider"].ToString(), dv[0]["dbServer"].ToString(), dv[0]["dbDatabase"].ToString(), "", dv[0]["dbUserId"].ToString()), LcAppPw);
+				}
+				arr = cValClause22.Text.Split(' ');
+				if (arr.Length >= 2 && arr[0].ToString().IndexOf("EXEC") >= 0)
+				{
+					err = wr.WrSyncProc(arr[1].ToString(), cValCode22.Text, Config.GetConnStr(dv[0]["dbProvider"].ToString(), dv[0]["dbServer"].ToString(), dv[0]["dbDatabase"].ToString(), "", dv[0]["dbUserId"].ToString()), LcAppPw);
+				}
+				arr = cUpdClause22.Text.Split(' ');
+				if (arr.Length >= 2 && arr[0].ToString().IndexOf("EXEC") >= 0)
+				{
+					err = wr.WrSyncProc(arr[1].ToString(), cUpdCode22.Text, Config.GetConnStr(dv[0]["dbProvider"].ToString(), dv[0]["dbServer"].ToString(), dv[0]["dbDatabase"].ToString(), "", dv[0]["dbUserId"].ToString()), LcAppPw);
+				}
+				arr = cXlsClause22.Text.Split(' ');
+				if (arr.Length >= 2 && arr[0].ToString().IndexOf("EXEC") >= 0)
+				{
+					err = wr.WrSyncProc(arr[1].ToString(), cXlsCode22.Text, Config.GetConnStr(dv[0]["dbProvider"].ToString(), dv[0]["dbServer"].ToString(), dv[0]["dbDatabase"].ToString(), "", dv[0]["dbUserId"].ToString()), LcAppPw);
+				}
+				if (err != string.Empty) { bErrNow.Value = "Y"; PreMsgPopup(err); }
+				else
+				{
+					cLastGenDt22.Text = wr.WrUpdRptProc(cReportId22.Text, Session[KEY_sysConnectionString].ToString(), LcAppPw);
+                    try
+                    {
+                        SaveDb(sender, new EventArgs());
+                        bInfoNow.Value = "Y"; PreMsgPopup("Stored procedures synchronized to the physical database successfully.");
+                    }
+                    catch (Exception er) { bErrNow.Value = "Y"; PreMsgPopup(er.Message); return; }
+				}
+			}~@~~@~~@~~@~~@~~@~~@~~@~
+38~@~4~@~Procedures for translation~@~Culture Translation: Procedures for translation~@~Procedures for translation~@~8~@~~@~~@~16~@~        private static object _lock = new object();
+
+		private class CacheHolder
+		{
+			public System.Web.Caching.Cache cache;
+			public DateTime wakeUptime;
+			public int seconds;
+			public CacheHolder(System.Web.Caching.Cache c, DateTime dt, int interval) { cache = c; wakeUptime = dt; seconds = interval; }
+		}
+
+		private void RunScheduler(DateTime wakeUpTime)
+		{
+			if ((new Random()).Next(10) <= 5)	// Half of the time randomly.
+			{
+				bool bComplete = true;
+				DataTable dtSystems = base.SystemsList;
+				foreach (DataRow dr in dtSystems.Rows)
+				{
+					try
+					{
+						if ((new WebRule()).WrTranslateAll(this.Application["CultureTypeId"].ToString(), this.Application["CultureTypeName"].ToString(), Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", dr["dbAppUserId"].ToString()), this.Application["AppPassword"].ToString()))
+						{
+							bComplete = false; break;		// Wait for next turn.
+						}
+					}
+					catch (Exception err) { this.Application["TranslateON"] = err.Message; }
+				}
+				if (bComplete && this.Application["TranslateON"].ToString() == "Y") { this.Application["TranslateON"] = "Translation engine is readily available at your service."; }
+			}
+		}
+
+		private void DoCountDown(string cache_key, object holder, System.Web.Caching.CacheItemRemovedReason reason)
+		{
+			StartCountDown(holder as CacheHolder); RunScheduler((holder as CacheHolder).wakeUptime);
+		}
+
+		private void StartCountDown(CacheHolder ch)
+		{
+			lock (_lock)
+			{
+				System.Web.Caching.Cache cc = ch.cache;
+				if (this.Application["TranslateON"].ToString() != "Y") { return; }
+				if (cc["translation"] == null)
+				{
+					ch.wakeUptime = ch.wakeUptime.AddSeconds(ch.seconds).AddMilliseconds(-ch.wakeUptime.Millisecond);
+					cc.Add("translation", ch, null, ch.wakeUptime, System.Web.Caching.Cache.NoSlidingExpiration, System.Web.Caching.CacheItemPriority.NotRemovable, DoCountDown);
+				}
+			}
+		}
+~@~~@~~@~~@~~@~~@~~@~~@~
+39~@~4~@~Check translation status~@~Culture Translation: Check translation status~@~Check translation status.~@~8~@~~@~56~@~14~@~bInfoNow.Value = "Y";
+			if (this.Application["TranslateON"] != null)
+			{
+				if (this.Application["TranslateON"].ToString() == "Y" && this.Application["TrnlStartTime"] != null)
+				{
+					PreMsgPopup("Translation has been started on " + this.Application["TrnlStartTime"].ToString() + " and still in progress.");
+				}
+				else { PreMsgPopup(this.Application["TranslateON"].ToString()); }
+			}
+			else { PreMsgPopup("Please start the translation engine and try again."); }~@~~@~~@~~@~~@~~@~~@~~@~
+40~@~4~@~Ask before translate or fill FX table~@~Culture Translation: Ask before translate or fill FX table~@~Add confirm message for translation trigger and FX trigger.~@~8~@~~@~~@~18~@~if (this.Application["TranslateON"] == null || this.Application["TranslateON"].ToString() != "Y")
+			{
+				cUndoAllButton.Attributes["OnClick"] = "return confirm('Proceed to start translation engine?');";
+				cDeleteButton.Attributes["OnClick"] = "return confirm('Proceed to fill FX Rate table with current rates for this culture?');";
+			}
+~@~~@~~@~~@~~@~~@~~@~~@~
+41~@~2~@~Prevent unauthorized changes~@~Culture Translation: Prevent unauthorized changes~@~Prevent applications from changing culture types.~@~8~@~~@~11~@~6~@~			if (Config.AppNameSpace != "RO")
+			{
+				bErrNow.Value = "Y"; PreMsgPopup("Please do not attempt to modify any of the culture types as they will be overwritten by future Rintagi upgrade. If you wish to add a new culture, kindly contact cs@robocoder.com to request your new culture to be added in future Rintagi upgrade and email you a special script to implement your need ASAP.  Thank you."); return string.Empty;
+			}~@~~@~~@~~@~~@~~@~~@~~@~
+46~@~4~@~Email all active users~@~Maintenance Message: Email all active users~@~Email maintenance message to all active users~@~109~@~1874~@~~@~1~@~            if (cMaintMsgId233.Text != string.Empty && cMaintMessage233.Text != string.Empty)
+            {
+                try
+                {
+                    StringBuilder sb = new StringBuilder();
+                    DataView dv = new DataView((new WebRule()).WrGetActiveEmails(cMaintMsgId233.Text));
+                    foreach (DataRowView drv in dv)
+                    {
+                        if (sb.Length > 0) { sb.Append(";"); }
+                        sb.Append(drv[0].ToString());
+                    }
+                    string from = base.SysCustServEmail(base.LCurr.SystemId);
+                    base.SendEmail("System Maintenance Notification", cMaintMessage233.Text.Replace("\n", "<br />"), sb.ToString(), from, from, "System Maintenance Team", true);
+                    cLastEmailDt233.Text = DateTime.Now.ToLongDateString();
+                }
+                catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+59~@~4~@~Create program upon program name change or add screen~@~Screen Definition: Create program upon program name change or add screen~@~Generate program as soon as program name is changed or a new screen is added.~@~9~@~~@~11~@~10~@~if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new screen has been added successfully.
+			{
+				try
+				{
+					if (pid == string.Empty) { pid = cScreenId15.Text; }
+					DataTable dtTle = (new AdminSystem()).GetScreenHlp(int.Parse(pid), base.LUser.CultureId, (string)Session[KEY_sysConnectionString], LcAppPw);
+					DataRow row = base.SystemsList.Rows[cSystemId.SelectedIndex];
+					base.CSrc = new CurrSrc(true, row); base.CTar = new CurrTar(true, row);
+					(new GenScreensSystem()).CreateProgram(int.Parse(pid), dtTle.Rows[0]["ScreenTitle"].ToString(), row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
+					(new MenuSystem()).NewMenuItem(int.Parse(pid), 0, 0, dtTle.Rows[0]["ScreenTitle"].ToString(), (string)Session[KEY_sysConnectionString], LcAppPw);
+					//Response.Redirect(Request.RawUrl);
+				}
+				catch {}
+			}~@~~@~~@~~@~~@~~@~~@~~@~
+61~@~4~@~Signal create program needed upon program name change and validate program name~@~Screen Definition: Signal create program needed upon program name change and validate program name~@~Validate program name and set a flag to signal create program needed upon program name change.~@~9~@~~@~11~@~6~@~            if (base.SystemsList.Rows.Find(cSystemId.SelectedValue)["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View" && !cProgramName15.Text.StartsWith("u_"))
+            {
+                cProgramName15.Text = "u_" + cProgramName15.Text;
+            }
+            bool bRegenNeeded = false;
+            if (cAdmScreen9List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName15.Text, Int32.Parse(cAdmScreen9List.SelectedValue), 0, 0, (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }~@~~@~~@~~@~~@~~@~~@~~@~
+62~@~4~@~Signal create program needed upon program name change~@~Report Definition: Signal create program needed upon program name change~@~Set a flag to signal create program needed upon program name change.~@~67~@~~@~11~@~6~@~bool bRegenNeeded = false;
+            if (cAdmReport67List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName22.Text, 0, Int32.Parse(cAdmReport67List.SelectedValue), 0, (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }~@~~@~~@~~@~~@~~@~~@~~@~
+63~@~4~@~Create program upon program name change or add report~@~Report Definition: Create program upon program name change or add report~@~Generate program as soon as program name is changed or a new report is added.~@~67~@~~@~11~@~10~@~			if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new report has been added successfully.
+			{
+				try
+				{
+					if (pid == string.Empty) { pid = cReportId22.Text; }
+					DataTable dtTle = (new SqlReportSystem()).GetRptHlp(string.Empty,int.Parse(pid), base.LUser.CultureId, (string)Session[KEY_sysConnectionString], LcAppPw);
+					DataRow row = base.SystemsList.Rows[cSystemId.SelectedIndex];
+					base.CSrc = new CurrSrc(true, row); base.CTar = new CurrTar(true, row);
+					(new GenReportsSystem()).CreateProgram(string.Empty, int.Parse(pid), dtTle.Rows[0]["ReportTitle"].ToString(), row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
+					(new MenuSystem()).NewMenuItem(0, int.Parse(pid), 0, dtTle.Rows[0]["ReportTitle"].ToString(), (string)Session[KEY_sysConnectionString], LcAppPw);
+					this.Redirect(Request.RawUrl);
+				}
+				catch {}
+			}~@~~@~~@~~@~~@~~@~~@~~@~
+64~@~4~@~Signal create program needed upon program name change~@~Wizard Column: Signal create program needed upon program name change~@~Set a flag to signal create program needed upon program name change.~@~49~@~~@~11~@~6~@~bool bRegenNeeded = false;
+            if (cAdmWizardObj49List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName71.Text, 0, 0, Int32.Parse(cAdmWizardObj49List.SelectedValue), (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }~@~~@~~@~~@~~@~~@~~@~~@~
+65~@~4~@~Create program upon program name change or add wizard~@~Wizard Object: Create program upon program name change or add wizard~@~Generate program as soon as program name is changed or a new wizard is added.~@~49~@~~@~11~@~10~@~           if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new wizard has been added successfully.
+			{
+				try
+				{
+					if (pid == string.Empty) { pid = cWizardId71.Text; }
+					DataRow row = base.SystemsList.Rows[cSystemId.SelectedIndex];
+					base.CSrc = new CurrSrc(true, row); base.CTar = new CurrTar(true, row);
+					(new GenWizardsSystem()).CreateProgram(int.Parse(pid), cWizardTitle71.Text, row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
+					(new MenuSystem()).NewMenuItem(0, 0, int.Parse(pid), cWizardTitle71.Text, (string)Session[KEY_sysConnectionString], LcAppPw);
+					this.Redirect(Request.RawUrl);
+				}
+				catch {}
+			}~@~~@~~@~~@~~@~~@~~@~~@~
+66~@~2~@~Prevent web rule from being accessed~@~Web Rule: Prevent web rule from being accessed~@~Prevent web rule from being accessed for some systems.~@~80~@~~@~~@~18~@~if (LImpr.UsrGroups == "1") { throw new Exception("This function is intentionally blocked from you for the time being. Please contact administrator if you have any questions."); }~@~~@~~@~~@~~@~~@~~@~~@~
+68~@~1~@~Prepare db for document management or workflow ststus plus hide/show appropriate fields~@~Screen Object: Prepare db for document management or workflow ststus plus hide/show appropriate fields~@~Prepare database for document management or workflow status plus hide/show appropriate fields.~@~10~@~81~@~~@~1~@~            if (",3,5,17,29,32,53,".IndexOf("," + cDisplayModeId14.SelectedValue + ",") >= 0)   // DropDownList, ListBox, RadioButtonList, DataGridLink or Document or WorkflowStatus
+            {
+                cRefreshOnCUD14P1.Visible = true; cRefreshOnCUD14P2.Visible = true;
+            }
+            else
+            {
+                cRefreshOnCUD14.Checked = false; cRefreshOnCUD14P1.Visible = false; cRefreshOnCUD14P2.Visible = false;
+            }
+            if (",38,52,53,".IndexOf("," + cDisplayModeId14.SelectedValue + ",") >= 0)   // AutoComplete, AutoListBox, WorkflowStatus
+            {
+                cColumnHeight14.Text = string.Empty; cColumnHeight14P1.Visible = false; cColumnHeight14P2.Visible = false;
+            }
+            else
+            {
+                cColumnHeight14P1.Visible = true; cColumnHeight14P2.Visible = true;
+            }
+            if (",23,24,25,26,".IndexOf("," + cDisplayModeId14.SelectedValue + ",") >= 0)   // HyperLinks
+            {
+                cHyperLinkUrl14P1.Visible = true; cHyperLinkUrl14P2.Visible = true;
+                cDefAfter14.Checked = false; cDefAfter14P1.Visible = false; cDefAfter14P2.Visible = false;
+                cSystemValue14.Text = string.Empty; cSystemValue14P1.Visible = false; cSystemValue14P2.Visible = false;
+                cDefAlways14.Checked = false; cDefAlways14P1.Visible = false; cDefAlways14P2.Visible = false;
+                cAggregateCd14.ClearSelection(); cAggregateCd14P1.Visible = false; cAggregateCd14P2.Visible = false;
+                cMaskValid14.Text = string.Empty; cMaskValid14P1.Visible = false; cMaskValid14P2.Visible = false;
+                cRangeValidType14.Text = string.Empty; cRangeValidType14P1.Visible = false; cRangeValidType14P2.Visible = false;
+                cRangeValidMax14.Text = string.Empty; cRangeValidMax14P1.Visible = false; cRangeValidMax14P2.Visible = false;
+                cRangeValidMin14.Text = string.Empty; cRangeValidMin14P1.Visible = false; cRangeValidMin14P2.Visible = false;
+            }
+            else
+            {
+                cHyperLinkUrl14.Text = string.Empty; cHyperLinkUrl14P1.Visible = false; cHyperLinkUrl14P2.Visible = false;
+                cDefAfter14P1.Visible = true; cDefAfter14P2.Visible = true;
+                cSystemValue14P1.Visible = true; cSystemValue14P2.Visible = true;
+                cDefAlways14P1.Visible = true; cDefAlways14P2.Visible = true;
+                cAggregateCd14P1.Visible = true; cAggregateCd14P2.Visible = true;
+                cMaskValid14P1.Visible = true; cMaskValid14P2.Visible = true;
+                cRangeValidType14P1.Visible = true; cRangeValidType14P2.Visible = true;
+                cRangeValidMax14P1.Visible = true; cRangeValidMax14P2.Visible = true;
+                cRangeValidMin14P1.Visible = true; cRangeValidMin14P2.Visible = true;
+            }
+            if (IsPostBack && cDisplayModeId14.SelectedValue == "32")   // Document: Do not check cColumnLink14 as it is loaded from this on pageload.
+            {
+                string ctrlname = Request.Params.Get("__EVENTTARGET");
+                if (ctrlname != null && ctrlname != string.Empty && ctrlname.EndsWith(cDisplayModeId14.ID))
+                {
+                    try
+                    {
+                        DataTable dt = (new WebRule()).WrAddDocTbl(LCurr.DbId, cColumnName14.Text, (string)Session[KEY_sysConnectionString], LcAppPw);
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            SetDdlKeyColumnId14(cDdlKeyColumnId14, dt.Rows[0][0].ToString());
+                            SetDdlRefColumnId14(cDdlRefColumnId14, dt.Rows[1][0].ToString());
+                            //cColumnLink14.Text = "UpLoad.aspx?tbl=dbo." + cColumnName14.Text;
+                        }
+                        //else
+                        //{
+                        //    bInfoNow.Value = "Y"; PreMsgPopup("Table '" + cColumnName14.Text + "' already exist. Please try another column name or should you proceed, this could be sharing the same document storage table with other columns.");
+                        //}
+                    }
+                    catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
+                }
+            }
+            if (IsPostBack && cDisplayModeId14.SelectedValue == "53")
+            {
+                string ctrlname = Request.Params.Get("__EVENTTARGET");
+                if (ctrlname != null && ctrlname != string.Empty && ctrlname.EndsWith(cDisplayModeId14.ID))
+                {
+                    try
+                    {
+                        DataTable dt = (new WebRule()).WrAddWfsTbl(LCurr.DbId, cColumnName14.Text, (string)Session[KEY_sysConnectionString], LcAppPw);
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            SetDdlKeyColumnId14(cDdlKeyColumnId14, dt.Rows[0][0].ToString());
+                            SetDdlRefColumnId14(cDdlRefColumnId14, dt.Rows[1][0].ToString());
+                            SetDdlSrtColumnId14(cDdlSrtColumnId14, dt.Rows[5][0].ToString());
+                            cColumnLink14.Text = base.SystemsList.Rows[cSystemId.SelectedIndex]["SystemAbbr"].ToString() + cColumnName14.Text + ".aspx?col=StatusCd";
+                        }
+                        //else
+                        //{
+                        //    bInfoNow.Value = "Y"; PreMsgPopup("Table '" + cColumnName14.Text + "' already exist. Please try another column name or should you proceed, this could be sharing the same document storage table with other columns.");
+                        //}
+                        (new AdminSystem()).MkWfStatus(cScreenObjId14.Text, "Y", base.SystemsList.Rows[cSystemId.SelectedIndex]["dbAppDatabase"].ToString(), base.SystemsList.Rows[cSystemId.SelectedIndex]["dbDesDatabase"].ToString(), (string)Session[KEY_sysConnectionString], LcAppPw);
+                    }
+                    catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
+                }
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+74~@~2~@~Confirm Document and WorkflowStatus Type plus show/hide fields~@~Screen Object: Confirm Document and WorkflowStatus Type plus show/hide fields~@~Confirm Document and WorkflowStatus Type before creating associated tables~@~10~@~~@~~@~9~@~                cDisplayModeId14.Attributes["OnChange"] = "if (this.value!='32' && this.value!='53')  {document.getElementById('" + bConfirm.ClientID + "').value='N';} else {document.getElementById('" + bConfirm.ClientID + "').value='Y';};" + cDisplayModeId14.Attributes["OnChange"];
+                if (Request.QueryString["mod"] != null && Request.QueryString["mod"].ToLower() == "e")
+                {
+                    cGroupRowId14P1.Visible = false; cGroupRowId14P2.Visible = false;
+                    cGroupColId14P1.Visible = false; cGroupColId14P2.Visible = false;
+                }
+                else
+                {
+                    cGroupRowId14P1.Visible = true; cGroupRowId14P2.Visible = true;
+                    cGroupColId14P1.Visible = true; cGroupColId14P2.Visible = true;
+                }~@~~@~~@~~@~~@~~@~~@~~@~
+75~@~4~@~Embed translated label~@~Static Page: Embed translated label~@~Embed translated label for ease of searching~@~114~@~~@~~@~11~@~            cStaticPHolder.Controls.Add(new LiteralControl("<div><div style=\"position:relative\"><iframe frameborder=\"0\" src=\"AdmLabelVw.aspx?typ=N&cri=N&cri0=" + base.LUser.CultureId.ToString() + "&cri1=" + cStaticPgNm259.Text + "\" style=\"width:100%;height:100vh;\"></iframe></div></div>"));~@~~@~~@~~@~~@~~@~~@~~@~
+77~@~4~@~Save translated label tag~@~Static Page: Save translated label tag~@~Replace all html text enclosed by "[=[" and "]]" with "[[9999]]" and insert the text into custom labels for translation.~@~114~@~~@~11~@~10~@~            if (newTranslateTag.Count > 0)
+            {
+
+                foreach (var kv in newTranslateTag)
+                {
+
+                    DataSet ds = new DataSet();
+                    DataTable dt = new DataTable("AdmLabel");
+                    DataColumnCollection columns = dt.Columns;
+                    columns.Add("LabelId215", typeof(string));
+                    columns.Add("CultureId215", typeof(string));
+                    columns.Add("LabelCat215", typeof(string));
+                    columns.Add("LabelKey215", typeof(string));
+                    columns.Add("LabelText215", typeof(string));
+                    columns.Add("CompanyId215", typeof(string));
+                    columns.Add("SortOrder215", typeof(string));
+                    ds.Tables.Add(dt);
+
+                    ds.DataSetName = "AdmLabel112";
+                    DataRow dr = ds.Tables["AdmLabel"].NewRow();
+                    DataRow drType = ds.Tables["AdmLabel"].NewRow();
+                    DataRow drDisp = ds.Tables["AdmLabel"].NewRow();
+                    dr["LabelId215"] = string.Empty;
+                    drType["LabelId215"] = "Numeric"; drDisp["LabelId215"] = "TextBox";
+                    try { dr["CultureId215"] = base.LUser.CultureId; }
+                    catch { }
+                    drType["CultureId215"] = "Numeric"; drDisp["CultureId215"] = "DropDownList";
+                    try { dr["LabelCat215"] = cStaticPgNm259.Text; }
+                    catch { }
+                    drType["LabelCat215"] = "VarChar"; drDisp["LabelCat215"] = "TextBox";
+                    try { dr["LabelKey215"] = kv.Key.Trim(); }
+                    catch { }
+                    drType["LabelKey215"] = "VarChar"; drDisp["LabelKey215"] = "TextBox";
+                    try { dr["LabelText215"] = kv.Value.Trim(); }
+                    catch { }
+                    drType["LabelText215"] = "VarWChar"; drDisp["LabelText215"] = "MultiLine";
+                    try { dr["CompanyId215"] = string.Empty; }
+                    catch { }
+                    drType["CompanyId215"] = "Numeric"; drDisp["CompanyId215"] = "DropDownList";
+                    try { dr["SortOrder215"] = string.Empty; }
+                    catch { }
+                    drType["SortOrder215"] = "Numeric"; drDisp["SortOrder215"] = "TextBox";
+                    ds.Tables["AdmLabel"].Rows.Add(dr); ds.Tables["AdmLabel"].Rows.Add(drType); ds.Tables["AdmLabel"].Rows.Add(drDisp);
+                    pid = (new AdminSystem()).AddData(112, false, base.LUser, base.LImpr, base.LCurr, ds, (string)Session[KEY_sysConnectionString], LcAppPw, base.CPrj, base.CSrc);
+                }
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+78~@~4~@~Search translated label tag~@~Static Page: Search translated label tag~@~Look for text that are enclosed by "[=[" and "]]" and prepare them for auto-replacement by label keys.~@~114~@~~@~11~@~6~@~            System.Collections.Generic.Dictionary<string, string> newTranslateTag = new System.Collections.Generic.Dictionary<string, string>();
+            System.Collections.Generic.Dictionary<string, string> updateTranslateTag = new System.Collections.Generic.Dictionary<string, string>();
+            if (ValidPage() && LUser.CultureId == 1)
+            {
+                string paramXML = "<Params><LabelCat>" + cStaticPgNm259.Text + "</LabelCat></Params>";
+                DataTable dt = (new AdminSystem()).RunWrRule(114, "WrGetMaxCustLabelNbr", (string)Session[KEY_sysConnectionString], LcAppPw, paramXML, LImpr, LCurr);
+                int ii = int.Parse(dt.Rows[0][0].ToString());
+                MatchEvaluator meGetExistingNumTag = m =>
+                {
+                    int n = int.Parse(m.Groups[1].Value);
+                    if (n > ii) ii = n;
+                    return m.Groups[0].Value;
+                };
+                Regex reExistingNumTag = new Regex(@"\[\[([0-9]+)\]\]", RegexOptions.Multiline);
+                reExistingNumTag.Replace(cStaticPgHtm259.Content, meGetExistingNumTag);
+                reExistingNumTag = new Regex(@"\[=([0-9]+)\[([^\]]*)\]\]", RegexOptions.Multiline);
+                reExistingNumTag.Replace(cStaticPgHtm259.Content, meGetExistingNumTag);
+
+                Regex newRE = new Regex(@"\[=\[([^\]]*)\]\]",RegexOptions.Multiline|RegexOptions.CultureInvariant);
+                MatchEvaluator meNew = m =>
+                {
+                    ii = ii + 1;
+                    string key = ii.ToString("D4");
+                    newTranslateTag[key] = m.Groups[1].Value;
+                    return "[[" + key + "]]" + "<!--" + m.Groups[1].Value.Replace("--","__") + "-->" ;
+                };
+                string html = newRE.Replace(cStaticPgHtm259.Content, meNew);
+
+                Regex updateRE = new Regex(@"\[=([^\[]+)\[([^\]]*)\]\]", RegexOptions.Multiline);
+                MatchEvaluator meUpd = m =>
+                {
+                    string key = m.Groups[1].Value.Trim();
+                    updateTranslateTag[key] = m.Groups[2].Value;
+                    return "[[" + key + "]]"; ;
+                };
+                html = updateRE.Replace(html, meUpd);
+                if (newTranslateTag.Count > 0 || updateTranslateTag.Count > 0)
+                {
+                    cStaticPgHtm259.Content = html;
+                }
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+80~@~4~@~Replace the screen with the entire menu tree.~@~Menu IDE: Replace the screen with the entire menu tree.~@~Replace the screen with the entire menu tree.~@~121~@~~@~~@~11~@~            ScriptManager.RegisterStartupScript(this, this.GetType(), "CustomCss", @"<link rel='stylesheet' type='text/css' media='screen' href='css/ide.css' />", false);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "DraggableMenu", @"<script type='text/javascript' src='scripts/menuide.js'></script>", false);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "SortableMenu", @"<script type='text/javascript' src='scripts/jquery.nestedSortable.js'></script>", false);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateMenuList", @"
+                <script>
+                    Sys.Application.add_load(function (e) {                      
+                        var menuItemList = $('.menuItemList').val();                      
+                        $('.iFrameIdt').show();
+                        $('.pgIdt').css({'display':'inline'});
+                        $('.page').css({'display':'none'});                  
+                        ShowMenuMap($.evalJSON(menuItemList));
+                        $('.pgIdt').css({'display':'none'});
+                        $('.page').css({'display':'table-cell'});
+                        
+                        if($('#sitemap').children().length > 0 ){
+                            $('.pageBtnSec, .navigateCntMsg, .pgPreview').show();
+                        }else{
+                            $('.pageBtnSec, .navigateCntMsg, .pgPreview').hide();
+                        }
+            
+                        var height = $(window).height() - $('.page').offset().top -160;
+                        var prevHeight = $(window).height() - $('.page').offset().top -120;
+                        if ($('#sitemap').find('li').length == 0) {
+                            $('#sitemap').css({ 'height': '380px' });
+                        } else {
+                            $('#sitemap').css({ 'height': height });
+                            $('#pgPreviewIframe').css({'height': prevHeight});
+                        }
+                        
+                        $('#pgPreviewIframe').on('load', function () {
+                            $('.iFrameIdt').hide();
+                        }); 
+                        $('.search-grp > div > .rc-1-8').append('<span>All changes on the left hand side is instant and immediate.</span>')
+                    });
+
+                    function getUpdateMenuList() {
+                        GetUpdatedMenuList($('#sitemap'));
+                        $('#" + cNewMenuList.ClientID + @"').val($.toJSON(menuList));
+                    };
+
+                    function updMenuText(menuText)
+                    {
+                        $('.active a').html(menuText);
+                        $('.active').parent().attr('itemtext', menuText);
+                    };
+                    
+                    function updMenuUrl(menuUrl)
+                    {
+                        $('.active a').attr('onclick','loadMenuUrl(this, \''+ menuUrl +'\'); return false;');
+                        $('.active a').attr('menuurl', menuUrl)
+                    };
+
+                    $(window).resize(function () {
+                        var height = $(window).height() - $('.page').offset().top -160;
+                        var prevHeight = $(window).height() - $('.page').offset().top -120;
+                        if ($('#sitemap').find('li').length == 0) {
+                            $('#sitemap').css({ 'height': '380px' });
+                        } else {
+                            $('#sitemap').css({ 'height': height });
+                            $('#pgPreviewIframe').css({'height': prevHeight});
+                        }
+                    });
+                </script>
+            ", false);
+
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "hideScreen", @"
+                    <style>
+                        .screen-tabfolder, .BannerGrp{display: none; }
+                        .navigateCntMsg{padding: 10px; border-radius: 4px;} 
+                        .navigateCntMsg{font-size: 16px; color: #333;}
+                        .iFrameIdt, .menuIframeIdt {
+                            position:absolute;
+                            left:50%;
+                            top:50%;
+                            border-radius:4px;
+                            padding:10px;
+                            border:1px solid #777777;
+                            background:#ffffff;
+                        }
+                        .pageCnt, .page{display: table-cell;}
+                        .pageCnt{width: 100%;}
+                        .page{vertical-align: top;}
+                        #sitemap, #pgPreviewIframe{min-height: 50px;}
+                        .pageBtnSec a{background-color: #3898ee; border-radius: 4px; box-shadow: 1px 2px 2px #cdcdcd; color: white; padding: 5px 10px 5px 24px; display: inline-block; margin-bottom: 3px;}
+                        .pageBtnSec a:hover{background-color: #2990ea;}
+                        .pageBtnSec{background-color:#f5f6f6; padding: 10px; border-radius: 4px; margin-bottom: 5px; text-align: right;}
+                        .pageBtnSec span{float: left; color: #333; font-size: 15px; padding: 5px;}
+                        .pageBtnSec img{border: 1px solid #555; border-radius: 15px; margin-left: 5px; margin-top: -4px; padding: 2px; vertical-align: middle;}
+                        .search-grp > div > .rc-1-8 span{background: rgba(255,255,255,0.5); color:#333; font-size: 16px; padding: 3px 15px; border-radius: 4px;}
+                        #menuDefiLink, #menuItemLink, #menuPermLink, #menuTranLink{
+                            background-image: url('images/button/Open.png');
+                            background-position:6px center;
+                            background-repeat: no-repeat;
+                        }
+                        
+                        @media only screen and (max-width : 767px) {
+                            .pageCnt, .page{display: block !important;}
+                            #sitemap, #menuDefiIframe, #menuItemIframe, #menuPermIframe, #menuTranIframe{min-height: 200px;}
+                        }
+                  </style>
+            ", false);
+
+            cScreenSearch.Visible = false;
+            LiteralControl draggableMenu = new LiteralControl();
+
+            string menuCnt = @"
+            <div style='display: table; border-spacing: 10px 0; border-collapse: separate; width: 100%; background: rgba(255,255,255,0.4); padding: 10px; border-radius: 4px;'>
+                <div style='display: table-row'>
+                    <div class='page'>
+                        <div class='pgIdt'>
+                            <img src='./images/indicator.gif' style='padding-right: 20px;' />
+                            <span>Menu Loading ...</span>
+                        </div>
+                        <div style='position: relative;'>
+                          <ol id='sitemap' class='sortable ui-sortable'></ol>
+                        </div>
+                    </div>
+                    <div class='pageCnt'>
+                        <div class='pageBtnSec'>
+                            <span>ITEM PREVIEW<img src='images/ArrowDn.png'></img></span>
+                            <a id='menuDefiLink' href='#' onclick='loadDefiUrl(); return false;'>DEFINITION</a>
+                            <a id='menuItemLink' href='#' onclick='loadItemUrl(); return false;'>MENU ITEM</a>
+                            <a id='menuPermLink' href='#' onclick='loadPermUrl(); return false;'>MENU PERMISSION</a>
+                            <a id='menuTranLink' href='#' onclick='loadTranUrl(); return false;'>MENU LABEL</a>
+                        </div>
+                        <div id='navigateCntMsg' class='navigateCntMsg'>
+                            <p>There is no preview for this page. Please click the buttons above to change the attributes.</p>
+                        </div>
+                        <div id='pgPreview' class='pgPreview'>
+                            <div class='iFrameIdt'>
+                                <img src='./images/indicator.gif' />
+                                <span>Page Loading ...</span>
+                            </div>
+                            <iframe id='pgPreviewIframe' style='width: 100%; height: 65vh'></iframe>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>";
+            draggableMenu.Text = menuCnt;
+            LstPHolder.Controls.Add(draggableMenu);
+            LstPHolder.Visible = true;
+
+            DataTable dtMenuItems = (new MenuSystem()).GetMenu(base.LUser.CultureId, 3, base.LImpr, (string)Session[KEY_sysConnectionString], LcAppPw, 0, 0, 0);
+            DataTable dtMenuDefi;
+            string ScreenId, WizardId, ReportId, StaticPgId, MenuUrl, MenuIndex;
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("[");
+            int i = 0;
+            foreach (DataRow dr in dtMenuItems.Rows)
+            {
+                dtMenuDefi = (new AdminSystem()).GetMstById("GetAdmMenu35ById", dr["MenuId"].ToString(), (string)Session[KEY_sysConnectionString], LcAppPw);
+                DataRow drv = dtMenuDefi.Rows[0];
+                ScreenId = drv["ScreenId39"].ToString();
+                WizardId = drv["WizardId39"].ToString();
+                ReportId = drv["ReportId39"].ToString();
+                StaticPgId = drv["StaticPgId39"].ToString();
+                MenuIndex = drv["MenuIndex39"].ToString();
+                if (!string.IsNullOrEmpty(ScreenId)) { MenuUrl = "AdmScreen.aspx?typ=n&key=" + ScreenId; }
+                else if (!string.IsNullOrEmpty(WizardId)) { MenuUrl = "AdmWizardObj.aspx?typ=n&key=" + WizardId; }
+                else if (!string.IsNullOrEmpty(ReportId)) { MenuUrl = "AdmReport.aspx?typ=n&key=" + ReportId; }
+                else if (!string.IsNullOrEmpty(StaticPgId)) { MenuUrl = "AdmStaticPg.aspx?typ=n&key=" + StaticPgId; }
+                else { MenuUrl = ""; }
+
+                if (i > 0)
+                {
+                    sb.Append(",");
+                }
+                sb.Append("{");
+                sb.Append("\"MenuId\": ");
+                sb.Append(string.Format("\"{0}\"", dr["MenuId"].ToString()));
+                sb.Append(", \"ParentId\": ");
+                sb.Append(string.Format("\"{0}\"", dr["ParentId"].ToString()));
+                sb.Append(", \"MenuText\": ");
+                sb.Append(string.Format("\"{0}\"", dr["MenuText"].ToString()));
+                sb.Append(", \"MenuIndex\": ");
+                sb.Append(string.Format("\"{0}\"", MenuIndex));
+                sb.Append(", \"MenuUrl\": ");
+                sb.Append(string.Format("\"{0}\"", MenuUrl));
+                sb.Append("}");
+                i++;
+            }
+            sb.Append("]");
+            TextBox tb = new TextBox();
+            tb.Text = sb.ToString();
+            tb.CssClass = "menuItemList";
+
+            cMenuListLabel.Controls.Add(tb);~@~~@~~@~~@~~@~~@~~@~~@~
+82~@~1~@~Fill in the length of standard data types~@~Data Table and Columns: Fill in the length of standard data types~@~Fill in the length of standard data types and prevent editing~@~2~@~17~@~~@~1~@~            if (cAdmDbTableGrid.EditIndex > -1 && cAdmDbTableGrid.Items.Count > cAdmDbTableGrid.EditIndex)
+            {
+                TextBox tb1 = ((TextBox)cAdmDbTableGrid.Items[cAdmDbTableGrid.EditIndex].FindControl("cColumnLength5"));
+                TextBox tb2 = ((TextBox)cAdmDbTableGrid.Items[cAdmDbTableGrid.EditIndex].FindControl("cColumnScale5"));
+                switch (((DropDownList)sender).SelectedValue)
+                {
+                    case "1":
+                        tb1.Text = "1"; tb1.Enabled = false; tb2.Text = ""; break;
+                    case "2":
+                        tb1.Text = "2"; tb1.Enabled = false; tb2.Text = ""; break;
+                    case "3":
+                        tb1.Text = "4"; tb1.Enabled = false; tb2.Text = ""; break;
+                    case "6":
+                        tb1.Text = "8"; tb1.Enabled = false; tb2.Text = "6"; break;
+                    case "18":
+                        tb1.Text = "8"; tb1.Enabled = true; tb2.Text = "2"; break;
+                    case "4": case "7": case "12": case "21":
+                        tb1.Text = "8"; tb1.Enabled = false; tb2.Text = ""; break;
+                    default:
+                        tb1.Enabled = true; break;
+                }
+                if (!tb1.Enabled) { tb1.BackColor = System.Drawing.Color.FromName(Config.ReadOnlyBColor); } else { tb1.BackColor = System.Drawing.Color.Empty; }
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+83~@~4~@~Fill FX Rate table for selected culture currency~@~Culture Translation: Fill FX Rate table for selected culture currency~@~Fill foreign exchange table for selected culture currency~@~8~@~~@~57~@~14~@~            if (string.IsNullOrEmpty(cCultureTypeId8.Text))
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("Please select a culture for the FX rates to all other currencies and try again.");
+            }
+            else
+            {
+                string ToFxRate = string.Empty;
+                string ToCurrency = string.Empty;
+                string FrCurrency = (new System.Globalization.RegionInfo((new CultureInfo(cCultureTypeName8.Text)).LCID)).ISOCurrencySymbol;
+                DataTable dtLang = (new AdminSystem()).GetLang(Int16.Parse(cCultureTypeId8.Text));
+                Random rnd = new Random();    //Must be outside the loop so that each reference returns a different number;
+                foreach (DataRow dr in dtLang.Rows)
+                {
+                    try
+                    {
+                        ToCurrency = (new System.Globalization.RegionInfo((new CultureInfo(dr["CultureTypeName"].ToString())).LCID)).ISOCurrencySymbol;
+                        ToFxRate = base.GetExtFxRate(FrCurrency, ToCurrency);
+                        if (!string.IsNullOrEmpty(ToFxRate))
+                        {
+                            (new AdminSystem()).UpdFxRate(FrCurrency, ToCurrency, ToFxRate);
+                        }
+                        Thread.Sleep(rnd.Next(100,1000));
+                    }
+                    catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
+                }
+                bInfoNow.Value = "Y"; PreMsgPopup("Foreign Exchange Table is filled for this culture successfully.");
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+85~@~4~@~Get currency code~@~Culture Translation: Get currency code~@~Obtain currency code to validate this culture.~@~8~@~33~@~~@~1~@~            try
+            {
+                cCurrencyCd8.Text = (new System.Globalization.RegionInfo((new CultureInfo(cCultureTypeName8.Text)).LCID)).ISOCurrencySymbol;
+            }
+            catch
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("'" + cCultureTypeName8.Text + "' is not a valid culture, please try again.");
+                cCurrencyCd8.Text = string.Empty; cCultureTypeName8.Text = string.Empty;
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+88~@~2~@~Initialize remove button~@~Custom Label: Initialize remove button~@~Initialize remove button to prompt~@~112~@~~@~~@~9~@~                if (cRemoveBtn.Attributes["OnClick"] == null || cRemoveBtn.Attributes["OnClick"].IndexOf("return confirm") < 0) { cRemoveBtn.Attributes["OnClick"] += "return confirm('Proceed to remove all other translated labels for sure?');"; }
+                if (cCultureId215.SelectedValue == "1") { cRemoveBtn.Visible = true; } else { cRemoveBtn.Visible = false; }
+~@~~@~~@~~@~~@~~@~~@~~@~
+89~@~4~@~Set remove button visibility~@~Custom Label: Set remove button visibility~@~Set remove button visibility~@~112~@~1967~@~~@~1~@~            if (cCultureId215.SelectedValue == "1") { cRemoveBtn.Visible = true; } else { cRemoveBtn.Visible = false; }
+~@~~@~~@~~@~~@~~@~~@~~@~
+90~@~4~@~Remove translated labels~@~Custom Label: Remove translated labels~@~Remove translated labels~@~112~@~3078~@~~@~1~@~            (new WebRule()).RmTranslatedLbl(cLabelId215.Text, (string)Session[KEY_sysConnectionString], LcAppPw);
+            bInfoNow.Value = "Y"; PreMsgPopup("All translations of this label have been deleted.");
+~@~~@~~@~~@~~@~~@~~@~~@~
+91~@~4~@~Send email notice to user~@~Change Password: Send email notice to user~@~Send email notice to user upon update~@~71~@~~@~11~@~6~@~            if (ValidPage() && !string.IsNullOrEmpty(cAdmChgPwd71List.SelectedValue) && cSendMail.Checked)
+            {
+                DataTable dt = (new WebRule()).WrGetUsrEmail(cUsrId1.Text);
+                string from = base.SysCustServEmail(base.LCurr.SystemId);
+                string bd = "Your account (" + dt.Rows[0]["UsrName"].ToString() + ") password has been changed. Please do not hesitate to contact the undersigned if you have any question.<br /><br />" + Config.WebTitle + " system administrator";
+                base.SendEmail(Config.WebTitle + ": System Password Change", bd, dt.Rows[0]["UsrEmail"].ToString(), from, from, "System Administrator", true);
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+92~@~1~@~Default member to chosen criteria~@~Time Tracking for SR&ED: Default member to chosen criteria~@~When adding a new row, make member the same as the chosen criteria~@~123~@~~@~~@~12~@~            if (cAdmSredTimeGrid.EditIndex > -1 && GetDataItemIndex(cAdmSredTimeGrid.EditIndex) == e.Item.DataItemIndex)
+            {
+                if (string.IsNullOrEmpty(dvAdmSredTimeGrid[e.Item.DataItemIndex]["MemberId272"].ToString()))
+                {
+                    RoboCoder.WebControls.ComboBox cComboBox = (RoboCoder.WebControls.ComboBox)cCriteria.FindControl("xMemberId10");
+                    if (cComboBox != null) { SetMemberId272((RoboCoder.WebControls.ComboBox)e.Item.FindControl("cMemberId272"), cComboBox.SelectedValue, cAdmSredTimeGrid.EditItem); }
+                }
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+93~@~4~@~Pull up the member or create one~@~Member for SR&ED: Pull up the member or create one~@~Pull up associated member or create one if not exist~@~122~@~3090~@~~@~1~@~            if (cAdmMemberGrid.EditIndex > -1 && cAdmMemberGrid.Items.Count > cAdmMemberGrid.EditIndex)
+            {
+                RoboCoder.WebControls.ComboBox UserId = (RoboCoder.WebControls.ComboBox)sender;
+                if (!string.IsNullOrEmpty(UserId.SelectedValue))
+                {
+                    RoboCoder.WebControls.ComboBox MemberId = ((RoboCoder.WebControls.ComboBox)cAdmMemberGrid.Items[cAdmMemberGrid.EditIndex].FindControl("cMemberId274"));
+                    DataView dv = (DataView)UserId.DataSource; dv.RowFilter = "UserId274=" + UserId.SelectedValue;
+                    if (string.IsNullOrEmpty(dv[0]["MemberId"].ToString()))
+                    {
+                        DataTable dtMebr = (new AdminSystem()).GetDdl(int.Parse(UserId.SelectedValue), "WrAddMember", false, false, 1, string.Empty, LcAppConnString, LcAppPw, dv[0]["UserId274Text"].ToString(), base.LImpr, base.LCurr);
+                        if (dtMebr != null && dtMebr.Rows.Count > 0)
+                        {
+                            SetMemberId274(MemberId, dtMebr.Rows[0]["MemberId"].ToString(), cAdmMemberGrid.EditItem);
+                        }
+                    }
+                    else
+                    {
+                        SetMemberId274(MemberId, dv[0]["MemberId"].ToString(), cAdmMemberGrid.EditItem);
+                    }
+                }
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+94~@~4~@~Hide/Show appropriate fields~@~Screen Definition: Hide/Show appropriate fields~@~Hide/Show appropriate fields based on screen type~@~9~@~45~@~~@~1~@~            if (cScreenTypeId15.SelectedValue == "5")       // Tab-folder only.
+            {
+                cSearchTableId15P1.Visible = true; cSearchTableId15P2.Visible = true;
+                cSearchId15P1.Visible = true; cSearchId15P2.Visible = true;
+                cSearchIdR15P1.Visible = true; cSearchIdR15P2.Visible = true;
+                cSearchAscending15P1.Visible = true; cSearchAscending15P2.Visible = true;
+                cSearchDtlId15P1.Visible = true; cSearchDtlId15P2.Visible = true;
+                cSearchDtlIdR15P1.Visible = true; cSearchDtlIdR15P2.Visible = true;
+                cSearchUrlId15P1.Visible = true; cSearchUrlId15P2.Visible = true;
+                cSearchImgId15P1.Visible = true; cSearchImgId15P2.Visible = true;
+                SetDetailTableId15(cDetailTableId15, string.Empty); cDetailTableId15P1.Visible = false; cDetailTableId15P2.Visible = false;
+                cGridRows15P1.Visible = false; cGridRows15P2.Visible = false;
+                cHasDeleteAll15P1.Visible = false; cHasDeleteAll15P2.Visible = false;
+                cShowGridHead15P1.Visible = false; cShowGridHead15P2.Visible = false;
+            }
+            else if (cScreenTypeId15.SelectedValue == "7")       // Data Grid only.
+            {
+                cSearchTableId15P1.Visible = false; cSearchTableId15P2.Visible = false;
+                cSearchId15P1.Visible = false; cSearchId15P2.Visible = false;
+                cSearchIdR15P1.Visible = false; cSearchIdR15P2.Visible = false;
+                cSearchAscending15P1.Visible = false; cSearchAscending15P2.Visible = false;
+                cSearchDtlId15P1.Visible = false; cSearchDtlId15P2.Visible = false;
+                cSearchDtlIdR15P1.Visible = false; cSearchDtlIdR15P2.Visible = false;
+                cSearchUrlId15P1.Visible = false; cSearchUrlId15P2.Visible = false;
+                cSearchImgId15P1.Visible = false; cSearchImgId15P2.Visible = false;
+                SetDetailTableId15(cDetailTableId15, string.Empty); cDetailTableId15P1.Visible = false; cDetailTableId15P2.Visible = false;
+                cGridRows15P1.Visible = true; cGridRows15P2.Visible = true;
+                cHasDeleteAll15P1.Visible = true; cHasDeleteAll15P2.Visible = true;
+                cShowGridHead15P1.Visible = true; cShowGridHead15P2.Visible = true;
+            }
+            else
+            {
+                cSearchTableId15P1.Visible = true; cSearchTableId15P2.Visible = true;
+                cSearchId15P1.Visible = true; cSearchId15P2.Visible = true;
+                cSearchIdR15P1.Visible = true; cSearchIdR15P2.Visible = true;
+                cSearchAscending15P1.Visible = true; cSearchAscending15P2.Visible = true;
+                cSearchDtlId15P1.Visible = true; cSearchDtlId15P2.Visible = true;
+                cSearchDtlIdR15P1.Visible = true; cSearchDtlIdR15P2.Visible = true;
+                cSearchUrlId15P1.Visible = true; cSearchUrlId15P2.Visible = true;
+                cSearchImgId15P1.Visible = true; cSearchImgId15P2.Visible = true;
+                cDetailTableId15P1.Visible = true; cDetailTableId15P2.Visible = true;
+                cGridRows15P1.Visible = true; cGridRows15P2.Visible = true;
+                cHasDeleteAll15P1.Visible = true; cHasDeleteAll15P2.Visible = true;
+                cShowGridHead15P1.Visible = true; cShowGridHead15P2.Visible = true;
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+95~@~4~@~Custom function to hide or show icons/upload~@~Data Table and Columns: Custom function to hide or show icons/upload~@~Custom function to hide or show icons and upload panel~@~2~@~~@~~@~16~@~        private void HideShowIcons(object sender, EventArgs e)
+        {
+            if (Config.DeployType == "PRD" && base.SystemsList.Rows.Find(cSystemId.SelectedValue)["dbAppDatabase"].ToString() != base.CPrj.EntityCode + "View")
+            {
+                cSyncByDb.Visible = false; cAnalToDb.Visible = false; cModelSample.Visible = false; cSyncToDb.Visible = false;
+            }
+            else
+            {
+                cSyncByDb.Visible = true; cAnalToDb.Visible = true; cModelSample.Visible = true; cSyncToDb.Visible = true;
+            }
+        }
+
+        private void HideShowUpload(bool bHide)
+        {
+            if (bHide)
+            {
+                cUploadSheetP1.Visible = false; cUploadSheetP2.Visible = false;
+                cSheetNameListP1.Visible = false; cSheetNameListP2.Visible = false;
+                cRowsToExamineP1.Visible = false; cRowsToExamineP2.Visible = false;
+                cBtnScanP1.Visible = false; cBtnScanP2.Visible = false;
+            }
+            else
+            {
+                cUploadSheetP1.Visible = true; cUploadSheetP2.Visible = true;
+                cSheetNameListP1.Visible = true; cSheetNameListP2.Visible = true;
+                cRowsToExamineP1.Visible = true; cRowsToExamineP2.Visible = true;
+                cBtnScanP1.Visible = true; cBtnScanP2.Visible = true;
+            }
+        }~@~~@~~@~~@~~@~~@~~@~~@~
+96~@~4~@~Tie hide / show icons to cSystemId event~@~Data Table and Columns: Tie hide / show icons to cSystemId event~@~Tie hide / show icons to cSystemId event~@~2~@~~@~~@~18~@~            cSystemId.SelectedIndexChanged += HideShowIcons;
+~@~~@~~@~~@~~@~~@~~@~~@~
+97~@~4~@~Make sure essential fields are not copied~@~User Manager: Make sure essential fields are not copied~@~Make sure essential fields are not copied~@~1~@~~@~8~@~6~@~            cFailedAttempt1.Text = string.Empty;
+            cLastSuccessDt1.Text = string.Empty;
+            cLastFailedDt1.Text = string.Empty;
+            cHintQuestionId1.ClearSelection();
+            cHintAnswer1.Text = string.Empty;
+            cModifiedOn1.Text = string.Empty;~@~~@~~@~~@~~@~~@~~@~~@~
+98~@~4~@~Make sure essential fields are not copied~@~Timed-Job Schedule: Make sure essential fields are not copied~@~Make sure essential fields are not copied~@~118~@~~@~8~@~6~@~            cLastRun264.Text = string.Empty;
+            cNextRun264.Text = string.Empty;~@~~@~~@~~@~~@~~@~~@~~@~
+99~@~4~@~Usage calendar display (2 of 2)~@~User Manager: Usage calendar display (2 of 2)~@~Usage calendar display (2 of 2)~@~1~@~~@~~@~11~@~            if (!string.IsNullOrEmpty(cUsrId1.Text))
+            {
+                DataView dv = new DataView((new AdminSystem()).GetDdl(1, "WrGetUageCalender", false, true, 0, cUsrId1.Text, (string)Session[KEY_sysConnectionString], LcAppPw, string.Empty, base.LImpr, base.LCurr));
+                /* Must return date in yyyy/mm/dd format (111) */
+                System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>> dayList = (from r in dv.Table.AsEnumerable()
+                select new System.Collections.Generic.Dictionary<string, string>
+                { 
+                    { "date", r["UsageDt"].ToString()},
+                    { "content", r["Cnt"].ToString()},
+                    { "color", r["Color"].ToString()},
+                    { "url", string.Empty},
+                }
+                ).ToList();
+                string resetYear = string.Empty;
+                string resetMonth = string.Empty;
+                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                ScriptManager.RegisterStartupScript(cMsgContent, typeof(Label), "CalendarSel", @"<script type='text/javascript' language='javascript'>DC={resetYear:'" + resetYear + "',resetMonth:'" + resetMonth + "',data:" + jss.Serialize(dayList) + @"};</script>", false);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(cMsgContent, typeof(Label), "CalendarSel", @"<script type='text/javascript' language='javascript'>DC={};</script>", false);
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+100~@~4~@~Usage calendar display (1 of 2) and height customization~@~User Manager: Usage calendar display (1 of 2) and height customization~@~Usage calendar display (1 of 2) and height customization~@~1~@~~@~~@~18~@~            if (!IsPostBack)
+            {
+                string defaultYear = DateTime.Today.Year.ToString();
+                string defaultMonth = DateTime.Today.Month.ToString();
+                string init = "{colorMap:{'R':'less-hour', 'G':'norm-hour', 'B':'over-hour'}}";
+                string script =
+                @"<script type='text/javascript' language='javascript'>
+                DC={data:[]};
+                Sys.Application.add_load(function(){DrawCalenderPlanner(DC," + defaultYear + "," + defaultMonth + "," + init + ",'" + cUsageStat.ClientID + @"');});
+                </script>";
+                ScriptManager.RegisterStartupScript(cMsgContent, typeof(Label), "CalendarInit", script, false);
+            }
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "CalendarStyleCSS", @"<style>
+                .responsive-calendar .day {height:35px;}
+                .responsive-calendar .day.less-hour {background-color:#e32403;}
+                .responsive-calendar .day.over-hour {background-color:#4100d9;}
+                .responsive-calendar .day.norm-hour {background-color:#00cf80;}
+            </style>", false);~@~~@~~@~~@~~@~~@~~@~~@~
+102~@~4~@~Set filter on criteria "User Name" change~@~User Manager: Set filter on criteria "User Name" change~@~Set filter to "All Users" or default on criteria "User Name"~@~1~@~~@~~@~19~@~                if (!string.IsNullOrEmpty(((TextBox)cCriteria.FindControl("x" + (GetScrCriteria())[1]["ColumnName"].ToString())).Text)) { cFilterId.SelectedIndex = 4; }~@~~@~~@~~@~~@~~@~~@~~@~
+103~@~4~@~Paste default script~@~Section Object: Paste default script~@~Paste default script for special type~@~1001~@~3123~@~~@~1~@~            if (cLinkTypeCd1277.SelectedValue == "CRS")
+            {
+                cPageObjSrp1277.Text = "    $(window).load(function () { $('.flexslider').flexslider({ animation:'fade', pauseOnHover:true, slideshowSpeed:7000 }); });";
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+106~@~4~@~Hide irrelevant Module dropdown~@~Section Object: Hide irrelevant Module dropdown~@~Hide irrelevant Module dropdown.~@~1001~@~~@~~@~9~@~                cSystem.Visible = false;~@~~@~~@~~@~~@~~@~~@~~@~
+107~@~4~@~Synchronize the label with the controlling menu~@~Menu Label: Synchronize the label with the controlling menu~@~Synchronize the label with the controlling menu on the fly.~@~36~@~~@~11~@~10~@~            string menuText = ""; string menuCulture;
+            DataTable dtUpdated = (DataTable)Session[KEY_dtAdmMenuHlpGrid];
+            string defaultMenuText = "";
+            foreach (DataRow dr in dtUpdated.Rows)
+            {
+                menuCulture = dr["CultureId40"].ToString();
+                if (menuCulture == "1") { defaultMenuText = dr["MenuText40"].ToString(); }
+                if (menuCulture == base.LUser.CultureId.ToString()) {menuText = dr["MenuText40"].ToString();}
+            }
+
+            if (string.IsNullOrEmpty(menuText)){menuText = defaultMenuText;}
+
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "tmp", @"
+                    <script type='text/javascript'>
+                        passToParent('" + menuText + @"');
+                        function passToParent(val)
+                        {
+                            var menuText;
+                            if ( (menuText = window.parent) && (menuText = menuText.updMenuText) && ('function' == typeof menuText || 'object' == typeof menuText) ){
+                                menuText(val);
+                            }
+                        }
+                    </script>
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+108~@~4~@~Store the url for launch later~@~Menu Item: Store the url for launch later~@~Store the url for launch later by the controlling menu.~@~35~@~~@~11~@~10~@~            string MenuUrl;
+            string ScreenId = cScreenId39.SelectedValue;
+            string WizardId = cWizardId39.SelectedValue;
+            string ReportId = cReportId39.SelectedValue;
+            string StaticPgId = cStaticPgId39.SelectedValue;
+            if (!string.IsNullOrEmpty(ScreenId)) { MenuUrl = "AdmScreen.aspx?typ=n&key=" + ScreenId; }
+            else if (!string.IsNullOrEmpty(WizardId)) { MenuUrl = "AdmWizardObj.aspx?typ=n&key=" + WizardId; }
+            else if (!string.IsNullOrEmpty(ReportId)) { MenuUrl = "AdmReport.aspx?typ=n&key=" + ReportId; }
+            else if (!string.IsNullOrEmpty(StaticPgId)) { MenuUrl = "AdmStaticPg.aspx?typ=n&key=" + StaticPgId; }
+            else { MenuUrl = ""; }
+
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "tmp", @"
+                    <script type='text/javascript'>
+                        passToParent('" + MenuUrl + @"');
+                        function passToParent(val)
+                        {
+                            var menuUrl;
+                            if ( (menuUrl = window.parent) && (menuUrl = menuUrl.updMenuUrl) && ('function' == typeof menuUrl || 'object' == typeof menuUrl) ){
+                                menuUrl(val);
+                            }
+                        }
+                    </script>
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+123~@~4~@~Testing lunar calendar conversion~@~Release Tracking: Testing lunar calendar conversion~@~Testing lunar calendar conversion~@~82~@~1344~@~~@~1~@~            try
+            {
+                DateTime vdt = DateTime.Parse(cVersionDt135.Text);
+                cLunarDt.Text = "[" + LunarCal.GetLCYearZodiac(vdt) + "] " + LunarCal.GetLCDateTimeForChina(vdt);
+            }
+            catch { }~@~~@~~@~~@~~@~~@~~@~~@~
+124~@~4~@~Replace the screen with the entire object tree.~@~Object IDE: Replace the screen with the entire object tree.~@~Replace the screen with the entire object tree.~@~1007~@~~@~~@~11~@~            /* This code was after Add New Tab Button
+            <a id='folderBtn' href='#' onclick='showFolderSec(); return false;'>Folder</a>
+            <a id='grdBtn' href='#' onclick='showGrdSec(); return false;'>Grid</a>
+            <a id='objList' title='Click here to adjust the layout graphically.'> --> IDE: OBJECT LIST</a>
+            <a id='objGraphic' title='Click here to adjust the layout via a tree list.'> --> IDE: SCREEN LAYOUT</a>
+            <input id='cbAllTab' type='checkbox' onchange='ShowAllTab(this); return false;'>SHOW ALL TABS</input>
+            */
+            LiteralControl draggableColumn = new LiteralControl();
+            string columnCnt = @"
+                <div style='display: table; border-spacing: 10px 0; border-collapse: separate; width: 100%; background: rgba(255,255,255,0.4); padding: 10px 0; border-radius: 4px;'>
+                    <div style='display: table-row'>
+                        <div class='pageCnt'>
+                            <div id = 'objTreeList'>
+                                <div class='pageBtnSec'>
+                                    
+                                    <a id='prevScreen' title='Click here to preivew the actual screen.' href='#'>VIEW</a>            
+                                    <div class='tabBtnSection'><button title='ADD NEW TAB' onclick='AddTab(this); return false;' class='AddTabBtn'>ADD NEW TAB</button></div> 
+                                    <div class='showAllTabSection'>
+                                        <a id='showTabHor' title = 'Click here to change tab folders to a horizontal view; this will also inhibit fields to be moved across tabs.' onclick='ShowTabHor(this); return false;'>Tab -> Horizontal</a>
+                                        <a id='showTabVer' title = 'Click here to change tab folders to a vertical view; this will also enable fields to be moved across tabs.' onclick='ShowTabVer(this); return false;'>Tab -> Vertical</a>
+                                    </div>   
+                                    <a id='tabProLink' href='#' onclick='loadTabProUrl(); return false;'>TAB PROPERTY</a>
+                                    <a id='objProLink' href='#' onclick='loadProUrl(); return false;'>OBJ PROPERTY</a>
+                                    <a id='objPerLink' href='#' onclick='loadPerUrl(); return false;'>OBJ PERMISSION</a>
+                                    <a id='objLblLink' href='#' onclick='loadLblUrl(); return false;'>OBJ LABEL</a>
+                                </div>
+                            </div>
+                            <div class='pageListCnt'>
+                                <div class='page'>
+                                    <ol id='columnMap' class='sortable ui-sortable'></ol>
+                                    <div><button class='addTabBtn' onclick='AddScreenTab(); return false;'>ADD NEW TAB</button></div>
+                                    <div><button class='addObj' onclick='AddScreenObj(); return false;'>ADD NEW OBJECT</button></div>
+                                </div>
+                                <div class='pageIframe'>
+                                    <div id='navigateCntMsg' class='navigateCntMsg'>
+                                        <p>There is no item selected. Please select the item from the list on the left to change the property.</p>
+                                    </div>
+                                    <div class='iFrameIdt'>
+                                        <img src='./images/indicator.gif' />
+                                        <span>Page Loading ...</span>
+                                    </div>
+                                    <iframe id='listIframe' frameborder='0' scrolling='auto'></iframe>
+                                </div>
+                            </div>
+                            <div id='columnMapCnt' class='sortable ui-sortable'></div>
+                        </div>
+                    </div>
+                </div>";
+            draggableColumn.Text = columnCnt;
+            LstPHolder.Controls.Add(draggableColumn);
+            LstPHolder.Visible = true;
+
+            if (!string.IsNullOrEmpty(Request.QueryString["key"]) && bUseCri.Value == string.Empty)
+            {
+                key = Request.QueryString["key"].ToString();
+                cScreenSearch.Visible = false; cSystem.Visible = false; cEditButton.Visible = true;
+            }
+            RoboCoder.WebControls.ComboBox cb = (RoboCoder.WebControls.ComboBox)cCriteria.FindControl("xScreenId10");
+            string screenId = cb.SelectedValue;
+            DataTable dtItms = (new WebRule()).WrGetScreenObj(screenId, base.LUser.CultureId, null, (string)Session[KEY_sysConnectionString], LcAppPw);
+            if (dtItms.Rows.Count > 0)
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("[");
+                int x = 0;
+                foreach (DataRow dr in dtItms.Rows)
+                {
+                    if (x > 0) { sb.Append(","); }
+
+                    sb.Append("{");
+                    sb.Append("\"ScreenTabId\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["ScreenTabId"].ToString()));
+                    sb.Append(", \"TabFolderName\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["TabFolderName"].ToString().Replace("\"", "\\\"")));
+                    sb.Append(", \"TabFolderOrder\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["TabFolderOrder"].ToString()));
+                    sb.Append(", \"ScreenObjId\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["ScreenObjId"].ToString()));
+                    sb.Append(", \"MasterTable\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["MasterTable"].ToString()));
+                    sb.Append(", \"NewGroupRow\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["NewGroupRow"].ToString()));
+                    sb.Append(", \"ScreenTypeName\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["ScreenTypeName"].ToString()));
+                    sb.Append(", \"ColumnName\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["ColumnName"].ToString().Replace("\"", "\\\"")));
+                    sb.Append(", \"TabIndex\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["TabIndex"].ToString()));
+                    sb.Append(", \"ColCssClass\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["ColCssClass"].ToString()));
+                    sb.Append(", \"RowCssClass\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["RowCssClass"].ToString()));
+                    sb.Append(", \"GridGrpCd\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["GridGrpCd"].ToString()));
+                    sb.Append(", \"ColumnHeight\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["ColumnHeight"].ToString()));
+                    sb.Append(", \"ColumnHeader\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["ColumnHeader"].ToString().Replace("\"", "\\\"")));
+                    sb.Append(", \"ProgramName\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["ProgramName"].ToString().Replace("\"", "\\\"")));
+                    sb.Append(", \"RequiredValid\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["RequiredValid"].ToString()));
+                    sb.Append(", \"DisplayMode\": ");
+                    sb.Append(string.Format("\"{0}\"", dr["DisplayMode"].ToString()));
+                    sb.Append("}");
+                    x++;
+                }
+
+                sb.Append("]");
+                TextBox columnItemList = cNaviPanel.FindControl("columnItemList") as TextBox;
+                columnItemList.Text = sb.ToString();
+                TextBox tbScreenId = cNaviPanel.FindControl("tbScreenId") as TextBox;
+                tbScreenId.Text = screenId.ToString();
+                TextBox tbDeleteId = cNaviPanel.FindControl("tbDeleteId") as TextBox;
+                tbDeleteId.Text = "";
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+125~@~4~@~Initialization~@~Object IDE: Initialization~@~Initialization~@~1007~@~~@~~@~18~@~            TextBox tbURL = new TextBox();
+            tbURL.CssClass = "tbURL";
+            tbURL.ID = "tbURL";
+
+            TextBox columnItemList = new TextBox();
+            columnItemList.CssClass = "columnItemList";
+            columnItemList.ID = "columnItemList";
+
+            TextBox tabList = new TextBox();
+            tabList.CssClass = "tabList";
+            tabList.ID = "tabList";
+
+            TextBox tbScreenId = new TextBox();
+            tbScreenId.CssClass = "tbScreenId";
+            tbScreenId.ID = "tbScreenId";
+
+            TextBox tbDeleteId = new TextBox();
+            tbDeleteId.CssClass = "tbDeleteId";
+            tbDeleteId.ID = "tbDeleteId";
+
+            cNaviPanel.Controls.Add(tbURL);
+            cNaviPanel.Controls.Add(columnItemList);
+            cNaviPanel.Controls.Add(tabList);
+            cNaviPanel.Controls.Add(tbScreenId);
+            cNaviPanel.Controls.Add(tbDeleteId);~@~~@~~@~~@~~@~~@~~@~~@~
+126~@~4~@~Insert code snippet to pop up window from TabFolder~@~Web Rule: Insert code snippet to pop up window from TabFolder~@~Insert code snippet to pop up window from TabFolder~@~80~@~3310~@~~@~1~@~            StringBuilder sb = new StringBuilder();
+            sb.Append("            // Apply to either 'List Selection' or 'Page Load' event;" + Environment.NewLine);
+            sb.Append("            // SearchLink(url, keyCtrlID, dlgWidth, dlgHeight)" + Environment.NewLine);
+            sb.Append("            // keyCtrlID is needed for client-side communication without a postback;" + Environment.NewLine);
+            sb.Append("            // The last two parameters of SearchLink are defaulted '70%' width and '70vh' height;" + Environment.NewLine);
+            sb.Append("            /*" + Environment.NewLine);
+            sb.Append("            c???.Attributes[\"onclick\"] = \"SearchLink('??.aspx?typ=N&key=\" + c?.Text + \"','\" + \"','',''); return false;\";" + Environment.NewLine);
+            sb.Append("            */" + Environment.NewLine);
+            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~
+127~@~4~@~Insert code snippet to send emails~@~Web Rule: Insert code snippet to send emails~@~Insert code snippet to send emails~@~80~@~3311~@~~@~1~@~            StringBuilder sb = new StringBuilder();
+            sb.Append("            // Three syntaxes:" + Environment.NewLine);
+            sb.Append("            // SendEmail(subject, body, to, from, reply to, reply from, title, isHtml)" + Environment.NewLine);
+            sb.Append("            // SendEmail(subject, body, to, from, reply to, reply from, title, isHtml, smtp)" + Environment.NewLine);
+            sb.Append("            // SendEmail(subject, body, to, from, reply to, reply from, title, isHtml, attachment)" + Environment.NewLine);
+            sb.Append("            // 'title' is relevant on 'amazon.aws and localhost' smtp or viewed by outsiders; it is ignored when 'smtp.office365.com' is used and viewed by 365 users." + Environment.NewLine);
+            sb.Append("            // The 'smtp' in the 2nd syntax can be used to override the smtp setting in Web.config." + Environment.NewLine);
+            sb.Append("            /*" + Environment.NewLine);
+            sb.Append("            string sbj = \"\";" + Environment.NewLine);
+            sb.Append("            string url = ((Config.SslUrl).StartsWith(\"http\") ? (new Uri(Config.SslUrl)) : Request.Url).GetLeftPart(UriPartial.Scheme) + Request.Url.Host + Request.Url.AbsolutePath.ToLower();" + Environment.NewLine);
+            sb.Append("            string bod = \"<html><body><div><a href='\" + url.ToString() + \"?key=\" + c??.Text + \"'>Please click here to ...</a></div></body></html>\";" + Environment.NewLine);
+            sb.Append("            string mto = c?.Text;" + Environment.NewLine);
+            sb.Append("            string mfr = base.SysCustServEmail(base.LCurr.SystemId);" + Environment.NewLine);
+            sb.Append("            Int32 iSent = base.SendEmail(sbj, bod, mto, mfr, mfr, \"\", true);" + Environment.NewLine);
+            sb.Append("            if (iSent > 8000) { throw new Exception(\"Daily limit of 8,000 emails sent exceeded.\"); }" + Environment.NewLine);
+            sb.Append("            */" + Environment.NewLine);
+            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~
+128~@~4~@~Insert code snippet to check then save~@~Web Rule: Insert code snippet to check then save~@~Insert code snippet to checking something then save~@~80~@~3313~@~~@~1~@~            StringBuilder sb = new StringBuilder();
+            sb.Append("            /*" + Environment.NewLine);
+            sb.Append("            if (c???.Text != string.Empty && !c??.Checked) {" + Environment.NewLine);
+            sb.Append("                c??.Checked = true;" + Environment.NewLine);
+            sb.Append("                try {" + Environment.NewLine);
+            sb.Append("                    SaveDb(sender, new EventArgs());" + Environment.NewLine);
+            sb.Append("                    bInfoNow.Value = \"Y\"; PreMsgPopup(\"This ... has been finalized and ready ...\");" + Environment.NewLine);
+            sb.Append("                }" + Environment.NewLine);
+            sb.Append("                catch (Exception err) { c??.Checked = false; bErrNow.Value = \"Y\"; PreMsgPopup(err.Message); }" + Environment.NewLine);
+            sb.Append("            }" + Environment.NewLine);
+            sb.Append("            */" + Environment.NewLine);
+            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~
+131~@~4~@~Synchronize the label with the controlling object~@~Screen Object Label: Synchronize the label with the controlling object~@~Synchronize the label with the controlling object~@~1006~@~~@~11~@~10~@~            DataTable dtHlp = (new AdminSystem()).GetDtlById(10, "WrGetScreenObjById", cScreenObjId14.Text, (string)Session[KEY_sysConnectionString], LcAppPw, 0, base.LImpr, base.LCurr);
+            string objText = dtHlp.Rows[0]["ColumnHeader21"].ToString();
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "tmp", @"
+                    <script type='text/javascript'>
+                        passToParent('" + objText + @"');
+                        function passToParent(val)
+                        {
+                            var objText;
+                            if ( (objText = window.parent) && (objText = objText.updObjText) && ('function' == typeof objText || 'object' == typeof objText) ){ objText(val); }
+                        }
+                    </script>
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+134~@~4~@~Synchronize the label with the controlling object~@~Screen Tab Folders: Synchronize the label with the controlling object~@~Synchronize the label with the controlling object~@~54~@~~@~11~@~10~@~            string tabText = "";
+            DataTable dtUpdated = (DataTable)Session[KEY_dtAdmScreenTabGrid];
+            foreach (DataRow dr in dtUpdated.Rows)
+            {
+                if (dr["CultureId80"].ToString() == base.LUser.CultureId.ToString()) { tabText = dr["TabFolderName80"].ToString(); break; }
+            }
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "tmp", @"
+                    <script type='text/javascript'>
+                        passToParent('" + tabText + @"');
+                        function passToParent(val)
+                        {
+                            var tabText;
+                            if ( (tabText = window.parent) && (tabText = tabText.updTabText) && ('function' == typeof tabText || 'object' == typeof tabText) ){ tabText(val); }
+                        }
+                    </script>
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+135~@~4~@~Synchronize the label with the controlling object~@~Screen Object: Synchronize the label with the controlling object~@~Synchronize the label with the controlling object~@~10~@~~@~11~@~10~@~            int filterId = 0;
+            string key = string.Empty;
+            if (!string.IsNullOrEmpty(Request.QueryString["key"]) && bUseCri.Value == string.Empty) { key = Request.QueryString["key"].ToString(); }
+            else if (Utils.IsInt(cFilterId.SelectedValue)) { filterId = int.Parse(cFilterId.SelectedValue); }
+            DataTable dtItms = (new WebRule()).WrGetScreenObj(null, base.LUser.CultureId, cAdmScreenObj10List.SelectedValue,(string)Session[KEY_sysConnectionString], LcAppPw);
+
+            string checkMaster = dtItms.Rows[0]["MasterTable"].ToString();
+            string objDisMode = dtItms.Rows[0]["DisplayMode"].ToString();
+            string disHeight = dtItms.Rows[0]["ColumnHeight"].ToString();
+            string RequiredValid = dtItms.Rows[0]["RequiredValid"].ToString();
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "tmp", @"
+                    <script type='text/javascript'>
+                        passMasterToParent('" + checkMaster + @"');
+                        passHeightToParent('" + disHeight + @"' , '" + objDisMode + @"');
+                        passMandatoryToParent('" + RequiredValid + @"');
+
+                        function passMasterToParent(val)
+                        {
+                            var objText;
+                            if ( (objText = window.parent) && (objText = objText.updObjMaster) && ('function' == typeof objText || 'object' == typeof objText) ){ objText(val); }
+                        }
+                         function passHeightToParent(height, type)
+                        {
+                            var objHeight;
+                            if ( (objHeight = window.parent) && (objHeight = objHeight.updObjHeight) && ('function' == typeof objHeight || 'object' == typeof objHeight) ){ objHeight(height, type); }
+                        }
+                        
+                        function passMandatoryToParent(val)
+                        {
+                            var objMandatory;
+                            if ( (objMandatory = window.parent) && (objMandatory = objMandatory.updObjMandatory) && ('function' == typeof objMandatory || 'object' == typeof objMandatory) ){ objMandatory(val); }
+                        }
+                    </script>
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+138~@~4~@~Create code table screen when requested~@~Screen Definition: Create code table screen when requested~@~Create code table screen when requested~@~9~@~~@~~@~9~@~                if (!string.IsNullOrEmpty(Request.QueryString["ctb"]))
+                {
+                    if (!string.IsNullOrEmpty(Request.QueryString["cid"]))
+                    {
+                        cProgramName15.Text = Request.QueryString["ctb"].ToString();
+                        SetScreenTypeId15(cScreenTypeId15, "7"); cScreenTypeId15_SelectedIndexChanged(cScreenTypeId15, new EventArgs());
+                        SetMasterTableId15(cMasterTableId15, Request.QueryString["cid"].ToString());
+                        cSaveButton_Click(sender, new EventArgs());
+                    }
+                    this.Redirect((((Config.SslUrl).StartsWith("http") ? (new Uri(Config.SslUrl)) : Request.Url).GetLeftPart(UriPartial.Scheme) + Request.Url.Host + Request.Url.AbsolutePath.ToLower()).Replace("admscreen", Request.QueryString["ctb"].ToString()) + "?msy=" + LCurr.DbId.ToString());
+                }~@~~@~~@~~@~~@~~@~~@~~@~
+142~@~4~@~Initialize MasterTable flag~@~Screen Object: Initialize MasterTable flag~@~Initialize MasterTable flag~@~10~@~74~@~~@~1~@~            string mtb = (new RO.WebRules.WebRule()).WrGetMasterTable(cScreenId14.Text, cColumnId14.SelectedValue, (string)Session[KEY_sysConnectionString], LcAppPw);
+            if (string.IsNullOrEmpty(mtb)) { cMasterTable14.Enabled = true; } else { cMasterTable14.Checked = GetBool(mtb); cMasterTable14.Enabled = false; }
+            cMasterTable14_CheckedChanged(sender, new EventArgs());~@~~@~~@~~@~~@~~@~~@~~@~
+143~@~4~@~Initialize Hide on ...~@~Screen Object: Initialize Hide on ...~@~Initialize Hide on Mobile & Tablet~@~10~@~73~@~~@~1~@~            DataTable dt = (DataTable)Session[KEY_dtScreenId14];
+            DataView dv = dt != null ? dt.DefaultView : null;
+            dv.RowFilter = "ScreenId14=" + cScreenId14.SelectedValue;
+            if (cMasterTable14.Checked && "5,6".IndexOf(dv[0]["ScreenTypeId"].ToString()) >= 0)
+            {
+                cHideOnMobile14.Checked = false; cHideOnMobile14P1.Visible = false; cHideOnMobile14P2.Visible = false;
+                cHideOnTablet14.Checked = false; cHideOnTablet14P1.Visible = false; cHideOnTablet14P2.Visible = false;
+                cDtlLstPosId14.ClearSelection(); cDtlLstPosId14P1.Visible = false; cDtlLstPosId14P2.Visible = false;
+            }
+            else
+            {
+                cHideOnMobile14P1.Visible = true; cHideOnMobile14P2.Visible = true;
+                cHideOnTablet14P1.Visible = true; cHideOnTablet14P2.Visible = true;
+                cDtlLstPosId14P1.Visible = true; cDtlLstPosId14P2.Visible = true;
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+144~@~4~@~Hide fields, change order, etc.~@~Server Rule: Hide fields, change order, etc.~@~Hide appropriate fields and change execution order, etc.~@~14~@~163~@~~@~1~@~            if (cBeforeCRUD24.SelectedValue == "C")
+            {
+                cMasterTable24.Checked = true; cMasterTable24P1.Visible = false; cMasterTable24P2.Visible = false;
+            }
+            else { cMasterTable24P1.Visible = true; cMasterTable24P2.Visible = true; }~@~~@~~@~~@~~@~~@~~@~~@~
+147~@~4~@~Show hints (after save button click)~@~Timed-Job Schedule: Show hints (after save button click)~@~Show hints (after save button click) to bypass post-back issue~@~118~@~~@~11~@~6~@~            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateMenuList", @"
+                <script>
+                    Sys.Application.add_load(function (e) { getCronJobMsg(); });
+                </script>
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+148~@~4~@~Show hints (after selecting a record)~@~Timed-Job Schedule: Show hints (after selecting a record)~@~Show hints (after selecting a record)~@~118~@~~@~~@~11~@~            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateMenuList", @"
+                <script>
+                    Sys.Application.add_load(function (e) {
+                        function getCronJobMsg(){
+                            var year = $('#" + cYear264.ClientID + @"');
+                            var month = $('#" + cMonth264.ClientID + @"');
+                            var day = $('#" + cDay264.ClientID + @"');
+                            var hour = $('#" + cHour264.ClientID + @"');
+                            var min = $('#" + cMinute264.ClientID + @"');
+                            var dayOfWeek = $('#" + cDayOfWeek264.ClientID + @"');
+                            var cronJobMsg = $('#" + cCronJobMsg.ClientID + @"');
+                            var dayOfWeekCnt = '', monthCnt = '';
+
+                            if(dayOfWeek.val() == 0){dayOfWeekCnt='Sunday';}
+                            else if(dayOfWeek.val() == 1){dayOfWeekCnt='Monday';}
+                            else if(dayOfWeek.val() == 2){dayOfWeekCnt='Tuesday';}
+                            else if(dayOfWeek.val() == 3){dayOfWeekCnt='Wednesday';}
+                            else if(dayOfWeek.val() == 4){dayOfWeekCnt='Thursday';}
+                            else if(dayOfWeek.val() == 5){dayOfWeekCnt='Friday';}
+                            else if(dayOfWeek.val() == 6){dayOfWeekCnt='Saturday';}    
+                            else {dayOfWeekCnt = '(not valid Day-of-Week)'}    
+
+                            if(month.val() == 1){monthCnt='January';}
+                            else if(month.val() == 2){monthCnt='February';}
+                            else if(month.val() == 3){monthCnt='March';}
+                            else if(month.val() == 4){monthCnt='April';}
+                            else if(month.val() == 5){monthCnt='May';}
+                            else if(month.val() == 6){monthCnt='June';}
+                            else if(month.val() == 7){monthCnt='July';}
+                            else if(month.val() == 8){monthCnt='August';}
+                            else if(month.val() == 9){monthCnt='September';}
+                            else if(month.val() == 10){monthCnt='October';}
+                            else if(month.val() == 11){monthCnt='November';}
+                            else if(month.val() == 12){monthCnt='December';}
+                            else{monthCnt= '(not valid month)'}
+                        
+                            var dateMsg = '', timeMsg = '';
+                            if(year.val() == '' && month.val() == '' && day.val() =='' && dayOfWeek.val() ==''){
+                                dateMsg = ' every day';
+                            }
+                            else if(year.val() == '' && month.val() == '' && day.val() =='' && dayOfWeek.val() !=''){
+                                dateMsg = ' on every ' + dayOfWeekCnt;
+                            }
+                            else if(year.val() == '' && month.val() == '' && day.val() !='' && dayOfWeek.val() ==''){
+                                dateMsg = ' on day ' + day.val() + ' of each month';
+                            }
+                            else if(year.val() == '' && month.val() != '' && day.val() =='' && dayOfWeek.val() ==''){
+                                dateMsg = ' on every day in ' + monthCnt;
+                            }
+                            else if(year.val() != '' && month.val() == '' && day.val() =='' && dayOfWeek.val() ==''){
+                                dateMsg = ' on every day in year ' + year.val();
+                            }
+                            else if(year.val() == '' && month.val() == '' && day.val() !='' && dayOfWeek.val() !=''){
+                                dateMsg = ' on day ' + day.val() + ' of each month if it is ' + dayOfWeekCnt;
+                            }
+                            else if(year.val() == '' && month.val() != '' && day.val() =='' && dayOfWeek.val() !=''){
+                                dateMsg = ' on every day in ' + monthCnt + ' if it is ' + dayOfWeekCnt;
+                            }
+                            else if(year.val() != '' && month.val() == '' && day.val() =='' && dayOfWeek.val() !=''){
+                                dateMsg = ' on every ' + dayOfWeekCnt + ' in year ' + year.val();
+                            }  
+                            else if(year.val() == '' && month.val() != '' && day.val() !='' && dayOfWeek.val() ==''){
+                                dateMsg = ' on day ' + day.val() + ' of ' + monthCnt;
+                            } 
+                            else if(year.val() != '' && month.val() == '' && day.val() !='' && dayOfWeek.val() ==''){
+                                dateMsg = ' on day ' + day.val() + ' of each month in year ' + year.val();
+                            }
+                            else if(year.val() != '' && month.val() != '' && day.val() =='' && dayOfWeek.val() ==''){
+                                dateMsg = ' on every day of ' + monthCnt + ' in year ' + year.val();
+                            }
+                            else if(year.val() == '' && month.val() != '' && day.val() !='' && dayOfWeek.val() !=''){
+                                dateMsg = ' on day ' + day.val() + ' of ' + monthCnt + ' if it is ' + dayOfWeekCnt;
+                            } 
+                            else if(year.val() != '' && month.val() != '' && day.val() !='' && dayOfWeek.val() ==''){
+                                dateMsg = ' on ' +  day.val() + ', ' + monthCnt + ', ' + year.val();
+                            }     
+                            else if(year.val() != '' && month.val() != '' && day.val() =='' && dayOfWeek.val() !=''){
+                                dateMsg = ' on every ' +  dayOfWeekCnt + ' in ' + monthCnt + ', ' + year.val();
+                            } 
+                            else if(year.val() != '' && month.val() == '' && day.val() !='' && dayOfWeek.val() !=''){
+                                dateMsg = ' on day ' +  day.val() + ' of each month in year ' + year.val() + ' if it is ' + dayOfWeekCnt;
+                            } 
+                            else if(year.val() != '' && month.val() != '' && day.val() !='' && dayOfWeek.val() !=''){
+                                dateMsg = ' on ' +  day.val() + ', ' + monthCnt + ', ' + year.val() + ' if it is ' + dayOfWeekCnt;
+                            }
+
+                            if (hour.val() == '' && min.val() ==''){
+                                timeMsg = ' every minute ';
+                            }
+                            else if (hour.val() == '' && min.val() !=''){
+                                timeMsg = ' every hour on minute ' + min.val() + ' (UTC) ';
+                            }
+                            else if (hour.val() != '' && min.val() ==''){
+                                timeMsg = ' every minute between ' + hour.val() + ':00 ' + ' and ' + (parseInt(hour.val()) + 1) +':00 (UTC)' ;
+                            }
+                            else if(hour.val() != '' && min.val() !=''){
+                                timeMsg = ' at ' + hour.val() + ':' + (min.val() > 9 ? '' : '0') + min.val() + ' (UTC) ';
+                            }
+                            
+                            cronJobMsg.html('This job will be run' + timeMsg + dateMsg + '.');
+                        }
+                        
+                        getCronJobMsg();                
+                        $('#" + cYear264.ClientID + @", #" + cMonth264.ClientID + @", #" + cDay264.ClientID + @", #" + cHour264.ClientID + @", #" + cMinute264.ClientID + @", #" + cDayOfWeek264.ClientID + @"').on('change', function() {                           
+                            getCronJobMsg();                       
+                        });
+                    });
+                </script>
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+149~@~4~@~Hide and show based on rule method~@~Client Rule: Hide and show based on rule method~@~Hide and show based on rule method~@~79~@~4073~@~~@~1~@~            cScreenId127.ClearSearch();
+            cReportId127.ClearSearch();
+            cScreenObjHlpId127.ClearSearch();
+            cScreenCriHlpId127.ClearSearch();
+            cReportCriHlpId127.ClearSearch();
+            SetRuleCntTypeId127(cRuleCntTypeId127, string.Empty);
+            cClientRuleProg127.Text = string.Empty;
+            SetClientScript127(cClientScript127, string.Empty);
+            cUserScriptEvent127.Text = string.Empty;
+            cUserScriptName127.Text = string.Empty;
+            cScriptParam127.Text = string.Empty;
+
+            if (cRuleMethodId127.SelectedValue == "1") //Embedded CSS/JS
+            {
+                cScreenId127P1.Visible = true; cScreenId127P2.Visible = true;
+                cScreenObjHlpId127P1.Visible = false; cScreenObjHlpId127P2.Visible = false;
+                cScreenCriHlpId127P1.Visible = false; cScreenCriHlpId127P2.Visible = false;
+                cReportId127P1.Visible = false; cReportId127P2.Visible = false;
+                cReportCriHlpId127P1.Visible = false; cReportCriHlpId127P2.Visible = false;
+                SetEScriptVisible(true); SetSScriptVisible(false); SetVScriptVisible(false);
+            }
+            else if (cRuleMethodId127.SelectedValue == "2") //Screen Column Stock Script
+            {
+                cScreenId127P1.Visible = true; cScreenId127P2.Visible = true;
+                cScreenObjHlpId127P1.Visible = true; cScreenObjHlpId127P2.Visible = true;
+                cScreenCriHlpId127P1.Visible = false; cScreenCriHlpId127P2.Visible = false;
+                cReportId127P1.Visible = false; cReportId127P2.Visible = false;
+                cReportCriHlpId127P1.Visible = false; cReportCriHlpId127P2.Visible = false;
+                SetEScriptVisible(false); SetSScriptVisible(true); SetVScriptVisible(false);
+            }
+            else if (cRuleMethodId127.SelectedValue == "3") //Screen Column Event Override
+            {
+                cScreenId127P1.Visible = true; cScreenId127P2.Visible = true;
+                cScreenObjHlpId127P1.Visible = true; cScreenObjHlpId127P2.Visible = true;
+                cScreenCriHlpId127P1.Visible = false; cScreenCriHlpId127P2.Visible = false;
+                cReportId127P1.Visible = false; cReportId127P2.Visible = false;
+                cReportCriHlpId127P1.Visible = false; cReportCriHlpId127P2.Visible = false;
+                SetEScriptVisible(false); SetSScriptVisible(false); SetVScriptVisible(true);
+            }
+            else if (cRuleMethodId127.SelectedValue == "4") //Screen Criteria Stock Script
+            {
+                cScreenId127P1.Visible = true; cScreenId127P2.Visible = true;
+                cScreenObjHlpId127P1.Visible = false; cScreenObjHlpId127P2.Visible = false;
+                cScreenCriHlpId127P1.Visible = true; cScreenCriHlpId127P2.Visible = true;
+                cReportId127P1.Visible = false; cReportId127P2.Visible = false;
+                cReportCriHlpId127P1.Visible = false; cReportCriHlpId127P2.Visible = false;
+                SetEScriptVisible(false); SetSScriptVisible(true); SetVScriptVisible(false);
+            }
+            else if (cRuleMethodId127.SelectedValue == "5") //Screen Criteria Event Override
+            {
+                cScreenId127P1.Visible = true; cScreenId127P2.Visible = true;
+                cScreenObjHlpId127P1.Visible = false; cScreenObjHlpId127P2.Visible = false;
+                cScreenCriHlpId127P1.Visible = true; cScreenCriHlpId127P2.Visible = true;
+                cReportId127P1.Visible = false; cReportId127P2.Visible = false;
+                cReportCriHlpId127P1.Visible = false; cReportCriHlpId127P2.Visible = false;
+                SetEScriptVisible(false); SetSScriptVisible(false); SetVScriptVisible(true);
+            }
+            else if (cRuleMethodId127.SelectedValue == "6") //Report Criteria Stock Script
+            {
+                cScreenId127P1.Visible = false; cScreenId127P2.Visible = false;
+                cScreenObjHlpId127P1.Visible = false; cScreenObjHlpId127P2.Visible = false;
+                cScreenCriHlpId127P1.Visible = false; cScreenCriHlpId127P2.Visible = false;
+                cReportId127P1.Visible = true; cReportId127P2.Visible = true;
+                cReportCriHlpId127P1.Visible = true; cReportCriHlpId127P2.Visible = true;
+                SetEScriptVisible(false); SetSScriptVisible(true); SetVScriptVisible(false);
+            }
+            else if (cRuleMethodId127.SelectedValue == "7") //Report Criteria Event Override
+            {
+                cScreenId127P1.Visible = false; cScreenId127P2.Visible = false;
+                cScreenObjHlpId127P1.Visible = false; cScreenObjHlpId127P2.Visible = false;
+                cScreenCriHlpId127P1.Visible = false; cScreenCriHlpId127P2.Visible = false;
+                cReportId127P1.Visible = true; cReportId127P2.Visible = true;
+                cReportCriHlpId127P1.Visible = true; cReportCriHlpId127P2.Visible = true;
+                SetEScriptVisible(false); SetSScriptVisible(false); SetVScriptVisible(true);
+            }
+            else
+            {
+                cScreenId127P1.Visible = false; cScreenId127P2.Visible = false;
+                cScreenObjHlpId127P1.Visible = false; cScreenObjHlpId127P2.Visible = false;
+                cScreenCriHlpId127P1.Visible = false; cScreenCriHlpId127P2.Visible = false;
+                cReportId127P1.Visible = false; cReportId127P2.Visible = false;
+                cReportCriHlpId127P1.Visible = false; cReportCriHlpId127P2.Visible = false;
+                SetEScriptVisible(false); SetSScriptVisible(false); SetVScriptVisible(false);
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+150~@~4~@~Hide and show functions~@~Client Rule: Hide and show functions~@~Hide and show functions~@~79~@~~@~~@~16~@~        private void SetEScriptVisible(bool bVisible)
+        {
+            cRuleCntTypeId127P1.Visible = bVisible; cRuleCntTypeId127P2.Visible = bVisible;
+            cRuleCntTypeDesc1294P1.Visible = bVisible; cRuleCntTypeDesc1294P2.Visible = bVisible;
+            cClientRuleProg127P1.Visible = bVisible; cClientRuleProg127P2.Visible = bVisible;
+        }
+
+        private void SetSScriptVisible(bool bVisible)
+        {
+            cClientScript127P1.Visible = bVisible; cClientScript127P2.Visible = bVisible;
+            cClientScriptHelp126P1.Visible = bVisible; cClientScriptHelp126P2.Visible = bVisible;
+        }
+
+        private void SetVScriptVisible(bool bVisible)
+        {
+            cUserScriptEvent127P1.Visible = bVisible; cUserScriptEvent127P2.Visible = bVisible;
+            cUserScriptName127P1.Visible = bVisible; cUserScriptName127P2.Visible = bVisible;
+            cScriptParam127P1.Visible = bVisible; cScriptParam127P2.Visible = bVisible;
+        }~@~~@~~@~~@~~@~~@~~@~~@~
+151~@~4~@~Initialization~@~Sign Up: Initialization~@~Initialization~@~1018~@~~@~~@~18~@~            cTokenMsgP2.Visible = false; cConfirmationTokenP2.Visible = false; cResnedTokenP2.Visible = false; cSubmitP2.Visible = false; cUsrPassword270.Visible = false;
+            if ((cSignUpBtn.Attributes["OnClick"] == null || cSignUpBtn.Attributes["OnClick"].IndexOf("_bConfirm") < 0)) { cSignUpBtn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+            if ((cSubmit.Attributes["OnClick"] == null || cSubmit.Attributes["OnClick"].IndexOf("_bConfirm") < 0)) { cSubmit.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+            if ((cResnedToken.Attributes["OnClick"] == null || cResnedToken.Attributes["OnClick"].IndexOf("_bConfirm") < 0)) { cResnedToken.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+            Literal criLiteral = new Literal();
+            criLiteral.Text = "<p style='text-align: center;'>By clicking 'Join' I agree to Rintagi's <a href='http://www.rintagi.com/home/terms_of_service.pdf' target='_blank'>Terms of Service</a></p>";
+            cSignUpMsg.Controls.Add(criLiteral);~@~~@~~@~~@~~@~~@~~@~~@~
+152~@~4~@~Join button click~@~Sign Up: Join button click~@~Generate and send token to email entered.~@~1018~@~4099~@~~@~1~@~            if (ValidPage())
+            {
+                Guid g = Guid.NewGuid();
+                string GuidString = g.ToString();
+                string generatedToken = GuidString.Left(6);
+                cToken.Text= generatedToken;
+
+                if (cUsrName270.Text == "Enter First and Last Name") { cUsrName270.Text = null; }
+                if (string.IsNullOrEmpty(cUsrName270.Text))
+                {
+                    bErrNow.Value = "Y"; PreMsgPopup("Please enter a name so we can address you."); return;
+                }
+                if (cUsrEmail270.Text == "Email") { cUsrEmail270.Text = null; }
+                if (!string.IsNullOrEmpty(cUsrEmail270.Text))
+                {
+                    if (!(new WebRule()).WrIsUniqueEmail(cUsrEmail270.Text))
+                    {
+                        bErrNow.Value = "Y"; PreMsgPopup("This Email has already registered to an account. Please try another or try signing in."); return;
+                    }
+                }
+                else
+                {
+                    bErrNow.Value = "Y"; PreMsgPopup("Please enter an Email address."); return;
+                }
+
+                StringBuilder sb = new StringBuilder();
+                sb.Append("<br /><strong>").Append(generatedToken).Append("</strong><br /><br />");
+                string emailCnt = "Hi " + cUsrName270.Text + ",<br /><br />Thanks for creating an account with us using your Email as login name. <br /><br /> Please enter the following confirmation token to activate your account<br/>" + sb.ToString() + "<br/>If you have any questions, please do not hestiate to contact us.<br /><br />Yours Truly,<br />Rintagi Service Team";
+                try 
+                {
+                    string from = base.SysCustServEmail(base.LCurr.SystemId);
+                    base.SendEmail("Rintagi Sign Up Notification", emailCnt, cUsrEmail270.Text, from, from, "Rintagi Service Team", true);
+                    ShowDirty(false);
+                    cUsrPassword270.Visible = true; cTokenMsgP2.Visible = true; cConfirmationTokenP2.Visible = true; cResnedTokenP2.Visible = true; cSubmitP2.Visible = true; cSignUpBtnP2.Visible = false;
+                    bInfoNow.Value = "Y"; PreMsgPopup("Your account is ready, please check your email and enter the token provided to activate your account. <br /> <br /><b>If you cannot find the email from us in your Inbox, please check the Spam folder; thanks.</b>"); return;
+                }
+                catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message + "<br /><br />Please contact customer service at your earliest convenience, thank you."); return; }
+            }
+            ShowDirty(false); PanelTop.Update();~@~~@~~@~~@~~@~~@~~@~~@~
+153~@~4~@~submit button click~@~Sign Up: submit button click~@~Create user account and login after entering token and password.~@~1018~@~4098~@~~@~1~@~            if (ValidPage() && cConfirmationToken.Text == cToken.Text)
+            {
+                if (cUsrPassword270.Text == "Password") { cUsrPassword270.Text = null; }
+                if (string.IsNullOrEmpty(cUsrPassword270.Text))
+                {
+                    bErrNow.Value = "Y"; PreMsgPopup("Please enter a password and try again."); return;
+                }
+                if (cUsrName270.Text == "Enter First and Last Name") { cUsrName270.Text = null; }
+                if (string.IsNullOrEmpty(cUsrName270.Text))
+                {
+                    bErrNow.Value = "Y"; PreMsgPopup("Please enter a name and try again."); return;
+                }
+                if (!string.IsNullOrEmpty(cUsrEmail270.Text))
+                {
+                    if (!(new WebRule()).WrIsUniqueEmail(cUsrEmail270.Text))
+                    {
+                        bErrNow.Value = "Y"; PreMsgPopup("This Email has already registered to an account. Please try another or try signing in."); return;
+                    }
+                }
+                else
+                {
+                    bErrNow.Value = "Y"; PreMsgPopup("Please enter an Email address and try agin."); return;
+                }
+                try
+                {
+                    int DefSystemId = 5;                    // Default system after signon.
+                    string IntendUserGroup = "(2)";         // Default user group.
+                    DataTable dtUsr = new LoginSystem().WrAddUsr(cUsrEmail270.Text, cUsrName270.Text, cUsrPassword270.Text, LUser.CultureId, DefSystemId, cUsrEmail270.Text, IntendUserGroup, false, null, null, null, true, null, null);
+                    if (!string.IsNullOrEmpty(dtUsr.Rows[0][0].ToString()))     // UsrId.
+                    {
+                        bInfoNow.Value = "Y"; PreMsgPopup("Your account has been created successfully; please try signing in using your email and password."); return;
+                    }
+                }
+                catch (Exception err) { PreMsgPopup(err.Message); return; }
+            }
+            else
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("Please enter a correct confirmation token and try again."); return;
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+154~@~4~@~resend button click~@~Sign Up: resend button click~@~Resend token when requested.~@~1018~@~4095~@~~@~1~@~            Guid g = Guid.NewGuid();
+            string GuidString = g.ToString();
+            string generatedToken = GuidString.Left(6);
+            cToken.Text = generatedToken;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<br /><strong>").Append(generatedToken).Append("</strong><br /><br />");
+            string emailCnt = "Hi " + cUsrName270.Text + ",<br /><br />Thanks for creating an account with us using your Email as login name. <br /><br /> Please enter the confirmation token to activate your account<br/>" + sb.ToString() + "<br/>If you have any questions, please do not hestiate to contact us.<br /><br />Yours Truly,<br />Rintagi Service Team";
+            try
+            {
+                string from = base.SysCustServEmail(base.LCurr.SystemId);
+                base.SendEmail("Rintagi Sign Up Notification", emailCnt, cUsrEmail270.Text, from, from, "Rintagi Service Team", true);
+                ShowDirty(false);
+                cUsrPassword270.Visible = true; cTokenMsgP2.Visible = true; cConfirmationTokenP2.Visible = true; cResnedTokenP2.Visible = true; cSubmitP2.Visible = true; cSignUpBtnP2.Visible = false;
+                bInfoNow.Value = "Y"; PreMsgPopup("The new token has been sent to your email.");
+                //return;
+            }
+            catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message + "<br /><br />Please contact customer service at your earliest convenience, thank you."); return; }
+~@~~@~~@~~@~~@~~@~~@~~@~
+155~@~4~@~Pop up detail changes~@~Screen Audit Header: Pop up detail changes~@~Pop up detail changes~@~1019~@~~@~~@~8~@~            HtmlTableRow trow = e.Item.FindControl("cAdmScrAuditGridRow") as HtmlTableRow;
+            DataTable tdt = (DataTable)Session[KEY_dtAdmScrAuditGrid];
+            DataView tdv = tdt != null ? tdt.DefaultView : null;
+            string tkey = tdv[e.Item.DataItemIndex]["ScrAuditId1300"].ToString();
+            if (!string.IsNullOrEmpty(tkey))
+            {
+                trow.Attributes["onclick"] = "SearchLink('AdmScrAuditDtl.aspx?cri0=" + tkey + "&typ=N&sys=" + (string.IsNullOrEmpty(Request.QueryString["sys"]) ? cSystemId.SelectedValue : Request.QueryString["sys"].ToString()) + "','','',''); return false;"; return;
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+156~@~4~@~Hide criteria panel and systems module~@~Screen Audit Detail: Hide criteria panel and systems module~@~Hide criteria panel and systems module~@~1020~@~~@~~@~9~@~                cCriPanel.Visible = false;
+                cSystemLabel.Visible = false; cSystemId.Visible = false;~@~~@~~@~~@~~@~~@~~@~~@~
+157~@~4~@~Hide systems module and initialization~@~Screen Audit Header: Hide systems module and initialization~@~Hide systems module and initialization~@~1019~@~~@~~@~9~@~                cSystemLabel.Visible = false; cSystemId.Visible = false;
+                if (cExpRtfButton.Attributes["OnClick"] == null || cExpRtfButton.Attributes["OnClick"].IndexOf("return confirm") < 0) { cExpRtfButton.Attributes["OnClick"] += "return confirm('Purge all audit trails older than six (6) years for sure?');"; }~@~~@~~@~~@~~@~~@~~@~~@~
+160~@~4~@~Purge audit trail~@~Screen Audit Header: Purge audit trail~@~Purge audit trails older than 6 years.~@~1019~@~~@~4~@~14~@~            (new WebRule()).PurgeScrAudit(6, (string)Session[KEY_sysConnectionString], LcAppPw);~@~~@~~@~~@~~@~~@~~@~~@~
+161~@~1~@~Paypal redirection setup~@~Paypal Payment: Paypal redirection setup~@~To prepare being 'redirected' from paypal express checkout~@~1021~@~~@~~@~9~@~                if (!string.IsNullOrEmpty(Request.QueryString["token"]))
+                {
+                    // callback from paypal express payment, retrieve back state info, this is needed because
+                    // paypal callback is restricted to single query string thus we lost all state information
+                    string payPalKeyName = "AdmPaymentModulePayPalToken" + Request.QueryString["token"];
+                    string orgUrl = Session[payPalKeyName] as string;
+                    System.Collections.Generic.Dictionary<string, string> originalData = Session[payPalKeyName + "State"] as System.Collections.Generic.Dictionary<string, string>;
+                    if (!string.IsNullOrEmpty(orgUrl))
+                    {
+                        Session.Remove(payPalKeyName);
+                        this.Redirect(orgUrl + "&token=" + Request.QueryString["token"] + "&PayerID=" + Request.QueryString["PayerID"] + "&act=" + Request.QueryString["act"]);
+                        return;
+                    }
+                    try
+                    {
+                        Session.Remove(payPalKeyName + "State");
+                    }
+                    catch { }
+                    PaypalExpress paypal = new RO.Common3.PaypalExpress(true, System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIUserName"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncPwd"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncSignature"]);
+
+                    if (Request.QueryString["act"] == "1")
+                    {
+                        string token = Request.QueryString["token"];
+                        string payerId = Request.QueryString["PayerID"];
+                        System.Collections.Specialized.NameValueCollection det = paypal.PayPalGetExpressCheckoutDetails(token);
+                        string result = string.Join("<br/>", det.AllKeys.Select(k => string.Format("{0}={1}", k, det[k])).ToArray());
+                        if (det["ACK"] == "Success")
+                        {
+                            string currency = det["CURRENCYCODE"];
+                            string payee0 = det["PAYMENTREQUEST_0_SELLERPAYPALACCOUNTID"];
+                            double itemamt0 = (float.Parse(det["PAYMENTREQUEST_0_AMT"], CultureInfo.InvariantCulture) - float.Parse(det["PAYMENTREQUEST_0_TAXAMT"], CultureInfo.InvariantCulture));
+                            double tax0 = float.Parse(det["PAYMENTREQUEST_0_TAXAMT"], CultureInfo.InvariantCulture);
+                            double amt0 = float.Parse(det["PAYMENTREQUEST_0_AMT"], CultureInfo.InvariantCulture);
+                            string ref0 = "payment reference description 0";
+                            string desc0 = "payment description 0";
+
+                            System.Collections.Specialized.NameValueCollection payRet = null;
+
+                            string payee1 = det["PAYMENTREQUEST_1_SELLERPAYPALACCOUNTID"];
+                            if (!string.IsNullOrEmpty(payee1))
+                            {
+                                double itemamt1 = (float.Parse(det["PAYMENTREQUEST_1_AMT"], CultureInfo.InvariantCulture) - float.Parse(det["PAYMENTREQUEST_1_TAXAMT"], CultureInfo.InvariantCulture));
+                                double tax1 = float.Parse(det["PAYMENTREQUEST_1_TAXAMT"], CultureInfo.InvariantCulture);
+                                double amt1 = float.Parse(det["PAYMENTREQUEST_1_AMT"], CultureInfo.InvariantCulture);
+                                string ref1 = "payment reference description 1";
+                                string desc1 = "payment description 0";
+                                payRet = paypal.PayPalDoExpressCheckoutPayment(token, payerId, currency, payee0, amt0, itemamt0, tax0, desc0, ref0, payee1, amt1, itemamt1, tax1, desc1, ref1);
+                            }
+                            else
+                            {
+                                payRet = paypal.PayPalDoExpressCheckoutPayment(token, payerId, currency, payee0, amt0, itemamt0, tax0, desc0, ref0, "", 0, 0, 0, "", "");
+                            }
+
+                            if (payRet["ACK"] == "Success")
+                            {
+                                Label lb = new Label();
+                                string payVia = paypal.PaypalUrl;
+                                string payPalTtlPaidAmt0 = (float.Parse(det["PAYMENTREQUEST_0_AMT"], CultureInfo.InvariantCulture) + (string.IsNullOrEmpty(payee1) ? 0 : float.Parse(det["PAYMENTREQUEST_1_AMT"], CultureInfo.InvariantCulture))).ToString();
+                                string payPalCurrency = det["CURRENCYCODE"];
+                                string msg = @"Thank you for your payment.<br /><br />"
+                                    + " Your PayPal account have been charged " + payPalTtlPaidAmt0 + " " + payPalCurrency + "."
+                                    + " You may also <a href='" + payVia + "'>click here</a> to see your transaction history.";
+                                PreMsgPopup(msg);
+                            }
+                            else
+                            {
+                                // failed to retrieve actual payment detail
+                                Label lb = new Label();
+                                result = "<br/>" + string.Join("<br/>", payRet.AllKeys.Select(k => string.Format("{0}={1}", k, payRet[k])).ToArray());
+                                lb.Text = result;
+                                PreMsgPopup(result);
+                            }
+
+                        }
+                        else
+                        {
+                            // failed to retrieve paypal payment info
+                            Label lb = new Label();
+                            result = "<br/>" + string.Join("<br/>", det.AllKeys.Select(k => string.Format("{0}={1}", k, det[k])).ToArray());
+                            lb.Text = result;
+                            PreMsgPopup(result);
+                        }
+                    }
+                    else if (Request.QueryString["act"] == "2")
+                    {
+                        // cancelled
+                        if (originalData != null)
+                        {
+                            cDescription.Text = originalData["cDescription"];
+                            cItemDescription.Text = originalData["cItemDescription"];
+                            cCurrency.Text = originalData["cCurrency"];
+                            cAmt.Text = originalData["cAmt"];
+                            cTaxAmt.Text = originalData["cTaxAmt"];
+                            cPayTo.Text = originalData["cPayTo"];
+                            cPayFrom.Text = originalData["cPayFrom"];
+                        }
+                        PreMsgPopup("user cancelled payment request");
+                    }
+                }
+~@~~@~~@~~@~~@~~@~~@~~@~
+162~@~1~@~Paypal Express Checkout Button action~@~Paypal Payment: Paypal Express Checkout Button action~@~Setup to redirect to Paypal Express Checkout, the 'facilitator' account used must be setup first in Paypal Developer Portal. But the actual pay to account can be any valid paypal account and the option to pay as guest(credit card but not creating paypal account) depends on if the payee has guest option enabled. Only business pro account has this ability as it seems.~@~1021~@~4131~@~~@~1~@~            if (ValidPage())
+            {
+                PaypalExpress paypal = new RO.Common3.PaypalExpress(true, System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIUserName"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncPwd"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncSignature"]);
+                string payer = cPayFrom.Text ;    
+                string action = Request.QueryString["act"];
+                string myUrl = Request.Url.ToString();
+                string currency = cCurrency.Text.ToUpper().Trim(); // must be cap
+                string payee0 = cPayTo.Text;
+                string payee1 = "";
+                double itemamt0 = double.Parse(cAmt.Text);
+                double tax0 = 0.10; double.TryParse(cTaxAmt.Text, out tax0);
+                double amt0 = (itemamt0 + tax0);
+                string ref0 = cDescription.Text;
+                string desc0 = cItemDescription.Text;
+                double itemamt1 = 0.00;
+                double tax1 = 0.00;
+                double amt1 = (itemamt1 + tax1);
+                string ref1 = "payment reference 1";
+                string desc1 = "payment description 1";
+                string successUrl = new Regex("\\?.*$").Replace(myUrl, "") + "?act=1";
+                string cancelUrl = new Regex("\\?.*$").Replace(myUrl, "") + "?act=2";
+                System.Collections.Specialized.NameValueCollection ret = paypal.PayPalSetExpressCheckout(successUrl, cancelUrl, payer, currency, payee0, amt0, itemamt0, tax0, desc0, ref0, payee1, amt1, itemamt1, tax1, desc1, ref1);
+                if (ret["ACK"] == "Success")
+                {
+                    string payPalKeyName = "AdmPaymentModulePayPalToken" + ret["TOKEN"];
+                    if (string.IsNullOrEmpty(Request.QueryString["TOKEN"])) { Session["AdmPaymentModulePayPalToken"] = myUrl; }
+                    System.Collections.Generic.Dictionary<string, string> relaventData = new System.Collections.Generic.Dictionary<string, string>{
+                        {"cDescription", cDescription.Text}
+                        ,{"cItemDescription", cItemDescription.Text}
+                        ,{"cCurrency", cCurrency.Text}
+                        ,{"cAmt", cAmt.Text}
+                        ,{"cTaxAmt", cTaxAmt.Text}
+                        ,{"cPayTo", cPayTo.Text}
+                        ,{"cPayFrom", cPayFrom.Text}
+                    };
+                    Session[payPalKeyName] = Session["AdmPaymentModulePayPalToken"];
+                    Session[payPalKeyName + "State"] = relaventData;
+                    Response.Redirect(ret["PayPalPaymentUrl"]);
+                }
+                else
+                {
+                    PreMsgPopup(string.Join("<br/>", ret.AllKeys.Select(k => string.Format("{0}={1}", k, ret[k])).ToArray()));
+                }
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+163~@~1~@~Paypal Direct Payout button~@~Paypal Payment: Paypal Direct Payout button~@~this use paypal REST API to payout to paypal account directly(can be in the backend) from specific paypal account login for the REST API(with payout enabled in developer portal)~@~1021~@~4132~@~~@~1~@~            if (ValidPage())
+            {
+                Paypal payPal = new RO.Common3.Paypal(System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIClientID"], System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIEncSecret"]);
+                payPal.Login();
+                try
+                {
+                    PaypalPayoutResult result = payPal.Payout(Guid.NewGuid().ToString(), cPayTo.Text, cDescription.Text, cItemDescription.Text, cCurrency.Text.ToUpper().Trim(), float.Parse(cAmt.Text));
+                    string message = "";
+                    if (result.status == "DENIED")
+                    {
+                        message = "Your payout to " + result.recipient_email + " of " + result.amount.ToString() + " " + result.currency + " has been denied with a charge of " + result.fee.ToString() + "."
+                                        + " The paypal payout batch transaction id is " + result.payout_batch_id + " and your own batch id is " + result.sender_batch_id;
+                    }
+                    else if (result.status == "SUCCESS")
+                    {
+                        message = "Your payout to " + result.recipient_email + " of " + result.amount.ToString() + " " + result.currency + " has been transferred successfully with a charge of " + result.fee.ToString() + "."
+                                        + " The paypal payout batch transaction id is " + result.payout_batch_id + " and your own batch id is " + result.sender_batch_id;
+                    }
+                    PreMsgPopup(message);
+                }
+                catch (PaypalException ex)
+                {
+                    PreMsgPopup(ex.Message);
+                }
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+164~@~1~@~Paypal Express button image~@~Paypal Payment: Paypal Express button image~@~needs to be done on master record selection change, just pull in paypal express checkout image url~@~1021~@~~@~~@~11~@~                cPaypalBtn.ImageUrl = "https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif";
+~@~~@~~@~~@~~@~~@~~@~~@~
+165~@~1~@~Paypal Direct Credit Card Charge button~@~Paypal Payment: Paypal Direct Credit Card Charge button~@~this use paypal REST API to charge the supplied credit card information directly(can be in the backend) and the fund go directly to the specific paypal account used for the API login(with direct credit card enabled in developer portal, only available in selected country like US, check)~@~1021~@~4135~@~~@~1~@~            if (ValidPage())
+            {
+                Paypal payPal = new RO.Common3.Paypal(System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIClientID"], System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIEncSecret"]);
+                payPal.Login();
+                try
+                {
+                    PaypalPaymentResult result = payPal.Payment(cDescription.Text, cCurrency.Text.ToUpper().Trim(), double.Parse(cAmt.Text), cCCNbr.Text.Trim(), cCCType.Text, "first Name", "Last Name", int.Parse(cCCExpiryMonth.Text), int.Parse(cCCExpiryYear.Text), cCCCVV.Text);
+                    string message = "";
+                    if (result.state == "approved")
+                    {
+                        message = "Your charge to credit card " + cCCNbr.Text.Trim() + " of " +  result.amount.ToString("0.00") + " " + result.currency + " has been completed successfully (AVS/CVV approval code of " + result.avs_code + "/" + result.cvv_code + ")."
+                                        + " The paypal sales id is " + result.salesId;
+                    }
+                }
+                catch (PaypalException ex)
+                {
+                    PreMsgPopup(ex.Message);
+                }
+
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+166~@~4~@~Insert code snippet to pop up window from Grid~@~Web Rule: Insert code snippet to pop up window from Grid~@~Insert code snippet to pop up window from Grid~@~80~@~4140~@~~@~1~@~            StringBuilder sb = new StringBuilder();
+            sb.Append("            // Apply to 'OnItemDataBound' event;" + Environment.NewLine);
+            sb.Append("            // SearchLink(url, keyCtrlID, dlgWidth, dlgHeight)" + Environment.NewLine);
+            sb.Append("            // keyCtrlID is needed for client-side communication without a postback;" + Environment.NewLine);
+            sb.Append("            // The last two parameters of SearchLink are defaulted '70%' width and '70vh' height;" + Environment.NewLine);
+            sb.Append("            /*" + Environment.NewLine);
+            sb.Append("            HtmlTableRow gr = e.Item.FindControl(\"c??GridRow\") as HtmlTableRow;" + Environment.NewLine);
+            sb.Append("            if (gr != null)" + Environment.NewLine);
+            sb.Append("            {" + Environment.NewLine);
+            sb.Append("                gr.Attributes[\"onclick\"] = \"SearchLink('???.aspx?typ=N&key=\" + dv??ListGrid[e.Item.DataItemIndex][\"?Id?\"].ToString() + \"','\" + \"','',''); return false;\";" + Environment.NewLine);
+            sb.Append("            }" + Environment.NewLine);
+            sb.Append("            */" + Environment.NewLine);
+            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~
+168~@~4~@~Scan spreadsheet~@~Data Table and Columns: Scan spreadsheet~@~Invoke Excel Scanning based on already uploaded file~@~2~@~4152~@~~@~1~@~            ScanExcelSample(sender, e, false);~@~~@~~@~~@~~@~~@~~@~~@~
+169~@~4~@~Function to upload Excel / scan uploaded sample~@~Data Table and Columns: Function to upload Excel / scan uploaded sample~@~Upload spreadsheet or scan uploaded sample and populate columns~@~2~@~~@~~@~16~@~        private void ScanExcelSample(object sender, EventArgs e, bool populateSheetNameOnly)
+        {
+            DataTable dtAdmDbTableGrid = (DataTable)Session[KEY_dtAdmDbTableGrid];
+            if (cUploadSheet.Text != string.Empty && (string.IsNullOrEmpty(cTableId3.Text) || dtAdmDbTableGrid.Rows.Count == 0))
+            {
+                string fileName = new FileInfo(Server.MapPath(cUploadSheet.Text)).Name;
+                string path = new FileInfo(Server.MapPath(cUploadSheet.Text)).FullName;
+                string rowsToExamine = cRowsToExamine.Text;
+                string[] sheets = null;
+                System.Collections.Generic.List<string> messages = new System.Collections.Generic.List<string>();
+                try
+                {
+                    sheets = (new XLSImport()).GetSheetNames(path);
+                }
+                catch (Exception er)
+                {
+                    PreMsgPopup(er.Message);
+                    return;
+                }
+
+                if (populateSheetNameOnly)
+                {
+                    cSheetNameList.DataSource = sheets.Select(x => new {SheetNameList=x,SheetNameListText=x});
+                    cSheetNameList.DataBind();
+                    return;
+                }
+
+                string sheetName = cSheetNameList.SelectedValue;
+                DataTable dtImp = null;
+
+                try
+                {
+                    dtImp = RO.Common3.XmlUtils.XmlToDataSet((new XLSImport()).ImportFile(fileName, sheetName, "1", path)).Tables[0];
+                }
+                catch (Exception er)
+                {
+                    PreMsgPopup(er.Message);
+                    return;
+                }
+                System.Collections.Generic.List<DataStructure> columns = RO.Common3.Utils.AnalyseExcelData(dtImp, string.IsNullOrEmpty(rowsToExamine) ? 100 : int.Parse(rowsToExamine));
+                if (columns.Count == 0 || dtImp.Rows.Count == 0)
+                {
+                    PreMsgPopup("No information found in the spreadsheet");
+                    return;
+                }
+                else if (dtImp.Rows.Count < 2)
+                {
+                    messages.Add("No data sample to analyse, all columns are treated as string, i.e. NVarchar(max)");
+                }
+
+                DataTable dtd = (DataTable)Session[KEY_dtDataType5];
+                if (dtd == null)
+                {
+                    try
+                    {
+                        dtd = (new AdminSystem()).GetDdl(2, "GetDdlDataType3S17", true, true, 0, string.Empty, (string)Session[KEY_sysConnectionString], LcAppPw, string.Empty, base.LImpr, base.LCurr);
+                    }
+                    catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+                    Session[KEY_dtDataType5] = dtd;
+                }
+                System.Collections.Generic.Dictionary<string, int> dataType = new System.Collections.Generic.Dictionary<string, int>();
+                foreach (DataRow dr in dtd.Rows)
+                {
+                    if (!string.IsNullOrEmpty(dr[0].ToString())) dataType.Add(dr[1].ToString(), int.Parse(dr[0].ToString()));
+                }
+                dtAdmDbTableGrid.Clear();
+                DataRow drKey = dtAdmDbTableGrid.NewRow();
+                string TableName = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Regex.Replace(sheetName, @"\s+", "").ToLower());
+                drKey[1] = 10;
+                drKey[3] = TableName.Left(13) + "Id";
+                drKey[4] = dataType["Int"];
+                drKey[5] = "Int";
+                drKey[6] = 4;
+                drKey[10] = "Y";
+                drKey[11] = "Y";
+                drKey[14] = "Unique Internal key, must present";
+                cTableName3.Text = TableName.Left(13);
+                dtAdmDbTableGrid.Rows.Add(drKey);
+                cTableDesc3.Text = sheetName;
+                int ii = 2; int columnNameFix = 0;
+                foreach (DataStructure x in columns)
+                {
+                    if (!string.IsNullOrEmpty(x.ColumnName))
+                    {
+                        if (x.ColumnType == "Float")
+                        {
+                            if (x.maxDecimal <= 2) x.ColumnType = "Money";
+                        }
+                        DataRow dr = dtAdmDbTableGrid.NewRow();
+                        string trimmedColumnName = Regex.Replace(x.ColumnName, @"(\s|[*#.])+", "");
+                        dr[1] = ii * 10;
+                        dr[3] = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(trimmedColumnName.Left(15).ToLower());
+                        dr[4] = dataType[x.ColumnType];
+                        dr[5] = x.ColumnType;
+                        dr[6] = x.ColumnType == "Int" ? 4
+                                : x.ColumnType == "Date" || x.ColumnType == "DateTime" ? 8
+                                : x.ColumnType == "Float" ? 8
+                                : x.ColumnType == "Money" ? 8
+                                : x.ColumnWidth;
+                        dr[7] = x.ColumnType == "Float" ? x.maxDecimal : dr[7];
+                        dr[9] = x.hasEmpty ? "Y" : "N";
+                        dr[14] = (trimmedColumnName.Length > 15 ? ">>Column Name truncated to 15 character - " : "") + x.ColumnName;
+                        dtAdmDbTableGrid.Rows.Add(dr);
+                        columnNameFix = columnNameFix + (trimmedColumnName.Length > 15 ? 1 : 0);
+                        ii = ii + 1;
+                    };
+                }
+                messages.Add(columns.Count.ToString() + " analysed" + (columnNameFix > 0 ? ", " + columnNameFix.ToString() + " with column name being truncated to 15 characters" : ""));
+                bInfoNow.Value = "Y"; PreMsgPopup(string.Join("\n", messages.ToArray()));
+                cAdmDbTableGrid_DataBind(dtAdmDbTableGrid.DefaultView);
+            }
+            else
+            {
+                PreMsgPopup("We can only analyse/popular new table or table without column already defined");
+            }
+
+        }~@~~@~~@~~@~~@~~@~~@~~@~
+170~@~4~@~Upload the worksheets to be scanned~@~Data Table and Columns: Upload the worksheets to be scanned~@~Upload the worksheets to be scanned~@~2~@~4149~@~~@~1~@~            ScanExcelSample(sender, e, true);~@~~@~~@~~@~~@~~@~~@~~@~
+171~@~4~@~Display the panel to upload spreadsheet with sample data~@~Data Table and Columns: Display the panel to upload spreadsheet with sample data~@~Display the panel to upload spreadsheet with sample data~@~2~@~4153~@~~@~1~@~            if (cUploadSheetP1.Visible) { HideShowUpload(true); } else { HideShowUpload(false); }~@~~@~~@~~@~~@~~@~~@~~@~
+172~@~4~@~Generate default content~@~Section Object: Generate default content~@~Generate default content~@~1001~@~4154~@~~@~1~@~            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Default", 0, 0, 0, string.Empty, string.Empty))
+            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
+            {
+                (new GenSectionSystem()).CreateProgram("D", base.CPrj, base.CSrc);
+                bInfoNow.Value = "Y"; PreMsgPopup("DefaultModule and its CSS generated.");
+            }
+            else
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("DefaultModule not generated.");
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+173~@~4~@~Generate header content~@~Section Object: Generate header content~@~Generate header content~@~1001~@~4155~@~~@~1~@~            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Header", 0, 0, 0, string.Empty, string.Empty))
+            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
+            {
+                (new GenSectionSystem()).CreateProgram("H", base.CPrj, base.CSrc);
+                bInfoNow.Value = "Y"; PreMsgPopup("HeaderModule and its CSS generated.");
+            }
+            else
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("HeaderModule not generated.");
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+174~@~4~@~Generate footer content~@~Section Object: Generate footer content~@~Generate footer content~@~1001~@~4156~@~~@~1~@~            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Footer", 0, 0, 0, string.Empty, string.Empty))
+            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
+            {
+                (new GenSectionSystem()).CreateProgram("F", base.CPrj, base.CSrc);
+                bInfoNow.Value = "Y"; PreMsgPopup("FooterModule and its CSS generated.");
+            }
+            else
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("FooterModule not generated.");
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+175~@~4~@~Generate sidebar content~@~Section Object: Generate sidebar content~@~Generate sidebar content~@~1001~@~4157~@~~@~1~@~            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Sidebar", 0, 0, 0, string.Empty, string.Empty))
+            if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
+            {
+                (new GenSectionSystem()).CreateProgram("S", base.CPrj, base.CSrc);
+                bInfoNow.Value = "Y"; PreMsgPopup("SidebarModule and its CSS generated.");
+            }
+            else
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("SidebarModule not generated.");
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+177~@~4~@~Hide/Show appropriate fields~@~Screen Object: Hide/Show appropriate fields~@~Hide/Show appropriate fields based on display type~@~10~@~81~@~~@~1~@~            if (cDisplayModeId14.SelectedValue == "28")       // Image only.
+            {
+                cResizeWidth14P1.Visible = true; cResizeWidth14P2.Visible = true;
+                cResizeHeight14P1.Visible = true; cResizeHeight14P2.Visible = true;
+            }
+            else
+            {
+                cResizeWidth14P1.Visible = false; cResizeWidth14P2.Visible = false;
+                cResizeHeight14P1.Visible = false; cResizeHeight14P2.Visible = false;
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+178~@~4~@~Create React Code Base~@~Systems Maintenance: Create React Code Base~@~Create prerequisite for React code~@~87~@~4216~@~~@~1~@~            try
+            {
+                if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
+                string systemAbbr = cSystemAbbr45.Text;
+                string systemId = cSystemId45.Text;
+                string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+                string appRoot = webAppRoot.Replace("/Web/", "");
+                string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
+                string reactTemplateDir = reactRootDir + "/Template";
+                string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
+                string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
+                string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string siteApplicationPath = Context.Request.ApplicationPath;
+                string machineName = Environment.MachineName;
+                string rintagiJSContent =
+string.Format(@"
+/* this is runtime loading script for actual installation(production) configuration override say putting app to deep directory structure or
+ * web service end point not the same as the app loading source
+ * typically for situation where the apps are hosted in CDN and/or not at root level of the domain
+ * for reactjs configuration, make sure homepage is set to './' so everything generated is relative 
+ */
+document.Rintagi = {{
+  localDev:{{
+    // these setup is only effective when served via app is served via http://localhost:3000 type, for local npm start development. ignored in production build or proxying to localhost
+    appNS:'{4}',
+    appDomainUrl:'http://{2}/{0}', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
+    apiBasename: 'http://{2}/{0}', // webservice url for local development via npm start, i.e. localhost:3000 etc. must be full url in the form of http:// pointing to the site serving , no ending slash
+  }},
+  appRelBase:['React','ReactProxy','ReactPort'],  // path this app is serving UNDER(can be multiple), implicitly assume they are actually /Name/, do not put begin/end slash 
+  appNS:'', // used for login token sync(shared login when served under the same domain) between apps and asp.net site
+  appDomainUrl:'', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
+  apiBasename: '', // webservice url, can be relative or full http:// etc., no ending slash
+  useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
+  appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
+  appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
+  systemId: {3}                
+}}
+", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName,systemId, siteApplicationPath);
+
+
+                //if (homeDir.Contains("NetworkService"))
+                //{
+                //    // above from Windows are not the same npm is seeing in case it is run under Network Service
+                //    homeDir = Environment.GetFolderPath(Environment.SpecialFolder.System) + "/config/systemprofile";
+                //    appDataDir = homeDir + "/AppData";
+                //}
+                //if (!Directory.Exists(homeDir + "/.config"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user",homeDir + "/.config"));
+                //}
+                //if (!Directory.Exists(appDataDir + "/Roaming/npm"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user", appDataDir + "/Roaming/npm"));
+                //}
+                //if (!Directory.Exists(appDataDir + "/Roaming/npm-cache"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user", appDataDir + "/Roaming/npm-cache"));
+                //}
+
+                if (!System.IO.Directory.Exists(reactTemplateDir)) throw new Exception(string.Format("no react template directory found({0})", reactTemplateDir));
+                if (System.IO.Directory.Exists(reactModuleDir))
+                {
+                    //throw new Exception(string.Format("react module already exists ({0})", reactModuleDir));
+                }
+                else
+                {
+                    ////DirectoryCopy(reactTemplateDir, reactModuleDir, true, true);
+                    var copyRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /E /S /COPY:DATS /SECFIX /TIMFIX", reactTemplateDir, reactModuleDir), true, appRoot);
+                    var runtimeJS = string.Format("{0}/runtime/rintagi.js", reactModuleDir);
+                    using (var sr = new StreamWriter(reactModuleDir + "/public/runtime/rintagi.js", false, System.Text.UTF8Encoding.UTF8))
+                    {
+                        sr.WriteLine(rintagiJSContent);
+                        sr.Close();
+                    }
+                }
+                if (!File.Exists(reactModuleDir + "/.npmrc"))
+                {
+                    using (var sr = new StreamWriter(reactModuleDir + "/.npmrc", false, System.Text.UTF8Encoding.UTF8))
+                    {
+                        sr.WriteLine(string.Format("prefix={0}npm", reactRootDir.Replace("/", @"\")));
+                        sr.WriteLine(string.Format("cache={0}npm-cache", reactRootDir.Replace("/", @"\")));
+                        sr.WriteLine(string.Format("update-notifier=false", reactRootDir.Replace("/", @"\")));
+                        sr.Flush();
+                        sr.Close();
+                    }
+                }
+                //System.Threading.Thread.Sleep(5000);
+                string npmPath = @"C:\Program Files\nodejs\npm.cmd";
+                //var ret = new Tuple<int,string,string>(0, "", "");
+                //var ret1 = WinProc(npmPath, "cache clean --force", true, reactModuleDir);
+                var installRet = Utils.WinProc(npmPath, @"install  --no-optional --no-update-notifier", true, reactModuleDir);
+                if (installRet.Item1 != 0 || installRet.Item3.Contains("ERR"))
+                {
+                    bErrNow.Value = "Y";
+                    bInfoNow.Value = "N";
+                    PreMsgPopup(installRet.Item3);
+                }
+                else
+                {
+
+                    bInfoNow.Value = "Y";
+                    bErrNow.Value = "N";
+                    bool testPublish = false;
+                    if (testPublish)
+                    {
+                        var buildRet = Utils.WinProc(npmPath, "run build", true, reactModuleDir);
+                        var buildDir = reactModuleDir + "/build";
+                        var webSiteTargetDir = webAppRoot + "/React/" + systemAbbr;
+                        bool isReady = buildRet.Item2.Contains("The build folder is ready to be deployed");
+
+                        var webSiteRuntimeDir = string.Format("{0}/runtime", webSiteTargetDir);
+                        var webSiteRuntimeJS = string.Format("{0}/rintagi.js", webSiteRuntimeDir);
+                        var publishRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /MIR /XF rintagi.js", buildDir, webSiteTargetDir), true, appRoot);
+                        if (!File.Exists(webSiteRuntimeJS))
+                        {
+                            if (!Directory.Exists(webSiteRuntimeDir)) Directory.CreateDirectory(webSiteRuntimeDir);
+                            using (var sr = new StreamWriter(webSiteRuntimeJS, false, System.Text.UTF8Encoding.UTF8))
+                            {
+                                sr.WriteLine(rintagiJSContent);
+                                sr.Close();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        PreMsgPopup("React base initialized\r\n\r\n" + installRet.Item2);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(ex.Message);
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+179~@~4~@~Remove React Code Base~@~Systems Maintenance: Remove React Code Base~@~Remove all React code within this system~@~87~@~4217~@~~@~1~@~            try
+            {
+                if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
+                string systemAbbr = cSystemAbbr45.Text;
+                string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+                string appRoot = webAppRoot.Replace("/Web/", "");
+                string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
+                string reactTemplateDir = reactRootDir + "/Template";
+                string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
+                string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
+
+                if (System.IO.Directory.Exists(reactModuleDir))
+                {
+                    System.IO.Directory.Delete(reactModuleDir, true);
+                }
+
+                PreMsgPopup(string.Format(string.Format("React Source Directory {0} removed", reactModuleDir)));
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(ex.Message);
+            }~@~~@~~@~~@~~@~~@~~@~~@~
+180~@~4~@~Reset from Git Repo~@~Systems Maintenance: Reset from Git Repo~@~Bring system up-to-date from all Git repo contributions; all local changes permanently removed. use web.config key GitCheckoutBranch to specify specific branch. use form origin/master to track remote branch. require credential in remote url(and only support http:// transport)~@~87~@~4218~@~~@~1~@~            try
+            {
+                string webRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+                string appRoot = webRoot.Replace("/Web/", "");
+
+                string branch = System.Configuration.ConfigurationManager.AppSettings["GitCheckoutBranch"];
+
+                if (branch.Contains("/"))
+                {
+                    // fetch latest
+                    try
+                    {
+                        // .git/config must properly configured(credential in url or else would stall
+                        var fetchResult = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "fetch -v ", true, appRoot);
+                        if (fetchResult.Item1 != 0)
+                        {
+                            throw new Exception(fetchResult.Item3); 
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw;
+                    }
+                }
+
+                // get change set
+                var changedFilesRet =
+                        branch.Contains("/")
+                        ? Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "diff --name-status master " + branch + " --", true, appRoot)
+                        : Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "status -s -uno", true, appRoot);
+
+                // checkout, overwrite all local changes
+                var revertChangesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
+                                                    , "checkout"
+                                                        + (
+                                                        string.IsNullOrEmpty(branch)
+                                                        ? " HEAD "
+                                                        : (branch.Contains("/") ? " " + branch + " -B master "
+                                                        : " " + branch + " "
+                                                        ))
+                                                        + "-f -- "
+                                                        , true, appRoot);
+                if (revertChangesRet.Item1 != 0)
+                {
+                    throw new Exception(revertChangesRet.Item3);
+                }
+
+                // change summary
+                int lastX = 20;
+                var lastXcommitLog = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
+                    , string.Format("--no-pager log -n {0} --pretty=\"%an %ci %H %s\" -n{0}", lastX)
+                    , true, appRoot);
+                System.Collections.Generic.List<string> ruleTierProjects = new System.Collections.Generic.List<string>() { "UsrRules", "UsrAccess" };
+                bool needMSBuild = ruleTierProjects.Where(m => new Regex(string.Format("/{0}/", m), RegexOptions.IgnoreCase).IsMatch(changedFilesRet.Item2)).Count() > 0;
+                bool noWebSiteBuild = true;
+
+                System.Collections.Generic.List<string> stdOut = new System.Collections.Generic.List<string>();
+                System.Collections.Generic.List<string> stdErr = new System.Collections.Generic.List<string>();
+                //bool webSiteBuildSkipped = false;
+                if (needMSBuild)
+                {
+
+                    int? _runningPid = null;
+                    Func<int, string, bool> stdOutHandler = (pid, data) =>
+                    {
+                        _runningPid = pid;
+                        stdOut.Add(data);
+                        if (data.Contains("aspnet_compiler.exe") && noWebSiteBuild)
+                        {
+                            stdOut.Add("Skip website rebuild\r\n");
+                            //webSiteBuildSkipped = true;
+                            return true;
+                        }
+                        return false;
+                    };
+                    Func<int, string, bool> stdErrHandler = (pid, data) =>
+                    {
+                        _runningPid = pid;
+                        stdErr.Add(data);
+                        return false;
+                    };
+                    var publishRet = Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format(""), true, stdOutHandler, stdErrHandler, appRoot);
+
+                }
+                else
+                {
+                    stdOut.Add("No rebuild needed\r\n");
+                }
+
+                PreMsgPopup("Changed Files\r\n" 
+                        + changedFilesRet.Item2 
+                        + "Last " + lastX.ToString() + " commits\r\n" 
+                        + lastXcommitLog.Item2 + "\r\n\r\n Build Result\r\n" + string.Join("", stdOut.ToArray()));
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(ex.Message);
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+181~@~4~@~Publish React to Site~@~Systems Maintenance: Publish React to Site~@~Ready React code for production~@~87~@~4219~@~~@~1~@~            try
+            {
+                if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
+                string systemAbbr = cSystemAbbr45.Text;
+                string systemId = cSystemId45.Text;
+                string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+                string appRoot = webAppRoot.Replace("/Web/", "");
+                string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
+                string reactTemplateDir = reactRootDir + "/Template";
+                string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
+                string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
+                string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string siteApplicationPath = Context.Request.ApplicationPath;
+                string machineName = Environment.MachineName;
+                string rintagiJSContent =
+string.Format(@"
+/* this is runtime loading script for actual installation(production) configuration override say putting app to deep directory structure or
+ * web service end point not the same as the app loading source
+ * typically for situation where the apps are hosted in CDN and/or not at root level of the domain
+ * for reactjs configuration, make sure homepage is set to './' so everything generated is relative 
+ */
+document.Rintagi = {{
+  appRelBase:['React','ReactProxy','ReactPort'],  // path this app is serving UNDER(can be multiple), implicitly assume they are actually /Name/, do not put begin/end slash 
+  appNS:'', // used for login token sync(shared login when served under the same domain) between apps and asp.net site
+  appDomainUrl:'', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
+  apiBasename: '', // webservice url, can be relative or full http:// etc., no ending slash
+  useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
+  appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
+  appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
+  systemId: {3}                
+}}
+", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName, systemId, siteApplicationPath);
+
+                if (System.Configuration.ConfigurationManager.AppSettings["AdvanceReactBuildVersion"] != "N")
+                {
+                    using (var sr = new System.IO.StreamReader(reactModuleDir + "/package.json", System.Text.UTF8Encoding.UTF8))
+                    {
+                        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                        dynamic packageJson = jss.DeserializeObject(sr.ReadToEnd());
+                        var ver = ((string)((IDictionary<string, object>)packageJson)["version"]).Split(new char[] { '.' });
+                        var _x = ver.Select((v, i) => int.Parse(v) + (i == ver.Length - 1 ? 1 : 0)).Select(v => v.ToString()).ToArray();
+                        var newVer = string.Join(".", _x);
+                        ((IDictionary<string, object>)packageJson)["version"] = newVer;
+
+                        sr.Close();
+
+                        using (var sw = new System.IO.StreamWriter(reactModuleDir + "/src/app/Version.js", false, System.Text.UTF8Encoding.UTF8))
+                        {
+                            sw.WriteLine(string.Format("export const Version = '{0}';", newVer));
+                            sw.Close();
+                        }
+                        using (var sw = new System.IO.StreamWriter(reactModuleDir + "/package.json", false, new System.Text.UTF8Encoding(false)))
+                        {
+                            sw.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(packageJson, Newtonsoft.Json.Formatting.Indented).Replace(@"\u003c", "<").Replace(@"\u003e", ">"));
+                            //sw.Write(jss.Serialize(packageJson).Replace(@"\u003c", "<").Replace(@"\u003e", ">"));
+                            sw.Close();
+                        }
+                        try
+                        {
+                            var aa = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("add {0} {1}", string.Format("package.json"), string.Format("src/app/Version.js")), true, reactModuleDir);
+                            var bb = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("commit -m \"{0}\"", string.Format("advance UI to version {0}", newVer)), true, reactModuleDir);
+                        }
+                        catch (Exception ex)
+                        {
+                            // no git is fine
+                            PreMsgPopup(ex.Message);
+                        }
+
+                    };
+                }
+
+                System.Collections.Generic.List<string> stdIn = new System.Collections.Generic.List<string>();
+                System.Collections.Generic.List<string> stdOut = new System.Collections.Generic.List<string>();
+                int? _runningPid = null;
+                Func<int, string, bool> stdInHandler = (pid, output) =>
+                {
+                    _runningPid = pid;
+                    return false;
+                };
+                Func<int, string, bool> stdErrHandler = (pid, output) =>
+                {
+                    _runningPid = pid;
+                    return false;
+                };
+
+                //string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                //string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                //if (homeDir.Contains("NetworkService"))
+                //{
+                //    // above from Windows are not the same npm is seeing in case it is run under Network Service
+                //    homeDir = Environment.GetFolderPath(Environment.SpecialFolder.System) + "/config/systemprofile";
+                //    appDataDir = homeDir + "/AppData";
+                //}
+                //if (!Directory.Exists(homeDir + "/.config"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user",homeDir + "/.config"));
+                //}
+                //if (!Directory.Exists(appDataDir + "/Roaming/npm"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user", appDataDir + "/Roaming/npm"));
+                //}
+                //if (!Directory.Exists(appDataDir + "/Roaming/npm-cache"))
+                //{
+                //    throw new Exception(string.Format("npm requires full access to directory {0} for the current user", appDataDir + "/Roaming/npm-cache"));
+                //}
+                //if (!System.IO.Directory.Exists(reactTemplateDir)) throw new Exception(string.Format("no react template directory found({0})", reactTemplateDir));
+                //if (System.IO.Directory.Exists(reactModuleDir)) throw new Exception(string.Format("react module already exists ({0})", reactModuleDir));
+                //if (System.IO.Directory.Exists(reactModuleDir))
+                //{
+                //    System.IO.Directory.Delete(reactModuleDir, true);
+                //}
+                ////DirectoryCopy(reactTemplateDir, reactModuleDir, true, true);
+                //var copyRet = WinProc("robocopy.exe", string.Format("{0} {1} /E /S /COPY:DATS /SECFIX /TIMFIX", reactTemplateDir, reactModuleDir), true, reactRootDir);
+                //if (System.IO.Directory.Exists(reactModuleNodeModuleDir))
+                //{
+                //    System.IO.Directory.Delete(reactModuleNodeModuleDir, true);
+                //}
+                //if (!File.Exists(reactModuleDir + ".npmrc"))
+                //{
+                //    using (var sr = new StreamWriter(reactModuleDir + "/.npmrc",false,System.Text.UTF8Encoding.UTF8))
+                //    {
+                //        sr.WriteLine(string.Format("prefix={0}/npm", reactRootDir));
+                //        sr.WriteLine(string.Format("cache={0}/npm-cache", reactRootDir));
+                //        sr.WriteLine(string.Format("update-notifier=false", reactRootDir));
+                //        sr.Close();
+                //    }
+                //}
+                string npmPath = @"C:\Program Files\nodejs\npm.cmd";
+                if (!System.IO.File.Exists(reactModuleDir + "/.npmrc"))
+                {
+                    using (var sr = new System.IO.StreamWriter(reactModuleDir + "/.npmrc", false, System.Text.UTF8Encoding.UTF8))
+                    {
+                        sr.WriteLine(string.Format("prefix={0}npm", reactRootDir.Replace("/", @"\")));
+                        sr.WriteLine(string.Format("cache={0}npm-cache", reactRootDir.Replace("/", @"\")));
+                        sr.WriteLine(string.Format("update-notifier=false", reactRootDir.Replace("/", @"\")));
+                        sr.Flush();
+                        sr.Close();
+                    }
+                }
+                //var ret1 = WinProc(npmPath, "cache clean --force", true, reactModuleDir);
+                var npmInstallRet = Utils.WinProc(npmPath, @"install  --no-optional --no-update-notifier", true, stdInHandler, stdErrHandler, reactModuleDir);
+                var npmRunBuildRet = Utils.WinProc(npmPath, "run build", true, stdInHandler, stdErrHandler, reactModuleDir);
+                var buildDir = reactModuleDir + "/build";
+                var webSiteTargetDir = webAppRoot + "/React/" + systemAbbr;
+                bool isReady = npmRunBuildRet.Item2.Contains("The build folder is ready to be deployed");
+
+                if ((npmRunBuildRet.Item1 != 0 || npmRunBuildRet.Item3.Contains("ERR")))
+                {
+                    bErrNow.Value = "Y";
+                    bInfoNow.Value = "N";
+                    PreMsgPopup(npmRunBuildRet.Item3);
+                }
+                else
+                {
+
+                    var webSiteRuntimeDir = string.Format("{0}/runtime", webSiteTargetDir);
+                    var webSiteRuntimeJS = string.Format("{0}/rintagi.js", webSiteRuntimeDir);
+                    var publishRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /MIR /XF rintagi.js", buildDir, webSiteTargetDir), true, appRoot);
+                    if (publishRet.Item1 >= 8)
+                    {
+                        // weird robocopy return code for error
+                        PreMsgPopup(publishRet.Item3 + "\r\n" + publishRet.Item2);
+                    }
+                    else
+                    {
+                        if (File.Exists(webSiteRuntimeJS))
+                        {
+                            if (!Directory.Exists(webSiteRuntimeDir)) Directory.CreateDirectory(webSiteRuntimeDir);
+                            using (var sr = new StreamWriter(webSiteRuntimeJS, false, System.Text.UTF8Encoding.UTF8))
+                            {
+                                sr.WriteLine(rintagiJSContent);
+                                sr.Close();
+                            }
+                        }
+                        PreMsgPopup(string.Format("React app for {0} deployed to {1}", systemAbbr, webSiteTargetDir));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(ex.Message);
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+182~@~1~@~GrabLicenseDetail~@~Rintagi Installation: GrabLicenseDetail~@~retrieve current saved license~@~1022~@~~@~~@~11~@~            var LicenseServer = !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]) ? System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]
+                                : "https://www.rintagi.com";
+            ShowLicenseDetail(LicenseServer, null);~@~~@~~@~~@~~@~~@~~@~~@~
+183~@~4~@~AcquireLicense~@~Rintagi Installation: AcquireLicense~@~renew license from license server~@~1022~@~4254~@~~@~1~@~            var newLicense = RO.Common3.Utils.RenewLicense(cLicenseServerUrl.Text);
+            if (!string.IsNullOrEmpty(newLicense))
+            {
+                ShowLicenseDetail(cLicenseServerUrl.Text, newLicense);
+                cLicenseString.Text = newLicense;
+            }
+            else
+            {
+                PreMsgPopup("cannot renew license, check server URL and make sure you have purchased a valid license");
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+184~@~4~@~UpdateLicense~@~Rintagi Installation: UpdateLicense~@~save license string to web.config~@~1022~@~4252~@~~@~1~@~            if (!string.IsNullOrEmpty(cLicenseString.Text))
+            {
+                System.Configuration.Configuration config = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
+                if (config.AppSettings.Settings["RintagiLicense"] != null) config.AppSettings.Settings["RintagiLicense"].Value = cLicenseString.Text;
+                else config.AppSettings.Settings.Add("RintagiLicense", cLicenseString.Text);
+                config.Save(System.Configuration.ConfigurationSaveMode.Modified);
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+185~@~1~@~ShowLicenseDetail~@~Rintagi Installation: ShowLicenseDetail~@~decode and show license detail~@~1022~@~~@~~@~16~@~        private void ShowLicenseDetail(string LicenseServer, string licenseString)
+        {
+            var InstallationDetail = RO.Common3.Utils.GetInstallDetail();
+            cInstallID.Text = InstallationDetail.Item1;
+            cAppID.Text = InstallationDetail.Item2;
+            cLicenseServerUrl.Text = LicenseServer;
+            cLicenseServerUrl.ReadOnly = false;
+            cLicenseServerUrl.Enabled = true;
+            cLicenseString.Text = Config.RintagiLicense;
+            cLicenseString.ReadOnly = false;
+            cLicenseString.Enabled = true;
+            var regUrl = cLicenseServerUrl.Text
+                + "/AcquireLicense.aspx?InstallID=" + InstallationDetail.Item1
+                + "&AppID=" + InstallationDetail.Item2
+                + "&ModuleName=" + "Design"
+                //+ "&FromUrl=" + HttpUtility.UrlEncode(Request.Url.ToString())
+                ;
+            cRegisterInsall.NavigateUrl = regUrl;
+            cRegisterInsall.Text = regUrl;
+            cRegisterInsall.Attributes["onclick"] = string.Format("SearchLink('{0}');return return stopEvent(this,event);", regUrl);
+            try
+            {
+                var License = RO.Common3.Utils.DecodeLicense(licenseString);
+                var validLicense = License.Item2;
+                var LicenseDetail = RO.Common3.Utils.DecodeLicenseDetail(License.Item1);
+                var LicenseString = License.Item3;
+                var InstallationFeature = LicenseDetail["Design"];
+                cExpiryDate.Text = InstallationFeature["Expiry"];
+                cCompanyCount.Text = InstallationFeature["CompanyCount"];
+                cProjectCount.Text = InstallationFeature["ProjectCount"];
+                cUserCount.Text = InstallationFeature["UserCount"];
+                var moduleCount = InstallationFeature["ModuleCount"];
+                if (moduleCount == "-1")
+                {
+                    cModuleIncluded.Text = "All";
+                }
+                else
+                {
+                    cModuleIncluded.Text = string.Join(",", LicenseDetail.Keys.Where(m => m != "Design").ToArray());
+                }
+                cFeatureIncluded.Text = InstallationFeature["Include"];
+                cFeatureExcluded.Text = InstallationFeature["Exclude"];
+
+            }
+            catch
+            {
+
+            }
+
+        }
+~@~~@~~@~~@~~@~~@~~@~~@~
+187~@~1~@~Cronjob tracking~@~Timed-Job Schedule: Cronjob tracking~@~test run of cronjob ~@~118~@~~@~~@~9~@~                if (IsCronInvoked())
+                {
+                    try
+                    {
+                        // required to indicate success so no retry until next scheduled time
+                        UpdCronStatus(LcSysConnString, LcAppPw);
+                        // optional status message to indicate last success
+                        UpdCronStatus("success", LcAppConnString, LcAppPw);
+                    }
+                    catch (Exception ex)
+                    {
+                        // report error to the front end as cron invoked has no visual error reporting
+                        UpdCronStatus(ex.Message, LcAppConnString, LcAppPw);
+                        // backend support
+                        ErrorTrace(ex, "error");
+                    }
+                }
+
+~@~~@~~@~~@~~@~~@~~@~~@~
+188~@~2~@~modify button behavior~@~Rintagi Installation: modify button behavior~@~~@~1022~@~~@~~@~9~@~                cSaveButton.Visible = false;
+                if (cAcquireLicense.Attributes["OnClick"] == null || cAcquireLicense.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cAcquireLicense.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+                if (cRenewLicense.Attributes["OnClick"] == null || cRenewLicense.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cRenewLicense.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+~@~~@~~@~~@~~@~~@~~@~~@~

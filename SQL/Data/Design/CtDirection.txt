@@ -1,0 +1,2 @@
+L~@~LTR~@~Left to Right
+R~@~RTL~@~Right to Left

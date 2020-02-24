@@ -1,0 +1,8 @@
+1~@~None~@~None
+2~@~LeftRight~@~Left to Right
+3~@~TopBottom~@~Top to Bottom
+4~@~Center~@~Center
+5~@~DiagonalLeft~@~Diagonal Left
+6~@~DiagonalRight~@~Diagonal Right
+7~@~HorizontalCenter~@~Horizontal Center
+8~@~VerticalCenter~@~Vertical Center

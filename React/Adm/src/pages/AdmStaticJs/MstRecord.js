@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmStaticJs || {});
+    this.GetReduxState = () => (this.props.AdmStaticJs || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'StaticJsId261';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,56 +87,44 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
     const columnLabel = (this.props.AdmStaticJs || {}).ColumnLabel || {};
     /* standard field validation */
-if (!values.cStaticJsNm261) { errors.cStaticJsNm261 = (columnLabel.StaticJsNm261 || {}).ErrMessage;}
+    if (!values.cStaticJsNm261) { errors.cStaticJsNm261 = (columnLabel.StaticJsNm261 || {}).ErrMessage; }
     return errors;
   }
 
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmStaticJs || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmStaticJs,
         {
-          StaticJsId261: values.cStaticJsId261|| '',
-          StaticJsNm261: values.cStaticJsNm261|| '',
-          ScriptDef261: values.cScriptDef261|| '',
+          StaticJsId261: values.cStaticJsId261 || '',
+          StaticJsNm261: values.cStaticJsNm261 || '',
+          ScriptDef261: values.cScriptDef261 || '',
         },
         [],
         {
@@ -173,12 +164,12 @@ if (!values.cStaticJsNm261) { errors.cStaticJsNm261 = (columnLabel.StaticJsNm261
       const fromMstId = mstId || (mst || {}).StaticJsId261;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmStaticJs.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmStaticJs.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmStaticJs.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -260,7 +251,7 @@ if (!values.cStaticJsNm261) { errors.cStaticJsNm261 = (columnLabel.StaticJsNm261
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmStaticJs || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -284,7 +275,7 @@ if (!values.cStaticJsNm261) { errors.cStaticJsNm261 = (columnLabel.StaticJsNm261
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -313,6 +304,7 @@ if (!values.cStaticJsNm261) { errors.cStaticJsNm261 = (columnLabel.StaticJsNm261
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmStaticJsReduxObj.GetScreenButtons(AdmStaticJsState) || {};
     const itemList = AdmStaticJsState.Dtl || [];
@@ -324,20 +316,23 @@ if (!values.cStaticJsNm261) { errors.cStaticJsNm261 = (columnLabel.StaticJsNm261
     const authRow = (AdmStaticJsState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmStaticJs || {}).Mst || {});
     const currDtl = ((this.props.AdmStaticJs || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.StaticJsId261));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.StaticJsId261));
     const selectList = AdmStaticJsReduxObj.SearchListToSelectList(AdmStaticJsState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const StaticJsId261 = currMst.StaticJsId261;
-const StaticJsNm261 = currMst.StaticJsNm261;
-const ScriptDef261 = currMst.ScriptDef261;
+
+    const StaticJsId261 = currMst.StaticJsId261;
+    const StaticJsNm261 = currMst.StaticJsNm261;
+    const ScriptDef261 = currMst.ScriptDef261;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -355,9 +350,9 @@ const ScriptDef261 = currMst.ScriptDef261;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cStaticJsId261: StaticJsId261 || '',
-                  cStaticJsNm261: StaticJsNm261 || '',
-                  cScriptDef261: ScriptDef261 || '',
+                    cStaticJsId261: formatContent(StaticJsId261 || '', 'TextBox'),
+                    cStaticJsNm261: formatContent(StaticJsNm261 || '', 'TextBox'),
+                    cScriptDef261: formatContent(ScriptDef261 || '', 'MultiLine'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -419,72 +414,101 @@ const ScriptDef261 = currMst.ScriptDef261;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.StaticJsId261 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.StaticJsId261 || {}).ColumnHeader} {(columnLabel.StaticJsId261 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.StaticJsId261 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.StaticJsId261 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cStaticJsId261'
-disabled = {(authCol.StaticJsId261 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cStaticJsId261 && touched.cStaticJsId261 && <span className='form__form-group-error'>{errors.cStaticJsId261}</span>}
-</div>
-</Col>
-}
-{(authCol.StaticJsNm261 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.StaticJsNm261 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.StaticJsNm261 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.StaticJsNm261 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.StaticJsNm261 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cStaticJsNm261'
-disabled = {(authCol.StaticJsNm261 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cStaticJsNm261 && touched.cStaticJsNm261 && <span className='form__form-group-error'>{errors.cStaticJsNm261}</span>}
-</div>
-</Col>
-}
-{(authCol.ScriptDef261 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ScriptDef261 || {}).ColumnHeader} {(columnLabel.ScriptDef261 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ScriptDef261 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScriptDef261 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cScriptDef261'
-disabled = {(authCol.ScriptDef261 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cScriptDef261 && touched.cScriptDef261 && <span className='form__form-group-error'>{errors.cScriptDef261}</span>}
-</div>
-</Col>
-}
+                              {(authCol.StaticJsId261 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.StaticJsId261 || {}).ColumnHeader} {(columnLabel.StaticJsId261 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.StaticJsId261 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.StaticJsId261 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cStaticJsId261'
+                                          disabled={(authCol.StaticJsId261 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cStaticJsId261 && touched.cStaticJsId261 && <span className='form__form-group-error'>{errors.cStaticJsId261}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.StaticJsNm261 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.StaticJsNm261 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.StaticJsNm261 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.StaticJsNm261 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.StaticJsNm261 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cStaticJsNm261'
+                                          disabled={(authCol.StaticJsNm261 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cStaticJsNm261 && touched.cStaticJsNm261 && <span className='form__form-group-error'>{errors.cStaticJsNm261}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {false && (authCol.ScriptDef261 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ScriptDef261 || {}).ColumnHeader} {(columnLabel.ScriptDef261 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ScriptDef261 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ScriptDef261 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmStaticJsState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cScriptDef261'
+                                          disabled={(authCol.ScriptDef261 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cScriptDef261 && touched.cScriptDef261 && <span className='form__form-group-error'>{errors.cScriptDef261}</span>}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -544,9 +568,6 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmStaticJsReduxObj.SavePage.bind(AdmStaticJsReduxObj) },
     { DelMst: AdmStaticJsReduxObj.DelMst.bind(AdmStaticJsReduxObj) },
     { AddMst: AdmStaticJsReduxObj.AddMst.bind(AdmStaticJsReduxObj) },
-//    { SearchMemberId64: AdmStaticJsReduxObj.SearchActions.SearchMemberId64.bind(AdmStaticJsReduxObj) },
-//    { SearchCurrencyId64: AdmStaticJsReduxObj.SearchActions.SearchCurrencyId64.bind(AdmStaticJsReduxObj) },
-//    { SearchCustomerJobId64: AdmStaticJsReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmStaticJsReduxObj) },
 
     { showNotification: showNotification },
     { setTitle: setTitle },
@@ -555,5 +576,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

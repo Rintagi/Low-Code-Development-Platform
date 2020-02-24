@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmDataCat || {});
+    this.GetReduxState = () => (this.props.AdmDataCat || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'RptwizCatId181';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,69 +87,55 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-RptwizTypId181InputChange() { const _this = this; return function (name, v) {const filterBy = ''; _this.props.SearchRptwizTypId181(v, filterBy);}}
-TableId181InputChange() { const _this = this; return function (name, v) {const filterBy = ''; _this.props.SearchTableId181(v, filterBy);}}
- SampleImage({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-return function (evt) {
-this.OnClickColumeName = 'SampleImage';
-//Enter Custom Code here, eg: submitForm();
-evt.preventDefault();
-}.bind(this);
-}/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+  RptwizTypId181InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchRptwizTypId181(v, filterBy); } }
+  TableId181InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchTableId181(v, filterBy); } }
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
     const columnLabel = (this.props.AdmDataCat || {}).ColumnLabel || {};
     /* standard field validation */
-if (isEmptyId((values.cRptwizTypId181 || {}).value)) { errors.cRptwizTypId181 = (columnLabel.RptwizTypId181 || {}).ErrMessage;}
-if (!values.cRptwizCatName181) { errors.cRptwizCatName181 = (columnLabel.RptwizCatName181 || {}).ErrMessage;}
-if (!values.cCatDescription181) { errors.cCatDescription181 = (columnLabel.CatDescription181 || {}).ErrMessage;}
-if (isEmptyId((values.cTableId181 || {}).value)) { errors.cTableId181 = (columnLabel.TableId181 || {}).ErrMessage;}
+    if (isEmptyId((values.cRptwizTypId181 || {}).value)) { errors.cRptwizTypId181 = (columnLabel.RptwizTypId181 || {}).ErrMessage; }
+    if (!values.cRptwizCatName181) { errors.cRptwizCatName181 = (columnLabel.RptwizCatName181 || {}).ErrMessage; }
+    if (!values.cCatDescription181) { errors.cCatDescription181 = (columnLabel.CatDescription181 || {}).ErrMessage; }
+    if (isEmptyId((values.cTableId181 || {}).value)) { errors.cTableId181 = (columnLabel.TableId181 || {}).ErrMessage; }
     return errors;
   }
 
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmDataCat || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmDataCat,
         {
-          RptwizCatId181: values.cRptwizCatId181|| '',
-          RptwizTypId181: (values.cRptwizTypId181|| {}).value || '',
-          RptwizCatName181: values.cRptwizCatName181|| '',
-          CatDescription181: values.cCatDescription181|| '',
-          TableId181: (values.cTableId181|| {}).value || '',
+          RptwizCatId181: values.cRptwizCatId181 || '',
+          RptwizTypId181: (values.cRptwizTypId181 || {}).value || '',
+          RptwizCatName181: values.cRptwizCatName181 || '',
+          CatDescription181: values.cCatDescription181 || '',
+          TableId181: (values.cTableId181 || {}).value || '',
+          SampleImage181: values.cSampleImage181 ?
+            JSON.stringify({
+              ...values.cSampleImage181,
+              base64: this.StripEmbeddedBase64Prefix(values.cSampleImage181.base64)
+            }) : null,
         },
         [],
         {
@@ -186,12 +175,12 @@ if (isEmptyId((values.cTableId181 || {}).value)) { errors.cTableId181 = (columnL
       const fromMstId = mstId || (mst || {}).RptwizCatId181;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmDataCat.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmDataCat.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmDataCat.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -273,7 +262,7 @@ if (isEmptyId((values.cTableId181 || {}).value)) { errors.cTableId181 = (columnL
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmDataCat || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -297,7 +286,7 @@ if (isEmptyId((values.cTableId181 || {}).value)) { errors.cTableId181 = (columnL
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -326,6 +315,7 @@ if (isEmptyId((values.cTableId181 || {}).value)) { errors.cTableId181 = (columnL
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmDataCatReduxObj.GetScreenButtons(AdmDataCatState) || {};
     const itemList = AdmDataCatState.Dtl || [];
@@ -337,24 +327,40 @@ if (isEmptyId((values.cTableId181 || {}).value)) { errors.cTableId181 = (columnL
     const authRow = (AdmDataCatState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmDataCat || {}).Mst || {});
     const currDtl = ((this.props.AdmDataCat || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.RptwizCatId181));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.RptwizCatId181));
     const selectList = AdmDataCatReduxObj.SearchListToSelectList(AdmDataCatState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const RptwizCatId181 = currMst.RptwizCatId181;
-const RptwizTypId181List = AdmDataCatReduxObj.ScreenDdlSelectors.RptwizTypId181(AdmDataCatState);
-const RptwizTypId181 = currMst.RptwizTypId181;
-const RptwizCatName181 = currMst.RptwizCatName181;
-const CatDescription181 = currMst.CatDescription181;
-const TableId181List = AdmDataCatReduxObj.ScreenDdlSelectors.TableId181(AdmDataCatState);
-const TableId181 = currMst.TableId181;
+
+    const RptwizCatId181 = currMst.RptwizCatId181;
+    const RptwizTypId181List = AdmDataCatReduxObj.ScreenDdlSelectors.RptwizTypId181(AdmDataCatState);
+    const RptwizTypId181 = currMst.RptwizTypId181;
+    const RptwizCatName181 = currMst.RptwizCatName181;
+    const CatDescription181 = currMst.CatDescription181;
+    const TableId181List = AdmDataCatReduxObj.ScreenDdlSelectors.TableId181(AdmDataCatState);
+    const TableId181 = currMst.TableId181;
+    const SampleImage181 = currMst.SampleImage181 ? (currMst.SampleImage181.startsWith('{') ? JSON.parse(currMst.SampleImage181) : { fileName: '', mimeType: 'image/jpeg', base64: currMst.SampleImage181 }) : null;
+    const SampleImage181FileUploadOptions = {
+      CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
+      DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
+      MaxImageSize: {
+        Width: (columnLabel.SampleImage181 || {}).ResizeWidth,
+        Height: (columnLabel.SampleImage181 || {}).ResizeHeight,
+      },
+      MinImageSize: {
+        Width: (columnLabel.SampleImage181 || {}).ColumnSize,
+        Height: (columnLabel.SampleImage181 || {}).ColumnHeight,
+      },
+    }
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -372,11 +378,12 @@ const TableId181 = currMst.TableId181;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cRptwizCatId181: RptwizCatId181 || '',
-                  cRptwizTypId181: RptwizTypId181List.filter(obj => { return obj.key === RptwizTypId181 })[0],
-                  cRptwizCatName181: RptwizCatName181 || '',
-                  cCatDescription181: CatDescription181 || '',
-                  cTableId181: TableId181List.filter(obj => { return obj.key === TableId181 })[0],
+                    cRptwizCatId181: formatContent(RptwizCatId181 || '', 'TextBox'),
+                    cRptwizTypId181: RptwizTypId181List.filter(obj => { return obj.key === RptwizTypId181 })[0],
+                    cRptwizCatName181: formatContent(RptwizCatName181 || '', 'TextBox'),
+                    cCatDescription181: formatContent(CatDescription181 || '', 'MultiLine'),
+                    cTableId181: TableId181List.filter(obj => { return obj.key === TableId181 })[0],
+                    cSampleImage181: SampleImage181,
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -438,133 +445,183 @@ const TableId181 = currMst.TableId181;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.RptwizCatId181 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.RptwizCatId181 || {}).ColumnHeader} {(columnLabel.RptwizCatId181 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RptwizCatId181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RptwizCatId181 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cRptwizCatId181'
-disabled = {(authCol.RptwizCatId181 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRptwizCatId181 && touched.cRptwizCatId181 && <span className='form__form-group-error'>{errors.cRptwizCatId181}</span>}
-</div>
-</Col>
-}
-{(authCol.RptwizTypId181 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.RptwizTypId181 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RptwizTypId181 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RptwizTypId181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RptwizTypId181 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<AutoCompleteField
-name='cRptwizTypId181'
-onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cRptwizTypId181', false)}
-onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cRptwizTypId181', true)}
-onInputChange={this.RptwizTypId181InputChange()}
-value={values.cRptwizTypId181}
-defaultSelected={RptwizTypId181List.filter(obj => { return obj.key === RptwizTypId181 })}
-options={RptwizTypId181List}
-filterBy={this.AutoCompleteFilterBy}
-disabled = {(authCol.RptwizTypId181 || {}).readonly ? true: false }/>
-</div>
-}
-{errors.cRptwizTypId181 && touched.cRptwizTypId181 && <span className='form__form-group-error'>{errors.cRptwizTypId181}</span>}
-</div>
-</Col>
-}
-{(authCol.RptwizCatName181 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.RptwizCatName181 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RptwizCatName181 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RptwizCatName181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RptwizCatName181 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cRptwizCatName181'
-disabled = {(authCol.RptwizCatName181 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRptwizCatName181 && touched.cRptwizCatName181 && <span className='form__form-group-error'>{errors.cRptwizCatName181}</span>}
-</div>
-</Col>
-}
-{(authCol.CatDescription181 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.CatDescription181 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CatDescription181 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.CatDescription181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CatDescription181 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cCatDescription181'
-disabled = {(authCol.CatDescription181 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cCatDescription181 && touched.cCatDescription181 && <span className='form__form-group-error'>{errors.cCatDescription181}</span>}
-</div>
-</Col>
-}
-{(authCol.TableId181 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.TableId181 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TableId181 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.TableId181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TableId181 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<AutoCompleteField
-name='cTableId181'
-onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cTableId181', false)}
-onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cTableId181', true)}
-onInputChange={this.TableId181InputChange()}
-value={values.cTableId181}
-defaultSelected={TableId181List.filter(obj => { return obj.key === TableId181 })}
-options={TableId181List}
-filterBy={this.AutoCompleteFilterBy}
-disabled = {(authCol.TableId181 || {}).readonly ? true: false }/>
-</div>
-}
-{errors.cTableId181 && touched.cTableId181 && <span className='form__form-group-error'>{errors.cTableId181}</span>}
-</div>
-</Col>
-}
-<Col lg={6} xl={6}>
-<div className='form__form-group'>
-<div className='d-block'>
-{(authCol.SampleImage || {}).visible && <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10' disabled={(authCol.SampleImage || {}).readonly || !(authCol.SampleImage || {}).visible} onClick={this.SampleImage({ naviBar, submitForm, currMst })} >{auxLabels.SampleImage || (columnLabel.SampleImage || {}).ColumnName}</Button>}
-</div>
-</div>
-</Col>
+                              {(authCol.RptwizCatId181 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.RptwizCatId181 || {}).ColumnHeader} {(columnLabel.RptwizCatId181 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.RptwizCatId181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RptwizCatId181 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cRptwizCatId181'
+                                          disabled={(authCol.RptwizCatId181 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cRptwizCatId181 && touched.cRptwizCatId181 && <span className='form__form-group-error'>{errors.cRptwizCatId181}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.RptwizTypId181 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.RptwizTypId181 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RptwizTypId181 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.RptwizTypId181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RptwizTypId181 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='cRptwizTypId181'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cRptwizTypId181', false)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cRptwizTypId181', true)}
+                                          onInputChange={this.RptwizTypId181InputChange()}
+                                          value={values.cRptwizTypId181}
+                                          defaultSelected={RptwizTypId181List.filter(obj => { return obj.key === RptwizTypId181 })}
+                                          options={RptwizTypId181List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol.RptwizTypId181 || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.cRptwizTypId181 && touched.cRptwizTypId181 && <span className='form__form-group-error'>{errors.cRptwizTypId181}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.RptwizCatName181 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.RptwizCatName181 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RptwizCatName181 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.RptwizCatName181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RptwizCatName181 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cRptwizCatName181'
+                                          disabled={(authCol.RptwizCatName181 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cRptwizCatName181 && touched.cRptwizCatName181 && <span className='form__form-group-error'>{errors.cRptwizCatName181}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.CatDescription181 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.CatDescription181 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CatDescription181 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.CatDescription181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CatDescription181 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cCatDescription181'
+                                          disabled={(authCol.CatDescription181 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cCatDescription181 && touched.cCatDescription181 && <span className='form__form-group-error'>{errors.cCatDescription181}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.TableId181 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.TableId181 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TableId181 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.TableId181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.TableId181 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='cTableId181'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cTableId181', false)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cTableId181', true)}
+                                          onInputChange={this.TableId181InputChange()}
+                                          value={values.cTableId181}
+                                          defaultSelected={TableId181List.filter(obj => { return obj.key === TableId181 })}
+                                          options={TableId181List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol.TableId181 || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.cTableId181 && touched.cTableId181 && <span className='form__form-group-error'>{errors.cTableId181}</span>}
+                                  </div>
+                                </Col>
+                              }
+
+                              {(authCol.SampleImage181 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.SampleImage181 || {}).ColumnHeader} {(columnLabel.SampleImage181 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.SampleImage181 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SampleImage181 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <FileInputFieldV1
+                                          name='cSampleImage181'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'cSampleImage181')}
+                                          fileInfo={{ filename: this.state.filename }}
+                                          options={SampleImage181FileUploadOptions}
+                                          value={values.cSampleImage181 || SampleImage181}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />
+                                      </div>
+                                    }
+                                    {errors.cSampleImage181 && touched.cSampleImage181 && <span className='form__form-group-error'>{errors.cSampleImage181}</span>}
+                                  </div>
+                                </Col>
+                              }
+
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -624,11 +681,8 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmDataCatReduxObj.SavePage.bind(AdmDataCatReduxObj) },
     { DelMst: AdmDataCatReduxObj.DelMst.bind(AdmDataCatReduxObj) },
     { AddMst: AdmDataCatReduxObj.AddMst.bind(AdmDataCatReduxObj) },
-//    { SearchMemberId64: AdmDataCatReduxObj.SearchActions.SearchMemberId64.bind(AdmDataCatReduxObj) },
-//    { SearchCurrencyId64: AdmDataCatReduxObj.SearchActions.SearchCurrencyId64.bind(AdmDataCatReduxObj) },
-//    { SearchCustomerJobId64: AdmDataCatReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmDataCatReduxObj) },
-{ SearchRptwizTypId181: AdmDataCatReduxObj.SearchActions.SearchRptwizTypId181.bind(AdmDataCatReduxObj) },
-{ SearchTableId181: AdmDataCatReduxObj.SearchActions.SearchTableId181.bind(AdmDataCatReduxObj) },
+    { SearchRptwizTypId181: AdmDataCatReduxObj.SearchActions.SearchRptwizTypId181.bind(AdmDataCatReduxObj) },
+    { SearchTableId181: AdmDataCatReduxObj.SearchActions.SearchTableId181.bind(AdmDataCatReduxObj) },
     { showNotification: showNotification },
     { setTitle: setTitle },
     { setSpinner: setSpinner },
@@ -636,5 +690,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

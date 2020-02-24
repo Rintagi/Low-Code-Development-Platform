@@ -3,6 +3,8 @@ namespace RO.Common3.Data
 	using System;
 	using System.IO;
 	using System.Text;
+    using System.Collections.Generic;
+    using System.Linq;
 
 	[SerializableAttribute]
 	
@@ -25,7 +27,13 @@ namespace RO.Common3.Data
         private string pLenders;
 
         public UsrImpr() {}
+        private string Merge(string ls1, string ls2)
+        {
+            List<string> l1 = (ls1 ?? "").Split(new char[] { (char)191 }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<string> l2 = (ls2 ?? "").Split(new char[] { (char)191 }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            return string.Join(((char)191).ToString(), l1.Concat(l2).Distinct().ToArray());
 
+        }
         public UsrImpr(string usrs, string usrGroups, string cultures, string rowAuthoritys, string companys, string projects, string investors, string customers, string vendors, string agents, string brokers, string members, string borrowers, string guarantors, string lenders)
 		{
 			pUsrs = usrs;
@@ -48,91 +56,91 @@ namespace RO.Common3.Data
 		public string Usrs
 		{
 			get {return pUsrs;}
-			set { pUsrs = pUsrs + (string.IsNullOrEmpty(pUsrs) ? string.Empty : ((char)191).ToString()) + value; }
+            set { pUsrs = Merge(pUsrs, value);}
 		}
 
 		public string UsrGroups
 		{
 			get {return pUsrGroups;}
-			set { pUsrGroups = pUsrGroups + (string.IsNullOrEmpty(pUsrGroups) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pUsrGroups = Merge(pUsrGroups,value); }
 		}
 
 		public string Cultures
 		{
 			get {return pCultures;}
-			set { pCultures = pCultures + (string.IsNullOrEmpty(pCultures) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pCultures = Merge(pCultures,value); }
 		}
 
 		public string RowAuthoritys
 		{
 			get {return pRowAuthoritys;}
-			set { pRowAuthoritys = pRowAuthoritys + (string.IsNullOrEmpty(pRowAuthoritys) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pRowAuthoritys = Merge(pRowAuthoritys,value); }
 		}
 
 		public string Companys
 		{
 			get {return pCompanys;}
-			set { pCompanys = pCompanys + (string.IsNullOrEmpty(pCompanys) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pCompanys = Merge(pCompanys,value); }
 		}
 
 		public string Projects
 		{
 			get { return pProjects; }
-			set { pProjects = pProjects + (string.IsNullOrEmpty(pProjects) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pProjects = Merge(pProjects,value); }
 		}
 
 		public string Investors
 		{
 			get {return pInvestors;}
-			set { pInvestors = pInvestors + (string.IsNullOrEmpty(pInvestors) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pInvestors = Merge(pInvestors,value); }
 		}
 
 		public string Customers
 		{
 			get {return pCustomers;}
-			set { pCustomers = pCustomers + (string.IsNullOrEmpty(pCustomers) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pCustomers = Merge(pCustomers,value); }
 		}
 
 		public string Vendors
 		{
 			get {return pVendors;}
-			set { pVendors = pVendors + (string.IsNullOrEmpty(pVendors) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pVendors = Merge(pVendors,value); }
 		}
 
 		public string Agents
 		{
 			get {return pAgents;}
-			set { pAgents = pAgents + (string.IsNullOrEmpty(pAgents) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pAgents = Merge(pAgents,value); }
 		}
 
 		public string Brokers
 		{
 			get {return pBrokers;}
-			set { pBrokers = pBrokers + (string.IsNullOrEmpty(pBrokers) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pBrokers = Merge(pBrokers,value); }
 		}
 
 		public string Members
 		{
 			get {return pMembers;}
-			set { pMembers = pMembers + (string.IsNullOrEmpty(pMembers) ? string.Empty : ((char)191).ToString()) + value; }
+			set { pMembers = Merge(pMembers,value); }
 		}
 
         public string Borrowers
         {
             get { return pBorrowers; }
-            set { pBorrowers = pBorrowers + (string.IsNullOrEmpty(pBorrowers) ? string.Empty : ((char)191).ToString()) + value; }
+            set { pBorrowers = Merge(pBorrowers,value); }
         }
 
         public string Guarantors
         {
             get { return pGuarantors; }
-            set { pGuarantors = pGuarantors + (string.IsNullOrEmpty(pGuarantors) ? string.Empty : ((char)191).ToString()) + value; }
+            set { pGuarantors = Merge(pGuarantors,value); }
         }
 
         public string Lenders
         {
             get { return pLenders; }
-            set { pLenders = pLenders + (string.IsNullOrEmpty(pLenders) ? string.Empty : ((char)191).ToString()) + value; }
+            set { pLenders = Merge(pLenders,value); }
         }
     }
 }

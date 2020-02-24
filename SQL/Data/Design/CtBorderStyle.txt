@@ -1,0 +1,10 @@
+1~@~None
+2~@~Dotted
+3~@~Dashed
+4~@~Solid
+5~@~Double
+6~@~Groove
+7~@~Ridge
+8~@~Inset
+9~@~WindowInset
+10~@~Outset

@@ -9,6 +9,7 @@ namespace RO.Rule3
 	using RO.Common3.Data;
 	using RO.SystemFramewk;
 	using RO.Access3;
+    using System.Linq;
 
 	public class GenReportsRules
 	{
@@ -1591,7 +1592,7 @@ namespace RO.Rule3
             sb.Append("				if ((Config.DeployType == \"DEV\" || row[\"dbAppDatabase\"].ToString() == base.CPrj.EntityCode + \"View\") && !(base.CPrj.EntityCode != \"RO\" && row[\"SysProgram\"].ToString() == \"Y\") && (new AdminSystem()).IsRegenNeeded(string.Empty,0," + reportId.ToString() + ",0,LcSysConnString,LcAppPw))" + Environment.NewLine);
             sb.Append("				{" + Environment.NewLine);
             sb.Append("					(new GenReportsSystem()).CreateProgram(string.Empty," + reportId.ToString() + ", \"" + reportTitle + "\", row[\"dbAppDatabase\"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);" + Environment.NewLine);
-            sb.Append("					Response.Redirect(Request.RawUrl);" + Environment.NewLine);
+            sb.Append("					this.Redirect(Request.RawUrl);" + Environment.NewLine);
             sb.Append("				}" + Environment.NewLine);
             sb.Append("			}" + Environment.NewLine);
             sb.Append("			catch (Exception e) { PreMsgPopup(e.Message); }" + Environment.NewLine);
@@ -1802,7 +1803,12 @@ namespace RO.Rule3
 			sb.Append("		{" + Environment.NewLine);
 			sb.Append("			Ds" + dw["ProgramName"].ToString() + "In ds = new Ds" + dw["ProgramName"].ToString() + "In();" + Environment.NewLine);
 			sb.Append("			DataRow dr = ds.Tables[\"Dt" + dw["ProgramName"].ToString() + "In\"].NewRow();" + Environment.NewLine);
-            sb.Append("			bool bAll = false; string selectedVal = null; DataView dv = null;int TotalChoiceCnt = 0;int CriCnt=0;bool noneSelected=true;" + Environment.NewLine);
+            bool hasMultiSelect = dvCri.Table.AsEnumerable().Where(dr => dr["DisplayName"].ToString() == "ListBox").Count() > 0;
+            bool hasAutoListBox = dvCri.Table.AsEnumerable().Where(dr => dr["DisplayMode"].ToString() == "AutoListBox").Count() > 0;
+            if (hasMultiSelect)
+            {
+                sb.Append("			bool bAll = false; string selectedVal = null;" + (hasAutoListBox ? " DataView dv = null;" : "") + "int TotalChoiceCnt = 0;int CriCnt=0;bool noneSelected=true;" + Environment.NewLine);
+            }
             foreach (DataRowView drv in dvCri)
             {
                 if ("ListBox".IndexOf(drv["DisplayName"].ToString()) >= 0)

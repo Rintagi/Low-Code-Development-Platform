@@ -192,7 +192,7 @@ namespace RO.Web
 				if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && (new AdminSystem()).IsRegenNeeded(string.Empty,0,55,0,LcSysConnString,LcAppPw))
 				{
 					(new GenReportsSystem()).CreateProgram(string.Empty,55, "Server Rules Listing", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
-					Response.Redirect(Request.RawUrl);
+					this.Redirect(Request.RawUrl);
 				}
 			}
 			catch (Exception e) { PreMsgPopup(e.Message); }
@@ -301,7 +301,6 @@ namespace RO.Web
 		{
 			DsAdmRptBizRuleIn ds = new DsAdmRptBizRuleIn();
 			DataRow dr = ds.Tables["DtAdmRptBizRuleIn"].NewRow();
-			bool bAll = false; string selectedVal = null; DataView dv = null;int TotalChoiceCnt = 0;int CriCnt=0;bool noneSelected=true;
 			if (cSystemId.SelectedIndex >= 0 && cSystemId.SelectedValue != string.Empty) {dr["SystemId"] = cSystemId.SelectedValue;}
 			if (IsPostBack && cSystemId.SelectedValue == string.Empty) { throw new ApplicationException("Criteria column: SystemId should not be empty. Please rectify and try again.");};
 			ds.Tables["DtAdmRptBizRuleIn"].Rows.Add(dr);

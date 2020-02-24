@@ -288,11 +288,11 @@ namespace RO.Web
 				}
 				if (cTable.Checked)
 				{
-					ss = ds.ScriptCreateTables(SrcDbProviderCd, SrcDbProviderCd, true, base.CSrc, base.CTar);
+					ss = ds.ScriptCreateTables(SrcDbProviderCd, SrcDbProviderCd, true, true, base.CSrc, base.CTar);
 					Robot.WriteToFile("M",SrcScriptPath + "OTable.sql",ss);
 					if (TarDbProviderCd == "S")
 					{
-						ss = ds.ScriptCreateTables(SrcDbProviderCd, TarDbProviderCd, true, base.CSrc, base.CTar);
+						ss = ds.ScriptCreateTables(SrcDbProviderCd, TarDbProviderCd, true, true, base.CSrc, base.CTar);
 						ss = pt.SqlToSybase(Int16.Parse(cEntityId.SelectedValue), TarUdFunctionDb, ss, LcAppConnString, LcAppPw);
 					}
 					Robot.WriteToFile("M",TarScriptPath + "NTable.sql",ss);
@@ -325,11 +325,11 @@ namespace RO.Web
 				}
 				if (cIndex.Checked)
 				{
-					ss = ds.ScriptIndexFK(SrcDbProviderCd, SrcDbProviderCd, true, base.CSrc, base.CTar);
+					ss = ds.ScriptIndexFK(SrcDbProviderCd, SrcDbProviderCd, true, true, base.CSrc, base.CTar);
 					Robot.WriteToFile("M",SrcScriptPath + "OIndex.sql",ss);
 					if (TarDbProviderCd == "S") 
 					{
-						ss = ds.ScriptIndexFK(SrcDbProviderCd, TarDbProviderCd, true, base.CSrc, base.CTar);
+						ss = ds.ScriptIndexFK(SrcDbProviderCd, TarDbProviderCd, true, true, base.CSrc, base.CTar);
 						ss = pt.SqlToSybase(Int16.Parse(cEntityId.SelectedValue), TarUdFunctionDb, ss, LcAppConnString, LcAppPw);
 					}
 					Robot.WriteToFile("M",TarScriptPath + "NIndex.sql",ss);

@@ -1,0 +1,42 @@
+3~@~20~@~color:#3d72c1; font-family:sans-serif; font-size:2em; line-height:1;~@~N~@~~@~Screen: Create a simple Screen~@~~@~~@~10
+4~@~16~@~display:block; font-size: 16px; color: #333; font-family: century gothic;~@~Y~@~AdmScreen.aspx?id=25&typ=N~@~Define the Screen~@~~@~~@~10
+5~@~16~@~display:block; font-size: 16px; color: #333; font-family: century gothic;~@~Y~@~AdmScreenObj.aspx?id=26&typ=N~@~Specify the Screen Objects~@~~@~~@~20
+6~@~16~@~display:block; font-size: 16px; color: #333; font-family: century gothic;~@~Y~@~AdmAuthCol.aspx?id=20&typ=N~@~Assign Object Authority~@~~@~~@~30
+7~@~21~@~color:#3d72c1; font-family:sans-serif; font-size:2em; line-height:1;~@~N~@~~@~Advanced Screen: Enhance Current Screen~@~~@~~@~10
+8~@~17~@~display:block; font-size: 16px; color: #333; font-family: century gothic;~@~Y~@~AdmScreenCri.aspx?id=196&typ=N~@~Add Screen Criteria~@~~@~~@~10
+9~@~17~@~display:block; font-size: 16px; color: #333; font-family: century gothic;~@~Y~@~AdmScreenCriMap.aspx?id=197&typ=N~@~Map Screen Criteria to Columns~@~~@~~@~20
+10~@~17~@~display:block; font-size: 16px; color: #333; font-family: century gothic;~@~Y~@~AdmServerRule.aspx?id=22&typ=N~@~Add Server Rules~@~~@~~@~30
+11~@~22~@~color:#3d72c1; font-family:sans-serif; font-size:2em; line-height:1;~@~N~@~~@~Reporting: Create tabular report, chart & guage~@~~@~~@~10
+12~@~18~@~display:block; font-size: 16px; color: #333; font-family: century gothic;~@~Y~@~AdmReport.aspx?id=186&typ=N~@~Refine the Report Definition~@~~@~~@~10
+13~@~18~@~display:block; font-size: 16px; color: #333; font-family: century gothic;~@~Y~@~AdmReportCri.aspx?id=188&typ=N~@~Refine the Report Criteria~@~~@~~@~20
+19~@~3~@~vertical-align:middle; padding: 0px 6px 0px 0px; max-height: 30px;~@~Y~@~javascript:ShowEmbedScript(); return false;~@~~@~images/shortcut/embed.gif~@~images/shortcut/embedr.gif~@~10
+23~@~11~@~color:#152a57; padding: 0px 5px;~@~Y~@~http://www.rintagi.com/home/terms_of_service.pdf~@~Terms of Service~@~~@~~@~10
+24~@~11~@~color:#152a57; padding: 0px 5px;~@~Y~@~http://www.rintagi.com/home/privacy_policy.pdf~@~Privacy Policy~@~~@~~@~20
+25~@~13~@~background:url(../images/question.png) no-repeat; display:inline-block; height:16px; padding: 0px 5px 0 20px; color:#152a57; text-decoration:underline; cursor:pointer;~@~N~@~javascript:email('cs','robocoder.com','A'); return false;~@~Need help? Get support.~@~~@~~@~10
+28~@~3~@~vertical-align:middle; padding: 0px 6px 0px 0px; max-height: 30px;~@~Y~@~http://www.google.com~@~Google~@~~@~~@~20
+29~@~3~@~vertical-align:middle; padding: 0px 6px 0px 0px; max-height: 30px;~@~N~@~AdmSignup.aspx?csy=3~@~SIGN UP~@~~@~~@~30
+35~@~1~@~width:100%;~@~N~@~Default.aspx~@~~@~images/special/YourLogo.gif~@~images/special/Robocoder.png~@~10
+36~@~18~@~display:block; font-size: 16px; color: #333; font-family: century gothic;~@~Y~@~AdmRptWiz.aspx?id=229&typ=N~@~Use the Report Generator~@~~@~~@~5
+38~@~28~@~font-size:14px; color:#555;~@~Y~@~~@~The end product as we see it today, and in fact, as we have seen it for a number of years now, is, to the best of my knowledge, the best in the business.~@~~@~~@~10
+39~@~28~@~font-size:14px; color:#555;~@~N~@~~@~I have found Robocoder's development team to be very knowledgeable, dependable and an absolute pleasure to work with.~@~~@~~@~20
+40~@~28~@~font-size:14px; color:#555;~@~N~@~~@~They were able to quickly understand our market requirements and come up with great solutions to our customers' challenges.~@~~@~~@~30
+41~@~28~@~font-size:14px; color:#555;~@~N~@~~@~We were constantly amazed at the flexibility of the software and how changes that traditionally would take weeks of programming time could be done almost on-the-fly, real time. All in all, the experience has exceeded our expectations.~@~~@~~@~40
+42~@~28~@~font-size:14px; color:#555;~@~N~@~~@~The developing and implementing of the new system was seamless.~@~~@~~@~50
+43~@~28~@~font-size:14px; color:#555;~@~N~@~~@~With the end user in mind, they have transformed often obscure mental concepts into flexible and easy-to-use solutions.~@~~@~~@~60
+44~@~28~@~font-size:14px; color:#555;~@~N~@~~@~Their Late change no penalty approach allowed us to tailor to specific customer needs and requirements.~@~~@~~@~70
+45~@~28~@~font-size:14px; color:#555;~@~N~@~~@~Not only have your team made every effort to understand our unique needs, you have suggested innovative concepts that have automated our processes without much effort.~@~~@~~@~80
+46~@~28~@~font-size:14px; color:#555;~@~N~@~~@~Working with Robocoder Corporation has been a pleasant experience. Many modifications and improvements were made as we requested them late in the customization process.~@~~@~~@~90
+47~@~28~@~font-size:14px; color:#555;~@~N~@~~@~Your attention to detail has been paramount and that every number can be explained. You have delivered a robust system. Thank you for the wonderful job you have done for us and the securitization industry.~@~~@~~@~100
+48~@~29~@~max-width:400px; max-height:100px;~@~N~@~~@~~@~images/testimonial/roynat.png~@~~@~10
+49~@~29~@~max-width:400px; max-height:100px;~@~N~@~~@~~@~images/testimonial/pwBank.png~@~~@~20
+50~@~29~@~max-width:400px; max-height:100px;~@~N~@~~@~~@~images/testimonial/sunLife.png~@~~@~30
+51~@~29~@~max-width:400px; max-height:100px;~@~N~@~~@~~@~images/testimonial/pcw.png~@~~@~40
+52~@~29~@~max-width:400px; max-height:100px;~@~N~@~~@~~@~images/testimonial/spartan.png~@~~@~50
+53~@~29~@~max-width:400px; max-height:100px;~@~N~@~~@~~@~images/testimonial/beacon.png~@~~@~60
+54~@~29~@~max-width:400px; max-height:100px;~@~N~@~~@~~@~images/testimonial/securcor.png~@~~@~70
+55~@~29~@~max-width:400px; max-height:100px;~@~N~@~~@~~@~images/testimonial/aileron.png~@~~@~80
+58~@~30~@~~@~N~@~~@~Build Great Systems That Last~@~~@~~@~10
+59~@~31~@~~@~N~@~~@~Bringing Highly Trained Mission-Critical Resources to Enterprise~@~~@~~@~10
+60~@~35~@~padding: 0px 0px 0px 4px; max-height: 30px;~@~Y~@~~@~~@~images/special/Facebook.png~@~~@~10
+61~@~35~@~padding: 0px 0px 0px 4px; max-height: 30px;~@~Y~@~~@~~@~images/special/Twitter.png~@~~@~20
+62~@~35~@~padding: 0px 0px 0px 4px; max-height: 30px;~@~Y~@~~@~~@~images/special/Linkedin.png~@~~@~30
