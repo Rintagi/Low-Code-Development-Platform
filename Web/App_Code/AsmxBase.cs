@@ -2345,8 +2345,8 @@ namespace RO.Web
             DataTable dtSuggest = GetLis(getListMethod, csy, screenId, query, criteria, "0", "", "N", 1);
             if (
                 (dtSuggest.Rows.Count == 0 
-                 || (dtSuggest.Rows.Count == 1 
-                        && (query??"").StartsWith("**") 
+                 || (dtSuggest.Rows.Count == 1
+                        && (query ?? "").StartsWith("**") && (query ?? "") != "**-1" && (query ?? "") != "**" 
                         && string.IsNullOrEmpty(dtSuggest.Rows[0][GetMstKeyColumnName()].ToString()))
                 )
                 && !isAdd)

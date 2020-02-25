@@ -375,6 +375,9 @@ ORDER BY so1.name"
 			}
 			foreach (DataRow dr2 in dt.Rows)
 			{
+                // skip sysdiagrams related files
+                if (dr2["tbName"].ToString().Contains("sysdiagrams")) continue;
+
 				if (bOut) {db = CSrc.SrcDbDatabase;}
 				else
 				{

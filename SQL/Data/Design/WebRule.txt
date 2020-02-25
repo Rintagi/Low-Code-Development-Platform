@@ -2517,7 +2517,7 @@ document.Rintagi = {{
 182~@~1~@~GrabLicenseDetail~@~Rintagi Installation: GrabLicenseDetail~@~retrieve current saved license~@~1022~@~~@~~@~11~@~            var LicenseServer = !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]) ? System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]
                                 : "https://www.rintagi.com";
             ShowLicenseDetail(LicenseServer, null);~@~~@~~@~~@~~@~~@~~@~~@~
-183~@~4~@~AcquireLicense~@~Rintagi Installation: AcquireLicense~@~renew license from license server~@~1022~@~4254~@~~@~1~@~            var newLicense = RO.Common3.Utils.RenewLicense(cLicenseServerUrl.Text);
+183~@~4~@~AcquireLicense~@~Rintagi Installation: AcquireLicense~@~renew license from license server~@~1022~@~4254~@~~@~1~@~            var newLicense = RO.Common3.Utils.RenewLicense(cLicenseServerUrl.Text, cInstallID.Text, cAppID.Text, cAppNameSpace.Text);
             if (!string.IsNullOrEmpty(newLicense))
             {
                 ShowLicenseDetail(cLicenseServerUrl.Text, newLicense);

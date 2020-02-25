@@ -199,6 +199,10 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     		<div id="cAppIDP2" class="r-td r-content" runat="server"><asp:TextBox id="cAppID" CssClass="inp-txt" runat="server" /></div>
     	</div>
     	<div class="r-tr">
+    		<div id="cAppNameSpaceP1" class="r-td r-labelR" runat="server"><asp:Label id="cAppNameSpaceLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cAppNameSpaceP2" class="r-td r-content" runat="server"><asp:TextBox id="cAppNameSpace" CssClass="inp-txt" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
     		<div id="cRegisterInsallP1" class="r-td r-labelR" runat="server"><asp:Label id="cRegisterInsallLabel" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cRegisterInsallP2" class="r-td r-content" runat="server"><asp:HyperLink id="cRegisterInsall" CssClass="inp-txtln" runat="server" /></div>
     	</div>
