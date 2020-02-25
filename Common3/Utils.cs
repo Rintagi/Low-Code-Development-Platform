@@ -1356,10 +1356,10 @@
             RO.Common3.Encryption e = new RO.Common3.Encryption();
             return e.CheckValidLicense(moduleName, resourceName);
         }
-        public static string RenewLicense(string LicenseServerEndPoint = null)
+        public static string RenewLicense(string LicenseServerEndPoint = null, string InstallID = null, string AppId = null, string AppNameSpace = null)
         {
             RO.Common3.Encryption e = new RO.Common3.Encryption();
-            return e.RenewLicense(LicenseServerEndPoint);
+            return e.RenewLicense(LicenseServerEndPoint, InstallID, AppId, AppNameSpace);
         }
 
         public static List<DataStructure> AnalyseExcelData(DataTable dtImp, int rowsToExamine)

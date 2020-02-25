@@ -202,7 +202,7 @@ namespace RO.Common3
         }
 
 
-        public string RenewLicense(string LicenseServerEndPoint)
+        public string RenewLicense(string LicenseServerEndPoint, string InstallID=null, string AppId = null, string AppNameSpace = null)
         {
             return null;
         }

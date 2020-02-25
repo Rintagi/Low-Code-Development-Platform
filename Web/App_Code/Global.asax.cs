@@ -362,9 +362,10 @@ namespace RO
                pulseStarted = true;
             }
             string appPath = HttpRuntime.AppDomainAppVirtualPath;
-            string http = ((Request.IsSecureConnection) ? "https" : "http") 
-                        + (HttpContext.Current.Request.Url.IsDefaultPort ? "://" : ":" + HttpContext.Current.Request.Url.Port.ToString() + "//")
-                        + HttpContext.Current.Request.Url.Host + (applicationPath == "/" ? "" : applicationPath);
+            string http = ((Request.IsSecureConnection) ? "https://" : "http://")
+                        + HttpContext.Current.Request.Url.Host
+                        + (HttpContext.Current.Request.Url.IsDefaultPort ? "" : ":" + HttpContext.Current.Request.Url.Port.ToString())
+                        + (appPath == "/" ? "" : appPath);
             string cronjobBaseUrl =
                     !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"])
                     ? System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"]
