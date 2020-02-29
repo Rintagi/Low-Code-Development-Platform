@@ -2046,16 +2046,28 @@ namespace RO.Web
                 //FileUploadObj fileObj = jss.Deserialize<FileUploadObj>(docJson);
                 _ReactFileUploadObj fileObj = fileArray.Count > 0 ? fileArray[0] : new _ReactFileUploadObj();
                 bool backwardCompatible = false;
-                if (fileArray.Count == 0)
+                if (fileArray.Count == 0 || 
+                    (fileArray.Count == 1 
+                    && fileArray[0].base64 == "iVBORw0KGgoAAAANSUhEUgAAAhwAAAABCAQAAAA/IL+bAAAAFElEQVR42mN89p9hFIyCUTAKSAIABgMB58aXfLgAAAAASUVORK5CYII=")
+                    )
                 {
                     // empty list means DELETE 
                     new AdminSystem().UpdDbImg(docId, tableName, keyColumnName, columnName, null, LcAppConnString, LcAppPw);
                 }
-                else if (fileArray.Count > (backwardCompatible ? 1 : 0))
+                else if (fileArray.Where(f => string.IsNullOrEmpty(f.base64)).Count() > 0
+                    // only if there is internal inconsistency, ignore with single file case as if nothing happens
+                    //    && fileArray.Count > 1
+                    )
+                {
+                    throw new Exception("invalid file upload format, empty base64 conent");
+                }
+                else if (fileArray.Count > (backwardCompatible ? 1 : 0)
+                        && fileArray.Where(f => !string.IsNullOrEmpty(f.base64)).Count() > 0
+                    )
                 {
                     var resizedFiles = resizeImages(fileArray);
-                    byte[] fileStreamHeader = EncodeFileStreamHeader(fileArray);
-                    byte[] content = System.Text.UTF8Encoding.UTF8.GetBytes(docJson);
+                    byte[] fileStreamHeader = EncodeFileStreamHeader(resizeToIcon ? resizedFiles : fileArray);
+                    byte[] content = System.Text.UTF8Encoding.UTF8.GetBytes(resizeToIcon ? jss.Serialize(resizeImages) : docJson);
                     storedContent = new byte[content.Length + fileStreamHeader.Length];
                     Array.Copy(fileStreamHeader, storedContent, fileStreamHeader.Length);
                     Array.Copy(content, 0, storedContent, fileStreamHeader.Length, content.Length);
@@ -2092,8 +2104,21 @@ namespace RO.Web
                         Array.Copy(fileStreamHeader, storedContent, fileStreamHeader.Length);
                         Array.Copy(content, 0, storedContent, fileStreamHeader.Length, content.Length);
                     }
+
                     new AdminSystem().UpdDbImg(docId, tableName, keyColumnName, columnName, content.Length == 0 || dummyImage ? null : storedContent, LcAppConnString, LcAppPw);
-                    return resizeToIcon && content.Length > 0 && !dummyImage ? new List<_ReactFileUploadObj>() { new _ReactFileUploadObj() { base64 = Convert.ToBase64String(content), fileName = fileObj.fileName, lastModified = fileObj.lastModified, mimeType = fileObj.mimeType }} : null;
+
+                    return resizeToIcon
+                        && content.Length > 0
+                        && !dummyImage
+                        ? new List<_ReactFileUploadObj>() { 
+                                new _ReactFileUploadObj() { 
+                                    base64 = Convert.ToBase64String(content), 
+                                    fileName = fileObj.fileName, 
+                                    lastModified = fileObj.lastModified, 
+                                    mimeType = fileObj.mimeType 
+                                }
+                            }
+                        : null;
                 }
                 else
                 {
@@ -2289,10 +2314,11 @@ namespace RO.Web
             UsrImpr ui = LImpr;
             LoginUsr usr = LUser;
             int rowExpected = dvCri.Count;
+            var effectiveFilterId = GetEffectiveScreenFilterId(filterId, true);
             DataTable dtLastScrCriteria = _GetLastScrCriteria(screenId, rowExpected);
             DataSet ds = criteria == null || criteria.Count == 0 ? MakeScrCriteria(screenId, dvCri, dtLastScrCriteria,true,false) : MakeScrCriteria(screenId, dvCri, criteria,true,false);
             DataTable dt = (new AdminSystem()).GetLis(screenId, getLisMethod, addRow, "Y", topN, isSys != "N" ? (string)null : LcAppConnString, isSys != "N" ? null : LcAppPw,
-                string.IsNullOrEmpty(filterId) ? 0 : int.Parse(filterId), searchStr.StartsWith("**") ? searchStr.Substring(2) : "", searchStr.StartsWith("**") ? "" : searchStr,
+                string.IsNullOrEmpty(filterId) ? 0 : effectiveFilterId, searchStr.StartsWith("**") ? searchStr.Substring(2) : "", searchStr.StartsWith("**") ? "" : searchStr,
                 dvCri, ui, uc, ds);
 
             return dt;
@@ -2351,14 +2377,14 @@ namespace RO.Web
                 )
                 && !isAdd)
             {
-                throw new Exception("access denied");
+                throw new Exception("access denied " + query);
             }
             else if (isAdd)
             {
                 DataTable dtAuthRow = _GetAuthRow(screenId);
                 if (dtAuthRow.Rows[0]["AllowAdd"].ToString() == "N") 
                 {
-                    throw new Exception("access denied");
+                    throw new Exception("access denied on add");
                 }
             }
         }
@@ -2921,8 +2947,15 @@ namespace RO.Web
                         )
                         rec[columnName] =
                             colType == typeof(DateTime) ? (((DateTime)dr[columnName]).ToString("o") + (utcColumns == null || !utcColumns.Contains(columnName) ? "" : "Z")) :
-                            colType == typeof(byte[]) ? (dr[columnName] != null ? ((includeBLOB == IncludeBLOB.Content || ((byte[])(dr[columnName])).Length < 256) ? DecodeFileStream((byte[])(dr[columnName]),true) : BlobPlaceHolder((byte[])(dr[columnName]))) : null) :
-                            dr[columnName].ToString();
+                            colType == typeof(byte[]) ? 
+                                (dr[columnName] != null 
+                                    ? (
+                                        (includeBLOB == IncludeBLOB.Content || ((byte[])(dr[columnName])).Length < 256) 
+                                            ? DecodeFileStream((byte[])(dr[columnName]),true) 
+                                            : includeBLOB == IncludeBLOB.None ? null : BlobPlaceHolder((byte[])(dr[columnName]))) 
+                                    : null) 
+                            : dr[columnName].ToString()
+                            ;
                     else rec[columnName] = null;
                 }
                 ret.Add(rec);
@@ -3394,6 +3427,7 @@ namespace RO.Web
             string colLength = drLabel.Table.Columns.Contains("ColumnLength") ? drLabel["ColumnLength"].ToString() : "999999";
             string dataType = drLabel.Table.Columns.Contains("DataType") ? drLabel["DataType"].ToString() : "";
             
+            // these must not be replaced by db value as they may not be complete from ref record
             if (displayMode == "Document") return;
 
             string oldVal = refRecord.ContainsKey(colName) ? refRecord[colName] : null;
@@ -3413,8 +3447,29 @@ namespace RO.Web
                 val = oldVal;
                 errors.Add(new KeyValuePair<string, string>(colName, "readonly value cannot be changed" + " " + drLabel["ColumnHeader"].ToString()));
             }
-
-            if (isDdlType.Contains(displayName))
+            if (displayMode == "ImageButton")
+            {
+                if (!string.IsNullOrEmpty(drLabel["TableId"].ToString())
+                    && revisedRecord.ContainsKey(colName)
+                    && !string.IsNullOrEmpty(revisedRecord[colName]))
+                {
+                    try
+                    {
+                        List<_ReactFileUploadObj> fileArray = DestructureFileUploadObject(val);
+                        if (fileArray.Where(f => string.IsNullOrEmpty(f.base64)).Count() > 0
+                            && fileArray.Count > 1
+                            )
+                        {
+                            errors.Add(new KeyValuePair<string, string>(colName, "invalid file upload, incomplete content"));
+                        }
+                    }
+                    catch {
+                        // bounce
+                        errors.Add(new KeyValuePair<string, string>(colName, "invalid file upload format"));
+                    }
+                }
+            }
+            else if (isDdlType.Contains(displayName))
             {
                 // this would empty out invalidate field selection
                 val = ValidatedDdlValue(colName, refRecord, revisedRecord, drAuth["MasterTable"].ToString() == "Y" ? revisedRecord : refMaster, isMultiValueType.Contains(displayName));
@@ -3449,6 +3504,9 @@ namespace RO.Web
                 errors.Add(new KeyValuePair<string, string>(colName, drLabel["ErrMessage"].ToString() + " " + drLabel["ColumnHeader"].ToString()));
             }
             /* should include range check too but dtLabel doesn't have that info, needs to be expanded */
+
+            // never use existing ref data for image button, it can be incomplete
+            if (displayMode == "ImageButton") return;
 
             revisedRecord[colName] = val;
         }
@@ -3529,14 +3587,22 @@ namespace RO.Web
         protected Tuple<List<KeyValuePair<string, string>>, List<List<KeyValuePair<string, string>>>> ValidateInput(ref SerializableDictionary<string, string> mst, ref List<SerializableDictionary<string, string>> dtlList, DataTable dtMst, DataTable dtDtl, string mstKeyIdName, string dtlKeyIdName, SerializableDictionary<string, string> skipValidation)
         {
             var pid = mst[mstKeyIdName];
-            var currMst = string.IsNullOrEmpty(pid) || dtMst.Rows.Count == 0 ? InitMaster() : DataTableToListOfObject(dtMst)[0];
+            DataTable dtColLabel = _GetScreenLabel(GetScreenId());
+            var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr["DisplayMode"].ToString().Contains("UTC")).Select(dr => dr["ColumnName"].ToString() + dr["TableId"].ToString()).ToArray();
+            HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
+
+            var currMst = string.IsNullOrEmpty(pid) || dtMst.Rows.Count == 0 
+                        ? InitMaster() 
+                        // full content for image field to validator and utc formatted datetime column, as if it is sent in 
+                        : DataTableToListOfObject(dtMst,IncludeBLOB.Content, null, utcColumns)[0];
 
             List<KeyValuePair<string, string>> mstError = ValidateMst(ref mst, currMst, skipValidation);
             List<List<KeyValuePair<string, string>>> dtlError = new List<List<KeyValuePair<string, string>>>();
 
             if (dtDtl != null)
             {
-                var currDtlList = DataTableToListOfObject(dtDtl).ToDictionary(dr => dr[dtlKeyIdName].ToString(), dr => dr);
+                // full content for image field to validator and utc formatted datetime column, as if it is sent in 
+                var currDtlList = DataTableToListOfObject(dtDtl, IncludeBLOB.Content, null, utcColumns).ToDictionary(dr => dr[dtlKeyIdName].ToString(), dr => dr);
                 dtlError = ValidateDtl(mst, currDtlList, ref dtlList, dtlKeyIdName, skipValidation);
             }
 
@@ -3681,6 +3747,59 @@ namespace RO.Web
         {
             return blobOption == "I" ? IncludeBLOB.Icon : (blobOption == "N" ? IncludeBLOB.None : (blobOption =="C" ? IncludeBLOB.Content : IncludeBLOB.None));
         }
+
+        protected int GetEffectiveScreenFilterId(string filterId, bool isMaster = true)
+        {
+            DataTable dt = _GetScreenFilter(GetScreenId());
+            int effectiveScreenFilterId = 0;
+            int firstApplicableScreenFilterId = 0;
+            int parsedFilterId = 0;
+            bool filterIdIsName = !string.IsNullOrEmpty(filterId) && !int.TryParse(filterId, out parsedFilterId);
+            bool hasDtlFilter = false;
+            bool hasMstFilter = false;
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows) {
+                    if (
+                        (
+                        (dr["ApplyToMst"].ToString() == "Y" && isMaster)
+                        ||
+                        (dr["ApplyToMst"].ToString() == "N" && !isMaster)
+                        )
+                        && 
+                        (
+                        (dr["ScreenFilterId"].ToString() == filterId && !filterIdIsName)
+                        ||
+                        (dr["FilterName"].ToString() == filterId && filterIdIsName)
+                        )
+                        )
+                    {
+                        if (dr["ApplyToMst"].ToString() == "Y") hasMstFilter = true;
+                        else if (dr["ApplyToMst"].ToString() == "N") hasDtlFilter = true;
+
+                        int id = (int)dr["ScreenFilterId"];
+                        if (firstApplicableScreenFilterId == 0)
+                        {
+                            firstApplicableScreenFilterId = id;
+                        }
+                        if (
+                            (!filterIdIsName && id.ToString() == filterId)
+                            ||
+                            (filterIdIsName && dr["FilterName"].ToString() == filterId)
+                            ) 
+                        {
+                            effectiveScreenFilterId = id;
+                            break;
+                        }
+                    }
+                }
+
+            }
+            return effectiveScreenFilterId != 0 
+                ? effectiveScreenFilterId 
+                : (isMaster && !hasDtlFilter || !isMaster && !hasMstFilter) ? firstApplicableScreenFilterId : 0;
+        }
+
         #region visible extern service endpoint
         [WebMethod(EnableSession = false)]
         public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetAuthRow()
@@ -4241,6 +4360,8 @@ namespace RO.Web
         {
             var NewMst = GetNewMst();
             var LastScreenCriteria = GetScreenCriteriaEX(true);
+            var effectiveFilterId = GetEffectiveScreenFilterId(filterId,true);
+            var effectiveDtlFilterId = GetEffectiveScreenFilterId("", false);
             Func<SerializableDictionary<string, string>, SerializableDictionary<string, SerializableDictionary<string, string>>> fn = (d) =>
             {
                 if (d == null) return null;
@@ -4262,15 +4383,15 @@ namespace RO.Web
 
             if (loadFirst && (filledScrCriteria == null || validFilledScrCriteria))
             {
-                var SearchList = GetSearchList(string.IsNullOrEmpty(keyId) ? "" : "**" + keyId, 2, filterId, desiredScreenCriteria);
+                var SearchList = GetSearchList(string.IsNullOrEmpty(keyId) ? "" : "**" + keyId, 2, effectiveFilterId.ToString(), desiredScreenCriteria);
                 if (SearchList.data == null)
                 {
-                    SearchList = GetSearchList("**-1", 2, filterId, desiredScreenCriteria);
+                    SearchList = GetSearchList("**-1", 2, effectiveFilterId.ToString(), desiredScreenCriteria);
                 }
                 var firstMstId = (SearchList.data.data.FirstOrDefault() ?? new SerializableDictionary<string, string>() { { "key", "" } })["key"];
                 var filteringOptions = new SerializableDictionary<string, string>() { { "CurrentScreenCriteria", new JavaScriptSerializer().Serialize(currentScrCriteria.Item2) } };
                 var Mst = GetMstById(firstMstId, filteringOptions);
-                var Dtl = GetDtlById(firstMstId, filteringOptions, 0).data;
+                var Dtl = GetDtlById(firstMstId, filteringOptions, effectiveDtlFilterId).data;
                 return new Tuple<List<SerializableDictionary<string, string>>, SerializableDictionary<string, string>, List<SerializableDictionary<string, string>>>(SearchList.data.data, Mst.data.Count > 0 ? Mst.data[0] : NewMst.data[0], Dtl);
             }
             else
@@ -4290,6 +4411,7 @@ namespace RO.Web
             bool skipMetaData = options.ContainsKey("SkipMetaData") && options["SkipMetaData"] == "Y";
             bool skipSupportingData = options.ContainsKey("SkipSupportingData") && options["SkipSupportingData"] == "Y";
             string filterId = options.ContainsKey("FilterId") ? options["FilterId"] : "";
+            string filterName = options.ContainsKey("FilterName") ? options["FilterName"] : "";
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y";
 
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();

@@ -26,6 +26,7 @@ import { getNaviBar } from './index';
 import AdmReportObjReduxObj, { ShowMstFilterApplied } from '../../redux/AdmReportObj';
 import Skeleton from 'react-skeleton-loader';
 import ControlledPopover from '../../components/custom/ControlledPopover';
+import log from '../../helpers/logger';
 
 class DtlRecord extends RintagiScreen {
   constructor(props) {

@@ -41,6 +41,7 @@ namespace RO.Web
             columns.Add("SystemAbbr1317", typeof(string));
             columns.Add("InstallID", typeof(string));
             columns.Add("AppID", typeof(string));
+            columns.Add("AppNameSpace", typeof(string));
             columns.Add("RegisterInsall", typeof(string));
             columns.Add("ExpiryDate", typeof(string));
             columns.Add("ModuleIncluded", typeof(string));
@@ -132,6 +133,8 @@ namespace RO.Web
             drType["InstallID"] = string.Empty; drDisp["InstallID"] = "TextBox";
             try { dr["AppID"] = (mst["AppID"] ?? "").Trim().Left(9999999); } catch { }
             drType["AppID"] = string.Empty; drDisp["AppID"] = "TextBox";
+            try { dr["AppNameSpace"] = (mst["AppNameSpace"] ?? "").Trim().Left(9999999); } catch { }
+            drType["AppNameSpace"] = string.Empty; drDisp["AppNameSpace"] = "TextBox";
             try { dr["RegisterInsall"] = mst["RegisterInsall"]; } catch { }
             drType["RegisterInsall"] = string.Empty; drDisp["RegisterInsall"] = "HyperPopUp";
             try { dr["ExpiryDate"] = mst["ExpiryDate"]; } catch { }
@@ -198,6 +201,7 @@ namespace RO.Web
                 {"SystemAbbr1317",""},
                 {"InstallID",""},
                 {"AppID",""},
+                {"AppNameSpace",""},
                 {"RegisterInsall","http://www.rintagi.com"},
                 {"ExpiryDate",""},
                 {"ModuleIncluded",""},
@@ -283,8 +287,8 @@ namespace RO.Web
             Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
-                string mstBlobIconOption = !options.ContainsKey("MstBlob") ? "N" : options["MstBlob"];
-                string dtlBlobIconOption = !options.ContainsKey("DtlBlob") ? "N" : options["DtlBlob"];
+                string mstBlobIconOption = !options.ContainsKey("MstBlob") ? "I" : options["MstBlob"];
+                string dtlBlobIconOption = !options.ContainsKey("DtlBlob") ? "I" : options["DtlBlob"];
                 var mstBlob = GetBlobOption(mstBlobIconOption);
                 var dtlBlob = GetBlobOption(dtlBlobIconOption);
                 string jsonCri = options.ContainsKey("CurrentScreenCriteria") ? options["CurrentScreenCriteria"] : null;
@@ -316,6 +320,7 @@ namespace RO.Web
         public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetAdmLicense1022DtlById(string keyId, SerializableDictionary<string, string> options, int filterId)
         {
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y" ;
+            string filterName = options.ContainsKey("FilterName") ? options["FilterName"] : "";
 
             Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
@@ -376,7 +381,7 @@ namespace RO.Web
         }
         protected override DataTable _GetDtlById(string mstId, int screenFilterId)
         {
-            return (new RO.Access3.AdminAccess()).GetDtlById(screenId, "GetAdmLicense1022DtlById", string.IsNullOrEmpty(mstId) ? "-1" : mstId, LcAppConnString, LcAppPw, screenFilterId, LImpr, LCurr);
+            return (new RO.Access3.AdminAccess()).GetDtlById(screenId, "GetAdmLicense1022DtlById", string.IsNullOrEmpty(mstId) ? "-1" : mstId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(screenFilterId.ToString(), false), LImpr, LCurr);
 
         }
         protected override Dictionary<string, SerializableDictionary<string, string>> GetDdlContext()
@@ -489,7 +494,7 @@ namespace RO.Web
                 var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr["DisplayMode"].ToString().Contains("UTC")).Select(dr => dr["ColumnName"].ToString() + dr["TableId"].ToString()).ToArray();
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
 
-                result.mst = DataTableToListOfObject(dtMst, IncludeBLOB.Icon, colAuth, utcColumns)[0];
+                result.mst = DataTableToListOfObject(dtMst, IncludeBLOB.None, colAuth, utcColumns)[0];
 
                     
                 result.message = msg;

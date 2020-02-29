@@ -13,6 +13,7 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
@@ -26,6 +27,7 @@ import { getNaviBar } from './index';
 import AdmUsrReduxObj, { ShowMstFilterApplied } from '../../redux/AdmUsr';
 import Skeleton from 'react-skeleton-loader';
 import ControlledPopover from '../../components/custom/ControlledPopover';
+import log from '../../helpers/logger';
 
 class MstRecord extends RintagiScreen {
   constructor(props) {
@@ -143,11 +145,13 @@ class MstRecord extends RintagiScreen {
           DefSystemId1: (values.cDefSystemId1 || {}).value || '',
           UsrEmail1: values.cUsrEmail1 || '',
           UsrMobile1: values.cUsrMobile1 || '',
-          UsrGroupLs1: (values.cUsrGroupLs1 || {}).value || '',
+          UsrGroupLs1: values.cUsrGroupLs1 || '',
           UsrImprLink1: (values.cUsrImprLink1 || {}).value || '',
-          PicMed1: values.cPicMed1 ?
+          PicMed1: values.cPicMed1 && values.cPicMed1.ts ?
             JSON.stringify({
               ...values.cPicMed1,
+              ts: undefined,
+              lastTS: values.cPicMed1.ts,
               base64: this.StripEmbeddedBase64Prefix(values.cPicMed1.base64)
             }) : null,
           IPAlert1: values.cIPAlert1 ? 'Y' : 'N',
@@ -162,8 +166,8 @@ class MstRecord extends RintagiScreen {
           FailedAttempt1: values.cFailedAttempt1 || '',
           LastSuccessDt1: values.cLastSuccessDt1 || '',
           LastFailedDt1: values.cLastFailedDt1 || '',
-          CompanyLs1: (values.cCompanyLs1 || {}).value || '',
-          ProjectLs1: (values.cProjectLs1 || {}).value || '',
+          CompanyLs1: values.cCompanyLs1 || '',
+          ProjectLs1: values.cProjectLs1 || '',
           ModifiedOn1: values.cModifiedOn1 || '',
           HintQuestionId1: (values.cHintQuestionId1 || {}).value || '',
           HintAnswer1: values.cHintAnswer1 || '',
@@ -475,7 +479,7 @@ class MstRecord extends RintagiScreen {
                     cDefSystemId1: DefSystemId1List.filter(obj => { return obj.key === DefSystemId1 })[0],
                     cUsrEmail1: formatContent(UsrEmail1 || '', 'TextBox'),
                     cUsrMobile1: formatContent(UsrMobile1 || '', 'TextBox'),
-                    cUsrGroupLs1: UsrGroupLs1List.filter(obj => { return obj.key === UsrGroupLs1 })[0],
+                    cUsrGroupLs1: UsrGroupLs1,
                     cUsrImprLink1: UsrImprLink1List.filter(obj => { return obj.key === UsrImprLink1 })[0],
                     cPicMed1: PicMed1,
                     cIPAlert1: IPAlert1 === 'Y',
@@ -490,8 +494,8 @@ class MstRecord extends RintagiScreen {
                     cFailedAttempt1: formatContent(FailedAttempt1 || '', 'StarRating'),
                     cLastSuccessDt1: LastSuccessDt1 || new Date(),
                     cLastFailedDt1: LastFailedDt1 || new Date(),
-                    cCompanyLs1: CompanyLs1List.filter(obj => { return obj.key === CompanyLs1 })[0],
-                    cProjectLs1: ProjectLs1List.filter(obj => { return obj.key === ProjectLs1 })[0],
+                    cCompanyLs1: CompanyLs1,
+                    cProjectLs1: ProjectLs1,
                     cModifiedOn1: ModifiedOn1 || new Date(),
                     cHintQuestionId1: HintQuestionId1List.filter(obj => { return obj.key === HintQuestionId1 })[0],
                     cHintAnswer1: formatContent(HintAnswer1 || '', 'TextBox'),
@@ -565,21 +569,21 @@ class MstRecord extends RintagiScreen {
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-                          {!isNaN(selectedMst) ?
+                          {(selectedMst || {}).key ?
                             <div className='form__form-group'>
                               <div className='form__form-group-narrow'>
                                 <div className='form__form-group-field'>
                                   <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
-                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
-                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || ''}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || ''}</span>
                                     </span>
                                   </span>
                                 </div>
                               </div>
                               <div className='form__form-group-field'>
                                 <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
-                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
-                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || ''}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || ''}</span>
                                   </span>
                                 </span>
                               </div>
@@ -811,10 +815,10 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <DropdownField
+                                      <div className='form__form-group-field listboxArea' style={{ height: '102px' }}>
+                                        <ListBox
                                           name='cUsrGroupLs1'
-                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cUsrGroupLs1')}
+                                          onChange={this.ListBoxChange(setFieldValue, setFieldTouched, 'cUsrGroupLs1')}
                                           value={values.cUsrGroupLs1}
                                           options={UsrGroupLs1List}
                                           placeholder=''
@@ -1145,10 +1149,10 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <DropdownField
+                                      <div className='form__form-group-field listboxArea' style={{ height: '202px' }}>
+                                        <ListBox
                                           name='cCompanyLs1'
-                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cCompanyLs1')}
+                                          onChange={this.ListBoxChange(setFieldValue, setFieldTouched, 'cCompanyLs1')}
                                           value={values.cCompanyLs1}
                                           options={CompanyLs1List}
                                           placeholder=''
@@ -1169,10 +1173,10 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <DropdownField
+                                      <div className='form__form-group-field listboxArea' style={{ height: '202px' }}>
+                                        <ListBox
                                           name='cProjectLs1'
-                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cProjectLs1')}
+                                          onChange={this.ListBoxChange(setFieldValue, setFieldTouched, 'cProjectLs1')}
                                           value={values.cProjectLs1}
                                           options={ProjectLs1List}
                                           placeholder=''

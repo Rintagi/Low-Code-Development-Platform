@@ -22,6 +22,7 @@ import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
 import DtlRecord from './DtlRecord';
+import log from '../../helpers/logger';
 import AdmScreenCriReduxObj from '../../redux/AdmScreenCri';
 
 class DtlList extends RintagiScreen {

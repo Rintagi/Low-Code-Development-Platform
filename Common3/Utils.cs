@@ -1437,7 +1437,7 @@
             return (from x in columns where !string.IsNullOrEmpty(x.ColumnName) select x).ToList();
         }
 
-        public static void DirectoryCleanup(string sourceDirName, string searchPattern, bool recursve = false)
+        public static void DirectoryCleanup(string sourceDirName, string searchPattern, bool recursive = false)
         {
             if (string.IsNullOrEmpty(searchPattern)) return;
 
@@ -1460,7 +1460,7 @@
                 { }
             }
 
-            if (recursve)
+            if (recursive)
             {
                 // Get the subdirectories for the specified directory.
                 try
@@ -1468,7 +1468,7 @@
                     DirectoryInfo[] dirs = dir.GetDirectories();
                     foreach (DirectoryInfo subdir in dirs)
                     {
-                        DirectoryCleanup(subdir.FullName, searchPattern, recursve);
+                        DirectoryCleanup(subdir.FullName, searchPattern, recursive);
                     }
                 }
                 catch { }

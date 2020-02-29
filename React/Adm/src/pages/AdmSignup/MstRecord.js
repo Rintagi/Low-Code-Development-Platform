@@ -13,6 +13,7 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
@@ -26,6 +27,7 @@ import { getNaviBar } from './index';
 import AdmSignupReduxObj, { ShowMstFilterApplied } from '../../redux/AdmSignup';
 import Skeleton from 'react-skeleton-loader';
 import ControlledPopover from '../../components/custom/ControlledPopover';
+import log from '../../helpers/logger';
 
 class MstRecord extends RintagiScreen {
   constructor(props) {
@@ -446,21 +448,21 @@ class MstRecord extends RintagiScreen {
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-                          {!isNaN(selectedMst) ?
+                          {(selectedMst || {}).key ?
                             <div className='form__form-group'>
                               <div className='form__form-group-narrow'>
                                 <div className='form__form-group-field'>
                                   <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
-                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
-                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || ''}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || ''}</span>
                                     </span>
                                   </span>
                                 </div>
                               </div>
                               <div className='form__form-group-field'>
                                 <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
-                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
-                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || ''}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || ''}</span>
                                   </span>
                                 </span>
                               </div>

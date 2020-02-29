@@ -493,7 +493,10 @@ export function uploadMultiDoc(uploadService, mstId, dtlId, isMaster, screenColu
     return {
       screenColumnName: screenColumnName,
       isMaster,
-      file: { ...f, ts: undefined },
+      file: { ...f
+        , ts: undefined
+        , lastTS: f.ts || undefined,
+       },
       removeList,
       actionTypeSuccess,
       fileName: f.fileName,
@@ -579,6 +582,7 @@ export function processMultiDoc(existingDocList, newDocList)
     base64: o.base64 || (o.DocId && (currentDocsLookup[o.DocId] || {}).base64),
     mimeType: o.mimeType || (o.DocId && (currentDocsLookup[o.DocId] || {}).mimeType),
     ts: undefined,
+    lastTS: o.ts || undefined,
   }));
   return {
     newDocs:newDocs,
@@ -598,6 +602,9 @@ export function makeMultiDocFileObjectFromServer(o, MstKeyName) {
     fileName: o.DocName,
     DocId: o.DocId,
     MasterId: o[MstKeyName],
+    InputOn: o.InputOn + 'Z',
+    DocSize: o.DocSize,
+    InputBy: o.LoginName,
   }
 }
 

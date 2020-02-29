@@ -171,3 +171,5 @@
 266~@~32~@~114~@~Année à ce jour
 267~@~33~@~114~@~L'année dernière
 268~@~34~@~114~@~Toutes les dates
+269~@~35~@~1~@~Impersonated By Me
+270~@~37~@~1~@~Has impersonation

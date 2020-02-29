@@ -138,7 +138,7 @@ export default class AutoCompleteField extends Component {
 
   render() {
     return (
-      <div className='form__form-group-input-wrap'>
+      <div className={`${this.props.className} form__form-group-input-wrap`}>
         <Fragment>
           <Typeahead
             ref={(typeahead) => this.typeahead = typeahead}

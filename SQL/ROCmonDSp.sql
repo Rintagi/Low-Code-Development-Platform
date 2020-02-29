@@ -2895,7 +2895,27 @@ SELECT @sClause = 'SELECT ColOvrdId241=b241.ColOvrdId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b241.ScreenObjId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
@@ -3033,7 +3053,27 @@ SELECT @sClause = 'SELECT ScreenObjHlpId21=b21.ScreenObjHlpId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b21.ScreenObjId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+ SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b21.','Y','N',null,'N','ScreenObjHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b21.','Y','N',null,'N','ScreenObjHlpId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
@@ -3177,7 +3217,27 @@ SELECT @sClause = 'SELECT RptwizCatDtlId182=b182.RptwizCatDtlId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b182.RptwizCatId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
@@ -3321,7 +3381,27 @@ SELECT @sClause = 'SELECT ColumnId5=b5.ColumnId'
 SELECT @oClause = 'ORDER BY b5.ColumnIndex'
 SELECT @wClause = 'WHERE b5.TableId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
@@ -3503,7 +3583,27 @@ SELECT @sClause = 'SELECT MenuHlpId40=b40.MenuHlpId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b40.MenuId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b40.','Y','N',null,'N','MenuHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b40.','Y','N',null,'N','MenuHlpId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
@@ -3605,7 +3705,27 @@ SELECT @sClause = 'SELECT MenuPrmId231=b231.MenuPrmId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b231.MenuId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
@@ -3703,7 +3823,27 @@ SELECT @sClause = 'SELECT MsgCenterId147=b147.MsgCenterId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b147.MsgId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b147.','Y','N',null,'N','MsgCenterId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b147.','Y','N',null,'N','MsgCenterId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b147.','Y','N',null,'N','MsgCenterId',@wClause OUTPUT,@Usrs
@@ -4067,7 +4207,27 @@ SELECT @sClause = 'SELECT ReportHlpId96=b96.ReportHlpId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b96.ReportId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b96.','Y','N',null,'N','ReportHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b96.','Y','N',null,'N','ReportHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b96.','Y','N',null,'N','ReportHlpId',@wClause OUTPUT,@Usrs
@@ -4188,7 +4348,27 @@ SELECT @sClause = 'SELECT ReportCriHlpId98=b98.ReportCriHlpId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b98.ReportCriId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b98.','Y','N',null,'N','ReportCriHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b98.','Y','N',null,'N','ReportCriHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b98.','Y','N',null,'N','ReportCriHlpId',@wClause OUTPUT,@Usrs
@@ -4346,7 +4526,27 @@ SELECT @sClause = 'SELECT ReportObjHlpId99=b99.ReportObjHlpId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b99.ReportObjId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b99.','Y','N',null,'N','ReportObjHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b99.','Y','N',null,'N','ReportObjHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b99.','Y','N',null,'N','ReportObjHlpId',@wClause OUTPUT,@Usrs
@@ -4456,7 +4656,27 @@ SELECT @sClause = 'SELECT RowOvrdPrmId239=b239.RowOvrdPrmId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b239.RowOvrdId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
@@ -4700,7 +4920,27 @@ SELECT @sClause = 'SELECT RptCelId164=b164.RptCelId'
 SELECT @oClause = 'ORDER BY b164.RowNum, x1477.RptTblDesc'
 SELECT @wClause = 'WHERE b164.RptTblId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
@@ -4947,7 +5187,27 @@ SELECT @sClause = 'SELECT ScreenHlpId16=b16.ScreenHlpId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b16.ScreenId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b16.','Y','N',null,'N','ScreenHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b16.','Y','N',null,'N','ScreenHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b16.','Y','N',null,'N','ScreenHlpId',@wClause OUTPUT,@Usrs
@@ -5061,7 +5321,27 @@ SELECT @sClause = 'SELECT ScreenCriHlpId105=b105.ScreenCriHlpId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b105.ScreenCriId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b105.','Y','N',null,'N','ScreenCriHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b105.','Y','N',null,'N','ScreenCriHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b105.','Y','N',null,'N','ScreenCriHlpId',@wClause OUTPUT,@Usrs
@@ -5165,7 +5445,27 @@ SELECT @sClause = 'SELECT ScreenFilterHlpId87=b87.ScreenFilterHlpId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b87.ScreenFilterId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b87.','Y','N',null,'N','ScreenFilterHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b87.','Y','N',null,'N','ScreenFilterHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b87.','Y','N',null,'N','ScreenFilterHlpId',@wClause OUTPUT,@Usrs
@@ -5333,7 +5633,27 @@ SELECT @sClause = 'SELECT ScreenTabHlpId80=b80.ScreenTabHlpId'
 SELECT @oClause = ''
 SELECT @wClause = 'WHERE b80.ScreenTabId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b80.','Y','N',null,'N','ScreenTabHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b80.','Y','N',null,'N','ScreenTabHlpId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
@@ -5654,7 +5974,27 @@ SELECT @sClause = 'SELECT WizardObjId72=b72.WizardObjId'
 SELECT @oClause = 'ORDER BY b72.TabIndex'
 SELECT @wClause = 'WHERE b72.WizardId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
 SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
-IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
@@ -24081,7 +24421,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -24211,7 +24571,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -24324,7 +24704,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -24463,7 +24863,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -24574,7 +24994,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -24683,7 +25123,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -24800,7 +25260,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -24909,7 +25389,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		   SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -25036,7 +25536,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -25154,7 +25674,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -25276,7 +25816,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -25372,7 +25932,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -25473,7 +26053,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -25582,7 +26182,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -25692,7 +26312,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -25945,7 +26585,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -26089,7 +26749,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -26221,7 +26901,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -26352,7 +27052,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -26470,7 +27190,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -26607,7 +27347,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -26772,7 +27532,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -26905,7 +27685,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -27217,7 +28017,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -27361,7 +28181,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -27479,7 +28319,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -27656,7 +28516,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -27762,7 +28642,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -27888,7 +28788,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -27989,7 +28909,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -28085,7 +29025,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -28195,7 +29155,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -28300,7 +29280,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -28433,7 +29433,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -28550,7 +29570,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -28658,7 +29698,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -28983,7 +30043,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -29084,7 +30164,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -29184,7 +30284,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -29310,7 +30430,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -29414,7 +30554,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -29533,7 +30693,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -29630,7 +30810,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -29726,7 +30926,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -29822,7 +31042,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -29918,7 +31158,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -30016,7 +31276,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -30124,7 +31404,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -30241,7 +31541,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -30340,7 +31660,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -30436,7 +31776,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -30532,7 +31892,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -30628,7 +32008,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -30727,7 +32127,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -30920,7 +32340,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -31020,7 +32460,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -31133,7 +32593,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -31231,7 +32711,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -31333,7 +32833,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -31434,7 +32954,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -31532,7 +33072,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -31648,7 +33208,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -31746,7 +33326,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -31848,7 +33448,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -32041,7 +33661,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -32151,7 +33791,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -32256,7 +33916,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -32354,7 +34034,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -32455,7 +34155,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -32556,7 +34276,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -32656,7 +34396,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -32752,7 +34512,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -32849,7 +34629,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -32950,7 +34750,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -33047,7 +34867,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -33140,7 +34980,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -33238,7 +35098,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -33340,7 +35220,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -33443,7 +35343,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -33537,7 +35457,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -33637,7 +35577,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -33734,7 +35694,27 @@ BEGIN
 	BEGIN
 		SELECT @bUsr='N'
 		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
-		IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + ' AND ' + @filterClause
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
 		IF @useGlobalFilter='Y'
 		BEGIN
 			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
@@ -34091,8 +36071,8 @@ DECLARE  @rr			varchar(1000)
 		,@SysAdmin		char(1)
 SET NOCOUNT ON
 /* REMOVE redundant, only first 2 is enough */
-SELECT @PermKeys = RODesign.dbo.CompressLS(@PermKeys)
-SELECT @RowAuthoritys = RODesign.dbo.CompressLS(@RowAuthoritys)
+SELECT @PermKeys = RODesign.dbo.fCompressLS(@PermKeys)
+SELECT @RowAuthoritys = RODesign.dbo.fCompressLS(@RowAuthoritys)
 --SELECT @Usrs = RODesign.dbo.CompressLS(@Usrs)
 
 
@@ -36101,7 +38081,7 @@ SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefaul
 IF @CultureId <> @DefCultureId
 	INSERT #hlp (ScreenFilterId, FilterName) SELECT a.ScreenFilterId, a.FilterName FROM dbo.ScreenFilterHlp a WHERE a.CultureId = @DefCultureId
 	AND NOT EXISTS (SELECT 'true' FROM dbo.ScreenFilterHlp b WHERE a.ScreenFilterId = b.ScreenFilterId AND b.CultureId = @CultureId)
-SELECT a.ScreenFilterId, b.FilterName
+SELECT a.ScreenFilterId, b.FilterName, a.ApplyToMst
 	FROM dbo.ScreenFilter a
 	INNER JOIN #hlp b ON a.ScreenFilterId = b.ScreenFilterId
 	WHERE a.ScreenId = @screenId ORDER BY a.FilterOrder
@@ -36271,97 +38251,118 @@ ALTER PROCEDURE [dbo].[GetScreenLis1Proc]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13) + ' @useGlobalFilter' + CHAR(9) + 'char(1)' + CHAR(13)
-+ ',@screenId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
-+ ',@Usrs' + CHAR(9) + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@RowAuthoritys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Customers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Vendors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Members' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Investors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Agents' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Brokers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@UsrGroups' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Key' + CHAR(9) + CHAR(9) + 'nvarchar(500)' + CHAR(13)
-+ ',@FilterTxt' + CHAR(9) + CHAR(9) + 'nvarchar(500)' + CHAR(13)
+SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13) + CHAR(10) + ' @useGlobalFilter' + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ ',@screenId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
++ ',@Usrs' + CHAR(9) + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@RowAuthoritys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Customers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Vendors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Members' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Investors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Agents' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Brokers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@UsrGroups' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Key' + CHAR(9) + CHAR(9) + 'nvarchar(500)' + CHAR(13) + CHAR(10)
++ ',@FilterTxt' + CHAR(9) + CHAR(9) + 'nvarchar(500)' + CHAR(13) + CHAR(10)
 + @paramCriSql
-+ ',@screenFilterId' + CHAR(9) + 'int' + CHAR(13)
-+ ',@currCompanyId' + CHAR(9) + 'int' + CHAR(13)
-+ ',@currProjectId' + CHAR(9) + 'int' + CHAR(13)
-+ ',@topN' + CHAR(9) + 'smallint = null' + CHAR(13)
-+ '/* WITH ENCRYPTION */' + CHAR(13)
-+ 'AS' + CHAR(13) + 'SET NOCOUNT ON' + CHAR(13) + 'DECLARE'
-+ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@fClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@wClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@oClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@filterClause' + CHAR(9) + CHAR(9) + 'nvarchar(2000)' + CHAR(13)
-+ CHAR(9) + ',@bUsr' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@UsrId' + CHAR(9) + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
-+ CHAR(9) + ',@tClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@cc' + CHAR(9) + CHAR(9) + 'varchar(max)' + CHAR(13)
-+ CHAR(9) + ',@rr' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ CHAR(9) + ',@pp' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ CHAR(9) + ',@SelUsr' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelUsrGroup' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelCulture' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelCompany' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelAgent' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelBroker' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelCustomer' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelInvestor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelMember' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelVendor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelLender' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelBorrower' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelGuarantor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelProject' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@RowAuthorityId' + CHAR(9) + 'smallint' + CHAR(13) + @declare1Sql
++ ',@screenFilterId' + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
++ ',@currCompanyId' + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
++ ',@currProjectId' + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
++ ',@topN' + CHAR(9) + 'smallint = null' + CHAR(13) + CHAR(10)
++ '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10)
++ 'AS' + CHAR(13) + CHAR(10) + 'SET NOCOUNT ON' + CHAR(13) + CHAR(10) + 'DECLARE'
++ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@fClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@wClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@oClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@filterClause' + CHAR(9) + CHAR(9) + 'nvarchar(2000)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@bUsr' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@UsrId' + CHAR(9) + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@tClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@cc' + CHAR(9) + CHAR(9) + 'varchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@rr' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@pp' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelUsr' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelUsrGroup' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelCulture' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelCompany' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelAgent' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelBroker' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelCustomer' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelInvestor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelMember' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelVendor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelLender' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelBorrower' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelGuarantor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelProject' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@RowAuthorityId' + CHAR(9) + 'smallint' + CHAR(13) + CHAR(10) + @declare1Sql
 -- @sClause comes after @fClause for GetExp to work properly:
 -- Use DISTINCT to avoid duplicate arising from impersonation:
-SELECT @procedureSql1 = @procedureSql1 + 'SELECT @fClause=''''FROM ' + @fromClause + '''''' + CHAR(13)
-+ 'SELECT @sClause=''''SELECT DISTINCT '''' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '''''''' ELSE '''' TOP '''' + CONVERT(varchar(10),@topN) END + '''' '  + @select1Clause + '''''' + CHAR(13)
+SELECT @procedureSql1 = @procedureSql1 + 'SELECT @fClause=''''FROM ' + @fromClause + '''''' + CHAR(13) + CHAR(10)
++ 'SELECT @sClause=''''SELECT DISTINCT '''' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '''''''' ELSE '''' TOP '''' + CONVERT(varchar(10),@topN) END + '''' '  + @select1Clause + '''''' + CHAR(13) + CHAR(10)
 IF @orderClause <> ''
-	SELECT @procedureSql1 = @procedureSql1 + 'SELECT @oClause=''''ORDER BY ' + @orderClause + '''''' + CHAR(13)
+	SELECT @procedureSql1 = @procedureSql1 + 'SELECT @oClause=''''ORDER BY ' + @orderClause + '''''' + CHAR(13) + CHAR(10)
 ELSE
-	SELECT @procedureSql1 = @procedureSql1 + 'SELECT @oClause=''''''''' + CHAR(13)
-SELECT @procedureSql1 = @procedureSql1 + 'SELECT @wClause=''''WHERE 1=1'''', @bUsr=''''Y''''' + CHAR(13)
-SELECT @procedureSql2 = 'SELECT @pp = @Usrs' + CHAR(13)
-+ 'WHILE @pp <> '''''''' AND datalength(@pp) > 0' + CHAR(13)
-+ 'BEGIN' + CHAR(13)
-+ CHAR(9) + 'EXEC ' + @desDatabase + '.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT' + CHAR(13)
-+ CHAR(9) + 'IF @bUsr=''''Y''''' + CHAR(13)
-+ CHAR(9) + 'BEGIN' + CHAR(13)
-+ CHAR(9) + CHAR(9) + 'SELECT @bUsr=''''N''''' + CHAR(13)
+	SELECT @procedureSql1 = @procedureSql1 + 'SELECT @oClause=''''''''' + CHAR(13) + CHAR(10)
+SELECT @procedureSql1 = @procedureSql1 + 'SELECT @wClause=''''WHERE 1=1'''', @bUsr=''''Y''''' + CHAR(13) + CHAR(10)
+SELECT @procedureSql2 = 'SELECT @pp = @Usrs' + CHAR(13) + CHAR(10)
++ 'WHILE @pp <> '''''''' AND datalength(@pp) > 0' + CHAR(13) + CHAR(10)
++ 'BEGIN' + CHAR(13) + CHAR(10)
++ CHAR(9) + 'EXEC ' + @desDatabase + '.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT' + CHAR(13) + CHAR(10)
++ CHAR(9) + 'IF @bUsr=''''Y''''' + CHAR(13) + CHAR(10)
++ CHAR(9) + 'BEGIN' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + 'SELECT @bUsr=''''N''''' + CHAR(13) + CHAR(10)
 + CHAR(9) + CHAR(9) + 'SELECT @filterClause=rtrim(FilterClause) FROM '
-+ @sysDatabase + '.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst=''''Y''''' + CHAR(13)
-+ CHAR(9) + CHAR(9) + 'IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + '''' AND '''' + @filterClause' + CHAR(13)
-+ CHAR(9) + CHAR(9) + 'IF @useGlobalFilter=''''Y''''' + CHAR(13)
-+ CHAR(9) + CHAR(9) + 'BEGIN' + CHAR(13)
++ @sysDatabase + '.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst=''''Y''''' + CHAR(13) + CHAR(10)
+--+ CHAR(9) + CHAR(9) + 'IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + '''' AND '''' + @filterClause' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + 'IF @@ROWCOUNT <> 0' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + 'BEGIN' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Usrs'''', REPLACE(REPLACE(@Usrs,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@RowAuthoritys'''', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Customers'''', REPLACE(REPLACE(@Customers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Vendors'''', REPLACE(REPLACE(@Vendors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Members'''', REPLACE(REPLACE(@Members,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Investors'''', REPLACE(REPLACE(@Investors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Agents'''', REPLACE(REPLACE(@Agents,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Brokers'''', REPLACE(REPLACE(@Brokers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@UsrGroups'''', REPLACE(REPLACE(@UsrGroups,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Companys'''', REPLACE(REPLACE(@Companys,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Projects'''', REPLACE(REPLACE(@Projects,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Borrowers'''', REPLACE(REPLACE(@Borrowers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Lenders'''', REPLACE(REPLACE(@Lenders,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@Guarantors'''', REPLACE(REPLACE(@Guarantors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@currCompanyId'''',REPLACE(@currCompanyId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@currProjectId'''',REPLACE(@currProjectId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@currUsrId'''', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + '    SELECT @wClause=@wClause + '''' AND '''' + @filterClause' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + 'END' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + 'IF @useGlobalFilter=''''Y''''' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + 'BEGIN' + CHAR(13) + CHAR(10)
 + CHAR(9) + CHAR(9) + CHAR(9) + 'SELECT @filterClause=rtrim(FilterClause) FROM '
-+ @sysDatabase + '.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId' + CHAR(13)
++ @sysDatabase + '.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId' + CHAR(13) + CHAR(10)
 + CHAR(9) + CHAR(9) + CHAR(9) + 'IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + '''' '''' + replace(@filterClause,''''~~.'''','''''
-+ @tableAbbrM + '.'''')' + CHAR(13)
-+ CHAR(9) + CHAR(9) + CHAR(9) + 'ELSE' + CHAR(13)
-+ CHAR(9) + CHAR(9) + CHAR(9) + 'BEGIN' + CHAR(13)
++ @tableAbbrM + '.'''')' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + CHAR(9) + 'ELSE' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + CHAR(9) + 'BEGIN' + CHAR(13) + CHAR(10)
 + CHAR(9) + CHAR(9) + CHAR(9) + CHAR(9) + 'SELECT @filterClause=rtrim(FilterClause) FROM '
-+ @sysDatabase + '.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault=''''Y''''' + CHAR(13)
++ @sysDatabase + '.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault=''''Y''''' + CHAR(13) + CHAR(10)
 + CHAR(9) + CHAR(9) + CHAR(9) + CHAR(9) + 'IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + '''' '''' + replace(@filterClause,''''~~.'''','''''
-+ @tableAbbrM + '.'''')' + CHAR(13)
-+ CHAR(9) + CHAR(9) + CHAR(9) + 'END' + CHAR(13)
-+ CHAR(9) + CHAR(9) + 'END' + CHAR(13)
-+ CHAR(9) + 'END' + CHAR(13)
-+ 'END' + CHAR(13)
++ @tableAbbrM + '.'''')' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + CHAR(9) + 'END' + CHAR(13) + CHAR(10)
++ CHAR(9) + CHAR(9) + 'END' + CHAR(13) + CHAR(10)
++ CHAR(9) + 'END' + CHAR(13) + CHAR(10)
++ 'END' + CHAR(13) + CHAR(10)
 + @allClause
 SELECT @procedureSql3 = @selfClause + @criClause
-+ 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13)
-+ 'RETURN 0' + CHAR(13)
++ 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13) + CHAR(10)
++ 'RETURN 0' + CHAR(13) + CHAR(10)
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -36383,16 +38384,16 @@ ALTER PROCEDURE [dbo].[GetScreenLis2Proc]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-SELECT @procedure2Sql = 'CREATE PROCEDURE ' + @procedureName + CHAR(13)
-+ ' ' + RIGHT(@param2Sql,LEN(@param2Sql)-1) + '/* WITH ENCRYPTION */' + CHAR(13) + 'AS' + CHAR(13) + 'SET NOCOUNT ON' + CHAR(13) + 'DECLARE'
-+ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@fClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@wClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ 'SELECT @fClause = ''''FROM ' + @fromClause + '''''' + CHAR(13)
-+ 'SELECT @sClause = ''''SELECT ' + @select2Clause + '''''' + CHAR(13)
+SELECT @procedure2Sql = 'CREATE PROCEDURE ' + @procedureName + CHAR(13) + CHAR(10)
++ ' ' + RIGHT(@param2Sql,LEN(@param2Sql)-1) + '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10) + 'AS' + CHAR(13) + CHAR(10) + 'SET NOCOUNT ON' + CHAR(13) + CHAR(10) + 'DECLARE'
++ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@fClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@wClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause = ''''FROM ' + @fromClause + '''''' + CHAR(13) + CHAR(10)
++ 'SELECT @sClause = ''''SELECT ' + @select2Clause + '''''' + CHAR(13) + CHAR(10)
 + @whereClause
-+ 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause)' + CHAR(13)
-+ 'RETURN 0' + CHAR(13)
++ 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause)' + CHAR(13) + CHAR(10)
++ 'RETURN 0' + CHAR(13) + CHAR(10)
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -36424,66 +38425,87 @@ ALTER PROCEDURE [dbo].[GetScreenLis3Proc]
 AS
 SET NOCOUNT ON
 /* @paramSql is temporary ignored */
-SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13)
-+ ' @screenId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + @paramKeySql
-+ ',@Usrs' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@RowAuthoritys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Customers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Vendors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Members' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Investors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Agents' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Brokers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@UsrGroups' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@screenFilterId' + CHAR(9) + 'int' + CHAR(13)
-+ ',@currCompanyId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
-+ ',@currProjectId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
-+ '/* WITH ENCRYPTION */' + CHAR(13)
-+ 'AS' + CHAR(13) + 'SET NOCOUNT ON' + CHAR(13) + 'DECLARE'
-+ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@fClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@wClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@oClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@tClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@filterClause' + CHAR(9) + CHAR(9) + 'nvarchar(2000)' + CHAR(13)
-+ CHAR(9) + ',@cc' + CHAR(9) + CHAR(9) + 'varchar(max)' + CHAR(13)
-+ CHAR(9) + ',@rr' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ CHAR(9) + ',@pp' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ CHAR(9) + ',@SelUsr' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelUsrGroup' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelCulture' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelCompany' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelAgent' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelBroker' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelCustomer' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelInvestor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelMember' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelVendor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelLender' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelBorrower' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelGuarantor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelProject' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@RowAuthorityId' + CHAR(9) + 'smallint' + CHAR(13) + @declareSql
-+ 'SELECT @fClause = ''''FROM ' + @fromClause + '''''' + CHAR(13)
-+ 'SELECT @sClause = ''''SELECT ' + @selectClause + '''''' + CHAR(13)
+SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13) + CHAR(10)
++ ' @screenId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10) + @paramKeySql
++ ',@Usrs' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@RowAuthoritys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Customers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Vendors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Members' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Investors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Agents' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Brokers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@UsrGroups' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@screenFilterId' + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
++ ',@currCompanyId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
++ ',@currProjectId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
++ '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10)
++ 'AS' + CHAR(13) + CHAR(10) + 'SET NOCOUNT ON' + CHAR(13) + CHAR(10) + 'DECLARE'
++ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@fClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@wClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@oClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@tClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@filterClause' + CHAR(9) + CHAR(9) + 'nvarchar(2000)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@cc' + CHAR(9) + CHAR(9) + 'varchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@rr' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@pp' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelUsr' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelUsrGroup' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelCulture' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelCompany' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelAgent' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelBroker' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelCustomer' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelInvestor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelMember' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelVendor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelLender' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelBorrower' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelGuarantor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelProject' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@RowAuthorityId' + CHAR(9) + 'smallint' + CHAR(13) + CHAR(10) + @declareSql
++ 'SELECT @fClause = ''''FROM ' + @fromClause + '''''' + CHAR(13) + CHAR(10)
++ 'SELECT @sClause = ''''SELECT ' + @selectClause + '''''' + CHAR(13) + CHAR(10)
 IF @orderClause <> ''
-	SELECT @procedureSql1 = @procedureSql1 + 'SELECT @oClause = ''''ORDER BY ' + @orderClause + '''''' + CHAR(13)
+	SELECT @procedureSql1 = @procedureSql1 + 'SELECT @oClause = ''''ORDER BY ' + @orderClause + '''''' + CHAR(13) + CHAR(10)
 ELSE
-	SELECT @procedureSql1 = @procedureSql1 + 'SELECT @oClause = ''''''''' + CHAR(13)
+	SELECT @procedureSql1 = @procedureSql1 + 'SELECT @oClause = ''''''''' + CHAR(13) + CHAR(10)
 SELECT @procedureSql2 = @whereClause
 + 'SELECT @filterClause=rtrim(FilterClause) FROM '
-+ @sysDatabase + '.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>''''Y''''' + CHAR(13)
-+ 'IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + '''' AND '''' + @filterClause' + CHAR(13)
++ @sysDatabase + '.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>''''Y''''' + CHAR(13) + CHAR(10)
+--+ 'IF @@ROWCOUNT <> 0 SELECT @wClause=@wClause + '''' AND '''' + @filterClause' + CHAR(13) + CHAR(10)
++ 'IF @@ROWCOUNT <> 0' + CHAR(13) + CHAR(10)
++ 'BEGIN' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Usrs'''', REPLACE(REPLACE(@Usrs,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@RowAuthoritys'''', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Customers'''', REPLACE(REPLACE(@Customers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Vendors'''', REPLACE(REPLACE(@Vendors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Members'''', REPLACE(REPLACE(@Members,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Investors'''', REPLACE(REPLACE(@Investors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Agents'''', REPLACE(REPLACE(@Agents,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Brokers'''', REPLACE(REPLACE(@Brokers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@UsrGroups'''', REPLACE(REPLACE(@UsrGroups,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Companys'''', REPLACE(REPLACE(@Companys,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Projects'''', REPLACE(REPLACE(@Projects,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Borrowers'''', REPLACE(REPLACE(@Borrowers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Lenders'''', REPLACE(REPLACE(@Lenders,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@Guarantors'''', REPLACE(REPLACE(@Guarantors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@currCompanyId'''',REPLACE(@currCompanyId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@currProjectId'''',REPLACE(@currProjectId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ '    SELECT @filterClause=replace(@filterClause,''''@currUsrId'''', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))' + CHAR(13) + CHAR(10)
++ '    SELECT @wClause=@wClause + '''' AND '''' + @filterClause' + CHAR(13) + CHAR(10)
++ 'END' + CHAR(13) + CHAR(10)
 + @allClause
 SELECT @procedureSql3 = @selfClause
-+ 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13)
-+ 'RETURN 0' + CHAR(13)
++ 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13) + CHAR(10)
++ 'RETURN 0' + CHAR(13) + CHAR(10)
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -36524,9 +38546,9 @@ IF @tableAbbr is null OR rtrim(@tableAbbr) = '' SELECT @tableAbbr = '' ELSE SELE
 SELECT @paramCriSql = '', @tmpClause = ''
 SELECT @criClause = 'IF @key is not null SELECT @wClause = @wClause + '''' AND (' + @tableAbbr + @PKeyColumnName
 IF @numericData = 'Y'
-	SELECT @criClause = @criClause + ' = '''' + RODesign.dbo.fSanitizeKeyVal(@key,1) + '''')''''' + CHAR(13)
+	SELECT @criClause = @criClause + ' = '''' + RODesign.dbo.fSanitizeKeyVal(@key,1) + '''')''''' + CHAR(13) + CHAR(10)
 ELSE
-	SELECT @criClause = @criClause + ' = '''''''''''' + RODesign.dbo.fSanitizeKeyVal(@key,0) + '''''''''''')''''' + CHAR(13)
+	SELECT @criClause = @criClause + ' = '''''''''''' + RODesign.dbo.fSanitizeKeyVal(@key,0) + '''''''''''')''''' + CHAR(13) + CHAR(10)
 DECLARE criCursor CURSOR FOR
 	SELECT a1.ColumnName, a1.AllowNulls, e.OperatorName, a2.NumericData, a2.DataTypeSqlName
 	, b1.ColumnName + convert(varchar,a.ScreenCriId), isnull(a3.TableName,'')
@@ -36552,13 +38574,13 @@ OPEN criCursor
 FETCH NEXT FROM criCursor INTO @ColumnName, @AllowNulls, @OperatorName, @NumericData, @DataTypeSqlName, @CriColumnName, @CriTableName, @CriDataType, @ExternalTable
 WHILE @@FETCH_STATUS = 0
 BEGIN
-	IF charindex(@CriColumnName, @paramCriSql) <= 0 SELECT @paramCriSql = @paramCriSql + ',@' + @CriColumnName + CHAR(9) + @CriDataType + CHAR(13)
+	IF charindex(@CriColumnName, @paramCriSql) <= 0 SELECT @paramCriSql = @paramCriSql + ',@' + @CriColumnName + CHAR(9) + @CriDataType + CHAR(13) + CHAR(10)
 	IF ISNULL(@OperatorName,'noop') <> 'noop'
 	BEGIN
 		SELECT @tmpClause = @tmpClause + CHAR(9) + 'IF @' + @CriColumnName + ' is not null SELECT @wClause = @wClause + '''' AND '
 		IF @ExternalTable is not null AND @ExternalTable <> ''
 			SELECT @tmpClause = @tmpClause + 'EXISTS (SELECT ''''''''true'''''''' FROM dbo.' + @ExternalTable + ' x WHERE ' + @tableAbbr + @PKeyColumnName + ' = x.' + @PKeyColumnName
-			+ ' AND x.' + @ColumnName + ' IN '''' + RODesign.dbo.fKeyHier(''''' + @CriTableName + ''''',@' + @CriColumnName + ') + '''')''''' + CHAR(13)
+			+ ' AND x.' + @ColumnName + ' IN '''' + RODesign.dbo.fKeyHier(''''' + @CriTableName + ''''',@' + @CriColumnName + ') + '''')''''' + CHAR(13) + CHAR(10)
 		ELSE
 		BEGIN
 			IF LOWER(@OperatorName) IN ('have some','have none')
@@ -36582,14 +38604,14 @@ BEGIN
 					SELECT @tmpClause = @tmpClause + ' '''' + convert(varchar,@'+ @CriColumnName + ') + '''')'
 				ELSE SELECT @tmpClause = @tmpClause + ' N'''''''''''' + @' + @CriColumnName + ' + '''''''''''')'
 			END
-			SELECT @tmpClause = @tmpClause + '''''' + CHAR(13)
+			SELECT @tmpClause = @tmpClause + '''''' + CHAR(13) + CHAR(10)
 		END
 	END
 	FETCH NEXT FROM criCursor INTO @ColumnName, @AllowNulls, @OperatorName, @NumericData, @DataTypeSqlName, @CriColumnName, @CriTableName, @CriDataType, @ExternalTable
 END
 CLOSE criCursor
 DEALLOCATE criCursor
-IF @tmpClause <> '' SELECT @criClause = @criClause + 'ELSE' + CHAR(13) + 'BEGIN' + CHAR(13) + @tmpClause + 'END' + CHAR(13)
+IF @tmpClause <> '' SELECT @criClause = @criClause + 'ELSE' + CHAR(13) + CHAR(10) + 'BEGIN' + CHAR(13) + CHAR(10) + @tmpClause + 'END' + CHAR(13) + CHAR(10)
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -36846,7 +38868,7 @@ BEGIN
 		IF @select4Clause <> ''
 		BEGIN
 			IF right(@select4Clause,4) <> ' end' SELECT @select4Clause = @select4Clause + ''''''
-			SELECT @select4Clause = @select4Clause + CHAR(13) + '+ '''', '
+			SELECT @select4Clause = @select4Clause + CHAR(13) + CHAR(10) + '+ '''', '
 		END
 		SELECT @select4Clause = @select4Clause + @columnName + CONVERT(VARCHAR(10),@tableId) + 'Text=' + @tableAbbr+'.'+@columnName
 		IF EXISTS (SELECT 'true' FROM dbo.DbColumn WHERE TableId = @tableId AND ColumnName = 'Active')
@@ -36856,26 +38878,26 @@ BEGIN
 		SELECT @pKeyParamName = @dbColumnName, @pKeyDataType = @dataTypeSysName, @pKeyTableName = @tableName, @pKeyTableAbbr = @tableAbbr
 		IF CHARINDEX(',@'+@pKeyParamName,@param2Sql) = 0
 		BEGIN
-			/* SELECT	 @param2Sql = @param2Sql + ',@' + @pKeyParamName + CHAR(9) + CHAR(9) + @DataTypeSqlName + CHAR(13) */
+			/* SELECT	 @param2Sql = @param2Sql + ',@' + @pKeyParamName + CHAR(9) + CHAR(9) + @DataTypeSqlName + CHAR(13) + CHAR(10) */
 			SELECT @jj = @jj + 1
-			SELECT @param2Sql = @param2Sql + ',@KeyId' + CONVERT(varchar,@jj) + CHAR(9) + CHAR(9) + 'nvarchar(1000)' + CHAR(13)
+			SELECT @param2Sql = @param2Sql + ',@KeyId' + CONVERT(varchar,@jj) + CHAR(9) + CHAR(9) + 'nvarchar(1000)' + CHAR(13) + CHAR(10)
 				,@parameter2Names = @parameter2Names + ',' + @pKeyParamName
 				,@parameter2Types = @parameter2Types + ',' + @dataTypeSysName
 				,@parameter2SByte = @parameter2SByte + ',' + @dataTypeSByteOle
 				,@parameter2DByte = @parameter2DByte + ',' + @dataTypeDByteOle
 		END
 		IF @numericData = 'Y'
-			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + isnull(''''=''''+ RODesign.dbo.fSanitizeKeyVal(@KeyId' + CONVERT(varchar,@jj) + ',1),'''' is null'''')' + CHAR(13)
+			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + isnull(''''=''''+ RODesign.dbo.fSanitizeKeyVal(@KeyId' + CONVERT(varchar,@jj) + ',1),'''' is null'''')' + CHAR(13) + CHAR(10)
 		ELSE
-			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ' = '''''''''''' + isnull(RODesign.dbo.fSanitizeKeyVal(@KeyId' + CONVERT(varchar,@jj) + ',0),'''''''') + ''''''''''''''''' + CHAR(13)
-		SELECT @criNfilterTxtClause = @criClause + CHAR(13)
-			+ 'SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,''''['''',''''[[]''''),''''%'''',''''[%]''''),''''_'''',''''[_]''''), '''''''''''''''','''''''''''''''''''''''') ' + CHAR(13)
+			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ' = '''''''''''' + isnull(RODesign.dbo.fSanitizeKeyVal(@KeyId' + CONVERT(varchar,@jj) + ',0),'''''''') + ''''''''''''''''' + CHAR(13) + CHAR(10)
+		SELECT @criNfilterTxtClause = @criClause + CHAR(13) + CHAR(10)
+			+ 'SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,''''['''',''''[[]''''),''''%'''',''''[%]''''),''''_'''',''''[_]''''), '''''''''''''''','''''''''''''''''''''''') ' + CHAR(13) + CHAR(10)
 			+ 'IF @FilterTxt is not null AND @FilterTxt <> '''''''' SELECT @wClause = @wClause + '''' AND ('
 			+ @tableAbbr+'.'+@searchColumnName +' LIKE N''''''''%'''' + REPLACE(@FilterTxt,'''' '''',''''%'''') + ''''%'''''''''
 			+ ISNULL(' OR ' + @tableAbbr+'.'+@searchIdRName +' LIKE N''''''''%'''' + REPLACE(@FilterTxt,'''' '''',''''%'''') + ''''%''''''''','')
 			+ ISNULL(' OR ' + @tableAbbr+'.'+@searchDtlName +' LIKE N''''''''%'''' + REPLACE(@FilterTxt,'''' '''',''''%'''') + ''''%''''''''','')
 			+ ISNULL(' OR ' + @tableAbbr+'.'+@searchDtlRName +' LIKE N''''''''%'''' + REPLACE(@FilterTxt,'''' '''',''''%'''') + ''''%''''''''','')
-			+ ') ''''' + CHAR(13)
+			+ ') ''''' + CHAR(13) + CHAR(10)
 	END
 	IF @tableId is NOT NULL
 	BEGIN
@@ -36888,7 +38910,7 @@ BEGIN
 				IF @select2Clause <> ''
 				BEGIN
 					IF right(@select2Clause,4) <> ' end' SELECT @select2Clause = @select2Clause + ''''''
-					SELECT @select2Clause = @select2Clause + CHAR(13) + '+ '''', '
+					SELECT @select2Clause = @select2Clause + CHAR(13) + CHAR(10) + '+ '''', '
 				END
 				SELECT @select2Clause = @select2Clause + @columnName + CONVERT(VARCHAR,@tableId)
 				IF @tableAbbr <> '' AND @tableAbbr <> @pKeyTableAbbr AND @tableAbbr <> 'RODesign' AND @tableAbbr <> 'ROCmon'
@@ -36898,18 +38920,18 @@ BEGIN
 				IF @from2Clause <> '' AND CHARINDEX(@tableName,@from2Clause) = 0
 				BEGIN
 					IF @tableDb <> '' AND @tableDb <> 'RODesign' AND @tableDb <> 'ROCmon'
-						SELECT @from2Clause = @from2Clause + ' ' + CHAR(13) + 'IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @tableDb + ''''')'
-					SELECT @from2Clause = @from2Clause + ' ' + CHAR(13) + 'SELECT @fClause = @fClause + '''' '
+						SELECT @from2Clause = @from2Clause + ' ' + CHAR(13) + CHAR(10) + 'IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @tableDb + ''''')'
+					SELECT @from2Clause = @from2Clause + ' ' + CHAR(13) + CHAR(10) + 'SELECT @fClause = @fClause + '''' '
 					SELECT @from2Clause = @from2Clause + 'INNER JOIN ' + @tableName + ' ' + @tableAbbr + ' ON ' + @pKeyTableAbbr + '.' + @pKeyParamName + ' = ' + @tableAbbr + '.' +  + @pKeyParamName + ''''''
 				END
 			END
 			-- Listbox and DataGrid are currently multiple selection and may return duplicate rows:
 			IF @displayName NOT IN ('ListBox','DataGrid') AND @from4Clause <> '' AND CHARINDEX(@tableName,@from4Clause) = 0
 			BEGIN
-				-- The space before CHAR(13) is needed for @foundEnd evaluation:
+				-- The space before CHAR(13) + CHAR(10) is needed for @foundEnd evaluation:
 				IF @tableDb <> '' AND @tableDb <> 'RODesign' AND @tableDb <> 'ROCmon'
-					SELECT @from4Clause = @from4Clause + ' ' + CHAR(13) + 'IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @tableDb + ''''')'
-				SELECT @from4Clause = @from4Clause + ' ' + CHAR(13) + 'SELECT @fClause = @fClause + '''' '
+					SELECT @from4Clause = @from4Clause + ' ' + CHAR(13) + CHAR(10) + 'IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @tableDb + ''''')'
+				SELECT @from4Clause = @from4Clause + ' ' + CHAR(13) + CHAR(10) + 'SELECT @fClause = @fClause + '''' '
 				IF @masterTable = 'Y' SELECT @from4Clause = @from4Clause + 'INNER JOIN ' ELSE SELECT @from4Clause = @from4Clause + 'LEFT OUTER JOIN '
 				SELECT @from4Clause = @from4Clause + @tableName + ' ' + @tableAbbr + ' (NOLOCK) ON ' + @pKeyTableAbbr + '.' + @pKeyParamName + ' = ' + @tableAbbr + '.' +  + @pKeyParamName + ''''''
 			END
@@ -36935,15 +38957,15 @@ BEGIN
 				RAISERROR('Foreign key relationship has not been established for tables %s and %s.',18,2,@tableName,@ddlKeyTableName) WITH SETERROR
 			IF @ddlKeyTableDb <> ''
 			BEGIN
-				-- The space before CHAR(13) is needed for @foundEnd evaluation:
+				-- The space before CHAR(13) + CHAR(10) is needed for @foundEnd evaluation:
 				IF @ddlKeyTableDb <> '' AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
 				BEGIN
-					SELECT @from4Clause = @from4Clause + ' ' + CHAR(13) + 'IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @ddlKeyTableDb + ''''')'
+					SELECT @from4Clause = @from4Clause + ' ' + CHAR(13) + CHAR(10) + 'IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @ddlKeyTableDb + ''''')'
 					IF @ddlKeyTableDb <> @ddlRefTableDb AND @ddlRefTableDb <> '' AND @ddlRefTableDb <> 'RODesign' AND @ddlRefTableDb <> 'ROCmon'
 						SELECT @from4Clause = @from4Clause + ' AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @ddlRefTableDb + ''''')'
 				END
 			END
-			SELECT @from4Clause = @from4Clause + ' ' + CHAR(13) + 'SELECT @fClause = @fClause + '''' '
+			SELECT @from4Clause = @from4Clause + ' ' + CHAR(13) + CHAR(10) + 'SELECT @fClause = @fClause + '''' '
 			SELECT @from4Clause = @from4Clause + 'LEFT OUTER JOIN '		-- No inner join so rows will show up even when ddl not found.
 			IF @ddlKeyTableName <> @ddlRefTableName AND SUBSTRING(@from4Clause,CHARINDEX(@ddlRefTableName,@from4Clause)+LEN(@ddlRefTableName)+9,1) = ')' AND CHARINDEX(@joinColumn1,@from4Clause) <= 0
 				SELECT @from4Clause = REPLACE(@from4Clause,' FROM ' + @ddlRefTableName,',' + @joinColumn1 + ' FROM ' + @ddlRefTableName)
@@ -36963,7 +38985,7 @@ BEGIN
 			IF @select4Clause <> ''
 			BEGIN
 				IF right(@select4Clause,4) <> ' end' SELECT @select4Clause = @select4Clause + ''''''
-				SELECT @select4Clause = @select4Clause + CHAR(13) + '+ '''', '
+				SELECT @select4Clause = @select4Clause + CHAR(13) + CHAR(10) + '+ '''', '
 			END
 			SELECT @select4Clause = @select4Clause + @columnName + CONVERT(VARCHAR,@tableId)
 			IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @pKeyTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
@@ -36973,7 +38995,7 @@ BEGIN
 			IF @select4Clause <> ''
 			BEGIN
 				IF right(@select4Clause,4) <> ' end' SELECT @select4Clause = @select4Clause + ''''''
-				SELECT @select4Clause = @select4Clause + CHAR(13) + '+ '''', '
+				SELECT @select4Clause = @select4Clause + CHAR(13) + CHAR(10) + '+ '''', '
 			END
 			SELECT @select4Clause = @select4Clause + @columnName + CONVERT(VARCHAR,@tableId) + 'Text'
 			IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @pKeyTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
@@ -37005,7 +39027,7 @@ BEGIN
 				IF @select4Clause <> ''
 				BEGIN
 					IF right(@select4Clause,4) <> ' end' SELECT @select4Clause = @select4Clause + ''''''
-					SELECT @select4Clause = @select4Clause + CHAR(13) + '+ '''', '
+					SELECT @select4Clause = @select4Clause + CHAR(13) + CHAR(10) + '+ '''', '
 				END
 				SELECT @select4Clause = @select4Clause + @columnName + CONVERT(VARCHAR,@tableId)
 				IF @ddlTableAbbr <> @pKeyTableAbbr AND @tableDb <> 'RODesign' AND @tableDb <> 'ROCmon'
@@ -37021,7 +39043,7 @@ BEGIN
 		IF @select2Clause <> ''
 		BEGIN
 			IF right(@select2Clause,4) <> ' end' SELECT @select2Clause = @select2Clause + ''''''
-			SELECT @select2Clause = @select2Clause + CHAR(13) + '+ '''', '
+			SELECT @select2Clause = @select2Clause + CHAR(13) + CHAR(10) + '+ '''', '
 		END
 		SELECT @select2Clause = @select2Clause + @ddlKeyColumnName + CONVERT(VARCHAR,@ddlKeyTableId) + 'URL'
 		IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @pKeyTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
@@ -37329,15 +39351,15 @@ BEGIN
 		SELECT @pKeyParamName = @dbColumnName, @pKeyDataType = @dataTypeSysName, @pKeyTableName = @tableName, @pKeyTableAbbr = @tableAbbr
 		IF CHARINDEX(',@keyId',@paramKeySql) = 0
 		BEGIN
-			SELECT	 @paramKeySql = @paramKeySql + ',@keyId' + CHAR(9) + CHAR(9) + 'nvarchar(1000)' + CHAR(13)
+			SELECT	 @paramKeySql = @paramKeySql + ',@keyId' + CHAR(9) + CHAR(9) + 'nvarchar(1000)' + CHAR(13) + CHAR(10)
 				,@parameter2Types = @parameter2Types + ',' + @dataTypeSysName
 				,@parameter2SByte = @parameter2SByte + ',' + @dataTypeSByteOle
 				,@parameter2DByte = @parameter2DByte + ',' + @dataTypeDByteOle
 		END
 		IF @numericData = 'Y'
-			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + case when @KeyId' + ' is null then '''' is null'''' else ''''='''' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end' + CHAR(13)
+			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + case when @KeyId' + ' is null then '''' is null'''' else ''''='''' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end' + CHAR(13) + CHAR(10)
 		ELSE
-			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + case when @KeyId' + ' is null then '''' is null'''' else ''''='''''''''''' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,0)) + '''''''''''''''' end' + CHAR(13)
+			SELECT @whereClause = 'SELECT @wClause = ''''WHERE ' + @tableAbbr + '.' + @dbColumnName + ''''' + case when @KeyId' + ' is null then '''' is null'''' else ''''='''''''''''' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,0)) + '''''''''''''''' end' + CHAR(13) + CHAR(10)
 	END
 	IF @tableId is NOT NULL
 	BEGIN
@@ -37364,15 +39386,15 @@ BEGIN
 			BEGIN
 				IF @ddlKeyTableDb <> ''
 				BEGIN
-					-- The space before CHAR(13) is needed for @foundEnd evaluation:
+					-- The space before CHAR(13) + CHAR(10) is needed for @foundEnd evaluation:
 					IF @ddlKeyTableDb <> '' AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
 					BEGIN
-						SELECT @from3Clause = @from3Clause + ' ' + CHAR(13) + 'IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @ddlKeyTableDb + ''''')'
+						SELECT @from3Clause = @from3Clause + ' ' + CHAR(13) + CHAR(10) + 'IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @ddlKeyTableDb + ''''')'
 						IF @ddlKeyTableDb <> @ddlRefTableDb AND @ddlRefTableDb <> '' AND @ddlRefTableDb <> 'RODesign' AND @ddlRefTableDb <> 'ROCmon'
 							SELECT @from3Clause = @from3Clause + ' AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @ddlRefTableDb + ''''')'
 					END
 				END
-				SELECT @from3Clause = @from3Clause + ' ' + CHAR(13) + 'SELECT @fClause = @fClause + '''' '
+				SELECT @from3Clause = @from3Clause + ' ' + CHAR(13) + CHAR(10) + 'SELECT @fClause = @fClause + '''' '
 				SELECT @from3Clause = @from3Clause + 'LEFT OUTER JOIN '		-- No inner join so rows will show up even when DDL not found.
 				IF @ddlKeyTableName <> @ddlRefTableName AND SUBSTRING(@from3Clause,CHARINDEX(@ddlRefTableName,@from3Clause)+LEN(@ddlRefTableName)+9,1) = ')' AND CHARINDEX(@joinColumn2,@from3Clause) <= 0
 					SELECT @from3Clause = REPLACE(@from3Clause,' FROM ' + @ddlRefTableName,',' + @joinColumn2 + ' FROM ' + @ddlRefTableName)
@@ -37395,7 +39417,7 @@ BEGIN
 				IF @select3Clause <> ''
 				BEGIN
 					IF right(@select3Clause,4) <> ' end' SELECT @select3Clause = @select3Clause + ''''''
-					SELECT @select3Clause = @select3Clause + CHAR(13) + '+ '''', '
+					SELECT @select3Clause = @select3Clause + CHAR(13) + CHAR(10) + '+ '''', '
 				END
 				SELECT @select3Clause = @select3Clause + @columnName + CONVERT(VARCHAR,@tableId)
 				IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @dtlTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
@@ -37405,7 +39427,7 @@ BEGIN
 				IF @select3Clause <> ''
 				BEGIN
 					IF right(@select3Clause,4) <> ' end' SELECT @select3Clause = @select3Clause + ''''''
-					SELECT @select3Clause = @select3Clause + CHAR(13) + '+ '''', '
+					SELECT @select3Clause = @select3Clause + CHAR(13) + CHAR(10) + '+ '''', '
 				END
 				SELECT @select3Clause = @select3Clause + @columnName + CONVERT(VARCHAR,@tableId) + 'Text'
 				IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @dtlTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
@@ -37435,7 +39457,7 @@ BEGIN
 				IF @select3Clause <> ''
 				BEGIN
 					IF right(@select3Clause,4) <> ' end' SELECT @select3Clause = @select3Clause + ''''''
-					SELECT @select3Clause = @select3Clause + CHAR(13) + '+ '''', '
+					SELECT @select3Clause = @select3Clause + CHAR(13) + CHAR(10) + '+ '''', '
 				END
 				SELECT @select3Clause = @select3Clause + @columnName + CONVERT(VARCHAR,@tableId)
 				IF @ddlTableAbbr <> @dtlTableAbbr AND @tableDb <> 'RODesign' AND @tableDb <> 'ROCmon'
@@ -37448,7 +39470,7 @@ BEGIN
 					IF @select3Clause <> ''
 					BEGIN
 						IF right(@select3Clause,4) <> ' end' SELECT @select3Clause = @select3Clause + ''''''
-						SELECT @select3Clause = @select3Clause + CHAR(13) + '+ '''', '
+						SELECT @select3Clause = @select3Clause + CHAR(13) + CHAR(10) + '+ '''', '
 					END
 					SELECT @select3Clause = @select3Clause + @ddlKeyColumnName + CONVERT(VARCHAR,@tableId)
 					IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @dtlTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
@@ -37466,7 +39488,7 @@ BEGIN
 			IF @select3Clause <> ''
 			BEGIN
 				IF right(@select3Clause,4) <> ' end' SELECT @select3Clause = @select3Clause + ''''''
-				SELECT @select3Clause = @select3Clause + CHAR(13) + '+ '''', '
+				SELECT @select3Clause = @select3Clause + CHAR(13) + CHAR(10) + '+ '''', '
 			END
 			SELECT @CultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 			SELECT @select3Clause = @select3Clause + @columnName + '=''''''''' + isnull(@DefaultValue,isnull(ColumnHeader,space(0))) + ''''''''''
@@ -37479,7 +39501,7 @@ BEGIN
 		IF @select3Clause <> ''
 		BEGIN
 			IF right(@select3Clause,4) <> ' end' SELECT @select3Clause = @select3Clause + ''''''
-			SELECT @select3Clause = @select3Clause + CHAR(13) + '+ '''', '
+			SELECT @select3Clause = @select3Clause + CHAR(13) + CHAR(10) + '+ '''', '
 		END
 		SELECT @select3Clause = @select3Clause + @ddlKeyColumnName + CONVERT(VARCHAR,@ddlKeyTableId) + 'URL'
 		IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @dtlTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
@@ -37736,15 +39758,15 @@ BEGIN
 				RAISERROR('Foreign key relationship has not been established for tables %s and %s.',18,2,@tableName,@ddlKeyTableName) WITH SETERROR
 			IF @ddlKeyTableDb <> ''
 			BEGIN
-				-- The space before CHAR(13) is needed for @foundEnd evaluation:
+				-- The space before CHAR(13) + CHAR(10) is needed for @foundEnd evaluation:
 				IF @ddlKeyTableDb <> '' AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
 				BEGIN
-					SELECT @fromClause = @fromClause + ' ' + CHAR(13) + 'IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @ddlKeyTableDb + ''''')'
+					SELECT @fromClause = @fromClause + ' ' + CHAR(13) + CHAR(10) + 'IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @ddlKeyTableDb + ''''')'
 					IF @ddlKeyTableDb <> @ddlRefTableDb AND @ddlRefTableDb <> '' AND @ddlRefTableDb <> 'RODesign' AND @ddlRefTableDb <> 'ROCmon'
 						SELECT @fromClause = @fromClause + ' AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name=''''' + @ddlRefTableDb + ''''')'
 				END
 			END
-			SELECT @fromClause = @fromClause + ' ' + CHAR(13) + 'SELECT @fClause = @fClause + '''' '
+			SELECT @fromClause = @fromClause + ' ' + CHAR(13) + CHAR(10) + 'SELECT @fClause = @fClause + '''' '
 			SELECT @fromClause = @fromClause + 'LEFT OUTER JOIN '	-- No inner join so rows will show up even when DDL not found.
 			IF @ddlKeyTableName <> @ddlRefTableName AND SUBSTRING(@fromClause,CHARINDEX(@ddlRefTableName,@fromClause)+LEN(@ddlRefTableName)+9,1) = ')' AND CHARINDEX(@joinColumn1,@fromClause) <= 0
 				SELECT @fromClause = REPLACE(@fromClause,' FROM ' + @ddlRefTableName,',' + @joinColumn1 + ' FROM ' + @ddlRefTableName)
@@ -37764,7 +39786,7 @@ BEGIN
 			IF @select1Clause <> ''
 			BEGIN
 				IF right(@select1Clause,4) <> ' end' SELECT @select1Clause = @select1Clause + ''''''
-				SELECT @select1Clause = @select1Clause + CHAR(13) + '+ '''', '
+				SELECT @select1Clause = @select1Clause + CHAR(13) + CHAR(10) + '+ '''', '
 			END
 			SELECT @select1Clause = @select1Clause + @columnName + CONVERT(VARCHAR,@tableId)
 			IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @pKeyTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
@@ -37774,7 +39796,7 @@ BEGIN
 			IF @select1Clause <> ''
 			BEGIN
 				IF right(@select1Clause,4) <> ' end' SELECT @select1Clause = @select1Clause + ''''''
-				SELECT @select1Clause = @select1Clause + CHAR(13) + '+ '''', '
+				SELECT @select1Clause = @select1Clause + CHAR(13) + CHAR(10) + '+ '''', '
 			END
 			SELECT @select1Clause = @select1Clause + @columnName + CONVERT(VARCHAR,@tableId) + 'Text'
 			IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @pKeyTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
@@ -37804,7 +39826,7 @@ BEGIN
 			IF @select1Clause <> ''
 			BEGIN
 				IF right(@select1Clause,4) <> ' end' SELECT @select1Clause = @select1Clause + ''''''
-				SELECT @select1Clause = @select1Clause + CHAR(13) + '+ '''', '
+				SELECT @select1Clause = @select1Clause + CHAR(13) + CHAR(10) + '+ '''', '
 			END
 			SELECT @select1Clause = @select1Clause + @columnName + CONVERT(VARCHAR,@tableId)
 			IF @ddlTableAbbr <> @pKeyTableAbbr AND @tableDb <> 'RODesign' AND @tableDb <> 'ROCmon'
@@ -37818,7 +39840,7 @@ BEGIN
 		IF @select1Clause <> ''
 		BEGIN
 			IF right(@select1Clause,4) <> ' end' SELECT @select1Clause = @select1Clause + ''''''
-			SELECT @select1Clause = @select1Clause + CHAR(13) + '+ '''', '
+			SELECT @select1Clause = @select1Clause + CHAR(13) + CHAR(10) + '+ '''', '
 		END
 		IF @displayName = 'TextBox'
 			SELECT @select1Clause = @select1Clause + @columnName + '='''''''''''''''''
@@ -37831,7 +39853,7 @@ BEGIN
 		IF @select1Clause <> ''
 		BEGIN
 			IF right(@select1Clause,4) <> ' end' SELECT @select1Clause = @select1Clause + ''''''
-			SELECT @select1Clause = @select1Clause + CHAR(13) + '+ '''', '
+			SELECT @select1Clause = @select1Clause + CHAR(13) + CHAR(10) + '+ '''', '
 		END
 		SELECT @select1Clause = @select1Clause + @ddlKeyColumnName + CONVERT(VARCHAR,@ddlKeyTableId) + 'URL'
 		IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @pKeyTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
@@ -37933,7 +39955,7 @@ DECLARE	 @parameterName		varchar(50)
 		,@ExtProject		varchar(50)
 		,@paramSql			varchar(4000)
 SET NOCOUNT ON
-SELECT @paramSql = '', @allClause = '', @selfClause = 'SELECT @tClause = ''''''''' + CHAR(13)
+SELECT @paramSql = '', @allClause = '', @selfClause = 'SELECT @tClause = ''''''''' + CHAR(13) + CHAR(10)
 SELECT @pKeyColName = ColumnName FROM dbo.DbColumn WHERE TableId = @tableId AND PrimaryKey = 'Y'
 IF @pKeyColName is null
 BEGIN
@@ -37965,28 +39987,28 @@ BEGIN
 		SELECT @parameter1Types = @parameter1Types + ',string'
 		SELECT @parameter1SByte = @parameter1SByte + ',VarChar'
 		SELECT @calling1Params = @calling1Params + ',base.LImpr.' + @parameterName
-		SELECT @paramSql = @paramSql + ',@' + @parameterName + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-		SELECT @declare1Sql = @declare1Sql + CHAR(9) + ',@' + @columnName + CHAR(9) + CHAR(9) + @paramDataTypeSql + CHAR(13)
+		SELECT @paramSql = @paramSql + ',@' + @parameterName + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
+		SELECT @declare1Sql = @declare1Sql + CHAR(9) + ',@' + @columnName + CHAR(9) + CHAR(9) + @paramDataTypeSql + CHAR(13) + CHAR(10)
 	END
 	SELECT @clause = 'EXEC ' + @sysDatabase + '.dbo.GetPermFilter '
 		+ case when @reportId is not null then 'null,@reportId' else '@screenId,null' end
 		+ ',@RowAuthoritys,@' + @parameterName + ',''''' + @paramColumnName
 		+ ''''',''''' + @tableName + ''''',''''' + @tableAbbr + ''''',''''' + @AndCondition + ''''',''''' + @MultiValue + ''''','
 		+ case when @ExternalTable is null then 'null' else '''''' + @ExternalTable + '''''' end + ',''''' + @paramAllowNulls + ''''',''''' + @pKeyColName
-		+ ''''',' + case when @AndCondition = 'N' then '@tClause' else '@wClause' end + ' OUTPUT,@Usrs' + CHAR(13)
+		+ ''''',' + case when @AndCondition = 'N' then '@tClause' else '@wClause' end + ' OUTPUT,@Usrs' + CHAR(13) + CHAR(10)
 	IF @AndCondition = 'N' SELECT @selfClause = @selfClause + @clause ELSE SELECT @allClause = @allClause + @clause
 	FETCH NEXT FROM PCur INTO @parameterName, @paramColumnName, @tableName, @columnName, @AndCondition, @MultiValue, @paramAllowNulls, @paramDataTypeSql, @ExternalTable
 END
 CLOSE PCur DEALLOCATE PCur
-SELECT @selfClause = @selfClause + 'IF @tClause <> '''''''' SELECT @wClause = @wClause + '''' AND ('''' + right(@tClause,len(@tClause)-4) + '''')''''' + CHAR(13)
+SELECT @selfClause = @selfClause + 'IF @tClause <> '''''''' SELECT @wClause = @wClause + '''' AND ('''' + right(@tClause,len(@tClause)-4) + '''')''''' + CHAR(13) + CHAR(10)
 IF charindex('Companys',@paramSql) > 0
 	SELECT @selfClause = @selfClause + 'EXEC ' + @sysDatabase + '.dbo.GetCurrFilter @currCompanyId,'''''
 		+ case when @MulCompany = 'Y' then 'CompanyLs' else 'CompanyId' end + ''''',''''Company'''','''''
-		+ @tableAbbr + ''''',''''' + @MulCompany + ''''',' + isnull('''''' + @ExtCompany + '''''','null') + ',''''' + @pKeyColName + ''''',@wClause OUTPUT' + CHAR(13)
+		+ @tableAbbr + ''''',''''' + @MulCompany + ''''',' + isnull('''''' + @ExtCompany + '''''','null') + ',''''' + @pKeyColName + ''''',@wClause OUTPUT' + CHAR(13) + CHAR(10)
 IF charindex('Projects',@paramSql) > 0
 	SELECT @selfClause = @selfClause + 'EXEC ' + @sysDatabase + '.dbo.GetCurrFilter @currProjectId,'''''
 		+ case when @MulProject = 'Y' then 'ProjectLs' else 'ProjectId' end + ''''',''''Project'''','''''
-		+ @tableAbbr + ''''',''''' + @MulProject + ''''',' + isnull('''''' + @ExtProject + '''''','null') + ',''''' + @pKeyColName + ''''',@wClause OUTPUT' + CHAR(13)
+		+ @tableAbbr + ''''',''''' + @MulProject + ''''',' + isnull('''''' + @ExtProject + '''''','null') + ',''''' + @pKeyColName + ''''',@wClause OUTPUT' + CHAR(13) + CHAR(10)
 SELECT @param1Sql = @param1Sql + @paramSql
 RETURN 0
 GO
@@ -38172,9 +40194,9 @@ BEGIN
 			END
 			IF @displayName IN ('ComboBox','DropDownList','ListBox','RadioButtonList','DataGrid') OR @displayMode = 'Document'
 			BEGIN
-				SELECT @paramKeySql = ',@bAll' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
+				SELECT @paramKeySql = ',@bAll' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
 					+ ',@keyId' + CHAR(9) + CHAR(9) + CASE WHEN @displayName = 'ListBox' THEN 'VarChar(4000)'
-					ELSE @ddlKeyDataType + CASE WHEN CHARINDEX('Char',@ddlKeyDataType) > 0 THEN '(100)' ELSE space(0) END END + CHAR(13)
+					ELSE @ddlKeyDataType + CASE WHEN CHARINDEX('Char',@ddlKeyDataType) > 0 THEN '(100)' ELSE space(0) END END + CHAR(13) + CHAR(10)
 				SELECT @paramKeySByte = @ddlKeySByte, @paramKeyDByte = @ddlKeyDByte
 				SELECT @whereClause = 'IF @bAll = ''''Y'''' SELECT @wClause = ''''WHERE ((('
 				IF EXISTS (SELECT 'true' FROM dbo.DbColumn WHERE TableId = @ddlKeyTableId AND ColumnName = 'Active') AND @displayMode <> 'DataGridLink'
@@ -38182,7 +40204,7 @@ BEGIN
 				ELSE
 					SELECT @whereClause = @whereClause + '1=1'
 				SELECT @whereClause = @whereClause + ') '''' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '''''''' THEN '''''''' ELSE '''' AND ' + @ddlKeyTableAbbr + '.' + @ddlRefColumnName + ' LIKE N''''''''%'''' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,''''['''',''''[[]''''),''''%'''',''''[%]''''),''''_'''',''''[_]''''), '''''''''''''''',''''''''''''''''''''''''),'''' '''',''''%'''') + ''''%'''''''''''' END + '''') '
-					+ ' OR '''' ELSE SELECT @wClause = ''''WHERE (''''' + CHAR(13)
+					+ ' OR '''' ELSE SELECT @wClause = ''''WHERE (''''' + CHAR(13) + CHAR(10)
 					+ 'IF @keyId is not null SELECT @wClause = @wClause + '''''
 				IF @displayMode = 'Document'
 					SELECT @whereClause = @whereClause + '(' + @ddlKeyTableAbbr + '.MasterId is null OR ' + @ddlKeyTableAbbr + '.MasterId'
@@ -38201,7 +40223,7 @@ BEGIN
 						IF @ddlKeyNumeric = 'N' SELECT @whereClause = @whereClause + ' + '''''''''''')''''' ELSE SELECT @whereClause = @whereClause + ' + '''')'''''
 					END
 				END
-				SELECT @whereClause = @whereClause + ' ELSE SELECT @wClause = @wClause + ''''1<>1)''''' + CHAR(13)
+				SELECT @whereClause = @whereClause + ' ELSE SELECT @wClause = @wClause + ''''1<>1)''''' + CHAR(13) + CHAR(10)
 			END
 		END
 		IF @displayName IN ('ComboBox','DropDownList','ListBox','RadioButtonList','DataGrid')
@@ -38346,66 +40368,67 @@ ALTER PROCEDURE [dbo].[GetScreenObjDdlProc]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13)
-+ ' @screenId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + @paramKeySql
-+ ',@Usrs' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@RowAuthoritys' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@Customers' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@Vendors' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@Members' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@Investors' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@Agents' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@Brokers' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@UsrGroups' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13)
-+ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@currCompanyId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) 
-+ ',@currProjectId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) 
-+ ',@FilterTxt' + CHAR(9) + CHAR(9) + 'nvarchar(1000) = null' + CHAR(13)
-+ ',@TopN' + CHAR(9) + CHAR(9) + 'smallint=null' + CHAR(13)
+SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13) + CHAR(10)
++ ' @screenId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10) + @paramKeySql
++ ',@Usrs' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@RowAuthoritys' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@Customers' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@Vendors' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@Members' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@Investors' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@Agents' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@Brokers' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@UsrGroups' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(4000)' + CHAR(13) + CHAR(10)
++ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@currCompanyId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10) 
++ ',@currProjectId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10) 
++ ',@FilterTxt' + CHAR(9) + CHAR(9) + 'nvarchar(1000) = null' + CHAR(13) + CHAR(10)
++ ',@TopN' + CHAR(9) + CHAR(9) + 'smallint=null' + CHAR(13) + CHAR(10)
 + CASE WHEN CHARINDEX('@bAll',@paramKeySql) <= 0 THEN
-	',@bAll' + CHAR(9) + CHAR(9) + 'char(1)=null' + CHAR(13)
-	+ ',@keyId' + CHAR(9) + CHAR(9) + 'varchar(max)=null' + CHAR(13)
+	',@bAll' + CHAR(9) + CHAR(9) + 'char(1)=null' + CHAR(13) + CHAR(10)
+	+ ',@keyId' + CHAR(9) + CHAR(9) + 'varchar(max)=null' + CHAR(13) + CHAR(10)
   ELSE '' END
-+ '/* WITH ENCRYPTION */' + CHAR(13) 
-+ 'AS' + CHAR(13) + 'SET NOCOUNT ON' + CHAR(13) + 'DECLARE'
-+ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@fClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@wClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@oClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@tClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
++ '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10) 
++ 'AS' + CHAR(13) + CHAR(10)
++ 'SET NOCOUNT ON' + CHAR(13) + CHAR(10) + 'DECLARE'
++ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@fClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@wClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@oClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@tClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
 /*
-+ CHAR(9) + ',@cc' + CHAR(9) + CHAR(9) + 'varchar(max)' + CHAR(13)
-+ CHAR(9) + ',@rr' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ CHAR(9) + ',@pp' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ CHAR(9) + ',@SelUsr' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelUsrGroup' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelCulture' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelCompany' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelAgent' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelBroker' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelCustomer' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelInvestor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelMember' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelVendor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@SelProject' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13)
-+ CHAR(9) + ',@RowAuthorityId' + CHAR(9) + 'smallint' + CHAR(13) + @declare1Sql
++ CHAR(9) + ',@cc' + CHAR(9) + CHAR(9) + 'varchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@rr' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@pp' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelUsr' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelUsrGroup' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelCulture' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelCompany' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelAgent' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelBroker' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelCustomer' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelInvestor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelMember' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelVendor' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@SelProject' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@RowAuthorityId' + CHAR(9) + 'smallint' + CHAR(13) + CHAR(10) + @declare1Sql
 */
-SELECT @procedureSql1 = @procedureSql1 + 'IF ' + @ifClause + CHAR(13) + 'BEGIN' + CHAR(13)
-+ 'SELECT @sClause = ''''SELECT ' + @select1Clause + '''''' + CHAR(13)
-+ 'SELECT @fClause = ''''FROM ' + @fromClause + '''''' + CHAR(13)
-+ 'SELECT @oClause = ''''ORDER BY ' + @orderClause + '''''' + CHAR(13)
+SELECT @procedureSql1 = @procedureSql1 + 'IF ' + @ifClause + CHAR(13) + CHAR(10) + 'BEGIN' + CHAR(13) + CHAR(10)
++ 'SELECT @sClause = ''''SELECT ' + @select1Clause + '''''' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause = ''''FROM ' + @fromClause + '''''' + CHAR(13) + CHAR(10)
++ 'SELECT @oClause = ''''ORDER BY ' + @orderClause + '''''' + CHAR(13) + CHAR(10)
 SELECT @procedureSql2 = @whereClause + @allClause
 SELECT @procedureSql3 = @selfClause
-+ 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13)
-+ 'END' + CHAR(13)
-+ 'ELSE' + CHAR(13)
-+ CHAR(9) + 'SELECT ' + @select2Clause + ' WHERE 1<>1' + CHAR(13)
-+ 'RETURN 0' + CHAR(13)
++ 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13) + CHAR(10)
++ 'END' + CHAR(13) + CHAR(10)
++ 'ELSE' + CHAR(13) + CHAR(10)
++ CHAR(9) + 'SELECT ' + @select2Clause + ' WHERE 1<>1' + CHAR(13) + CHAR(10)
++ 'RETURN 0' + CHAR(13) + CHAR(10)
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF

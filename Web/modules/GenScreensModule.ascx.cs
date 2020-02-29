@@ -307,7 +307,7 @@ namespace RO.Web
                 }
                 if (iGen > 1) { sGen = "s"; }
                 if (iNot > 1) { sNot = "s"; }
-                cMsgLabel.Text = iGen.ToString() + " screen" + sGen + " generated successfully; " + iNot.ToString() + " selected screen" + sNot + " not generated.";
+                cMsgLabel.Text = iGen.ToString() + " screen" + sGen + " generated successfully; " + iNot.ToString() + " selected screen" + sNot + " not generated. Remember to publish react to site on 'Maintenance -> Systems Maint' page before rollout.";
             }
         }
 

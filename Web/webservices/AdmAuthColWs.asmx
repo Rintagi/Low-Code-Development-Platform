@@ -267,8 +267,8 @@ namespace RO.Web
             Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
-                string mstBlobIconOption = !options.ContainsKey("MstBlob") ? "N" : options["MstBlob"];
-                string dtlBlobIconOption = !options.ContainsKey("DtlBlob") ? "N" : options["DtlBlob"];
+                string mstBlobIconOption = !options.ContainsKey("MstBlob") ? "I" : options["MstBlob"];
+                string dtlBlobIconOption = !options.ContainsKey("DtlBlob") ? "I" : options["DtlBlob"];
                 var mstBlob = GetBlobOption(mstBlobIconOption);
                 var dtlBlob = GetBlobOption(dtlBlobIconOption);
                 string jsonCri = options.ContainsKey("CurrentScreenCriteria") ? options["CurrentScreenCriteria"] : null;
@@ -300,6 +300,7 @@ namespace RO.Web
         public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetAdmAuthCol16DtlById(string keyId, SerializableDictionary<string, string> options, int filterId)
         {
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y" ;
+            string filterName = options.ContainsKey("FilterName") ? options["FilterName"] : "";
 
             Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
@@ -307,7 +308,7 @@ namespace RO.Web
                 string jsonCri = options.ContainsKey("CurrentScreenCriteria") ? options["CurrentScreenCriteria"] : null;            
                 
                 ValidatedMstId("GetLisAdmAuthCol16", systemId, screenId, "**" + keyId, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));
-                string dtlBlobIconOption = !options.ContainsKey("DtlBlob") ? "N" : options["DtlBlob"];
+                string dtlBlobIconOption = !options.ContainsKey("DtlBlob") ? "I" : options["DtlBlob"];
                 var dtlBlob = GetBlobOption(dtlBlobIconOption);;
                 DataTable dtColAuth = _GetAuthCol(GetScreenId());
                 DataTable dtColLabel = _GetScreenLabel(GetScreenId());
@@ -315,7 +316,7 @@ namespace RO.Web
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);;
                 Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr["ColName"].ToString());
                 ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
-                DataTable dt = (new RO.Access3.AdminAccess()).GetDtlById(16, "GetAdmAuthCol16DtlById", keyId, LcAppConnString, LcAppPw, filterId, base.LImpr, base.LCurr);
+                DataTable dt = (new RO.Access3.AdminAccess()).GetDtlById(screenId, "GetAdmAuthCol16DtlById", keyId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(!string.IsNullOrEmpty(filterName) ? filterName : filterId.ToString(), false), base.LImpr, base.LCurr);
                 mr.data = DataTableToListOfObject(dt, dtlBlob, colAuth, utcColumns);
                 mr.status = "success";
                 mr.errorMsg = "";
@@ -369,7 +370,7 @@ namespace RO.Web
         }
         protected override DataTable _GetDtlById(string mstId, int screenFilterId)
         {
-            return (new RO.Access3.AdminAccess()).GetDtlById(screenId, "GetAdmAuthCol16DtlById", string.IsNullOrEmpty(mstId) ? "-1" : mstId, LcAppConnString, LcAppPw, screenFilterId, LImpr, LCurr);
+            return (new RO.Access3.AdminAccess()).GetDtlById(screenId, "GetAdmAuthCol16DtlById", string.IsNullOrEmpty(mstId) ? "-1" : mstId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(screenFilterId.ToString(), false), LImpr, LCurr);
 
         }
         protected override Dictionary<string, SerializableDictionary<string, string>> GetDdlContext()
@@ -432,7 +433,7 @@ namespace RO.Web
 
                 /* current data */
                 DataTable dtMst = _GetMstById(pid);
-                DataTable dtDtl = _GetDtlById(pid, 0); 
+                DataTable dtDtl = _GetDtlById(pid, GetEffectiveScreenFilterId("0", false)); 
                 int maxDtlId = dtDtl == null ? -1 : dtDtl.AsEnumerable().Select(dr => dr["ColOvrdId241"].ToString()).Where((s) => !string.IsNullOrEmpty(s)).Select(id => int.Parse(id)).DefaultIfEmpty(-1).Max();
                 var validationResult = ValidateInput(ref mst, ref dtl, dtMst, dtDtl, "ScreenObjId14", "ColOvrdId241", skipValidation);
                 if (validationResult.Item1.Count > 0 || validationResult.Item2.Count > 0)
@@ -482,8 +483,8 @@ namespace RO.Web
                 var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr["DisplayMode"].ToString().Contains("UTC")).Select(dr => dr["ColumnName"].ToString() + dr["TableId"].ToString()).ToArray();
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
 
-                result.mst = DataTableToListOfObject(dtMst, IncludeBLOB.Icon, colAuth, utcColumns)[0];
-                result.dtl = DataTableToListOfObject(dtDtl, IncludeBLOB.Icon, colAuth, utcColumns);
+                result.mst = DataTableToListOfObject(dtMst, IncludeBLOB.None, colAuth, utcColumns)[0];
+                result.dtl = DataTableToListOfObject(dtDtl, IncludeBLOB.None, colAuth, utcColumns);
                     
                 result.message = msg;
                 mr.status = "success";

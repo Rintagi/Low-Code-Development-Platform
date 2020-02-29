@@ -29,9 +29,27 @@ namespace RO.Common3.Data
         public UsrImpr() {}
         private string Merge(string ls1, string ls2)
         {
-            List<string> l1 = (ls1 ?? "").Split(new char[] { (char)191 }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            List<string> l2 = (ls2 ?? "").Split(new char[] { (char)191 }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            return string.Join(((char)191).ToString(), l1.Concat(l2).Distinct().ToArray());
+            List<string> lo = new List<string>();
+            HashSet<string> v = new HashSet<string>();
+            string[] l1 = (ls1 ?? "").Split(new char[] { (char)191 }, StringSplitOptions.RemoveEmptyEntries);
+            string[] l2 = (ls2 ?? "").Split(new char[] { (char)191 }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string s in l1)
+            {
+                if (!v.Contains(s)) {
+                    lo.Add(s);
+                    v.Add(s);
+                }
+            }
+            foreach (string s in l2)
+            {
+                if (!v.Contains(s))
+                {
+                    lo.Add(s);
+                    v.Add(s);
+                }
+            }
+
+            return string.Join(((char)191).ToString(), lo.ToArray());
 
         }
         public UsrImpr(string usrs, string usrGroups, string cultures, string rowAuthoritys, string companys, string projects, string investors, string customers, string vendors, string agents, string brokers, string members, string borrowers, string guarantors, string lenders)

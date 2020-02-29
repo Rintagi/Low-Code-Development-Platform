@@ -94,9 +94,10 @@ class FileInputField extends Component {
     let reader = new FileReader();
     let file = value.target.files[0] || { type: '' };
     var fileType = file['type'];
+    const actionTimeStamp = Date.now();
 
     reader.fileName = file.name;
-
+    
     if (fileType.split('/')[0] === 'image') {
 
       const _this = this;
@@ -149,7 +150,15 @@ class FileInputField extends Component {
             });
 
             // Passing name and base64 value of our rotated and resized image
-            _this.props.onChange({ name: files[0].name, mimeType: files[0].type, size: files[0].size, width: width, height: height, lastModified: files[0].lastModified, base64: readerResizedImg });
+            _this.props.onChange({ 
+              name: files[0].name, 
+              mimeType: files[0].type, 
+              size: files[0].size, 
+              width: width, 
+              height: height, 
+              ts: actionTimeStamp + 1,
+              lastModified: files[0].lastModified, 
+              base64: readerResizedImg });
           }
         })
       };
@@ -161,7 +170,14 @@ class FileInputField extends Component {
           previewUrl: reader.result,
           fileName: reader.fileName
         });
-        this.props.onChange({ name: files[0].name, mimeType: files[0].type, size: files[0].size, lastModified: files[0].lastModified, base64: reader });
+        this.props.onChange({ 
+          name: files[0].name, 
+          mimeType: files[0].type, 
+          size: files[0].size, 
+          lastModified: files[0].lastModified, 
+          ts: actionTimeStamp + 1,
+          base64: reader 
+        });
         // this.props.onChange({ name: files[0].name, base64: reader });
       };
     }
@@ -210,7 +226,11 @@ class FileInputField extends Component {
       result: "iVBORw0KGgoAAAANSUhEUgAAAhwAAAABCAQAAAA/IL+bAAAAFElEQVR42mN89p9hFIyCUTAKSAIABgMB58aXfLgAAAAASUVORK5CYII=",
     }
 
-    this.props.onChange({ name: '', base64: emptyObject });
+    this.props.onChange({ 
+      name: '', 
+      base64: emptyObject,
+      ts:Date.now() + 1,
+     });
     this.setState({ deleteBtnVisibility: false });
   }
 
@@ -268,7 +288,7 @@ class FileInputField extends Component {
                 <label htmlFor={this.props.name}>{this.props.label}</label>
                 <label className={`ml-15 ${previewClass}`} onClick={this.removeSelectedFile}>{options.CancelFileButton}</label>
                 {
-                  (fileInfo.base64 || '').length > 0 && <label className={`ml-15 ${deleteClass}`} onClick={this.sendEmptyFile}>{options.DeleteFileButton}</label>
+                  (fileInfo.base64 || fileInfo.icon || '').length > 0 && <label className={`ml-15 ${deleteClass}`} onClick={this.sendEmptyFile}>{options.DeleteFileButton}</label>
                 }
                 <input
                   className="fileInput"
@@ -283,7 +303,7 @@ class FileInputField extends Component {
           </Col>
           <Col className="mw-133">
             {
-              (fileInfo.base64 || fileInfo.icon || '').length > 0 && inPlaceImg && fileInfo.base64 !== emptyFile &&
+              (fileInfo.base64 || '').length > 0 && inPlaceImg && fileInfo.base64 !== emptyFile &&
               <div className={`form__form-group truncate pointer ${deleteIconClass}`} onClick={this.previewServerFile(fileContent, mimeType)} src={fileContent || iconContent}>
                 <i className={`fa ${iconClass} fs-38 fill-fintrux`}></i>
                 <p>{fileInfo.fileName}</p>
