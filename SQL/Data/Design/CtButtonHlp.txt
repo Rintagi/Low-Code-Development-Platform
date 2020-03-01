@@ -1,0 +1,534 @@
+1~@~1~@~1~@~Clear~@~Clear~@~Press this to clear criteria section
+4~@~1~@~4~@~RTF~@~RTF~@~Press this to export all data based on criteria as rich text to an RTF file or to Microsoft Word
+5~@~1~@~5~@~Export~@~Export~@~Press this to export all data based on criteria as tab-delimited to flat file or Excel Spreadsheet
+6~@~1~@~6~@~Clear~@~Clear~@~Press this to clear this form for the same record and assume initial defaulted values
+7~@~1~@~7~@~Delete~@~Delete~@~Press this to delete this record permanently
+8~@~1~@~8~@~Copy~@~Copy~@~Press this to copy the current contents to a new form
+11~@~1~@~11~@~Save~@~Save~@~Press this to save this record permanently
+12~@~1~@~12~@~First~@~First~@~First page
+13~@~1~@~13~@~Last~@~Last~@~Last page
+14~@~1~@~14~@~Next~@~Next~@~Next page
+15~@~1~@~15~@~Previous~@~Previous~@~Previous Page
+16~@~1~@~16~@~GoTo~@~GoTo~@~Go to the page number entered on left
+17~@~1~@~17~@~Find~@~Find~@~Find the records from the grid below that has the text entered on left
+20~@~1~@~20~@~Clear~@~Clear~@~Press this to clear criteria section
+21~@~1~@~21~@~Criteria~@~Criteria~@~Press this to show criteria section
+22~@~1~@~22~@~Search~@~Search~@~Press this to show global criteria section
+24~@~1~@~24~@~PDF~@~PDF~@~Press this to view results in an Adobe PDF file
+25~@~1~@~25~@~RTF~@~RTF~@~Press this to view results in a Rich Text format (RTF) file
+26~@~1~@~26~@~Export~@~Export~@~Press this to export as tab-delimited to flat file or Excel Spreadsheet
+27~@~1~@~27~@~Word~@~Word~@~Press this to view results in a Microsoft Word file
+28~@~1~@~28~@~Excel~@~Excel~@~Press this to view results in a XML-formated Excel SpreadSheet version 2000 and beyond
+29~@~1~@~29~@~Print~@~Print~@~Press this to view results on screen and print to the printer selected
+30~@~1~@~30~@~View~@~View~@~Press this to view results on screen
+40~@~1~@~40~@~List~@~List~@~Press this for a list of spreadsheets
+41~@~1~@~41~@~Search~@~Search~@~Press this to search for spreadsheets with specified text on the left
+42~@~1~@~42~@~Import~@~Import~@~Press this to import the selected spreadseet
+43~@~1~@~43~@~Excel~@~Excel~@~Press this to view results in an Excel Spreadsheet
+44~@~1~@~44~@~Import~@~Import~@~Press this to import the selected spreadsheet or tab-delimited file
+45~@~1~@~45~@~Return~@~Return~@~Press this to return selected value to calling module control
+46~@~1~@~46~@~Cancel~@~Cancel~@~Press this to cancel current search
+47~@~1~@~47~@~Hide-I~@~Hide-I~@~Press this to hide Import panel and enable Update buttons
+48~@~1~@~48~@~Show-I~@~Show-I~@~Press this to show Import panel and disable Update buttons
+51~@~1~@~51~@~Save&New~@~Save&New~@~Press this to save this record permanently and clear this form for a new record with default values
+52~@~1~@~52~@~Continue~@~Continue~@~Enter password and press this to continue screen import
+53~@~2~@~11~@~Epargner~@~Epargner~@~Appuyer ceci pour mettre à jour ce rapport d'une façon permanente
+54~@~2~@~20~@~Eclaircir~@~Eclaircir~@~Appuyer ceci pour éclaircir de la section de critères
+55~@~2~@~27~@~Mot~@~Mot~@~Appuyer ceci pour regarder a pour résultat un dossier de Mot de Microsoft
+56~@~2~@~24~@~PDF~@~PDF~@~Appuyer ceci pour regarder a pour résultat un dossier de PDF d'Adobe
+57~@~2~@~25~@~RTF~@~RTF~@~Appuyer ceci pour regarder a pour résultat un format Riche de Texte (RTF) le dossier
+58~@~2~@~26~@~Export~@~Export~@~Appuyer ceci pour exporter comme étiquette-délimité au dossier plat ou Excelle la Feuille électroniq
+59~@~2~@~43~@~Excel~@~Excel~@~Appuyer ceci pour regarder a pour résultat un Excelle la Feuille électronique
+60~@~2~@~28~@~XML~@~XML~@~Appuyer ceci pour regarder a pour résultat un XML-FORMATE Excelle la Feuille électronique
+61~@~2~@~22~@~Recherche~@~Recherche~@~Appuyer ceci pour montrer de la section globales de critères
+63~@~2~@~29~@~Caractères~@~Caractères~@~Appuyer ceci pour regarder des résultats sur l'écran et les caractères à l'imprimante choisie
+64~@~2~@~21~@~Critères~@~Critères~@~Appuyer ceci pour montrer de la section aux critères
+65~@~2~@~30~@~Vue~@~Vue~@~Appuyer ceci pour regarder des résultats sur l'écran
+66~@~2~@~6~@~Eclaircir~@~Eclaircir~@~Appuyer ceci pour éclaircir cette forme et suppose l'initiale valeurs prises par défaut
+68~@~2~@~1~@~Eclaircir~@~Eclaircir~@~Appuyer ceci pour éclaircir de la section de critères
+69~@~2~@~7~@~Efface~@~Efface~@~Appuyer ceci pour effacer ce rapport d'une façon permanente
+70~@~2~@~4~@~RTF~@~RTF~@~Appuyer ceci pour exporter comme le texte riche à un dossier de RTF ou au Mot de Microsoft
+71~@~2~@~5~@~Export~@~Export~@~Appuyer ceci pour exporter comme étiquette-délimité au dossier plat ou Excelle la Feuille électroniq
+72~@~2~@~17~@~Découverte~@~Découverte~@~Trouver les rangs de la grille au dessous de qu'a le texte entré sur gauche
+73~@~2~@~12~@~Premièrement~@~Premièrement~@~Première page
+74~@~2~@~16~@~Aller A~@~Aller A~@~Aller au nombre de page entré sur gauche
+77~@~2~@~47~@~Cache-je~@~Cache-je~@~Appuyer ceci pour cacher le panneau d'Importation et rend capable les boutons de Mise à jour
+78~@~2~@~44~@~Importation~@~Importation~@~Appuyer ceci pour importer la feuille électronique choisie ou dossier étiquette-délimité
+79~@~2~@~52~@~Continuer~@~Continuer~@~Entrer le mot de passe et appuyer ceci pour continuer l'importation d'écran
+81~@~2~@~13~@~Durer~@~Durer~@~Durer la page
+82~@~2~@~14~@~Après~@~Après~@~Page prochaine
+83~@~2~@~15~@~Précédent~@~Précédent~@~Page précédente
+84~@~2~@~46~@~Annuler~@~Annuler~@~Appuyer ceci pour annuler la recherche actuelle
+85~@~2~@~45~@~Retour~@~Retour~@~Appuyer ceci pour retourner la valeur choisie à l'appel de contrôle de module
+88~@~2~@~48~@~Montre-I~@~Montre-I~@~Appuyer ceci pour montrer panneau à l'Importation et rend infirme les boutons de Mise à jour
+89~@~2~@~42~@~Importation~@~Importation~@~Appuyer ceci pour importer le spreadseet choisi
+90~@~2~@~40~@~Liste~@~Liste~@~Appuyer ceci pour une liste de feuilles électroniques
+91~@~2~@~41~@~Recherche~@~Recherche~@~Appuyer ceci pour chercher des feuilles électroniques avec le texte spécifié sur le gauche
+92~@~1~@~53~@~PageSize~@~PageSize~@~Set the grid page size (1 to 200 records) as entered on left
+93~@~2~@~53~@~Pg Taille~@~Pg Taille~@~Régler la taille de page de grille (1 à 200 rangs) comme entré sur gauche
+97~@~1~@~54~@~New~@~New~@~Press this to clear this form for a new record and assume initial defaulted values
+98~@~4~@~1~@~清晰~@~清晰~@~这对新闻界明确标准组
+101~@~4~@~4~@~富文本~@~富文本~@~这个新闻输出所有数据基于标准文本丰富的特遣队或微软Word档案
+102~@~4~@~5~@~出口~@~出口~@~这个新闻输出所有数据基于标准统计表--为单位档案或Excel的表格划线
+103~@~4~@~6~@~清晰~@~清晰~@~这本以新闻形式一样清晰记录并承担违约初始值
+104~@~4~@~7~@~删除~@~删除~@~这本记录永久删除新闻
+107~@~4~@~12~@~第一~@~第一~@~第一页
+108~@~4~@~13~@~上次~@~上次~@~最后一页
+109~@~4~@~14~@~下一~@~下一~@~下一页
+110~@~4~@~15~@~先前~@~先前~@~上次页
+111~@~4~@~16~@~跳转~@~跳转~@~页码进入到左
+112~@~4~@~17~@~寻找~@~寻找~@~找到记录从格低于已进入左文
+113~@~4~@~20~@~清晰~@~清晰~@~这对新闻界明确标准组
+114~@~4~@~21~@~标准~@~标准~@~记者节这表明准则
+115~@~4~@~22~@~搜索~@~搜索~@~记者节这表明全球标准
+116~@~4~@~24~@~以PDF~@~以PDF~@~这是记者从成绩坯体PDF档案
+117~@~4~@~25~@~富文本~@~富文本~@~记者在此观看了富有成果文字档案格式(特遣队)
+118~@~4~@~26~@~出口~@~出口~@~这个以出口为新闻界统计表-单位档案或Excel的表格划线
+119~@~4~@~27~@~词~@~词~@~这一观点引起了新闻界对微软WORD文件
+120~@~4~@~28~@~卓越~@~卓越~@~这一成果在记者观看的XML格式Excel的表格2000年及以后版本
+121~@~4~@~29~@~打印~@~打印~@~新闻界对这个结果的看法,并在屏幕上打印选定的打印机
+122~@~4~@~30~@~鉴于~@~鉴于~@~这一结果在屏幕观看新闻
+123~@~4~@~40~@~名单~@~名单~@~新闻界对这个名单表格
+124~@~4~@~41~@~搜索~@~搜索~@~新闻搜索此表格与指定的左文
+125~@~4~@~42~@~进口~@~进口~@~本输入选定spreadseet新闻
+126~@~4~@~43~@~卓越~@~卓越~@~记者观看此试算结果有卓越
+127~@~4~@~44~@~进口~@~进口~@~这个新闻或试算表输入选定-开山档案
+128~@~4~@~45~@~返回~@~返回~@~这回选定的新闻价值,要求控制模块
+129~@~4~@~46~@~取消~@~取消~@~这将取消现行新闻搜索
+130~@~4~@~47~@~藏匿我~@~藏匿我~@~这个新闻隐瞒进口小组并让更新按钮
+131~@~4~@~48~@~显示我~@~显示我~@~这个小组向新闻界表明进口更新按钮失灵
+135~@~4~@~52~@~继续~@~继续~@~这个密码,进入新闻界继续进口屏幕
+136~@~4~@~53~@~页面大小~@~页面大小~@~定格页大小(1到200记录)进入左
+137~@~4~@~54~@~新~@~新~@~以这种形式来明确告知新闻界的新纪录,并首次承担违约价值观
+138~@~1~@~55~@~Add~@~Insert Row~@~Press this to insert a new row at the beginning of the grid.
+139~@~1~@~56~@~Save&Copy~@~Save&Copy~@~Press this to save this record permanently and copy the current contents to a new form
+141~@~1~@~57~@~Undo~@~Undo~@~Press this to undo all the changes made so far
+142~@~1~@~58~@~Customize~@~Customize~@~Press this to customize this report further
+143~@~1~@~59~@~Preview~@~Preview~@~Press this to preview the results
+144~@~4~@~8~@~复制~@~复制~@~按下此复制的当前内容，以一种新形式
+145~@~4~@~11~@~保存~@~保存~@~出版社这本记录永久保存
+147~@~4~@~55~@~新行~@~新行~@~按下此插入一个新行开始的时候，网格。
+149~@~4~@~57~@~撤消所有~@~撤消所有~@~按下此撤消所有更改，迄今已取得
+150~@~4~@~58~@~自定义~@~自定义~@~按这个定义报告进一步
+151~@~4~@~59~@~预览~@~预览~@~按这个结果预览
+152~@~2~@~8~@~Copie~@~Copie~@~Appuyez sur cette copie pour le contenu actuel d&#39;une nouvelle forme
+153~@~2~@~54~@~Nouveau~@~Nouveau~@~Appuyez sur ce ressort de ce formulaire pour un nouveau record et d&#39;assumer les valeurs initiale
+156~@~2~@~57~@~Annuler tous les~@~Annuler tous les~@~Appuyez sur cette annuler tous les changements réalisés jusqu&#39;à présent
+157~@~2~@~58~@~Customize~@~Customize~@~Appuyez sur cette personnaliser ce rapport de plus amples
+158~@~2~@~59~@~Preview~@~Preview~@~Appuyez sur ce à un aperçu des résultats
+202~@~8~@~1~@~स्पष्ट~@~स्पष्ट~@~प्रेस यह स्पष्ट मानदंड अनुभाग
+205~@~8~@~4~@~RichText~@~RichText~@~इस प्रेस सभी Microsoft Word को RTF या फ़ाइल को अमीर पाठ के रूप में मानदंडों के आधार पर डेटा निर्यात 
+206~@~8~@~5~@~निर्यात~@~निर्यात~@~इस प्रेस सभी टैब के रूप में मानदंडों के आधार पर डेटा निर्यात के लिए सीमांकित फ्लैट फ़ाइल या एक्सेल स
+207~@~8~@~6~@~स्पष्ट~@~स्पष्ट~@~यह प्रेस एक ही रिकॉर्ड के लिए इस प्रपत्र का स्पष्ट और प्रारंभिक चूक मूल्यों को ग्रहण
+208~@~8~@~7~@~मिटाना~@~मिटाना~@~इस प्रेस इस रिकॉर्ड नष्ट करने के लिए स्थायी रूप से
+209~@~8~@~8~@~प्रतिलिपि~@~प्रतिलिपि~@~यह प्रेस एक नए रूप में मौजूदा सामग्री को कॉपी करने
+210~@~8~@~11~@~बचाना~@~बचाना~@~इस प्रेस इस रिकार्ड को बचाने के लिए स्थायी रूप से
+211~@~8~@~12~@~प्रथम~@~प्रथम~@~पहला पृष्ठ
+212~@~8~@~13~@~अंतिम~@~अंतिम~@~पिछले पृष्ठ
+213~@~8~@~14~@~अगला~@~अगला~@~अगले पृष्ठ
+214~@~8~@~15~@~पिछला~@~पिछला~@~पिछले पृष्ठ
+215~@~8~@~16~@~गोटो~@~गोटो~@~पृष्ठ पर बाईं ओर की संख्या में प्रवेश के लिए जाओ
+216~@~8~@~17~@~ढूँढना~@~ढूँढना~@~कि बाईं ओर पाठ में प्रवेश किया है नीचे ग्रिड से रिकॉर्ड खोजें
+217~@~8~@~20~@~स्पष्ट~@~स्पष्ट~@~प्रेस यह स्पष्ट मानदंड अनुभाग
+218~@~8~@~21~@~मानदंड~@~मानदंड~@~प्रेस इस मानदंड अनुभाग दिखाने के लिए
+219~@~8~@~22~@~खोज~@~खोज~@~प्रेस इस वैश्विक मानदंड अनुभाग दिखाने के लिए
+220~@~8~@~24~@~पीडीएफ~@~पीडीएफ~@~प्रेस यह एक एडोब पीडीएफ फाइल में परिणाम को देखने के लिए
+221~@~8~@~25~@~RichText~@~RichText~@~प्रेस यह रिच टेक्स्ट फ़ॉर्मेट (RTF) में परिणाम को देखने के लिए फ़ाइल
+222~@~8~@~26~@~निर्यात~@~निर्यात~@~इस प्रेस टैब के रूप में निर्यात करने के फ्लैट सीमांकित फाइल या एक्सेल स्प्रेडशीट के लिए
+223~@~8~@~27~@~शब्द~@~शब्द~@~प्रेस यह एक Microsoft Word फ़ाइल में परिणाम को देखने के लिए
+224~@~8~@~28~@~एक्सेल~@~एक्सेल~@~प्रेस यह एक XML में परिणाम को देखने के लिए, एक्सेल स्प्रेडशीट संस्करण 2000 और उसके बाद formated
+225~@~8~@~29~@~प्रिंट~@~प्रिंट~@~प्रेस इस स्क्रीन और प्रिंटर से प्रिंट पर परिणाम देखने के लिए चयनित
+226~@~8~@~30~@~दृश्य~@~दृश्य~@~प्रेस इस स्क्रीन पर परिणाम देखने के लिए
+227~@~8~@~40~@~सूची~@~सूची~@~प्रेस इस स्प्रैडशीट की सूची के लिए
+228~@~8~@~41~@~खोज~@~खोज~@~प्रेस पर निर्दिष्ट पाठ के साथ स्प्रैडशीट्स के लिए इस खोज के लिए छोड़ दिया
+229~@~8~@~42~@~आयात~@~आयात~@~इस प्रेस चयनित spreadseet आयात के लिए
+230~@~8~@~43~@~एक्सेल~@~एक्सेल~@~प्रेस यह एक एक्सेल स्प्रेडशीट में परिणाम को देखने के लिए
+231~@~8~@~44~@~आयात~@~आयात~@~इस प्रेस चयनित स्प्रेडशीट या टैब सीमांकित फ़ाइल आयात करने के लिए
+232~@~8~@~45~@~वापस~@~वापस~@~इस प्रेस को नियंत्रण मॉड्यूल को बुला मूल्य वापसी का चयन
+233~@~8~@~46~@~रद्द करें~@~रद्द करें~@~इस प्रेस चालू खोज को रद्द करने के लिए
+234~@~8~@~47~@~मैं छुपाएँ -~@~मैं छुपाएँ -~@~इस प्रेस आयात पैनल को छिपाने के लिए और अद्यतन बटन को सक्षम
+235~@~8~@~48~@~मैं शो~@~मैं शो~@~इस प्रेस आयात पैनल निष्क्रिय कर देते हैं और अद्यतन बटन को दिखाने के लिए
+237~@~8~@~52~@~जारी रखें~@~जारी रखें~@~पासवर्ड दर्ज करें और इस प्रेस को स्क्रीन आयात जारी
+238~@~8~@~53~@~PageSize~@~PageSize~@~सेट ग्रिड पृष्ठ आकार (1-200 रिकॉर्ड) के रूप में छोड़ दिया पर प्रवेश किया
+239~@~8~@~54~@~नया~@~नया~@~यह प्रेस एक नया रिकॉर्ड के लिए इस प्रपत्र का स्पष्ट और प्रारंभिक चूक मूल्यों को ग्रहण
+242~@~8~@~57~@~सभी पूर्ववत करें~@~सभी पूर्ववत करें~@~इस प्रेस सभी परिवर्तनों को पूर्ववत् करें के लिए अब तक किए
+243~@~8~@~58~@~अनुकूलित करें~@~अनुकूलित करें~@~इस प्रेस इस रिपोर्ट को अनुकूलित करने के लिए आगे
+244~@~8~@~59~@~पूर्वावलोकन~@~पूर्वावलोकन~@~प्रेस इस पूर्वावलोकन परिणाम
+245~@~9~@~1~@~Claro~@~Claro~@~Pressione esta seção para limpar critérios
+248~@~9~@~4~@~RichText~@~RichText~@~Pressione este botão para exportar todos os dados com base em critérios como rich text em um arquivo
+249~@~9~@~5~@~Exportação~@~Exportação~@~Pressione este botão para exportar todos os dados com base em critérios como delimitado por tabulaçõ
+250~@~9~@~6~@~Claro~@~Claro~@~Pressione este botão para limpar este formulário para o mesmo registro e assumir valores iniciais in
+251~@~9~@~7~@~Excluir~@~Excluir~@~Pressione este botão para excluir este registro permanentemente
+252~@~9~@~8~@~Cópia~@~Cópia~@~Pressione este botão para copiar o conteúdo atual para uma nova forma
+253~@~9~@~11~@~Salvar~@~Salvar~@~Pressione este botão para salvar este registro permanentemente
+254~@~9~@~12~@~Primeiro~@~Primeiro~@~Primeira página
+255~@~9~@~13~@~Passado~@~Passado~@~Última página
+256~@~9~@~14~@~Próximo~@~Próximo~@~Próxima página
+257~@~9~@~15~@~Anterior~@~Anterior~@~Página anterior
+258~@~9~@~16~@~GoTo~@~GoTo~@~Ir para o número da página entrou à esquerda
+259~@~9~@~17~@~Encontrar~@~Encontrar~@~Encontrar os registros da grade abaixo que tem o texto inserido na esquerda
+260~@~9~@~20~@~Claro~@~Claro~@~Pressione esta seção para limpar critérios
+261~@~9~@~21~@~Critérios~@~Critérios~@~Pressione esta seção para mostrar critérios
+262~@~9~@~22~@~Pesquisa~@~Pesquisa~@~Pressione esta seção para mostrar critérios globais
+263~@~9~@~24~@~PDF~@~PDF~@~Pressione-o para ver os resultados em um arquivo PDF Adobe
+264~@~9~@~25~@~RichText~@~RichText~@~Pressione aqui para visualizar resultados em um formato Rich Text (RTF)
+265~@~9~@~26~@~Exportação~@~Exportação~@~Prima para exportação como delimitado por tabulações para arquivo simples ou planilha Excel
+266~@~9~@~27~@~Palavra~@~Palavra~@~Pressione-o para ver os resultados em um arquivo do Microsoft Word
+267~@~9~@~28~@~Sobressair~@~Sobressair~@~Pressione aqui para visualizar resultados em um XML-formatada versão planilha Excel 2000 e além
+268~@~9~@~29~@~Imprimir~@~Imprimir~@~Pressione aqui para exibir os resultados na tela e impressão para a impressora selecionada
+269~@~9~@~30~@~Vista~@~Vista~@~Pressione aqui para exibir os resultados na tela
+270~@~9~@~40~@~Lista~@~Lista~@~Pressione este para uma lista de planilhas
+271~@~9~@~41~@~Pesquisa~@~Pesquisa~@~Pressione-o para procurar planilhas com o texto especificado à esquerda
+272~@~9~@~42~@~Importação~@~Importação~@~Pressione este botão para importar o spreadseet selecionados
+273~@~9~@~43~@~Sobressair~@~Sobressair~@~Pressione-o para ver os resultados em uma planilha do Excel
+274~@~9~@~44~@~Importação~@~Importação~@~Pressione este botão para importar a planilha selecionada ou por tabulação arquivo
+275~@~9~@~45~@~Retorno~@~Retorno~@~Pressione este botão para retornar o valor selecionado para controlar módulo chamado
+276~@~9~@~46~@~Cancelar~@~Cancelar~@~Pressione este botão para cancelar a busca atual
+277~@~9~@~47~@~Esconder-I~@~Esconder-I~@~Prima para ocultar o painel de importação e permitir botões Atualização
+278~@~9~@~48~@~Mostrar-I~@~Mostrar-I~@~Pressione-o para mostrar painel de Importação e desativar botões Atualização
+280~@~9~@~52~@~Continuar~@~Continuar~@~Digite a senha e pressione para continuar esta importação tela
+281~@~9~@~53~@~PageSize~@~PageSize~@~Definir o tamanho da página de grade (1-200 registros) como entrou à esquerda
+282~@~9~@~54~@~Novo~@~Novo~@~Pressione este botão para limpar este formulário para um novo recorde e assume valores iniciais inad
+285~@~9~@~57~@~Todos desfazer~@~Todos desfazer~@~Pressione este botão para desfazer todas as alterações feitas até agora
+286~@~9~@~58~@~Customize~@~Customize~@~Pressione-o para personalizar este novo relatório
+287~@~9~@~59~@~Visualização~@~Visualização~@~Pressione este botão para visualizar os resultados
+288~@~11~@~1~@~Açık~@~Açık~@~Kriterler bölümü silmek için bu basın
+291~@~11~@~4~@~RichText~@~RichText~@~Bir RTF dosyası, zengin metin veya Microsoft Word gibi kriterlere dayalı tüm verileri dışa aktarmak 
+292~@~11~@~5~@~Ihracat~@~Ihracat~@~Sekme ile sınırlandırılmış gibi kriterlere dayalı tüm veriler, düz bir dosya veya Excel Spreadsheet 
+293~@~11~@~6~@~Açık~@~Açık~@~Basın ve ilk temerrüde değerler aynı kayıt için bu formu temizlemek için bu
+294~@~11~@~7~@~Silmek~@~Silmek~@~Basın bu kayıt kalıcı olarak silmek için bu
+295~@~11~@~8~@~Kopya~@~Kopya~@~Yeni bir form için geçerli içeriğini kopyalamak için bu basın
+296~@~11~@~11~@~Kurtarmak~@~Kurtarmak~@~Bu kayıt kalıcı olarak kaydetmek için bu basın
+297~@~11~@~12~@~Ilk~@~Ilk~@~İlk sayfa
+298~@~11~@~13~@~Son~@~Son~@~Son sayfa
+299~@~11~@~14~@~Sonraki~@~Sonraki~@~Sonraki sayfa
+300~@~11~@~15~@~Önceki~@~Önceki~@~Önceki Sayfa
+301~@~11~@~16~@~Git~@~Git~@~Sayfa numarası solda girdi
+302~@~11~@~17~@~Bulmak~@~Bulmak~@~Aşağıdaki ızgara kayıtları bulma metin sola girmiştir
+303~@~11~@~20~@~Açık~@~Açık~@~Kriterler bölümü silmek için bu basın
+304~@~11~@~21~@~Kriterleri~@~Kriterleri~@~Kriterler bölümü göstermek için bu basın
+305~@~11~@~22~@~Arama~@~Arama~@~Küresel kriterler bölümü göstermek için bu basın
+306~@~11~@~24~@~PDF~@~PDF~@~Adobe PDF dosyası sonuçlarını görüntülemek için buna basın
+307~@~11~@~25~@~RichText~@~RichText~@~Zengin Metin biçimi (RTF) dosyasını sonuçlarını görüntülemek için bu basın
+308~@~11~@~26~@~Ihracat~@~Ihracat~@~Basın, düz bir dosya veya Excel elektronik tablo için sekme ile ayrılmış olarak vermek için bu
+309~@~11~@~27~@~Kelime~@~Kelime~@~Microsoft Word dosyası sonuçlarını görüntülemek için buna basın
+310~@~11~@~28~@~Excel~@~Excel~@~Bir XML format Excel elektronik tablo sürüm 2000 ve ötesinde sonuçları görmek için bu basın
+311~@~11~@~29~@~Baskı~@~Baskı~@~Bu basın, ekranda sonuçlarını görüntülemek ve seçilen yazıcıya yazdırmak için
+312~@~11~@~30~@~Görünüm~@~Görünüm~@~Ekranda sonuçlarını görüntülemek için bu basın
+313~@~11~@~40~@~Liste~@~Liste~@~Elektronik tablolar, bir listesi için bu basın
+315~@~11~@~42~@~Ithalat~@~Ithalat~@~Basın seçilen spreadseet almak için bu
+316~@~11~@~43~@~Excel~@~Excel~@~Bir Excel elektronik tablo sonuçlarını görüntülemek için bu basın
+317~@~11~@~44~@~Ithalat~@~Ithalat~@~Seçilen elektronik tablo veya sekme ile sınırlandırılmış dosya almak için bu basın
+318~@~11~@~45~@~Geri dönüş~@~Geri dönüş~@~Basın çağıran modül kontrolü için seçilen değeri dönmek için bu
+319~@~11~@~46~@~Iptal~@~Iptal~@~Basın geçerli aramayı iptal etmek için bu
+320~@~11~@~47~@~Hide-I~@~Hide-I~@~Basın ve Güncelleme düğmeleri etkinleştirin İthalat paneli gizlemek için bu
+321~@~11~@~48~@~Show-I~@~Show-I~@~Basın ve Güncelleme düğmeleri devre dışı bırakmak İthalat paneli göstermek için bu
+323~@~11~@~52~@~Devam etmek~@~Devam etmek~@~Şifrenizi girin ve ekran ithalat devam etmek için bu basın
+324~@~11~@~53~@~PageSize~@~PageSize~@~Sol girilen gibi ızgara sayfa boyutunu ayarlayın (1-200 kayıtları)
+325~@~11~@~54~@~Yeni~@~Yeni~@~Basın ve ilk temerrüde değerler yeni bir rekor için bu formu temizlemek için bu
+328~@~11~@~57~@~Tümünü geri al~@~Tümünü geri al~@~Şimdiye kadar yapılmış tüm değişiklikleri geri almak için bu basın
+329~@~11~@~58~@~Özelleştir~@~Özelleştir~@~Bu raporun daha da özelleştirmek için bu basın
+330~@~11~@~59~@~Önizleme~@~Önizleme~@~Basın sonuçları önizleme yapmak için bu
+331~@~14~@~1~@~クリア~@~クリア~@~基準セクションをクリアするには、このを押して、
+334~@~14~@~4~@~リッチテキスト~@~リッチテキスト~@~RTFファイルにまたはMicrosoft Wordにリッチテキストなどの基準に基づいてすべてのデータをエクスポートするときに押します
+335~@~14~@~5~@~輸出~@~輸出~@~フラットファイルまたはExcelスプレッドシートにタブ区切りなどの基準に基づいてすべてのデータをエクスポートするときに押します
+336~@~14~@~6~@~クリア~@~クリア~@~同じレコードでこのフォームをクリアするには、このを押して、初期ディフォルト値を前提としています
+337~@~14~@~7~@~削除~@~削除~@~永久にこのレコードを削除するときに押します
+338~@~14~@~8~@~コピー~@~コピー~@~新しいフォームに現在の内容をコピーするときに押します
+339~@~14~@~11~@~保存~@~保存~@~永久にこのレコードを保存するときに押します
+340~@~14~@~12~@~初~@~初~@~最初のページ
+341~@~14~@~13~@~最後の~@~最後の~@~最後のページ
+342~@~14~@~14~@~次のページ~@~次のページ~@~次のページ
+343~@~14~@~15~@~前~@~前~@~前のページ
+344~@~14~@~16~@~後藤~@~後藤~@~左側に入力したページ番号に移動します
+345~@~14~@~17~@~検索~@~検索~@~左側に入力したテキストを持っているその下のグリッドからレコードを見つける
+346~@~14~@~20~@~クリア~@~クリア~@~基準セクションをクリアするには、このを押して、
+347~@~14~@~21~@~の基準~@~の基準~@~基準セクションを表示するには、このを押して、
+348~@~14~@~22~@~検索する~@~検索する~@~グローバル基準のセクションを表示するには、このを押して、
+349~@~14~@~24~@~PDF~@~PDF~@~Adobe PDFファイルに結果を表示するには、このキーを押して
+350~@~14~@~25~@~リッチテキスト~@~リッチテキスト~@~リッチテキスト形式（RTF）ファイルに結果を表示するには、このキーを押して
+351~@~14~@~26~@~輸出~@~輸出~@~フラットファイルまたはExcelスプレッドシートにタブ区切りとしてエクスポートするときに押します
+352~@~14~@~27~@~ワード~@~ワード~@~Microsoft Wordのファイルに結果を表示するには、このキーを押して
+353~@~14~@~28~@~Excelの~@~Excelの~@~XML -フォーマットされたExcelスプレッドシートのバージョン2000年以降に結果を表示するには、このキーを押して
+354~@~14~@~29~@~プリント~@~プリント~@~画面上に結果を表示し、選択したプリンタに印刷するときに押します
+355~@~14~@~30~@~見る~@~見る~@~画面上に結果を表示するには、このキーを押して
+356~@~14~@~40~@~一覧~@~一覧~@~スプレッドシートのリストにこれを押すと、
+357~@~14~@~41~@~検索する~@~検索する~@~左側の指定したテキストを使用してスプレッドシートを検索するには、このを押して、
+358~@~14~@~42~@~インポート~@~インポート~@~選択したspreadseetをインポートするときに押します
+359~@~14~@~43~@~Excelの~@~Excelの~@~Excelスプレッドシートに結果を表示するには、このキーを押して
+360~@~14~@~44~@~インポート~@~インポート~@~選択したスプレッドシートまたはタブ区切りのファイルをインポートするときに押します
+361~@~14~@~45~@~戻る~@~戻る~@~呼び出し元のモジュールの制御に選択された値を返すためにこのキーを押して
+362~@~14~@~46~@~キャンセル~@~キャンセル~@~現在の検索をキャンセルするときに押します
+363~@~14~@~47~@~非表示- I~@~非表示- I~@~インポートパネルを非表示にし、更新ボタンを有効にするには、このを押して、
+364~@~14~@~48~@~ショー- I~@~ショー- I~@~インポートパネルを表示し、更新ボタンを無効にするには、このを押して、
+366~@~14~@~52~@~継続~@~継続~@~パスワードを入力し、画面のインポートを続行するには、このキーを押し
+367~@~14~@~53~@~ページサイズ~@~ページサイズ~@~として左側に入力されたグリッドのページサイズ（1〜200レコード）を設定する
+368~@~14~@~54~@~新~@~新~@~新しいレコードのためにこのフォームをクリアするには、このを押して、初期ディフォルト値を前提としています
+371~@~14~@~57~@~すべてを元に戻す~@~すべてを元に戻す~@~これまでに行ったすべての変更を元に戻す、これを押すと、
+372~@~14~@~58~@~カスタマイズ~@~カスタマイズ~@~さらにこのレポートをカスタマイズするときに押します
+373~@~14~@~59~@~プレビュー~@~プレビュー~@~結果をプレビューするときに押します
+374~@~12~@~1~@~Ясно~@~Ясно~@~Нажмите для четких критериев разделе
+377~@~12~@~4~@~RichText~@~RichText~@~Нажмите, чтобы экспортировать все данные на основе критериев, как форматированный текст в файл RTF и
+378~@~12~@~5~@~Экспорт~@~Экспорт~@~Нажмите, чтобы экспортировать все данные на основе критериев, разделенных табуляцией в плоский файл 
+379~@~12~@~6~@~Ясно~@~Ясно~@~Нажмите, чтобы очистить эту форму для той же записи и считать начальные значения дефолт
+380~@~12~@~7~@~Удалять~@~Удалять~@~Нажмите, чтобы удалить эту запись постоянно
+381~@~12~@~8~@~Копия~@~Копия~@~Нажмите, чтобы скопировать текущее содержимое в новую форму
+382~@~12~@~11~@~Экономить~@~Экономить~@~Нажмите, чтобы сохранить эту запись постоянно
+383~@~12~@~12~@~Первый~@~Первый~@~Первая страница
+384~@~12~@~13~@~Последний~@~Последний~@~Последняя страница
+385~@~12~@~14~@~Следующий~@~Следующий~@~Следующая страница
+386~@~12~@~15~@~Предыдущий~@~Предыдущий~@~Предыдущая Страница
+387~@~12~@~16~@~GoTo~@~GoTo~@~Перейти на страницу номер, введенный на левом
+388~@~12~@~17~@~Находить~@~Находить~@~Найти записи из сетки, которая ниже текст, введенный на левом
+389~@~12~@~20~@~Ясно~@~Ясно~@~Нажмите для четких критериев разделе
+390~@~12~@~21~@~Критерии~@~Критерии~@~Нажмите, чтобы показать критерии разделе
+391~@~12~@~22~@~Поиск~@~Поиск~@~Нажмите, чтобы показать глобальное сечение критериям
+392~@~12~@~24~@~PDF~@~PDF~@~Нажмите, чтобы просмотреть результаты в файл Adobe PDF
+393~@~12~@~25~@~RichText~@~RichText~@~Нажмите для просмотра результатов в формате Rich Text Format (RTF-файл)
+394~@~12~@~26~@~Экспорт~@~Экспорт~@~Нажмите для экспорта, разделенные символом табуляции в плоский файл или таблица Excel
+395~@~12~@~27~@~Слово~@~Слово~@~Нажмите, чтобы просмотреть результаты в файл Microsoft Word,
+396~@~12~@~28~@~Превосходить~@~Превосходить~@~Нажмите для просмотра результатов в XML-форматированный таблица Excel версии 2000 и выше
+397~@~12~@~29~@~Печать~@~Печать~@~Нажмите для просмотра результатов на экране и печати на принтер, выбранный
+398~@~12~@~30~@~Вид~@~Вид~@~Нажмите для просмотра результатов на экране
+399~@~12~@~40~@~Список~@~Список~@~Нажмите, чтобы получить список таблиц
+400~@~12~@~41~@~Поиск~@~Поиск~@~Нажмите для поиска таблицы с заданным текстом на левой
+401~@~12~@~42~@~Импорт~@~Импорт~@~Нажмите, чтобы импортировать выбранные spreadseet
+402~@~12~@~43~@~Превосходить~@~Превосходить~@~Нажмите для просмотра результатов в таблицы Excel
+403~@~12~@~44~@~Импорт~@~Импорт~@~Нажмите, чтобы импортировать выбранные таблицы или символ табуляции файл
+404~@~12~@~45~@~Возвращение~@~Возвращение~@~Нажмите, чтобы вернуться выбранного значения вызовом модуля управления
+405~@~12~@~46~@~Отменить~@~Отменить~@~Нажмите, чтобы отменить текущий поиск
+406~@~12~@~47~@~Hide-я~@~Hide-я~@~Нажмите, чтобы скрыть панель импорта и позволит Обновление кнопки
+407~@~12~@~48~@~Шоу-я~@~Шоу-я~@~Нажмите, чтобы показать Импорт панель и кнопки отключения обновлений
+409~@~12~@~52~@~Продолжать~@~Продолжать~@~Введите пароль и нажмите, чтобы это продолжалось экране импорта
+410~@~12~@~53~@~PageSize~@~PageSize~@~Установить размер сетки страницы (от 1 до 200 записей), вписанные на левом
+411~@~12~@~54~@~Новый~@~Новый~@~Нажмите, чтобы очистить эту форму для новой записи и считать начальные значения дефолт
+414~@~12~@~57~@~Отменить все~@~Отменить все~@~Нажмите, чтобы отменить все изменения, сделанные до сих пор
+415~@~12~@~58~@~Настроить~@~Настроить~@~Нажмите, чтобы настроить эту докладе далее
+416~@~12~@~59~@~Предварительный прос~@~Предварительный прос~@~Нажмите для предварительного просмотра результатов
+417~@~13~@~1~@~Claro~@~Claro~@~Pulse aquí para borrar la sección de criterios
+420~@~13~@~4~@~RichText~@~RichText~@~Pulse este botón para exportar todos los datos en función de criterios como texto enriquecido en un 
+421~@~13~@~5~@~Exportación~@~Exportación~@~Pulse este botón para exportar todos los datos en función de criterios como delimitado por tabulacio
+422~@~13~@~6~@~Claro~@~Claro~@~Pulse aquí para borrar esta forma para el mismo registro y asumir los valores iniciales de cesación 
+423~@~13~@~7~@~Borrar~@~Borrar~@~Pulse aquí para eliminar este registro de forma permanente
+424~@~13~@~8~@~Copia~@~Copia~@~Pulse este botón para copiar el contenido actual a una nueva forma
+425~@~13~@~11~@~Ahorrar~@~Ahorrar~@~Pulse este botón para guardar este registro de forma permanente
+426~@~13~@~12~@~Primero~@~Primero~@~Primera página
+427~@~13~@~13~@~Pasado~@~Pasado~@~Última página
+428~@~13~@~14~@~Próximo~@~Próximo~@~Página siguiente
+429~@~13~@~15~@~Anterior~@~Anterior~@~Página anterior
+430~@~13~@~16~@~GoTo~@~GoTo~@~Ir a la página que entró a la izquierda
+431~@~13~@~17~@~Encontrar~@~Encontrar~@~Buscar los registros de la tabla de abajo que tiene el texto introducido a la izquierda
+432~@~13~@~20~@~Claro~@~Claro~@~Pulse aquí para borrar la sección de criterios
+433~@~13~@~21~@~Criterios~@~Criterios~@~Pulse este botón para mostrar la sección de criterios
+434~@~13~@~22~@~Búsqueda~@~Búsqueda~@~Pulse este botón para mostrar la sección de criterios globales
+435~@~13~@~24~@~PDF~@~PDF~@~Pulse este botón para ver los resultados en un archivo PDF de Adobe
+436~@~13~@~25~@~RichText~@~RichText~@~Pulse este botón para ver los resultados en un formato de texto enriquecido (RTF)
+437~@~13~@~26~@~Exportación~@~Exportación~@~Pulse este botón para la exportación, delimitado por tabulaciones para archivo plano o de hoja de cá
+438~@~13~@~27~@~Palabra~@~Palabra~@~Pulse este botón para ver los resultados en un archivo de Microsoft Word
+439~@~13~@~28~@~Sobresalir~@~Sobresalir~@~Pulse este botón para ver los resultados en una versión de XML con formato hoja de cálculo Excel 200
+440~@~13~@~29~@~Imprimir~@~Imprimir~@~Pulse este botón para ver los resultados en pantalla e imprimir a la impresora seleccionada
+441~@~13~@~30~@~Ver~@~Ver~@~Pulse este botón para ver los resultados en la pantalla
+442~@~13~@~40~@~Lista~@~Lista~@~Presione este para obtener una lista de hojas de cálculo
+443~@~13~@~41~@~Búsqueda~@~Búsqueda~@~Pulse este botón para la búsqueda de hojas de cálculo con el texto especificado a la izquierda
+444~@~13~@~42~@~Importación~@~Importación~@~Presione aquí para importar el spreadseet seleccionados
+445~@~13~@~43~@~Sobresalir~@~Sobresalir~@~Pulse este botón para ver los resultados en una hoja de cálculo Excel
+446~@~13~@~44~@~Importación~@~Importación~@~Presione aquí para importar la hoja de cálculo seleccionadas o archivos delimitados por tabuladores
+447~@~13~@~45~@~Volver~@~Volver~@~Pulse este botón para devolver el valor seleccionado para el módulo de control llamado
+448~@~13~@~46~@~Cancelar~@~Cancelar~@~Pulse este botón para cancelar la búsqueda actual
+449~@~13~@~47~@~Ocultar-I~@~Ocultar-I~@~Pulse este botón para ocultar el panel de importación y permitir que los botones de actualización
+450~@~13~@~48~@~Show-I~@~Show-I~@~Pulse este botón para mostrar el panel de importación y desactivar los botones de actualización
+452~@~13~@~52~@~Continuar~@~Continuar~@~Escriba la contraseña y pulse el continuar la importación de pantalla
+453~@~13~@~53~@~PageSize~@~PageSize~@~Configurar el tamaño de la red (1 a 200 registros) que entró a la izquierda
+454~@~13~@~54~@~Nuevo~@~Nuevo~@~Pulse aquí para borrar este formulario para un nuevo registro y asumir los valores iniciales de cesa
+457~@~13~@~57~@~Deshacer todos los~@~Deshacer todos los~@~Pulse este botón para deshacer todos los cambios realizados hasta la fecha
+458~@~13~@~58~@~Personalizar~@~Personalizar~@~Pulse este botón para personalizar este informe
+459~@~13~@~59~@~Vista previa~@~Vista previa~@~Presione aquí para previsualizar los resultados
+461~@~11~@~41~@~Arama~@~Arama~@~Elektronik tablolar, sol tarafta belirtilen metin aramak için bu basın
+462~@~1~@~62~@~Embed~@~Embed~@~Press this to copy the script for embedding this wizard in other html pages
+463~@~1~@~61~@~Embed~@~Embed~@~Press this to copy the script for embedding this report in other html pages
+464~@~1~@~60~@~Embed~@~Embed~@~Press this to copy the script for embedding this screen in other html pages
+465~@~4~@~62~@~嵌~@~嵌~@~按下此按钮即可复制此向导其他HTML页面中嵌入的脚本
+466~@~4~@~61~@~嵌~@~嵌~@~按下此按钮即可复制本报告中的其他HTML页面中嵌入脚本
+467~@~4~@~60~@~嵌~@~嵌~@~按下此按钮即可复制此屏幕中其他的HTML页面中嵌入脚本
+468~@~2~@~62~@~Enchâsser~@~Enchâsser~@~Appuyez sur cette option pour copier le script pour intégrer cet assistant dans d'autres pages html
+469~@~2~@~61~@~Enchâsser~@~Enchâsser~@~Appuyez sur cette option pour copier le script pour intégrer ce rapport à d'autres pages html
+470~@~2~@~60~@~Enchâsser~@~Enchâsser~@~Appuyez sur cette option pour copier le script pour intégrer cet écran dans d'autres pages html
+471~@~68~@~1~@~Löschen~@~Löschen~@~Drücken Sie diese Kriterien Abschnitt löschen
+474~@~68~@~4~@~RichText~@~RichText~@~Drücken, um alle Daten auf Kriterien wie Rich-Text in eine RTF-Datei oder in Microsoft Word basiert 
+475~@~68~@~5~@~Exportieren~@~Exportieren~@~Drücken, um alle Daten auf Kriterien wie tabulatorgetrennte basiert auf flache Datei oder Excel-Tabe
+476~@~68~@~6~@~Löschen~@~Löschen~@~Drücken Sie diese, um diese Form für denselben Datensatz löschen und übernehmen ersten ausgefallenen
+477~@~68~@~7~@~Löschen~@~Löschen~@~Drücken Sie diese, um diesen Datensatz endgültig löschen
+478~@~68~@~8~@~Kopieren~@~Kopieren~@~Drücken, um den aktuellen Inhalt zu einer neuen Form kopieren
+479~@~68~@~11~@~Sparen~@~Sparen~@~Drücken Sie diese, um diesen Datensatz dauerhaft speichern
+480~@~68~@~12~@~Erste~@~Erste~@~Erste Seite
+481~@~68~@~13~@~Letzte~@~Letzte~@~Letzte Seite
+482~@~68~@~14~@~Nächste~@~Nächste~@~Nächste Seite
+483~@~68~@~15~@~Früher~@~Früher~@~Vorherige Seite
+484~@~68~@~16~@~GoTo~@~GoTo~@~Gehen Sie zur Seite eingegeben links
+485~@~68~@~17~@~Finden~@~Finden~@~Finden Sie die Datensätze aus dem Netz unten, dass der eingegebene Text hat auf der linken Seite
+486~@~68~@~20~@~Löschen~@~Löschen~@~Drücken Sie diese Kriterien Abschnitt löschen
+487~@~68~@~21~@~Kriterien~@~Kriterien~@~Drücken Sie diese Kriterien Abschnitt zeigen
+488~@~68~@~22~@~Suchen~@~Suchen~@~Drücken, um die globalen Kriterien Abschnitt zeigen
+489~@~68~@~24~@~PDF~@~PDF~@~Drücken, um die Ergebnisse in einer Adobe PDF-Datei anzeigen
+490~@~68~@~25~@~RichText~@~RichText~@~Drücken, um die Ergebnisse in einem Rich-Text-Format (RTF) Datei anzuzeigen
+491~@~68~@~26~@~Exportieren~@~Exportieren~@~Drücken Sie diese als tabulatorgetrennte zu flachen Datei oder Excel-Tabelle exportieren
+492~@~68~@~27~@~Wort~@~Wort~@~Drücken, um die Ergebnisse in einem Microsoft Word-Datei anzuzeigen
+493~@~68~@~28~@~Übertreffen~@~Übertreffen~@~Drücken, um die Ergebnisse in einer XML-formatierten Excel-Tabelle Version 2000 und darüber hinaus z
+494~@~68~@~29~@~Drucken~@~Drucken~@~Drücken, um die Ergebnisse auf dem Bildschirm anzeigen und drucken die Drucker ausgewählt
+495~@~68~@~30~@~Sehen~@~Sehen~@~Drücken, um die Ergebnisse auf dem Bildschirm anzuzeigen
+496~@~68~@~40~@~Liste~@~Liste~@~Drücken Sie diese für eine Liste von Tabellenkalkulationen
+497~@~68~@~41~@~Suchen~@~Suchen~@~Drücken Sie hier für Tabellenkalkulationen mit dem angegebenen Text auf der linken Suche
+498~@~68~@~42~@~Importieren~@~Importieren~@~Drücken Sie diese, um die ausgewählte spreadseet importieren
+499~@~68~@~43~@~Übertreffen~@~Übertreffen~@~Drücken, um die Ergebnisse in einem Excel Spreadsheet anzuzeigen
+500~@~68~@~44~@~Importieren~@~Importieren~@~Drücken Sie die ausgewählte Tabelle oder tabulatorgetrennte Datei importieren
+501~@~68~@~45~@~Rückkehr~@~Rückkehr~@~Drücken, um ausgewählten Wert zu nennen Modulsteuerung zurück
+502~@~68~@~46~@~Stornieren~@~Stornieren~@~Drücken, um die aktuelle Suche abbrechen
+503~@~68~@~47~@~Hide-I~@~Hide-I~@~Drücken, um die Import-Panel verstecken und den Update-Tasten
+504~@~68~@~48~@~Show-I~@~Show-I~@~Drücken, um die Import-Panel zeigen und deaktivieren Update-Tasten
+506~@~68~@~52~@~Fortsetzen~@~Fortsetzen~@~Geben Sie das Passwort ein und drücken dies Bildschirm Import weiter
+507~@~68~@~53~@~SeitenGröße~@~SeitenGröße~@~Stellen Sie das Raster Seitengröße (1 bis 200 Datensätze) als auf der linken eingegebenen
+508~@~68~@~54~@~Neu~@~Neu~@~Drücken Sie diese, um diese Form für einen neuen Datensatz zu löschen und nehmen erste ausgefallenen
+511~@~68~@~57~@~Rückgängig All~@~Rückgängig All~@~Drücken Sie hier, um alle bisher vorgenommenen Änderungen rückgängig
+512~@~68~@~58~@~Anpassen~@~Anpassen~@~Drücken Sie diese, um diesen Bericht weiter anpassen
+513~@~68~@~59~@~Vorschau~@~Vorschau~@~Drücken Sie diese, um die Ergebnisse anzuzeigen
+514~@~68~@~62~@~Einbetten~@~Einbetten~@~Drücken Sie diese, um das Skript für die Einbettung dieses Assistenten in anderen HTML-Seiten kopier
+515~@~68~@~61~@~Einbetten~@~Einbetten~@~Drücken Sie diese, um das Skript für die Einbettung dieses Berichts in anderen HTML-Seiten kopieren
+516~@~68~@~60~@~Einbetten~@~Einbetten~@~Drücken Sie diese, um das Skript für die Einbettung dieser Bildschirm in anderen HTML-Seiten kopiere
+517~@~8~@~62~@~एम्बेड~@~एम्बेड~@~इस प्रेस अन्य HTML पृष्ठों में इस जादूगर embedding के लिए स्क्रिप्ट की प्रतिलिपि
+518~@~8~@~61~@~एम्बेड~@~एम्बेड~@~इस प्रेस अन्य HTML पृष्ठों में इस रिपोर्ट embedding के लिए स्क्रिप्ट की प्रतिलिपि
+519~@~8~@~60~@~एम्बेड~@~एम्बेड~@~इस प्रेस अन्य HTML पृष्ठों में इस स्क्रीन embedding के लिए स्क्रिप्ट की प्रतिलिपि
+520~@~14~@~62~@~埋め込む~@~埋め込む~@~他のHTMLページには、このウィザードを埋め込むためのスクリプトをコピーするときに押し
+521~@~14~@~61~@~埋め込む~@~埋め込む~@~他のHTMLページに、このレポートを埋め込むためのスクリプトをコピーするときに押し
+522~@~14~@~60~@~埋め込む~@~埋め込む~@~他のHTMLページに、この画面を埋め込むためのスクリプトをコピーするときに押し
+523~@~28~@~1~@~삭제~@~삭제~@~기준 섹션을 지우려면이 키를 눌러
+526~@~28~@~4~@~리치~@~리치~@~RTF 파일이나 Microsoft Word에 서식있는 텍스트로 기준에 따라 모든 데이터를 내보내려면이 키를 눌러
+527~@~28~@~5~@~수출~@~수출~@~플랫 파일 또는 Excel 스프레드 시트에 탭으로 구분 된 같은 기준에 따라 모든 데이터를 내보내려면이 키를 눌러
+528~@~28~@~6~@~삭제~@~삭제~@~동일한 레코드에 대해이 양식을 지우려면이을 누르면 초기 기본적으로 값을 가정
+529~@~28~@~7~@~삭제~@~삭제~@~영구적으로이 레코드를 삭제하려면이 키를 눌러
+530~@~28~@~8~@~복사~@~복사~@~새로운 형태로 현재의 내용을 복사하려면이 키를 눌러
+531~@~28~@~11~@~저장~@~저장~@~영구적으로이 기록을 저장하려면이 키를 눌러
+532~@~28~@~12~@~처음으로~@~처음으로~@~첫 페이지
+533~@~28~@~13~@~마지막~@~마지막~@~마지막 페이지
+534~@~28~@~14~@~다음~@~다음~@~다음 페이지
+535~@~28~@~15~@~이전~@~이전~@~이전 페이지
+536~@~28~@~16~@~고토~@~고토~@~페이지 번호로 이동 왼쪽에 입력
+537~@~28~@~17~@~발견~@~발견~@~텍스트를 왼쪽에 입력 한 그 아래 표에서 레코드를 찾기
+538~@~28~@~20~@~삭제~@~삭제~@~기준 섹션을 지우려면이 키를 눌러
+539~@~28~@~21~@~기준~@~기준~@~기준 섹션을 표시하려면이 키를 눌러
+540~@~28~@~22~@~검색~@~검색~@~글로벌 기준 섹션을 표시하려면이 키를 눌러
+541~@~28~@~24~@~PDF~@~PDF~@~어도비 PDF 파일에 결과를 볼이 키를 눌러
+542~@~28~@~25~@~리치~@~리치~@~서식있는 텍스트 형식 (RTF) 파일에 결과를 볼이 키를 눌러
+543~@~28~@~26~@~수출~@~수출~@~플랫 파일 또는 Excel 스프레드 시트에 탭으로 구분 된로 내보내려면이 키를 눌러
+544~@~28~@~27~@~워드~@~워드~@~Microsoft Word의 파일에 결과를 볼이 키를 눌러
+545~@~28~@~28~@~뛰어나다~@~뛰어나다~@~XML-formated Excel 스프레드 시트 버전 2000 년과 그 이후 결과를 보려면이 키를 눌러
+546~@~28~@~29~@~인쇄~@~인쇄~@~화면에 결과를보고 선택한 프린터로 인쇄하려면이 옵션을 누르십시오
+547~@~28~@~30~@~전망~@~전망~@~화면에 결과를 볼이 키를 눌러
+548~@~28~@~40~@~명부~@~명부~@~스프레드 시트의 목록이를 누르십시오
+549~@~28~@~41~@~검색~@~검색~@~왼쪽에있는 지정된 텍스트로 스프레드 시트를 검색하려면이 옵션을 누르십시오
+550~@~28~@~42~@~수입~@~수입~@~선택한 spreadseet를 가져 오기 위해이 키를 눌러
+551~@~28~@~43~@~뛰어나다~@~뛰어나다~@~Excel 스프레드 시트에 결과를 볼이 키를 눌러
+552~@~28~@~44~@~수입~@~수입~@~선택한 스프레드 시트 또는 탭으로 구분 된 파일을 가져 오려면이 키를 눌러
+553~@~28~@~45~@~반환~@~반환~@~전화 모듈 컨트롤에 선택된 값을 반환하려면이 키를 눌러
+554~@~28~@~46~@~취소~@~취소~@~현재 검색을 취소하려면이 키를 눌러
+555~@~28~@~47~@~숨기기-I~@~숨기기-I~@~가져 오기 패널을 숨기려면이를 누르고 업데이트 버튼을 활성화
+556~@~28~@~48~@~쇼-I~@~쇼-I~@~가져 오기 패널을 표시하려면이 옵션을 누르면 업데이트 버튼을 비활성화
+558~@~28~@~52~@~계속~@~계속~@~비밀번호를 입력하고이 화면 가져 오기를 계속 눌러
+559~@~28~@~53~@~PageSize~@~PageSize~@~그리드 페이지 크기 (1-200 기록)를 왼쪽에 입력 한 설정
+560~@~28~@~54~@~새로운~@~새로운~@~새로운 기록이 양식을 지우려면이을 누르면 초기 기본적으로 값을 가정
+563~@~28~@~57~@~모두 취소~@~모두 취소~@~지금까지 한 모든 변경 사항을 취소하려면이 키를 눌러
+564~@~28~@~58~@~사용자 정의~@~사용자 정의~@~추가로이 보고서를 사용자 정의하려면이 키를 눌러
+565~@~28~@~59~@~시사~@~시사~@~결과를 미리 본을 누르
+566~@~28~@~62~@~퍼가기~@~퍼가기~@~다른 HTML 페이지에서이 마법사를 삽입하기위한 스크립트를 복사하려면이 키를 눌러
+567~@~28~@~61~@~퍼가기~@~퍼가기~@~다른 HTML 페이지에이 보고서를 삽입하기위한 스크립트를 복사하려면이 키를 눌러
+568~@~28~@~60~@~퍼가기~@~퍼가기~@~다른 HTML 페이지에이 화면을 삽입하기위한 스크립트를 복사하려면이 키를 눌러
+569~@~9~@~62~@~Embutir~@~Embutir~@~Pressione-o para copiar o script para incorporar este assistente em outras páginas html
+570~@~9~@~61~@~Embutir~@~Embutir~@~Pressione-o para copiar o script para a incorporação deste relatório em outras páginas html
+571~@~9~@~60~@~Embutir~@~Embutir~@~Pressione-o para copiar o script para incorporar esta tela em outras páginas html
+572~@~12~@~62~@~Вставлять~@~Вставлять~@~Нажмите сюда, чтобы скопировать скрипт для встраивания этого мастера в других HTML страниц
+573~@~12~@~61~@~Вставлять~@~Вставлять~@~Нажмите сюда, чтобы скопировать скрипт для встраивания этого доклада в другой HTML-страниц
+574~@~12~@~60~@~Вставлять~@~Вставлять~@~Нажмите сюда, чтобы скопировать скрипт для встраивания этот экран в других HTML-страниц
+575~@~13~@~62~@~Incrustar~@~Incrustar~@~Pulse este botón para copiar el script para incrustar este asistente en otras páginas html
+576~@~13~@~61~@~Incrustar~@~Incrustar~@~Pulse este botón para copiar el script para incrustar este informe en otras páginas html
+577~@~13~@~60~@~Incrustar~@~Incrustar~@~Pulse este botón para copiar el script para incrustar esta pantalla en otras páginas html
+578~@~1~@~63~@~More~@~More~@~Press this to display more action buttons on mobile
+579~@~1~@~64~@~All Data~@~All Data~@~Press this to view all other records and edit them if authorized to do so.
+580~@~4~@~51~@~储存及新~@~储存及新~@~按这个这个记录永久保存并清除这种形式与默认值的新记录
+581~@~4~@~56~@~保存和复制~@~保存和复制~@~按这个这个记录永久保存和当前内容复制到一个新的形式
+582~@~4~@~63~@~更多~@~更多~@~按下此按钮可显示在移动更多的操作按钮
+584~@~28~@~51~@~저장 및 새로운~@~저장 및 새로운~@~이 영구적으로 기록을 눌러 저장 및 기본 값을 갖는 새 기록이 기능을 취소
+585~@~28~@~56~@~저장 및 복사~@~저장 및 복사~@~이 영구적으로 기록을 눌러 저장하고 새로운 형태의 현재 내용을 복사
+586~@~28~@~63~@~더~@~더~@~모바일에 대한 자세한 동작 버튼을 표시하려면이 옵션을 누르십시오
+587~@~28~@~64~@~모든 데이터~@~모든 데이터~@~다른 모든 기록을보고 할 권한이있는 경우 편집이를 누릅니다.
+589~@~4~@~64~@~所有数据~@~所有数据~@~按这一切其他记录查看，如果授权这样做编辑。
+590~@~1~@~65~@~Save & Close~@~Save & Close~@~Press this to save this record permanently and close this dialog
+591~@~1~@~66~@~Audit~@~Audit~@~Press this to inspect historical changes and drill down to audit details.
+592~@~1~@~67~@~Delete~@~Delete Row~@~Press this to delete selected row
+593~@~1~@~68~@~Copy~@~Copy Row~@~Press this to duplicate selected row
+594~@~1~@~69~@~Edit~@~Edit Row~@~Press this to view/edit selected row
+595~@~1~@~70~@~Edit~@~Edit Header~@~Press this to view/edit selected header record
+596~@~1~@~71~@~View Item~@~Detail List~@~Press this to drill down to detail list
+597~@~1~@~72~@~Filter~@~Filter~@~Press this to filter master records
+598~@~1~@~73~@~Help~@~Help~@~Press this to get help
+600~@~1~@~74~@~Master List~@~Master List~@~Press this to display a list of master records
+601~@~1~@~75~@~Master~@~Master Record~@~Press this to display a master record
+602~@~1~@~76~@~Detail List~@~Detail List~@~Press this to display a list of detail records
+603~@~1~@~77~@~Detail~@~Detail Record~@~Press this to display a detail record
+604~@~114~@~1~@~Clair~@~Clair~@~Appuyez dessus pour effacer la section des critères
+605~@~114~@~4~@~RTF~@~RTF~@~Appuyez sur cette touche pour exporter toutes les données basées sur des critères sous forme de texte enrichi vers un fichier RTF ou vers Microsoft Word
+606~@~114~@~5~@~Exportation~@~Exportation~@~Appuyez sur ce bouton pour exporter toutes les données basées sur des critères sous forme de fichier délimité par des tabulations vers un fichier plat ou une feuille de calcul Excel
+607~@~114~@~6~@~Clair~@~Clair~@~Appuyez sur ce bouton pour effacer ce formulaire pour le même enregistrement et assumer les valeurs par défaut initiales
+608~@~114~@~7~@~Supprimer~@~Supprimer~@~Appuyez dessus pour supprimer définitivement cet enregistrement
+609~@~114~@~8~@~Copie~@~Copie~@~Appuyez dessus pour copier le contenu actuel dans un nouveau formulaire
+610~@~114~@~11~@~sauvegarder~@~sauvegarder~@~Appuyez dessus pour sauvegarder cet enregistrement de façon permanente
+611~@~114~@~12~@~Premier~@~Premier~@~Première page
+612~@~114~@~13~@~Dernier~@~Dernier~@~Dernière page
+613~@~114~@~14~@~Prochain~@~Prochain~@~Page suivante
+614~@~114~@~15~@~précédent~@~précédent~@~Page précédente
+615~@~114~@~16~@~Aller à~@~Aller à~@~Accédez au numéro de page saisi à gauche
+616~@~114~@~17~@~Trouver~@~Trouver~@~Recherchez les enregistrements dans la grille ci-dessous contenant le texte à gauche
+617~@~114~@~20~@~Clair~@~Clair~@~Appuyez dessus pour effacer la section des critères
+618~@~114~@~21~@~Critères~@~Critères~@~Appuyez ici pour afficher la section des critères
+619~@~114~@~22~@~Chercher~@~Chercher~@~Appuyez dessus pour afficher la section des critères globaux
+620~@~114~@~24~@~PDF~@~PDF~@~Appuyez sur ce bouton pour afficher les résultats dans un fichier Adobe PDF
+621~@~114~@~25~@~RTF~@~RTF~@~Appuyez sur ce bouton pour afficher les résultats dans un fichier au format RTF (Rich Text Format)
+622~@~114~@~26~@~Exportation~@~Exportation~@~Appuyez sur ce bouton pour exporter en tant que fichier séparé par des tabulations vers un fichier plat ou une feuille de calcul Excel
+623~@~114~@~27~@~Mot~@~Mot~@~Appuyez sur ce bouton pour afficher les résultats dans un fichier Microsoft Word
+624~@~114~@~28~@~Exceller~@~Exceller~@~Appuyez sur ce bouton pour afficher les résultats dans une feuille de calcul Excel au format XML version 2000 et ultérieure
+625~@~114~@~29~@~Impression~@~Impression~@~Appuyez sur ce bouton pour afficher les résultats à l'écran et imprimer sur l'imprimante sélectionnée
+626~@~114~@~30~@~Vue~@~Vue~@~Appuyez dessus pour afficher les résultats à l'écran
+627~@~114~@~40~@~liste~@~liste~@~Appuyez dessus pour une liste des feuilles de calcul
+628~@~114~@~41~@~Chercher~@~Chercher~@~Appuyez sur ce bouton pour rechercher des feuilles de calcul avec le texte spécifié à gauche
+629~@~114~@~42~@~Importation~@~Importation~@~Appuyez sur ce bouton pour importer la feuille de calcul sélectionnée
+630~@~114~@~43~@~Exceller~@~Exceller~@~Appuyez sur ce bouton pour afficher les résultats dans une feuille de calcul Excel
+631~@~114~@~44~@~Importation~@~Importation~@~Appuyez sur ce bouton pour importer la feuille de calcul ou le fichier délimité par des tabulations sélectionné
+632~@~114~@~45~@~Revenir~@~Revenir~@~Appuyez sur cette touche pour renvoyer la valeur sélectionnée au contrôle du module appelant
+633~@~114~@~46~@~Annuler~@~Annuler~@~Appuyez sur ce bouton pour annuler la recherche en cours
+634~@~114~@~47~@~Hide-I~@~Hide-I~@~Appuyez dessus pour masquer le panneau d'importation et activer les boutons de mise à jour
+635~@~114~@~48~@~Show-I~@~Show-I~@~Appuyez dessus pour afficher le panneau d'importation et désactiver les boutons de mise à jour
+636~@~114~@~51~@~Enregistrer et nouveau~@~Enregistrer et nouveau~@~Appuyez dessus pour sauvegarder cet enregistrement de façon permanente et effacer ce formulaire pour un nouvel enregistrement avec des valeurs par défaut
+637~@~114~@~52~@~Continuer~@~Continuer~@~Entrez le mot de passe et appuyez dessus pour continuer l'importation d'écran
+638~@~114~@~53~@~Taille de la page~@~Taille de la page~@~Définissez la taille de la page de la grille (1 à 200 enregistrements) comme indiqué à gauche
+639~@~114~@~54~@~Nouveau~@~Nouveau~@~Appuyez sur ce bouton pour effacer ce formulaire pour un nouvel enregistrement et assumer les valeurs par défaut initiales
+640~@~114~@~55~@~Ajouter~@~Insérer une ligne~@~Appuyez sur ce bouton pour insérer une nouvelle ligne au début de la grille.
+641~@~114~@~56~@~Enregistrer et copier~@~Enregistrer et copier~@~Appuyez dessus pour sauvegarder cet enregistrement de façon permanente et copier le contenu actuel dans un nouveau formulaire
+642~@~114~@~57~@~annuler~@~annuler~@~Appuyez dessus pour annuler toutes les modifications apportées jusqu'à présent
+643~@~114~@~58~@~Personnaliser~@~Personnaliser~@~Appuyez dessus pour personnaliser davantage ce rapport
+644~@~114~@~59~@~Aperçu~@~Aperçu~@~Appuyez dessus pour prévisualiser les résultats
+645~@~114~@~62~@~Intégrer~@~Intégrer~@~Appuyez sur ce bouton pour copier le script d'intégration de cet assistant dans d'autres pages html
+646~@~114~@~61~@~Intégrer~@~Intégrer~@~Appuyez sur ce bouton pour copier le script d'intégration de ce rapport dans d'autres pages html
+647~@~114~@~60~@~Intégrer~@~Intégrer~@~Appuyez dessus pour copier le script pour intégrer cet écran dans d'autres pages html
+648~@~114~@~63~@~Plus~@~Plus~@~Appuyez dessus pour afficher plus de boutons d'action sur mobile
+649~@~114~@~64~@~Toutes les données~@~Toutes les données~@~Appuyez sur ce bouton pour afficher tous les autres enregistrements et les modifier si vous y êtes autorisé.
+650~@~114~@~65~@~Sauvegarder et fermer~@~Sauvegarder et fermer~@~Appuyez dessus pour sauvegarder cet enregistrement de façon permanente et fermer cette boîte de dialogue
+651~@~114~@~66~@~Audit~@~Audit~@~Appuyez sur ce bouton pour inspecter les modifications historiques et effectuer un zoom avant pour vérifier les détails.
+652~@~114~@~67~@~Supprimer~@~Supprimer la ligne~@~Appuyez sur ce bouton pour supprimer la ligne sélectionnée
+653~@~114~@~68~@~Copie~@~Copier la ligne~@~Appuyez sur ce bouton pour dupliquer la ligne sélectionnée
+654~@~114~@~69~@~Éditer~@~Modifier la ligne~@~Appuyez sur ce bouton pour afficher / modifier la ligne sélectionnée
+655~@~114~@~70~@~Éditer~@~Modifier l'en-tête~@~Appuyez sur ce bouton pour afficher / modifier l'enregistrement d'en-tête sélectionné
+656~@~114~@~71~@~Regarder l'objet~@~Liste détaillée~@~Appuyez dessus pour accéder à la liste détaillée
+657~@~114~@~72~@~Filtre~@~Filtre~@~Appuyez dessus pour filtrer les enregistrements principaux
+658~@~114~@~73~@~Aidez-moi~@~Aidez-moi~@~Appuyez dessus pour obtenir de l'aide
+659~@~114~@~74~@~Liste principale~@~Liste principale~@~Appuyez dessus pour afficher une liste des fiches principales
+660~@~114~@~75~@~Maître~@~Fiche maître~@~Appuyez sur ce bouton pour afficher un enregistrement principal
+661~@~114~@~76~@~Liste détaillée~@~Liste détaillée~@~Appuyez sur ce bouton pour afficher une liste des enregistrements détaillés
+662~@~114~@~77~@~Détail~@~Enregistrement détaillé~@~Appuyez sur ce bouton pour afficher un enregistrement détaillé

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect,withRouter } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import { Formik, Field, Form } from 'formik';
 import { Button, Row, Col, ButtonToolbar, ButtonGroup, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Nav, NavItem, NavLink } from 'reactstrap';
 import LoadingIcon from 'mdi-react/LoadingIcon';
@@ -28,7 +28,7 @@ import DocumentTitle from 'react-document-title';
 class MstList extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmDbTable || {});
+    this.GetReduxState = () => (this.props.AdmDbTable || {});
     this.hasChangedContent = false;
     this.titleSet = false;
     this.MstKeyColumnName = 'TableId3';
@@ -55,22 +55,22 @@ class MstList extends RintagiScreen {
       ShowMst: false,
       isMobile: false,
     };
-//    const lastAppUrl = GetCurrent('LastAppUrl',true);
-      const lastAppUrl = null;
- 
+    //const lastAppUrl = GetCurrent('LastAppUrl',true);
+    const lastAppUrl = null;
+
     if (lastAppUrl && !(this.props.AdmDbTable || {}).initialized) {
       if (lastAppUrl.pathname !== ((this.props.history || {}).location || {}).pathname) {
-          this.props.history.push(lastAppUrl.pathname);
+        this.props.history.push(lastAppUrl.pathname);
       }
     }
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
   }
 
- 
+
 
 
   /* standard screen button actions for each screen, must implement if button defined */
@@ -92,7 +92,7 @@ class MstList extends RintagiScreen {
           ShowMst: true,
         });
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   }
@@ -110,7 +110,7 @@ class MstList extends RintagiScreen {
           ShowMst: true,
         });
       }
-      if(!this.hasChangedContent) addFn();
+      if (!this.hasChangedContent) addFn();
       else this.setState({ ModalOpen: true, ModalSuccess: addFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   };
@@ -125,7 +125,7 @@ class MstList extends RintagiScreen {
         this.props.AddDtl(mstId, null, -1);
         this.props.history.push(getAddDtlPath(getNaviPath(naviBar, 'DtlList', '/')) + '_');
       }
-      if(!this.hasChangedContent) addFn();
+      if (!this.hasChangedContent) addFn();
       else this.setState({ ModalOpen: true, ModalSuccess: addFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   };
@@ -134,12 +134,12 @@ class MstList extends RintagiScreen {
     const AdmDbTableState = this.props.AdmDbTable || {};
     const auxSystemLabels = AdmDbTableState.SystemLabel || {};
     return this.Prompt({
-      okFn: function(evt) {
+      okFn: function (evt) {
         const fromMstId = mstId || mst.TableId3;
-        this.props.DelMst(this.props.AdmDbTable, fromMstId);        
-      }.bind(this) ,
+        this.props.DelMst(this.props.AdmDbTable, fromMstId);
+      }.bind(this),
       message: auxSystemLabels.DeletePageMsg || ''
-    }).bind(this); 
+    }).bind(this);
   }
 
   ExpMstTxt() {
@@ -155,14 +155,12 @@ class MstList extends RintagiScreen {
     const refreshFn = (() => {
       this.props.SetScreenCriteria(values.search,
         {
-           TableName10: (values.cCriTableName10) ? values.cCriTableName10 : '',
-
-TableDesc20: (values.cCriTableDesc20) ? values.cCriTableDesc20 : '',
-
+          TableName10: (values.cCriTableName10) ? values.cCriTableName10 : '',
+          TableDesc20: (values.cCriTableDesc20) ? values.cCriTableDesc20 : '',
         },
         (values.cFilterId) ? values.cFilterId.value : 0);
-      }).bind(this);
-    if(true || !this.hasChangedContent) refreshFn();
+    }).bind(this);
+    if (true || !this.hasChangedContent) refreshFn();
     else this.setState({ ModalOpen: true, ModalSuccess: refreshFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
   }
 
@@ -203,14 +201,14 @@ TableDesc20: (values.cCriTableDesc20) ? values.cCriTableDesc20 : '',
     // const isMobileView = this.state.isMobile;
     // const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
 
-    if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
       const _this = this;
       setTimeout(() => _this.props.setSpinner(false), 500);
     }
-    // else if(currReduxScreenState.initialized && this.props.global.pageSpinner) {
+    // else if (currReduxScreenState.initialized && this.props.global.pageSpinner) {
     //   this.props.setSpinner(false);
     // }
-    
+
     this.SetPageTitle(currReduxScreenState);
 
     if (prevStates.key !== (currReduxScreenState.Mst || {}).TableId3) {
@@ -219,7 +217,7 @@ TableDesc20: (values.cCriTableDesc20) ? values.cCriTableDesc20 : '',
 
       if (prevStates.ScreenButton === 'Copy' && useMobileView) {
         const naviBar = getNaviBar('MstList', {}, {}, currReduxScreenState.Label);
-        const editMstPath = getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_');
+        const editMstPath = getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_');
         this.props.history.push(editMstPath);
       }
     }
@@ -259,7 +257,7 @@ TableDesc20: (values.cCriTableDesc20) ? values.cCriTableDesc20 : '',
     const columnLabel = AdmDbTableState.ColumnLabel || {};
     const currMst = AdmDbTableState.Mst;
     const currDtl = AdmDbTableState.EditDtl;
-    const naviBar = getNaviBar('MstList', currMst, {}, screenButtons).filter(v=>((v.type !== 'Dtl' && v.type !=='DtlList') || currMst.TableId3));
+    const naviBar = getNaviBar('MstList', currMst, {}, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.TableId3));
     const naviSelectBar = getNaviBar('MstList', {}, {}, screenButtons);
     const screenFilterList = AdmDbTableReduxObj.QuickFilterDdlToSelectList(AdmDbTableState);
     const screenFilterSelected = screenFilterList.filter(obj => { return obj.key === screenCriteria.FilterId });
@@ -278,7 +276,6 @@ TableDesc20: (values.cCriTableDesc20) ? values.cCriTableDesc20 : '',
     let filterBtnStyle = classNames({ 'filter-button-clicked': screenCriteria.ShowFilter });
     let filterActive = classNames({ 'filter-icon-active': screenCriteria.ShowFilter });
 
- 
 
 
     const hasScreenFilter = screenFilterList.length > 0;
@@ -289,266 +286,262 @@ TableDesc20: (values.cCriTableDesc20) ? values.cCriTableDesc20 : '',
     const getMainRowDesc = (desc) => (desc.replace(/^[0-9.]+\s\[\w*\]/));
     return (
       <DocumentTitle title={siteTitle}>
-      <div className='top-level-split'>
-        <ModalDialog color={this.state.ModalColor} title={this.state.ModalTitle} onChange={this.OnModalReturn} ModalOpen={this.state.ModalOpen} message={this.state.ModalMsg} />
-        <Row className='no-margin-right'>
-          <Col className='no-padding-right' xs='6'>
-            <div className='account'>
-              <div className='account__wrapper account-col'>
-                <div className='account__card rad-4'>
-                  {/* {this.constructor.ShowSpinner(AdmDbTableState,'MstList') && siteSpinner} */}
-                  {useMobileView && <div className='tabs tabs--justify tabs--bordered-bottom'>
-                    <div className='tabs__wrap'>
-                      <NaviBar history={this.props.history} navi={naviBar} key={currMst.key} mstListCount={(selectList||[]).length} />
-                    </div>
-                  </div>}
-                  <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
-                  <div className='account__head'>
-                    <Row>
-                      <Col xs={8}>
-                        <h3 className='account__title'>{MasterLstTitle}</h3>
-                        <h4 className='account__subhead subhead'>{MasterLstSubtitle}</h4>
-                      </Col>
-                      <Col xs={4}>
-                        <ButtonToolbar className='f-right'>
-                          <UncontrolledDropdown>
-                            <ButtonGroup className='btn-group--icons'>
-                              <Button className={`mw-50 ${filterBtnStyle}`} onClick={this.props.changeMstListFilterVisibility} outline>
-                                <i className={`fa fa-filter icon-holder ${filterActive}`}></i>{ShowMstFilterApplied(AdmDbTableState) && <i className='filter-applied'></i>}
-                                {!useMobileView && <p className='action-menu-label'>{(screenButtons.Filter || {}).label}</p>}
-                              </Button>
-                              {
-                                dropdownMenuButtonList.filter(v => v.expose).map(v => {
-                                  return (
-                                    <Button
-                                      key={v.tid || v.buttonType}
-                                      // disabled={!activeSelectionVisible || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3)}
-                                      onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}
-                                      className='mw-50 add-report-expense'
-                                      outline>
-                                      <i className={`${v.iconClassName} icon-holder`}></i>
-                                      {!useMobileView && <p className='action-menu-label'>{v.label}</p>}
-                                    </Button>)
-                                })
-                              }
-                              {activeSelectionVisible &&
-                                dropdownMenuButtonList.filter(v => !v.expose).length > 0 &&
-                                <DropdownToggle className='mw-50' outline>
-                                  <i className='fa fa-ellipsis-h icon-holder'></i>
-                                  {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
-                                </DropdownToggle>
-                              }
-                            </ButtonGroup>
-                            {dropdownMenuButtonList.filter(v => !v.expose).length > 0 &&
-                              <DropdownMenu right className={`dropdown__menu dropdown-options`}>
+        <div className='top-level-split'>
+          <ModalDialog color={this.state.ModalColor} title={this.state.ModalTitle} onChange={this.OnModalReturn} ModalOpen={this.state.ModalOpen} message={this.state.ModalMsg} />
+          <Row className='no-margin-right'>
+            <Col className='no-padding-right' xs='6'>
+              <div className='account'>
+                <div className='account__wrapper account-col'>
+                  <div className='account__card rad-4'>
+                    {/* {this.constructor.ShowSpinner(AdmDbTableState,'MstList') && siteSpinner} */}
+                    {useMobileView && <div className='tabs tabs--justify tabs--bordered-bottom'>
+                      <div className='tabs__wrap'>
+                        <NaviBar history={this.props.history} navi={naviBar} key={currMst.key} mstListCount={(selectList || []).length} />
+                      </div>
+                    </div>}
+                    <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
+                    <div className='account__head'>
+                      <Row>
+                        <Col xs={8}>
+                          <h3 className='account__title'>{MasterLstTitle}</h3>
+                          <h4 className='account__subhead subhead'>{MasterLstSubtitle}</h4>
+                        </Col>
+                        <Col xs={4}>
+                          <ButtonToolbar className='f-right'>
+                            <UncontrolledDropdown>
+                              <ButtonGroup className='btn-group--icons'>
+                                <Button className={`mw-50 ${filterBtnStyle}`} onClick={this.props.changeMstListFilterVisibility} outline>
+                                  <i className={`fa fa-filter icon-holder ${filterActive}`}></i>{ShowMstFilterApplied(AdmDbTableState) && <i className='filter-applied'></i>}
+                                  {!useMobileView && <p className='action-menu-label'>{(screenButtons.Filter || {}).label}</p>}
+                                </Button>
                                 {
-                                  dropdownMenuButtonList.filter(v => !v.expose).map(v => {
+                                  dropdownMenuButtonList.filter(v => v.expose).map(v => {
                                     return (
-                                      <DropdownItem
-                                        key={v.tid || v.order}
-                                        disabled={!activeSelectionVisible || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3)}
-                                        onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}
-                                        className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
+                                      <Button
+                                        key={v.tid || v.buttonType}
+                                        // disabled={!activeSelectionVisible || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3)}
+                                        onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}
+                                        className='mw-50 add-report-expense'
+                                        outline>
+                                        <i className={`${v.iconClassName} icon-holder`}></i>
+                                        {!useMobileView && <p className='action-menu-label'>{v.label}</p>}
+                                      </Button>)
                                   })
                                 }
-                              </DropdownMenu>
-                            }
-                          </UncontrolledDropdown>
-                        </ButtonToolbar>
-                      </Col>
-                    </Row>
-                  </div>
-                  <Formik
-                    initialValues={{
-
- cCriTableName10: ((screenCriteria || {}).TableName10 || {}).LastCriteria,
-cCriTableDesc20: ((screenCriteria || {}).TableDesc20 || {}).LastCriteria,
-                      search: screenCriteria.SearchStr || '',
-                      cFilterId: (screenFilterSelected.length > 0 ? screenFilterSelected[0] : screenFilterList[0])
-                    }}
-                    key={AdmDbTableState.searchListVersion}
-                    onSubmit={this.RefreshSearchList}
-                    render={({
-                      values,
-                      isSubmitting,
-                      handleChange,
-                      handleSubmit,
-                      handleBlur,
-                      setFieldValue,
-                      setFieldTouched
-                    }) => (
-                        <div>
-                          <Form className='form'>
-                            <div className='form__form-group'>
-                              <div className={`form__form-group filter-padding ${filterVisibility}`} key={screenCriteria.key}>
-                                <Row className='mb-5'>
-                                  <Col xs={12} md={12}>
-<label className='form__form-group-label filter-label'>{(screenCriteria.TableName10 || {}).ColumnHeader}</label>
-<div className='form__form-group-field filter-form-border'>
-<Field
-type='text'
-name='cCriTableName10'
-value={values.cCriTableName10}
-onBlur = {this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cCriTableName10')}
-/>
-</div>
-</Col>
-<Col xs={12} md={12}>
-<label className='form__form-group-label filter-label'>{(screenCriteria.TableDesc20 || {}).ColumnHeader}</label>
-<div className='form__form-group-field filter-form-border'>
-<Field
-type='text'
-name='cCriTableDesc20'
-value={values.cCriTableDesc20}
-onBlur = {this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cCriTableDesc20')}
-/>
-</div>
-</Col>
-                                </Row>
-                                <Row>
-                                  {hasScreenFilter && <Col xs={12} md={12}>
-                                    <label className='form__form-group-label filter-label'>{auxSystemLabels.QFilter}</label>
-                                    <div className='form__form-group-field filter-form-border'>
-                                      <DropdownField
-                                        name='cFilterId'
-                                        onBlur={setFieldTouched}
-                                        // onChange={setFieldValue}
-                                        onChange={this.SearchFilterValueChange(handleSubmit, setFieldValue, 'ddl', 'cFilterId')}
-                                        value={values.cFilterId}
-                                        options={screenFilterList}
-                                      />
-                                    </div>
-                                  </Col>}
-                                  <Col xs={12} md={12}>
-                                    <label className='form__form-group-label filter-label'>{auxSystemLabels.FilterSearchLabel}</label>
-                                    <div className='form__form-group-field filter-form-border'>
-                                      <Field
-                                        className='white-left-border'
-                                        type='text'
-                                        name='search'
-                                        value={values.search}
-                                        onFocus={(e) => this.SearchBoxFocus(e)}
-                                        onBlur={(e) => this.SearchBoxFocus(e)}
-                                      />
-                                      <span onClick={handleSubmit} className={`form__form-group-button desktop-filter-button search-btn-fix ${this.state.searchFocus ? ' active' : ''}`}><MagnifyIcon /></span>
-                                    </div>
-                                  </Col>
-                                </Row>
-                              </div>
-                              <h5 className='fill-fintrux pb-10 fw-700'><span className='color-dark mr-5'>{MasterFoundMsg}:</span> {screenCriteria.MatchCount}</h5>
-                              {selectList.map((obj, i) => {
-                                return (
-                                  <div className='form__form-group-narrow list-divider' key={i}>
-                                    <div className='form__form-group-field'>
-                                      <label className='radio-btn radio-btn--button margin-narrow'>
+                                {activeSelectionVisible &&
+                                  dropdownMenuButtonList.filter(v => !v.expose).length > 0 &&
+                                  <DropdownToggle className='mw-50' outline>
+                                    <i className='fa fa-ellipsis-h icon-holder'></i>
+                                    {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
+                                  </DropdownToggle>
+                                }
+                              </ButtonGroup>
+                              {dropdownMenuButtonList.filter(v => !v.expose).length > 0 &&
+                                <DropdownMenu right className={`dropdown__menu dropdown-options`}>
+                                  {
+                                    dropdownMenuButtonList.filter(v => !v.expose).map(v => {
+                                      return (
+                                        <DropdownItem
+                                          key={v.tid || v.order}
+                                          disabled={!activeSelectionVisible || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3)}
+                                          onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}
+                                          className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
+                                    })
+                                  }
+                                </DropdownMenu>
+                              }
+                            </UncontrolledDropdown>
+                          </ButtonToolbar>
+                        </Col>
+                      </Row>
+                    </div>
+                    <Formik
+                      initialValues={{
+                        cCriTableName10: ((screenCriteria || {}).TableName10 || {}).LastCriteria,
+                        cCriTableDesc20: ((screenCriteria || {}).TableDesc20 || {}).LastCriteria,
+                        search: screenCriteria.SearchStr || '',
+                        cFilterId: (screenFilterSelected.length > 0 ? screenFilterSelected[0] : screenFilterList[0])
+                      }}
+                      key={AdmDbTableState.searchListVersion}
+                      onSubmit={this.RefreshSearchList}
+                      render={({
+                        values,
+                        isSubmitting,
+                        handleChange,
+                        handleSubmit,
+                        handleBlur,
+                        setFieldValue,
+                        setFieldTouched
+                      }) => (
+                          <div>
+                            <Form className='form'>
+                              <div className='form__form-group'>
+                                <div className={`form__form-group filter-padding ${filterVisibility}`} key={screenCriteria.key}>
+                                  <Row className='mb-5'>
+                                    <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{(screenCriteria.TableName10 || {}).ColumnHeader}</label>
+                                      <div className='form__form-group-field filter-form-border'>
                                         <Field
-                                          className='radio-btn__radio'
-                                          name='TableId3'
-                                          listidx={obj.idx}
-                                          keyid={obj.key}
-                                          type='radio'
-                                          value={obj.key || ''}
-                                          onClick={this.SelectMstListRow({naviBar:naviSelectBar,useMobileView})}
-                                          defaultChecked={obj.isSelected ? true : false}
+                                          type='text'
+                                          name='cTableName10'
+                                          value={values.cTableName10}
+                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cTableName10')}
                                         />
-                                        <span className='radio-bg-solver'></span>
-                                        {hasActableButtons &&
-                                          <span className='radio-btn__label-svg'>
-                                            <CheckIcon className='radio-btn__label-check' />
-                                            <RadioboxBlankIcon className='radio-btn__label-uncheck' />
-                                          </span>
-                                        }
-                                        <span className={`radio-btn__label ${colorDark}`}>
-                                          <div className='row-cut'>{this.FormatSearchTitleL(obj.label)}</div>
-                                          <div className='row-cut row-bottom-report'>{this.FormatSearchSubTitleL(obj.detail)}</div>
-                                        </span>
-                                        <span className={`radio-btn__label__right ${colorDark}`}>
-                                          <div>{this.FormatSearchTitleR(obj.labelR)}</div>
-                                          <div className='row-bottom-report f-right'>{this.FormatSearchSubTitleR(obj.detailR)}</div>
-                                        </span>
-                                        {
-                                          rowMenuButtonList
-                                            .filter(v => v.expose && !useMobileView)
-                                            .map((v, i) => {
-                                              if (this.ActionSuppressed(authRow, v.buttonType, obj.key)) return null;
-                                              return (
-                                                <button type='button' key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, useMobileView, mstId: obj.key })} className={`${v.exposedClassName}`}><i className={`${v.iconClassName}`}></i></button>
-                                              )
-                                            })
-                                        }
-                                        {
-                                          rowMenuButtonList.filter(v => !v.expose || useMobileView).length > 0 &&
-                                          <UncontrolledDropdown className={`btn-row-dropdown`}>
-                                            <DropdownToggle className='btn-row-dropdown-icon btn-row-menu' onClick={(e) => { e.preventDefault() }}>
-                                              <i className='fa fa-ellipsis-h icon-holder menu-icon'></i>
-                                            </DropdownToggle>
-                                            <DropdownMenu right className={`dropdown__menu dropdown-options`}>
-                                              {rowMenuButtonList
-                                                .filter(v => !v.expose || useMobileView)
-                                                .map((v) => {
-                                                  if (this.ActionSuppressed(authRow, v.buttonType, obj.key)) return null;
-                                                  return <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, useMobileView, mstId: obj.key })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.labelLong}</DropdownItem>
-                                                })
-                                              }
-                                            </DropdownMenu>
-                                          </UncontrolledDropdown>
-                                        }
-                                      </label>
-                                    </div>
-                                  </div>
-                                )
-                              })}
-                            </div>
-                            {this.constructor.ShowMoreMstBtn(AdmDbTableState) && <Button className={`btn btn-view-more-blue account__btn ${noMargin}`} onClick={this.ShowMoreSearchList} type='button'>{strFormat(IncrementMsg, AdmDbTableState.ScreenCriteria.Increment)}<br /><i className='fa fa-arrow-down'></i></Button>}
-                            {useMobileView && activeSelectionVisible &&
-                              bottomButtonList.filter(v => v.expose).length > 0 &&
-                              <div className='width-wrapper'>
-                                <div className='buttons-bottom-container'>
-                                  <Row className='btn-bottom-row'>
-                                    {
-                                      bottomButtonList
-                                        .filter(v => v.expose)
-                                        .map((v, i, a) => {
-                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3)) return null;
-                                          const buttonCount = a.length;
-                                          const colWidth = parseInt(12 / buttonCount, 10);
-                                          const lastBtn = i === a.length - 1;
-                                          const outlineProperty = lastBtn ? false : true;
-                                          return (
-                                            <Col key={v.tid} xs={colWidth} sm={colWidth} className='btn-bottom-column'>
-                                              <Button color='success' type='button' outline={outlineProperty} className='account__btn' onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}>{v.labelLong}</Button>
-                                            </Col>
-                                          )
-                                        })
-                                    }
+                                      </div>
+                                    </Col>
+                                    <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{(screenCriteria.TableDesc20 || {}).ColumnHeader}</label>
+                                      <div className='form__form-group-field filter-form-border'>
+                                        <Field
+                                          type='text'
+                                          name='cTableDesc20'
+                                          value={values.cTableDesc20}
+                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cTableDesc20')}
+                                        />
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                  <Row>
+                                    {hasScreenFilter && <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{auxSystemLabels.QFilter}</label>
+                                      <div className='form__form-group-field filter-form-border'>
+                                        <DropdownField
+                                          name='cFilterId'
+                                          onBlur={setFieldTouched}
+                                          // onChange={setFieldValue}
+                                          onChange={this.SearchFilterValueChange(handleSubmit, setFieldValue, 'ddl', 'cFilterId')}
+                                          value={values.cFilterId}
+                                          options={screenFilterList}
+                                        />
+                                      </div>
+                                    </Col>}
+                                    <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{auxSystemLabels.FilterSearchLabel}</label>
+                                      <div className='form__form-group-field filter-form-border'>
+                                        <Field
+                                          className='white-left-border'
+                                          type='text'
+                                          name='search'
+                                          value={values.search}
+                                          onFocus={(e) => this.SearchBoxFocus(e)}
+                                          onBlur={(e) => this.SearchBoxFocus(e)}
+                                        />
+                                        <span onClick={handleSubmit} className={`form__form-group-button desktop-filter-button search-btn-fix ${this.state.searchFocus ? ' active' : ''}`}><MagnifyIcon /></span>
+                                      </div>
+                                    </Col>
                                   </Row>
                                 </div>
+                                <h5 className='fill-fintrux pb-10 fw-700'><span className='color-dark mr-5'>{MasterFoundMsg}:</span> {screenCriteria.MatchCount}</h5>
+                                {selectList.map((obj, i) => {
+                                  return (
+                                    <div className='form__form-group-narrow list-divider' key={i}>
+                                      <div className='form__form-group-field'>
+                                        <label className='radio-btn radio-btn--button margin-narrow'>
+                                          <Field
+                                            className='radio-btn__radio'
+                                            name='TableId3'
+                                            listidx={obj.idx}
+                                            keyid={obj.key}
+                                            type='radio'
+                                            value={obj.key || ''}
+                                            onClick={this.SelectMstListRow({ naviBar: naviSelectBar, useMobileView })}
+                                            defaultChecked={obj.isSelected ? true : false}
+                                          />
+                                          <span className='radio-bg-solver'></span>
+                                          {hasActableButtons &&
+                                            <span className='radio-btn__label-svg'>
+                                              <CheckIcon className='radio-btn__label-check' />
+                                              <RadioboxBlankIcon className='radio-btn__label-uncheck' />
+                                            </span>
+                                          }
+                                          <span className={`radio-btn__label ${colorDark}`}>
+                                            <div className='row-cut'>{this.FormatSearchTitleL(obj.label)}</div>
+                                            <div className='row-cut row-bottom-report'>{this.FormatSearchSubTitleL(obj.detail)}</div>
+                                          </span>
+                                          <span className={`radio-btn__label__right ${colorDark}`}>
+                                            <div>{this.FormatSearchTitleR(obj.labelR)}</div>
+                                            <div className='row-bottom-report f-right'>{this.FormatSearchSubTitleR(obj.detailR)}</div>
+                                          </span>
+                                          {
+                                            rowMenuButtonList
+                                              .filter(v => v.expose && !useMobileView)
+                                              .map((v, i) => {
+                                                if (this.ActionSuppressed(authRow, v.buttonType, obj.key)) return null;
+                                                return (
+                                                  <button type='button' key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, useMobileView, mstId: obj.key })} className={`${v.exposedClassName}`}><i className={`${v.iconClassName}`}></i></button>
+                                                )
+                                              })
+                                          }
+                                          {
+                                            rowMenuButtonList.filter(v => !v.expose || useMobileView).length > 0 &&
+                                            <UncontrolledDropdown className={`btn-row-dropdown`}>
+                                              <DropdownToggle className='btn-row-dropdown-icon btn-row-menu' onClick={(e) => { e.preventDefault() }}>
+                                                <i className='fa fa-ellipsis-h icon-holder menu-icon'></i>
+                                              </DropdownToggle>
+                                              <DropdownMenu right className={`dropdown__menu dropdown-options`}>
+                                                {rowMenuButtonList
+                                                  .filter(v => !v.expose || useMobileView)
+                                                  .map((v) => {
+                                                    if (this.ActionSuppressed(authRow, v.buttonType, obj.key)) return null;
+                                                    return <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, useMobileView, mstId: obj.key })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.labelLong}</DropdownItem>
+                                                  })
+                                                }
+                                              </DropdownMenu>
+                                            </UncontrolledDropdown>
+                                          }
+                                        </label>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
                               </div>
-                            }
-                          </Form>
-                        </div>
-                      )}
-                  />
+                              {this.constructor.ShowMoreMstBtn(AdmDbTableState) && <Button className={`btn btn-view-more-blue account__btn ${noMargin}`} onClick={this.ShowMoreSearchList} type='button'>{strFormat(IncrementMsg, AdmDbTableState.ScreenCriteria.Increment)}<br /><i className='fa fa-arrow-down'></i></Button>}
+                              {useMobileView && activeSelectionVisible &&
+                                bottomButtonList.filter(v => v.expose).length > 0 &&
+                                <div className='width-wrapper'>
+                                  <div className='buttons-bottom-container'>
+                                    <Row className='btn-bottom-row'>
+                                      {
+                                        bottomButtonList
+                                          .filter(v => v.expose)
+                                          .map((v, i, a) => {
+                                            if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3)) return null;
+                                            const buttonCount = a.length;
+                                            const colWidth = parseInt(12 / buttonCount, 10);
+                                            const lastBtn = i === a.length - 1;
+                                            const outlineProperty = lastBtn ? false : true;
+                                            return (
+                                              <Col key={v.tid} xs={colWidth} sm={colWidth} className='btn-bottom-column'>
+                                                <Button color='success' type='button' outline={outlineProperty} className='account__btn' onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}>{v.labelLong}</Button>
+                                              </Col>
+                                            )
+                                          })
+                                      }
+                                    </Row>
+                                  </div>
+                                </div>
+                              }
+                            </Form>
+                          </div>
+                        )}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          </Col>
-          {!useMobileView &&
-            <Col xs={6}>
-              {!activeSelectionVisible &&
-                !this.state.ShowMst &&
-                <div className='empty-block'>
-                  <img className='folder-img' alt='' src={require('../../img/folder.png')} />
-                  <p className='create-new-message'>{NoMasterMsg}. <span className='link-imitation' onClick={this.AddNewMst({ naviBar: naviSelectBar, useMobileView })}>{AddMasterMsg}</span></p>
-                </div>
-              }
-
-              {(activeSelectionVisible || this.state.ShowMst) && <MstRecord key={currMst.key} history={this.props.history} updateChangedState={this.SetCurrentRecordState} onCopy={this.OnMstCopy} suppressLoadPage={true} />}
-
-            </Col>}
-        </Row>
-
-      </div>
+            </Col>
+            {!useMobileView &&
+              <Col xs={6}>
+                {!activeSelectionVisible &&
+                  !this.state.ShowMst &&
+                  <div className='empty-block'>
+                    <img className='folder-img' alt='' src={require('../../img/folder.png')} />
+                    <p className='create-new-message'>{NoMasterMsg}. <span className='link-imitation' onClick={this.AddNewMst({ naviBar: naviSelectBar, useMobileView })}>{AddMasterMsg}</span></p>
+                  </div>
+                }
+                {(activeSelectionVisible || this.state.ShowMst) && <MstRecord key={currMst.key} history={this.props.history} updateChangedState={this.SetCurrentRecordState} onCopy={this.OnMstCopy} suppressLoadPage={true} />}
+              </Col>}
+          </Row>
+        </div>
       </DocumentTitle>
     );
   };
@@ -570,10 +563,9 @@ const mapDispatchToProps = (dispatch) => (
     { SelectMst: AdmDbTableReduxObj.SelectMst.bind(AdmDbTableReduxObj) },
     { DelMst: AdmDbTableReduxObj.DelMst.bind(AdmDbTableReduxObj) },
     { AddMst: AdmDbTableReduxObj.AddMst.bind(AdmDbTableReduxObj) },
-    { AddDtl: AdmDbTableReduxObj.AddDtl.bind(AdmDbTableReduxObj) },    
+    { AddDtl: AdmDbTableReduxObj.AddDtl.bind(AdmDbTableReduxObj) },
     { changeMstListFilterVisibility: AdmDbTableReduxObj.ChangeMstListFilterVisibility.bind(AdmDbTableReduxObj) },
     { SetScreenCriteria: AdmDbTableReduxObj.SetScreenCriteria.bind(AdmDbTableReduxObj) },
- 
 
     { setTitle: setTitle },
     { setSpinner: setSpinner },
@@ -581,5 +573,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList));
-
-            

@@ -195,7 +195,7 @@ namespace RO.Web
 				if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && (new AdminSystem()).IsRegenNeeded(string.Empty,0,59,0,LcSysConnString,LcAppPw))
 				{
 					(new GenReportsSystem()).CreateProgram(string.Empty,59, "SR&ED Remittance", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
-					Response.Redirect(Request.RawUrl);
+					this.Redirect(Request.RawUrl);
 				}
 			}
 			catch (Exception e) { PreMsgPopup(e.Message); }
@@ -304,7 +304,6 @@ namespace RO.Web
 		{
 			DsAdmRptSredIn ds = new DsAdmRptSredIn();
 			DataRow dr = ds.Tables["DtAdmRptSredIn"].NewRow();
-			bool bAll = false; string selectedVal = null; DataView dv = null;int TotalChoiceCnt = 0;int CriCnt=0;bool noneSelected=true;
 			if (cMonthEnding.Text != string.Empty) {dr["MonthEnding"] = base.SetDateTimeUTC(cMonthEnding.Text, !bUpdate);}
 			if (IsPostBack && cMonthEnding.Text == string.Empty) { throw new ApplicationException("Criteria column: MonthEnding should not be empty. Please rectify and try again.");};
 			if (cNumMonths.Text != string.Empty) {dr["NumMonths"] = cNumMonths.Text;}

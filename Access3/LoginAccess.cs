@@ -505,6 +505,8 @@ namespace RO.Access3
                 bool rowsRemoved = false;
                 foreach (DataRow dr in dt.Rows)
                 {
+                    if (string.IsNullOrEmpty(dr["CompanyId"].ToString())) continue;
+
                     if (ii >= licensedCount)
                     {
                         dr.Delete();
@@ -547,6 +549,8 @@ namespace RO.Access3
                 bool rowsRemoved = false;
                 foreach (DataRow dr in dt.Rows)
                 {
+                    if (string.IsNullOrEmpty(dr["ProjectId"].ToString())) continue;
+
                     if (ii >= licensedCount)
                     {
                         dr.Delete();
@@ -584,6 +588,8 @@ namespace RO.Access3
                 bool rowsRemoved = false;
                 foreach (DataRow dr in dt.Rows)
                 {
+                    if (string.IsNullOrEmpty(dr["SystemId"].ToString())) continue;
+
                     if (ii >= licensedCount && dr["SystemId"].ToString() != "3" && dr["SystemId"].ToString() != "5")
                     {
                         dr.Delete();

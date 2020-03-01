@@ -28,7 +28,7 @@ namespace RO.Web
                     if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Sidebar", 0, 0, 0, string.Empty, string.Empty))
                     {
                         (new GenSectionSystem()).CreateProgram("S", base.CPrj, base.CSrc);
-                        Session[KEY_SidebarGenerated] = true; Response.Redirect(Request.RawUrl);
+                        Session[KEY_SidebarGenerated] = true; this.Redirect(Request.RawUrl);
                     }
                 }
                 catch (Exception err) { throw new ApplicationException(err.Message); }

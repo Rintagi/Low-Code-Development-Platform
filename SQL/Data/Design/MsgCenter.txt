@@ -1,0 +1,741 @@
+1~@~1~@~1~@~Please choose one and only one authority default and try again (%1s).
+
+2~@~2~@~1~@~Please do not specify any specific column or button for this event and try again.
+3~@~3~@~1~@~Please only specify a system button for this event and try again.
+4~@~4~@~1~@~Please only specify a column for this event and try again.
+5~@~5~@~1~@~Please remove the referencing web rule and try again.
+6~@~6~@~1~@~Please remove the referencing client rule and try again.
+8~@~8~@~1~@~Please remove the referencing client rule and try again.
+9~@~9~@~1~@~Please remove the referencing client rule and try again.
+10~@~1~@~4~@~请选择一个只有一个权力违约,再试(%1s).
+12~@~3~@~4~@~请为这件事只能说明一个按钮,再试.
+14~@~5~@~4~@~请参照网站规则删除,再试.
+15~@~6~@~4~@~请参照消除客户统治,再试.
+17~@~8~@~4~@~请参照消除客户统治,再试.
+18~@~9~@~4~@~请参照消除客户统治,再试.
+19~@~1~@~2~@~Veuillez choisir un et seulement un défaut d'autorité et essayer encore (%1s).
+21~@~3~@~2~@~Veuillez indiquer seulement un bouton pour ces événement et essai encore.
+23~@~5~@~2~@~Veuillez enlever la règle de mise en référence de Web et essayer encore.
+24~@~6~@~2~@~Veuillez enlever la règle de mise en référence de client et essayer encore.
+26~@~8~@~2~@~Veuillez enlever la règle de mise en référence de client et essayer encore.
+27~@~9~@~2~@~Veuillez enlever la règle de mise en référence de client et essayer encore.
+28~@~10~@~1~@~Sybase does not allow keyword "exec" to be embeded in column name "%1s", please try again.
+29~@~11~@~1~@~Please remove the screen column "%1s" from referencing screen "%2s" and try again.
+30~@~12~@~1~@~Please make sure there is one and only one primary key column and try again.
+31~@~13~@~1~@~Change the screen column to non-mandatory and try again please.
+32~@~14~@~1~@~Please enter positive numbers for report margins.
+33~@~15~@~1~@~Please enter positive numbers for report page width and height.
+34~@~16~@~1~@~Please enter a page width greater than the sum of left and right margin.
+35~@~17~@~1~@~Please enter a page height greater than the sum of top and bottom margin.
+36~@~18~@~1~@~Please do not delete style as it is being used by report element.
+37~@~19~@~1~@~Please do not delete style as it is being used by report item.
+39~@~21~@~1~@~Please enter the default number of rows (1 - 200) for this screen type and try again.
+40~@~22~@~1~@~Please make sure there is one and only one Body for the report "%1s" and try again.
+41~@~23~@~1~@~Please make sure there is not more than one Header for the report "%1s" and try again.
+42~@~24~@~1~@~Please make sure there is not more than one Footer for the report "%1s" and try again.
+43~@~25~@~1~@~Please make sure page body is "%1s" for the report "%2s" and try again.
+44~@~26~@~1~@~Please do not delete element "%1s" as it is being used by report control.
+45~@~27~@~1~@~Please make sure control's width does not exceed "%1s" and try again.
+46~@~28~@~1~@~Please make sure at least one column is selected as criteria and try again.
+47~@~29~@~1~@~Please do not delete this report data category as it is being used by report generator.
+48~@~30~@~1~@~Please make sure all selected criteria has operator assigned and try again.
+49~@~31~@~1~@~Please make sure at least one column is selected as display and try again.
+51~@~33~@~1~@~Please be notified that only gauge, chart, list, table or document report-templates can be generated for now.
+53~@~35~@~1~@~This report name is in use, please enter another unique name and try again.
+54~@~36~@~1~@~Invalid report id as QueryString rpt, please rectify and try again.
+55~@~37~@~1~@~Please do not backup and restore for target Sybase server for now.
+56~@~38~@~1~@~Please make sure template name has an extension txt, rtf or mht.
+57~@~39~@~1~@~Please do not delete default template.
+58~@~40~@~1~@~Please select a column for charting category and try again.
+59~@~41~@~1~@~Please select a scalar column for charting values and try again.
+60~@~42~@~1~@~Please select a screen or a report or both as subject(s) to assign this row authority override.
+61~@~43~@~1~@~Please do not Allow Columns Selection unless it is document merging.
+62~@~44~@~1~@~Minimum value cannot be greater than the low range maximum value, please rectify and try again.
+63~@~45~@~1~@~Low range maximum value cannot be greater than the mid range maximum value, please rectify and try again.
+64~@~46~@~1~@~Mid range maximum value cannot be greater than the maximum value, please rectify and try again.
+65~@~10~@~4~@~Sybase公司不允许关键字“经理”被包埋在列名“ ％ 1秒” ，请再试一次。
+67~@~12~@~4~@~请确保有一个只有一个主键列，然后再试一次。
+68~@~13~@~4~@~请更改屏幕栏是非强制性的，然后再试一次。
+69~@~14~@~4~@~请输入正数为报告的利润。
+70~@~15~@~4~@~请输入正数为报告页面的宽度和高度。
+71~@~16~@~4~@~请输入网页宽度加一大于二的左，右边缘。
+72~@~17~@~4~@~请输入网页高度加一大于二的顶部和底部边缘。
+73~@~18~@~4~@~请不要删除风格，因为它正在使用的报告内容。
+74~@~19~@~4~@~请不要删除风格，因为它正在使用报告项目。
+76~@~21~@~4~@~请输入默认的行数（ 1 - 200 ）此屏幕类型，然后再试一次。
+77~@~22~@~4~@~请确保有一个，只有一个机构的报告“ ％ 1秒” ，然后再试一次。
+78~@~23~@~4~@~请确保没有一个以上的报告标题为“ ％ 1秒” ，然后再试一次。
+79~@~24~@~4~@~请确保有不超过1英尺的报告“ ％ 1秒” ，然后再试一次。
+80~@~25~@~4~@~请确保网页机构是“ ％ 1秒”的报告“ ％ 2 ” ，然后再试一次。
+81~@~26~@~4~@~请不要删除元素“ ％ 1秒” ，因为它正在使用报告控制。
+82~@~27~@~4~@~请务必控制的宽度不超过“ ％ 1秒” ，然后再试一次。
+83~@~28~@~4~@~请确保至少有一个栏是选择的标准，然后再试一次。
+84~@~29~@~4~@~请不要删除此报告的数据分类，因为它正在使用报告生成器。
+85~@~30~@~4~@~请确保所有的运营商选择的标准分配，并再试一次。
+86~@~31~@~4~@~请确保至少有一个栏是选择显示，然后再试一次。
+87~@~33~@~4~@~请得到通知，只有指标，图表，列表，表或文件，报告，模板，可以生成了。
+89~@~35~@~4~@~这份报告名称已在使用中，请输入其他独特的名称，然后再试一次。
+90~@~36~@~4~@~报告编号为无效的QueryString多哥人民联盟，请纠正，然后再试一次。
+91~@~37~@~4~@~请不要备份和恢复的目标数据库服务器现在。
+92~@~38~@~4~@~请确认范本名称已延长的TXT ， RTF或低温。
+93~@~39~@~4~@~请不要删除默认模板。
+94~@~40~@~4~@~请选择列图表类，然后再试一次。
+95~@~41~@~4~@~请选择一个标列图表值，然后再试一次。
+96~@~42~@~4~@~请选择一个屏幕或报告或作为主题（县）指定此列管理局覆盖。
+97~@~43~@~4~@~请不允许柱选择，除非它的文件合并。
+98~@~44~@~4~@~最低值不能大于低端最大价值，请纠正，然后再试一次。
+99~@~45~@~4~@~低端最大值不能大于中期范围内的最大值，请纠正，然后再试一次。
+100~@~46~@~4~@~卡伦米勒最大值不能大于最大值，请纠正，然后再试一次。
+101~@~10~@~2~@~Sybase ne permet pas de mot-clé &"exec&" pour être encastrée dans la colonne nom &"% 1s&", s'il vous plaît essayez de nouveau.
+103~@~12~@~2~@~S'il vous plaît assurez-vous qu'il ya une et une seule colonne de clé primaire et essayez à nouveau.
+104~@~13~@~2~@~S'il vous plaît changer la colonne de l'écran à des non-obligatoire et essayez à nouveau.
+105~@~14~@~2~@~S'il vous plaît entrer un nombre positif pour le rapport marges.
+106~@~15~@~2~@~S'il vous plaît entrer un nombre positif pour le rapport de la largeur et la hauteur de la page.
+107~@~16~@~2~@~S'il vous plaît entrer une page de largeur supérieure à la somme de la marge de gauche et de droite.
+108~@~17~@~2~@~S'il vous plaît entrer une page hauteur supérieure à la somme de la marge en haut et en bas.
+109~@~18~@~2~@~S'il vous plaît ne pas supprimer le style car il est utilisé par rapport élément.
+110~@~19~@~2~@~S'il vous plaît ne pas supprimer le style car il est utilisé par rapport item.
+112~@~21~@~2~@~S'il vous plaît entrez le nombre de lignes par défaut (1 - 200) pour ce type d'écran et essayez à nouveau.
+113~@~22~@~2~@~S'il vous plaît assurez-vous qu'il ya un et un seul corps pour le rapport &"% 1s&" et essayez à nouveau.
+114~@~23~@~2~@~S'il vous plaît assurez-vous qu'il n'y a pas plus d'une tête pour le rapport &"% 1s&" et essayez à nouveau.
+115~@~24~@~2~@~S'il vous plaît assurez-vous qu'il n'y a pas plus d'un pied de page pour le rapport &"% 1s&" et essayez à nouveau.
+116~@~25~@~2~@~S'il vous plaît assurez-vous que la page corps est &"% 1s&" pour le rapport &"% 2s&" et essayez à nouveau.
+117~@~26~@~2~@~S'il vous plaît ne pas supprimer l'élément &"% 1s&" comme il est utilisé par le rapport de contrôle.
+118~@~27~@~2~@~S'il vous plaît assurez-vous que le contrôle de la largeur ne dépasse pas &"% 1s&" et essayez à nouveau.
+119~@~28~@~2~@~S'il vous plaît assurez-vous au moins une colonne est sélectionnée en tant que critères et essayez à nouveau.
+120~@~29~@~2~@~S'il vous plaît ne pas supprimer ce rapport en tant que catégorie de données, il est utilisé par générateur de rapports.
+121~@~30~@~2~@~S'il vous plaît assurez-vous que tous les critères sélectionnés opérateur a attribué et essayez à nouveau.
+122~@~31~@~2~@~S'il vous plaît assurez-vous au moins une colonne est sélectionnée comme l'affichage et réessayez.
+123~@~33~@~2~@~S'il vous plaît être informé que seule jauge, tableau, liste, tableau ou document de rapport, des modèles peuvent être générés pour le moment.
+125~@~35~@~2~@~Ce nom de rapport est en cours d'utilisation, s'il vous plaît entrer un autre nom unique et essayez à nouveau.
+126~@~36~@~2~@~Invalid rapport identifiant QueryString rpt, de rectification et s'il vous plaît essayez de nouveau.
+127~@~37~@~2~@~S'il vous plaît ne pas faire de sauvegarde et de restauration pour cible serveur Sybase pour le moment.
+128~@~38~@~2~@~S'il vous plaît assurez-vous que le nom du template possède une extension txt, rtf ou mht.
+129~@~39~@~2~@~S'il vous plaît ne pas supprimer le modèle par défaut.
+130~@~40~@~2~@~S'il vous plaît sélectionnez une catégorie de la colonne de la cartographie et essayez à nouveau.
+131~@~41~@~2~@~S'il vous plaît sélectionnez une colonne scalaire de la cartographie des valeurs et essayer de nouveau.
+132~@~42~@~2~@~S'il vous plaît choisir un écran ou un rapport ou en tant que sujet (s) d'attribuer cette ligne autorité override.
+133~@~43~@~2~@~S'il vous plaît ne permettent pas de colonnes de sélection, sauf si elle est la fusion de document.
+134~@~44~@~2~@~La valeur minimale ne peut pas être supérieure à la fourchette basse valeur maximale, de rectification et s'il vous plaît essayez de nouveau.
+135~@~45~@~2~@~Bas de gamme valeur maximale ne peut pas être supérieure à la valeur maximale milieu de gamme, de rectification et s'il vous plaît essayez de nouveau.
+136~@~46~@~2~@~Milieu de gamme valeur maximale ne peut pas être supérieure à la valeur maximale, de rectification et s'il vous plaît essayez de nouveau.
+182~@~47~@~1~@~Your password has not been changed for %1s days, for your protection please change it at your convenience.
+183~@~48~@~1~@~Password
+184~@~48~@~4~@~密码
+185~@~49~@~1~@~My Account
+187~@~51~@~1~@~New Password*:
+188~@~52~@~1~@~Confirm Password*:
+189~@~53~@~1~@~Hint Question
+190~@~54~@~1~@~Question*:
+192~@~56~@~1~@~Hide
+193~@~57~@~1~@~Please enter a password and try again.
+194~@~58~@~1~@~Please confirm password and try again.
+195~@~59~@~1~@~Password updated successfully.
+196~@~60~@~1~@~Cannot update password, please try again.
+197~@~61~@~1~@~Please select a hint question and try again.
+198~@~62~@~1~@~Please enter an answer and try again.
+199~@~63~@~1~@~Hint Q&A updated successfully.
+200~@~64~@~1~@~Cannot update hint Q&A, please try again.
+201~@~47~@~4~@~您的密码尚未更改为％1秒天，为保护您的利益请更改您的方便了。
+202~@~49~@~4~@~我的帐户
+204~@~51~@~4~@~新密码*：
+205~@~52~@~4~@~确认密码*：
+206~@~53~@~4~@~提示问题
+207~@~54~@~4~@~问题*：
+209~@~56~@~4~@~隐藏
+210~@~57~@~4~@~请输入密码，然后再试一次。
+211~@~58~@~4~@~请确认密码并再试一次。
+212~@~59~@~4~@~密码更新成功。
+213~@~60~@~4~@~无法更新密码，请再试一次。
+214~@~61~@~4~@~请选择一个提示问题，然后再试一次。
+215~@~62~@~4~@~请输入答案，然后再试一次。
+216~@~63~@~4~@~提示问答更新成功。
+217~@~64~@~4~@~不能更新提示问答，请再试一次。
+218~@~47~@~2~@~Votre mot de passe n'a pas été changé pour% 1s jours, pour votre protection, s'il vous plaît le modifier à votre convenance.
+219~@~48~@~2~@~Mot de passe
+220~@~49~@~2~@~Mon compte
+222~@~51~@~2~@~Nouveau mot de passe *:
+223~@~52~@~2~@~Confirmer le mot de passe *:
+224~@~53~@~2~@~Suggestion Question
+225~@~54~@~2~@~Question *:
+227~@~56~@~2~@~Masquer
+228~@~57~@~2~@~S'il vous plaît entrer un mot de passe et essayez à nouveau.
+229~@~58~@~2~@~S'il vous plaît confirmer mot de passe et essayez à nouveau.
+230~@~59~@~2~@~Password updated successfully.
+231~@~60~@~2~@~Peuvent pas mettre à jour mot de passe, s'il vous plaît essayer de nouveau.
+232~@~61~@~2~@~S'il vous plaît choisir une question allusion et essayez à nouveau.
+233~@~62~@~2~@~S'il vous plaît entrer une réponse et essayez à nouveau.
+234~@~63~@~2~@~Hint Q &amp; A mis à jour avec succès.
+235~@~64~@~2~@~Peuvent pas mettre à jour indice Q & A, s'il vous plaît essayer de nouveau.
+236~@~1~@~8~@~कृपया एक और केवल एक अधिकार डिफ़ॉल्ट चुनें और फिर कोशिश करें (1s%).
+238~@~3~@~8~@~कृपया केवल इस घटना के लिए एक बटन को निर्दिष्ट करें और फिर कोशिश करें.
+240~@~5~@~8~@~कृपया संदर्भित वेब शासन हटाने और फिर कोशिश करें.
+241~@~6~@~8~@~कृपया संदर्भित ग्राहक शासन हटाने और फिर कोशिश करें.
+243~@~8~@~8~@~कृपया संदर्भित ग्राहक शासन हटाने और फिर कोशिश करें.
+244~@~9~@~8~@~कृपया संदर्भित ग्राहक शासन हटाने और फिर कोशिश करें.
+245~@~10~@~8~@~Sybase &"नहीं कीवर्ड करता अनुमति exec 'के नाम स्तंभ में embeded&" 1s &"%, फिर कोशिश करो.
+247~@~12~@~8~@~कृपया सुनिश्चित करें कि वहाँ एक और केवल एक ही है प्राथमिक कुंजी और कॉलम फिर कोशिश करें.
+248~@~13~@~8~@~कृपया स्क्रीन गैर-कॉलम अनिवार्य परिवर्तन और फिर कोशिश करें.
+249~@~14~@~8~@~कृपया रिपोर्ट मुनाफे के लिए सकारात्मक संख्या दर्ज करें.
+250~@~15~@~8~@~कृपया रिपोर्ट पृष्ठ चौड़ाई और ऊंचाई के लिए सकारात्मक संख्या दर्ज करें.
+251~@~16~@~8~@~कृपया एक पृष्ठ को छोड़ दिया और सही मार्जिन की राशि से अधिक चौड़ाई दर्ज करें.
+252~@~17~@~8~@~कृपया एक पृष्ठ ऊपर और नीचे के मार्जिन राशि से अधिक ऊंचाई दर्ज करें.
+253~@~18~@~8~@~कृपया शैली नहीं हटा के रूप में यह रिपोर्ट तत्व द्वारा इस्तेमाल किया जा रहा है.
+254~@~19~@~8~@~कृपया शैली नहीं हटा के रूप में यह रिपोर्ट आइटम द्वारा इस्तेमाल किया जा रहा है.
+256~@~21~@~8~@~कृपया इस प्रकार के लिए स्क्रीन पंक्तियाँ (1 - 200) के डिफ़ॉल्ट नंबर दर्ज करें और फिर कोशिश करें.
+257~@~22~@~8~@~कृपया सुनिश्चित करें कि वहाँ एक और केवल एक रिपोर्ट के लिए शारीरिक है 1s &"% और फिर कोशिश करें.
+258~@~23~@~8~@~कृपया सुनिश्चित करें कि वहाँ से अधिक नहीं रिपोर्ट के लिए एक शीर्षक &"% 1s&" और फिर से कोशिश करना है.
+259~@~24~@~8~@~कृपया सुनिश्चित करें कि वहाँ रिपोर्ट के लिए नहीं एक से ज्यादा सूचना है 1s &"% और फिर से प्रयास करें.
+260~@~25~@~8~@~कृपया सुनिश्चित करें कि पृष्ठ शरीर को बनाने &"1s रिपोर्ट के लिए&"% &"2s&"% है और फिर कोशिश करें.
+261~@~26~@~8~@~कृपया तत्व नष्ट नहीं &"% है 1s 'के रूप में यह रिपोर्ट नियंत्रण द्वारा इस्तेमाल किया जा रहा है.
+262~@~27~@~8~@~कृपया सुनिश्चित करें कि नियंत्रण है चौड़ाई &"1s&"% से अधिक नहीं है और फिर कोशिश करें.
+263~@~28~@~8~@~कृपया सुनिश्चित करें कि कम से कम एक कॉलम मानदंड के रूप में चुना है और फिर कोशिश करें.
+264~@~29~@~8~@~कृपया इस रिपोर्ट के डेटा श्रेणी के रूप में यह रिपोर्ट जनरेटर द्वारा इस्तेमाल किया जा रहा है हटा नहीं है.
+265~@~30~@~8~@~कृपया सुनिश्चित करें कि सभी चयनित मानदंड सौंपा ऑपरेटर करना है और फिर कोशिश करें.
+266~@~31~@~8~@~कृपया सुनिश्चित करें कि कम से कम एक कॉलम प्रदर्शन के रूप में चुना है और फिर कोशिश करें.
+267~@~33~@~8~@~कृपया सूचित किया है कि केवल लाइन, चार्ट, सूची, तालिका या दस्तावेज़ रिपोर्ट अभी के लिए उत्पन्न किया जा सकता है टेम्पलेट्स.
+268~@~35~@~8~@~इस रिपोर्ट के नाम का उपयोग में है, कृपया एक अनूठा नाम प्रविष्ट करें और फिर कोशिश करें.
+269~@~36~@~8~@~अवैध QueryString rpt के रूप में पहचान की रिपोर्ट, सुधार और फिर कोशिश करें.
+270~@~37~@~8~@~कृपया बैकअप लक्ष्य Sybase सर्वर के लिए बहाल नहीं है और अभी के लिए.
+271~@~38~@~8~@~कृपया सुनिश्चित करें कि नाम कर टेम्पलेट एक विस्तार txt, rtf या mht है.
+272~@~39~@~8~@~कृपया हटा नहीं है डिफ़ॉल्ट टेम्पलेट.
+273~@~40~@~8~@~कृपया वर्ग अपनाने और फिर प्रयास के लिए एक स्तंभ का चयन करें.
+274~@~41~@~8~@~कृपया मूल्यों को अपनाने और फिर प्रयास के लिए एक अदिश स्तंभ का चयन करें.
+275~@~42~@~8~@~कृपया एक स्क्रीन या एक रिपोर्ट या दोनों के रूप में विषय (एस) इस पंक्ति को पार अधिकार प्रदान करने का चयन करें.
+276~@~43~@~8~@~कृपया कॉलम चयन की अनुमति नहीं जब तक यह विलय दस्तावेज़ रही है.
+277~@~44~@~8~@~न्यूनतम मूल्य नहीं कम दूरी की अधिकतम मूल्य से अधिक हो सकता है, सुधार और फिर कोशिश करें.
+278~@~45~@~8~@~कम दूरी की अधिकतम मूल्य नहीं के मध्य दूरी की अधिकतम मूल्य से अधिक हो सकता है, सुधार और फिर कोशिश करें.
+279~@~46~@~8~@~मध्य दूरी की अधिकतम मूल्य नहीं अधिकतम मूल्य से अधिक हो सकता है, सुधार और फिर कोशिश करें.
+280~@~47~@~8~@~अपना पासवर्ड% के लिए नहीं बदल दिया गया है 1s दिनों के लिए अपने सुरक्षा कृपया अपनी सुविधानुसार बदल जाते हैं.
+281~@~48~@~8~@~पासवर्ड
+282~@~49~@~8~@~मेरा खाता
+284~@~51~@~8~@~नया पासवर्ड *:
+285~@~52~@~8~@~* पासवर्ड की पुष्टि करें:
+286~@~53~@~8~@~संकेत प्रश्न
+287~@~54~@~8~@~प्रश्न *:
+289~@~56~@~8~@~छिपना
+290~@~57~@~8~@~कृपया एक पासवर्ड दर्ज करें और फिर कोशिश करें.
+291~@~58~@~8~@~कृपया पासवर्ड की पुष्टि करें और फिर कोशिश करें.
+292~@~59~@~8~@~पासवर्ड सफलतापूर्वक नवीनीकृत.
+293~@~60~@~8~@~अद्यतन, नहीं कर सकते पासवर्ड कृपया पुनः प्रयास करें.
+294~@~61~@~8~@~कृपया एक संकेत प्रश्न का चयन करें और पुनः प्रयास करें.
+295~@~62~@~8~@~कृपया एक उत्तर दर्ज करें और फिर कोशिश करें.
+296~@~63~@~8~@~संकेत संसद प्रश्नोत्तर सफलतापूर्वक नवीनीकृत.
+297~@~64~@~8~@~अद्यतन के लिए कृपया फिर से कोशिश नहीं कर सकते संकेत संसद प्रश्नोत्तर,.
+298~@~65~@~1~@~Please make sure a row for U.S. English culture is present and try again.
+299~@~65~@~2~@~S'il vous plaît assurez-vous d'affilée des Etats-Unis culture anglaise est présente et essayez à nouveau.
+300~@~66~@~1~@~Valid until
+301~@~67~@~1~@~Changed On
+302~@~68~@~1~@~Your password has expired. You have only limited access to the system until you change the password.
+303~@~69~@~1~@~Password must be between 8-32 characters containing at least one upper case, one lower case, and one numeric character.
+304~@~65~@~4~@~请确保为美国英语文化行是否存在，然后再试一次。
+305~@~66~@~4~@~有效期至
+306~@~67~@~4~@~改变了
+307~@~68~@~4~@~您的密码已过期。你只有到系统有限访问，直到您更改密码。
+308~@~69~@~4~@~密码必须是8-32之间至少包含一个大写字母，一个小写，和一个数字字符的字符。
+310~@~66~@~2~@~Valable jusqu'au
+311~@~67~@~2~@~Changé D'
+312~@~68~@~2~@~Votre mot de passe a expiré. Vous avez seulement un accès limité au système jusqu'à ce que vous changer le mot de passe.
+313~@~69~@~2~@~Mot de passe doit être compris entre 8-32 caractères contenant au moins un majuscule, une minuscule, et un caractère numérique.
+316~@~1~@~9~@~Por favor, escolha um e apenas um padrão de autoridade e tente novamente (1s%).
+318~@~3~@~9~@~Por favor, especificar apenas um botão para este evento e tente novamente.
+320~@~5~@~9~@~Por favor, remova a regra web referência e tente novamente.
+321~@~6~@~9~@~Por favor, remova a regra cliente referência e tente novamente.
+323~@~8~@~9~@~Por favor, remova a regra cliente referência e tente novamente.
+324~@~9~@~9~@~Por favor, remova a regra cliente referência e tente novamente.
+325~@~10~@~9~@~Sybase não permite palavra-chave "exec", a ser embeded na coluna "% 1s" nome, por favor, tente novamente.
+327~@~12~@~9~@~Por favor, certifique-se que há uma e apenas uma coluna de chave primária e tente novamente.
+328~@~13~@~9~@~Por favor, altere a coluna da tela para não-obrigatórios e tente novamente.
+329~@~14~@~9~@~Por favor, digite os números positivos para as margens relatório.
+330~@~15~@~9~@~Por favor, digite os números positivos para a largura da página e relatório de altura.
+331~@~16~@~9~@~Por favor, insira uma largura de página maior do que a soma da margem esquerda e direita.
+332~@~17~@~9~@~Por favor insira um altura de página maior do que a soma da margem superior e inferior.
+333~@~18~@~9~@~Por favor, não delete estilo como ele está sendo usado por elemento relatório.
+334~@~19~@~9~@~Por favor, não delete estilo como ele está sendo usado pelo item de relatório.
+336~@~21~@~9~@~Por favor, insira o número padrão de linhas (1-200) para este tipo de tela e tente novamente.
+337~@~22~@~9~@~Por favor, certifique-se que há um só Corpo e um para o "% 1s" relatório e tente novamente.
+338~@~23~@~9~@~Por favor, certifique-se que não há mais de um cabeçalho para o relatório "% 1s" e tente novamente.
+339~@~24~@~9~@~Por favor, certifique-se que não há mais do que um rodapé para o relatório "% 1s" e tente novamente.
+340~@~25~@~9~@~Por favor, certifique-se de corpo da página é "% 1s" para o relatório "2s%" e tente novamente.
+341~@~26~@~9~@~Por favor, não delete elemento "% 1s", como ele está sendo usado pelo controle de relatório.
+342~@~27~@~9~@~Por favor, certifique-se de controle de largura não exceda "% 1s" e tente novamente.
+343~@~28~@~9~@~Por favor, certifique-se de pelo menos uma coluna é selecionada como critérios e tente novamente.
+344~@~29~@~9~@~Por favor, não excluir esta categoria os dados do relatório, uma vez que está sendo usado por gerador de relatórios.
+345~@~30~@~9~@~Por favor, certifique-se todos os critérios selecionados operador tem atribuído e tente novamente.
+346~@~31~@~9~@~Por favor, certifique-se de pelo menos uma coluna é selecionado como monitor e tente novamente.
+347~@~33~@~9~@~Por favor, seja notificado de que indicador só, gráfico, tabela, lista ou documento-relatório modelos podem ser gerados por agora.
+348~@~35~@~9~@~Este nome do relatório está em uso, por favor entrar em outro nome exclusivo e tente novamente.
+349~@~36~@~9~@~Id inválido relatório como QueryString rpt, por favor, corrigir e tente novamente.
+350~@~37~@~9~@~Por favor, não de backup e restauração para o alvo Sybase servidor por enquanto.
+351~@~38~@~9~@~Por favor, certifique-se nome do modelo tem uma extensão txt, rtf ou mht.
+352~@~39~@~9~@~Por favor, não delete modelo padrão.
+353~@~40~@~9~@~Por favor, selecione uma coluna para a categoria de gráficos e tente novamente.
+354~@~41~@~9~@~Por favor, selecione uma coluna escalar para valores gráficos e tente novamente.
+355~@~42~@~9~@~Por favor seleccione um ecrã ou um relatório ou ambos como sujeito (s) para atribuir essa substituição autoridade linha.
+356~@~43~@~9~@~Por favor, não Permitir Seleção de Colunas a menos que seja documento fusão.
+357~@~44~@~9~@~Valor mínimo não pode ser maior do que o valor baixo alcance máximo, por favor, corrigir e tente novamente.
+358~@~45~@~9~@~Valor máximo de gama baixa não pode ser maior do que o valor médio alcance máximo, por favor, corrigir e tente novamente.
+359~@~46~@~9~@~Valor máximo de gama média não pode ser maior que o valor máximo, por favor, corrigir e tente novamente.
+360~@~47~@~9~@~Sua senha não foi alterada para os dias 1s%, para sua proteção, por favor mude a sua conveniência.
+361~@~48~@~9~@~Senha
+362~@~49~@~9~@~Minha Conta
+364~@~51~@~9~@~Nova senha *:
+365~@~52~@~9~@~Confirmar Senha *:
+366~@~53~@~9~@~Pergunta dica
+367~@~54~@~9~@~* Pergunta:
+369~@~56~@~9~@~Esconder
+370~@~57~@~9~@~Digite uma senha e tente novamente.
+371~@~58~@~9~@~Por favor, confirme senha e tente novamente.
+372~@~59~@~9~@~Senha atualizada com sucesso.
+373~@~60~@~9~@~Não é possível atualizar a senha, por favor, tente novamente.
+374~@~61~@~9~@~Por favor, selecione uma pergunta dica e tente novamente.
+375~@~62~@~9~@~Por favor introduza uma resposta e tente novamente.
+376~@~63~@~9~@~Q & A dica atualizada com sucesso.
+377~@~64~@~9~@~Não é possível atualizar dica Q & A, por favor, tente novamente.
+378~@~65~@~9~@~Por favor, certifique-se de uma linha para Inglês EUA cultura está presente e tente novamente.
+379~@~66~@~9~@~Válido até
+380~@~67~@~9~@~Mudou On
+381~@~68~@~9~@~Sua senha expirou. Você tem apenas um acesso limitado ao sistema até que você altere a senha.
+382~@~69~@~9~@~A senha deve ter entre 8-32 caracteres contendo pelo menos uma letra maiúscula, uma minúscula e um caractere numérico.
+384~@~65~@~8~@~यकीन है कि अमेरिकी अंग्रेजी संस्कृति के लिए एक पंक्ति मौजूद है और फिर कोशिश करें.
+385~@~66~@~8~@~जब तक मान्य
+386~@~67~@~8~@~में परिवर्तित
+387~@~68~@~8~@~आपका पासवर्ड समाप्त हो गया है. आप सिस्टम के लिए केवल सीमित पहुँच है जब तक आप पासवर्ड परिवर्तित.
+388~@~69~@~8~@~पासवर्ड 8-32 वर्णों के बीच कम से कम एक ऊपरी मामले, एक कम मामले, और एक संख्यात्मक वर्ण युक्त होना चाहिए.
+390~@~1~@~11~@~Lütfen tek ve sadece tek bir otorite varsayılan seçin ve yeniden deneyin (% 1s).
+392~@~3~@~11~@~Sadece bu olay için bir düğme belirtmek ve tekrar deneyin.
+394~@~5~@~11~@~Lütfen referans web kuralı kaldırın ve tekrar deneyin.
+395~@~6~@~11~@~Başvuru istemci kuralı kaldırmak ve tekrar deneyin.
+397~@~8~@~11~@~Başvuru istemci kuralı kaldırmak ve tekrar deneyin.
+398~@~9~@~11~@~Başvuru istemci kuralı kaldırmak ve tekrar deneyin.
+399~@~10~@~11~@~Sybase sütun adı "% 1s" gömülmüş olması için anahtar kelime "exec" izin vermiyor, lütfen tekrar deneyin.
+401~@~12~@~11~@~Tek ve sadece tek bir birincil anahtar sütunu vardır emin olun ve tekrar deneyin.
+402~@~13~@~11~@~Lütfen zorunlu olmayan perde değiştirin ve tekrar deneyin.
+403~@~14~@~11~@~Rapor kenar boşlukları için pozitif bir sayı giriniz.
+404~@~15~@~11~@~Rapor sayfa genişliği ve yüksekliği için pozitif bir sayı giriniz.
+405~@~16~@~11~@~Sol ve sağ kenar toplamından daha büyük bir sayfa genişliği giriniz.
+406~@~17~@~11~@~Üst ve alt kenar boşluğu toplamından daha büyük bir sayfa yüksekliği giriniz.
+407~@~18~@~11~@~Lütfen rapor elemanı tarafından kullanılan ediliyor stil silmeyin.
+408~@~19~@~11~@~Lütfen rapor öğesi tarafından kullanılan olduğu gibi stil silmeyin.
+410~@~21~@~11~@~Lütfen bu ekranı tipi için ve yeniden deneyin - satır varsayılan numarasını girin (1 200).
+411~@~22~@~11~@~"% 1s" raporu için bir ve tek tek Vücut emin olun ve tekrar deneyin.
+412~@~23~@~11~@~Lütfen birden fazla rapor için Header "% 1s" olmadığından emin olun ve yeniden deneyin.
+413~@~24~@~11~@~Lütfen birden fazla rapor için Altbilgisi "% 1s" olmadığından emin olun ve yeniden deneyin.
+414~@~25~@~11~@~Lütfen sayfa vücut raporu "% 2" için "% 1s" olduğundan emin olun ve yeniden deneyin.
+415~@~26~@~11~@~Lütfen elemanı silmeyin "% 1s" raporu kumanda ile kullanılıyor.
+416~@~27~@~11~@~Denetimin genişliği "% 1s" aşmak ve tekrar deneyin emin olun.
+417~@~28~@~11~@~Kriter olarak en az bir sütun seçili olduğundan emin olun ve tekrar deneyin.
+418~@~29~@~11~@~Lütfen rapor üreteci tarafından kullanılmakta olan bu raporda veri kategorisinde silmeyin.
+419~@~30~@~11~@~Lütfen seçilen tüm kriterlere emin operatör atanmış olun ve yeniden deneyin.
+420~@~31~@~11~@~Lütfen en az bir sütun ekran olarak seçili olduğundan emin olun ve yeniden deneyin.
+421~@~33~@~11~@~Şu an için tek göstergesi, grafik, liste, tablo veya belge rapor şablonlar oluşturulabilir bildirilir olun.
+422~@~35~@~11~@~Bu raporda adı kullanımda, lütfen başka bir benzersiz bir ad girin ve tekrar deneyin.
+423~@~36~@~11~@~QueryString rpt olarak geçersiz rapor id, düzeltmek ve tekrar deneyin.
+424~@~37~@~11~@~Lütfen yedekleme ve geri yüklemek için şu an için hedef Sybase sunucusu yok.
+425~@~38~@~11~@~Şablon adını bir uzantısı txt, rtf veya mht olduğundan emin olun.
+426~@~39~@~11~@~Lütfen varsayılan şablon silmeyin.
+427~@~40~@~11~@~Grafik kategori için bir sütun seçin ve tekrar deneyin.
+428~@~41~@~11~@~Grafik değerleri için bir skaler sütunu seçin ve tekrar deneyin.
+429~@~42~@~11~@~Lütfen bir ekran veya bir rapor veya her ikisi de bu satır yetkisini geçersiz kılma atamak konu (lar) olarak seçmek.
+430~@~43~@~11~@~Lütfen birleştirme belge olmadıkça Sütunlar Seçimi İzin yok.
+431~@~44~@~11~@~Minimum değer düşük aralık maksimum değerden daha büyük olamaz, lütfen düzeltmek ve tekrar deneyin.
+432~@~45~@~11~@~Düşük aralık maksimum değeri orta mesafeli maksimum değerden daha büyük olamaz, lütfen düzeltmek ve tekrar deneyin.
+433~@~46~@~11~@~Orta aralık maksimum değeri maksimum değerden daha büyük olamaz, lütfen düzeltmek ve tekrar deneyin.
+434~@~47~@~11~@~Parolanız% 1s gün boyunca, size kolaylık değiştirmek korunması için lütfen bir değişiklik olmamıştır.
+435~@~48~@~11~@~Parola
+436~@~49~@~11~@~Hesabım
+438~@~51~@~11~@~Yeni Şifre *:
+439~@~52~@~11~@~Şifre * onayla:
+440~@~53~@~11~@~İpucu soru
+441~@~54~@~11~@~Soru *:
+443~@~56~@~11~@~Gizlemek
+444~@~57~@~11~@~Lütfen bir parola girin ve yeniden deneyin.
+445~@~58~@~11~@~Parolayı onaylayın ve yeniden deneyin.
+446~@~59~@~11~@~Şifre başarılı bir şekilde güncellendi.
+447~@~60~@~11~@~Parola güncelleştirme, lütfen tekrar deneyin.
+448~@~61~@~11~@~Bir ipucu soru seçin ve tekrar deneyin.
+449~@~62~@~11~@~Bir cevap girin ve tekrar deneyin.
+450~@~63~@~11~@~İpucu Q & A güncellenen başarıyla.
+451~@~64~@~11~@~Ipucu Q & A güncelleme olamaz, lütfen tekrar deneyin.
+452~@~65~@~11~@~İngilizce (ABD) kültür için bir satır mevcut olduğundan emin olun ve tekrar deneyin.
+453~@~66~@~11~@~Tarihine kadar geçerli
+454~@~67~@~11~@~Tarihinde değiştirildi.
+455~@~68~@~11~@~Parolanız süresi doldu. Şifresini değiştirmek kadar sisteme sadece sınırlı erişim var.
+456~@~69~@~11~@~Şifre en az bir büyük harf, bir küçük harf ve bir sayısal karakter içeren 8-32 karakter arasında olmalıdır.
+458~@~1~@~14~@~ただ一つの権限のデフォルト値を選択し、（％の1S）、もう一度やり直してください。
+460~@~3~@~14~@~唯一このイベントのボタンを指定してもう一度試してください。
+462~@~5~@~14~@~参照するWebルールを削除してからもう一度お試しください。
+463~@~6~@~14~@~参照するクライアントルールを削除してからもう一度お試しください。
+465~@~8~@~14~@~参照するクライアントルールを削除してからもう一度お試しください。
+466~@~9~@~14~@~参照するクライアントルールを削除してからもう一度お試しください。
+467~@~10~@~14~@~Sybaseは列名"％1秒"に埋め込まれるため、キーワードの"exec"を許可していない、再試行してください。
+469~@~12~@~14~@~ただ一つの主キー列があることを確認し、もう一度やり直してください。
+470~@~13~@~14~@~非必須に画面​​のカラムを変更して再度実行してください。
+471~@~14~@~14~@~レポートの余白に正の数字を入力してください。
+472~@~15~@~14~@~レポートページの幅と高さの正の数字を入力してください。
+473~@~16~@~14~@~左と右マージンの合計よりも大きいページの幅を入力してください。
+474~@~17~@~14~@~上部と下部の余白の合計よりも大きいページの高さを入力してください。
+475~@~18~@~14~@~それはレポートの要素によって使用されているようにスタイルを削除しないでください。
+476~@~19~@~14~@~それは、レポートアイテムによって使用されているようにスタイルを削除しないでください。
+478~@~21~@~14~@~この画面タイプの、再試行してください - デフォルトの行数（200 1）を入力してください。
+479~@~22~@~14~@~報告書は"％1秒"のための唯一のボディがあることを確認し、もう一度やり直してください。
+480~@~23~@~14~@~報告書は"％1秒"のための複数のヘッダがないことを確認して、もう一度やり直してください。
+481~@~24~@~14~@~報告書は"％1秒"に複数のフッターがないことを確認して、もう一度やり直してください。
+482~@~25~@~14~@~ページの本文は、レポートの"％2秒"の"％の1秒"であることを確認し、もう一度やり直してください。
+483~@~26~@~14~@~してください、それがレポートのコントロールによって使用されているように、要素"％1sを"削除しないでください。
+484~@~27~@~14~@~コントロールの幅が"％1sを"超えて、再試行していないかを確認してください。
+485~@~28~@~14~@~少なくとも一つの列を基準として選択されていることを確認してから、もう一度やり直してください。
+486~@~29~@~14~@~それは、レポートジェネレータによって使用されているとして、このレポートのデータのカテゴリを削除しないでください。
+487~@~30~@~14~@~必ずすべての選択基準は、演算子が割り当てられているようにして、もう一度試してください。
+488~@~31~@~14~@~少なくとも一つの列はディスプレイとして選択されていることを確認してから、もう一度やり直してください。
+489~@~33~@~14~@~唯一のゲージ、チャート、リスト、テーブルまたはドキュメントレポートのテンプレートは現在のために生成することができることが通知さしてください。
+490~@~35~@~14~@~このレポートの名前が使用されている、別の一意の名前を入力してもう一度実行してください。
+491~@~36~@~14~@~QueryStringのRPTとして無効なレポートID、修正して再試行してください。
+492~@~37~@~14~@~バックアップと現在のターゲットのSybaseサーバ用に復元しないでください。
+493~@~38~@~14~@~テンプレート名に拡張子がTXT、RTFまたはMHTを持っていることを確認してください。
+494~@~39~@~14~@~デフォルトのテンプレートを削除しないでください。
+495~@~40~@~14~@~チャートのカテゴリの列を選択して、もう一度試してください。
+496~@~41~@~14~@~チャートの値のスカラー列を選択し、もう一度試してください。
+497~@~42~@~14~@~画面またはこの行の権限のオーバーライドを割り当てるには、レポートまたは対象（複数可）の両方を選択してください。
+498~@~43~@~14~@~それがマージ文書でない限り、列の選択を許可しないでください。
+499~@~44~@~14~@~最小値が低レンジの最大値より大きくすることはできません、修正して再試行してください。
+500~@~45~@~14~@~低レンジの最大値は、ミッドレンジの最大値より大きくすることはできません、修正して再試行してください。
+501~@~46~@~14~@~ミッドレンジの最大値が最大値より大きくすることはできません、修正して再試行してください。
+502~@~47~@~14~@~あなたのパスワードが％1秒の日のために変更されていない、あなたを守るために都合のよいときにそれを変更してください。
+503~@~48~@~14~@~パスワード
+504~@~49~@~14~@~マイアカウント
+506~@~51~@~14~@~新しいパスワード*：
+507~@~52~@~14~@~パスワード確認*：
+508~@~53~@~14~@~ヒントの質問
+509~@~54~@~14~@~質問*：
+511~@~56~@~14~@~隠す
+512~@~57~@~14~@~パスワードを入力してもう一度実行してください。
+513~@~58~@~14~@~パスワードを確認し、もう一度やり直してください。
+514~@~59~@~14~@~パスワードが正常に更新されました。
+515~@~60~@~14~@~パスワードを更新することはできません、もう一度やり直してください。
+516~@~61~@~14~@~ヒントの質問を選択して、もう一度試してください。
+517~@~62~@~14~@~答えを入力してもう一度実行してください。
+518~@~63~@~14~@~ヒントQ＆A更新に成功。
+519~@~64~@~14~@~ヒントQ＆Aの更新ができません、もう一度やり直してください。
+520~@~65~@~14~@~アメリカ英語の文化のための行が存在してから、もう一度やり直してください。
+521~@~66~@~14~@~まで有効
+522~@~67~@~14~@~で変更
+523~@~68~@~14~@~パスワードの有効期限が切れています。あなたがパスワードを変更するまでは、システムへのアクセスが制限されます。
+524~@~69~@~14~@~パスワードは、少なくとも1つの大文字、1つの小文字、および数字をそれぞれ1文字を含む8〜32文字の間でなければなりません。
+526~@~1~@~12~@~Пожалуйста, выберите один и только один авторитет по умолчанию и попробуйте еще раз (% 1s).
+528~@~3~@~12~@~Пожалуйста, задавайте только кнопки для этого события и повторите попытку.
+530~@~5~@~12~@~Пожалуйста, удалите правило веб-ссылки и повторите попытку.
+531~@~6~@~12~@~Пожалуйста, удалите ссылки клиенту правления и попробуйте еще раз.
+533~@~8~@~12~@~Пожалуйста, удалите ссылки клиенту правления и попробуйте еще раз.
+534~@~9~@~12~@~Пожалуйста, удалите ссылки клиенту правления и попробуйте еще раз.
+535~@~10~@~12~@~Sybase не позволяет ключевое слово "Exec", который будет поместить его в имени столбца "% 1 сек", пожалуйста, попробуйте еще раз.
+537~@~12~@~12~@~Пожалуйста, убедитесь, что есть один и только один столбец первичного ключа и повторите попытку.
+538~@~13~@~12~@~Пожалуйста, измените экрана столбец необязательным и повторите попытку.
+539~@~14~@~12~@~Пожалуйста, введите положительных чисел, для доклада полей.
+540~@~15~@~12~@~Пожалуйста, введите положительных чисел, для доклада ширина страницы и высота.
+541~@~16~@~12~@~Пожалуйста, введите ширина страницы больше, чем сумма левого и правого поля.
+542~@~17~@~12~@~Пожалуйста, введите высоту страницы больше, чем сумма верхнего и нижнего поля.
+543~@~18~@~12~@~Пожалуйста, не удаляйте стиль как он используется по элементу отчета.
+544~@~19~@~12~@~Пожалуйста, не удаляйте стиль как он в настоящее время используется элемент отчета.
+546~@~21~@~12~@~Пожалуйста, введите умолчанию количество строк (1 - 200) для этого экрана типа и повторите попытку.
+547~@~22~@~12~@~Пожалуйста, убедитесь, что есть один и только один орган по докладу "% 1s" и повторите попытку.
+548~@~23~@~12~@~Пожалуйста, убедитесь, что не более одного заголовка для отчета "% 1s" и повторите попытку.
+549~@~24~@~12~@~Пожалуйста, убедитесь, что не более одного Footer для отчета "% 1s" и повторите попытку.
+550~@~25~@~12~@~Пожалуйста, убедитесь, что страница тело "% 1s" для отчета "2s%" и попробуйте еще раз.
+551~@~26~@~12~@~Пожалуйста, не удаляйте элемент "% 1 с", как оно используется в докладе управления.
+552~@~27~@~12~@~Пожалуйста, убедитесь, что ширина элемента управления не превышает "% 1s" и повторите попытку.
+553~@~28~@~12~@~Пожалуйста, убедитесь, что хотя бы один столбец выбран в качестве критериев и попробуйте еще раз.
+554~@~29~@~12~@~Пожалуйста, не удаляйте эту категорию представлять данные как в настоящее время используется генератор отчетов.
+555~@~30~@~12~@~Пожалуйста, убедитесь, что все выбранные критерии имеет назначенный оператор и повторите попытку.
+556~@~31~@~12~@~Пожалуйста, убедитесь, что хотя бы один столбец выбран в качестве экрана и повторите попытку.
+557~@~33~@~12~@~Пожалуйста, будьте уведомлены, что только калибр, диаграмма, список, таблица или документ, отчет-шаблоны могут быть созданы на данный момент.
+558~@~35~@~12~@~Этот отчет имя уже используется, введите другое уникальное имя и повторите попытку.
+559~@~36~@~12~@~Как получить такой отчет идентификатор, как QueryString RPT, пожалуйста, исправить и попробовать еще раз.
+560~@~37~@~12~@~Пожалуйста, не резервного копирования и восстановления данных на целевой сервер Sybase на данный момент.
+561~@~38~@~12~@~Пожалуйста, убедитесь, что имя шаблона имеет расширение TXT, RTF или MHT.
+562~@~39~@~12~@~Пожалуйста, не удаляйте шаблон по умолчанию.
+563~@~40~@~12~@~Пожалуйста, выберите колонку для построения графиков категории и попробуйте еще раз.
+564~@~41~@~12~@~Пожалуйста, выберите скалярных колонки для построения графиков значения и повторите попытку.
+565~@~42~@~12~@~Пожалуйста, выберите экран или отчет или как в качестве предмета (ов), чтобы назначить этот переопределить ряд полномочий.
+566~@~43~@~12~@~Пожалуйста, не Разрешить Столбцы выбора, если он не документ слияния.
+567~@~44~@~12~@~Минимальное значение не может быть больше, чем низкое значение максимальной дальности, пожалуйста, исправить и попробовать еще раз.
+568~@~45~@~12~@~Низкое значение максимального диапазона не может быть больше, чем максимальное значение в середине диапазона, пожалуйста, исправить и попробовать еще раз.
+569~@~46~@~12~@~Средние значения максимальной дальности не может быть больше, чем максимальное значение, пожалуйста, исправить и попробовать еще раз.
+570~@~47~@~12~@~Ваш пароль не был изменен в течение многих дней% 1s, для вашей защиты пожалуйста, измените его в удобное время.
+571~@~48~@~12~@~Пароль
+572~@~49~@~12~@~Мои данные
+574~@~51~@~12~@~Новый пароль *:
+575~@~52~@~12~@~Подтвердите пароль *:
+576~@~53~@~12~@~Подсказка Вопрос
+577~@~54~@~12~@~Вопрос *:
+579~@~56~@~12~@~Скрывать
+580~@~57~@~12~@~Пожалуйста, введите пароль и попробуйте еще раз.
+581~@~58~@~12~@~Пожалуйста, подтвердите пароль и попробуйте еще раз.
+582~@~59~@~12~@~Пароль успешно обновлен.
+583~@~60~@~12~@~Не удается обновить пароль, пожалуйста, попробуйте еще раз.
+584~@~61~@~12~@~Пожалуйста, выберите намек вопрос и попробуйте снова.
+585~@~62~@~12~@~Пожалуйста, введите ответ, и попробуйте еще раз.
+586~@~63~@~12~@~Q Подсказка и успешно обновлены.
+587~@~64~@~12~@~Невозможно обновить намек Q & A, попробуйте еще раз.
+588~@~65~@~12~@~Пожалуйста, убедитесь, что строка для американской культуры английски присутствует и повторите попытку.
+589~@~66~@~12~@~Действительно до
+590~@~67~@~12~@~Изменен С
+591~@~68~@~12~@~Ваш пароль истек. У вас есть только ограниченный доступ к системе пока вы не измените пароль.
+592~@~69~@~12~@~Пароль должен быть в пределах 8-32 символов, содержащий по меньшей мере один верхний регистр, один нижний регистр, и один цифровой символ.
+594~@~1~@~13~@~Por favor, elija uno y sólo uno por defecto la autoridad y vuelva a intentarlo (1s%).
+596~@~3~@~13~@~Por favor, especifique sólo un botón para este evento y vuelva a intentarlo.
+598~@~5~@~13~@~Por favor, elimine la regla web de referencia y vuelva a intentarlo.
+599~@~6~@~13~@~Por favor, elimine la regla de cliente de referencia y vuelva a intentarlo.
+601~@~8~@~13~@~Por favor, elimine la regla de cliente de referencia y vuelva a intentarlo.
+602~@~9~@~13~@~Por favor, elimine la regla de cliente de referencia y vuelva a intentarlo.
+603~@~10~@~13~@~Sybase no permite la palabra clave "ejecutivo" que se embebido en "1s%" Nombre de la columna, por favor, inténtelo de nuevo.
+605~@~12~@~13~@~Por favor, asegúrese de que hay una y sólo una columna de clave principal y vuelva a intentarlo.
+606~@~13~@~13~@~Por favor, cambie la columna de la pantalla para no obligatoria y vuelva a intentarlo.
+607~@~14~@~13~@~Por favor, introduzca los números positivos de los márgenes del informe.
+608~@~15~@~13~@~Por favor, introduzca los números positivos para el ancho de página del informe y la altura.
+609~@~16~@~13~@~Por favor, introduzca un ancho de página mayor que la suma de los márgenes izquierdo y derecho.
+610~@~17~@~13~@~Por favor, introduzca una altura de página mayor que la suma de los márgenes superior e inferior.
+611~@~18~@~13~@~Por favor, no elimine el estilo, ya que está siendo utilizado por elemento de informe.
+612~@~19~@~13~@~Por favor, no elimine el estilo, ya que está siendo utilizado por elementos de informe.
+614~@~21~@~13~@~Por favor, introduzca el número predeterminado de filas (1 - 200) para este tipo de pantalla y vuelva a intentarlo.
+615~@~22~@~13~@~Por favor, asegúrese de que hay una y sólo una para el Cuerpo "1s%" informe y vuelva a intentarlo.
+616~@~23~@~13~@~Por favor, asegúrese de que no es más que un encabezado para el informe "1s%" y vuelva a intentarlo.
+617~@~24~@~13~@~Por favor, asegúrese de que no es más que un pie de página para el informe "1s%" y vuelva a intentarlo.
+618~@~25~@~13~@~Por favor, asegúrese cuerpo de la página es "1s%" para "2s%" el informe y vuelva a intentarlo.
+619~@~26~@~13~@~Por favor, no elimine el elemento "% 1s", ya que está siendo utilizado por el control de informe.
+620~@~27~@~13~@~Por favor, asegúrese de control de ancho no exceda "1s%" y vuelva a intentarlo.
+621~@~28~@~13~@~Por favor, asegúrese de que al menos una columna se selecciona como criterios y vuelva a intentarlo.
+622~@~29~@~13~@~Por favor, no borrar esta categoría los datos del informe, ya que está siendo utilizado por generador de informes.
+623~@~30~@~13~@~Por favor, asegúrese de que todos los criterios seleccionados se ha asignado el operador y vuelva a intentarlo.
+624~@~31~@~13~@~Por favor, asegúrese de que al menos una columna se selecciona como pantalla y vuelva a intentarlo.
+625~@~33~@~13~@~Por favor, sea notificado de que única medida, tabla, lista, tabla o un documento de informe de las plantillas se pueden generar por el momento.
+626~@~35~@~13~@~Este nombre del informe está en uso, por favor, escriba un nombre único y vuelva a intentarlo.
+627~@~36~@~13~@~Identificación del informe no válido como QueryString rpt, por favor, rectifique y vuelva a intentarlo.
+628~@~37~@~13~@~Por favor, no copia de seguridad y restauración para servidores Sybase objetivo por ahora.
+629~@~38~@~13~@~Por favor, asegúrese de nombre de la plantilla tiene una extensión txt, rtf o mht.
+630~@~39~@~13~@~Por favor, no elimine la plantilla predeterminada.
+631~@~40~@~13~@~Por favor, seleccione una columna para la categoría de gráficos y vuelva a intentarlo.
+632~@~41~@~13~@~Por favor, seleccione una columna de escalar para los valores de la cartografía y vuelva a intentarlo.
+633~@~42~@~13~@~Por favor, seleccione una pantalla o un informe o ambos como sujeto (s) para asignar este reemplazo autoridad fila.
+634~@~43~@~13~@~Por favor, no Permitir la selección de columnas, a menos que es un documento de la fusión.
+635~@~44~@~13~@~Valor mínimo no puede ser mayor que el valor máximo del intervalo de baja, por favor, rectifique y vuelva a intentarlo.
+636~@~45~@~13~@~Bajo valor máximo rango no puede ser mayor que el valor máximo del intervalo medio, por favor, rectifique y vuelva a intentarlo.
+637~@~46~@~13~@~Valor medio máximo rango no puede ser mayor que el valor máximo, por favor, rectifique y vuelva a intentarlo.
+638~@~47~@~13~@~Su contraseña no se ha cambiado para los días 1s%, para su protección debe cambiarla a su conveniencia.
+639~@~48~@~13~@~Contraseña
+640~@~49~@~13~@~Mi Cuenta
+642~@~51~@~13~@~Nueva contraseña *:
+643~@~52~@~13~@~Confirmar contraseña *:
+644~@~53~@~13~@~Sugerencia Pregunta
+645~@~54~@~13~@~Pregunta *:
+647~@~56~@~13~@~Ocultar
+648~@~57~@~13~@~Por favor, introduzca una contraseña y vuelva a intentarlo.
+649~@~58~@~13~@~Por favor, confirme la contraseña y vuelva a intentarlo.
+650~@~59~@~13~@~Contraseña actualizada correctamente.
+651~@~60~@~13~@~No se puede actualizar la contraseña, por favor, inténtelo de nuevo.
+652~@~61~@~13~@~Por favor, seleccione una pregunta indirecta y vuelva a intentarlo.
+653~@~62~@~13~@~Por favor, introduzca una respuesta y vuelve a intentarlo.
+654~@~63~@~13~@~Sugerencia Q & A se ha actualizado correctamente.
+655~@~64~@~13~@~No se puede actualizar pista Q & A, por favor, inténtelo de nuevo.
+656~@~65~@~13~@~Por favor, asegúrese de que una fila de cultura de EE.UU. Inglés está presente y vuelva a intentarlo.
+657~@~66~@~13~@~Válido hasta el
+658~@~67~@~13~@~En cambiado
+659~@~68~@~13~@~Su contraseña ha caducado. Usted tiene un acceso limitado al sistema hasta que cambie la contraseña.
+660~@~69~@~13~@~La contraseña debe tener entre 8-32 caracteres que contenga al menos una mayúscula, una minúscula, y un carácter numérico.
+665~@~1~@~68~@~Bitte wählen Sie eine und nur eine Behörde Verzug und versuchen Sie es erneut (% 1s).
+667~@~3~@~68~@~Bitte nur angeben, ein System-Taste für diese Veranstaltung und erneut versuchen.
+669~@~5~@~68~@~Bitte entfernen Sie den Verweis web Regel und versuchen Sie es erneut.
+670~@~6~@~68~@~Bitte entfernen Sie den Verweis Client-Regel und erneut versuchen.
+672~@~8~@~68~@~Bitte entfernen Sie den Verweis Client-Regel und erneut versuchen.
+673~@~9~@~68~@~Bitte entfernen Sie den Verweis Client-Regel und erneut versuchen.
+674~@~10~@~68~@~Sybase nicht erlaubt Stichwort "exec" in der Spalte Name "% 1s" eingebettet werden, bitte versuchen Sie es erneut.
+676~@~12~@~68~@~Bitte stellen Sie sicher, es gibt eine und nur eine Primärschlüsselspalte und erneut versuchen.
+677~@~13~@~68~@~Bitte ändern Sie den Bildschirm Spalte zur unverbindlichen und erneut versuchen.
+678~@~14~@~68~@~Bitte geben Sie positive Zahlen für den Bericht Margen.
+679~@~15~@~68~@~Bitte geben Sie positive Zahlen für Bericht Seite Breite und Höhe.
+680~@~16~@~68~@~Bitte geben Sie eine Seitenbreite größer als die Summe der linken und rechten Rand.
+681~@~17~@~68~@~Bitte geben Sie eine Seite Höhe größer als die Summe der oberen und unteren Rand.
+682~@~18~@~68~@~Bitte löschen Sie Stil, wie es wird durch Bericht Element benutzt wird.
+683~@~19~@~68~@~Bitte löschen Sie Stil, wie es durch Berichtselement verwendet wird.
+685~@~21~@~68~@~Bitte geben Sie die standardmäßige Anzahl der Zeilen (1 - 200) für diesen Bildschirm Typ und versuchen Sie es erneut.
+686~@~22~@~68~@~Bitte stellen Sie sicher, es gibt eine und nur eine Stelle für den Bericht "% 1s" und versuchen Sie es erneut.
+687~@~23~@~68~@~Bitte stellen Sie sicher, es ist nicht mehr als ein Header für den Bericht "% 1s" und versuchen Sie es erneut.
+688~@~24~@~68~@~Bitte stellen Sie sicher, es ist nicht mehr als ein Footer für den Bericht "% 1s" und versuchen Sie es erneut.
+689~@~25~@~68~@~Bitte stellen Sie sicher Seite Körper ist "% 1s" für den Bericht "% 2s" und versuchen Sie es erneut.
+690~@~26~@~68~@~Bitte nicht löschen Element "% 1s", wie es wird von Report Control verwendet.
+691~@~27~@~68~@~Bitte stellen Sie sicher Steuerung der Breite nicht überschreiten "% 1s" und versuchen Sie es erneut.
+692~@~28~@~68~@~Bitte stellen Sie sicher, dass mindestens eine Spalte als Kriterien ausgewählt und erneut versuchen.
+693~@~29~@~68~@~Bitte löschen Sie diesen Bericht Datenkategorie, wie sie von Report-Generator verwendet wird.
+694~@~30~@~68~@~Bitte stellen Sie sicher, dass alle ausgewählten Kriterien hat Betreiber zugeordnet und versuchen Sie es erneut.
+695~@~31~@~68~@~Bitte stellen Sie sicher, dass mindestens eine Spalte als Display ausgewählt und erneut versuchen.
+696~@~33~@~68~@~Mitgeteilt bitte, dass nur Manometer, Diagramm, Liste, Tabelle oder Dokument Bericht-Vorlagen für jetzt erzeugt werden können.
+697~@~35~@~68~@~Dieser Bericht Name wird verwendet, geben Sie bitte weitere eindeutigen Namen und versuchen Sie es erneut.
+698~@~36~@~68~@~Ungültige Bericht id als QueryString rpt, bitte berichtigen und versuchen Sie es erneut.
+699~@~37~@~68~@~Bitte nicht sichern und wiederherstellen für Ziel Sybase-Server für jetzt.
+700~@~38~@~68~@~Bitte stellen Sie sicher Template-Namen eine Erweiterung txt, rtf oder mht.
+701~@~39~@~68~@~Bitte löschen Sie Standardvorlage.
+702~@~40~@~68~@~Bitte wählen Sie eine Spalte für Charting Kategorie und versuchen Sie es erneut.
+703~@~41~@~68~@~Bitte wählen Sie eine skalare Spalte für Charting Werte und versuchen Sie es erneut.
+704~@~42~@~68~@~Bitte wählen Sie einen Bildschirm oder einen Bericht oder beide als Subjekt (s), um diese Zeile Autorität override zuweisen.
+705~@~43~@~68~@~Bitte nicht zulassen Columns Selection, es sei denn Dokument ist ein Zusammenführen.
+706~@~44~@~68~@~Minimaler Wert kann nicht größer sein als die niedrigen Bereich Maximalwert, bitte berichtigen und versuchen Sie es erneut.
+707~@~45~@~68~@~Niedriger Bereich maximale Wert nicht größer sein als die Mid-Range-Maximalwert, bitte berichtigen und versuchen Sie es erneut.
+708~@~46~@~68~@~Mid Range maximalen Wert kann nicht größer sein als der maximale Wert, bitte berichtigen und versuchen Sie es erneut.
+709~@~47~@~68~@~Ihr Kennwort ist nicht für% 1s Tag geändert wurde, zu Ihrem Schutz ändern an Ihrer Bequemlichkeit bitte.
+710~@~48~@~68~@~Kennwort
+711~@~49~@~68~@~Ihr Konto
+713~@~51~@~68~@~Neues Passwort *:
+714~@~52~@~68~@~Passwort bestätigen *:
+715~@~53~@~68~@~Hint Frage
+716~@~54~@~68~@~Frage *:
+718~@~56~@~68~@~Verbergen
+719~@~57~@~68~@~Bitte geben Sie ein Kennwort ein und versuchen Sie es erneut.
+720~@~58~@~68~@~Bitte bestätigen Sie Passwort und versuchen Sie es erneut.
+721~@~59~@~68~@~Kennwort erfolgreich aktualisiert.
+722~@~60~@~68~@~Kann nicht aktualisieren Passwort, bitte versuchen Sie es erneut.
+723~@~61~@~68~@~Bitte wählen Sie einen Hauch Frage und versuchen Sie es erneut.
+724~@~62~@~68~@~Bitte geben Sie eine Antwort und versuchen Sie es erneut.
+725~@~63~@~68~@~Hinweis Q & A erfolgreich aktualisiert.
+726~@~64~@~68~@~Kann nicht aktualisieren Hinweis Q & A, please try again.
+727~@~65~@~68~@~Bitte stellen Sie sicher, dass eine Zeile für die amerikanische englische Kultur vorhanden ist und versuchen Sie es erneut.
+728~@~66~@~68~@~Gültig bis
+729~@~67~@~68~@~Wechsel auf
+730~@~68~@~68~@~Ihr Kennwort ist abgelaufen. Sie haben nur begrenzten Zugriff auf das System, bis Sie das Passwort ändern.
+731~@~69~@~68~@~Das Passwort muss zwischen 8-32 Zeichen mit mindestens einem oberen Gehäuse, einem unteren Gehäuse, und ein numerisches Zeichen sein.
+736~@~1~@~28~@~하나 하나의 권위 기본을 선택하고 (%의 1 초) 다시 시도하십시오.
+738~@~3~@~28~@~이 이벤트에 대한 시스템 버튼을 지정하고 다시 시도 만하시기 바랍니다.
+740~@~5~@~28~@~참조 웹 규칙을 제거하고 다시 시도하십시오.
+741~@~6~@~28~@~참조 클라이언트 규칙을 제거하고 다시 시도하십시오.
+743~@~8~@~28~@~참조 클라이언트 규칙을 제거하고 다시 시도하십시오.
+744~@~9~@~28~@~참조 클라이언트 규칙을 제거하고 다시 시도하십시오.
+745~@~10~@~28~@~사이베이스는 열 이름 '%의 1 초 "에 embeded 할 키워드"간부 "를 허용하지 않습니다, 다시 시도해주십시오.
+747~@~12~@~28~@~하나 하나의 기본 키 열이 있는지 확인하고 다시 시도하십시오.
+748~@~13~@~28~@~비 필수로 화면 열을 변경하고 다시 시도하십시오.
+749~@~14~@~28~@~보고서 여백에 대한 긍정적 인 숫자를 입력하세요.
+750~@~15~@~28~@~보고서 페이지 너비와 높이에 대한 긍정적 인 숫자를 입력하세요.
+751~@~16~@~28~@~왼쪽과 오른쪽 여백의 합보다 더 큰 페이지 너비를 입력하십시오.
+752~@~17~@~28~@~상단과 하단 여백의 합보다 더 큰 페이지 높이를 입력하십시오.
+753~@~18~@~28~@~이 보고서 요소로 사용되고 있기 때문입니다 스타일을 삭제하지 마십시오.
+754~@~19~@~28~@~이 보고서 항목으로 사용되고 있기 때문입니다 스타일을 삭제하지 마십시오.
+756~@~21~@~28~@~이 화면 유형에 대한 한 후 다시 시도 - 행의 기본 번호를 (200 1) 입력하십시오.
+757~@~22~@~28~@~보고서 "%의 1 초"에 대한 하나 하나의 바디가 있는지 확인하고 다시 시도하십시오.
+758~@~23~@~28~@~보고서 "%의 1 초"에 대한 하나 이상의 헤더가 표시되지 있는지 확인하고 다시 시도하십시오.
+759~@~24~@~28~@~보고서 "%의 1 초"에 대한 하나 이상의 바닥 글이 없습니다 있는지 확인하고 다시 시도하십시오.
+760~@~25~@~28~@~확인 페이지 몸 보고서 "%의 거 고요"에 대한 "%의 1 초"입니다 확인하고 다시 시도하십시오.
+761~@~26~@~28~@~하시기 바랍니다에서는 요소 삭제하지 마십시오 "%를 1 초"이 보고서 제어에 의해 사용되고 있기 때문입니다.
+762~@~27~@~28~@~컨트롤의 너비가 "%의 1 초"를 초과하고 다시 시도하지 않습니다 있는지 확인하십시오.
+763~@~28~@~28~@~하나 이상의 열을 기준으로 선택되어 있는지 확인하고 다시 시도하십시오.
+764~@~29~@~28~@~이 보고서 발전기에 의해 사용되고 있기 때문입니다이 보고서 데이터 카테고리를 삭제하지 마십시오.
+765~@~30~@~28~@~선택한 모든 기준 연산자는 할당되었는지 확인하고 다시 시도하십시오.
+766~@~31~@~28~@~하나 이상의 항목을 디스플레이로 선택되어 있는지 확인하고 다시 시도하십시오.
+767~@~33~@~28~@~하시기 바랍니다에만 게이지, 차트, 목록, 테이블 또는 문서 리포트 템플릿은 지금 생성 될 수 있다는 알림을 받게됩니다.
+768~@~35~@~28~@~이 보고서 이름이 사용 중입니다 다른 고유 한 이름을 입력하고 다시 시도하십시오.
+769~@~36~@~28~@~QueryString rpt로 잘못된 보고서 ID는, 정류 한 다음 다시 시도하십시오.
+770~@~37~@~28~@~백업과 지금은 대상 사이베이스 서버를 복원하지 마십시오.
+771~@~38~@~28~@~템플릿 이름이 확장 TXT, RTF 또는 MHT을 가지고 있는지 확인하십시오.
+772~@~39~@~28~@~기본 템플릿을 삭제하지 마십시오.
+773~@~40~@~28~@~차트 카테고리에 대한 항목을 선택하고 다시 시도하십시오.
+774~@~41~@~28~@~차트 값에 대한 스칼라 열을 선택하고 다시 시도하십시오.
+775~@~42~@~28~@~화면이나 보고서 또는이 행 기관 오버라이드를 할당 대상 (들)을 둘 다 선택하십시오.
+776~@~43~@~28~@~이 통합 문서입니다하지 않는 한 열 선택을 허용하지 마십시오.
+777~@~44~@~28~@~최소 값이 낮은 범위 최대 값보다 클 수 없습니다, 수정할하고 다시 시도하십시오.
+778~@~45~@~28~@~낮은 범위의 최대 값은 중간 범위의 최대 값보다 클 수 없습니다, 수정할하고 다시 시도하십시오.
+779~@~46~@~28~@~중간 범위의 최대 값이 최대 값보다 클 수 없습니다, 수정할하고 다시 시도하십시오.
+780~@~47~@~28~@~비밀번호는 보호의 편의를에서 변경하시기 바랍니다 들어, %의 1 초 일이 변경되지 않았습니다.
+781~@~48~@~28~@~암호
+782~@~49~@~28~@~내 계정
+784~@~51~@~28~@~새 암호 * :
+785~@~52~@~28~@~비밀번호 * 확인 :
+786~@~53~@~28~@~힌트 질문
+787~@~54~@~28~@~질문 * :
+789~@~56~@~28~@~숨기기
+790~@~57~@~28~@~비밀번호를 입력하고 다시 시도하십시오.
+791~@~58~@~28~@~비밀번호를 확인하고 다시 시도하십시오.
+792~@~59~@~28~@~비밀번호가 업데이트되었습니다.
+793~@~60~@~28~@~암호를 업데이트 할 수 없습니다 다시 시도하십시오.
+794~@~61~@~28~@~힌트 질문을 선택하고 다시 시도하십시오.
+795~@~62~@~28~@~답변을 입력하고 다시 시도하십시오.
+796~@~63~@~28~@~Q & A 업데이트 성공적으로두기.
+797~@~64~@~28~@~힌트 Q & A를 업데이트 할 수 없습니다, 다시 시도하십시오.
+798~@~65~@~28~@~미국 영어 문화에 대한 행이 존재하는지 확인하고 다시 시도하십시오.
+799~@~66~@~28~@~까지 유효
+800~@~67~@~28~@~에서 변경
+801~@~68~@~28~@~귀하의 암호는 만료되었습니다. 당신이 암호를 변경하기 전까지는 시스템에 제한된 액세스 할 수 있습니다.
+802~@~69~@~28~@~비밀번호에는 적어도 하나의 대문자, 한 낮은 경우, 한 숫자 문자를 포함하는 8-32 자 사이 여야합니다.
+808~@~72~@~1~@~Please remove the search column "%1s" from referencing screen "%2s" and try again.
+809~@~73~@~1~@~Please remove the screen criteria column "%1s" from referencing screen "%2s" and try again.
+810~@~2~@~4~@~请不要指定任何特定的列或按钮，为这个事件，然后再试一次。
+811~@~4~@~4~@~请只为这个事件指定一个列，然后再试一次。
+812~@~11~@~4~@~请参照屏幕“％2秒”清除屏幕列“％1”，然后再试一次。
+813~@~72~@~4~@~请参照屏幕“％2秒”删除搜索栏“％1”，然后再试一次。
+814~@~73~@~4~@~请参照屏幕“％2秒”清除屏幕标准列“％1”，然后再试一次。
+815~@~2~@~28~@~이 이벤트에 대한 특정 열 또는 버튼을 지정하고 다시 시도하지 마십시오.
+816~@~4~@~28~@~만이 이벤트에 대한 열을 지정하고 다시 시도하십시오.
+817~@~11~@~28~@~참조 화면 "%의 2 초"에서 화면 열 "%의 1 초"를 제거하고 다시 시도하십시오.
+818~@~72~@~28~@~참조 화면 "%의 2 초"에서 검색 열 "%의 1 초"를 제거하고 다시 시도하십시오.
+819~@~73~@~28~@~참조 화면 "%의 2 초"에서 화면 기준 열 "%의 1 초"를 제거하고 다시 시도하십시오.
+820~@~1~@~114~@~Veuillez choisir une et une seule autorité par défaut et réessayer (% 1s).
+821~@~2~@~114~@~Veuillez ne spécifier aucune colonne ou bouton spécifique pour cet événement et réessayer.
+822~@~3~@~114~@~Veuillez uniquement spécifier un bouton système pour cet événement et réessayer.
+823~@~4~@~114~@~Veuillez uniquement spécifier une colonne pour cet événement et réessayer.
+824~@~5~@~114~@~Veuillez supprimer la règle Web de référence et réessayer.
+825~@~6~@~114~@~Veuillez supprimer la règle du client de référence et réessayer.
+826~@~8~@~114~@~Veuillez supprimer la règle du client de référence et réessayer.
+827~@~9~@~114~@~Veuillez supprimer la règle du client de référence et réessayer.
+828~@~10~@~114~@~Sybase n'autorise pas l'intégration du mot clé "exec" dans le nom de colonne "% 1s", veuillez réessayer.
+829~@~11~@~114~@~Veuillez supprimer la colonne d'écran "% 1s" de l'écran de référence "% 2s" et réessayer.
+830~@~12~@~114~@~Veuillez vous assurer qu'il y a une et une seule colonne de clé primaire et réessayer.
+831~@~13~@~114~@~Modifiez la colonne d'écran sur non obligatoire et réessayez s'il vous plaît.
+832~@~14~@~114~@~Veuillez saisir des nombres positifs pour les marges du rapport.
+833~@~15~@~114~@~Veuillez saisir des nombres positifs pour la largeur et la hauteur de la page du rapport.
+834~@~16~@~114~@~Veuillez saisir une largeur de page supérieure à la somme des marges gauche et droite.
+835~@~17~@~114~@~Veuillez saisir une hauteur de page supérieure à la somme des marges supérieure et inférieure.
+836~@~18~@~114~@~Veuillez ne pas supprimer le style car il est utilisé par l'élément de rapport.
+837~@~19~@~114~@~Veuillez ne pas supprimer le style car il est utilisé par l'élément de rapport.
+838~@~21~@~114~@~Veuillez entrer le nombre de lignes par défaut (1 - 200) pour ce type d'écran et réessayer.
+839~@~22~@~114~@~Veuillez vous assurer qu'il existe un et un seul corps pour le rapport «% 1s» et réessayer.
+840~@~23~@~114~@~Veuillez vous assurer qu'il n'y a pas plus d'un en-tête pour le rapport «% 1s» et réessayer.
+841~@~24~@~114~@~Veuillez vous assurer qu'il n'y a pas plus d'un pied de page pour le rapport «% 1s» et réessayer.
+842~@~25~@~114~@~Veuillez vous assurer que le corps de la page est "% 1s" pour le rapport "% 2s" et réessayer.
+843~@~26~@~114~@~Veuillez ne pas supprimer l'élément "% 1s" car il est utilisé par le contrôle de rapport.
+844~@~27~@~114~@~Veuillez vous assurer que la largeur du contrôle ne dépasse pas «% 1s» et réessayer.
+845~@~28~@~114~@~Veuillez vous assurer qu'au moins une colonne est sélectionnée comme critère et réessayer.
+846~@~29~@~114~@~Veuillez ne pas supprimer cette catégorie de données de rapport car elle est utilisée par le générateur de rapports.
+847~@~30~@~114~@~Veuillez vous assurer que tous les critères sélectionnés ont un opérateur assigné et réessayer.
+848~@~31~@~114~@~Veuillez vous assurer qu'au moins une colonne est sélectionnée comme affichage et réessayer.
+849~@~33~@~114~@~Veuillez noter que seuls les gabarits de rapport de jauge, de graphique, de liste, de tableau ou de document peuvent être générés pour l'instant.
+850~@~35~@~114~@~Ce nom de rapport est en cours d'utilisation, veuillez saisir un autre nom unique et réessayer.
+851~@~36~@~114~@~ID de rapport non valide en tant que QueryString rpt, veuillez rectifier et réessayer.
+852~@~37~@~114~@~Veuillez ne pas sauvegarder et restaurer pour le serveur Sybase cible pour l'instant.
+853~@~38~@~114~@~Veuillez vous assurer que le nom du modèle a une extension txt, rtf ou mht.
+854~@~39~@~114~@~Veuillez ne pas supprimer le modèle par défaut.
+855~@~40~@~114~@~Veuillez sélectionner une colonne pour la catégorie de cartographie et réessayer.
+856~@~41~@~114~@~Veuillez sélectionner une colonne scalaire pour représenter les valeurs et réessayer.
+857~@~42~@~114~@~Veuillez sélectionner un écran ou un rapport ou les deux en tant que sujet (s) pour attribuer ce remplacement d'autorité de ligne.
+858~@~43~@~114~@~Veuillez ne pas autoriser la sélection de colonnes sauf s'il s'agit d'une fusion de documents.
+859~@~44~@~114~@~La valeur minimale ne peut pas être supérieure à la valeur maximale de la plage inférieure, veuillez rectifier et réessayer.
+860~@~45~@~114~@~La valeur maximale de la plage inférieure ne peut pas être supérieure à la valeur maximale de la plage moyenne, veuillez rectifier et réessayer.
+861~@~46~@~114~@~La valeur maximale de la plage moyenne ne peut pas être supérieure à la valeur maximale, veuillez rectifier et réessayer.
+862~@~47~@~114~@~Votre mot de passe n'a pas été modifié depuis% 1s jours, pour votre protection, veuillez le changer à votre convenance.
+863~@~48~@~114~@~Mot de passe
+864~@~49~@~114~@~Mon compte
+865~@~51~@~114~@~Nouveau mot de passe*:
+866~@~52~@~114~@~Confirmez le mot de passe*:
+867~@~53~@~114~@~Question indice
+868~@~54~@~114~@~Question*:
+869~@~56~@~114~@~Cacher
+870~@~57~@~114~@~Veuillez saisir un mot de passe et réessayer.
+871~@~58~@~114~@~Veuillez confirmer le mot de passe et réessayer.
+872~@~59~@~114~@~Mot de passe mis à jour avec succès.
+873~@~60~@~114~@~Impossible de mettre à jour le mot de passe, veuillez réessayer.
+874~@~61~@~114~@~Veuillez sélectionner une question de conseil et réessayer.
+875~@~62~@~114~@~Veuillez entrer une réponse et réessayer.
+876~@~63~@~114~@~Astuce Q&A mis à jour avec succès.
+877~@~64~@~114~@~Impossible de mettre à jour l'indice Q&R, veuillez réessayer.
+878~@~65~@~114~@~Veuillez vous assurer qu'une ligne pour la culture anglaise américaine est présente et réessayer.
+879~@~66~@~114~@~Valable jusque
+880~@~67~@~114~@~Modifié le
+881~@~68~@~114~@~Votre mot de passe a expiré. Vous n'avez qu'un accès limité au système jusqu'à ce que vous changiez le mot de passe.
+882~@~69~@~114~@~Le mot de passe doit être composé de 8 à 32 caractères contenant au moins une majuscule, une minuscule et un caractère numérique.
+883~@~72~@~114~@~Veuillez supprimer la colonne de recherche "% 1s" de l'écran de référencement "% 2s" et réessayer.
+884~@~73~@~114~@~Veuillez supprimer la colonne des critères d'écran "% 1s" de l'écran de référence "% 2s" et réessayer.

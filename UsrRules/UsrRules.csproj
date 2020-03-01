@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.21022</ProductVersion>
@@ -107,10 +107,6 @@
     <Compile Include="UsrRule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common3\Common3.csproj">
-      <Project>{AEB74555-0049-4BE9-AED6-0B425B37BD66}</Project>
-      <Name>Common3</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UsrAccess\UsrAccess.csproj">
       <Project>{CEE68C9E-87C5-44C0-8578-7FEDFDF07EF2}</Project>
       <Name>UsrAccess</Name>

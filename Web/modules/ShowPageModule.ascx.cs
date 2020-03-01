@@ -89,7 +89,7 @@ namespace RO.Web
             SetSystem(SystemId);
             /* GetAdmPage115ById must match the AdmPage definition, thus changes there may invalidate this gary */
             dtPage = (new AdminSystem()).GetMstById("GetAdmStaticPg114ById", Request.QueryString["pg"].ToString().Split(new char[] { ',' }).First(), LcSysConnString, LcAppPw);
-            if (dtPage.Rows.Count == 0) { Response.Redirect(Config.OrdUrl); }
+            if (dtPage.Rows.Count == 0) { this.Redirect(Config.OrdUrl); }
             else
             {
                 string StaticCsId = (dtPage.Rows[0]["StaticCsId259"] ?? "").ToString();

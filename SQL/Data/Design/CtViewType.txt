@@ -1,0 +1,4 @@
+G~@~Grid View Only~@~40
+N~@~Not View Only~@~10
+T~@~Tab-folder View Only~@~30
+Y~@~Everything View Only~@~20

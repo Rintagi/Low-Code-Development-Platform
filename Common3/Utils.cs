@@ -118,10 +118,10 @@
             }
         }
 
-        public SerializableDictionary<TKey, TValue> Clone(Dictionary<TKey, TValue> mergeWith = null)
+        public SerializableDictionary<TKey, TValue> Clone(Dictionary<TKey, TValue> mergeWith = null, List<TKey> keys = null)
         {
             var x = CreateInstance(this);
-            if (mergeWith != null) mergeWith.ToList().ForEach(v => x[v.Key] = v.Value);
+            if (mergeWith != null) mergeWith.ToList().Where(v => keys == null || keys.Count == 0 || keys.Contains(v.Key)).ToList().ForEach(v => x[v.Key] = v.Value);
             return x;
         }
 
@@ -134,7 +134,6 @@
             get { return GetValue(key); }
             set { base[key] = value; }
         }
-
         #endregion
 
     }
@@ -183,6 +182,7 @@
         // Resize image into a thumnail.
         public static string BlobPlaceHolder(byte[] content, bool blobOnly = false)
         {
+            const int maxOriginalSize = 2000;
             Func<byte[], byte[]> tryResizeImage = (ba) =>
             {
                 try
@@ -195,38 +195,52 @@
                 }
             };
 
+            Func<string, string, byte[], string> makeInlineSrc = (mimeType, contentBase64, icon) =>
+            {
+                if (mimeType.Contains("image"))
+                {
+                    if (icon != null) return "data:application/base64;base64," + Convert.ToBase64String(icon);
+                    else if (mimeType.Contains("svg") && contentBase64.Length < maxOriginalSize) return "data:" + mimeType + ";base64," + contentBase64;
+                    else return "../images/DefaultImg.png";
+                }
+                else if (mimeType.Contains("pdf"))
+                {
+                    return "../images/pdfIcon.png";
+                }
+                else if (mimeType.Contains("word"))
+                {
+                    return "../images/wordIcon.png";
+                }
+                else if (mimeType.Contains("openxmlformats"))
+                {
+                    return "../images/ExcelIcon.png";
+                }
+                else
+                {
+                    return "../images/fileIcon.png";
+                }
+            };
+
             try
             {
                 string fileContent = DecodeFileStream(content);
                 System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                jss.MaxJsonLength = int.MaxValue;
                 try
                 {
                     FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
                     byte[] icon = tryResizeImage(Convert.FromBase64String(fileInfo.base64));
                     if (blobOnly)
                     {
-                        if (fileInfo.mimeType.Contains("image"))
-                        {
-                            return "data:application/base64;base64," + Convert.ToBase64String(icon);
-                        }
-                        else if (fileInfo.mimeType.Contains("pdf"))
-                        {
-                            return "../images/pdfIcon.png";
-                        }
-                        else if (fileInfo.mimeType.Contains("word"))
-                        {
-                            return "../images/wordIcon.png";
-                        }
-                        else if (fileInfo.mimeType.Contains("openxmlformats"))
-                        {
-                            return "../images/ExcelIcon.png";
-                        }
-                        else
-                        {
-                            return "../images/fileIcon.png";
-                        }
+                        return makeInlineSrc(fileInfo.mimeType, fileInfo.base64, icon);
                     }
-                    else return jss.Serialize(new FileUploadObj() { icon = icon != null ? Convert.ToBase64String(icon) : null, mimeType = fileInfo.mimeType, lastModified = fileInfo.lastModified, fileName = fileInfo.fileName });
+                    else return jss.Serialize(new FileUploadObj() { 
+                        icon = icon != null 
+                            ? Convert.ToBase64String(icon)
+                                    : (fileInfo.mimeType.Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64 : null),
+                        mimeType = fileInfo.mimeType, 
+                        lastModified = fileInfo.lastModified, 
+                        fileName = fileInfo.fileName });
                 }
                 catch
                 {
@@ -239,28 +253,15 @@
                             byte[] icon = tryResizeImage(Convert.FromBase64String(fileInfo.base64));
                             if (blobOnly)
                             {
-                                if (fileInfo.mimeType.Contains("image"))
-                                {
-                                    return "data:application/base64;base64," + Convert.ToBase64String(icon);
-                                }
-                                else if (fileInfo.mimeType.Contains("pdf"))
-                                {
-                                    return "../images/pdfIcon.png";
-                                }
-                                else if (fileInfo.mimeType.Contains("word"))
-                                {
-                                    return "../images/wordIcon.png";
-                                }
-                                else if (fileInfo.mimeType.Contains("openxmlformats"))
-                                {
-                                    return "../images/ExcelIcon.png";
-                                }
-                                else
-                                {
-                                    return "../images/fileIcon.png";
-                                }
+                                return makeInlineSrc(fileInfo.mimeType, fileInfo.base64, icon);
                             }
-                            x.Add(new FileUploadObj() { icon = icon != null ? Convert.ToBase64String(icon) : null, mimeType = fileInfo.mimeType, lastModified = fileInfo.lastModified, fileName = fileInfo.fileName });
+                            x.Add(new FileUploadObj() {
+                                icon = icon != null
+                                    ? Convert.ToBase64String(icon)
+                                    : (fileInfo.mimeType.Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64 : null),
+                                mimeType = fileInfo.mimeType, 
+                                lastModified = fileInfo.lastModified, 
+                                fileName = fileInfo.fileName });
                         }
                         if (blobOnly && fileList.Count == 0) return null;
                         else return jss.Serialize(x);
@@ -269,7 +270,11 @@
                     {
                         byte[] icon = tryResizeImage(Convert.FromBase64String(fileContent));
                         if (blobOnly) return "data:application/base64;base64," + Convert.ToBase64String(icon);
-                        else return jss.Serialize(new List<FileUploadObj>() { new FileUploadObj() { icon = icon != null ? Convert.ToBase64String(icon) : null, mimeType = "image/jpeg", fileName = "image" } });
+                        else return jss.Serialize(new List<FileUploadObj>() { 
+                            new FileUploadObj() { 
+                                icon = icon != null ? Convert.ToBase64String(icon) : null, 
+                                mimeType = "image/jpeg", 
+                                fileName = "image" } });
                     }
                 }
             }
@@ -354,6 +359,7 @@
             {
                 string fileContent = DecodeFileStream(content);
                 System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                jss.MaxJsonLength = int.MaxValue;
                 try
                 {
                     FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
@@ -711,6 +717,47 @@
             { return Decimal.Parse(ss, System.Globalization.NumberStyles.Any).ToString("g", new System.Globalization.CultureInfo(culture)); }
             else { return Decimal.Parse(ss, System.Globalization.NumberStyles.Any).ToString("#############0." + string.Empty.PadRight(int.Parse(ColumnScale), Convert.ToChar(48))); }
         }
+        public static string normalizeUrlPath(string urlPath)
+        {
+            return new Regex("/+").Replace(urlPath, "/");
+        }
+        public static string transformProxyUrl(string url, Dictionary<string, string> requestHeader)
+        {
+            string xForwardedFor = requestHeader.ContainsKey("X-Forwarded-For") ? requestHeader["X-Forwarded-For"] : null;
+            string xOriginalUrl = requestHeader.ContainsKey("X-Orginal-Url") ? requestHeader["X-Orginal-Url"] : null;
+            string xForwardedProto = requestHeader.ContainsKey("X-Forwarded-Proto") ? requestHeader["X-Forwarded-Proto"] : null;
+            string xForwardedHttps = requestHeader.ContainsKey("X-Forwarded-Https") ? requestHeader["X-Forwarded-Https"] : null;
+            string xForwardedHost = requestHeader.ContainsKey("X-Forwarded-Host") ? requestHeader["X-Forwarded-Host"] : null;
+            string host = requestHeader["Host"];
+            string appPath = requestHeader["ApplicationPath"];
+            bool isProxy = !string.IsNullOrEmpty(xForwardedFor);
+            string extBasePath = Config.ExtBasePath;
+            string extDomain = Config.ExtDomain;
+            string extBaseUrl = !string.IsNullOrEmpty(Config.ExtBaseUrl)
+                    ? Config.ExtBaseUrl
+                    : (!string.IsNullOrEmpty(xForwardedHost)
+                        ? (xForwardedHttps == "on" || xForwardedProto == "https" ? "https:" : "http") + "://" + xForwardedHost + extBasePath
+                    : ""
+                    );
+
+            if (!string.IsNullOrEmpty(extBasePath)
+                && !string.IsNullOrEmpty(extBaseUrl)
+                )
+            {
+                var rx = url.ToLower().StartsWith("http")
+                        ? new Regex("^https?://" + host + appPath, RegexOptions.IgnoreCase)
+                        : new Regex("^" + appPath, RegexOptions.IgnoreCase);
+
+                string extUrl = url.StartsWith("/") || url.ToLower().StartsWith("http")
+                    ? rx.Replace(url, extBaseUrl + (appPath == "/" ? "/" : ""))
+                                : extBaseUrl + "/" + url;
+                return extUrl;
+            }
+            else
+            {
+                return url;
+            }
+        }
 
         public static string evalExpr(string expr)
         {
@@ -1032,9 +1079,13 @@
 
         public static void JFileUnzip(string zipFileName, string destinationPath)
         {
+            if (Directory.Exists(destinationPath))
+            {
+                DirectoryCleanup(destinationPath, "*.tmp", true);
+            }
             using (Ionic.Zip.ZipFile zipFile = new Ionic.Zip.ZipFile(zipFileName, System.Text.Encoding.UTF8))
             {
-                zipFile.ExtractAll(destinationPath);
+                zipFile.ExtractAll(destinationPath, Ionic.Zip.ExtractExistingFileAction.OverwriteSilently);
             }
         }
         public static DateTime NextTargetDate(DateTime now, int? year, int? month, int? day, byte? dow)
@@ -1285,10 +1336,30 @@
             return e.EncodeLicenseString(licenseJSON, installID, appId, encrypt, perInstance, signerFile);
         }
 
+        public static Tuple<string, bool, string> DecodeLicense(string licenseString)
+        {
+            RO.Common3.Encryption e = new RO.Common3.Encryption();
+            return e.DecodeLicenseString(licenseString);
+        }
+        public static Dictionary<string, Dictionary<string, string>> DecodeLicenseDetail(string licenseJSON)
+        {
+            RO.Common3.Encryption e = new RO.Common3.Encryption();
+            return e.DecodeLicenseDetail(licenseJSON);
+        }
         public static Tuple<string, string, bool> CheckValidLicense(string moduleName, string resourceName)
         {
             RO.Common3.Encryption e = new RO.Common3.Encryption();
             return new Tuple<string, string, bool>(e.GetInstallID(), e.GetAppID(), e.CheckValidLicense(moduleName,resourceName));
+        }
+        public static bool IsFullyLicense(string moduleName, string resourceName)
+        {
+            RO.Common3.Encryption e = new RO.Common3.Encryption();
+            return e.CheckValidLicense(moduleName, resourceName);
+        }
+        public static string RenewLicense(string LicenseServerEndPoint = null)
+        {
+            RO.Common3.Encryption e = new RO.Common3.Encryption();
+            return e.RenewLicense(LicenseServerEndPoint);
         }
 
         public static List<DataStructure> AnalyseExcelData(DataTable dtImp, int rowsToExamine)
@@ -1366,7 +1437,44 @@
             return (from x in columns where !string.IsNullOrEmpty(x.ColumnName) select x).ToList();
         }
 
-        public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        public static void DirectoryCleanup(string sourceDirName, string searchPattern, bool recursve = false)
+        {
+            if (string.IsNullOrEmpty(searchPattern)) return;
+
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+            if (!dir.Exists)
+            {
+                return;
+            }
+
+            // Get the files in the directory and delete
+            FileInfo[] files = dir.GetFiles(searchPattern);
+            foreach (FileInfo file in files)
+            {
+                try
+                {
+                    File.Delete(file.FullName);
+                }
+                catch
+                { }
+            }
+
+            if (recursve)
+            {
+                // Get the subdirectories for the specified directory.
+                try
+                {
+                    DirectoryInfo[] dirs = dir.GetDirectories();
+                    foreach (DirectoryInfo subdir in dirs)
+                    {
+                        DirectoryCleanup(subdir.FullName, searchPattern, recursve);
+                    }
+                }
+                catch { }
+            }
+        }
+        public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs, bool overwrite = false)
         {
             // Get the subdirectories for the specified directory.
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
@@ -1390,7 +1498,7 @@
             foreach (FileInfo file in files)
             {
                 string temppath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(temppath, false);
+                file.CopyTo(temppath, overwrite);
             }
 
             // If copying subdirectories, copy them and their contents to new location.
@@ -1399,7 +1507,7 @@
                 foreach (DirectoryInfo subdir in dirs)
                 {
                     string temppath = Path.Combine(destDirName, subdir.Name);
-                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                    DirectoryCopy(subdir.FullName, temppath, copySubDirs, overwrite);
                 }
             }
         }
@@ -1598,6 +1706,14 @@
             return securePassword;
         }
 
+        public static void NeverThrow(Exception ex)
+        {
+            if (ex == null && ex != null) throw ex;
+        }
+        public static void AlwaysThrow(Exception ex)
+        {
+            if (ex != null) throw ex;
+        }
         // Should only execute this on the client tier:
         //public static System.Collections.ArrayList GetSheetNames(string fileFullName)
         //{

@@ -1,0 +1,10 @@
+1~@~Default: Column  1 to 12 of 12~@~D~@~78~@~margin-top:30px; border-spacing: 3px 0;
+2~@~Footer: Column  1 to 12 of 12~@~F~@~78~@~
+3~@~Header: Column  1 to  3 of 12~@~H~@~24~@~
+4~@~Header: Column  4 to 12 of 12~@~H~@~72~@~
+5~@~Header: Column  5 to 12 of 12~@~H~@~68~@~
+6~@~Header: Column  1 to 12 of 12~@~H~@~78~@~
+7~@~Header: Column  1 to  4 of 12~@~H~@~34~@~
+9~@~Header: Column  9 to 12 of 12~@~H~@~42~@~
+10~@~Header: Column 11 to 12 of 12~@~H~@~23~@~
+11~@~Footer: Column  5 to 12 of 12~@~F~@~68~@~

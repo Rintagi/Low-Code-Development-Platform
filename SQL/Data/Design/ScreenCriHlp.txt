@@ -1,0 +1,540 @@
+2~@~AdmReportGrp    10: Report (en-US)~@~2~@~1~@~Report
+3~@~AdmScreenCri    10: Screen (en-US)~@~3~@~1~@~Screen
+4~@~AdmReportCri    10: Report (en-US)~@~4~@~1~@~Report
+9~@~AdmClientRule    10: Screen (en-US)~@~9~@~1~@~Screen
+10~@~AdmClientRule    30: Culture (en-US)~@~10~@~1~@~Culture
+11~@~AdmClientRule    20: Report (en-US)~@~11~@~1~@~Report
+13~@~AdmReportObj    10: Report (en-US)~@~13~@~1~@~Report
+15~@~AdmWebRule    10: Screen (en-US)~@~15~@~1~@~Screen
+16~@~AdmServerRule    10: Screen (en-US)~@~16~@~1~@~Screen
+17~@~AdmWizardRule    10: Wizard (en-US)~@~17~@~1~@~Wizard
+18~@~AdmCtButtonHlp    10: Culture (en-US)~@~18~@~1~@~Culture
+19~@~AdmButtonHlp    10: Culture (en-US)~@~19~@~1~@~Culture
+22~@~AdmUsr    10: Email Address (en-US)~@~22~@~1~@~Email Address
+23~@~AdmUsr    20: User Name (en-US)~@~23~@~1~@~User Name
+24~@~AdmUsr    30: User Group (en-US)~@~24~@~1~@~User Group
+25~@~AdmDbTable    10: Table Name (en-US)~@~25~@~1~@~Table Name
+27~@~AdmReportGrp    10: Report (zh-CN)~@~2~@~4~@~报告
+28~@~AdmScreenCri    10: Screen (zh-CN)~@~3~@~4~@~屏幕
+29~@~AdmReportCri    10: Report (zh-CN)~@~4~@~4~@~报告
+31~@~AdmClientRule    10: Screen (zh-CN)~@~9~@~4~@~屏幕
+32~@~AdmClientRule    30: Culture (zh-CN)~@~10~@~4~@~文化
+33~@~AdmClientRule    20: Report (zh-CN)~@~11~@~4~@~报告
+35~@~AdmReportObj    10: Report (zh-CN)~@~13~@~4~@~报告
+36~@~AdmWebRule    10: Screen (zh-CN)~@~15~@~4~@~屏幕
+37~@~AdmServerRule    10: Screen (zh-CN)~@~16~@~4~@~屏幕
+38~@~AdmWizardRule    10: Wizard (zh-CN)~@~17~@~4~@~男巫
+39~@~AdmCtButtonHlp    10: Culture (zh-CN)~@~18~@~4~@~文化
+40~@~AdmButtonHlp    10: Culture (zh-CN)~@~19~@~4~@~文化
+43~@~AdmUsr    10: Email Address (zh-CN)~@~22~@~4~@~电子邮址
+44~@~AdmUsr    20: User Name (zh-CN)~@~23~@~4~@~用户名称
+45~@~AdmUsr    30: User Group (zh-CN)~@~24~@~4~@~用户组
+46~@~AdmDbTable    10: Table Name (zh-CN)~@~25~@~4~@~表名称
+48~@~AdmReportGrp    10: Report (fr-FR)~@~2~@~2~@~Rapport
+49~@~AdmScreenCri    10: Screen (fr-FR)~@~3~@~2~@~Écran
+50~@~AdmReportCri    10: Report (fr-FR)~@~4~@~2~@~Rapport
+52~@~AdmClientRule    10: Screen (fr-FR)~@~9~@~2~@~Écran
+53~@~AdmClientRule    30: Culture (fr-FR)~@~10~@~2~@~Culture
+54~@~AdmClientRule    20: Report (fr-FR)~@~11~@~2~@~Rapport
+56~@~AdmReportObj    10: Report (fr-FR)~@~13~@~2~@~Rapport
+57~@~AdmWebRule    10: Screen (fr-FR)~@~15~@~2~@~Écran
+58~@~AdmServerRule    10: Screen (fr-FR)~@~16~@~2~@~Écran
+59~@~AdmWizardRule    10: Wizard (fr-FR)~@~17~@~2~@~Magicien
+60~@~AdmCtButtonHlp    10: Culture (fr-FR)~@~18~@~2~@~Culture
+61~@~AdmButtonHlp    10: Culture (fr-FR)~@~19~@~2~@~Culture
+64~@~AdmUsr    10: Email Address (fr-FR)~@~22~@~2~@~Email address
+65~@~AdmUsr    20: User Name (fr-FR)~@~23~@~2~@~Nom d'utilisateur
+66~@~AdmUsr    30: User Group (fr-FR)~@~24~@~2~@~Groupe d'utilisateur
+67~@~AdmDbTable    10: Table Name (fr-FR)~@~25~@~2~@~Nom de Tableau
+69~@~AdmMsgCenter    20: Source (en-US)~@~27~@~1~@~Source
+70~@~AdmMsgCenter    10: Message Id (en-US)~@~28~@~1~@~Message Id
+71~@~AdmRptCtr    10: Report (en-US)~@~29~@~1~@~Report
+72~@~AdmRptElm    10: Report (en-US)~@~30~@~1~@~Report
+73~@~AdmRptTbl    20: Report Control (en-US)~@~31~@~1~@~Report Control
+74~@~AdmRptStyle    10: Default Style (en-US)~@~32~@~1~@~Default Style
+76~@~AdmRptTbl    10: Report (en-US)~@~34~@~1~@~Report
+77~@~AdmRelease    10: Releases On or After (en-US)~@~35~@~1~@~Releases On or After
+78~@~AdmRelease    20: Entity (en-US)~@~36~@~1~@~Entity
+79~@~AdmRelease    30: Release Type (en-US)~@~37~@~1~@~Release Type
+80~@~AdmRowOvrd    10: Screen (en-US)~@~38~@~1~@~Screen
+81~@~AdmRowOvrd    10: Screen (zh-CN)~@~38~@~4~@~屏幕
+82~@~AdmRowOvrd    10: Screen (fr-FR)~@~38~@~2~@~Écran
+83~@~AdmRowOvrd    20: Report (en-US)~@~39~@~1~@~Report
+88~@~AdmDbTable    20: Table Description (en-US)~@~42~@~1~@~Table Description
+91~@~AdmMsgCenter    20: Source (zh-CN)~@~27~@~4~@~来源
+92~@~AdmMsgCenter    10: Message Id (zh-CN)~@~28~@~4~@~消息ID
+93~@~AdmRptCtr    10: Report (zh-CN)~@~29~@~4~@~报告
+94~@~AdmRptElm    10: Report (zh-CN)~@~30~@~4~@~报告
+95~@~AdmRptTbl    20: Report Control (zh-CN)~@~31~@~4~@~报告控制
+96~@~AdmRptStyle    10: Default Style (zh-CN)~@~32~@~4~@~默认风格
+97~@~AdmRptTbl    10: Report (zh-CN)~@~34~@~4~@~报告
+98~@~AdmRelease    10: Releases On or After (zh-CN)~@~35~@~4~@~发布或之后
+99~@~AdmRelease    20: Entity (zh-CN)~@~36~@~4~@~实体
+100~@~AdmRelease    30: Release Type (zh-CN)~@~37~@~4~@~发布类型
+101~@~AdmRowOvrd    20: Report (zh-CN)~@~39~@~4~@~报告
+104~@~AdmDbTable    20: Table Description (zh-CN)~@~42~@~4~@~表说明
+107~@~AdmMsgCenter    20: Source (fr-FR)~@~27~@~2~@~Source
+108~@~AdmMsgCenter    10: Message Id (fr-FR)~@~28~@~2~@~Message Id
+109~@~AdmRptCtr    10: Report (fr-FR)~@~29~@~2~@~Rapport
+110~@~AdmRptElm    10: Report (fr-FR)~@~30~@~2~@~Rapport
+111~@~AdmRptTbl    20: Report Control (fr-FR)~@~31~@~2~@~Rapport de contrôle
+112~@~AdmRptStyle    10: Default Style (fr-FR)~@~32~@~2~@~Style par défaut
+113~@~AdmRptTbl    10: Report (fr-FR)~@~34~@~2~@~Rapport
+114~@~AdmRelease    10: Releases On or After (fr-FR)~@~35~@~2~@~Communiqués de presse le ou après le
+115~@~AdmRelease    20: Entity (fr-FR)~@~36~@~2~@~Entité
+116~@~AdmRelease    30: Release Type (fr-FR)~@~37~@~2~@~Type de sortie
+117~@~AdmRowOvrd    20: Report (fr-FR)~@~39~@~2~@~Rapport
+120~@~AdmDbTable    20: Table Description (fr-FR)~@~42~@~2~@~Description Table
+122~@~AdmAppItem    10: Script contains (en-US)~@~44~@~1~@~Script contains
+126~@~AdmAppItem    10: Script contains (zh-CN)~@~44~@~4~@~脚本包含
+127~@~AdmAppItem    10: Script contains (fr-FR)~@~44~@~2~@~Script contient
+129~@~AdmReportGrp    10: Report (hi-IN)~@~2~@~8~@~रिपोर्ट
+130~@~AdmScreenCri    10: Screen (hi-IN)~@~3~@~8~@~परदा
+131~@~AdmReportCri    10: Report (hi-IN)~@~4~@~8~@~रिपोर्ट
+133~@~AdmClientRule    10: Screen (hi-IN)~@~9~@~8~@~परदा
+134~@~AdmClientRule    30: Culture (hi-IN)~@~10~@~8~@~संस्कृति
+135~@~AdmClientRule    20: Report (hi-IN)~@~11~@~8~@~रिपोर्ट
+137~@~AdmReportObj    10: Report (hi-IN)~@~13~@~8~@~रिपोर्ट
+138~@~AdmWebRule    10: Screen (hi-IN)~@~15~@~8~@~परदा
+139~@~AdmServerRule    10: Screen (hi-IN)~@~16~@~8~@~परदा
+140~@~AdmWizardRule    10: Wizard (hi-IN)~@~17~@~8~@~जादूगर
+141~@~AdmCtButtonHlp    10: Culture (hi-IN)~@~18~@~8~@~संस्कृति
+142~@~AdmButtonHlp    10: Culture (hi-IN)~@~19~@~8~@~संस्कृति
+143~@~AdmUsr    10: Email Address (hi-IN)~@~22~@~8~@~ईमेल पता
+144~@~AdmUsr    20: User Name (hi-IN)~@~23~@~8~@~उपयोगकर्ता नाम
+145~@~AdmUsr    30: User Group (hi-IN)~@~24~@~8~@~उपयोगकर्ता समूह
+146~@~AdmDbTable    10: Table Name (hi-IN)~@~25~@~8~@~तालिका का नाम
+148~@~AdmMsgCenter    20: Source (hi-IN)~@~27~@~8~@~स्रोत
+149~@~AdmMsgCenter    10: Message Id (hi-IN)~@~28~@~8~@~संदेश आईडी
+150~@~AdmRptCtr    10: Report (hi-IN)~@~29~@~8~@~रिपोर्ट
+151~@~AdmRptElm    10: Report (hi-IN)~@~30~@~8~@~रिपोर्ट
+152~@~AdmRptTbl    20: Report Control (hi-IN)~@~31~@~8~@~रिपोर्ट नियंत्रण
+153~@~AdmRptStyle    10: Default Style (hi-IN)~@~32~@~8~@~डिफ़ॉल्ट पहनाव
+154~@~AdmRptTbl    10: Report (hi-IN)~@~34~@~8~@~रिपोर्ट
+155~@~AdmRelease    10: Releases On or After (hi-IN)~@~35~@~8~@~या को विज्ञप्ति के बाद
+156~@~AdmRelease    20: Entity (hi-IN)~@~36~@~8~@~इकाई
+157~@~AdmRelease    30: Release Type (hi-IN)~@~37~@~8~@~रिलीज के प्रकार
+158~@~AdmRowOvrd    10: Screen (hi-IN)~@~38~@~8~@~परदा
+159~@~AdmRowOvrd    20: Report (hi-IN)~@~39~@~8~@~रिपोर्ट
+162~@~AdmDbTable    20: Table Description (hi-IN)~@~42~@~8~@~तालिका विवरण
+164~@~AdmAppItem    10: Script contains (hi-IN)~@~44~@~8~@~स्क्रिप्ट शामिल
+167~@~AdmReportGrp    10: Report (pt-BR)~@~2~@~9~@~Relatório
+168~@~AdmScreenCri    10: Screen (pt-BR)~@~3~@~9~@~Tela
+169~@~AdmReportCri    10: Report (pt-BR)~@~4~@~9~@~Relatório
+171~@~AdmClientRule    10: Screen (pt-BR)~@~9~@~9~@~Tela
+172~@~AdmClientRule    30: Culture (pt-BR)~@~10~@~9~@~Cultura
+173~@~AdmClientRule    20: Report (pt-BR)~@~11~@~9~@~Relatório
+175~@~AdmReportObj    10: Report (pt-BR)~@~13~@~9~@~Relatório
+176~@~AdmWebRule    10: Screen (pt-BR)~@~15~@~9~@~Tela
+177~@~AdmServerRule    10: Screen (pt-BR)~@~16~@~9~@~Tela
+178~@~AdmWizardRule    10: Wizard (pt-BR)~@~17~@~9~@~Feiticeiro
+179~@~AdmCtButtonHlp    10: Culture (pt-BR)~@~18~@~9~@~Cultura
+180~@~AdmButtonHlp    10: Culture (pt-BR)~@~19~@~9~@~Cultura
+181~@~AdmUsr    10: Email Address (pt-BR)~@~22~@~9~@~Endereço de e-mail
+182~@~AdmUsr    20: User Name (pt-BR)~@~23~@~9~@~Nome de usuário
+183~@~AdmUsr    30: User Group (pt-BR)~@~24~@~9~@~Grupo de Usuários
+184~@~AdmDbTable    10: Table Name (pt-BR)~@~25~@~9~@~Nome da tabela
+186~@~AdmMsgCenter    20: Source (pt-BR)~@~27~@~9~@~Fonte
+187~@~AdmMsgCenter    10: Message Id (pt-BR)~@~28~@~9~@~Id mensagem
+188~@~AdmRptCtr    10: Report (pt-BR)~@~29~@~9~@~Relatório
+189~@~AdmRptElm    10: Report (pt-BR)~@~30~@~9~@~Relatório
+190~@~AdmRptTbl    20: Report Control (pt-BR)~@~31~@~9~@~Relatório de Controle
+191~@~AdmRptStyle    10: Default Style (pt-BR)~@~32~@~9~@~Estilo padrão
+192~@~AdmRptTbl    10: Report (pt-BR)~@~34~@~9~@~Relatório
+193~@~AdmRelease    10: Releases On or After (pt-BR)~@~35~@~9~@~Lançamentos Em ou Depois
+194~@~AdmRelease    20: Entity (pt-BR)~@~36~@~9~@~Entidade
+195~@~AdmRelease    30: Release Type (pt-BR)~@~37~@~9~@~Tipo de lançamento
+196~@~AdmRowOvrd    10: Screen (pt-BR)~@~38~@~9~@~Tela
+197~@~AdmRowOvrd    20: Report (pt-BR)~@~39~@~9~@~Relatório
+198~@~AdmDbTable    20: Table Description (pt-BR)~@~42~@~9~@~Descrição tabela
+200~@~AdmAppItem    10: Script contains (pt-BR)~@~44~@~9~@~Script contém
+203~@~AdmReportGrp    10: Report (tr-TR)~@~2~@~11~@~Rapor
+204~@~AdmScreenCri    10: Screen (tr-TR)~@~3~@~11~@~Ekran
+205~@~AdmReportCri    10: Report (tr-TR)~@~4~@~11~@~Rapor
+207~@~AdmClientRule    10: Screen (tr-TR)~@~9~@~11~@~Ekran
+208~@~AdmClientRule    30: Culture (tr-TR)~@~10~@~11~@~Kültür
+209~@~AdmClientRule    20: Report (tr-TR)~@~11~@~11~@~Rapor
+211~@~AdmReportObj    10: Report (tr-TR)~@~13~@~11~@~Rapor
+212~@~AdmWebRule    10: Screen (tr-TR)~@~15~@~11~@~Ekran
+213~@~AdmServerRule    10: Screen (tr-TR)~@~16~@~11~@~Ekran
+214~@~AdmWizardRule    10: Wizard (tr-TR)~@~17~@~11~@~Sihirbaz
+215~@~AdmCtButtonHlp    10: Culture (tr-TR)~@~18~@~11~@~Kültür
+216~@~AdmButtonHlp    10: Culture (tr-TR)~@~19~@~11~@~Kültür
+217~@~AdmUsr    10: Email Address (tr-TR)~@~22~@~11~@~E-posta Adresi
+218~@~AdmUsr    20: User Name (tr-TR)~@~23~@~11~@~Kullanıcı adı
+219~@~AdmUsr    30: User Group (tr-TR)~@~24~@~11~@~Kullanıcı Grubu
+220~@~AdmDbTable    10: Table Name (tr-TR)~@~25~@~11~@~Tablo Adı
+222~@~AdmMsgCenter    20: Source (tr-TR)~@~27~@~11~@~Kaynak
+223~@~AdmMsgCenter    10: Message Id (tr-TR)~@~28~@~11~@~Mesaj Kimliği
+224~@~AdmRptCtr    10: Report (tr-TR)~@~29~@~11~@~Rapor
+225~@~AdmRptElm    10: Report (tr-TR)~@~30~@~11~@~Rapor
+226~@~AdmRptTbl    20: Report Control (tr-TR)~@~31~@~11~@~Rapor Kontrol
+227~@~AdmRptStyle    10: Default Style (tr-TR)~@~32~@~11~@~Default Style
+228~@~AdmRptTbl    10: Report (tr-TR)~@~34~@~11~@~Rapor
+229~@~AdmRelease    10: Releases On or After (tr-TR)~@~35~@~11~@~Açık veya sonra Bültenleri
+230~@~AdmRelease    20: Entity (tr-TR)~@~36~@~11~@~Varlık
+231~@~AdmRelease    30: Release Type (tr-TR)~@~37~@~11~@~Yayın Türü
+232~@~AdmRowOvrd    10: Screen (tr-TR)~@~38~@~11~@~Ekran
+233~@~AdmRowOvrd    20: Report (tr-TR)~@~39~@~11~@~Rapor
+234~@~AdmDbTable    20: Table Description (tr-TR)~@~42~@~11~@~Tablo Açıklama
+236~@~AdmAppItem    10: Script contains (tr-TR)~@~44~@~11~@~Komut dosyası içeren
+239~@~AdmReportGrp    10: Report (ja-JP)~@~2~@~14~@~レポート
+240~@~AdmScreenCri    10: Screen (ja-JP)~@~3~@~14~@~スクリーン
+241~@~AdmReportCri    10: Report (ja-JP)~@~4~@~14~@~レポート
+243~@~AdmClientRule    10: Screen (ja-JP)~@~9~@~14~@~スクリーン
+244~@~AdmClientRule    30: Culture (ja-JP)~@~10~@~14~@~文化
+245~@~AdmClientRule    20: Report (ja-JP)~@~11~@~14~@~レポート
+247~@~AdmReportObj    10: Report (ja-JP)~@~13~@~14~@~レポート
+248~@~AdmWebRule    10: Screen (ja-JP)~@~15~@~14~@~スクリーン
+249~@~AdmServerRule    10: Screen (ja-JP)~@~16~@~14~@~スクリーン
+250~@~AdmWizardRule    10: Wizard (ja-JP)~@~17~@~14~@~ウィザード
+251~@~AdmCtButtonHlp    10: Culture (ja-JP)~@~18~@~14~@~文化
+252~@~AdmButtonHlp    10: Culture (ja-JP)~@~19~@~14~@~文化
+253~@~AdmUsr    10: Email Address (ja-JP)~@~22~@~14~@~メールアドレス
+254~@~AdmUsr    20: User Name (ja-JP)~@~23~@~14~@~ユーザ名
+255~@~AdmUsr    30: User Group (ja-JP)~@~24~@~14~@~ユーザグループ
+256~@~AdmDbTable    10: Table Name (ja-JP)~@~25~@~14~@~テーブル名
+258~@~AdmMsgCenter    20: Source (ja-JP)~@~27~@~14~@~元
+259~@~AdmMsgCenter    10: Message Id (ja-JP)~@~28~@~14~@~メッセージID
+260~@~AdmRptCtr    10: Report (ja-JP)~@~29~@~14~@~レポート
+261~@~AdmRptElm    10: Report (ja-JP)~@~30~@~14~@~レポート
+262~@~AdmRptTbl    20: Report Control (ja-JP)~@~31~@~14~@~レポートコントロール
+263~@~AdmRptStyle    10: Default Style (ja-JP)~@~32~@~14~@~デフォルトのスタイル
+264~@~AdmRptTbl    10: Report (ja-JP)~@~34~@~14~@~レポート
+265~@~AdmRelease    10: Releases On or After (ja-JP)~@~35~@~14~@~以降のリリース
+266~@~AdmRelease    20: Entity (ja-JP)~@~36~@~14~@~エンティティ
+267~@~AdmRelease    30: Release Type (ja-JP)~@~37~@~14~@~リリースの種類
+268~@~AdmRowOvrd    10: Screen (ja-JP)~@~38~@~14~@~スクリーン
+269~@~AdmRowOvrd    20: Report (ja-JP)~@~39~@~14~@~レポート
+270~@~AdmDbTable    20: Table Description (ja-JP)~@~42~@~14~@~表の説明
+272~@~AdmAppItem    10: Script contains (ja-JP)~@~44~@~14~@~スクリプトが含まれています
+275~@~AdmReportGrp    10: Report (ru-RU)~@~2~@~12~@~Отчет
+276~@~AdmScreenCri    10: Screen (ru-RU)~@~3~@~12~@~Экран
+277~@~AdmReportCri    10: Report (ru-RU)~@~4~@~12~@~Отчет
+279~@~AdmClientRule    10: Screen (ru-RU)~@~9~@~12~@~Экран
+280~@~AdmClientRule    30: Culture (ru-RU)~@~10~@~12~@~Культура
+281~@~AdmClientRule    20: Report (ru-RU)~@~11~@~12~@~Отчет
+283~@~AdmReportObj    10: Report (ru-RU)~@~13~@~12~@~Отчет
+284~@~AdmWebRule    10: Screen (ru-RU)~@~15~@~12~@~Экран
+285~@~AdmServerRule    10: Screen (ru-RU)~@~16~@~12~@~Экран
+286~@~AdmWizardRule    10: Wizard (ru-RU)~@~17~@~12~@~Мастер
+287~@~AdmCtButtonHlp    10: Culture (ru-RU)~@~18~@~12~@~Культура
+288~@~AdmButtonHlp    10: Culture (ru-RU)~@~19~@~12~@~Культура
+289~@~AdmUsr    10: Email Address (ru-RU)~@~22~@~12~@~Адрес электронной почты
+290~@~AdmUsr    20: User Name (ru-RU)~@~23~@~12~@~Имя пользователя
+291~@~AdmUsr    30: User Group (ru-RU)~@~24~@~12~@~Группа пользователей
+292~@~AdmDbTable    10: Table Name (ru-RU)~@~25~@~12~@~Имя таблицы
+294~@~AdmMsgCenter    20: Source (ru-RU)~@~27~@~12~@~Источник
+295~@~AdmMsgCenter    10: Message Id (ru-RU)~@~28~@~12~@~Идентификатор сообщения
+296~@~AdmRptCtr    10: Report (ru-RU)~@~29~@~12~@~Отчет
+297~@~AdmRptElm    10: Report (ru-RU)~@~30~@~12~@~Отчет
+298~@~AdmRptTbl    20: Report Control (ru-RU)~@~31~@~12~@~Доклада о борьбе
+299~@~AdmRptStyle    10: Default Style (ru-RU)~@~32~@~12~@~Обычный стиль
+300~@~AdmRptTbl    10: Report (ru-RU)~@~34~@~12~@~Отчет
+301~@~AdmRelease    10: Releases On or After (ru-RU)~@~35~@~12~@~Релизы В течение или после
+302~@~AdmRelease    20: Entity (ru-RU)~@~36~@~12~@~Сущность
+303~@~AdmRelease    30: Release Type (ru-RU)~@~37~@~12~@~Тип релиза
+304~@~AdmRowOvrd    10: Screen (ru-RU)~@~38~@~12~@~Экран
+305~@~AdmRowOvrd    20: Report (ru-RU)~@~39~@~12~@~Отчет
+306~@~AdmDbTable    20: Table Description (ru-RU)~@~42~@~12~@~Таблица Описание
+308~@~AdmAppItem    10: Script contains (ru-RU)~@~44~@~12~@~Сценарий содержит
+311~@~AdmReportGrp    10: Report (es-ES)~@~2~@~13~@~Informe
+312~@~AdmScreenCri    10: Screen (es-ES)~@~3~@~13~@~Pantalla
+313~@~AdmReportCri    10: Report (es-ES)~@~4~@~13~@~Informe
+315~@~AdmClientRule    10: Screen (es-ES)~@~9~@~13~@~Pantalla
+316~@~AdmClientRule    30: Culture (es-ES)~@~10~@~13~@~Cultura
+317~@~AdmClientRule    20: Report (es-ES)~@~11~@~13~@~Informe
+319~@~AdmReportObj    10: Report (es-ES)~@~13~@~13~@~Informe
+320~@~AdmWebRule    10: Screen (es-ES)~@~15~@~13~@~Pantalla
+321~@~AdmServerRule    10: Screen (es-ES)~@~16~@~13~@~Pantalla
+322~@~AdmWizardRule    10: Wizard (es-ES)~@~17~@~13~@~Mago
+323~@~AdmCtButtonHlp    10: Culture (es-ES)~@~18~@~13~@~Cultura
+324~@~AdmButtonHlp    10: Culture (es-ES)~@~19~@~13~@~Cultura
+325~@~AdmUsr    10: Email Address (es-ES)~@~22~@~13~@~Dirección de correo electrónico
+326~@~AdmUsr    20: User Name (es-ES)~@~23~@~13~@~Nombre de usuario
+327~@~AdmUsr    30: User Group (es-ES)~@~24~@~13~@~Grupo de usuarios
+328~@~AdmDbTable    10: Table Name (es-ES)~@~25~@~13~@~Nombre de la tabla
+330~@~AdmMsgCenter    20: Source (es-ES)~@~27~@~13~@~Fuente
+331~@~AdmMsgCenter    10: Message Id (es-ES)~@~28~@~13~@~Id mensaje
+332~@~AdmRptCtr    10: Report (es-ES)~@~29~@~13~@~Informe
+333~@~AdmRptElm    10: Report (es-ES)~@~30~@~13~@~Informe
+334~@~AdmRptTbl    20: Report Control (es-ES)~@~31~@~13~@~Informe de Control
+335~@~AdmRptStyle    10: Default Style (es-ES)~@~32~@~13~@~El estilo por defecto
+336~@~AdmRptTbl    10: Report (es-ES)~@~34~@~13~@~Informe
+337~@~AdmRelease    10: Releases On or After (es-ES)~@~35~@~13~@~Emisiones en o después
+338~@~AdmRelease    20: Entity (es-ES)~@~36~@~13~@~Entidad
+339~@~AdmRelease    30: Release Type (es-ES)~@~37~@~13~@~Tipo de liberación
+340~@~AdmRowOvrd    10: Screen (es-ES)~@~38~@~13~@~Pantalla
+341~@~AdmRowOvrd    20: Report (es-ES)~@~39~@~13~@~Informe
+342~@~AdmDbTable    20: Table Description (es-ES)~@~42~@~13~@~Descripción Tabla
+344~@~AdmAppItem    10: Script contains (es-ES)~@~44~@~13~@~Script contiene
+348~@~AdmLabel    10: Culture (en-US)~@~48~@~1~@~Culture
+349~@~AdmLabel    20: Category (en-US)~@~49~@~1~@~Category
+350~@~AdmLabel    40: Text (en-US)~@~50~@~1~@~Text
+351~@~AdmLabel    30: Key (en-US)~@~51~@~1~@~Key
+352~@~AdmTbdRule    10: Screen (en-US)~@~52~@~1~@~Screen
+353~@~AdmTbdRule    10: Screen (fr-FR)~@~52~@~2~@~Écran
+354~@~AdmTbdRule    10: Screen (zh-CN)~@~52~@~4~@~屏幕
+355~@~AdmTbdRule    10: Screen (hi-IN)~@~52~@~8~@~परदा
+356~@~AdmTbdRule    10: Screen (pt-BR)~@~52~@~9~@~Tela
+357~@~AdmTbdRule    10: Screen (tr-TR)~@~52~@~11~@~Ekran
+358~@~AdmTbdRule    10: Screen (ru-RU)~@~52~@~12~@~Экран
+359~@~AdmTbdRule    10: Screen (es-ES)~@~52~@~13~@~Pantalla
+360~@~AdmTbdRule    10: Screen (ja-JP)~@~52~@~14~@~スクリーン
+361~@~AdmAppInfo    10: Release Date Since (en-US)~@~53~@~1~@~Release Date Since
+364~@~AdmLabel    10: Culture (zh-CN)~@~48~@~4~@~文化
+365~@~AdmLabel    20: Category (zh-CN)~@~49~@~4~@~类别
+366~@~AdmLabel    40: Text (zh-CN)~@~50~@~4~@~文本
+367~@~AdmLabel    30: Key (zh-CN)~@~51~@~4~@~关键
+368~@~AdmAppInfo    10: Release Date Since (zh-CN)~@~53~@~4~@~发行日期自
+370~@~AdmStaticPg    20: Description (en-US)~@~55~@~1~@~Description
+372~@~AdmStaticPg    20: Description (zh-CN)~@~55~@~4~@~描述
+373~@~AdmLabelVw    10: Culture (en-US)~@~56~@~1~@~Culture
+378~@~AdmLabelVw    20: Category (en-US)~@~59~@~1~@~Category
+379~@~AdmLabelVw    20: Category (zh-CN)~@~59~@~4~@~类别
+380~@~AdmLabelVw    10: Culture (zh-CN)~@~56~@~4~@~文化
+381~@~AdmScreen    10: Program Name (en-US)~@~60~@~1~@~Program Name
+382~@~AdmCtCulture    10: To Translate (en-US)~@~61~@~1~@~To Translate
+383~@~AdmScreen    10: Program Name (zh-CN)~@~60~@~4~@~节目名称
+384~@~AdmCtCulture    10: To Translate (zh-CN)~@~61~@~4~@~要翻译
+387~@~AdmLabel    10: Culture (fr-FR)~@~48~@~2~@~Culture
+388~@~AdmLabel    20: Category (fr-FR)~@~49~@~2~@~Catégorie
+389~@~AdmLabel    40: Text (fr-FR)~@~50~@~2~@~Texte
+390~@~AdmLabel    30: Key (fr-FR)~@~51~@~2~@~Clé
+391~@~AdmAppInfo    10: Release Date Since (fr-FR)~@~53~@~2~@~Date de Sortie Depuis
+393~@~AdmStaticPg    20: Description (fr-FR)~@~55~@~2~@~Description
+394~@~AdmLabelVw    10: Culture (fr-FR)~@~56~@~2~@~Culture
+395~@~AdmLabelVw    20: Category (fr-FR)~@~59~@~2~@~Catégorie
+396~@~AdmScreen    10: Program Name (fr-FR)~@~60~@~2~@~Nom du programme
+397~@~AdmCtCulture    10: To Translate (fr-FR)~@~61~@~2~@~À traduire
+399~@~AdmReportGrp    10: Report (de-DE)~@~2~@~68~@~Bericht
+400~@~AdmScreenCri    10: Screen (de-DE)~@~3~@~68~@~Bildschirm
+401~@~AdmReportCri    10: Report (de-DE)~@~4~@~68~@~Bericht
+403~@~AdmClientRule    10: Screen (de-DE)~@~9~@~68~@~Bildschirm
+404~@~AdmClientRule    30: Culture (de-DE)~@~10~@~68~@~Kultur
+405~@~AdmClientRule    20: Report (de-DE)~@~11~@~68~@~Bericht
+407~@~AdmReportObj    10: Report (de-DE)~@~13~@~68~@~Bericht
+408~@~AdmWebRule    10: Screen (de-DE)~@~15~@~68~@~Bildschirm
+409~@~AdmServerRule    10: Screen (de-DE)~@~16~@~68~@~Bildschirm
+410~@~AdmWizardRule    10: Wizard (de-DE)~@~17~@~68~@~Zauberer
+411~@~AdmCtButtonHlp    10: Culture (de-DE)~@~18~@~68~@~Kultur
+412~@~AdmButtonHlp    10: Culture (de-DE)~@~19~@~68~@~Kultur
+413~@~AdmUsr    10: Email Address (de-DE)~@~22~@~68~@~E-Mail-Adresse
+414~@~AdmUsr    20: User Name (de-DE)~@~23~@~68~@~User Name
+415~@~AdmUsr    30: User Group (de-DE)~@~24~@~68~@~User Group
+416~@~AdmDbTable    10: Table Name (de-DE)~@~25~@~68~@~Table Name
+418~@~AdmMsgCenter    20: Source (de-DE)~@~27~@~68~@~Quelle
+419~@~AdmMsgCenter    10: Message Id (de-DE)~@~28~@~68~@~Message-Id
+420~@~AdmRptCtr    10: Report (de-DE)~@~29~@~68~@~Bericht
+421~@~AdmRptElm    10: Report (de-DE)~@~30~@~68~@~Bericht
+422~@~AdmRptTbl    20: Report Control (de-DE)~@~31~@~68~@~Report Control
+423~@~AdmRptStyle    10: Default Style (de-DE)~@~32~@~68~@~Default Style
+424~@~AdmRptTbl    10: Report (de-DE)~@~34~@~68~@~Bericht
+425~@~AdmRelease    10: Releases On or After (de-DE)~@~35~@~68~@~Releases Am oder nach
+426~@~AdmRelease    20: Entity (de-DE)~@~36~@~68~@~Wesen
+427~@~AdmRelease    30: Release Type (de-DE)~@~37~@~68~@~Versionstypen
+428~@~AdmRowOvrd    10: Screen (de-DE)~@~38~@~68~@~Bildschirm
+429~@~AdmRowOvrd    20: Report (de-DE)~@~39~@~68~@~Bericht
+430~@~AdmDbTable    20: Table Description (de-DE)~@~42~@~68~@~Tabelle Beschreibung
+432~@~AdmAppItem    10: Script contains (de-DE)~@~44~@~68~@~Skript enthält
+436~@~AdmLabel    10: Culture (de-DE)~@~48~@~68~@~Kultur
+437~@~AdmLabel    20: Category (de-DE)~@~49~@~68~@~Kategorie
+438~@~AdmLabel    40: Text (de-DE)~@~50~@~68~@~Text
+439~@~AdmLabel    30: Key (de-DE)~@~51~@~68~@~Schlüssel
+440~@~AdmTbdRule    10: Screen (de-DE)~@~52~@~68~@~Bildschirm
+441~@~AdmAppInfo    10: Release Date Since (de-DE)~@~53~@~68~@~Erscheinungsdatum Da
+443~@~AdmStaticPg    20: Description (de-DE)~@~55~@~68~@~Beschreibung
+444~@~AdmLabelVw    10: Culture (de-DE)~@~56~@~68~@~Kultur
+445~@~AdmLabelVw    20: Category (de-DE)~@~59~@~68~@~Kategorie
+446~@~AdmScreen    10: Program Name (de-DE)~@~60~@~68~@~Program Name
+447~@~AdmCtCulture    10: To Translate (de-DE)~@~61~@~68~@~Übersetzen
+450~@~AdmLabel    10: Culture (hi-IN)~@~48~@~8~@~संस्कृति
+451~@~AdmLabel    20: Category (hi-IN)~@~49~@~8~@~श्रेणी
+452~@~AdmLabel    40: Text (hi-IN)~@~50~@~8~@~पाठ
+453~@~AdmLabel    30: Key (hi-IN)~@~51~@~8~@~कुंजी
+454~@~AdmAppInfo    10: Release Date Since (hi-IN)~@~53~@~8~@~रिलीज की तारीख के बाद से
+456~@~AdmStaticPg    20: Description (hi-IN)~@~55~@~8~@~विवरण
+457~@~AdmLabelVw    10: Culture (hi-IN)~@~56~@~8~@~संस्कृति
+458~@~AdmLabelVw    20: Category (hi-IN)~@~59~@~8~@~श्रेणी
+459~@~AdmScreen    10: Program Name (hi-IN)~@~60~@~8~@~प्रोग्राम नाम
+460~@~AdmCtCulture    10: To Translate (hi-IN)~@~61~@~8~@~अनुवाद करने के लिए
+463~@~AdmLabel    10: Culture (ja-JP)~@~48~@~14~@~文化
+464~@~AdmLabel    20: Category (ja-JP)~@~49~@~14~@~カテゴリ
+465~@~AdmLabel    40: Text (ja-JP)~@~50~@~14~@~テキスト
+466~@~AdmLabel    30: Key (ja-JP)~@~51~@~14~@~キー
+467~@~AdmAppInfo    10: Release Date Since (ja-JP)~@~53~@~14~@~以来、リリース日
+469~@~AdmStaticPg    20: Description (ja-JP)~@~55~@~14~@~説明
+470~@~AdmLabelVw    10: Culture (ja-JP)~@~56~@~14~@~文化
+471~@~AdmLabelVw    20: Category (ja-JP)~@~59~@~14~@~カテゴリ
+472~@~AdmScreen    10: Program Name (ja-JP)~@~60~@~14~@~プログラム名
+473~@~AdmCtCulture    10: To Translate (ja-JP)~@~61~@~14~@~翻訳する
+475~@~AdmReportGrp    10: Report (ko-KR)~@~2~@~28~@~신고
+476~@~AdmScreenCri    10: Screen (ko-KR)~@~3~@~28~@~화면
+477~@~AdmReportCri    10: Report (ko-KR)~@~4~@~28~@~신고
+479~@~AdmClientRule    10: Screen (ko-KR)~@~9~@~28~@~화면
+480~@~AdmClientRule    30: Culture (ko-KR)~@~10~@~28~@~문화
+481~@~AdmClientRule    20: Report (ko-KR)~@~11~@~28~@~신고
+483~@~AdmReportObj    10: Report (ko-KR)~@~13~@~28~@~신고
+484~@~AdmWebRule    10: Screen (ko-KR)~@~15~@~28~@~화면
+485~@~AdmServerRule    10: Screen (ko-KR)~@~16~@~28~@~화면
+486~@~AdmWizardRule    10: Wizard (ko-KR)~@~17~@~28~@~마법사
+487~@~AdmCtButtonHlp    10: Culture (ko-KR)~@~18~@~28~@~문화
+488~@~AdmButtonHlp    10: Culture (ko-KR)~@~19~@~28~@~문화
+489~@~AdmUsr    10: Email Address (ko-KR)~@~22~@~28~@~이메일 주소
+490~@~AdmUsr    20: User Name (ko-KR)~@~23~@~28~@~사용자 이름
+491~@~AdmUsr    30: User Group (ko-KR)~@~24~@~28~@~사용자 그룹
+492~@~AdmDbTable    10: Table Name (ko-KR)~@~25~@~28~@~테이블 이름
+494~@~AdmMsgCenter    20: Source (ko-KR)~@~27~@~28~@~출처
+495~@~AdmMsgCenter    10: Message Id (ko-KR)~@~28~@~28~@~메시지 ID
+496~@~AdmRptCtr    10: Report (ko-KR)~@~29~@~28~@~신고
+497~@~AdmRptElm    10: Report (ko-KR)~@~30~@~28~@~신고
+498~@~AdmRptTbl    20: Report Control (ko-KR)~@~31~@~28~@~보고서 제어
+499~@~AdmRptStyle    10: Default Style (ko-KR)~@~32~@~28~@~기본 스타일
+500~@~AdmRptTbl    10: Report (ko-KR)~@~34~@~28~@~신고
+501~@~AdmRelease    10: Releases On or After (ko-KR)~@~35~@~28~@~이후에 자료
+502~@~AdmRelease    20: Entity (ko-KR)~@~36~@~28~@~본체
+503~@~AdmRelease    30: Release Type (ko-KR)~@~37~@~28~@~릴리스 유형
+504~@~AdmRowOvrd    10: Screen (ko-KR)~@~38~@~28~@~화면
+505~@~AdmRowOvrd    20: Report (ko-KR)~@~39~@~28~@~신고
+506~@~AdmDbTable    20: Table Description (ko-KR)~@~42~@~28~@~표 설명
+508~@~AdmAppItem    10: Script contains (ko-KR)~@~44~@~28~@~스크립트가 포함되어
+512~@~AdmLabel    10: Culture (ko-KR)~@~48~@~28~@~문화
+513~@~AdmLabel    20: Category (ko-KR)~@~49~@~28~@~범주
+514~@~AdmLabel    40: Text (ko-KR)~@~50~@~28~@~본문
+515~@~AdmLabel    30: Key (ko-KR)~@~51~@~28~@~키
+516~@~AdmTbdRule    10: Screen (ko-KR)~@~52~@~28~@~화면
+517~@~AdmAppInfo    10: Release Date Since (ko-KR)~@~53~@~28~@~날짜 이후 해제
+519~@~AdmStaticPg    20: Description (ko-KR)~@~55~@~28~@~기술
+520~@~AdmLabelVw    10: Culture (ko-KR)~@~56~@~28~@~문화
+521~@~AdmLabelVw    20: Category (ko-KR)~@~59~@~28~@~범주
+522~@~AdmScreen    10: Program Name (ko-KR)~@~60~@~28~@~프로그램 이름
+523~@~AdmCtCulture    10: To Translate (ko-KR)~@~61~@~28~@~번역하기
+526~@~AdmLabel    10: Culture (pt-BR)~@~48~@~9~@~Cultura
+527~@~AdmLabel    20: Category (pt-BR)~@~49~@~9~@~Categoria
+528~@~AdmLabel    40: Text (pt-BR)~@~50~@~9~@~Texto
+529~@~AdmLabel    30: Key (pt-BR)~@~51~@~9~@~Chave
+530~@~AdmAppInfo    10: Release Date Since (pt-BR)~@~53~@~9~@~Data de Lançamento Desde
+532~@~AdmStaticPg    20: Description (pt-BR)~@~55~@~9~@~Descrição
+533~@~AdmLabelVw    10: Culture (pt-BR)~@~56~@~9~@~Cultura
+534~@~AdmLabelVw    20: Category (pt-BR)~@~59~@~9~@~Categoria
+535~@~AdmScreen    10: Program Name (pt-BR)~@~60~@~9~@~Nome do Programa
+536~@~AdmCtCulture    10: To Translate (pt-BR)~@~61~@~9~@~Para Traduzir
+539~@~AdmLabel    10: Culture (ru-RU)~@~48~@~12~@~Культура
+540~@~AdmLabel    20: Category (ru-RU)~@~49~@~12~@~Категория
+541~@~AdmLabel    40: Text (ru-RU)~@~50~@~12~@~Текст
+542~@~AdmLabel    30: Key (ru-RU)~@~51~@~12~@~Ключ
+543~@~AdmAppInfo    10: Release Date Since (ru-RU)~@~53~@~12~@~Дата выпуска С
+545~@~AdmStaticPg    20: Description (ru-RU)~@~55~@~12~@~Описание
+546~@~AdmLabelVw    10: Culture (ru-RU)~@~56~@~12~@~Культура
+547~@~AdmLabelVw    20: Category (ru-RU)~@~59~@~12~@~Категория
+548~@~AdmScreen    10: Program Name (ru-RU)~@~60~@~12~@~Название программы
+549~@~AdmCtCulture    10: To Translate (ru-RU)~@~61~@~12~@~Чтобы перевести
+552~@~AdmLabel    10: Culture (es-ES)~@~48~@~13~@~Cultura
+553~@~AdmLabel    20: Category (es-ES)~@~49~@~13~@~Categoría
+554~@~AdmLabel    40: Text (es-ES)~@~50~@~13~@~Texto
+555~@~AdmLabel    30: Key (es-ES)~@~51~@~13~@~Clave
+556~@~AdmAppInfo    10: Release Date Since (es-ES)~@~53~@~13~@~Fecha de la versión Puesto
+558~@~AdmStaticPg    20: Description (es-ES)~@~55~@~13~@~Descripción
+559~@~AdmLabelVw    10: Culture (es-ES)~@~56~@~13~@~Cultura
+560~@~AdmLabelVw    20: Category (es-ES)~@~59~@~13~@~Categoría
+561~@~AdmScreen    10: Program Name (es-ES)~@~60~@~13~@~Nombre del Programa
+562~@~AdmCtCulture    10: To Translate (es-ES)~@~61~@~13~@~Para traducir
+564~@~AdmSredTime    10: Member (en-US)~@~63~@~1~@~Member
+566~@~AdmSredTime    20: Work From (>=) (en-US)~@~65~@~1~@~Work From (>=)
+567~@~AdmSredTime    30: Work To (<=) (en-US)~@~66~@~1~@~Work To (<=)
+568~@~AdmRptCtr    20: Value like (en-US)~@~67~@~1~@~Value like
+571~@~AdmMsgCenter    30: Description Like (en-US)~@~70~@~1~@~Description Like
+1571~@~AdmStaticPg    10: ID (en-US)~@~1070~@~1~@~ID
+1621~@~AdmScreenFilter    10: Screen (en-US)~@~1072~@~1~@~Screen
+1622~@~AdmScreenFilter    10: Screen (zh-CN)~@~1072~@~4~@~屏幕
+1623~@~AdmScreenFilter    10: Screen (fr-FR)~@~1072~@~2~@~Écran
+1624~@~AdmScreenFilter    10: Screen (hi-IN)~@~1072~@~8~@~परदा
+1625~@~AdmScreenFilter    10: Screen (pt-BR)~@~1072~@~9~@~Tela
+1626~@~AdmScreenFilter    10: Screen (tr-TR)~@~1072~@~11~@~Ekran
+1627~@~AdmScreenFilter    10: Screen (ja-JP)~@~1072~@~14~@~スクリーン
+1628~@~AdmScreenFilter    10: Screen (ru-RU)~@~1072~@~12~@~Экран
+1629~@~AdmScreenFilter    10: Screen (es-ES)~@~1072~@~13~@~Pantalla
+1630~@~AdmScreenFilter    10: Screen (de-DE)~@~1072~@~68~@~Bildschirm
+1631~@~AdmScreenFilter    10: Screen (ko-KR)~@~1072~@~28~@~화면
+1632~@~AdmPageObj    10: Section Type (en-US)~@~1073~@~1~@~Section Type
+1633~@~AdmSredTime    10: Member (zh-CN)~@~63~@~4~@~会员
+1634~@~AdmSredTime    20: Work From (>=) (zh-CN)~@~65~@~4~@~从（> =）工作
+1635~@~AdmSredTime    30: Work To (<=) (zh-CN)~@~66~@~4~@~工作中（<=）
+1636~@~AdmRptCtr    20: Value like (zh-CN)~@~67~@~4~@~像值
+1637~@~AdmMsgCenter    30: Description Like (zh-CN)~@~70~@~4~@~描述像
+1638~@~AdmStaticPg    10: ID (zh-CN)~@~1070~@~4~@~ID
+1639~@~AdmPageObj    10: Section Type (zh-CN)~@~1073~@~4~@~截面类型
+1640~@~AdmSredTime    10: Member (ko-KR)~@~63~@~28~@~회원
+1641~@~AdmSredTime    20: Work From (>=) (ko-KR)~@~65~@~28~@~(> =)에서 작업
+1642~@~AdmSredTime    30: Work To (<=) (ko-KR)~@~66~@~28~@~할 일 (<=)
+1643~@~AdmRptCtr    20: Value like (ko-KR)~@~67~@~28~@~같은 값
+1644~@~AdmMsgCenter    30: Description Like (ko-KR)~@~70~@~28~@~설명처럼
+1645~@~AdmStaticPg    10: ID (ko-KR)~@~1070~@~28~@~신분증
+1646~@~AdmPageObj    10: Section Type (ko-KR)~@~1073~@~28~@~제 유형
+1647~@~AdmColDrg    10: Screen (en-US)~@~1074~@~1~@~Screen
+1648~@~AdmScrAudit    10: Screen (en-US)~@~1075~@~1~@~Screen
+1649~@~AdmScrAudit    10: Screen (zh-CN)~@~1075~@~4~@~屏幕
+1650~@~AdmScrAudit    10: Screen (fr-FR)~@~1075~@~2~@~Écran
+1651~@~AdmScrAudit    10: Screen (hi-IN)~@~1075~@~8~@~परदा
+1652~@~AdmScrAudit    10: Screen (pt-BR)~@~1075~@~9~@~Tela
+1653~@~AdmScrAudit    10: Screen (tr-TR)~@~1075~@~11~@~Ekran
+1654~@~AdmScrAudit    10: Screen (ja-JP)~@~1075~@~14~@~スクリーン
+1655~@~AdmScrAudit    10: Screen (ru-RU)~@~1075~@~12~@~Экран
+1656~@~AdmScrAudit    10: Screen (es-ES)~@~1075~@~13~@~Pantalla
+1657~@~AdmScrAudit    10: Screen (de-DE)~@~1075~@~68~@~Bildschirm
+1658~@~AdmScrAudit    10: Screen (ko-KR)~@~1075~@~28~@~화면
+1659~@~AdmScrAuditDtl    10: Audit ID (en-US)~@~1076~@~1~@~Audit ID
+1660~@~AdmCtCulture    20: 11/12/ Rule (en-US)~@~1077~@~1~@~11/12/ Rule
+1661~@~~@~2~@~114~@~rapport
+1662~@~~@~3~@~114~@~Écran
+1663~@~~@~4~@~114~@~rapport
+1664~@~~@~9~@~114~@~Écran
+1665~@~~@~10~@~114~@~Culture
+1666~@~~@~11~@~114~@~rapport
+1667~@~~@~13~@~114~@~rapport
+1668~@~~@~15~@~114~@~Écran
+1669~@~~@~16~@~114~@~Écran
+1670~@~~@~17~@~114~@~sorcier
+1671~@~~@~18~@~114~@~Culture
+1672~@~~@~19~@~114~@~Culture
+1673~@~~@~22~@~114~@~Adresse e-mail
+1674~@~~@~23~@~114~@~Nom d'utilisateur
+1675~@~~@~24~@~114~@~Groupe d'utilisateurs
+1676~@~~@~25~@~114~@~Nom de la table
+1677~@~~@~27~@~114~@~La source
+1678~@~~@~28~@~114~@~ID du message
+1679~@~~@~29~@~114~@~rapport
+1680~@~~@~30~@~114~@~rapport
+1681~@~~@~31~@~114~@~Contrôle des rapports
+1682~@~~@~32~@~114~@~Style par défaut
+1683~@~~@~34~@~114~@~rapport
+1684~@~~@~35~@~114~@~Versions le ou après
+1685~@~~@~36~@~114~@~Entité
+1686~@~~@~37~@~114~@~Type de version
+1687~@~~@~38~@~114~@~Écran
+1688~@~~@~39~@~114~@~rapport
+1689~@~~@~42~@~114~@~Description du tableau
+1690~@~~@~44~@~114~@~Le script contient
+1691~@~~@~48~@~114~@~Culture
+1692~@~~@~49~@~114~@~Catégorie
+1693~@~~@~50~@~114~@~Texte
+1694~@~~@~51~@~114~@~Clé
+1695~@~~@~52~@~114~@~Écran
+1696~@~~@~53~@~114~@~Date de sortie depuis
+1697~@~~@~55~@~114~@~La description
+1698~@~~@~56~@~114~@~Culture
+1699~@~~@~59~@~114~@~Catégorie
+1700~@~~@~60~@~114~@~Nom du programme
+1701~@~~@~61~@~114~@~Traduire
+1702~@~~@~63~@~114~@~Membre
+1703~@~~@~65~@~114~@~Travail à partir de (> =)
+1704~@~~@~66~@~114~@~Travail à (<=)
+1705~@~~@~67~@~114~@~Valeur comme
+1706~@~~@~70~@~114~@~Description J'aime
+1707~@~~@~1070~@~114~@~Identifiant
+1708~@~~@~1072~@~114~@~Écran
+1709~@~~@~1073~@~114~@~Type de section
+1710~@~~@~1074~@~114~@~Écran
+1711~@~~@~1075~@~114~@~Écran
+1712~@~~@~1076~@~114~@~ID d'audit
+1713~@~~@~1077~@~114~@~11/12 / Règle

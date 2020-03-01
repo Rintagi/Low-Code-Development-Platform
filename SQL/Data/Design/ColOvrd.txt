@@ -1,0 +1,198 @@
+1~@~AdmUsr    10: UsrId   100 [Default]~@~1~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+2~@~AdmUsr   230: CustomerId   100 [Default]~@~6~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+3~@~AdmUsr   240: VendorId   100 [Default]~@~7~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+4~@~AdmUsr   270: MemberId   100 [Default]~@~8~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+5~@~AdmUsr   210: Active   100 [Default]~@~9~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+6~@~AdmUsr   190: ModifiedOn   100 [Default]~@~10~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+7~@~AdmDbTable    10: TableId   100 [Default]~@~11~@~2~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+8~@~AdmDbTable   120: ModifiedOn   100 [Default]~@~14~@~2~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+9~@~AdmDbTable   150: ColumnId   100 [Default]~@~15~@~2~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+10~@~AdmUsrGroup    10: UsrGroupId   100 [Default]~@~23~@~5~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+12~@~AdmScreen    10: ScreenId   100 [Default]~@~44~@~9~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+13~@~AdmScreen   180: ScreenHlpId   100 [Default]~@~52~@~9~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+14~@~AdmScreenObj [   10] Main Info: ScreenObjId   100 [Default]~@~71~@~10~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+15~@~AdmReportObj    10: ReportObjId   100 [Default]~@~127~@~13~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+16~@~AdmServerRule    10: ServerRuleId   100 [Default]~@~149~@~14~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+18~@~AdmAuthCol    10: ColOvrdId   100 [Default]~@~180~@~16~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+20~@~AdmRowOvrd [   10] Main Info: RowOvrdId   100 [Default]~@~198~@~17~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+21~@~AdmCtRowAuthority    10: RowAuthId   100 [Default]~@~307~@~22~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+22~@~AdmUsr   220: InvestorId   100 [Default]~@~316~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+23~@~AdmMenu    10: MenuId   100 [Default]~@~431~@~35~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+24~@~AdmMenuHlp    10: MenuId   100 [Default]~@~446~@~36~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+25~@~AdmMenuHlp    20: MenuHlpId   100 [Default]~@~447~@~36~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+26~@~AdmUsrGroup    60: UsrGroupAuthId   100 [Default]~@~551~@~5~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+27~@~AdmScreenObj   290: GenerateSp   100 [Default]~@~572~@~10~@~N~@~N~@~Y~@~~@~~@~~@~~@~~@~100~@~
+28~@~AdmWizardObj    10: WizardId   100 [Default]~@~633~@~49~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+29~@~AdmWizardObj   100: WizardObjId   100 [Default]~@~640~@~49~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+30~@~AdmWizardRule    10: WizardRuleId   100 [Default]~@~652~@~50~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+32~@~AdmScreenTab    10: ScreenTabId   100 [Default]~@~716~@~54~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+33~@~AdmScreenTab    60: ScreenTabHlpId   100 [Default]~@~719~@~54~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+34~@~AdmMenuPerm    10: MenuId   100 [Default]~@~820~@~58~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+35~@~AdmMenuPerm    20: MenuPrmId   100 [Default]~@~831~@~58~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+36~@~AdmScreenFilter    10: ScreenFilterId   100 [Default]~@~840~@~59~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+37~@~AdmScreenFilter    70: ScreenFilterHlpId   100 [Default]~@~846~@~59~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+38~@~AdmUsr   250: AgentId   100 [Default]~@~934~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+39~@~AdmUsr   260: BrokerId   100 [Default]~@~935~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+40~@~AdmUsrPref    10: UsrPrefId   100 [Default]~@~939~@~64~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+41~@~AdmReportGrp    10: ReportGrpId   100 [Default]~@~977~@~65~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+42~@~AdmReportGrp    30: ReportGrpIndex   100 [Default]~@~983~@~65~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+43~@~AdmUsrImpr    10: UsrImprId   100 [Default]~@~1000~@~66~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+44~@~AdmReport [   10] Main Info: ReportId   100 [Default]~@~1008~@~67~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+45~@~AdmReport   310: ReportHlpId   100 [Default]~@~1020~@~67~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+46~@~AdmReportCri    10: ReportCriId   100 [Default]~@~1074~@~69~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+47~@~AdmReportCri   210: ReportCriHlpId   100 [Default]~@~1094~@~69~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+48~@~AdmUsr   150: FailedAttempt   100 [Default]~@~1116~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+49~@~AdmUsr   140: LastSuccessDt   100 [Default]~@~1117~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+50~@~AdmUsr   150: LastFailedDt   100 [Default]~@~1118~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+51~@~AdmChgPwd    10: UsrId   100 [Default]~@~1121~@~71~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+54~@~AdmScreenCri [   10] Main Info: ScreenCriId   100 [Default]~@~1178~@~73~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+55~@~AdmScreenCri   160: ScreenCriHlpId   100 [Default]~@~1189~@~73~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+57~@~AdmButtonHlp   100: ButtonHlpId   100 [Default]~@~1207~@~76~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+58~@~AdmOvride    10: OvrideId   100 [Default]~@~1240~@~78~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+59~@~AdmOvride    50: OvrideGrpId   100 [Default]~@~1244~@~78~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+60~@~AdmClientRule [   10] Main Info: ClientRuleId   100 [Default]~@~1257~@~79~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+62~@~AdmClientRule [   90] Main Info: CultureId   100 [Default]~@~1259~@~79~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+64~@~AdmScreenObj   350: ScreenObjHlpId   100 [Default]~@~1270~@~10~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+65~@~AdmReportObj   120: ReportObjHlpId   100 [Default]~@~1275~@~13~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+66~@~AdmWebRule    10: WebRuleId   100 [Default]~@~1283~@~80~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+67~@~AdmCtButtonHlp    10: ButtonHlpId   100 [Default]~@~1295~@~81~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+69~@~AdmAppInfo    10: AppInfoId   100 [Default]~@~1347~@~82~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+71~@~AdmAppItem    10: AppItemId   100 [Default]~@~1350~@~83~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+73~@~AdmAppItem   140: ScreenId   100 [Default]~@~1364~@~83~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+74~@~AdmAppItem   150: ReportId   100 [Default]~@~1365~@~83~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+75~@~AdmAppItem   160: WizardId   100 [Default]~@~1366~@~83~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+76~@~AdmAppItem   170: CustomId   100 [Default]~@~1367~@~83~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+85~@~AdmServerRule   170: ModifiedBy   100 [Default]~@~1397~@~14~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+86~@~AdmServerRule   180: ModifiedOn   100 [Default]~@~1399~@~14~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+87~@~AdmMsgCenter    10: MsgId   100 [Default]~@~1408~@~86~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+88~@~AdmMsgCenter    50: MsgCenterId   100 [Default]~@~1412~@~86~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+89~@~AdmServerRule   210: SyncToDb   100 [Default]~@~1418~@~14~@~Y~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+90~@~AdmServerRule   190: LastGenDt   100 [Default]~@~1419~@~14~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+91~@~AdmServerRule   200: SyncByDb   100 [Default]~@~1420~@~14~@~Y~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+92~@~AdmDbTable   110: ModifiedBy   100 [Default]~@~1451~@~2~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+93~@~AdmDbTable   130: LastSyncDt   100 [Default]~@~1452~@~2~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+94~@~AdmReport    60: ModifiedBy   100 [Default]~@~1470~@~67~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+95~@~AdmReport    70: ModifiedOn   100 [Default]~@~1471~@~67~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+96~@~AdmReport   210: LastGenDt   100 [Default]~@~1472~@~67~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+97~@~AdmRptStyle    10: RptStyleId   100 [Default]~@~1533~@~89~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+98~@~AdmRptCtr    10: RptCtrId   100 [Default]~@~1572~@~90~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+99~@~AdmRptElm    10: RptElmId   100 [Default]~@~1597~@~91~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+100~@~AdmRptTbl    10: RptTblId   100 [Default]~@~1607~@~92~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+101~@~AdmRptTbl   120: RptCelId   100 [Default]~@~1618~@~92~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+103~@~AdmRptWiz    10: RptwizId   100 [Default]~@~1634~@~95~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+104~@~AdmRptWiz    60: UsrId   100 [Default]~@~1641~@~95~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+106~@~AdmRptWiz    80: CatDescription   100 [Default]~@~1653~@~95~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+107~@~AdmRptWiz   120: RptwizCatImg   100 [Default]~@~1654~@~95~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+108~@~AdmDataCat    10: RptwizCatId   100 [Default]~@~1657~@~96~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+109~@~AdmDataCat    80: RptwizCatDtlId   100 [Default]~@~1661~@~96~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+112~@~AdmRptwizTyp    10: RptwizTypId   100 [Default]~@~1668~@~97~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+113~@~AdmRptWiz    40: ReportId   100 [Default]~@~1672~@~95~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+115~@~AdmRptWiz    50: RptCtrTypeDesc   100 [Default]~@~1680~@~95~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+116~@~AdmRelease    10: ReleaseId   100 [Default]~@~1698~@~98~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+117~@~AdmRelease    30: ReleaseBuild   100 [Default]~@~1701~@~98~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+118~@~AdmRelease    40: ReleaseDate   100 [Default]~@~1702~@~98~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+119~@~AdmRelease   120: ReleaseDtlId   100 [Default]~@~1709~@~98~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+120~@~AdmRelease    90: DeployPath   100 [Default]~@~1724~@~98~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+121~@~AdmRptCha    10: RptChaId   100 [Default]~@~1730~@~100~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+122~@~AdmUsr [   50] Main Info: UsrGroupLs   100 [Default]~@~1741~@~1~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+123~@~AdmUsr   200: CompanyLs   100 [Default]~@~1742~@~1~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+124~@~AdmUsr   210: ProjectLs   100 [Default]~@~1743~@~1~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+139~@~AdmUsrImpr    40: FailedAttempt   100 [Default]~@~1842~@~66~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+141~@~AdmMaintMsg    10: MaintMsgId   100 [Default]~@~1869~@~109~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+142~@~AdmMaintMsg    50: LastEmailDt   100 [Default]~@~1873~@~109~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+143~@~AdmCtRowAuthority    90: RowAuthPrmId   100 [Default]~@~1875~@~22~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+144~@~AdmUsr   220: InvestorId    10 [UsrGroup5]~@~316~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~10~@~800000005
+145~@~AdmUsr   250: CustomerId    10 [UsrGroup5]~@~6~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~10~@~800000005
+146~@~AdmUsr   240: VendorId    10 [UsrGroup5]~@~7~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~10~@~800000005
+147~@~AdmUsr   270: MemberId    10 [UsrGroup5]~@~8~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~10~@~800000005
+148~@~AdmUsr   250: AgentId    10 [UsrGroup5]~@~934~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~10~@~800000005
+149~@~AdmUsr   260: BrokerId    10 [UsrGroup5]~@~935~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~10~@~800000005
+150~@~AdmServerRule   160: RuleCode    10 [UsrGroup12]~@~1396~@~14~@~Y~@~Y~@~N~@~~@~~@~~@~8~@~12~@~10~@~800000012
+152~@~AdmUsr    50: UsrGroupLs    10 [UsrGroup5]~@~1741~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~10~@~800000005
+153~@~AdmUsr [  250] Status: CompanyLs    10 [UsrGroup5]~@~1742~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~10~@~800000005
+154~@~AdmUsr [  320] Status: ProjectLs    10 [UsrGroup5]~@~1743~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~10~@~800000005
+155~@~AdmUsr [   50] Main Info: UsrGroupLs    20 [UsrGroup6]~@~1741~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~6~@~20~@~800000006
+157~@~AdmUsr   180: Active    10 [UsrGroup5]~@~9~@~1~@~Y~@~N~@~N~@~~@~~@~~@~8~@~5~@~10~@~800000005
+158~@~AdmAuthCol    50: ColReadOnly    10 [Company1]~@~186~@~16~@~Y~@~N~@~N~@~Check this if this screen object is not editable.~@~Non-Editable~@~~@~10~@~1~@~10~@~1000000001
+159~@~AdmRowOvrd    90: RowOvrdPrmId   100 [Default]~@~1881~@~17~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+161~@~AdmCtCulture    10: CultureTypeId   100 [Default]~@~31~@~8~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+162~@~AdmCtCulture    70: CultureLblId   100 [Default]~@~1890~@~8~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+165~@~AdmUsr   130: PwdDuration     5 [UsrGroup5]~@~1910~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~5~@~800000005
+166~@~AdmUsr   140: PwdWarn     5 [UsrGroup5]~@~1911~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~5~@~800000005
+167~@~AdmUsr   140: PwdWarn   100 [Default]~@~1911~@~1~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+168~@~AdmUsr   130: PwdDuration   100 [Default]~@~1910~@~1~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+169~@~AdmMenuOpt    10: MenuOptId   100 [Default]~@~1912~@~111~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+170~@~AdmMenuOpt    80: InputBy   100 [Default]~@~1924~@~111~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+171~@~AdmMenuOpt    90: InputOn   100 [Default]~@~1925~@~111~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+172~@~AdmLabel    10: LabelId   100 [Default]~@~1965~@~112~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+175~@~AdmDbKey    10: KeyId   100 [Default]~@~164~@~15~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+177~@~AdmTbdRule    10: TbdRuleId   100 [Default]~@~1976~@~113~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+182~@~AdmDataCat    70: RptwizCatImg   100 [Default]~@~1664~@~96~@~Y~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+183~@~AdmStaticPg    10: StaticPgId   100 [Default]~@~1993~@~114~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+184~@~AdmScreenObj   180: DisplayDesc   100 [Default]~@~1999~@~10~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+185~@~AdmStaticFi    10: StaticFiId   100 [Default]~@~2007~@~117~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+186~@~AdmStaticCs    10: StaticCsId   100 [Default]~@~2001~@~115~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+187~@~AdmStaticJs    10: StaticJsId   100 [Default]~@~2004~@~116~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+188~@~AdmCronJob    10: CronJobId   100 [Default]~@~2019~@~118~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+189~@~AdmCronJob    30: LastRun   100 [Default]~@~2027~@~118~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+190~@~AdmCronJob    40: NextRun   100 [Default]~@~2028~@~118~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+191~@~AdmCronJob    60: LastStatus   100 [Default]~@~2030~@~118~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+192~@~AdmLabelVw    10: LabelId   100 [Default]~@~2035~@~119~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+193~@~AdmLabelVw    30: CultureId   100 [Default]~@~2037~@~119~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+194~@~AdmLabelVw    40: LabelCat   100 [Default]~@~2038~@~119~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+195~@~AdmLabelVw    70: SortOrder   100 [Default]~@~2042~@~119~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+196~@~AdmUsrGroup    80: Filler   100 [Default]~@~2066~@~5~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+197~@~AdmCtCulture    40: CurrencyCd   100 [Default]~@~2071~@~8~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+198~@~AdmAppInfo    50: CultureTypeName   100 [Default]~@~3073~@~82~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+201~@~AdmUsrImpr    70: TestCulture   100 [Default]~@~3076~@~66~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+205~@~AdmSredTime    10: SredTimeId   100 [Default]~@~3091~@~123~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+206~@~AdmSredTime    50: EnteredBy   100 [Default]~@~3096~@~123~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+207~@~AdmSredTime    60: EnteredOn   100 [Default]~@~3097~@~123~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+208~@~AdmSredTime    70: ModifiedBy   100 [Default]~@~3098~@~123~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+209~@~AdmSredTime    80: ModifiedOn   100 [Default]~@~3099~@~123~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+210~@~AdmClientRule   150: ClientScriptHelp   100 [Default]~@~3100~@~79~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+213~@~AdmMember    30: MemberId   100 [Default]~@~3079~@~122~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+214~@~AdmMember    10: SredMebrId   100 [Default]~@~3102~@~122~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1221~@~AdmPageObj    10: PageObjId   100 [Default]~@~3116~@~1001~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1222~@~AdmPageObj   110: PageLnkId   100 [Default]~@~3126~@~1001~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1223~@~AdmSctGrpRow    10: SctGrpRowId   100 [Default]~@~3145~@~1004~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1225~@~AdmSctGrpRow    20: SectionCd   100 [Default]~@~3146~@~1004~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1226~@~AdmSctGrpRow    30: GroupRowId   100 [Default]~@~3147~@~1004~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1227~@~AdmSctGrpCol    10: SctGrpColId   100 [Default]~@~3138~@~1003~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1228~@~AdmSctGrpCol    20: SectionCd   100 [Default]~@~3139~@~1003~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1229~@~AdmSctGrpCol    30: GroupColId   100 [Default]~@~3140~@~1003~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1231~@~AdmMenu    40: MenuIndex   100 [Default]~@~433~@~35~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1232~@~AdmMenu    20: ParentId   100 [Default]~@~432~@~35~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1236~@~AdmUsr   110: PwdNoRepeat     5 [UsrGroup5]~@~3159~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~5~@~5~@~800000005
+1237~@~AdmUsr   110: PwdNoRepeat   100 [Default]~@~3159~@~1~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+1238~@~AdmColHlp [   20] Main: ScreenObjHlpId   100 [Default]~@~3252~@~1006~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+1239~@~AdmColHlp [   10] Main: ScreenObjId   100 [Default]~@~3208~@~1006~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+1241~@~AdmAuthCol [   10] Main Info: ScreenObjId   100 [Default]~@~3309~@~16~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1243~@~AdmUsrImpr [  110] Main Info: InputOn   100 [Default]~@~3361~@~66~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1244~@~AdmUsrImpr [  120] Main Info: ModifiedBy   100 [Default]~@~3362~@~66~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1245~@~AdmUsrImpr [  130] Main Info: ModifiedOn   100 [Default]~@~3363~@~66~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1248~@~AdmUsrImpr [   70] Main Info: InputBy   100 [Default]~@~3360~@~66~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1249~@~AdmServerRule [  160] Main Info: CrudTypeDesc   100 [Default]~@~3364~@~14~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1251~@~AdmClnTier [   10] Main Info: ClientTierId   100 [Default]~@~1812~@~105~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1252~@~AdmDatTier [   10] Main Info: DataTierId   100 [Default]~@~1827~@~107~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1253~@~AdmRulTier [   10] Main Info: RuleTierId   100 [Default]~@~1820~@~106~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1254~@~AdmClientRule [   30] Main Info: RuleMethodDesc   100 [Default]~@~4074~@~79~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+1255~@~AdmClientRule [  140] Main Info: RuleCntTypeDesc   100 [Default]~@~4076~@~79~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+1257~@~AdmSignup [  150] Main: Token   100 [Default]~@~4093~@~1018~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+1258~@~AdmSignup [   60] Main: UsrId   100 [Default]~@~4084~@~1018~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+1259~@~AdmSignup [   80] Main: LoginName   100 [Default]~@~4086~@~1018~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+1260~@~AdmUsr [  140] Main Info: Active    20 [UsrGroup]~@~9~@~1~@~Y~@~N~@~N~@~~@~~@~~@~8~@~6~@~20~@~800000006
+1261~@~AdmScrAudit [   10] Main: ScrAuditId   100 [Default]~@~4105~@~1019~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+1262~@~AdmScrAuditDtl [   10] Main: ScrAuditDtlId   100 [Default]~@~4114~@~1020~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+1263~@~AdmScrAuditDtl [   20] Main: ScrAuditId   100 [Default]~@~4115~@~1020~@~N~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~
+1264~@~AdmUsr [  250] Status: CompanyLs    10 [UsrGroup6]~@~1742~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~6~@~10~@~800000006
+1265~@~AdmUsr [  320] Status: ProjectLs    10 [UsrGroup6]~@~1743~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~6~@~10~@~800000006
+1266~@~AdmUsr [  260] Status: InvestorId    10 [UsrGroup]~@~316~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~6~@~10~@~800000006
+1267~@~AdmUsr [  270] Status: CustomerId    10 [UsrGroup]~@~6~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~6~@~10~@~800000006
+1268~@~AdmUsr [  280] Status: VendorId    10 [UsrGroup]~@~7~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~6~@~10~@~800000006
+1269~@~AdmUsr [  290] Status: AgentId    10 [UsrGroup]~@~934~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~6~@~10~@~800000006
+1270~@~AdmUsr [  300] Status: BrokerId    10 [UsrGroup]~@~935~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~6~@~10~@~800000006
+1271~@~AdmUsr [  310] Status: MemberId    10 [UsrGroup]~@~8~@~1~@~Y~@~N~@~Y~@~~@~~@~~@~8~@~6~@~10~@~800000006
+1272~@~AdmSystems [  300] Main Info: FromSystemId   100 [Default]~@~4304~@~87~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+1273~@~AdmSystems [  300] Main Info: UpdBaseSystemId   100 [Default]~@~4302~@~87~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+1274~@~AdmSystems [  320] Main Info: UpdRefSystemId   100 [Default]~@~4303~@~87~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~

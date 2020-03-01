@@ -1,0 +1,9 @@
+1~@~View self only~@~S~@~N~@~N~@~N~@~N~@~
+2~@~View self and Edit~@~S~@~N~@~Y~@~N~@~N~@~
+3~@~View self, Add, Edit and Delete~@~S~@~Y~@~Y~@~Y~@~N~@~
+4~@~View all and Edit~@~A~@~N~@~Y~@~N~@~N~@~
+5~@~View all, Add, Edit and Delete~@~A~@~Y~@~Y~@~Y~@~N~@~
+6~@~View all only~@~A~@~N~@~N~@~N~@~N~@~
+7~@~No access~@~N~@~N~@~N~@~N~@~N~@~
+8~@~All access~@~A~@~Y~@~Y~@~Y~@~Y~@~1
+9~@~Administration Special~@~A~@~N~@~N~@~N~@~N~@~

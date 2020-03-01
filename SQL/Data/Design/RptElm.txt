@@ -1,0 +1,13 @@
+10~@~Data Dictionary [PageFooter]~@~57~@~F~@~~@~.70~@~~@~~@~Y~@~Y
+11~@~Data Dictionary [Body]~@~57~@~B~@~~@~7.50~@~~@~~@~N~@~N
+12~@~Data Dictionary [PageHeader]~@~57~@~H~@~~@~.80~@~~@~~@~Y~@~Y
+13~@~SR&ED Time Report [PageFooter]~@~60~@~F~@~~@~.70~@~~@~~@~Y~@~Y
+14~@~SR&ED Time Report [Body]~@~60~@~B~@~~@~5.00~@~~@~~@~N~@~N
+15~@~SR&ED Time Report [PageHeader]~@~60~@~H~@~~@~.80~@~~@~~@~Y~@~Y
+16~@~SR&ED Statistic [Body]~@~61~@~B~@~~@~4.00~@~~@~~@~N~@~N
+20~@~AdmRptPerm [PageFooter]~@~62~@~F~@~~@~.70~@~~@~~@~Y~@~Y
+21~@~AdmRptPerm [Body]~@~62~@~B~@~~@~5.00~@~~@~~@~N~@~N
+22~@~AdmRptPerm [PageHeader]~@~62~@~H~@~~@~.80~@~~@~~@~Y~@~Y
+26~@~User Login Audit Report [PageFooter]~@~64~@~F~@~~@~.70~@~~@~~@~Y~@~Y
+27~@~User Login Audit Report [Body]~@~64~@~B~@~~@~7.50~@~~@~~@~N~@~N
+28~@~User Login Audit Report [PageHeader]~@~64~@~H~@~~@~.80~@~~@~~@~Y~@~Y

@@ -1,0 +1,4 @@
+C~@~Center
+G~@~General
+L~@~Left
+R~@~Right

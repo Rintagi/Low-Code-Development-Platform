@@ -11,15 +11,15 @@ import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
-import FileInputField from '../../components/custom/FileInput';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import DropdownField from '../../components/custom/DropdownField';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import {isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
-import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
 import { getNaviBar } from './index';
@@ -30,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class DtlRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmCtCulture || {});
+    this.GetReduxState = () => (this.props.AdmCtCulture || {});
     this.blocker = null;
     this.titleSet = false;
     this.SystemName = 'FintruX';
@@ -45,8 +45,8 @@ class DtlRecord extends RintagiScreen {
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
     this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
-    this.FileUploadChange = this.FileUploadChange.bind(this);
-//    this.BGlChartId65InputChange = this.BGlChartId65InputChange.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
 
@@ -63,12 +63,12 @@ class DtlRecord extends RintagiScreen {
       isMobile: false
     }
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
   }
-  
+
   mediaqueryresponse(value) {
     if (value.matches) { // if media query matches
       this.setState({ isMobile: true });
@@ -78,8 +78,14 @@ class DtlRecord extends RintagiScreen {
     }
   }
 
-CultureId242InputChange() { const _this = this; return function (name, v) {const filterBy = ''; _this.props.SearchCultureId242(v, filterBy);}}
-/* ReactRule: Detail Record Custom Function */
+  CultureId242InputChange() {
+    const _this = this; 
+    return function (name, v) { 
+      const filterBy = ''; 
+      _this.props.SearchCultureId242(v, filterBy);
+    } 
+  }
+  /* ReactRule: Detail Record Custom Function */
   /* ReactRule End: Detail Record Custom Function */
 
   ValidatePage(values) {
@@ -87,8 +93,8 @@ CultureId242InputChange() { const _this = this; return function (name, v) {const
     const columnLabel = (this.props.AdmCtCulture || {}).ColumnLabel || {};
     const regex = new RegExp(/^-?(?:\d+|\d{1,3}(?:\d{3})+)(?:(\.|,)\d+)?$/);
     /* standard field validation */
-if (isEmptyId((values.cCultureId242 || {}).value)) { errors.cCultureId242 = (columnLabel.CultureId242 || {}).ErrMessage;}
-if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.CultureTypeLabel242 || {}).ErrMessage;}
+    if (isEmptyId((values.cCultureId242 || {}).value)) { errors.cCultureId242 = (columnLabel.CultureId242 || {}).ErrMessage; }
+    if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.CultureTypeLabel242 || {}).ErrMessage; }
     return errors;
   }
 
@@ -97,7 +103,7 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
 
     this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting });
     const ScreenButton = this.state.ScreenButton || {};
-/* ReactRule: Detail Record Save */
+    /* ReactRule: Detail Record Save */
     /* ReactRule End: Detail Record Save */
 
     this.props.SavePage(
@@ -106,8 +112,8 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
       [
         {
           CultureLblId242: values.cCultureLblId242 || null,
-          CultureId242: (values.cCultureId242|| {}).value || '',
-          CultureTypeLabel242: values.cCultureTypeLabel242|| '',
+          CultureId242: (values.cCultureId242 || {}).value || '',
+          CultureTypeLabel242: values.cCultureTypeLabel242 || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cCultureLblId242 ? 'upd' : 'add'),
         }
       ],
@@ -117,8 +123,8 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
       }
     )
   }
- 
-   /* standard screen button actions */
+
+  /* standard screen button actions */
   CopyRow({ mst, dtl, dtlId, useMobileView }) {
     const AdmCtCultureState = this.props.AdmCtCulture || {};
     const auxSystemLabels = AdmCtCultureState.SystemLabel || {};
@@ -129,8 +135,8 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
         if (currDtlId) {
           this.props.AddDtl(mst.CultureTypeId8, currDtlId);
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', mst, {}, this.props.AdmCtCulture.Label);
-            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'Dtl', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', mst, {}, this.props.AdmCtCulture.Label);
+            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'DtlRecord', '/'), '_'));
           }
           else {
             if (this.props.OnCopy) this.props.OnCopy();
@@ -140,7 +146,7 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
           this.setState({ ModalOpen: true, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
         }
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   }
@@ -224,7 +230,7 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
     return revisedState;
   }
 
- confirmUnload(message, callback) {
+  confirmUnload(message, callback) {
     const AdmCtCultureState = this.props.AdmCtCulture || {};
     const auxSystemLabels = AdmCtCultureState.SystemLabel || {};
     const confirm = () => {
@@ -235,9 +241,9 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
     }
     this.setState({ ModalOpen: true, ModalSuccess: confirm, ModalCancel: cancel, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: message });
   }
-  
+
   setDirtyFlag(dirty) {
-   /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
+    /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
     if (dirty) {
       if (this.blocker) unregisterBlocker(this.blocker);
       this.blocker = this.confirmUnload;
@@ -261,7 +267,7 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
     if (!suppressLoadPage) {
       const { mstId, dtlId } = { ...this.props.match.params };
       if (!(this.props.AdmCtCulture || {}).AuthCol || true)
-        this.props.LoadPage('Item', { mstId : mstId || '_', dtlId:dtlId || '_' });
+        this.props.LoadPage('Item', { mstId: mstId || '_', dtlId: dtlId || '_' });
     }
     else {
       return;
@@ -270,13 +276,13 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
   componentDidUpdate(prevprops, prevstates) {
     const currReduxScreenState = this.props.AdmCtCulture || {};
 
-    if(!this.props.suppressLoadPage) {
-      if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!this.props.suppressLoadPage) {
+      if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
         const _this = this;
         setTimeout(() => _this.props.setSpinner(false), 500);
       }
     }
-    
+
     this.SetPageTitle(currReduxScreenState);
     if (prevstates.key !== (currReduxScreenState.EditDtl || {}).key) {
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveCloseDtl') {
@@ -284,7 +290,7 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
         const currDtl = (currReduxScreenState.EditDtl);
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
 
-        const naviBar = getNaviBar('Dtl', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('DtlRecord', currMst, currDtl, currReduxScreenState.Label);
         const dtlListPath = getDefaultPath(getNaviPath(naviBar, 'DtlList', '/'));
 
         this.props.history.push(dtlListPath);
@@ -318,13 +324,15 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
     const DetailRecSubtitle = ((screenHlp || {}).DetailRecSubtitle || '');
     const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
+    const selectList = AdmCtCultureReduxObj.SearchListToSelectList(AdmCtCultureState);
+    const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
     const screenButtons = AdmCtCultureReduxObj.GetScreenButtons(AdmCtCultureState) || {};
     const auxLabels = AdmCtCultureState.Label || {};
     const auxSystemLabels = AdmCtCultureState.SystemLabel || {};
     const columnLabel = AdmCtCultureState.ColumnLabel || {};
     const currMst = AdmCtCultureState.Mst;
     const currDtl = AdmCtCultureState.EditDtl;
-    const naviBar = getNaviBar('Dtl', currMst, currDtl, screenButtons);
+    const naviBar = getNaviBar('DtlRecord', currMst, currDtl, screenButtons);
     const authCol = this.GetAuthCol(AdmCtCultureState);
     const authRow = (AdmCtCultureState.AuthRow || [])[0] || {};
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -332,25 +340,11 @@ if (!values.cCultureTypeLabel242) { errors.cCultureTypeLabel242 = (columnLabel.C
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const CultureId242List = AdmCtCultureReduxObj.ScreenDdlSelectors.CultureId242(AdmCtCultureState);
-const CultureId242 = currDtl.CultureId242;
-const CultureTypeLabel242 = currDtl.CultureTypeLabel242;
-// custome image upload code
-//    const TrxDetImg65 = currDtl.TrxDetImg65 ? (currDtl.TrxDetImg65.startsWith('{') ? JSON.parse(currDtl.TrxDetImg65) : { fileName: '', mimeType: 'image/jpeg', base64: currDtl.TrxDetImg65 }) : null;
-//    const TrxDetImg65FileUploadOptions = {
-//      CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
-//      DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
-//      MaxImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ResizeWidth,
-//        Height:(columnLabel.TrxDetImg65 || {}).ResizeHeight,
-//      },
-//      MinImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ColumnSize,
-//        Height:(columnLabel.TrxDetImg65 || {}).ColumnHeight,
-//      },
-//    }
-/* ReactRule: Detail Record Render */
-/* ReactRule End: Detail Record Render */
+    const CultureId242List = AdmCtCultureReduxObj.ScreenDdlSelectors.CultureId242(AdmCtCultureState);
+    const CultureId242 = currDtl.CultureId242;
+    const CultureTypeLabel242 = currDtl.CultureTypeLabel242;
+    /* ReactRule: Detail Record Render */
+    /* ReactRule End: Detail Record Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -368,8 +362,9 @@ const CultureTypeLabel242 = currDtl.CultureTypeLabel242;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cCultureId242: CultureId242List.filter(obj => { return obj.key === currDtl.CultureId242 })[0],
-                  cCultureTypeLabel242: currDtl.CultureTypeLabel242 || '',
+                    cCultureLblId242: currDtl.CultureLblId242 || '',
+                    cCultureId242: CultureId242List.filter(obj => { return obj.key === currDtl.CultureId242 })[0],
+                    cCultureTypeLabel242: formatContent(currDtl.CultureTypeLabel242 || '', 'TextBox'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -406,7 +401,7 @@ const CultureTypeLabel242 = currDtl.CultureTypeLabel242;
                                   <ButtonGroup className='btn-group--icons'>
                                     <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
                                     {
-                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).CultureTypeId8,currDtl.CultureLblId242)).length > 0 &&
+                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).CultureTypeId8, currDtl.CultureLblId242)).length > 0 &&
                                       <DropdownToggle className='mw-50' outline>
                                         <i className='fa fa-ellipsis-h icon-holder'></i>
                                         {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
@@ -418,7 +413,7 @@ const CultureTypeLabel242 = currDtl.CultureTypeLabel242;
                                     <DropdownMenu right className={`dropdown__menu dropdown-options`}>
                                       {
                                         dropdownMenuButtonList.filter(v => !v.expose).map(v => {
-                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).CultureTypeId8,currDtl.CultureLblId242)) return null;
+                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).CultureTypeId8, currDtl.CultureLblId242)) return null;
                                           return (
                                             <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, submitForm, mst: currMst, dtl: currDtl, useMobileView })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
                                         })
@@ -431,57 +426,74 @@ const CultureTypeLabel242 = currDtl.CultureTypeLabel242;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          <div className='form__form-group'>
+                            <div className='form__form-group-narrow'>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                           <div className='w-100'>
                             <Row>
-            {(authCol.CultureId242 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.CultureId242 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureId242 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.CultureId242 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureId242 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<AutoCompleteField
-name='cCultureId242'
-onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureId242', false)}
-onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureId242', true)}
-onInputChange={this.CultureId242InputChange()}
-value={values.cCultureId242}
-defaultSelected={CultureId242List.filter(obj => { return obj.key === CultureId242 })}
-options={CultureId242List}
-filterBy={this.AutoCompleteFilterBy}
-disabled = {(authCol.CultureId242 || {}).readonly ? true: false }/>
-</div>
-}
-{errors.cCultureId242 && touched.cCultureId242 && <span className='form__form-group-error'>{errors.cCultureId242}</span>}
-</div>
-</Col>
-}
-{(authCol.CultureTypeLabel242 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.CultureTypeLabel242 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureTypeLabel242 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.CultureTypeLabel242 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CultureTypeLabel242 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cCultureTypeLabel242'
-disabled = {(authCol.CultureTypeLabel242 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cCultureTypeLabel242 && touched.cCultureTypeLabel242 && <span className='form__form-group-error'>{errors.cCultureTypeLabel242}</span>}
-</div>
-</Col>
-}
+                              {(authCol.CultureId242 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.CultureId242 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureId242 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.CultureId242 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CultureId242 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='cCultureId242'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureId242', false)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureId242', true)}
+                                          onInputChange={this.CultureId242InputChange()}
+                                          value={values.cCultureId242}
+                                          defaultSelected={CultureId242List.filter(obj => { return obj.key === CultureId242 })}
+                                          options={CultureId242List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol.CultureId242 || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.cCultureId242 && touched.cCultureId242 && <span className='form__form-group-error'>{errors.cCultureId242}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.CultureTypeLabel242 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.CultureTypeLabel242 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CultureTypeLabel242 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.CultureTypeLabel242 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CultureTypeLabel242 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmCtCultureState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cCultureTypeLabel242'
+                                          disabled={(authCol.CultureTypeLabel242 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cCultureTypeLabel242 && touched.cCultureTypeLabel242 && <span className='form__form-group-error'>{errors.cCultureTypeLabel242}</span>}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mb-0'>
@@ -497,7 +509,7 @@ disabled = {(authCol.CultureTypeLabel242 || {}).readonly ? 'disabled': '' }/>
                                     bottomButtonList
                                       .filter(v => v.expose)
                                       .map((v, i, a) => {
-                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).CultureTypeId8,currDtl.CultureLblId242)) return null;
+                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).CultureTypeId8, currDtl.CultureLblId242)) return null;
                                         const buttonCount = a.length;
                                         const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
@@ -540,11 +552,10 @@ const mapDispatchToProps = (dispatch) => (
     { LoadPage: AdmCtCultureReduxObj.LoadPage.bind(AdmCtCultureReduxObj) },
     { AddDtl: AdmCtCultureReduxObj.AddDtl.bind(AdmCtCultureReduxObj) },
     { SavePage: AdmCtCultureReduxObj.SavePage.bind(AdmCtCultureReduxObj) },
-{ SearchCultureId242: AdmCtCultureReduxObj.SearchActions.SearchCultureId242.bind(AdmCtCultureReduxObj) },
-  { setTitle: setTitle },
+    { SearchCultureId242: AdmCtCultureReduxObj.SearchActions.SearchCultureId242.bind(AdmCtCultureReduxObj) },
+    { setTitle: setTitle },
     { setSpinner: setSpinner },
   ), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
-

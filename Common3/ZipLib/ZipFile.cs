@@ -2383,7 +2383,9 @@ namespace Ionic.Zip
             }
         }
 
-
+        /// <summary>List of directory names that would be excluded from the zip operation </summary>
+        /// 
+        public List<string> ExcludeDir { get; set; }
         #endregion
 
         #region Constructors

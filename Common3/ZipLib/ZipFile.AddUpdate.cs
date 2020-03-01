@@ -29,6 +29,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ionic.Zip
 {
@@ -2130,8 +2131,23 @@ namespace Ionic.Zip
                     {
                         // add the subdirectories:
                         String[] dirnames = Directory.GetDirectories(directoryName);
+                        string zipFrNoSlash = directoryName.EndsWith(@"\") ? directoryName.Substring(0, directoryName.Length - 1) : directoryName;
+                        Func<string, string> fNoEndingSlash = x => x.EndsWith(@"\") ? x.Substring(0, x.Length - 1) : x;
+                        List<System.Text.RegularExpressions.Regex> exemptRules =
+                            (from o in (ExcludeDir ?? new List<string>())
+                             where !string.IsNullOrEmpty(o.Trim())
+                             select new System.Text.RegularExpressions.Regex("^" + zipFrNoSlash.Replace("\\", "\\\\").Replace(".", "\\.") + (fNoEndingSlash(o).Contains(".") && !fNoEndingSlash(o).Contains("\\") ? ".*" : "") + (fNoEndingSlash(o).StartsWith("\\") ? @"(\\)?" : @"\\") + fNoEndingSlash(o).Trim().ToLower().Replace("\\", "\\\\").Replace("*.*", "*").Replace(".", "\\.").Replace("*", fNoEndingSlash(o).Contains("\\*.*") ? ".*" : "[^\\\\]*") + "$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToList();
+                        Func<string, string, bool> fIsExempted = (f, p) => { foreach (var re in exemptRules) { if (re.IsMatch(p)) return true; } return false; };
+                        Func<string, string, bool> fIsIncluded = (f, p) => true;
+
                         foreach (String dir in dirnames)
                         {
+                            DirectoryInfo di = new DirectoryInfo(dir);
+                            if (ExcludeDir != null && fIsExempted(di.Name,di.FullName))
+                            {
+                                continue;
+                            }
+
                             // workitem 8617: Optionally traverse reparse points
 #if SILVERLIGHT
 #elif NETCF

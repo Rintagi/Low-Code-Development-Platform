@@ -11,15 +11,15 @@ import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
-import FileInputField from '../../components/custom/FileInput';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import DropdownField from '../../components/custom/DropdownField';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import {isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
-import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
 import { getNaviBar } from './index';
@@ -30,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class DtlRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmDbTable || {});
+    this.GetReduxState = () => (this.props.AdmDbTable || {});
     this.blocker = null;
     this.titleSet = false;
     this.SystemName = 'FintruX';
@@ -45,8 +45,8 @@ class DtlRecord extends RintagiScreen {
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
     this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
-    this.FileUploadChange = this.FileUploadChange.bind(this);
-//    this.BGlChartId65InputChange = this.BGlChartId65InputChange.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
 
@@ -63,12 +63,12 @@ class DtlRecord extends RintagiScreen {
       isMobile: false
     }
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
   }
-  
+
   mediaqueryresponse(value) {
     if (value.matches) { // if media query matches
       this.setState({ isMobile: true });
@@ -79,7 +79,7 @@ class DtlRecord extends RintagiScreen {
   }
 
 
-/* ReactRule: Detail Record Custom Function */
+  /* ReactRule: Detail Record Custom Function */
   /* ReactRule End: Detail Record Custom Function */
 
   ValidatePage(values) {
@@ -87,9 +87,9 @@ class DtlRecord extends RintagiScreen {
     const columnLabel = (this.props.AdmDbTable || {}).ColumnLabel || {};
     const regex = new RegExp(/^-?(?:\d+|\d{1,3}(?:\d{3})+)(?:(\.|,)\d+)?$/);
     /* standard field validation */
-if (!values.cColumnName5) { errors.cColumnName5 = (columnLabel.ColumnName5 || {}).ErrMessage;}
-if (isEmptyId((values.cDataType5 || {}).value)) { errors.cDataType5 = (columnLabel.DataType5 || {}).ErrMessage;}
-if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5 || {}).ErrMessage;}
+    if (!values.cColumnName5) { errors.cColumnName5 = (columnLabel.ColumnName5 || {}).ErrMessage; }
+    if (isEmptyId((values.cDataType5 || {}).value)) { errors.cDataType5 = (columnLabel.DataType5 || {}).ErrMessage; }
+    if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5 || {}).ErrMessage; }
     return errors;
   }
 
@@ -98,7 +98,7 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
 
     this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting });
     const ScreenButton = this.state.ScreenButton || {};
-/* ReactRule: Detail Record Save */
+    /* ReactRule: Detail Record Save */
     /* ReactRule End: Detail Record Save */
 
     this.props.SavePage(
@@ -107,19 +107,19 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
       [
         {
           ColumnId5: values.cColumnId5 || null,
-          ColumnIndex5: values.cColumnIndex5|| '',
-          ExternalTable5: values.cExternalTable5|| '',
-          ColumnName5: values.cColumnName5|| '',
-          DataType5: (values.cDataType5|| {}).value || '',
-          ColumnLength5: values.cColumnLength5|| '',
-          ColumnScale5: values.cColumnScale5|| '',
-          DefaultValue5: values.cDefaultValue5|| '',
+          ColumnIndex5: values.cColumnIndex5 || '',
+          ExternalTable5: values.cExternalTable5 || '',
+          ColumnName5: values.cColumnName5 || '',
+          DataType5: (values.cDataType5 || {}).value || '',
+          ColumnLength5: values.cColumnLength5 || '',
+          ColumnScale5: values.cColumnScale5 || '',
+          DefaultValue5: values.cDefaultValue5 || '',
           AllowNulls5: values.cAllowNulls5 || '',
           ColumnIdentity5: values.cColumnIdentity5 ? 'Y' : 'N',
           PrimaryKey5: values.cPrimaryKey5 ? 'Y' : 'N',
           IsIndexU5: values.cIsIndexU5 ? 'Y' : 'N',
           IsIndex5: values.cIsIndex5 ? 'Y' : 'N',
-          ColObjective5: values.cColObjective5|| '',
+          ColObjective5: values.cColObjective5 || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cColumnId5 ? 'upd' : 'add'),
         }
       ],
@@ -129,8 +129,8 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
       }
     )
   }
- 
-   /* standard screen button actions */
+
+  /* standard screen button actions */
   CopyRow({ mst, dtl, dtlId, useMobileView }) {
     const AdmDbTableState = this.props.AdmDbTable || {};
     const auxSystemLabels = AdmDbTableState.SystemLabel || {};
@@ -141,8 +141,8 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
         if (currDtlId) {
           this.props.AddDtl(mst.TableId3, currDtlId);
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', mst, {}, this.props.AdmDbTable.Label);
-            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'Dtl', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', mst, {}, this.props.AdmDbTable.Label);
+            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'DtlRecord', '/'), '_'));
           }
           else {
             if (this.props.OnCopy) this.props.OnCopy();
@@ -152,7 +152,7 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
           this.setState({ ModalOpen: true, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
         }
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   }
@@ -236,7 +236,7 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
     return revisedState;
   }
 
- confirmUnload(message, callback) {
+  confirmUnload(message, callback) {
     const AdmDbTableState = this.props.AdmDbTable || {};
     const auxSystemLabels = AdmDbTableState.SystemLabel || {};
     const confirm = () => {
@@ -247,9 +247,9 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
     }
     this.setState({ ModalOpen: true, ModalSuccess: confirm, ModalCancel: cancel, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: message });
   }
-  
+
   setDirtyFlag(dirty) {
-   /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
+    /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
     if (dirty) {
       if (this.blocker) unregisterBlocker(this.blocker);
       this.blocker = this.confirmUnload;
@@ -273,7 +273,7 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
     if (!suppressLoadPage) {
       const { mstId, dtlId } = { ...this.props.match.params };
       if (!(this.props.AdmDbTable || {}).AuthCol || true)
-        this.props.LoadPage('Item', { mstId : mstId || '_', dtlId:dtlId || '_' });
+        this.props.LoadPage('Item', { mstId: mstId || '_', dtlId: dtlId || '_' });
     }
     else {
       return;
@@ -282,13 +282,13 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
   componentDidUpdate(prevprops, prevstates) {
     const currReduxScreenState = this.props.AdmDbTable || {};
 
-    if(!this.props.suppressLoadPage) {
-      if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!this.props.suppressLoadPage) {
+      if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
         const _this = this;
         setTimeout(() => _this.props.setSpinner(false), 500);
       }
     }
-    
+
     this.SetPageTitle(currReduxScreenState);
     if (prevstates.key !== (currReduxScreenState.EditDtl || {}).key) {
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveCloseDtl') {
@@ -296,7 +296,7 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
         const currDtl = (currReduxScreenState.EditDtl);
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
 
-        const naviBar = getNaviBar('Dtl', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('DtlRecord', currMst, currDtl, currReduxScreenState.Label);
         const dtlListPath = getDefaultPath(getNaviPath(naviBar, 'DtlList', '/'));
 
         this.props.history.push(dtlListPath);
@@ -330,13 +330,15 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
     const DetailRecSubtitle = ((screenHlp || {}).DetailRecSubtitle || '');
     const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
+    const selectList = AdmDbTableReduxObj.SearchListToSelectList(AdmDbTableState);
+    const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
     const screenButtons = AdmDbTableReduxObj.GetScreenButtons(AdmDbTableState) || {};
     const auxLabels = AdmDbTableState.Label || {};
     const auxSystemLabels = AdmDbTableState.SystemLabel || {};
     const columnLabel = AdmDbTableState.ColumnLabel || {};
     const currMst = AdmDbTableState.Mst;
     const currDtl = AdmDbTableState.EditDtl;
-    const naviBar = getNaviBar('Dtl', currMst, currDtl, screenButtons);
+    const naviBar = getNaviBar('DtlRecord', currMst, currDtl, screenButtons);
     const authCol = this.GetAuthCol(AdmDbTableState);
     const authRow = (AdmDbTableState.AuthRow || [])[0] || {};
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -344,36 +346,22 @@ if (!values.cColumnLength5) { errors.cColumnLength5 = (columnLabel.ColumnLength5
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const ColumnIndex5 = currDtl.ColumnIndex5;
-const ExternalTable5 = currDtl.ExternalTable5;
-const ColumnName5 = currDtl.ColumnName5;
-const DataType5List = AdmDbTableReduxObj.ScreenDdlSelectors.DataType5(AdmDbTableState);
-const DataType5 = currDtl.DataType5;
-const ColumnLength5 = currDtl.ColumnLength5;
-const ColumnScale5 = currDtl.ColumnScale5;
-const DefaultValue5 = currDtl.DefaultValue5;
-const AllowNulls5 = currDtl.AllowNulls5;
-const ColumnIdentity5 = currDtl.ColumnIdentity5;
-const PrimaryKey5 = currDtl.PrimaryKey5;
-const IsIndexU5 = currDtl.IsIndexU5;
-const IsIndex5 = currDtl.IsIndex5;
-const ColObjective5 = currDtl.ColObjective5;
-// custome image upload code
-//    const TrxDetImg65 = currDtl.TrxDetImg65 ? (currDtl.TrxDetImg65.startsWith('{') ? JSON.parse(currDtl.TrxDetImg65) : { fileName: '', mimeType: 'image/jpeg', base64: currDtl.TrxDetImg65 }) : null;
-//    const TrxDetImg65FileUploadOptions = {
-//      CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
-//      DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
-//      MaxImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ResizeWidth,
-//        Height:(columnLabel.TrxDetImg65 || {}).ResizeHeight,
-//      },
-//      MinImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ColumnSize,
-//        Height:(columnLabel.TrxDetImg65 || {}).ColumnHeight,
-//      },
-//    }
-/* ReactRule: Detail Record Render */
-/* ReactRule End: Detail Record Render */
+    const ColumnIndex5 = currDtl.ColumnIndex5;
+    const ExternalTable5 = currDtl.ExternalTable5;
+    const ColumnName5 = currDtl.ColumnName5;
+    const DataType5List = AdmDbTableReduxObj.ScreenDdlSelectors.DataType5(AdmDbTableState);
+    const DataType5 = currDtl.DataType5;
+    const ColumnLength5 = currDtl.ColumnLength5;
+    const ColumnScale5 = currDtl.ColumnScale5;
+    const DefaultValue5 = currDtl.DefaultValue5;
+    const AllowNulls5 = currDtl.AllowNulls5;
+    const ColumnIdentity5 = currDtl.ColumnIdentity5;
+    const PrimaryKey5 = currDtl.PrimaryKey5;
+    const IsIndexU5 = currDtl.IsIndexU5;
+    const IsIndex5 = currDtl.IsIndex5;
+    const ColObjective5 = currDtl.ColObjective5;
+    /* ReactRule: Detail Record Render */
+    /* ReactRule End: Detail Record Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -391,19 +379,20 @@ const ColObjective5 = currDtl.ColObjective5;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cColumnIndex5: currDtl.ColumnIndex5 || '',
-                  cExternalTable5: currDtl.ExternalTable5 || '',
-                  cColumnName5: currDtl.ColumnName5 || '',
-                  cDataType5: DataType5List.filter(obj => { return obj.key === currDtl.DataType5 })[0],
-                  cColumnLength5: currDtl.ColumnLength5 || '',
-                  cColumnScale5: currDtl.ColumnScale5 || '',
-                  cDefaultValue5: currDtl.DefaultValue5 || '',
-                  cAllowNulls5: currDtl.AllowNulls5 || '',
-                  cColumnIdentity5: currDtl.ColumnIdentity5 === 'Y',
-                  cPrimaryKey5: currDtl.PrimaryKey5 === 'Y',
-                  cIsIndexU5: currDtl.IsIndexU5 === 'Y',
-                  cIsIndex5: currDtl.IsIndex5 === 'Y',
-                  cColObjective5: currDtl.ColObjective5 || '',
+                    cColumnId5: currDtl.ColumnId5 || '',
+                    cColumnIndex5: formatContent(currDtl.ColumnIndex5 || '', 'TextBox'),
+                    cExternalTable5: formatContent(currDtl.ExternalTable5 || '', 'TextBox'),
+                    cColumnName5: formatContent(currDtl.ColumnName5 || '', 'TextBox'),
+                    cDataType5: DataType5List.filter(obj => { return obj.key === currDtl.DataType5 })[0],
+                    cColumnLength5: formatContent(currDtl.ColumnLength5 || '', 'TextBox'),
+                    cColumnScale5: formatContent(currDtl.ColumnScale5 || '', 'TextBox'),
+                    cDefaultValue5: formatContent(currDtl.DefaultValue5 || '', 'TextBox'),
+                    cAllowNulls5: formatContent(currDtl.AllowNulls5 || '', 'CheckBoxAll'),
+                    cColumnIdentity5: currDtl.ColumnIdentity5 === 'Y',
+                    cPrimaryKey5: currDtl.PrimaryKey5 === 'Y',
+                    cIsIndexU5: currDtl.IsIndexU5 === 'Y',
+                    cIsIndex5: currDtl.IsIndex5 === 'Y',
+                    cColObjective5: formatContent(currDtl.ColObjective5 || '', 'TextBox'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -440,7 +429,7 @@ const ColObjective5 = currDtl.ColObjective5;
                                   <ButtonGroup className='btn-group--icons'>
                                     <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
                                     {
-                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3,currDtl.ColumnId5)).length > 0 &&
+                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3, currDtl.ColumnId5)).length > 0 &&
                                       <DropdownToggle className='mw-50' outline>
                                         <i className='fa fa-ellipsis-h icon-holder'></i>
                                         {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
@@ -452,7 +441,7 @@ const ColObjective5 = currDtl.ColObjective5;
                                     <DropdownMenu right className={`dropdown__menu dropdown-options`}>
                                       {
                                         dropdownMenuButtonList.filter(v => !v.expose).map(v => {
-                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3,currDtl.ColumnId5)) return null;
+                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3, currDtl.ColumnId5)) return null;
                                           return (
                                             <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, submitForm, mst: currMst, dtl: currDtl, useMobileView })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
                                         })
@@ -465,285 +454,302 @@ const ColObjective5 = currDtl.ColObjective5;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          <div className='form__form-group'>
+                            <div className='form__form-group-narrow'>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                           <div className='w-100'>
                             <Row>
-            {(authCol.ColumnIndex5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ColumnIndex5 || {}).ColumnHeader} {(columnLabel.ColumnIndex5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ColumnIndex5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnIndex5 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cColumnIndex5'
-disabled = {(authCol.ColumnIndex5 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cColumnIndex5 && touched.cColumnIndex5 && <span className='form__form-group-error'>{errors.cColumnIndex5}</span>}
-</div>
-</Col>
-}
-{(authCol.ExternalTable5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ExternalTable5 || {}).ColumnHeader} {(columnLabel.ExternalTable5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ExternalTable5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ExternalTable5 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cExternalTable5'
-disabled = {(authCol.ExternalTable5 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cExternalTable5 && touched.cExternalTable5 && <span className='form__form-group-error'>{errors.cExternalTable5}</span>}
-</div>
-</Col>
-}
-{(authCol.ColumnName5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ColumnName5 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ColumnName5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ColumnName5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnName5 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cColumnName5'
-disabled = {(authCol.ColumnName5 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cColumnName5 && touched.cColumnName5 && <span className='form__form-group-error'>{errors.cColumnName5}</span>}
-</div>
-</Col>
-}
-{(authCol.DataType5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DataType5 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DataType5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DataType5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DataType5 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cDataType5'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cDataType5')}
-value={values.cDataType5}
-options={DataType5List}
-placeholder=''
-disabled = {(authCol.DataType5 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDataType5 && touched.cDataType5 && <span className='form__form-group-error'>{errors.cDataType5}</span>}
-</div>
-</Col>
-}
-{(authCol.ColumnLength5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ColumnLength5 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ColumnLength5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ColumnLength5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnLength5 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cColumnLength5'
-disabled = {(authCol.ColumnLength5 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cColumnLength5 && touched.cColumnLength5 && <span className='form__form-group-error'>{errors.cColumnLength5}</span>}
-</div>
-</Col>
-}
-{(authCol.ColumnScale5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ColumnScale5 || {}).ColumnHeader} {(columnLabel.ColumnScale5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ColumnScale5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnScale5 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cColumnScale5'
-disabled = {(authCol.ColumnScale5 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cColumnScale5 && touched.cColumnScale5 && <span className='form__form-group-error'>{errors.cColumnScale5}</span>}
-</div>
-</Col>
-}
-{(authCol.DefaultValue5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DefaultValue5 || {}).ColumnHeader} {(columnLabel.DefaultValue5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DefaultValue5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DefaultValue5 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDefaultValue5'
-disabled = {(authCol.DefaultValue5 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDefaultValue5 && touched.cDefaultValue5 && <span className='form__form-group-error'>{errors.cDefaultValue5}</span>}
-</div>
-</Col>
-}
-{(authCol.AllowNulls5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.AllowNulls5 || {}).ColumnHeader} {(columnLabel.AllowNulls5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.AllowNulls5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.AllowNulls5 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cAllowNulls5'
-disabled = {(authCol.AllowNulls5 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cAllowNulls5 && touched.cAllowNulls5 && <span className='form__form-group-error'>{errors.cAllowNulls5}</span>}
-</div>
-</Col>
-}
-{(authCol.ColumnIdentity5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cColumnIdentity5'
-onChange={handleChange}
-defaultChecked={values.cColumnIdentity5}
-disabled={(authCol.ColumnIdentity5 || {}).readonly || !(authCol.ColumnIdentity5 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.ColumnIdentity5 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.ColumnIdentity5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ColumnIdentity5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColumnIdentity5 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
-{(authCol.PrimaryKey5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cPrimaryKey5'
-onChange={handleChange}
-defaultChecked={values.cPrimaryKey5}
-disabled={(authCol.PrimaryKey5 || {}).readonly || !(authCol.PrimaryKey5 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.PrimaryKey5 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.PrimaryKey5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PrimaryKey5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PrimaryKey5 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
-{(authCol.IsIndexU5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cIsIndexU5'
-onChange={handleChange}
-defaultChecked={values.cIsIndexU5}
-disabled={(authCol.IsIndexU5 || {}).readonly || !(authCol.IsIndexU5 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.IsIndexU5 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.IsIndexU5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.IsIndexU5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.IsIndexU5 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
-{(authCol.IsIndex5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cIsIndex5'
-onChange={handleChange}
-defaultChecked={values.cIsIndex5}
-disabled={(authCol.IsIndex5 || {}).readonly || !(authCol.IsIndex5 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.IsIndex5 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.IsIndex5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.IsIndex5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.IsIndex5 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
-{(authCol.ColObjective5 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ColObjective5 || {}).ColumnHeader} {(columnLabel.ColObjective5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ColObjective5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ColObjective5 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cColObjective5'
-disabled = {(authCol.ColObjective5 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cColObjective5 && touched.cColObjective5 && <span className='form__form-group-error'>{errors.cColObjective5}</span>}
-</div>
-</Col>
-}
+                              {(authCol.ColumnIndex5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ColumnIndex5 || {}).ColumnHeader} {(columnLabel.ColumnIndex5 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ColumnIndex5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ColumnIndex5 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cColumnIndex5'
+                                          disabled={(authCol.ColumnIndex5 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cColumnIndex5 && touched.cColumnIndex5 && <span className='form__form-group-error'>{errors.cColumnIndex5}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ExternalTable5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ExternalTable5 || {}).ColumnHeader} {(columnLabel.ExternalTable5 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ExternalTable5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ExternalTable5 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cExternalTable5'
+                                          disabled={(authCol.ExternalTable5 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cExternalTable5 && touched.cExternalTable5 && <span className='form__form-group-error'>{errors.cExternalTable5}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ColumnName5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ColumnName5 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ColumnName5 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ColumnName5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ColumnName5 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cColumnName5'
+                                          disabled={(authCol.ColumnName5 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cColumnName5 && touched.cColumnName5 && <span className='form__form-group-error'>{errors.cColumnName5}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DataType5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DataType5 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DataType5 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DataType5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DataType5 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cDataType5'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cDataType5')}
+                                          value={values.cDataType5}
+                                          options={DataType5List}
+                                          placeholder=''
+                                          disabled={(authCol.DataType5 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDataType5 && touched.cDataType5 && <span className='form__form-group-error'>{errors.cDataType5}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ColumnLength5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ColumnLength5 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ColumnLength5 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ColumnLength5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ColumnLength5 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cColumnLength5'
+                                          disabled={(authCol.ColumnLength5 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cColumnLength5 && touched.cColumnLength5 && <span className='form__form-group-error'>{errors.cColumnLength5}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ColumnScale5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ColumnScale5 || {}).ColumnHeader} {(columnLabel.ColumnScale5 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ColumnScale5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ColumnScale5 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cColumnScale5'
+                                          disabled={(authCol.ColumnScale5 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cColumnScale5 && touched.cColumnScale5 && <span className='form__form-group-error'>{errors.cColumnScale5}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DefaultValue5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DefaultValue5 || {}).ColumnHeader} {(columnLabel.DefaultValue5 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DefaultValue5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DefaultValue5 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDefaultValue5'
+                                          disabled={(authCol.DefaultValue5 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDefaultValue5 && touched.cDefaultValue5 && <span className='form__form-group-error'>{errors.cDefaultValue5}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {false && (authCol.AllowNulls5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.AllowNulls5 || {}).ColumnHeader} {(columnLabel.AllowNulls5 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.AllowNulls5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.AllowNulls5 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cAllowNulls5'
+                                          disabled={(authCol.AllowNulls5 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cAllowNulls5 && touched.cAllowNulls5 && <span className='form__form-group-error'>{errors.cAllowNulls5}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ColumnIdentity5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cColumnIdentity5'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cColumnIdentity5}
+                                        disabled={(authCol.ColumnIdentity5 || {}).readonly || !(authCol.ColumnIdentity5 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.ColumnIdentity5 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.ColumnIdentity5 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.ColumnIdentity5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ColumnIdentity5 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.PrimaryKey5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cPrimaryKey5'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cPrimaryKey5}
+                                        disabled={(authCol.PrimaryKey5 || {}).readonly || !(authCol.PrimaryKey5 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.PrimaryKey5 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.PrimaryKey5 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.PrimaryKey5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PrimaryKey5 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.IsIndexU5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cIsIndexU5'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cIsIndexU5}
+                                        disabled={(authCol.IsIndexU5 || {}).readonly || !(authCol.IsIndexU5 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.IsIndexU5 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.IsIndexU5 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.IsIndexU5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.IsIndexU5 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.IsIndex5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cIsIndex5'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cIsIndex5}
+                                        disabled={(authCol.IsIndex5 || {}).readonly || !(authCol.IsIndex5 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.IsIndex5 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.IsIndex5 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.IsIndex5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.IsIndex5 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ColObjective5 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ColObjective5 || {}).ColumnHeader} {(columnLabel.ColObjective5 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ColObjective5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ColObjective5 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cColObjective5'
+                                          disabled={(authCol.ColObjective5 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cColObjective5 && touched.cColObjective5 && <span className='form__form-group-error'>{errors.cColObjective5}</span>}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mb-0'>
@@ -759,7 +765,7 @@ disabled = {(authCol.ColObjective5 || {}).readonly ? 'disabled': '' }/>
                                     bottomButtonList
                                       .filter(v => v.expose)
                                       .map((v, i, a) => {
-                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3,currDtl.ColumnId5)) return null;
+                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).TableId3, currDtl.ColumnId5)) return null;
                                         const buttonCount = a.length;
                                         const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
@@ -803,10 +809,9 @@ const mapDispatchToProps = (dispatch) => (
     { AddDtl: AdmDbTableReduxObj.AddDtl.bind(AdmDbTableReduxObj) },
     { SavePage: AdmDbTableReduxObj.SavePage.bind(AdmDbTableReduxObj) },
 
-  { setTitle: setTitle },
+    { setTitle: setTitle },
     { setSpinner: setSpinner },
   ), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
-

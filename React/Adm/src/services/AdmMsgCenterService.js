@@ -1,5 +1,5 @@
 
-import {fetchData,getAccessControlInfo, getAccessScope, baseUrl} from './webAPIBase';
+import { fetchData, getAccessControlInfo, getAccessScope, baseUrl } from './webAPIBase';
 
 let activeScope = {};
 
@@ -10,9 +10,9 @@ export function setAccessScope(scope) {
     }
 }
 
-export function GetAuthCol(accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetAuthCol'
-        ,{
+export function GetAuthCol(accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetAuthCol'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -22,9 +22,9 @@ export function GetAuthCol(accessScope){
         }
     )
 }
-export function GetAuthRow(accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetAuthRow'
-        ,{
+export function GetAuthRow(accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetAuthRow'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -35,9 +35,9 @@ export function GetAuthRow(accessScope){
     )
 
 }
-export function GetScreenLabel(accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetScreenLabel'
-        ,{
+export function GetScreenLabel(accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetScreenLabel'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -49,12 +49,12 @@ export function GetScreenLabel(accessScope){
 
 }
 
-export function GetLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetLabels'
-        ,{
+export function GetLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -63,12 +63,12 @@ export function GetLabels(labelCat,accessScope){
     )
 }
 
-export function GetSystemLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetSystemLabels'
-        ,{
+export function GetSystemLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetSystemLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -77,9 +77,9 @@ export function GetSystemLabels(labelCat,accessScope){
     )
 }
 
-export function GetScreenButtonHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetScreenButtonHlp'
-        ,{
+export function GetScreenButtonHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetScreenButtonHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -89,9 +89,9 @@ export function GetScreenButtonHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetScreenHlp'
-        ,{
+export function GetScreenHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetScreenHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -101,9 +101,9 @@ export function GetScreenHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenCriteria(accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetScreenCriteria'
-        ,{
+export function GetScreenCriteria(accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -113,9 +113,9 @@ export function GetScreenCriteria(accessScope){
         }
     )
 }
-export function GetNewMst(accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetNewMst'
-        ,{
+export function GetNewMst(accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetNewMst'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -125,9 +125,9 @@ export function GetNewMst(accessScope){
         }
     )
 }
-export function GetNewDtl(accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetNewDtl'
-        ,{
+export function GetNewDtl(accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetNewDtl'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -137,9 +137,9 @@ export function GetNewDtl(accessScope){
         }
     )
 }
-export function GetScreenFilter(accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetScreenFilter'
-        ,{
+export function GetScreenFilter(accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetScreenFilter'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -149,31 +149,14 @@ export function GetScreenFilter(accessScope){
         }
     )
 }
-export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetColumnContent'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    mstId: mstId || '',
-                    dtlId: dtlId || '',
-                    screenColumnName: screenColumnName,
-                    columnName: columnName,
-                    isMaster: isMaster,
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function GetAdmMsgCenter86List(searchStr, topN, filterId,accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetAdmMsgCenter86List'
-        ,{
+export function GetAdmMsgCenter86List(searchStr, topN, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetAdmMsgCenter86List'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     searchStr: searchStr || '',
                     topN: topN || 0,
-                    filterId: ('' +  (filterId || 0)),
+                    filterId: ('' + (filterId || 0)),
                 }),
             },
             ...(getAccessControlInfo()),
@@ -181,14 +164,15 @@ export function GetAdmMsgCenter86List(searchStr, topN, filterId,accessScope){
         }
     )
 }
-export function GetAdmMsgCenter86ById(keyId,accessScope){   
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetAdmMsgCenter86ById'
-        ,{
+export const GetSearchList = GetAdmMsgCenter86List;
+export function GetAdmMsgCenter86ById(keyId, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetAdmMsgCenter86ById'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
                     options: {
-                        currentScreenCriteria : JSON.stringify({}),
+                        CurrentScreenCriteria: JSON.stringify({}),
                     },
                 }),
             },
@@ -197,14 +181,15 @@ export function GetAdmMsgCenter86ById(keyId,accessScope){
         }
     )
 }
-export function GetAdmMsgCenter86DtlById(keyId,filterId,accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetAdmMsgCenter86DtlById'
-        ,{
+export const GetMstById = GetAdmMsgCenter86ById;
+export function GetAdmMsgCenter86DtlById(keyId, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetAdmMsgCenter86DtlById'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
                     options: {
-                        currentScreenCriteria : JSON.stringify({}),
+                        CurrentScreenCriteria: JSON.stringify({}),
                     },
                     filterId: filterId || 0,
                 }),
@@ -214,13 +199,13 @@ export function GetAdmMsgCenter86DtlById(keyId,filterId,accessScope){
         }
     )
 }
-
-export function LoadInitPage(options,accessScope) {
+export const GetDtlById = GetAdmMsgCenter86DtlById;
+export function LoadInitPage(options, accessScope) {
     const reqJson = JSON.stringify({
         options: options
     });
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/LoadInitPage'
-        ,{
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/LoadInitPage'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -229,14 +214,29 @@ export function LoadInitPage(options,accessScope) {
         }
     )
 }
-export function SaveData(mst,dtl,options,accessScope){
+export function SaveData(mst, dtl, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mst: mst || {},
+        dtl: dtl || [],
+        options: options || {}
+    });
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/SaveData'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function DelMst(mst, options, accessScope) {
     const reqJson = JSON.stringify({
         mst: mst,
-        dtl: dtl,
         options: options
     });
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/SaveData'
-        ,{
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/DelMst'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -245,26 +245,9 @@ export function SaveData(mst,dtl,options,accessScope){
         }
     )
 }
-
-export function DelMst(mst,options,accessScope){
-    const reqJson = JSON.stringify({
-        mst: mst,
-        options: options
-    });
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/DelMst'
-        ,{
-            requestOptions: {
-                body: reqJson,
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-
-export function SetScreenCriteria(criteriaValues, accessScope){
-    return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/SetScreenCriteria'
-        ,{
+export function SetScreenCriteria(criteriaValues, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/SetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     criteriaValues: criteriaValues
@@ -276,83 +259,95 @@ export function SetScreenCriteria(criteriaValues, accessScope){
     )
 }
 
-/*screen criteria dll and screen dropdownlist/autocomplete*/           
-            export function GetScreenCriMsgId10List(query, topN, filterBy, accessScope){
-return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetScreenCriteriaDdlList'
-,{
-requestOptions: {
-body: JSON.stringify({
-screenCriId: 28,
-query: query || '',
-topN: topN || 0,
-filterBy: filterBy || null
-}),
-},
-...(getAccessControlInfo()),
-...(accessScope)
-}
-)
-}
-export function GetScreenCriMsgSource20List(query, topN, filterBy, accessScope){
-return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetScreenCriteriaDdlList'
-,{
-requestOptions: {
-body: JSON.stringify({
-screenCriId: 27,
-query: query || '',
-topN: topN || 0,
-filterBy: filterBy || null
-}),
-},
-...(getAccessControlInfo()),
-...(accessScope)
-}
-)
-}
-export function GetScreenCriMsgName30List(query, topN, filterBy, accessScope){
-return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetScreenCriteriaDdlList'
-,{
-requestOptions: {
-body: JSON.stringify({
-screenCriId: 70,
-query: query || '',
-topN: topN || 0,
-filterBy: filterBy || null
-}),
-},
-...(getAccessControlInfo()),
-...(accessScope)
-}
-)
-}export function GetMsgTypeCd146List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetMsgTypeCd146List'
+/*screen criteria dll and screen dropdownlist/autocomplete*/
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetCultureId147List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmMsgCenterWs.asmx/GetCultureId147List'
+export function GetScreenCriMsgId10List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetScreenCriteriaDdlList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    screenCriId: 28,
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }/* ReactRule: Service Custom Function *//* ReactRule End: Service Custom Function */
+
+export function GetScreenCriMsgSource20List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetScreenCriteriaDdlList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    screenCriId: 27,
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetScreenCriMsgName30List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetScreenCriteriaDdlList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    screenCriId: 70,
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+export function GetMsgTypeCd146List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetMsgTypeCd146List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetCultureId147List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmMsgCenterWs.asmx/GetCultureId147List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+/* ReactRule: Service Custom Function */
+
+
+/* ReactRule End: Service Custom Function */

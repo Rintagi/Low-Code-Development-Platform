@@ -70,6 +70,16 @@ namespace RO.Common3
         private static string wSecuredColumnKey;
         private static string wTrustedLoginFederationUrl;
         private static string wEnableTwoFactorAuth;
+        private static string wRedirectProjectRoot;
+        private static string wExtBasePath;
+        private static string wExtBaseUrl;
+        private static string wExtDomain;
+        private static string wWsXlsUrl;
+        private static string wIntBaseUrl;
+        private static string wIntDomain;
+        private static string wIntBasePath;
+        private static string wTranslateExtUrl;
+
         static Config()
 		{
             wConverterUrl = ConfigurationManager.AppSettings["WsConverterUrl"];
@@ -135,6 +145,44 @@ namespace RO.Common3
             wSecuredColumnKey = ConfigurationManager.AppSettings["SecuredColumnKey"] ?? "";
             wTrustedLoginFederationUrl = ConfigurationManager.AppSettings["TrustedLoginFederationUrl"];
             wEnableTwoFactorAuth = ConfigurationManager.AppSettings["EnableTwoFactorAuth"];
+            wExtBaseUrl = ConfigurationManager.AppSettings["ExtBaseUrl"] ?? "";
+            wExtBasePath = ConfigurationManager.AppSettings["ExtBasePath"] ?? "";
+//            wExtDomain = ConfigurationManager.AppSettings["ExtDomain"];
+            wRedirectProjectRoot = ConfigurationManager.AppSettings["RedirectProjectRoot"];
+            wWsXlsUrl = ConfigurationManager.AppSettings["WsXlsUrl"];
+            wIntBaseUrl = ConfigurationManager.AppSettings["IntBaseUrl"];
+            wTranslateExtUrl = ConfigurationManager.AppSettings["TranslateExtUrl"];
+            if (!string.IsNullOrEmpty(wRedirectProjectRoot))
+            {
+                string[] redirect = wRedirectProjectRoot.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                if (redirect.Length == 2)
+                {
+                    wPathRtfTemplate = (wPathRtfTemplate??"").Replace(redirect[0], redirect[1]);
+                    wPathTmpImport = (wPathTmpImport ?? "").Replace(redirect[0], redirect[1]);
+                    wPathTxtTemplate = (wPathTmpImport ?? "").Replace(redirect[0], redirect[1]);
+                    wPathXlsImport = (wPathXlsImport ?? "").Replace(redirect[0], redirect[1]);
+                    wClientTierPath = (wClientTierPath ?? "").Replace(redirect[0], redirect[1]);
+                    wRuleTierPath = (wRuleTierPath ?? "").Replace(redirect[0], redirect[1]);
+                }
+            }
+            if (!string.IsNullOrEmpty(wExtBaseUrl))
+            {
+                var match = new System.Text.RegularExpressions.Regex("https?://([^/]*)(/?.*)").Match(wExtBaseUrl);
+                if (match != null && match.Groups.Count > 0)
+                {
+                    if (string.IsNullOrEmpty(wExtBasePath)) wExtBasePath = string.IsNullOrEmpty(match.Groups[2].Value) ? "/" : match.Groups[2].Value;
+                    wExtDomain = match.Groups[1].Value;
+                }
+            }
+            if (!string.IsNullOrEmpty(wIntBaseUrl))
+            {
+                var match = new System.Text.RegularExpressions.Regex("https?://([^/]*)(/?.*)").Match(wIntBaseUrl);
+                if (match != null && match.Groups.Count > 0)
+                {
+                    if (string.IsNullOrEmpty(wIntBasePath)) wIntBasePath = string.IsNullOrEmpty(match.Groups[2].Value) ? "/" : match.Groups[2].Value;
+                    wIntDomain = match.Groups[1].Value;
+                }
+            }
         }
         
         public static string WsConverterUrl { get { return wConverterUrl; } }
@@ -261,6 +309,22 @@ namespace RO.Common3
 
         public static string EnableTwoFactorAuth { get { return wEnableTwoFactorAuth; } }
 
+        public static string ExtBaseUrl { get { return wExtBaseUrl; } }
+
+        public static string ExtBasePath { get { return wExtBasePath; } }
+
+        public static string ExtDomain { get { return wExtDomain; } }
+
+        public static string IntBaseUrl { get { return wIntBaseUrl; } }
+
+        public static string IntBasePath { get { return wIntBasePath; } }
+
+        public static string IntDomain { get { return wIntDomain; } }
+
+        public static string WsXlsUrl { get { return wWsXlsUrl; } }
+
+        public static bool TranslateExtUrl { get { return wTranslateExtUrl == "Y"; } }
+
         public static string RintagiLicense
         { 
             get { return wLicense; } 
@@ -279,7 +343,8 @@ namespace RO.Common3
 		{
             if (dbProvider == "Sqloledb" || dbProvider == "MSOLEDBSQL")
 			{
-				return "Provider=" + dbProvider + ";Data Source=" + dbServer + ";database=" + dbDatabase + ";Connect Timeout=" + DesTimeout + ";" + dbService + "User ID=" + dbUserId + ";password=";
+                bool bIntegratedSecurity = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y" && (System.Configuration.ConfigurationManager.AppSettings["SSPI"] ?? "N") == "Y";
+                return "Provider=" + dbProvider + ";Data Source=" + dbServer + ";database=" + dbDatabase + ";Connect Timeout=" + DesTimeout + ";" + (bIntegratedSecurity ? "Integrated Security=sspi;" : "User ID=" + dbUserId + ";") + dbService + ";password=";
 			}
 			else	// Sybase for now.
 			{

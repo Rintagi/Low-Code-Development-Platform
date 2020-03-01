@@ -1,0 +1,71 @@
+55~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 200[Column]~@~25~@~1~@~.25~@~~@~28~@~
+56~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 200[Column]~@~26~@~1~@~.20~@~~@~28~@~
+57~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 200[Column]~@~27~@~1~@~.35~@~~@~28~@~
+58~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 210[Column]~@~25~@~1~@~.25~@~~@~29~@~
+59~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 210[Column]~@~26~@~1~@~.20~@~~@~29~@~
+60~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 210[Column]~@~27~@~1~@~.35~@~~@~29~@~
+61~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 220[Column]~@~25~@~1~@~.25~@~~@~30~@~
+62~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 220[Column]~@~26~@~1~@~.20~@~~@~30~@~
+63~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 220[Column]~@~27~@~1~@~.35~@~~@~30~@~
+64~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 230[Column]~@~25~@~1~@~.25~@~~@~31~@~
+65~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 230[Column]~@~26~@~1~@~.20~@~~@~31~@~
+66~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 230[Column]~@~27~@~1~@~.35~@~~@~31~@~
+67~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 240[Column]~@~25~@~1~@~.25~@~~@~32~@~
+68~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 240[Column]~@~26~@~1~@~.20~@~~@~32~@~
+69~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 240[Column]~@~27~@~1~@~.35~@~~@~32~@~
+70~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 250[Column]~@~25~@~1~@~.25~@~~@~33~@~
+71~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 250[Column]~@~26~@~1~@~.20~@~~@~33~@~
+72~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 250[Column]~@~27~@~1~@~.35~@~~@~33~@~
+73~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 260[Column]~@~25~@~1~@~.25~@~~@~34~@~
+74~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 260[Column]~@~26~@~1~@~.20~@~~@~34~@~
+75~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 260[Column]~@~27~@~1~@~.35~@~~@~34~@~
+76~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 270[Column]~@~25~@~1~@~.25~@~~@~35~@~
+77~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 270[Column]~@~26~@~1~@~.20~@~~@~35~@~
+78~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 270[Column]~@~27~@~1~@~.35~@~~@~35~@~
+79~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 280[Column]~@~25~@~1~@~.25~@~~@~36~@~
+80~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 280[Column]~@~26~@~1~@~.20~@~~@~36~@~
+81~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 280[Column]~@~27~@~1~@~.35~@~~@~36~@~
+91~@~SR&ED Time Report [Body] 000[Table] TTbl 010[Header] #001 200[Column]~@~38~@~1~@~.25~@~~@~41~@~
+92~@~SR&ED Time Report [Body] 000[Table] TTbl 010[Header] #001 210[Column]~@~38~@~1~@~.25~@~~@~45~@~
+93~@~SR&ED Time Report [Body] 000[Table] TTbl 010[Header] #001 220[Column]~@~38~@~1~@~.25~@~~@~46~@~
+94~@~SR&ED Time Report [Body] 000[Table] TTbl 010[Header] #001 230[Column]~@~38~@~1~@~.25~@~~@~47~@~
+95~@~SR&ED Time Report [Body] 000[Table] TTbl 020[Details] #001 200[Column]~@~39~@~1~@~.20~@~~@~41~@~
+96~@~SR&ED Time Report [Body] 000[Table] TTbl 020[Details] #001 210[Column]~@~39~@~1~@~.20~@~~@~45~@~
+97~@~SR&ED Time Report [Body] 000[Table] TTbl 020[Details] #001 220[Column]~@~39~@~1~@~.20~@~~@~46~@~
+98~@~SR&ED Time Report [Body] 000[Table] TTbl 020[Details] #001 230[Column]~@~39~@~1~@~.20~@~~@~47~@~
+99~@~SR&ED Time Report [Body] 000[Table] TTbl 030[Footer] #001 200[Column]~@~40~@~1~@~.35~@~~@~41~@~3
+100~@~SR&ED Time Report [Body] 000[Table] TTbl 030[Footer] #001 230[Column]~@~40~@~1~@~.35~@~~@~47~@~
+101~@~SR&ED Time Report [Body] 000[Table] TTbl 100[Group]: 100[Header] #001 200[Column]~@~43~@~1~@~.22~@~~@~41~@~4
+102~@~SR&ED Time Report [Body] 000[Table] TTbl 100[Group]: 100[Footer] #001 200[Column]~@~44~@~1~@~.35~@~~@~41~@~3
+103~@~SR&ED Time Report [Body] 000[Table] TTbl 100[Group]: 100[Footer] #001 230[Column]~@~44~@~1~@~.35~@~~@~47~@~
+104~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 200[Column]~@~51~@~1~@~.25~@~~@~54~@~
+105~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 200[Column]~@~52~@~1~@~.20~@~~@~54~@~
+107~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 210[Column]~@~51~@~1~@~.25~@~~@~55~@~
+108~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 210[Column]~@~52~@~1~@~.20~@~~@~55~@~
+110~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 220[Column]~@~51~@~1~@~.25~@~~@~56~@~
+111~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 220[Column]~@~52~@~1~@~.20~@~~@~56~@~
+113~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 230[Column]~@~51~@~1~@~.25~@~~@~57~@~
+114~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 230[Column]~@~52~@~1~@~.20~@~~@~57~@~
+116~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 240[Column]~@~51~@~1~@~.25~@~~@~58~@~
+117~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 240[Column]~@~52~@~1~@~.20~@~~@~58~@~
+119~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 250[Column]~@~51~@~1~@~.25~@~~@~59~@~
+120~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 250[Column]~@~52~@~1~@~.20~@~~@~59~@~
+122~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 260[Column]~@~51~@~1~@~.25~@~~@~60~@~
+123~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 260[Column]~@~52~@~1~@~.20~@~~@~60~@~
+137~@~AdmRptPerm [Body] 000[Table] TTbl 100[Group]: 100[Header] #001 200[Column]~@~69~@~1~@~.30~@~~@~54~@~7
+138~@~Data Dictionary [Body] 000[Table] TTbl 100[Group]: 100[Header] #001 200[Column]~@~71~@~1~@~.50~@~~@~28~@~9
+139~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header] #001 200[Column]~@~72~@~1~@~.25~@~~@~75~@~
+140~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header] #001 210[Column]~@~72~@~1~@~.25~@~~@~76~@~
+141~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header] #001 220[Column]~@~72~@~1~@~.25~@~~@~77~@~
+142~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header] #001 230[Column]~@~72~@~1~@~.25~@~~@~78~@~
+143~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header] #001 240[Column]~@~72~@~1~@~.25~@~~@~79~@~
+144~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details] #001 200[Column]~@~73~@~1~@~.20~@~~@~75~@~
+145~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details] #001 210[Column]~@~73~@~1~@~.20~@~~@~76~@~
+146~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details] #001 220[Column]~@~73~@~1~@~.20~@~~@~77~@~
+147~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details] #001 230[Column]~@~73~@~1~@~.20~@~~@~78~@~
+148~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details] #001 240[Column]~@~73~@~1~@~.20~@~~@~79~@~
+149~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer] #001 200[Column]~@~74~@~1~@~.35~@~~@~75~@~
+150~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer] #001 210[Column]~@~74~@~1~@~.35~@~~@~76~@~
+151~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer] #001 220[Column]~@~74~@~1~@~.35~@~~@~77~@~
+152~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer] #001 230[Column]~@~74~@~1~@~.35~@~~@~78~@~
+153~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer] #001 240[Column]~@~74~@~1~@~.35~@~~@~79~@~

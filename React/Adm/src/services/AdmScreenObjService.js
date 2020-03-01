@@ -1,5 +1,5 @@
 
-import {fetchData,getAccessControlInfo, getAccessScope, baseUrl} from './webAPIBase';
+import { fetchData, getAccessControlInfo, getAccessScope, baseUrl } from './webAPIBase';
 
 let activeScope = {};
 
@@ -10,9 +10,9 @@ export function setAccessScope(scope) {
     }
 }
 
-export function GetAuthCol(accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetAuthCol'
-        ,{
+export function GetAuthCol(accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetAuthCol'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -22,9 +22,9 @@ export function GetAuthCol(accessScope){
         }
     )
 }
-export function GetAuthRow(accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetAuthRow'
-        ,{
+export function GetAuthRow(accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetAuthRow'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -35,9 +35,9 @@ export function GetAuthRow(accessScope){
     )
 
 }
-export function GetScreenLabel(accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetScreenLabel'
-        ,{
+export function GetScreenLabel(accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetScreenLabel'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -49,12 +49,12 @@ export function GetScreenLabel(accessScope){
 
 }
 
-export function GetLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetLabels'
-        ,{
+export function GetLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -63,12 +63,12 @@ export function GetLabels(labelCat,accessScope){
     )
 }
 
-export function GetSystemLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetSystemLabels'
-        ,{
+export function GetSystemLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetSystemLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -77,9 +77,9 @@ export function GetSystemLabels(labelCat,accessScope){
     )
 }
 
-export function GetScreenButtonHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetScreenButtonHlp'
-        ,{
+export function GetScreenButtonHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetScreenButtonHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -89,9 +89,9 @@ export function GetScreenButtonHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetScreenHlp'
-        ,{
+export function GetScreenHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetScreenHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -101,9 +101,9 @@ export function GetScreenHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenCriteria(accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetScreenCriteria'
-        ,{
+export function GetScreenCriteria(accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -113,9 +113,9 @@ export function GetScreenCriteria(accessScope){
         }
     )
 }
-export function GetNewMst(accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetNewMst'
-        ,{
+export function GetNewMst(accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetNewMst'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -125,9 +125,9 @@ export function GetNewMst(accessScope){
         }
     )
 }
-export function GetNewDtl(accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetNewDtl'
-        ,{
+export function GetNewDtl(accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetNewDtl'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -137,9 +137,9 @@ export function GetNewDtl(accessScope){
         }
     )
 }
-export function GetScreenFilter(accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetScreenFilter'
-        ,{
+export function GetScreenFilter(accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetScreenFilter'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -149,31 +149,14 @@ export function GetScreenFilter(accessScope){
         }
     )
 }
-export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetColumnContent'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    mstId: mstId || '',
-                    dtlId: dtlId || '',
-                    screenColumnName: screenColumnName,
-                    columnName: columnName,
-                    isMaster: isMaster,
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function GetAdmScreenObj10List(searchStr, topN, filterId,accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetAdmScreenObj10List'
-        ,{
+export function GetAdmScreenObj10List(searchStr, topN, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetAdmScreenObj10List'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     searchStr: searchStr || '',
                     topN: topN || 0,
-                    filterId: ('' +  (filterId || 0)),
+                    filterId: ('' + (filterId || 0)),
                 }),
             },
             ...(getAccessControlInfo()),
@@ -181,14 +164,15 @@ export function GetAdmScreenObj10List(searchStr, topN, filterId,accessScope){
         }
     )
 }
-export function GetAdmScreenObj10ById(keyId,accessScope){   
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetAdmScreenObj10ById'
-        ,{
+export const GetSearchList = GetAdmScreenObj10List;
+export function GetAdmScreenObj10ById(keyId, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetAdmScreenObj10ById'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
                     options: {
-                        currentScreenCriteria : JSON.stringify({}),
+                        CurrentScreenCriteria: JSON.stringify({}),
                     },
                 }),
             },
@@ -197,14 +181,15 @@ export function GetAdmScreenObj10ById(keyId,accessScope){
         }
     )
 }
-export function GetAdmScreenObj10DtlById(keyId,filterId,accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetAdmScreenObj10DtlById'
-        ,{
+export const GetMstById = GetAdmScreenObj10ById;
+export function GetAdmScreenObj10DtlById(keyId, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetAdmScreenObj10DtlById'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
                     options: {
-                        currentScreenCriteria : JSON.stringify({}),
+                        CurrentScreenCriteria: JSON.stringify({}),
                     },
                     filterId: filterId || 0,
                 }),
@@ -214,13 +199,13 @@ export function GetAdmScreenObj10DtlById(keyId,filterId,accessScope){
         }
     )
 }
-
-export function LoadInitPage(options,accessScope) {
+export const GetDtlById = GetAdmScreenObj10DtlById;
+export function LoadInitPage(options, accessScope) {
     const reqJson = JSON.stringify({
         options: options
     });
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/LoadInitPage'
-        ,{
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/LoadInitPage'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -229,14 +214,29 @@ export function LoadInitPage(options,accessScope) {
         }
     )
 }
-export function SaveData(mst,dtl,options,accessScope){
+export function SaveData(mst, dtl, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mst: mst || {},
+        dtl: dtl || [],
+        options: options || {}
+    });
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/SaveData'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function DelMst(mst, options, accessScope) {
     const reqJson = JSON.stringify({
         mst: mst,
-        dtl: dtl,
         options: options
     });
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/SaveData'
-        ,{
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/DelMst'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -245,26 +245,9 @@ export function SaveData(mst,dtl,options,accessScope){
         }
     )
 }
-
-export function DelMst(mst,options,accessScope){
-    const reqJson = JSON.stringify({
-        mst: mst,
-        options: options
-    });
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/DelMst'
-        ,{
-            requestOptions: {
-                body: reqJson,
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-
-export function SetScreenCriteria(criteriaValues, accessScope){
-    return fetchData(baseUrl+'/AdmScreenObjWs.asmx/SetScreenCriteria'
-        ,{
+export function SetScreenCriteria(criteriaValues, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/SetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     criteriaValues: criteriaValues
@@ -276,244 +259,263 @@ export function SetScreenCriteria(criteriaValues, accessScope){
     )
 }
 
-/*screen criteria dll and screen dropdownlist/autocomplete*/           
-            export function GetGridGrpCd14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetGridGrpCd14List'
+/*screen criteria dll and screen dropdownlist/autocomplete*/
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetColumnJustify14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetColumnJustify14List'
+export function GetGridGrpCd14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetGridGrpCd14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetScreenId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetScreenId14List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetGroupRowId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetGroupRowId14List'
+export function GetColumnJustify14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetColumnJustify14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetGroupColId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetGroupColId14List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetColumnId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetColumnId14List'
+export function GetScreenId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetScreenId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetDisplayModeId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetDisplayModeId14List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetDdlKeyColumnId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetDdlKeyColumnId14List'
+export function GetGroupRowId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetGroupRowId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetDdlRefColumnId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetDdlRefColumnId14List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetDdlSrtColumnId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetDdlSrtColumnId14List'
+export function GetGroupColId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetGroupColId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetDdlAdnColumnId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetDdlAdnColumnId14List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetDdlFtrColumnId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetDdlFtrColumnId14List'
+export function GetColumnId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetColumnId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetDtlLstPosId14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetDtlLstPosId14List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetAggregateCd14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetAggregateCd14List'
+export function GetDisplayModeId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetDisplayModeId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetMatchCd14List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmScreenObjWs.asmx/GetMatchCd14List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }/* ReactRule: Service Custom Function *//* ReactRule End: Service Custom Function */
+export function GetDdlKeyColumnId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetDdlKeyColumnId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetDdlRefColumnId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetDdlRefColumnId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetDdlSrtColumnId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetDdlSrtColumnId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetDdlAdnColumnId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetDdlAdnColumnId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetDdlFtrColumnId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetDdlFtrColumnId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetDtlLstPosId14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetDtlLstPosId14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetAggregateCd14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetAggregateCd14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetMatchCd14List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetMatchCd14List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+/* ReactRule: Service Custom Function */
+
+
+/* ReactRule End: Service Custom Function */

@@ -28,7 +28,7 @@ namespace RO.Web
                     if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Footer", 0, 0, 0, string.Empty, string.Empty))
                     {
                         (new GenSectionSystem()).CreateProgram("F", base.CPrj, base.CSrc);
-                        Session[KEY_FooterGenerated] = true; Response.Redirect(Request.RawUrl);
+                        Session[KEY_FooterGenerated] = true; this.Redirect(Request.RawUrl);
                     }
                 }
                 catch (Exception err) { throw new ApplicationException(err.Message); }

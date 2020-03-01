@@ -14,7 +14,6 @@ using RO.Facade3;
 using RO.Common3;
 using RO.Common3.Data;
 using RO.SystemFramewk;
-using System.IO;
 using System.Linq;
 
 // Used by data\home\demo\Guarded\web.config and BatchRptSetup:
@@ -68,6 +67,7 @@ namespace RO.Web
                 }
 
                 System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
                 FileUploadObj fileObj = new FileUploadObj()
                 {
                     fileName = Request.Files[0].FileName,
@@ -265,7 +265,7 @@ namespace RO.Web
                                 {
                                     string loginUrl = System.Web.Security.FormsAuthentication.LoginUrl;
                                     if (string.IsNullOrEmpty(loginUrl)) { loginUrl = "MyAccount.aspx"; }
-                                    Response.Redirect(loginUrl + (loginUrl.IndexOf('?') > 0 ? "&" : "?") + "wrn=1&ReturnUrl=" + Server.UrlEncode(Request.Url.PathAndQuery));
+                                    this.Redirect(loginUrl + (loginUrl.IndexOf('?') > 0 ? "&" : "?") + "wrn=1&ReturnUrl=" + Server.UrlEncode(Request.Url.PathAndQuery));
                                 }
                                 else
                                 {
@@ -299,6 +299,7 @@ namespace RO.Web
             try
             {
                 System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
                 FileUploadObj fileObj = jss.Deserialize<FileUploadObj>(docJson);
                 if (!string.IsNullOrEmpty(fileObj.base64))
                 {

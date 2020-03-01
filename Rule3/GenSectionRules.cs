@@ -407,7 +407,7 @@
             sb.Append("                    if (base.CPrj != null && base.CSrc != null && Config.DeployType == \"DEV\" && (new AdminSystem()).IsRegenNeeded(\"" + SectionNm + "\", 0, 0, 0, string.Empty, string.Empty))" + Environment.NewLine);
             sb.Append("                    {" + Environment.NewLine);
             sb.Append("                        (new GenSectionSystem()).CreateProgram(\"" + SectionCd + "\", base.CPrj, base.CSrc);" + Environment.NewLine);
-            sb.Append("                        Session[KEY_" + SectionNm + "Generated] = true; Response.Redirect(Request.RawUrl);" + Environment.NewLine);
+            sb.Append("                        Session[KEY_" + SectionNm + "Generated] = true; this.Redirect(Request.RawUrl);" + Environment.NewLine);
             sb.Append("                    }" + Environment.NewLine);
             sb.Append("                }" + Environment.NewLine);
             sb.Append("                catch (Exception err) { throw new ApplicationException(err.Message); }" + Environment.NewLine);
@@ -543,7 +543,7 @@
                 sb.Append("                base.LUser.Culture = (new AdminSystem()).SetCult(base.LUser.UsrId, base.LUser.CultureId);" + Environment.NewLine);
                 sb.Append("                base.LImpr = null; SetImpersonation(LUser.UsrId);" + Environment.NewLine);
                 sb.Append("                base.VMenu = new DataView((new MenuSystem()).GetMenu(base.LUser.CultureId, base.LCurr.SystemId, base.LImpr, base.SysConnectStr(base.LCurr.SystemId), base.AppPwd(base.LCurr.SystemId), null, null, null));" + Environment.NewLine);
-                sb.Append("                Response.Redirect(Request.Url.PathAndQuery);    // No need to SetCultureId(cLang, LUser.CultureId.ToString());" + Environment.NewLine);
+                sb.Append("                this.Redirect(Request.Url.PathAndQuery);    // No need to SetCultureId(cLang, LUser.CultureId.ToString());" + Environment.NewLine);
                 sb.Append("            }" + Environment.NewLine);
                 sb.Append("        }" + Environment.NewLine + Environment.NewLine);
                 sb.Append("        protected void lanResetBtn_Click(object sender, System.Web.UI.ImageClickEventArgs e)" + Environment.NewLine);
@@ -552,7 +552,7 @@
                 sb.Append("            base.LUser.Culture = (new AdminSystem()).SetCult(base.LUser.UsrId, base.LUser.CultureId);" + Environment.NewLine);
                 sb.Append("            if ((LUser.LoginName ?? string.Empty).ToLower() != \"anonymous\") { base.LImpr = null; SetImpersonation(LUser.UsrId); } else { base.LImpr.Cultures = base.LUser.CultureId.ToString(); }" + Environment.NewLine);
                 sb.Append("            base.VMenu = new DataView((new MenuSystem()).GetMenu(base.LUser.CultureId, base.LCurr.SystemId, base.LImpr, base.SysConnectStr(base.LCurr.SystemId), base.AppPwd(base.LCurr.SystemId), null, null, null));" + Environment.NewLine);
-                sb.Append("            Response.Redirect(Request.Url.PathAndQuery);" + Environment.NewLine);
+                sb.Append("            this.Redirect(Request.Url.PathAndQuery);" + Environment.NewLine);
                 sb.Append("        }" + Environment.NewLine);
             }
             sb.Append("    }" + Environment.NewLine);

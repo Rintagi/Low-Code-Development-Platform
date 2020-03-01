@@ -1,12 +1,13 @@
 
-                import { sidebarReducer } from './SideBar';
-                import { authReducer } from './Auth';
-                import { notificationReducer } from './Notification';
-                import { globalReducer } from './Global';
-                import { SqlReportReducer } from './SqlReport';
+import { sidebarReducer } from './SideBar';
+import { authReducer } from './Auth';
+import { notificationReducer } from './Notification';
+import { globalReducer } from './Global';
+import { SqlReportReducer } from './SqlReport';
+import { CustomReducer } from './Custom';
 
-                /* below are dynamic, put shared static one above this */
-            import AdmAtRowAuthReduxObj from './AdmAtRowAuth';
+/* below are dynamic, put shared static one above this */
+import AdmAtRowAuthReduxObj from './AdmAtRowAuth';
 import AdmChgPwdReduxObj from './AdmChgPwd';
 import AdmClientRuleReduxObj from './AdmClientRule';
 import AdmClnTierReduxObj from './AdmClnTier';
@@ -35,6 +36,7 @@ import AdmReportReduxObj from './AdmReport';
 import AdmReportObjReduxObj from './AdmReportObj';
 import AdmRptStyleReduxObj from './AdmRptStyle';
 import AdmRptTblReduxObj from './AdmRptTbl';
+import AdmLicenseReduxObj from './AdmLicense';
 import AdmRowOvrdReduxObj from './AdmRowOvrd';
 import AdmRulTierReduxObj from './AdmRulTier';
 import AdmTbdRuleReduxObj from './AdmTbdRule';
@@ -62,69 +64,69 @@ import AdmAppInfoReduxObj from './AdmAppInfo';
 import AdmWebRuleReduxObj from './AdmWebRule';
 import AdmWizardObjReduxObj from './AdmWizardObj';
 import AdmWizardRuleReduxObj from './AdmWizardRule';
-              export default {
-              auth: authReducer,
-              global: globalReducer,
-              sidebar: sidebarReducer,
-              notification: notificationReducer,
-              SqlReport: SqlReportReducer,
-
-              /* dynamic go to here */
-            AdmAtRowAuth: AdmAtRowAuthReduxObj.ReduxReducer(),
-AdmChgPwd: AdmChgPwdReduxObj.ReduxReducer(),
-AdmClientRule: AdmClientRuleReduxObj.ReduxReducer(),
-AdmClnTier: AdmClnTierReduxObj.ReduxReducer(),
-AdmCtCulture: AdmCtCultureReduxObj.ReduxReducer(),
-AdmLabel: AdmLabelReduxObj.ReduxReducer(),
-AdmDbTable: AdmDbTableReduxObj.ReduxReducer(),
-AdmDatTier: AdmDatTierReduxObj.ReduxReducer(),
-AdmDbKey: AdmDbKeyReduxObj.ReduxReducer(),
-AdmRelease: AdmReleaseReduxObj.ReduxReducer(),
-AdmMaintMsg: AdmMaintMsgReduxObj.ReduxReducer(),
-AdmMenuDrg: AdmMenuDrgReduxObj.ReduxReducer(),
-AdmMenu: AdmMenuReduxObj.ReduxReducer(),
-AdmMenuHlp: AdmMenuHlpReduxObj.ReduxReducer(),
-AdmMenuOpt: AdmMenuOptReduxObj.ReduxReducer(),
-AdmMenuPerm: AdmMenuPermReduxObj.ReduxReducer(),
-AdmMsgCenter: AdmMsgCenterReduxObj.ReduxReducer(),
-AdmAuthCol: AdmAuthColReduxObj.ReduxReducer(),
-AdmOvride: AdmOvrideReduxObj.ReduxReducer(),
-AdmPayment: AdmPaymentReduxObj.ReduxReducer(),
-AdmAppItem: AdmAppItemReduxObj.ReduxReducer(),
-AdmRptCha: AdmRptChaReduxObj.ReduxReducer(),
-AdmRptCtr: AdmRptCtrReduxObj.ReduxReducer(),
-AdmReportCri: AdmReportCriReduxObj.ReduxReducer(),
-AdmDataCat: AdmDataCatReduxObj.ReduxReducer(),
-AdmReport: AdmReportReduxObj.ReduxReducer(),
-AdmReportObj: AdmReportObjReduxObj.ReduxReducer(),
-AdmRptStyle: AdmRptStyleReduxObj.ReduxReducer(),
-AdmRptTbl: AdmRptTblReduxObj.ReduxReducer(),
-AdmRowOvrd: AdmRowOvrdReduxObj.ReduxReducer(),
-AdmRulTier: AdmRulTierReduxObj.ReduxReducer(),
-AdmTbdRule: AdmTbdRuleReduxObj.ReduxReducer(),
-AdmScreenCri: AdmScreenCriReduxObj.ReduxReducer(),
-AdmScreen: AdmScreenReduxObj.ReduxReducer(),
-AdmScreenFilter: AdmScreenFilterReduxObj.ReduxReducer(),
-AdmScreenObj: AdmScreenObjReduxObj.ReduxReducer(),
-AdmColHlp: AdmColHlpReduxObj.ReduxReducer(),
-AdmScreenTab: AdmScreenTabReduxObj.ReduxReducer(),
-AdmSctGrpCol: AdmSctGrpColReduxObj.ReduxReducer(),
-AdmPageObj: AdmPageObjReduxObj.ReduxReducer(),
-AdmSctGrpRow: AdmSctGrpRowReduxObj.ReduxReducer(),
-AdmServerRule: AdmServerRuleReduxObj.ReduxReducer(),
-AdmSignup: AdmSignupReduxObj.ReduxReducer(),
-AdmStaticCs: AdmStaticCsReduxObj.ReduxReducer(),
-AdmStaticJs: AdmStaticJsReduxObj.ReduxReducer(),
-AdmStaticPg: AdmStaticPgReduxObj.ReduxReducer(),
-AdmSystems: AdmSystemsReduxObj.ReduxReducer(),
-AdmCronJob: AdmCronJobReduxObj.ReduxReducer(),
-AdmUsrGroup: AdmUsrGroupReduxObj.ReduxReducer(),
-AdmUsrImpr: AdmUsrImprReduxObj.ReduxReducer(),
-AdmUsr: AdmUsrReduxObj.ReduxReducer(),
-AdmUsrPref: AdmUsrPrefReduxObj.ReduxReducer(),
-AdmAppInfo: AdmAppInfoReduxObj.ReduxReducer(),
-AdmWebRule: AdmWebRuleReduxObj.ReduxReducer(),
-AdmWizardObj: AdmWizardObjReduxObj.ReduxReducer(),
-AdmWizardRule: AdmWizardRuleReduxObj.ReduxReducer(),
-              }
-            
+export default {
+    auth: authReducer,
+    global: globalReducer,
+    sidebar: sidebarReducer,
+    notification: notificationReducer,
+    SqlReport: SqlReportReducer,
+    ...(CustomReducer || {}),
+    /* dynamic go to here */
+    AdmAtRowAuth: AdmAtRowAuthReduxObj.ReduxReducer(),
+    AdmChgPwd: AdmChgPwdReduxObj.ReduxReducer(),
+    AdmClientRule: AdmClientRuleReduxObj.ReduxReducer(),
+    AdmClnTier: AdmClnTierReduxObj.ReduxReducer(),
+    AdmCtCulture: AdmCtCultureReduxObj.ReduxReducer(),
+    AdmLabel: AdmLabelReduxObj.ReduxReducer(),
+    AdmDbTable: AdmDbTableReduxObj.ReduxReducer(),
+    AdmDatTier: AdmDatTierReduxObj.ReduxReducer(),
+    AdmDbKey: AdmDbKeyReduxObj.ReduxReducer(),
+    AdmRelease: AdmReleaseReduxObj.ReduxReducer(),
+    AdmMaintMsg: AdmMaintMsgReduxObj.ReduxReducer(),
+    AdmMenuDrg: AdmMenuDrgReduxObj.ReduxReducer(),
+    AdmMenu: AdmMenuReduxObj.ReduxReducer(),
+    AdmMenuHlp: AdmMenuHlpReduxObj.ReduxReducer(),
+    AdmMenuOpt: AdmMenuOptReduxObj.ReduxReducer(),
+    AdmMenuPerm: AdmMenuPermReduxObj.ReduxReducer(),
+    AdmMsgCenter: AdmMsgCenterReduxObj.ReduxReducer(),
+    AdmAuthCol: AdmAuthColReduxObj.ReduxReducer(),
+    AdmOvride: AdmOvrideReduxObj.ReduxReducer(),
+    AdmPayment: AdmPaymentReduxObj.ReduxReducer(),
+    AdmAppItem: AdmAppItemReduxObj.ReduxReducer(),
+    AdmRptCha: AdmRptChaReduxObj.ReduxReducer(),
+    AdmRptCtr: AdmRptCtrReduxObj.ReduxReducer(),
+    AdmReportCri: AdmReportCriReduxObj.ReduxReducer(),
+    AdmDataCat: AdmDataCatReduxObj.ReduxReducer(),
+    AdmReport: AdmReportReduxObj.ReduxReducer(),
+    AdmReportObj: AdmReportObjReduxObj.ReduxReducer(),
+    AdmRptStyle: AdmRptStyleReduxObj.ReduxReducer(),
+    AdmRptTbl: AdmRptTblReduxObj.ReduxReducer(),
+    AdmLicense: AdmLicenseReduxObj.ReduxReducer(),
+    AdmRowOvrd: AdmRowOvrdReduxObj.ReduxReducer(),
+    AdmRulTier: AdmRulTierReduxObj.ReduxReducer(),
+    AdmTbdRule: AdmTbdRuleReduxObj.ReduxReducer(),
+    AdmScreenCri: AdmScreenCriReduxObj.ReduxReducer(),
+    AdmScreen: AdmScreenReduxObj.ReduxReducer(),
+    AdmScreenFilter: AdmScreenFilterReduxObj.ReduxReducer(),
+    AdmScreenObj: AdmScreenObjReduxObj.ReduxReducer(),
+    AdmColHlp: AdmColHlpReduxObj.ReduxReducer(),
+    AdmScreenTab: AdmScreenTabReduxObj.ReduxReducer(),
+    AdmSctGrpCol: AdmSctGrpColReduxObj.ReduxReducer(),
+    AdmPageObj: AdmPageObjReduxObj.ReduxReducer(),
+    AdmSctGrpRow: AdmSctGrpRowReduxObj.ReduxReducer(),
+    AdmServerRule: AdmServerRuleReduxObj.ReduxReducer(),
+    AdmSignup: AdmSignupReduxObj.ReduxReducer(),
+    AdmStaticCs: AdmStaticCsReduxObj.ReduxReducer(),
+    AdmStaticJs: AdmStaticJsReduxObj.ReduxReducer(),
+    AdmStaticPg: AdmStaticPgReduxObj.ReduxReducer(),
+    AdmSystems: AdmSystemsReduxObj.ReduxReducer(),
+    AdmCronJob: AdmCronJobReduxObj.ReduxReducer(),
+    AdmUsrGroup: AdmUsrGroupReduxObj.ReduxReducer(),
+    AdmUsrImpr: AdmUsrImprReduxObj.ReduxReducer(),
+    AdmUsr: AdmUsrReduxObj.ReduxReducer(),
+    AdmUsrPref: AdmUsrPrefReduxObj.ReduxReducer(),
+    AdmAppInfo: AdmAppInfoReduxObj.ReduxReducer(),
+    AdmWebRule: AdmWebRuleReduxObj.ReduxReducer(),
+    AdmWizardObj: AdmWizardObjReduxObj.ReduxReducer(),
+    AdmWizardRule: AdmWizardRuleReduxObj.ReduxReducer(),
+}

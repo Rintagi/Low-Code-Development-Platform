@@ -1,0 +1,7 @@
+1~@~Embedded CSS/JS~@~Embed CSS or JavaScript on page load.
+2~@~Screen Column Stock Script~@~Execute a predefined JavaScript function on a specified screen column.
+3~@~Screen Column Event Override~@~Override a default JavaScript event with speific JavaScript content on a specified screen column.
+4~@~Screen Criteria Stock Script~@~Execute a predefined JavaScript function on a specified screen criteria.
+5~@~Screen Criteria Event Override~@~Override a default JavaScript event with speific JavaScript content on a specified screen criteria.
+6~@~Report Criteria Stock Script~@~Execute a predefined JavaScript function on a specified report criteria.
+7~@~Report Criteria Event Override~@~Override a default JavaScript event with speific JavaScript content on a specified report criteria.

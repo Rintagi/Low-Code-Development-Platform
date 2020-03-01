@@ -9,7 +9,7 @@ document.Rintagi = {
     // these setup is only effective when served via app is served via http://localhost:3000 type, for local npm start development. ignored in production build or proxying to localhost
     appNS:'/RO',
     appDomainUrl:'http://RCPRO/RO', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
-    apiBasename: 'http://RCPRO/RO', // webservice url for local development via npm start, i.e. localhost:3000 etc. must be full url in the form of http:// pointing to the site serving , no ending slash
+    apiBasename: 'http://rcdev03/RO', // webservice url for local development via npm start, i.e. localhost:3000 etc. must be full url in the form of http:// pointing to the site serving , no ending slash
   },
   appRelBase:['React','ReactProxy','ReactPort'],  // path this app is serving UNDER(can be multiple), implicitly assume they are actually /Name/, do not put begin/end slash 
   appNS:'', // used for login token sync(shared login when served under the same domain) between apps and asp.net site

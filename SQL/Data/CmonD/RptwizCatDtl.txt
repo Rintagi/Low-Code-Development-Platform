@@ -1,0 +1,14 @@
+1~@~2~@~6~@~3~@~CompanyId~@~CompanyName~@~300~@~~@~EXEC dbo._GetInCompanyId @wClause~@~EXEC ('IF EXISTS (SELECT 1 FROM sysobjects WHERE name = ''_GetInCompanyId'') DROP PROCEDURE dbo._GetInCompanyId')
+EXEC ('CREATE PROCEDURE dbo._GetInCompanyId
+ @wClause	varchar(4000)
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @sClause		varchar(4000)
+	,@fClause		varchar(4000)
+	,@oClause		varchar(1000)
+SET NOCOUNT ON
+SELECT @sClause = ''SELECT a.CompanyId, a.CompanyName''
+SELECT @fClause = ''FROM ROCmon.dbo.Company a''
+SELECT @oClause = ''ORDER BY a.CompanyName''
+EXEC (@sClause + '' '' + @fClause + '' '' + @wClause + '' '' + @oClause)
+RETURN 0')

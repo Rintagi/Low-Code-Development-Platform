@@ -1,0 +1,3 @@
+A~@~All
+N~@~None
+S~@~Self

@@ -40,6 +40,9 @@ GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwReportCriHlp') AND type='V')
 DROP VIEW dbo.VwReportCriHlp
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwRintagi') AND type='V')
+DROP VIEW dbo.VwRintagi
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwRowAuth') AND type='V')
 DROP VIEW dbo.VwRowAuth
 GO
@@ -61,9 +64,14 @@ GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwUsrAUdit') AND type='V')
 DROP VIEW dbo.VwUsrAUdit
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.FK_ScreenLstCri_UsrId') and type='F')
+ALTER TABLE dbo.ScreenLstCri DROP CONSTRAINT FK_ScreenLstCri_UsrId 
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.FK_ScreenObj_Screen') and type='F')
+ALTER TABLE dbo.ScreenObj DROP CONSTRAINT FK_ScreenObj_Screen 
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.AppInfo') AND type='U')
 DROP TABLE dbo.AppInfo
-GO
 CREATE TABLE AppInfo ( 
 AppInfoId int IDENTITY(1,1) NOT NULL ,
 AppInfoDesc varchar (50) NULL ,
@@ -80,10 +88,10 @@ CONSTRAINT PK_AppInfo PRIMARY KEY CLUSTERED (
 AppInfoId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.AppItem') AND type='U')
 DROP TABLE dbo.AppItem
-GO
 CREATE TABLE AppItem ( 
 AppItemId int IDENTITY(1,1) NOT NULL ,
 AppItemDesc varchar (200) NULL ,
@@ -107,10 +115,10 @@ CONSTRAINT PK_AppItem PRIMARY KEY CLUSTERED (
 AppItemId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.AppLog') AND type='U')
 DROP TABLE dbo.AppLog
-GO
 CREATE TABLE AppLog ( 
 AppLogId int IDENTITY(1,1) NOT NULL ,
 AppLogDesc varchar (200) NOT NULL ,
@@ -121,10 +129,10 @@ CONSTRAINT PK_AppLog PRIMARY KEY CLUSTERED (
 AppLogId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.AppZipId') AND type='U')
 DROP TABLE dbo.AppZipId
-GO
 CREATE TABLE AppZipId ( 
 DocId int IDENTITY(1,1) NOT NULL ,
 MasterId int NOT NULL ,
@@ -139,10 +147,10 @@ CONSTRAINT PK_AppZipId PRIMARY KEY CLUSTERED (
 DocId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.AtRowAuth') AND type='U')
 DROP TABLE dbo.AtRowAuth
-GO
 CREATE TABLE AtRowAuth ( 
 RowAuthId smallint IDENTITY(10000,1) NOT NULL ,
 RowAuthName varchar (50) NOT NULL ,
@@ -156,10 +164,10 @@ CONSTRAINT PK_AtRowAuth PRIMARY KEY CLUSTERED (
 RowAuthId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.AtRowAuthPrm') AND type='U')
 DROP TABLE dbo.AtRowAuthPrm
-GO
 CREATE TABLE AtRowAuthPrm ( 
 RowAuthPrmId smallint IDENTITY(10000,1) NOT NULL ,
 RowAuthId smallint NOT NULL ,
@@ -169,10 +177,10 @@ CONSTRAINT PK_AtRowAuthPrm PRIMARY KEY CLUSTERED (
 RowAuthPrmId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ButtonHlp') AND type='U')
 DROP TABLE dbo.ButtonHlp
-GO
 CREATE TABLE ButtonHlp ( 
 ButtonHlpId int IDENTITY(1,1) NOT NULL ,
 ScreenId int NULL ,
@@ -192,10 +200,10 @@ ButtonHlpId,
 CultureId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ClientRule') AND type='U')
 DROP TABLE dbo.ClientRule
-GO
 CREATE TABLE ClientRule ( 
 ClientRuleId int IDENTITY(1,1) NOT NULL ,
 RuleTypeId tinyint NOT NULL ,
@@ -220,10 +228,10 @@ ClientRuleId,
 CultureId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ClientTier') AND type='U')
 DROP TABLE dbo.ClientTier
-GO
 CREATE TABLE ClientTier ( 
 ClientTierId tinyint IDENTITY(1,1) NOT NULL ,
 ClientTierName nvarchar (50) NOT NULL ,
@@ -242,10 +250,10 @@ CONSTRAINT PK_ClientTier PRIMARY KEY CLUSTERED (
 ClientTierId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ColOvrd') AND type='U')
 DROP TABLE dbo.ColOvrd
-GO
 CREATE TABLE ColOvrd ( 
 ColOvrdId int IDENTITY(1,1) NOT NULL ,
 ColOvrdDesc varchar (200) NULL ,
@@ -265,10 +273,10 @@ CONSTRAINT PK_ColOvrd PRIMARY KEY CLUSTERED (
 ColOvrdId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CronJob') AND type='U')
 DROP TABLE dbo.CronJob
-GO
 CREATE TABLE CronJob ( 
 CronJobId int IDENTITY(1,1) NOT NULL ,
 CronJobName nvarchar (200) NOT NULL ,
@@ -286,10 +294,10 @@ CONSTRAINT PK_CronJob PRIMARY KEY CLUSTERED (
 CronJobId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtAccess') AND type='U')
 DROP TABLE dbo.CtAccess
-GO
 CREATE TABLE CtAccess ( 
 AccessCd char (1) NOT NULL ,
 AccessName nvarchar (10) NOT NULL ,
@@ -298,10 +306,10 @@ CONSTRAINT PK_CtAccess PRIMARY KEY CLUSTERED (
 AccessCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtAggregate') AND type='U')
 DROP TABLE dbo.CtAggregate
-GO
 CREATE TABLE CtAggregate ( 
 AggregateCd char (1) NOT NULL ,
 AggregateName nvarchar (10) NOT NULL ,
@@ -310,10 +318,10 @@ CONSTRAINT PK_CtAggregate PRIMARY KEY CLUSTERED (
 AggregateCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtAlignment') AND type='U')
 DROP TABLE dbo.CtAlignment
-GO
 CREATE TABLE CtAlignment ( 
 AlignmentCd char (1) NOT NULL ,
 AlignmentName nvarchar (10) NOT NULL ,
@@ -321,10 +329,10 @@ CONSTRAINT PK_CtAlignment PRIMARY KEY CLUSTERED (
 AlignmentCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtAndOr') AND type='U')
 DROP TABLE dbo.CtAndOr
-GO
 CREATE TABLE CtAndOr ( 
 AndOrCd char (1) NOT NULL ,
 AndOrName nvarchar (10) NOT NULL ,
@@ -332,10 +340,10 @@ CONSTRAINT PK_CtAndOr PRIMARY KEY CLUSTERED (
 AndOrCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtBgGradType') AND type='U')
 DROP TABLE dbo.CtBgGradType
-GO
 CREATE TABLE CtBgGradType ( 
 BgGradTypeId tinyint NOT NULL ,
 BgGradTypeName varchar (20) NOT NULL ,
@@ -344,10 +352,10 @@ CONSTRAINT PK_CtBgGradType PRIMARY KEY CLUSTERED (
 BgGradTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtBorderStyle') AND type='U')
 DROP TABLE dbo.CtBorderStyle
-GO
 CREATE TABLE CtBorderStyle ( 
 BorderStyleId tinyint NOT NULL ,
 BorderStyleName nvarchar (20) NOT NULL ,
@@ -355,13 +363,12 @@ CONSTRAINT PK_CtBorderStyle PRIMARY KEY CLUSTERED (
 BorderStyleId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_CtButtonHlp')
 DROP INDEX CtButtonHlp.IU_CtButtonHlp 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtButtonHlp') AND type='U')
 DROP TABLE dbo.CtButtonHlp
-GO
 CREATE TABLE CtButtonHlp ( 
 ButtonHlpId int IDENTITY(1,1) NOT NULL ,
 CultureId smallint NOT NULL ,
@@ -374,10 +381,10 @@ ButtonHlpId,
 CultureId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtButtonStyle') AND type='U')
 DROP TABLE dbo.CtButtonStyle
-GO
 CREATE TABLE CtButtonStyle ( 
 ButtonStyleCd char (1) NOT NULL ,
 ButtonStyleDesc nvarchar (100) NOT NULL ,
@@ -385,10 +392,10 @@ CONSTRAINT PK_CtButtonStyle PRIMARY KEY CLUSTERED (
 ButtonStyleCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtButtonType') AND type='U')
 DROP TABLE dbo.CtButtonType
-GO
 CREATE TABLE CtButtonType ( 
 ButtonTypeId tinyint NOT NULL ,
 ObjectType char (1) NOT NULL ,
@@ -403,10 +410,10 @@ CONSTRAINT PK_CtButtonType PRIMARY KEY CLUSTERED (
 ButtonTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtCheckBox') AND type='U')
 DROP TABLE dbo.CtCheckBox
-GO
 CREATE TABLE CtCheckBox ( 
 CultureId tinyint NOT NULL ,
 CheckBoxCd char (1) NOT NULL ,
@@ -416,10 +423,10 @@ CultureId,
 CheckBoxCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtClientScript') AND type='U')
 DROP TABLE dbo.CtClientScript
-GO
 CREATE TABLE CtClientScript ( 
 ClientScriptId smallint NOT NULL ,
 ClientScriptEvent varchar (50) NOT NULL ,
@@ -430,10 +437,10 @@ CONSTRAINT PK_CtClientScript PRIMARY KEY CLUSTERED (
 ClientScriptId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtCountry') AND type='U')
 DROP TABLE dbo.CtCountry
-GO
 CREATE TABLE CtCountry ( 
 CountryCd char (3) NOT NULL ,
 CountryName nvarchar (50) NOT NULL ,
@@ -441,10 +448,10 @@ CONSTRAINT PK_CtCountry PRIMARY KEY CLUSTERED (
 CountryCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtCrawler') AND type='U')
 DROP TABLE dbo.CtCrawler
-GO
 CREATE TABLE CtCrawler ( 
 CrawlerCd char (2) NOT NULL ,
 CrawlerName nvarchar (50) NOT NULL ,
@@ -457,10 +464,10 @@ CONSTRAINT PK_CtCrawler PRIMARY KEY CLUSTERED (
 CrawlerCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtCrudType') AND type='U')
 DROP TABLE dbo.CtCrudType
-GO
 CREATE TABLE CtCrudType ( 
 CrudTypeCd char (1) NOT NULL ,
 CrudTypeName nvarchar (50) NOT NULL ,
@@ -470,10 +477,10 @@ CONSTRAINT PK_CtCrudType PRIMARY KEY CLUSTERED (
 CrudTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtCudAction') AND type='U')
 DROP TABLE dbo.CtCudAction
-GO
 CREATE TABLE CtCudAction ( 
 CudAction char (1) NOT NULL ,
 CudActionDesc nvarchar (20) NOT NULL ,
@@ -481,13 +488,12 @@ CONSTRAINT PK_CtCudAction PRIMARY KEY CLUSTERED (
 CudAction
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_CtCulture')
 DROP INDEX CtCulture.IX_CtCulture 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtCulture') AND type='U')
 DROP TABLE dbo.CtCulture
-GO
 CREATE TABLE CtCulture ( 
 CultureTypeId smallint IDENTITY(1,1) NOT NULL ,
 CultureTypeName varchar (10) NOT NULL ,
@@ -502,13 +508,12 @@ CONSTRAINT PK_CtCulture PRIMARY KEY CLUSTERED (
 CultureTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_CtCultureLbl')
 DROP INDEX CtCultureLbl.IX_CtCultureLbl 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtCultureLbl') AND type='U')
 DROP TABLE dbo.CtCultureLbl
-GO
 CREATE TABLE CtCultureLbl ( 
 CultureLblId int IDENTITY(1,1) NOT NULL ,
 CultureTypeId smallint NOT NULL ,
@@ -518,10 +523,10 @@ CONSTRAINT PK_CtCultureLbl PRIMARY KEY CLUSTERED (
 CultureLblId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtDataType') AND type='U')
 DROP TABLE dbo.CtDataType
-GO
 CREATE TABLE CtDataType ( 
 DataTypeId tinyint IDENTITY(1,1) NOT NULL ,
 DataTypeName varchar (20) NOT NULL ,
@@ -538,10 +543,10 @@ CONSTRAINT PK_CtDataType PRIMARY KEY CLUSTERED (
 DataTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtDbProvider') AND type='U')
 DROP TABLE dbo.CtDbProvider
-GO
 CREATE TABLE CtDbProvider ( 
 DbProviderCd char (1) NOT NULL ,
 DbProviderName nvarchar (50) NOT NULL ,
@@ -550,10 +555,10 @@ CONSTRAINT PK_CtDbProvider PRIMARY KEY CLUSTERED (
 DbProviderCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtDirection') AND type='U')
 DROP TABLE dbo.CtDirection
-GO
 CREATE TABLE CtDirection ( 
 DirectionCd char (1) NOT NULL ,
 DirectionName varchar (10) NOT NULL ,
@@ -562,10 +567,10 @@ CONSTRAINT PK_CtDirection PRIMARY KEY CLUSTERED (
 DirectionCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtDisplayType') AND type='U')
 DROP TABLE dbo.CtDisplayType
-GO
 CREATE TABLE CtDisplayType ( 
 TypeId tinyint NOT NULL ,
 TypeName varchar (20) NOT NULL ,
@@ -576,10 +581,10 @@ CONSTRAINT PK_CtDisplayType PRIMARY KEY CLUSTERED (
 TypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtDtlLstPos') AND type='U')
 DROP TABLE dbo.CtDtlLstPos
-GO
 CREATE TABLE CtDtlLstPos ( 
 DtlLstPosId tinyint NOT NULL ,
 DtlLstPosNm nvarchar (20) NOT NULL ,
@@ -587,13 +592,12 @@ CONSTRAINT PK_CtDtlLstPos PRIMARY KEY CLUSTERED (
 DtlLstPosId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_CtEvent')
 DROP INDEX CtEvent.IX_CtEvent 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtEvent') AND type='U')
 DROP TABLE dbo.CtEvent
-GO
 CREATE TABLE CtEvent ( 
 EventId tinyint NOT NULL ,
 EventCode char (6) NOT NULL ,
@@ -602,10 +606,10 @@ CONSTRAINT PK_CtEvent PRIMARY KEY CLUSTERED (
 EventId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtEveryone') AND type='U')
 DROP TABLE dbo.CtEveryone
-GO
 CREATE TABLE CtEveryone ( 
 EveryoneCd char (1) NOT NULL ,
 EveryoneName nvarchar (20) NOT NULL ,
@@ -614,10 +618,10 @@ CONSTRAINT PK_CtEveryone PRIMARY KEY CLUSTERED (
 EveryoneCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtFontStyle') AND type='U')
 DROP TABLE dbo.CtFontStyle
-GO
 CREATE TABLE CtFontStyle ( 
 FontStyleCd char (1) NOT NULL ,
 FontStyleName varchar (10) NOT NULL ,
@@ -625,10 +629,10 @@ CONSTRAINT PK_CtFontStyle PRIMARY KEY CLUSTERED (
 FontStyleCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtFontWeight') AND type='U')
 DROP TABLE dbo.CtFontWeight
-GO
 CREATE TABLE CtFontWeight ( 
 FontWeightCd tinyint NOT NULL ,
 FontWeightName varchar (10) NOT NULL ,
@@ -637,10 +641,10 @@ CONSTRAINT PK_CtFontWeight PRIMARY KEY CLUSTERED (
 FontWeightCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtFormat') AND type='U')
 DROP TABLE dbo.CtFormat
-GO
 CREATE TABLE CtFormat ( 
 FormatCd char (1) NOT NULL ,
 FormatName nvarchar (10) NOT NULL ,
@@ -649,10 +653,10 @@ CONSTRAINT PK_CtFormat PRIMARY KEY CLUSTERED (
 FormatCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtFramework') AND type='U')
 DROP TABLE dbo.CtFramework
-GO
 CREATE TABLE CtFramework ( 
 FrameworkCd char (1) NOT NULL ,
 FrameworkName nvarchar (50) NOT NULL ,
@@ -660,10 +664,10 @@ CONSTRAINT PK_CtFramework PRIMARY KEY CLUSTERED (
 FrameworkCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtGridGrp') AND type='U')
 DROP TABLE dbo.CtGridGrp
-GO
 CREATE TABLE CtGridGrp ( 
 GridGrpCd char (1) NOT NULL ,
 GridGrpName nvarchar (50) NOT NULL ,
@@ -671,10 +675,10 @@ CONSTRAINT PK_CtGridGrp PRIMARY KEY CLUSTERED (
 GridGrpCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtHintQuestion') AND type='U')
 DROP TABLE dbo.CtHintQuestion
-GO
 CREATE TABLE CtHintQuestion ( 
 HintQuestionId tinyint NOT NULL ,
 HintQuestionDesc nvarchar (100) NOT NULL ,
@@ -682,10 +686,10 @@ CONSTRAINT PK_CtHintQuestion PRIMARY KEY CLUSTERED (
 HintQuestionId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtJustify') AND type='U')
 DROP TABLE dbo.CtJustify
-GO
 CREATE TABLE CtJustify ( 
 JustifyCd char (1) NOT NULL ,
 JustifyName nvarchar (10) NOT NULL ,
@@ -693,10 +697,10 @@ CONSTRAINT PK_CtJustify PRIMARY KEY CLUSTERED (
 JustifyCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtLanguage') AND type='U')
 DROP TABLE dbo.CtLanguage
-GO
 CREATE TABLE CtLanguage ( 
 LanguageCd char (1) NOT NULL ,
 LanguageName nvarchar (50) NOT NULL ,
@@ -704,10 +708,10 @@ CONSTRAINT PK_CtLanguage PRIMARY KEY CLUSTERED (
 LanguageCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtLineType') AND type='U')
 DROP TABLE dbo.CtLineType
-GO
 CREATE TABLE CtLineType ( 
 LineTypeCd char (1) NOT NULL ,
 LineTypeName nvarchar (10) NOT NULL ,
@@ -715,10 +719,10 @@ CONSTRAINT PK_CtLineType PRIMARY KEY CLUSTERED (
 LineTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtLinkType') AND type='U')
 DROP TABLE dbo.CtLinkType
-GO
 CREATE TABLE CtLinkType ( 
 LinkTypeCd char (3) NOT NULL ,
 LinkTypeName nvarchar (50) NOT NULL ,
@@ -731,10 +735,10 @@ CONSTRAINT PK_CtLinkType PRIMARY KEY CLUSTERED (
 LinkTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtMatch') AND type='U')
 DROP TABLE dbo.CtMatch
-GO
 CREATE TABLE CtMatch ( 
 MatchCd char (1) NOT NULL ,
 MatchName nvarchar (50) NOT NULL ,
@@ -743,10 +747,10 @@ CONSTRAINT PK_CtMatch PRIMARY KEY CLUSTERED (
 MatchCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtMsgType') AND type='U')
 DROP TABLE dbo.CtMsgType
-GO
 CREATE TABLE CtMsgType ( 
 MsgTypeCd char (1) NOT NULL ,
 MsgTypeDesc nvarchar (50) NOT NULL ,
@@ -754,10 +758,10 @@ CONSTRAINT PK_CtMsgType PRIMARY KEY CLUSTERED (
 MsgTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtObjectType') AND type='U')
 DROP TABLE dbo.CtObjectType
-GO
 CREATE TABLE CtObjectType ( 
 ObjectTypeCd char (1) NOT NULL ,
 ObjectTypeName nvarchar (50) NOT NULL ,
@@ -765,10 +769,10 @@ CONSTRAINT PK_CtObject PRIMARY KEY CLUSTERED (
 ObjectTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtOperator') AND type='U')
 DROP TABLE dbo.CtOperator
-GO
 CREATE TABLE CtOperator ( 
 OperatorId tinyint NOT NULL ,
 OperatorName varchar (10) NOT NULL ,
@@ -777,10 +781,10 @@ CONSTRAINT PK_CtOperator PRIMARY KEY CLUSTERED (
 OperatorId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtOrientation') AND type='U')
 DROP TABLE dbo.CtOrientation
-GO
 CREATE TABLE CtOrientation ( 
 OrientationCd char (1) NOT NULL ,
 OrientationName nvarchar (30) NOT NULL ,
@@ -788,10 +792,10 @@ CONSTRAINT PK_CtOrientation PRIMARY KEY CLUSTERED (
 OrientationCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtOsType') AND type='U')
 DROP TABLE dbo.CtOsType
-GO
 CREATE TABLE CtOsType ( 
 OsTypeCd char (1) NOT NULL ,
 OsTypeName nvarchar (20) NOT NULL ,
@@ -799,13 +803,12 @@ CONSTRAINT PK_CtOsType PRIMARY KEY CLUSTERED (
 OsTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_CtPermKey')
 DROP INDEX CtPermKey.IX_CtPermKey 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtPermKey') AND type='U')
 DROP TABLE dbo.CtPermKey
-GO
 CREATE TABLE CtPermKey ( 
 CtPermKeyId smallint IDENTITY(1,1) NOT NULL ,
 CtPermKeyName varchar (50) NOT NULL ,
@@ -818,10 +821,10 @@ CONSTRAINT PK_CtPermKey PRIMARY KEY CLUSTERED (
 CtPermKeyId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtReleaseType') AND type='U')
 DROP TABLE dbo.CtReleaseType
-GO
 CREATE TABLE CtReleaseType ( 
 ReleaseTypeId tinyint NOT NULL ,
 ReleaseTypeAbbr varchar (4) NOT NULL ,
@@ -830,10 +833,10 @@ CONSTRAINT PK_CtReleaseType PRIMARY KEY CLUSTERED (
 ReleaseTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtReportSct') AND type='U')
 DROP TABLE dbo.CtReportSct
-GO
 CREATE TABLE CtReportSct ( 
 ReportSctId tinyint NOT NULL ,
 ReportSctName varchar (10) NOT NULL ,
@@ -842,10 +845,10 @@ CONSTRAINT PK_CtReportSct PRIMARY KEY CLUSTERED (
 ReportSctId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtReportType') AND type='U')
 DROP TABLE dbo.CtReportType
-GO
 CREATE TABLE CtReportType ( 
 ReportTypeCd char (1) NOT NULL ,
 ReportTypeDesc nvarchar (50) NOT NULL ,
@@ -853,10 +856,10 @@ CONSTRAINT PK_CtReportType PRIMARY KEY CLUSTERED (
 ReportTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRowAuth') AND type='U')
 DROP TABLE dbo.CtRowAuth
-GO
 CREATE TABLE CtRowAuth ( 
 RowAuthId smallint IDENTITY(1,1) NOT NULL ,
 RowAuthName varchar (50) NOT NULL ,
@@ -870,10 +873,10 @@ CONSTRAINT PK_CtRowAuth PRIMARY KEY CLUSTERED (
 RowAuthId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRowAuthPrm') AND type='U')
 DROP TABLE dbo.CtRowAuthPrm
-GO
 CREATE TABLE CtRowAuthPrm ( 
 RowAuthPrmId smallint IDENTITY(1,1) NOT NULL ,
 RowAuthId smallint NOT NULL ,
@@ -883,10 +886,10 @@ CONSTRAINT PK_CtRowAuthPrm PRIMARY KEY CLUSTERED (
 RowAuthPrmId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRptChart') AND type='U')
 DROP TABLE dbo.CtRptChart
-GO
 CREATE TABLE CtRptChart ( 
 RptChartCd char (1) NOT NULL ,
 RptChartName nvarchar (100) NOT NULL ,
@@ -894,10 +897,10 @@ CONSTRAINT PK_CtRptChart PRIMARY KEY CLUSTERED (
 RptChartCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRptChaType') AND type='U')
 DROP TABLE dbo.CtRptChaType
-GO
 CREATE TABLE CtRptChaType ( 
 RptChaTypeCd char (2) NOT NULL ,
 RptChaTypeName nvarchar (30) NOT NULL ,
@@ -905,10 +908,10 @@ CONSTRAINT PK_CtRptChaType PRIMARY KEY CLUSTERED (
 RptChaTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRptCtrType') AND type='U')
 DROP TABLE dbo.CtRptCtrType
-GO
 CREATE TABLE CtRptCtrType ( 
 RptCtrTypeCd char (1) NOT NULL ,
 RptCtrTypeName nvarchar (20) NOT NULL ,
@@ -918,10 +921,10 @@ CONSTRAINT PK_CtRptCtrType PRIMARY KEY CLUSTERED (
 RptCtrTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRptElmType') AND type='U')
 DROP TABLE dbo.CtRptElmType
-GO
 CREATE TABLE CtRptElmType ( 
 RptElmTypeCd char (1) NOT NULL ,
 RptElmTypeName nvarchar (20) NOT NULL ,
@@ -929,10 +932,10 @@ CONSTRAINT PK_CtRptElmType PRIMARY KEY CLUSTERED (
 RptElmTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRptGroup') AND type='U')
 DROP TABLE dbo.CtRptGroup
-GO
 CREATE TABLE CtRptGroup ( 
 RptGroupId tinyint NOT NULL ,
 RptGroupName nvarchar (100) NOT NULL ,
@@ -940,10 +943,10 @@ CONSTRAINT PK_CtRptGroup PRIMARY KEY CLUSTERED (
 RptGroupId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRptObjType') AND type='U')
 DROP TABLE dbo.CtRptObjType
-GO
 CREATE TABLE CtRptObjType ( 
 RptObjTypeCd char (1) NOT NULL ,
 RptObjTypeName nvarchar (10) NOT NULL ,
@@ -951,10 +954,10 @@ CONSTRAINT PK_CtRptObjType PRIMARY KEY CLUSTERED (
 RptObjTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRptStyDef') AND type='U')
 DROP TABLE dbo.CtRptStyDef
-GO
 CREATE TABLE CtRptStyDef ( 
 DefaultCd char (2) NOT NULL ,
 DefaultName nvarchar (20) NOT NULL ,
@@ -962,10 +965,10 @@ CONSTRAINT PK_CtRptStyDef PRIMARY KEY CLUSTERED (
 DefaultCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRptTblType') AND type='U')
 DROP TABLE dbo.CtRptTblType
-GO
 CREATE TABLE CtRptTblType ( 
 RptTblTypeCd char (1) NOT NULL ,
 RptTblTypeName nvarchar (20) NOT NULL ,
@@ -973,10 +976,10 @@ CONSTRAINT PK_CtRptTblType PRIMARY KEY CLUSTERED (
 RptTblTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleAsmxType') AND type='U')
 DROP TABLE dbo.CtRuleAsmxType
-GO
 CREATE TABLE CtRuleAsmxType ( 
 RuleAsmxTypeId tinyint NOT NULL ,
 RuleAsmxTypeDesc nvarchar (50) NOT NULL ,
@@ -984,10 +987,10 @@ CONSTRAINT PK_CtRuleAsmxType PRIMARY KEY CLUSTERED (
 RuleAsmxTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleCntType') AND type='U')
 DROP TABLE dbo.CtRuleCntType
-GO
 CREATE TABLE CtRuleCntType ( 
 RuleCntTypeId tinyint NOT NULL ,
 RuleCntTypeName nvarchar (50) NOT NULL ,
@@ -997,10 +1000,10 @@ CONSTRAINT PK_CtRuleCntType PRIMARY KEY CLUSTERED (
 RuleCntTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleLayer') AND type='U')
 DROP TABLE dbo.CtRuleLayer
-GO
 CREATE TABLE CtRuleLayer ( 
 RuleLayerCd char (1) NOT NULL ,
 RuleLayerDesc nvarchar (50) NOT NULL ,
@@ -1008,10 +1011,10 @@ CONSTRAINT PK_CtRuleLayer PRIMARY KEY CLUSTERED (
 RuleLayerCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleMethod') AND type='U')
 DROP TABLE dbo.CtRuleMethod
-GO
 CREATE TABLE CtRuleMethod ( 
 RuleMethodId tinyint NOT NULL ,
 RuleMethodName nvarchar (50) NOT NULL ,
@@ -1020,10 +1023,10 @@ CONSTRAINT PK_CtRuleMethod PRIMARY KEY CLUSTERED (
 RuleMethodId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleReactType') AND type='U')
 DROP TABLE dbo.CtRuleReactType
-GO
 CREATE TABLE CtRuleReactType ( 
 RuleReactTypeId tinyint NOT NULL ,
 RuleReactTypeDesc nvarchar (50) NOT NULL ,
@@ -1031,10 +1034,10 @@ CONSTRAINT PK_CtRuleReactType PRIMARY KEY CLUSTERED (
 RuleReactTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleReduxType') AND type='U')
 DROP TABLE dbo.CtRuleReduxType
-GO
 CREATE TABLE CtRuleReduxType ( 
 RuleReduxTypeId tinyint NOT NULL ,
 RuleReduxTypeDesc nvarchar (50) NOT NULL ,
@@ -1042,10 +1045,10 @@ CONSTRAINT PK_CtRuleReduxType PRIMARY KEY CLUSTERED (
 RuleReduxTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleServiceType') AND type='U')
 DROP TABLE dbo.CtRuleServiceType
-GO
 CREATE TABLE CtRuleServiceType ( 
 RuleServiceTypeId tinyint NOT NULL ,
 RuleServiceTypeDesc nvarchar (50) NOT NULL ,
@@ -1053,10 +1056,10 @@ CONSTRAINT PK_CtRuleServiceType PRIMARY KEY CLUSTERED (
 RuleServiceTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtRuleType') AND type='U')
 DROP TABLE dbo.CtRuleType
-GO
 CREATE TABLE CtRuleType ( 
 RuleTypeId tinyint NOT NULL ,
 RuleTypeDesc nvarchar (50) NOT NULL ,
@@ -1064,10 +1067,10 @@ CONSTRAINT PK_CtRuleType PRIMARY KEY CLUSTERED (
 RuleTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtScreenType') AND type='U')
 DROP TABLE dbo.CtScreenType
-GO
 CREATE TABLE CtScreenType ( 
 ScreenTypeId tinyint IDENTITY(1,1) NOT NULL ,
 ScreenTypeName char (2) NOT NULL ,
@@ -1076,10 +1079,10 @@ CONSTRAINT PK_CtScreenType PRIMARY KEY CLUSTERED (
 ScreenTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtSection') AND type='U')
 DROP TABLE dbo.CtSection
-GO
 CREATE TABLE CtSection ( 
 SectionCd char (1) NOT NULL ,
 SectionName nvarchar (200) NOT NULL ,
@@ -1088,10 +1091,10 @@ CONSTRAINT PK_CtSection PRIMARY KEY CLUSTERED (
 SectionCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtSelectType') AND type='U')
 DROP TABLE dbo.CtSelectType
-GO
 CREATE TABLE CtSelectType ( 
 SelectTypeCd char (1) NOT NULL ,
 SelectTypeName nvarchar (10) NOT NULL ,
@@ -1099,10 +1102,10 @@ CONSTRAINT PK_CtSelectType PRIMARY KEY CLUSTERED (
 SelectTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtSProcOnly') AND type='U')
 DROP TABLE dbo.CtSProcOnly
-GO
 CREATE TABLE CtSProcOnly ( 
 SProcOnlyCd char (1) NOT NULL ,
 SProcOnlyName nvarchar (50) NOT NULL ,
@@ -1110,10 +1113,10 @@ CONSTRAINT PK_CtSProcOnly PRIMARY KEY CLUSTERED (
 SProcOnlyCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtSysListVisible') AND type='U')
 DROP TABLE dbo.CtSysListVisible
-GO
 CREATE TABLE CtSysListVisible ( 
 SysListVisibleCode char (1) NOT NULL ,
 SysListVisibleDesc nvarchar (50) NOT NULL ,
@@ -1121,10 +1124,10 @@ CONSTRAINT PK_UsrPrefSysVis PRIMARY KEY CLUSTERED (
 SysListVisibleCode
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtTextAlign') AND type='U')
 DROP TABLE dbo.CtTextAlign
-GO
 CREATE TABLE CtTextAlign ( 
 TextAlignCd char (1) NOT NULL ,
 TextAlignName varchar (20) NOT NULL ,
@@ -1132,10 +1135,10 @@ CONSTRAINT PK_CtTextAlign PRIMARY KEY CLUSTERED (
 TextAlignCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtTextDecor') AND type='U')
 DROP TABLE dbo.CtTextDecor
-GO
 CREATE TABLE CtTextDecor ( 
 TextDecorCd char (1) NOT NULL ,
 TextDecorName varchar (20) NOT NULL ,
@@ -1144,10 +1147,10 @@ CONSTRAINT PK_CtTextDecor PRIMARY KEY CLUSTERED (
 TextDecorCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtTierType') AND type='U')
 DROP TABLE dbo.CtTierType
-GO
 CREATE TABLE CtTierType ( 
 TierTypeCd char (1) NOT NULL ,
 TierTypeName nvarchar (10) NOT NULL ,
@@ -1155,10 +1158,10 @@ CONSTRAINT PK_CtTierType PRIMARY KEY CLUSTERED (
 TierTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtUnit') AND type='U')
 DROP TABLE dbo.CtUnit
-GO
 CREATE TABLE CtUnit ( 
 UnitCd char (2) NOT NULL ,
 UnitDesc nvarchar (50) NOT NULL ,
@@ -1168,10 +1171,10 @@ CONSTRAINT PK_CtUnit PRIMARY KEY CLUSTERED (
 UnitCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtVerticalAlign') AND type='U')
 DROP TABLE dbo.CtVerticalAlign
-GO
 CREATE TABLE CtVerticalAlign ( 
 VerticalAlignCd char (1) NOT NULL ,
 VerticalAlignName varchar (20) NOT NULL ,
@@ -1179,10 +1182,10 @@ CONSTRAINT PK_CtVerticalAlign PRIMARY KEY CLUSTERED (
 VerticalAlignCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtViewType') AND type='U')
 DROP TABLE dbo.CtViewType
-GO
 CREATE TABLE CtViewType ( 
 ViewTypeCd char (1) NOT NULL ,
 ViewTypeName nvarchar (30) NOT NULL ,
@@ -1191,10 +1194,10 @@ CONSTRAINT PK_CtViewType PRIMARY KEY CLUSTERED (
 ViewTypeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtWizardType') AND type='U')
 DROP TABLE dbo.CtWizardType
-GO
 CREATE TABLE CtWizardType ( 
 WizardTypeId tinyint IDENTITY(1,1) NOT NULL ,
 WizardTypeName char (2) NOT NULL ,
@@ -1203,10 +1206,10 @@ CONSTRAINT PK_CtWizardType PRIMARY KEY CLUSTERED (
 WizardTypeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CtWritingMode') AND type='U')
 DROP TABLE dbo.CtWritingMode
-GO
 CREATE TABLE CtWritingMode ( 
 WritingModeCd char (1) NOT NULL ,
 WritingModeName varchar (10) NOT NULL ,
@@ -1215,10 +1218,10 @@ CONSTRAINT PK_CtWritingMode PRIMARY KEY CLUSTERED (
 WritingModeCd
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DataTier') AND type='U')
 DROP TABLE dbo.DataTier
-GO
 CREATE TABLE DataTier ( 
 DataTierId tinyint IDENTITY(1,1) NOT NULL ,
 DataTierName nvarchar (50) NOT NULL ,
@@ -1239,10 +1242,10 @@ CONSTRAINT PK_DataTier PRIMARY KEY CLUSTERED (
 DataTierId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DbColumn') AND type='U')
 DROP TABLE dbo.DbColumn
-GO
 CREATE TABLE DbColumn ( 
 ColumnId int IDENTITY(1,1) NOT NULL ,
 TableId int NOT NULL ,
@@ -1265,13 +1268,12 @@ CONSTRAINT PK_DbColumn PRIMARY KEY CLUSTERED (
 ColumnId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_DbKey_KeyName')
 DROP INDEX DbKey.IX_DbKey_KeyName 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DbKey') AND type='U')
 DROP TABLE dbo.DbKey
-GO
 CREATE TABLE DbKey ( 
 KeyId int IDENTITY(1,1) NOT NULL ,
 KeyName varchar (50) NOT NULL ,
@@ -1283,13 +1285,12 @@ CONSTRAINT PK_DbKey PRIMARY KEY CLUSTERED (
 KeyId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_DbTable')
 DROP INDEX DbTable.IU_DbTable 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DbTable') AND type='U')
 DROP TABLE dbo.DbTable
-GO
 CREATE TABLE DbTable ( 
 TableId int IDENTITY(1,1) NOT NULL ,
 SystemId tinyint NOT NULL ,
@@ -1307,10 +1308,12 @@ CONSTRAINT PK_DbTable PRIMARY KEY CLUSTERED (
 TableId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Deleted') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Deleted') AND type='U')
 DROP TABLE dbo.Deleted
-GO
 CREATE TABLE Deleted ( 
 DbName varchar (50) NOT NULL ,
 TableName varchar (50) NOT NULL ,
@@ -1319,10 +1322,11 @@ DContent nvarchar (max) NULL ,
 DeletedBy int NOT NULL ,
 DeletedOn datetime NOT NULL 
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Document') AND type='U')
 DROP TABLE dbo.Document
-GO
 CREATE TABLE Document ( 
 DocumentId int IDENTITY(1,1) NOT NULL ,
 DocuTblName varchar (50) NOT NULL ,
@@ -1336,10 +1340,10 @@ CONSTRAINT PK_Document PRIMARY KEY CLUSTERED (
 DocumentId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Entity') AND type='U')
 DROP TABLE dbo.Entity
-GO
 CREATE TABLE Entity ( 
 EntityId smallint NOT NULL ,
 EntityImg varbinary (max) NULL ,
@@ -1350,10 +1354,10 @@ CONSTRAINT PK_Entity PRIMARY KEY CLUSTERED (
 EntityId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GlobalFilter') AND type='U')
 DROP TABLE dbo.GlobalFilter
-GO
 CREATE TABLE GlobalFilter ( 
 UsrId int NOT NULL ,
 ScreenId int NOT NULL ,
@@ -1365,10 +1369,10 @@ UsrId,
 ScreenId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GlobalFilterKey') AND type='U')
 DROP TABLE dbo.GlobalFilterKey
-GO
 CREATE TABLE GlobalFilterKey ( 
 UsrId int NOT NULL ,
 ScreenId int NOT NULL ,
@@ -1379,10 +1383,10 @@ ScreenId,
 GlobalFilterKey
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GroupCol') AND type='U')
 DROP TABLE dbo.GroupCol
-GO
 CREATE TABLE GroupCol ( 
 GroupColId smallint IDENTITY(1,1) NOT NULL ,
 ColCssClass varchar (20) NULL ,
@@ -1391,10 +1395,10 @@ CONSTRAINT PK_GroupCol PRIMARY KEY CLUSTERED (
 GroupColId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GroupRow') AND type='U')
 DROP TABLE dbo.GroupRow
-GO
 CREATE TABLE GroupRow ( 
 GroupRowId smallint IDENTITY(1,1) NOT NULL ,
 RowCssClass varchar (20) NOT NULL ,
@@ -1403,13 +1407,12 @@ CONSTRAINT PK_GroupRow PRIMARY KEY CLUSTERED (
 GroupRowId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_Label')
 DROP INDEX Label.IX_Label 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Label') AND type='U')
 DROP TABLE dbo.Label
-GO
 CREATE TABLE Label ( 
 LabelId int IDENTITY(1,1) NOT NULL ,
 LabelDesc varchar (200) NULL ,
@@ -1423,10 +1426,10 @@ CONSTRAINT PK_Label PRIMARY KEY CLUSTERED (
 LabelId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.LastEmail') AND type='U')
 DROP TABLE dbo.LastEmail
-GO
 CREATE TABLE LastEmail ( 
 LastEmailDt datetime NOT NULL ,
 LastEmailCnt int NOT NULL ,
@@ -1434,10 +1437,10 @@ CONSTRAINT PK_LastEmail PRIMARY KEY CLUSTERED (
 LastEmailDt
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MaintMsg') AND type='U')
 DROP TABLE dbo.MaintMsg
-GO
 CREATE TABLE MaintMsg ( 
 MaintMsgId smallint IDENTITY(1,1) NOT NULL ,
 MaintMsgName nvarchar (200) NOT NULL ,
@@ -1448,13 +1451,12 @@ CONSTRAINT PK_MaintMsg PRIMARY KEY CLUSTERED (
 MaintMsgId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_MemTrans')
 DROP INDEX MemTrans.IU_MemTrans 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MemTrans') AND type='U')
 DROP TABLE dbo.MemTrans
-GO
 CREATE TABLE MemTrans ( 
 MemTransId int IDENTITY(1,1) NOT NULL ,
 InStr nvarchar (2000) NOT NULL ,
@@ -1464,10 +1466,10 @@ CONSTRAINT PK_MemTrans PRIMARY KEY CLUSTERED (
 MemTransId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Menu') AND type='U')
 DROP TABLE dbo.Menu
-GO
 CREATE TABLE Menu ( 
 MenuId int IDENTITY(1,1) NOT NULL ,
 MenuIndex smallint NOT NULL ,
@@ -1483,13 +1485,12 @@ CONSTRAINT PK_Menu PRIMARY KEY CLUSTERED (
 MenuId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_MenuHlp_MenuId')
 DROP INDEX MenuHlp.IX_MenuHlp_MenuId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MenuHlp') AND type='U')
 DROP TABLE dbo.MenuHlp
-GO
 CREATE TABLE MenuHlp ( 
 MenuHlpId int IDENTITY(1,1) NOT NULL ,
 MenuId int NOT NULL ,
@@ -1499,10 +1500,10 @@ CONSTRAINT PK_MenuHlp PRIMARY KEY CLUSTERED (
 MenuHlpId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MenuPrm') AND type='U')
 DROP TABLE dbo.MenuPrm
-GO
 CREATE TABLE MenuPrm ( 
 MenuPrmId int IDENTITY(1,1) NOT NULL ,
 MenuId int NOT NULL ,
@@ -1513,10 +1514,10 @@ CONSTRAINT PK_MenuPrm PRIMARY KEY CLUSTERED (
 MenuPrmId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Msg') AND type='U')
 DROP TABLE dbo.Msg
-GO
 CREATE TABLE Msg ( 
 MsgId int IDENTITY(1,1) NOT NULL ,
 MsgTypeCd char (1) NOT NULL ,
@@ -1526,13 +1527,12 @@ CONSTRAINT PK_Msg PRIMARY KEY CLUSTERED (
 MsgId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_MsgCenter')
 DROP INDEX MsgCenter.IX_MsgCenter 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MsgCenter') AND type='U')
 DROP TABLE dbo.MsgCenter
-GO
 CREATE TABLE MsgCenter ( 
 MsgCenterId int IDENTITY(1,1) NOT NULL ,
 MsgId int NOT NULL ,
@@ -1542,10 +1542,10 @@ CONSTRAINT PK_MsgCenter PRIMARY KEY CLUSTERED (
 MsgCenterId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MyMenuOpt') AND type='U')
 DROP TABLE dbo.MyMenuOpt
-GO
 CREATE TABLE MyMenuOpt ( 
 MenuOptId int IDENTITY(1,1) NOT NULL ,
 MenuOptName nvarchar (100) NOT NULL ,
@@ -1566,13 +1566,12 @@ CONSTRAINT PK_MyMenuOpt PRIMARY KEY CLUSTERED (
 MenuOptId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_Num2Word_Digits')
 DROP INDEX Num2Word.IX_Num2Word_Digits 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Num2Word') AND type='U')
 DROP TABLE dbo.Num2Word
-GO
 CREATE TABLE Num2Word ( 
 Num2WordId int IDENTITY(1,1) NOT NULL ,
 CultureId tinyint NOT NULL ,
@@ -1591,10 +1590,10 @@ CONSTRAINT PK_Num2Word PRIMARY KEY CLUSTERED (
 Num2WordId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ovride') AND type='U')
 DROP TABLE dbo.Ovride
-GO
 CREATE TABLE Ovride ( 
 OvrideId smallint IDENTITY(1,1) NOT NULL ,
 OvrideName nvarchar (50) NOT NULL ,
@@ -1604,10 +1603,10 @@ CONSTRAINT PK_Ovride PRIMARY KEY CLUSTERED (
 OvrideId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.OvrideGrp') AND type='U')
 DROP TABLE dbo.OvrideGrp
-GO
 CREATE TABLE OvrideGrp ( 
 OvrideGrpId int IDENTITY(1,1) NOT NULL ,
 OvrideId smallint NOT NULL ,
@@ -1616,10 +1615,10 @@ CONSTRAINT PK_OvrideGrp PRIMARY KEY CLUSTERED (
 OvrideGrpId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.PageLnk') AND type='U')
 DROP TABLE dbo.PageLnk
-GO
 CREATE TABLE PageLnk ( 
 PageLnkId int IDENTITY(1,1) NOT NULL ,
 PageObjId smallint NOT NULL ,
@@ -1634,10 +1633,10 @@ CONSTRAINT PK_PageLnk PRIMARY KEY CLUSTERED (
 PageLnkId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.PageObj') AND type='U')
 DROP TABLE dbo.PageObj
-GO
 CREATE TABLE PageObj ( 
 PageObjId int IDENTITY(1,1) NOT NULL ,
 PageObjDesc nvarchar (200) NULL ,
@@ -1654,10 +1653,12 @@ CONSTRAINT PK_PageObj PRIMARY KEY CLUSTERED (
 PageObjId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Printer') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Printer') AND type='U')
 DROP TABLE dbo.Printer
-GO
 CREATE TABLE Printer ( 
 PrinterId smallint NOT NULL ,
 PrinterName varchar (100) NOT NULL ,
@@ -1667,10 +1668,13 @@ CONSTRAINT PK_Printer PRIMARY KEY CLUSTERED (
 PrinterId
 )
 )
+END
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Printer_MemberId') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Printer_MemberId') AND type='U')
 DROP TABLE dbo.Printer_MemberId
-GO
 CREATE TABLE Printer_MemberId ( 
 PrinterId smallint NOT NULL ,
 MemberId int NOT NULL ,
@@ -1679,10 +1683,13 @@ PrinterId,
 MemberId
 )
 )
+END
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Printer_UsrGroupId') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Printer_UsrGroupId') AND type='U')
 DROP TABLE dbo.Printer_UsrGroupId
-GO
 CREATE TABLE Printer_UsrGroupId ( 
 PrinterId smallint NOT NULL ,
 UsrGroupId smallint NOT NULL ,
@@ -1691,10 +1698,11 @@ PrinterId,
 UsrGroupId
 )
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Release') AND type='U')
 DROP TABLE dbo.Release
-GO
 CREATE TABLE Release ( 
 ReleaseId smallint IDENTITY(1,1) NOT NULL ,
 ReleaseName nvarchar (50) NOT NULL ,
@@ -1710,10 +1718,10 @@ CONSTRAINT PK_Release PRIMARY KEY CLUSTERED (
 ReleaseId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReleaseDtl') AND type='U')
 DROP TABLE dbo.ReleaseDtl
-GO
 CREATE TABLE ReleaseDtl ( 
 ReleaseDtlId int IDENTITY(1,1) NOT NULL ,
 ReleaseId smallint NOT NULL ,
@@ -1732,10 +1740,10 @@ CONSTRAINT PK_ReleaseDtl PRIMARY KEY CLUSTERED (
 ReleaseDtlId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Report') AND type='U')
 DROP TABLE dbo.Report
-GO
 CREATE TABLE Report ( 
 ReportId int IDENTITY(1,1) NOT NULL ,
 ProgramName varchar (20) NOT NULL ,
@@ -1773,10 +1781,10 @@ CONSTRAINT PK_Report PRIMARY KEY CLUSTERED (
 ReportId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportCri') AND type='U')
 DROP TABLE dbo.ReportCri
-GO
 CREATE TABLE ReportCri ( 
 ReportCriId int IDENTITY(1,1) NOT NULL ,
 ReportId int NOT NULL ,
@@ -1805,13 +1813,12 @@ CONSTRAINT PK_ReportCri PRIMARY KEY CLUSTERED (
 ReportCriId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ReportCriHlp_ReportCriId')
 DROP INDEX ReportCriHlp.IX_ReportCriHlp_ReportCriId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportCriHlp') AND type='U')
 DROP TABLE dbo.ReportCriHlp
-GO
 CREATE TABLE ReportCriHlp ( 
 ReportCriHlpId int IDENTITY(1,1) NOT NULL ,
 ReportCriHlpDesc varchar (200) NULL ,
@@ -1822,10 +1829,10 @@ CONSTRAINT PK_ReportCriHlp PRIMARY KEY CLUSTERED (
 ReportCriHlpId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportDel') AND type='U')
 DROP TABLE dbo.ReportDel
-GO
 CREATE TABLE ReportDel ( 
 ReportDelId int IDENTITY(1,1) NOT NULL ,
 ReportId int NOT NULL ,
@@ -1834,10 +1841,10 @@ CONSTRAINT PK_ReportDel PRIMARY KEY CLUSTERED (
 ReportDelId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportGrp') AND type='U')
 DROP TABLE dbo.ReportGrp
-GO
 CREATE TABLE ReportGrp ( 
 ReportGrpId int IDENTITY(1,1) NOT NULL ,
 ReportId int NULL ,
@@ -1853,13 +1860,12 @@ CONSTRAINT PK_ReportGrp PRIMARY KEY CLUSTERED (
 ReportGrpId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ReportHlp_ReportId')
 DROP INDEX ReportHlp.IX_ReportHlp_ReportId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportHlp') AND type='U')
 DROP TABLE dbo.ReportHlp
-GO
 CREATE TABLE ReportHlp ( 
 ReportHlpId int IDENTITY(1,1) NOT NULL ,
 ReportId int NOT NULL ,
@@ -1870,13 +1876,14 @@ CONSTRAINT PK_ReportHlp PRIMARY KEY CLUSTERED (
 ReportHlpId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportLstCri') and type='U')
+BEGIN
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ReportLstCri')
 DROP INDEX ReportLstCri.IX_ReportLstCri 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportLstCri') AND type='U')
 DROP TABLE dbo.ReportLstCri
-GO
 CREATE TABLE ReportLstCri ( 
 ReportLstCriId int IDENTITY(1,1) NOT NULL ,
 UsrId int NOT NULL ,
@@ -1887,10 +1894,11 @@ CONSTRAINT PK_ReportLstCri PRIMARY KEY CLUSTERED (
 ReportLstCriId
 )
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportObj') AND type='U')
 DROP TABLE dbo.ReportObj
-GO
 CREATE TABLE ReportObj ( 
 ReportObjId int IDENTITY(1,1) NOT NULL ,
 ReportId int NOT NULL ,
@@ -1908,13 +1916,12 @@ CONSTRAINT PK_ReportObj PRIMARY KEY CLUSTERED (
 ReportObjId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ReportObjHlp_ReportObjId')
 DROP INDEX ReportObjHlp.IX_ReportObjHlp_ReportObjId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportObjHlp') AND type='U')
 DROP TABLE dbo.ReportObjHlp
-GO
 CREATE TABLE ReportObjHlp ( 
 ReportObjHlpId int IDENTITY(1,1) NOT NULL ,
 ReportObjHlpDesc varchar (200) NULL ,
@@ -1926,10 +1933,10 @@ CONSTRAINT PK_ReportObjHlp PRIMARY KEY CLUSTERED (
 ReportObjHlpId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RowOvrd') AND type='U')
 DROP TABLE dbo.RowOvrd
-GO
 CREATE TABLE RowOvrd ( 
 RowOvrdId smallint IDENTITY(1,1) NOT NULL ,
 RowOvrdDesc varchar (200) NULL ,
@@ -1944,10 +1951,10 @@ CONSTRAINT PK_RowOvrd PRIMARY KEY CLUSTERED (
 RowOvrdId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RowOvrdPrm') AND type='U')
 DROP TABLE dbo.RowOvrdPrm
-GO
 CREATE TABLE RowOvrdPrm ( 
 RowOvrdPrmId smallint IDENTITY(1,1) NOT NULL ,
 RowOvrdId smallint NOT NULL ,
@@ -1958,10 +1965,10 @@ CONSTRAINT PK_RowOvrdPrm PRIMARY KEY CLUSTERED (
 RowOvrdPrmId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptCel') AND type='U')
 DROP TABLE dbo.RptCel
-GO
 CREATE TABLE RptCel ( 
 RptCelId int IDENTITY(1,1) NOT NULL ,
 RptCelDesc nvarchar (200) NULL ,
@@ -1975,10 +1982,10 @@ CONSTRAINT PK_RptCel PRIMARY KEY CLUSTERED (
 RptCelId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptCha') AND type='U')
 DROP TABLE dbo.RptCha
-GO
 CREATE TABLE RptCha ( 
 RptChaId int IDENTITY(1,1) NOT NULL ,
 RptChaDesc nvarchar (200) NULL ,
@@ -1993,10 +2000,10 @@ CONSTRAINT PK_RptCha PRIMARY KEY CLUSTERED (
 RptChaId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptCtr') AND type='U')
 DROP TABLE dbo.RptCtr
-GO
 CREATE TABLE RptCtr ( 
 RptCtrId int IDENTITY(1,1) NOT NULL ,
 RptCtrDesc nvarchar (200) NULL ,
@@ -2027,10 +2034,10 @@ CONSTRAINT PK_RptCtr PRIMARY KEY CLUSTERED (
 RptCtrId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptElm') AND type='U')
 DROP TABLE dbo.RptElm
-GO
 CREATE TABLE RptElm ( 
 RptElmId int IDENTITY(1,1) NOT NULL ,
 RptElmDesc nvarchar (200) NULL ,
@@ -2046,13 +2053,12 @@ CONSTRAINT PK_RptElm PRIMARY KEY CLUSTERED (
 RptElmId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_RptMemCri')
 DROP INDEX RptMemCri.IX_RptMemCri 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptMemCri') AND type='U')
 DROP TABLE dbo.RptMemCri
-GO
 CREATE TABLE RptMemCri ( 
 RptMemCriId int IDENTITY(1,1) NOT NULL ,
 RptMemFldId int NOT NULL ,
@@ -2070,10 +2076,10 @@ CONSTRAINT PK_RptMemCri PRIMARY KEY CLUSTERED (
 RptMemCriId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptMemCriDtl') AND type='U')
 DROP TABLE dbo.RptMemCriDtl
-GO
 CREATE TABLE RptMemCriDtl ( 
 RptMemCriDtlId int IDENTITY(1,1) NOT NULL ,
 RptMemCriId int NOT NULL ,
@@ -2083,10 +2089,10 @@ CONSTRAINT PK_RptMemCriDtl PRIMARY KEY CLUSTERED (
 RptMemCriDtlId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptMemFld') AND type='U')
 DROP TABLE dbo.RptMemFld
-GO
 CREATE TABLE RptMemFld ( 
 RptMemFldId int IDENTITY(1,1) NOT NULL ,
 RptMemFldName nvarchar (200) NOT NULL ,
@@ -2098,10 +2104,10 @@ CONSTRAINT PK_RptMemFld PRIMARY KEY CLUSTERED (
 RptMemFldId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptStyle') AND type='U')
 DROP TABLE dbo.RptStyle
-GO
 CREATE TABLE RptStyle ( 
 RptStyleId int IDENTITY(1,1) NOT NULL ,
 RptStyleDesc nvarchar (300) NOT NULL ,
@@ -2145,10 +2151,10 @@ CONSTRAINT PK_RptStyle PRIMARY KEY CLUSTERED (
 RptStyleId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptTbl') AND type='U')
 DROP TABLE dbo.RptTbl
-GO
 CREATE TABLE RptTbl ( 
 RptTblId int IDENTITY(1,1) NOT NULL ,
 RptTblDesc nvarchar (200) NULL ,
@@ -2166,13 +2172,12 @@ CONSTRAINT PK_RptTbl PRIMARY KEY CLUSTERED (
 RptTblId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_RptTemplate')
 DROP INDEX RptTemplate.IX_RptTemplate 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptTemplate') AND type='U')
 DROP TABLE dbo.RptTemplate
-GO
 CREATE TABLE RptTemplate ( 
 DocId int IDENTITY(1,1) NOT NULL ,
 MasterId int NOT NULL ,
@@ -2187,10 +2192,10 @@ CONSTRAINT PK_RptTemplate PRIMARY KEY CLUSTERED (
 DocId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Rptwiz') AND type='U')
 DROP TABLE dbo.Rptwiz
-GO
 CREATE TABLE Rptwiz ( 
 RptwizId int IDENTITY(1,1) NOT NULL ,
 RptwizName nvarchar (50) NOT NULL ,
@@ -2225,10 +2230,10 @@ CONSTRAINT PK_Rptwiz PRIMARY KEY CLUSTERED (
 RptwizId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptwizCat') AND type='U')
 DROP TABLE dbo.RptwizCat
-GO
 CREATE TABLE RptwizCat ( 
 RptwizCatId smallint IDENTITY(1,1) NOT NULL ,
 RptwizTypId smallint NOT NULL CONSTRAINT DF_RptwizCat_RptwizTypId DEFAULT ((1)),
@@ -2241,10 +2246,10 @@ CONSTRAINT PK_RptwizCat PRIMARY KEY CLUSTERED (
 RptwizCatId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptwizCatDtl') AND type='U')
 DROP TABLE dbo.RptwizCatDtl
-GO
 CREATE TABLE RptwizCatDtl ( 
 RptwizCatDtlId int IDENTITY(1,1) NOT NULL ,
 RptwizCatId smallint NOT NULL ,
@@ -2260,10 +2265,10 @@ CONSTRAINT PK_RptwizCatDtl PRIMARY KEY CLUSTERED (
 RptwizCatDtlId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptwizDtl') AND type='U')
 DROP TABLE dbo.RptwizDtl
-GO
 CREATE TABLE RptwizDtl ( 
 RptwizDtlId int IDENTITY(1,1) NOT NULL ,
 RptwizId int NOT NULL ,
@@ -2281,10 +2286,10 @@ CONSTRAINT PK_RptwizDtl PRIMARY KEY CLUSTERED (
 RptwizDtlId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptwizTyp') AND type='U')
 DROP TABLE dbo.RptwizTyp
-GO
 CREATE TABLE RptwizTyp ( 
 RptwizTypId smallint IDENTITY(1,1) NOT NULL ,
 RptwizTypName nvarchar (100) NOT NULL ,
@@ -2292,10 +2297,10 @@ CONSTRAINT PK_RptwizTyp PRIMARY KEY CLUSTERED (
 RptwizTypId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RuleAsmx') AND type='U')
 DROP TABLE dbo.RuleAsmx
-GO
 CREATE TABLE RuleAsmx ( 
 RuleAsmxId int IDENTITY(1,1) NOT NULL ,
 RuleAsmxTypeId tinyint NOT NULL ,
@@ -2308,10 +2313,10 @@ CONSTRAINT PK_RuleAsmx PRIMARY KEY CLUSTERED (
 RuleAsmxId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RuleReact') AND type='U')
 DROP TABLE dbo.RuleReact
-GO
 CREATE TABLE RuleReact ( 
 RuleReactId int IDENTITY(1,1) NOT NULL ,
 RuleReactTypeId tinyint NOT NULL ,
@@ -2325,10 +2330,10 @@ CONSTRAINT PK_RuleReact PRIMARY KEY CLUSTERED (
 RuleReactId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RuleTier') AND type='U')
 DROP TABLE dbo.RuleTier
-GO
 CREATE TABLE RuleTier ( 
 RuleTierId tinyint IDENTITY(1,1) NOT NULL ,
 RuleTierName nvarchar (50) NOT NULL ,
@@ -2341,13 +2346,14 @@ CONSTRAINT PK_RuleTier PRIMARY KEY CLUSTERED (
 RuleTierId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScrAudit') and type='U')
+BEGIN
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScrAudit')
 DROP INDEX ScrAudit.IX_ScrAudit 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScrAudit') AND type='U')
 DROP TABLE dbo.ScrAudit
-GO
 CREATE TABLE ScrAudit ( 
 ScrAuditId bigint IDENTITY(1,1) NOT NULL ,
 CudAction char (1) NOT NULL ,
@@ -2362,13 +2368,15 @@ CONSTRAINT PK_ScrAudit PRIMARY KEY CLUSTERED (
 ScrAuditId
 )
 )
+END
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScrAuditDtl') and type='U')
+BEGIN
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScrAuditDtl')
 DROP INDEX ScrAuditDtl.IX_ScrAuditDtl 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScrAuditDtl') AND type='U')
 DROP TABLE dbo.ScrAuditDtl
-GO
 CREATE TABLE ScrAuditDtl ( 
 ScrAuditDtlId bigint IDENTITY(1,1) NOT NULL ,
 ScrAuditId bigint NOT NULL ,
@@ -2382,10 +2390,11 @@ CONSTRAINT PK_ScrAuditDtl PRIMARY KEY CLUSTERED (
 ScrAuditDtlId
 )
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Screen') AND type='U')
 DROP TABLE dbo.Screen
-GO
 CREATE TABLE Screen ( 
 ScreenId int IDENTITY(1,1) NOT NULL ,
 ProgramName varchar (20) NOT NULL ,
@@ -2420,10 +2429,10 @@ CONSTRAINT PK_Screen PRIMARY KEY CLUSTERED (
 ScreenId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenCri') AND type='U')
 DROP TABLE dbo.ScreenCri
-GO
 CREATE TABLE ScreenCri ( 
 ScreenCriId int IDENTITY(1,1) NOT NULL ,
 ScreenId int NOT NULL ,
@@ -2446,13 +2455,12 @@ CONSTRAINT PK_ScreenCri PRIMARY KEY CLUSTERED (
 ScreenCriId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenCriHlp_ScreenCriId')
 DROP INDEX ScreenCriHlp.IX_ScreenCriHlp_ScreenCriId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenCriHlp') AND type='U')
 DROP TABLE dbo.ScreenCriHlp
-GO
 CREATE TABLE ScreenCriHlp ( 
 ScreenCriHlpId int IDENTITY(1,1) NOT NULL ,
 ScreenCriHlpDesc varchar (200) NULL ,
@@ -2463,10 +2471,10 @@ CONSTRAINT PK_ScreenCriHlp PRIMARY KEY CLUSTERED (
 ScreenCriHlpId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenDel') AND type='U')
 DROP TABLE dbo.ScreenDel
-GO
 CREATE TABLE ScreenDel ( 
 ScreenDelId int IDENTITY(1,1) NOT NULL ,
 ScreenId int NOT NULL ,
@@ -2476,13 +2484,12 @@ CONSTRAINT PK_ScreenDel PRIMARY KEY CLUSTERED (
 ScreenDelId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenFilter_Id_Name')
 DROP INDEX ScreenFilter.IX_ScreenFilter_Id_Name 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenFilter') AND type='U')
 DROP TABLE dbo.ScreenFilter
-GO
 CREATE TABLE ScreenFilter ( 
 ScreenFilterId int IDENTITY(1,1) NOT NULL ,
 ScreenId int NOT NULL ,
@@ -2495,13 +2502,12 @@ CONSTRAINT PK_ScreenFilter PRIMARY KEY CLUSTERED (
 ScreenFilterId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenFilterHlp_FilterId')
 DROP INDEX ScreenFilterHlp.IX_ScreenFilterHlp_FilterId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenFilterHlp') AND type='U')
 DROP TABLE dbo.ScreenFilterHlp
-GO
 CREATE TABLE ScreenFilterHlp ( 
 ScreenFilterHlpId int IDENTITY(1,1) NOT NULL ,
 ScreenFilterId int NOT NULL ,
@@ -2511,10 +2517,10 @@ CONSTRAINT PK_ScreenFilterHlp PRIMARY KEY CLUSTERED (
 ScreenFilterHlpId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenHlp') AND type='U')
 DROP TABLE dbo.ScreenHlp
-GO
 CREATE TABLE ScreenHlp ( 
 ScreenHlpId int IDENTITY(1,1) NOT NULL ,
 ScreenId int NOT NULL ,
@@ -2545,13 +2551,14 @@ ScreenHlpId,
 CultureId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenLstCri') and type='U')
+BEGIN
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenLstCri')
 DROP INDEX ScreenLstCri.IX_ScreenLstCri 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenLstCri') AND type='U')
 DROP TABLE dbo.ScreenLstCri
-GO
 CREATE TABLE ScreenLstCri ( 
 ScreenLstCriId int IDENTITY(1,1) NOT NULL ,
 UsrId int NOT NULL ,
@@ -2562,13 +2569,15 @@ CONSTRAINT PK_ScreenLstCri PRIMARY KEY CLUSTERED (
 ScreenLstCriId
 )
 )
+END
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenLstInf') and type='U')
+BEGIN
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenLstInf')
 DROP INDEX ScreenLstInf.IX_ScreenLstInf 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenLstInf') AND type='U')
 DROP TABLE dbo.ScreenLstInf
-GO
 CREATE TABLE ScreenLstInf ( 
 ScreenLstInfId int IDENTITY(1,1) NOT NULL ,
 UsrId int NOT NULL ,
@@ -2578,10 +2587,11 @@ CONSTRAINT PK_ScreenLstInf PRIMARY KEY CLUSTERED (
 ScreenLstInfId
 )
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenObj') AND type='U')
 DROP TABLE dbo.ScreenObj
-GO
 CREATE TABLE ScreenObj ( 
 ScreenObjId int IDENTITY(1,1) NOT NULL ,
 ScreenId int NOT NULL ,
@@ -2635,10 +2645,10 @@ CONSTRAINT PK_ScreenObj PRIMARY KEY CLUSTERED (
 ScreenObjId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenObjHlp') AND type='U')
 DROP TABLE dbo.ScreenObjHlp
-GO
 CREATE TABLE ScreenObjHlp ( 
 ScreenObjHlpId int IDENTITY(1,1) NOT NULL ,
 ScreenObjHlpDesc varchar (200) NULL ,
@@ -2653,10 +2663,10 @@ ScreenObjHlpId,
 CultureId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenTab') AND type='U')
 DROP TABLE dbo.ScreenTab
-GO
 CREATE TABLE ScreenTab ( 
 ScreenTabId int IDENTITY(1,1) NOT NULL ,
 ScreenTabDesc nvarchar (200) NULL ,
@@ -2667,13 +2677,12 @@ CONSTRAINT PK_ScreenTab PRIMARY KEY CLUSTERED (
 ScreenTabId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenTabHlp_ScreenTabId')
 DROP INDEX ScreenTabHlp.IX_ScreenTabHlp_ScreenTabId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenTabHlp') AND type='U')
 DROP TABLE dbo.ScreenTabHlp
-GO
 CREATE TABLE ScreenTabHlp ( 
 ScreenTabHlpId int IDENTITY(1,1) NOT NULL ,
 ScreenTabId int NOT NULL ,
@@ -2683,10 +2692,10 @@ CONSTRAINT PK_ScreenTabHlp PRIMARY KEY CLUSTERED (
 ScreenTabHlpId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScrMemCri') AND type='U')
 DROP TABLE dbo.ScrMemCri
-GO
 CREATE TABLE ScrMemCri ( 
 ScrMemCriId int IDENTITY(1,1) NOT NULL ,
 ScrMemCriName nvarchar (200) NOT NULL ,
@@ -2696,10 +2705,10 @@ CONSTRAINT PK_ScrMemCri PRIMARY KEY CLUSTERED (
 ScrMemCriId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScrMemCriDtl') AND type='U')
 DROP TABLE dbo.ScrMemCriDtl
-GO
 CREATE TABLE ScrMemCriDtl ( 
 ScrMemCriDtlId int IDENTITY(1,1) NOT NULL ,
 ScrMemCriId int NOT NULL ,
@@ -2709,13 +2718,12 @@ CONSTRAINT PK_ScrMemCriDtl PRIMARY KEY CLUSTERED (
 ScrMemCriDtlId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_SctGrpCol')
 DROP INDEX SctGrpCol.IU_SctGrpCol 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SctGrpCol') AND type='U')
 DROP TABLE dbo.SctGrpCol
-GO
 CREATE TABLE SctGrpCol ( 
 SctGrpColId smallint IDENTITY(1,1) NOT NULL ,
 SctGrpColDesc nvarchar (200) NULL ,
@@ -2727,13 +2735,12 @@ CONSTRAINT PK_SctGrpCol PRIMARY KEY CLUSTERED (
 SctGrpColId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_SctGrpRow')
 DROP INDEX SctGrpRow.IU_SctGrpRow 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SctGrpRow') AND type='U')
 DROP TABLE dbo.SctGrpRow
-GO
 CREATE TABLE SctGrpRow ( 
 SctGrpRowId smallint IDENTITY(1,1) NOT NULL ,
 SctGrpRowDesc nvarchar (200) NULL ,
@@ -2744,13 +2751,12 @@ CONSTRAINT PK_SctGrpRow PRIMARY KEY CLUSTERED (
 SctGrpRowId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ServerRule')
 DROP INDEX ServerRule.IX_ServerRule 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ServerRule') AND type='U')
 DROP TABLE dbo.ServerRule
-GO
 CREATE TABLE ServerRule ( 
 ServerRuleId int IDENTITY(1,1) NOT NULL ,
 ScreenId int NOT NULL ,
@@ -2776,10 +2782,10 @@ CONSTRAINT PK_ServerRule PRIMARY KEY CLUSTERED (
 ServerRuleId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SqlToSybMap') AND type='U')
 DROP TABLE dbo.SqlToSybMap
-GO
 CREATE TABLE SqlToSybMap ( 
 SqlToSybMapId int IDENTITY(1,1) NOT NULL ,
 ProjectId smallint NOT NULL ,
@@ -2789,13 +2795,12 @@ CONSTRAINT PK_SqlToSybMap PRIMARY KEY CLUSTERED (
 SqlToSybMapId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_SredMebr')
 DROP INDEX SredMebr.IU_SredMebr 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SredMebr') AND type='U')
 DROP TABLE dbo.SredMebr
-GO
 CREATE TABLE SredMebr ( 
 SredMebrId int IDENTITY(1,1) NOT NULL ,
 MemberId int NOT NULL ,
@@ -2811,10 +2816,10 @@ CONSTRAINT PK_SredMebr PRIMARY KEY CLUSTERED (
 SredMebrId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SredTime') AND type='U')
 DROP TABLE dbo.SredTime
-GO
 CREATE TABLE SredTime ( 
 SredTimeId int IDENTITY(1,1) NOT NULL ,
 MemberId int NOT NULL ,
@@ -2829,10 +2834,10 @@ CONSTRAINT PK_SredTime PRIMARY KEY CLUSTERED (
 SredTimeId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.StaticCs') AND type='U')
 DROP TABLE dbo.StaticCs
-GO
 CREATE TABLE StaticCs ( 
 StaticCsId smallint IDENTITY(1,1) NOT NULL ,
 StaticCsNm nvarchar (200) NOT NULL ,
@@ -2841,10 +2846,10 @@ CONSTRAINT PK_StaticCs PRIMARY KEY CLUSTERED (
 StaticCsId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.StaticFi') AND type='U')
 DROP TABLE dbo.StaticFi
-GO
 CREATE TABLE StaticFi ( 
 StaticFiId int IDENTITY(1,1) NOT NULL ,
 StaticFiUrl nvarchar (200) NOT NULL ,
@@ -2852,10 +2857,10 @@ CONSTRAINT PK_StaticFi PRIMARY KEY CLUSTERED (
 StaticFiId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.StaticJs') AND type='U')
 DROP TABLE dbo.StaticJs
-GO
 CREATE TABLE StaticJs ( 
 StaticJsId smallint IDENTITY(1,1) NOT NULL ,
 StaticJsNm nvarchar (200) NOT NULL ,
@@ -2864,10 +2869,10 @@ CONSTRAINT PK_StaticJs PRIMARY KEY CLUSTERED (
 StaticJsId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.StaticPg') AND type='U')
 DROP TABLE dbo.StaticPg
-GO
 CREATE TABLE StaticPg ( 
 StaticPgId int IDENTITY(1,1) NOT NULL ,
 StaticPgDesc nvarchar (300) NULL ,
@@ -2885,10 +2890,10 @@ CONSTRAINT PK_StaticPg PRIMARY KEY CLUSTERED (
 StaticPgId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Systems') AND type='U')
 DROP TABLE dbo.Systems
-GO
 CREATE TABLE Systems ( 
 SystemId tinyint NOT NULL ,
 SystemName nvarchar (50) NOT NULL ,
@@ -2918,10 +2923,10 @@ CONSTRAINT PK_Systems PRIMARY KEY CLUSTERED (
 SystemId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.TbdRule') AND type='U')
 DROP TABLE dbo.TbdRule
-GO
 CREATE TABLE TbdRule ( 
 TbdRuleId int IDENTITY(1,1) NOT NULL ,
 ScreenId int NOT NULL ,
@@ -2931,13 +2936,12 @@ CONSTRAINT PK_TbdRule PRIMARY KEY CLUSTERED (
 TbdRuleId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_Template_TmplDefault')
 DROP INDEX Template.IX_Template_TmplDefault 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Template') AND type='U')
 DROP TABLE dbo.Template
-GO
 CREATE TABLE Template ( 
 TemplateId smallint IDENTITY(1,1) NOT NULL ,
 TemplateName nvarchar (30) NOT NULL ,
@@ -2948,13 +2952,14 @@ CONSTRAINT PK_Template PRIMARY KEY CLUSTERED (
 TemplateId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Usage') and type='U')
+BEGIN
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_Usage_UsrId')
 DROP INDEX Usage.IX_Usage_UsrId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Usage') AND type='U')
 DROP TABLE dbo.Usage
-GO
 CREATE TABLE Usage ( 
 UsageDt datetime NOT NULL ,
 UsrId int NOT NULL ,
@@ -2965,13 +2970,15 @@ ReportId int NULL ,
 WizardId int NULL ,
 Miscellaneous varchar (100) NULL 
 )
+END
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Usr') and type='U')
+BEGIN
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_Usr')
 DROP INDEX Usr.IU_Usr 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Usr') AND type='U')
 DROP TABLE dbo.Usr
-GO
 CREATE TABLE Usr ( 
 UsrId int IDENTITY(1,1) NOT NULL ,
 LoginName nvarchar (32) NOT NULL ,
@@ -3021,13 +3028,15 @@ UsrId,
 CultureId
 )
 )
+END
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrAudit') and type='U')
+BEGIN
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_UsrAudit')
 DROP INDEX UsrAudit.IX_UsrAudit 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrAudit') AND type='U')
 DROP TABLE dbo.UsrAudit
-GO
 CREATE TABLE UsrAudit ( 
 AttemptDt datetime NOT NULL ,
 LoginName nvarchar (32) NOT NULL ,
@@ -3038,13 +3047,13 @@ CONSTRAINT PK_UsrAudit PRIMARY KEY CLUSTERED (
 AttemptDt
 )
 )
+END
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_UsrGroup_UsrGroupName')
 DROP INDEX UsrGroup.IX_UsrGroup_UsrGroupName 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrGroup') AND type='U')
 DROP TABLE dbo.UsrGroup
-GO
 CREATE TABLE UsrGroup ( 
 UsrGroupId smallint IDENTITY(1,1) NOT NULL ,
 UsrGroupName nvarchar (50) NOT NULL ,
@@ -3054,13 +3063,12 @@ CONSTRAINT PK_UsrGroup PRIMARY KEY CLUSTERED (
 UsrGroupId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_UsrGroupAuth')
 DROP INDEX UsrGroupAuth.IX_UsrGroupAuth 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrGroupAuth') AND type='U')
 DROP TABLE dbo.UsrGroupAuth
-GO
 CREATE TABLE UsrGroupAuth ( 
 UsrGroupAuthId int IDENTITY(1,1) NOT NULL ,
 UsrGroupId smallint NOT NULL ,
@@ -3072,10 +3080,12 @@ CONSTRAINT PK_UsrGroupAuth PRIMARY KEY CLUSTERED (
 UsrGroupAuthId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrImpr') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrImpr') AND type='U')
 DROP TABLE dbo.UsrImpr
-GO
 CREATE TABLE UsrImpr ( 
 UsrImprId int IDENTITY(1,1) NOT NULL ,
 UsrId int NOT NULL ,
@@ -3093,10 +3103,11 @@ CONSTRAINT PK_UsrImpr PRIMARY KEY CLUSTERED (
 UsrImprId
 )
 )
+END
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrPref') AND type='U')
 DROP TABLE dbo.UsrPref
-GO
 CREATE TABLE UsrPref ( 
 UsrPrefId int IDENTITY(1,1) NOT NULL ,
 UsrId int NULL ,
@@ -3128,10 +3139,12 @@ CONSTRAINT PK_UsrPref PRIMARY KEY CLUSTERED (
 UsrPrefId
 )
 )
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrProvider') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrProvider') AND type='U')
 DROP TABLE dbo.UsrProvider
-GO
 CREATE TABLE UsrProvider ( 
 UsrId int NOT NULL ,
 ProviderCd char (1) NOT NULL ,
@@ -3141,10 +3154,13 @@ UsrId,
 ProviderCd
 )
 )
+END
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrPwd') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrPwd') AND type='U')
 DROP TABLE dbo.UsrPwd
-GO
 CREATE TABLE UsrPwd ( 
 UsrId int NOT NULL ,
 LastCnt smallint NOT NULL ,
@@ -3154,10 +3170,13 @@ UsrId,
 LastCnt
 )
 )
+END
+
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrSafeIP') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrSafeIP') AND type='U')
 DROP TABLE dbo.UsrSafeIP
-GO
 CREATE TABLE UsrSafeIP ( 
 UsrId int NOT NULL ,
 IpAddress varchar (50) NOT NULL ,
@@ -3166,13 +3185,13 @@ UsrId,
 IpAddress
 )
 )
+END
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_UtReport_ProgramName')
 DROP INDEX UtReport.IX_UtReport_ProgramName 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtReport') AND type='U')
 DROP TABLE dbo.UtReport
-GO
 CREATE TABLE UtReport ( 
 ReportId int IDENTITY(1,1) NOT NULL ,
 ProgramName varchar (20) NOT NULL ,
@@ -3209,10 +3228,10 @@ CONSTRAINT PK_UtReport PRIMARY KEY CLUSTERED (
 ReportId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtReportCri') AND type='U')
 DROP TABLE dbo.UtReportCri
-GO
 CREATE TABLE UtReportCri ( 
 ReportCriId int IDENTITY(1,1) NOT NULL ,
 ReportId int NOT NULL ,
@@ -3240,10 +3259,10 @@ CONSTRAINT PK_UtReportCri PRIMARY KEY CLUSTERED (
 ReportCriId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtReportCriHlp') AND type='U')
 DROP TABLE dbo.UtReportCriHlp
-GO
 CREATE TABLE UtReportCriHlp ( 
 ReportCriHlpId int IDENTITY(1,1) NOT NULL ,
 ReportCriHlpDesc varchar (200) NULL ,
@@ -3254,10 +3273,10 @@ CONSTRAINT PK_UtReportCriHlp PRIMARY KEY CLUSTERED (
 ReportCriHlpId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtReportDel') AND type='U')
 DROP TABLE dbo.UtReportDel
-GO
 CREATE TABLE UtReportDel ( 
 UtReportDelId int IDENTITY(1,1) NOT NULL ,
 ReportId int NOT NULL ,
@@ -3266,10 +3285,10 @@ CONSTRAINT PK_UtReportDel PRIMARY KEY CLUSTERED (
 UtReportDelId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtReportHlp') AND type='U')
 DROP TABLE dbo.UtReportHlp
-GO
 CREATE TABLE UtReportHlp ( 
 ReportHlpId int IDENTITY(1,1) NOT NULL ,
 ReportId int NOT NULL ,
@@ -3280,10 +3299,10 @@ CONSTRAINT PK_UtReportHlp PRIMARY KEY CLUSTERED (
 ReportHlpId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtReportLstCri') AND type='U')
 DROP TABLE dbo.UtReportLstCri
-GO
 CREATE TABLE UtReportLstCri ( 
 ReportLstCriId int IDENTITY(1,1) NOT NULL ,
 UsrId int NOT NULL ,
@@ -3294,10 +3313,10 @@ CONSTRAINT PK_UtReportLstCri PRIMARY KEY CLUSTERED (
 ReportLstCriId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtReportObj') AND type='U')
 DROP TABLE dbo.UtReportObj
-GO
 CREATE TABLE UtReportObj ( 
 ReportObjId int IDENTITY(1,1) NOT NULL ,
 ReportId int NOT NULL ,
@@ -3315,10 +3334,10 @@ CONSTRAINT PK_UtReportObj PRIMARY KEY CLUSTERED (
 ReportObjId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtReportObjHlp') AND type='U')
 DROP TABLE dbo.UtReportObjHlp
-GO
 CREATE TABLE UtReportObjHlp ( 
 ReportObjHlpId int IDENTITY(1,1) NOT NULL ,
 ReportObjHlpDesc varchar (200) NULL ,
@@ -3330,10 +3349,10 @@ CONSTRAINT PK_UtReportObjHlp PRIMARY KEY CLUSTERED (
 ReportObjHlpId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtRptCel') AND type='U')
 DROP TABLE dbo.UtRptCel
-GO
 CREATE TABLE UtRptCel ( 
 RptCelId int IDENTITY(1,1) NOT NULL ,
 RptCelDesc nvarchar (200) NULL ,
@@ -3347,10 +3366,10 @@ CONSTRAINT PK_UtRptCel PRIMARY KEY CLUSTERED (
 RptCelId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtRptCha') AND type='U')
 DROP TABLE dbo.UtRptCha
-GO
 CREATE TABLE UtRptCha ( 
 RptChaId int IDENTITY(1,1) NOT NULL ,
 RptChaDesc nvarchar (200) NULL ,
@@ -3365,10 +3384,10 @@ CONSTRAINT PK_UtRptCha PRIMARY KEY CLUSTERED (
 RptChaId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtRptCtr') AND type='U')
 DROP TABLE dbo.UtRptCtr
-GO
 CREATE TABLE UtRptCtr ( 
 RptCtrId int IDENTITY(1,1) NOT NULL ,
 RptCtrDesc nvarchar (200) NULL ,
@@ -3399,10 +3418,10 @@ CONSTRAINT PK_UtRptCtr PRIMARY KEY CLUSTERED (
 RptCtrId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtRptElm') AND type='U')
 DROP TABLE dbo.UtRptElm
-GO
 CREATE TABLE UtRptElm ( 
 RptElmId int IDENTITY(1,1) NOT NULL ,
 RptElmDesc nvarchar (200) NULL ,
@@ -3418,10 +3437,10 @@ CONSTRAINT PK_UtRptElm PRIMARY KEY CLUSTERED (
 RptElmId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtRptMemCri') AND type='U')
 DROP TABLE dbo.UtRptMemCri
-GO
 CREATE TABLE UtRptMemCri ( 
 RptMemCriId int IDENTITY(1,1) NOT NULL ,
 RptMemFldId int NOT NULL ,
@@ -3439,10 +3458,10 @@ CONSTRAINT PK_UtRptMemCri PRIMARY KEY CLUSTERED (
 RptMemCriId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtRptMemCriDtl') AND type='U')
 DROP TABLE dbo.UtRptMemCriDtl
-GO
 CREATE TABLE UtRptMemCriDtl ( 
 RptMemCriDtlId int IDENTITY(1,1) NOT NULL ,
 RptMemCriId int NOT NULL ,
@@ -3452,10 +3471,10 @@ CONSTRAINT PK_UtRptMemCriDtl PRIMARY KEY CLUSTERED (
 RptMemCriDtlId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtRptMemFld') AND type='U')
 DROP TABLE dbo.UtRptMemFld
-GO
 CREATE TABLE UtRptMemFld ( 
 RptMemFldId int IDENTITY(1,1) NOT NULL ,
 RptMemFldName nvarchar (200) NOT NULL ,
@@ -3467,10 +3486,10 @@ CONSTRAINT PK_UtRptMemFld PRIMARY KEY CLUSTERED (
 RptMemFldId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtRptTbl') AND type='U')
 DROP TABLE dbo.UtRptTbl
-GO
 CREATE TABLE UtRptTbl ( 
 RptTblId int IDENTITY(1,1) NOT NULL ,
 RptTblDesc nvarchar (200) NULL ,
@@ -3488,10 +3507,10 @@ CONSTRAINT PK_UtRptTbl PRIMARY KEY CLUSTERED (
 RptTblId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WebRule') AND type='U')
 DROP TABLE dbo.WebRule
-GO
 CREATE TABLE WebRule ( 
 WebRuleId int IDENTITY(1,1) NOT NULL ,
 RuleTypeId tinyint NOT NULL ,
@@ -3515,13 +3534,12 @@ CONSTRAINT PK_WebRule PRIMARY KEY CLUSTERED (
 WebRuleId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_Wizard')
 DROP INDEX Wizard.IU_Wizard 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Wizard') AND type='U')
 DROP TABLE dbo.Wizard
-GO
 CREATE TABLE Wizard ( 
 WizardId int IDENTITY(1,1) NOT NULL ,
 WizardTypeId tinyint NOT NULL ,
@@ -3538,10 +3556,10 @@ CONSTRAINT PK_Wizard PRIMARY KEY CLUSTERED (
 WizardId
 )
 )
+
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WizardDel') AND type='U')
 DROP TABLE dbo.WizardDel
-GO
 CREATE TABLE WizardDel ( 
 WizardDelId int IDENTITY(1,1) NOT NULL ,
 WizardId int NOT NULL ,
@@ -3550,13 +3568,12 @@ CONSTRAINT PK_WizardDel PRIMARY KEY CLUSTERED (
 WizardDelId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_WizardObj_WizardId')
 DROP INDEX WizardObj.IX_WizardObj_WizardId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WizardObj') AND type='U')
 DROP TABLE dbo.WizardObj
-GO
 CREATE TABLE WizardObj ( 
 WizardObjId int IDENTITY(1,1) NOT NULL ,
 WizardId int NOT NULL ,
@@ -3567,13 +3584,12 @@ CONSTRAINT PK_WizardObj PRIMARY KEY CLUSTERED (
 WizardObjId
 )
 )
+
 GO
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_WizardRule_WizardId')
 DROP INDEX WizardRule.IX_WizardRule_WizardId 
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WizardRule') AND type='U')
 DROP TABLE dbo.WizardRule
-GO
 CREATE TABLE WizardRule ( 
 WizardRuleId int IDENTITY(1,1) NOT NULL ,
 WizardId int NOT NULL ,
@@ -3588,4 +3604,5 @@ CONSTRAINT PK_WizardRule PRIMARY KEY CLUSTERED (
 WizardRuleId
 )
 )
+
 GO

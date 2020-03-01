@@ -1,0 +1,62 @@
+7~@~71~@~~@~~@~1~@~5~@~~@~~@~~@~N~@~N~@~N~@~N
+8~@~71~@~~@~~@~1~@~4~@~~@~~@~~@~N~@~N~@~N~@~N
+20~@~5~@~~@~~@~1~@~47~@~~@~~@~~@~Y~@~N~@~N~@~N
+21~@~5~@~~@~~@~1~@~48~@~~@~~@~~@~Y~@~N~@~N~@~N
+27~@~95~@~~@~~@~1~@~4~@~~@~~@~~@~N~@~N~@~N~@~N
+28~@~95~@~~@~~@~1~@~5~@~~@~~@~~@~N~@~N~@~N~@~N
+31~@~95~@~~@~~@~1~@~59~@~~@~~@~Press this to preview this report after save button is pressed~@~Y~@~N~@~N~@~N
+34~@~78~@~~@~~@~1~@~7~@~~@~~@~~@~N~@~N~@~N~@~N
+36~@~95~@~~@~~@~4~@~59~@~~@~~@~按下此预览这份报告后，保存按钮被按下时~@~Y~@~N~@~N~@~N
+38~@~95~@~~@~~@~2~@~59~@~~@~~@~Appuyez sur cette preview de ce rapport après mettre le bouton est pressé~@~Y~@~N~@~N~@~N
+40~@~95~@~~@~~@~12~@~59~@~~@~~@~Пресс этом, чтобы просмотреть этот доклад после сохранить кнопка нажата~@~Y~@~N~@~N~@~N
+41~@~8~@~~@~~@~1~@~51~@~Translate~@~~@~Click here to translate all not-yet-translated items from default culture to selected culture.~@~Y~@~N~@~N~@~N
+42~@~8~@~~@~~@~4~@~57~@~翻译~@~~@~点击此处将所有尚未翻译项目选定的预设文化文化。~@~Y~@~N~@~N~@~N
+43~@~8~@~~@~~@~2~@~57~@~Traduire~@~~@~Cliquez ici pour traduire tous ne sont pas encore traduits par défaut des éléments de la culture, sé~@~Y~@~N~@~N~@~N
+44~@~8~@~~@~~@~1~@~56~@~Translation Status~@~~@~Click here to check status of the translation engine.~@~Y~@~N~@~N~@~N
+45~@~8~@~~@~~@~4~@~4~@~翻译状态~@~~@~点击这里查看地位的翻译引擎。~@~Y~@~N~@~N~@~N
+46~@~8~@~~@~~@~2~@~4~@~Statut de la traduct~@~~@~Cliquez ici pour vérifier l'état du moteur de traduction.~@~Y~@~N~@~N~@~N
+48~@~95~@~~@~~@~8~@~59~@~~@~~@~यह प्रेस की रिपोर्ट के बाद इस बटन को बचाने के पूर्वावलोकन के लिए है दबाया~@~Y~@~N~@~N~@~N
+49~@~8~@~~@~~@~8~@~57~@~अनुवाद करना~@~~@~यहाँ क्लिक करें सभी डिफ़ॉल्ट संस्कृति से चयनित संस्कृति को आइटम-अनुवाद अभी नहीं अनुवाद करने के लिए.~@~Y~@~N~@~N~@~N
+50~@~8~@~~@~~@~8~@~4~@~अनुवाद स्तर~@~~@~यहाँ क्लिक करें अनुवाद इंजन की स्थिति की जांच करने के लिए.~@~Y~@~N~@~N~@~N
+60~@~95~@~~@~~@~9~@~59~@~~@~~@~Pressione este botão para visualizar este relatório depois que o botão salvar for pressionado~@~Y~@~N~@~N~@~N
+61~@~8~@~~@~~@~9~@~57~@~Traduzir~@~~@~Clique aqui para traduzir todos os itens ainda-não-traduzido da cultura padrão para a cultura seleci~@~Y~@~N~@~N~@~N
+62~@~8~@~~@~~@~9~@~4~@~Status da tradução~@~~@~Clique aqui para verificar o estado do motor de tradução.~@~Y~@~N~@~N~@~N
+66~@~95~@~~@~~@~11~@~59~@~~@~~@~Kaydet tuşuna basıldıktan sonra bu rapor önizleme yapmak için bu basın~@~Y~@~N~@~N~@~N
+67~@~8~@~~@~~@~11~@~57~@~Çevirmek~@~~@~Henüz çevrilmiş tüm öğeleri varsayılan kültür seçilen kültürüne çevirmek için buraya tıklayın.~@~Y~@~N~@~N~@~N
+68~@~8~@~~@~~@~11~@~4~@~Çeviri Durumu~@~~@~Çeviri motorunun durumunu kontrol etmek için buraya tıklayın.~@~Y~@~N~@~N~@~N
+72~@~95~@~~@~~@~14~@~59~@~~@~~@~保存ボタンが押された後にこのレポートをプレビューするときに押します~@~Y~@~N~@~N~@~N
+73~@~8~@~~@~~@~14~@~57~@~翻訳~@~~@~既定のカルチャから選択された文化のすべては、まだ未翻訳の項目を変換するためにはここをクリックしてください。~@~Y~@~N~@~N~@~N
+74~@~8~@~~@~~@~14~@~4~@~翻訳ステータス~@~~@~翻訳エンジンの状態を確認するにはここをクリック。~@~Y~@~N~@~N~@~N
+78~@~95~@~~@~~@~12~@~59~@~~@~~@~Нажмите для просмотра данного отчета после сохранения нажата кнопка~@~Y~@~N~@~N~@~N
+79~@~8~@~~@~~@~12~@~57~@~Переводить~@~~@~Кликните здесь, чтобы перевести все пока еще не переведены элементы по умолчанию культуры в избранно~@~Y~@~N~@~N~@~N
+80~@~8~@~~@~~@~12~@~4~@~Перевод статус~@~~@~Нажмите здесь, чтобы проверить статус перевода двигателя.~@~Y~@~N~@~N~@~N
+84~@~95~@~~@~~@~13~@~59~@~~@~~@~Presione aquí para previsualizar este informe después de que se pulsa el botón Guardar~@~Y~@~N~@~N~@~N
+85~@~8~@~~@~~@~13~@~57~@~Traducir~@~~@~Haga clic aquí para traducir todos los elementos que aún no es traducido de la cultura a la cultura ~@~Y~@~N~@~N~@~N
+86~@~8~@~~@~~@~13~@~4~@~Estado de la traducc~@~~@~Haga clic aquí para comprobar el estado del motor de traducción.~@~Y~@~N~@~N~@~N
+89~@~121~@~~@~~@~1~@~5~@~~@~~@~~@~N~@~N~@~N~@~N
+90~@~121~@~~@~~@~1~@~4~@~~@~~@~~@~N~@~N~@~N~@~N
+91~@~8~@~~@~~@~1~@~57~@~Fill FX Rate Table~@~~@~Click here to fill FX Rate table for this culture currency.~@~Y~@~N~@~N~@~N
+92~@~8~@~~@~~@~4~@~7~@~填写外汇汇率表~@~~@~点击这里填写外汇汇率表​​，这种文化的货币。~@~Y~@~N~@~N~@~N
+93~@~8~@~~@~~@~2~@~7~@~Remplissez le tablea~@~~@~Cliquez ici pour remplir le tableau Taux de change de cette monnaie culture.~@~Y~@~N~@~N~@~N
+95~@~95~@~~@~~@~68~@~59~@~~@~~@~Drücken Sie hier, um den Bericht in der Vorschau nach dem Speichern-Taste gedrückt wird~@~Y~@~N~@~N~@~N
+98~@~8~@~~@~~@~68~@~7~@~Füllen FX Rate Tabel~@~~@~Klicken Sie hier, um FX Rate Tabelle für diese kultur zu füllen.~@~Y~@~N~@~N~@~N
+100~@~8~@~~@~~@~14~@~7~@~FXのレート表を埋める~@~~@~この培養通貨に対する為替レート表を埋めるためにここをクリックしてください。~@~Y~@~N~@~N~@~N
+102~@~95~@~~@~~@~28~@~59~@~~@~~@~저장 버튼을 누를 후이 보고서를 미리 본을 누르~@~Y~@~N~@~N~@~N
+103~@~8~@~~@~~@~28~@~57~@~번역~@~~@~기본 문화에서 선택한 문화에 모두 아직 번역되지 항목을 번역하려면 여기를 클릭하십시오.~@~Y~@~N~@~N~@~N
+104~@~8~@~~@~~@~28~@~4~@~번역 상태~@~~@~번역 엔진의 상태를 확인하려면 여기를 클릭하십시오.~@~Y~@~N~@~N~@~N
+105~@~8~@~~@~~@~28~@~7~@~FX 평가 테이블 채우기~@~~@~이 문화 통화 FX 평가 테이블을 작성하려면 여기를 클릭하십시오.~@~Y~@~N~@~N~@~N
+106~@~8~@~~@~~@~9~@~7~@~Preencha FX Tabela d~@~~@~Clique aqui para preencher FX tabela Taxas para esta moeda cultura.~@~Y~@~N~@~N~@~N
+107~@~8~@~~@~~@~12~@~7~@~Заполните FX Оценить~@~~@~Кликните здесь, чтобы заполнить FX Оценить таблицы для этой культуры валюту.~@~Y~@~N~@~N~@~N
+108~@~8~@~~@~~@~13~@~7~@~Llene la tabla FX Ta~@~~@~Haga clic aquí para rellenar la tabla FX tasa de esta moneda cultura.~@~Y~@~N~@~N~@~N
+110~@~1~@~~@~~@~1~@~51~@~~@~~@~~@~Y~@~N~@~N~@~N
+111~@~1~@~~@~~@~1~@~56~@~~@~~@~~@~Y~@~N~@~N~@~N
+112~@~71~@~~@~~@~1~@~57~@~~@~~@~~@~N~@~N~@~N~@~N
+113~@~8~@~~@~~@~1~@~7~@~~@~~@~~@~N~@~N~@~N~@~N
+118~@~8~@~~@~~@~4~@~51~@~翻译~@~~@~点击此处翻译所有还未翻译项目从默认的文化选择的文化。~@~Y~@~N~@~N~@~N
+119~@~8~@~~@~~@~4~@~56~@~翻译状态~@~~@~点击此处查看翻译引擎的地位。~@~Y~@~N~@~N~@~N
+124~@~1019~@~~@~~@~1~@~4~@~PURGE~@~~@~Press this to purge all audit trails older than six (6) years.~@~Y~@~N~@~N~@~N
+125~@~95~@~~@~~@~114~@~59~@~~@~~@~Appuyez sur ce bouton pour prévisualiser ce rapport après avoir appuyé sur le bouton Enregistrer~@~Y~@~N~@~N~@~N
+126~@~8~@~~@~~@~114~@~51~@~Traduire~@~~@~Cliquez ici pour traduire tous les éléments non encore traduits de la culture par défaut vers la culture sélectionnée.~@~Y~@~N~@~N~@~N
+127~@~8~@~~@~~@~114~@~56~@~Statut de la traduction~@~~@~Cliquez ici pour vérifier l'état du moteur de traduction.~@~Y~@~N~@~N~@~N
+128~@~8~@~~@~~@~114~@~57~@~Remplir le tableau des taux d'effets~@~~@~Cliquez ici pour remplir le tableau des taux de change pour cette devise culturelle.~@~Y~@~N~@~N~@~N
+129~@~1019~@~~@~~@~114~@~4~@~PURGE~@~~@~Appuyez sur ce bouton pour purger toutes les pistes d'audit de plus de six (6) ans.~@~Y~@~N~@~N~@~N

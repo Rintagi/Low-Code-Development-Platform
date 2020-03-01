@@ -84,7 +84,8 @@ export default class ProgressBar extends PureComponent {
     let progressBarClass = classNames({
       'progress-wrap--pink': this.state.score <= 30 ? true : false,
       'progress-wrap--yellow': this.state.score > 30 && this.state.score <= 60 ? true : false,
-      'progress-wrap--blue': this.state.score > 60 && this.state.score <= 80 ? true : false
+      'progress-wrap--blue': this.state.score > 60 && this.state.score <= 80 ? true : false,
+      'progress-wrap--green': this.state.score > 80 ? true : false,
     });
 
     return (

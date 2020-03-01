@@ -13,8 +13,8 @@ namespace RO.Web
 {
 	public partial class AuthModule : RO.Web.ModuleBase
 	{
-        private string LcSysConnString;
-		private string LcAppPw;
+  //      private string LcSysConnString;
+		//private string LcAppPw;
         
         public AuthModule()
 		{
@@ -39,7 +39,7 @@ namespace RO.Web
                 if (LUser != null && LUser.UsrId.ToString() != cUsrId.Text && (LUser.UsrName ?? "").ToLower() != "anonymous")
                 {
                     Session["UsrSwitch:" + Request.Url.PathAndQuery] = "Y";
-                    Response.Redirect(Request.Url.PathAndQuery);
+                    this.Redirect(Request.Url.PathAndQuery);
                 }
             }
 		}

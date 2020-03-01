@@ -1,0 +1,4 @@
+C~@~Last Rule~@~Run this s.proc after all the After-CRUD and just before Commit transaction.~@~4
+N~@~After CRUD~@~Run this s.proc after CRUD; Must handle Add scenario when CRUD is skipped.~@~3
+S~@~Skip CRUD~@~Run this s.proc after all the Before-CRUD and skip the CRUD operation.~@~2
+Y~@~Before CRUD~@~Run this s.proc before CRUD and before any Skip-CRUD.~@~1

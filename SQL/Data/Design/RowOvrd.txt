@@ -1,0 +1,136 @@
+24~@~Screen: Menu Label - View all, Add, Edit and Delete~@~36~@~~@~5~@~A~@~N~@~Y~@~N
+25~@~Screen: Menu Label - View self, Add, Edit and Delete~@~36~@~~@~3~@~S~@~N~@~N~@~N
+27~@~Screen: Object Authorization - View self, Add, Edit and Delete~@~16~@~~@~3~@~S~@~N~@~N~@~N
+28~@~Screen: Row Authorization - View all, Add, Edit and Delete~@~17~@~~@~5~@~A~@~N~@~N~@~N
+29~@~Screen: Row Authorization - View self, Add, Edit and Delete~@~17~@~~@~3~@~S~@~N~@~N~@~N
+34~@~Screen: Row Authorization - View all and Edit~@~17~@~~@~4~@~A~@~N~@~N~@~N
+35~@~Screen: Row Authorization - View self and Edit~@~17~@~~@~2~@~S~@~N~@~N~@~N
+37~@~Screen: Menu Item - View all, Add, Edit and Delete~@~35~@~~@~5~@~A~@~N~@~Y~@~N
+39~@~Screen: Menu Item - View self, Add, Edit and Delete~@~35~@~~@~3~@~S~@~N~@~N~@~N
+42~@~Screen: Menu Label - All access~@~36~@~~@~8~@~A~@~N~@~Y~@~N
+85~@~Screen: Server Rule - View all and Edit~@~14~@~~@~4~@~A~@~N~@~N~@~N
+86~@~Screen: Server Rule - View all, Add, Edit and Delete~@~14~@~~@~5~@~A~@~N~@~N~@~N
+87~@~Screen: Server Rule - View self and Edit~@~14~@~~@~2~@~S~@~N~@~N~@~N
+88~@~Screen: Server Rule - View self, Add, Edit and Delete~@~14~@~~@~3~@~S~@~N~@~N~@~N
+101~@~Screen: Screen Object - View all and Edit~@~10~@~~@~4~@~A~@~N~@~N~@~N
+102~@~Screen: Screen Object - View all, Add, Edit and Delete~@~10~@~~@~5~@~A~@~N~@~Y~@~N
+103~@~Screen: Screen Object - View self and Edit~@~10~@~~@~2~@~S~@~N~@~N~@~N
+104~@~Screen: Screen Object - View self, Add, Edit and Delete~@~10~@~~@~3~@~S~@~N~@~N~@~N
+105~@~Screen: Screen Object - All access~@~10~@~~@~8~@~A~@~N~@~Y~@~N
+131~@~Screen: Wizard Rule - View self and Edit~@~50~@~~@~2~@~S~@~N~@~N~@~N
+132~@~Screen: Wizard Rule - View self, Add, Edit and Delete~@~50~@~~@~3~@~S~@~N~@~N~@~N
+133~@~Screen: Wizard Rule - View all and Edit~@~50~@~~@~4~@~A~@~N~@~N~@~N
+134~@~Screen: Wizard Rule - View all, Add, Edit and Delete~@~50~@~~@~5~@~A~@~N~@~N~@~N
+145~@~Screen: Menu Permission - All access~@~58~@~~@~8~@~A~@~N~@~Y~@~N
+146~@~Screen: Menu Permission - View all and Edit~@~58~@~~@~4~@~A~@~N~@~N~@~N
+147~@~Screen: Menu Permission - View all, Add, Edit and Delete~@~58~@~~@~5~@~A~@~N~@~Y~@~N
+148~@~Screen: Menu Permission - View self and Edit~@~58~@~~@~2~@~S~@~N~@~N~@~N
+149~@~Screen: Menu Permission - View self, Add, Edit and Delete~@~58~@~~@~3~@~S~@~N~@~N~@~N
+152~@~Screen: Report Criteria Group - View self and Edit~@~65~@~~@~2~@~S~@~N~@~N~@~N
+153~@~Screen: Report Criteria Group - View self, Add, Edit and Delete~@~65~@~~@~3~@~S~@~N~@~N~@~N
+154~@~Screen: Report Criteria Group - View all and Edit~@~65~@~~@~4~@~A~@~N~@~N~@~N
+155~@~Screen: Report Criteria Group - View all, Add, Edit and Delete~@~65~@~~@~5~@~A~@~N~@~N~@~N
+160~@~Screen: Report Object - All access~@~13~@~~@~8~@~A~@~Y~@~Y~@~Y
+161~@~Screen: Report Object - View all and Edit~@~13~@~~@~4~@~A~@~N~@~N~@~N
+162~@~Screen: Report Object - View all, Add, Edit and Delete~@~13~@~~@~5~@~A~@~N~@~N~@~N
+163~@~Screen: Report Object - View self and Edit~@~13~@~~@~2~@~S~@~N~@~N~@~N
+164~@~Screen: Report Object - View self, Add, Edit and Delete~@~13~@~~@~3~@~S~@~N~@~N~@~N
+173~@~Screen: Change Password - All access~@~71~@~~@~8~@~A~@~N~@~Y~@~N
+176~@~Screen: Change Password - Administration Special~@~71~@~~@~9~@~A~@~N~@~Y~@~N
+183~@~Screen: Object Authorization - View all, Add, Edit and Delete~@~16~@~~@~5~@~A~@~N~@~Y~@~N
+184~@~Screen: Object Authorization - View all and Edit~@~16~@~~@~4~@~A~@~N~@~N~@~N
+190~@~Screen: User Manager - Administration Special~@~1~@~~@~9~@~A~@~Y~@~Y~@~Y
+191~@~Screen: User Preference - Administration Special~@~64~@~~@~9~@~A~@~Y~@~Y~@~Y
+192~@~Screen: Change Password - View self, Add, Edit and Delete~@~71~@~~@~3~@~S~@~N~@~Y~@~N
+193~@~Screen: Change Password - View all, Add, Edit and Delete~@~71~@~~@~5~@~A~@~N~@~Y~@~N
+201~@~Screen: User Manager - View all, Add, Edit and Delete~@~1~@~~@~5~@~S~@~Y~@~Y~@~N
+202~@~Screen: User Manager - View self, Add, Edit and Delete~@~1~@~~@~3~@~S~@~Y~@~Y~@~N
+203~@~Screen: User Group - All access~@~5~@~~@~8~@~A~@~Y~@~Y~@~Y
+204~@~Screen: User Group - View all and Edit~@~5~@~~@~4~@~A~@~N~@~N~@~N
+205~@~Screen: User Group - View all, Add, Edit and Delete~@~5~@~~@~5~@~A~@~N~@~N~@~N
+206~@~Screen: Version Tracking - All access~@~82~@~~@~8~@~A~@~N~@~Y~@~N
+207~@~Screen: Version Tracking - View all, Add, Edit and Delete~@~82~@~~@~5~@~A~@~N~@~N~@~N
+208~@~Screen: Version Tracking - View self, Add, Edit and Delete~@~82~@~~@~3~@~S~@~N~@~N~@~N
+209~@~Screen: Culture Translation - All access~@~8~@~~@~8~@~A~@~Y~@~Y~@~Y
+210~@~Screen: Screen Tab Folders - All access~@~54~@~~@~8~@~A~@~N~@~Y~@~N
+211~@~Screen: Screen Definition - View self and Edit~@~9~@~~@~2~@~S~@~N~@~N~@~N
+212~@~Screen: Screen Definition - View self, Add, Edit and Delete~@~9~@~~@~3~@~S~@~N~@~N~@~N
+213~@~Screen: Screen Definition - View all and Edit~@~9~@~~@~4~@~A~@~N~@~N~@~N
+214~@~Screen: Screen Definition - View all, Add, Edit and Delete~@~9~@~~@~5~@~A~@~Y~@~Y~@~Y
+215~@~Screen: Screen Definition - All access~@~9~@~~@~8~@~A~@~Y~@~Y~@~Y
+216~@~Screen: Message Center - View self and Edit~@~86~@~~@~2~@~S~@~N~@~N~@~N
+217~@~Screen: Message Center - View self, Add, Edit and Delete~@~86~@~~@~3~@~S~@~N~@~N~@~N
+218~@~Screen: Message Center - View all and Edit~@~86~@~~@~4~@~A~@~N~@~N~@~N
+219~@~Screen: Message Center - View all, Add, Edit and Delete~@~86~@~~@~5~@~A~@~N~@~N~@~N
+220~@~Screen: Message Center - All access~@~86~@~~@~8~@~A~@~Y~@~Y~@~Y
+221~@~Screen: Screen Criteria - All access~@~73~@~~@~8~@~A~@~Y~@~Y~@~Y
+222~@~Screen: Screen Criteria - View all and Edit~@~73~@~~@~4~@~A~@~N~@~N~@~N
+223~@~Screen: Screen Criteria - View all, Add, Edit and Delete~@~73~@~~@~5~@~A~@~N~@~N~@~N
+224~@~Screen: Screen Criteria - View self and Edit~@~73~@~~@~2~@~S~@~N~@~N~@~N
+225~@~Screen: Screen Criteria - View self, Add, Edit and Delete~@~73~@~~@~3~@~S~@~N~@~N~@~N
+226~@~Screen: Button Override - All access~@~76~@~~@~8~@~A~@~Y~@~Y~@~Y
+227~@~Screen: Button Override - View all and Edit~@~76~@~~@~4~@~A~@~N~@~N~@~N
+228~@~Screen: Button Override - View all, Add, Edit and Delete~@~76~@~~@~5~@~A~@~N~@~N~@~N
+229~@~Screen: Button Override - View self and Edit~@~76~@~~@~2~@~S~@~N~@~N~@~N
+230~@~Screen: Button Override - View self, Add, Edit and Delete~@~76~@~~@~3~@~S~@~N~@~N~@~N
+231~@~Screen: Report Criteria - All access~@~69~@~~@~8~@~A~@~Y~@~Y~@~Y
+232~@~Screen: Report Criteria - View all and Edit~@~69~@~~@~4~@~A~@~N~@~N~@~N
+233~@~Screen: Report Criteria - View all, Add, Edit and Delete~@~69~@~~@~5~@~A~@~N~@~N~@~N
+234~@~Screen: Report Criteria - View self and Edit~@~69~@~~@~2~@~S~@~N~@~N~@~N
+235~@~Screen: Report Criteria - View self, Add, Edit and Delete~@~69~@~~@~3~@~S~@~N~@~N~@~N
+236~@~Screen: Report Definition - All access~@~67~@~~@~8~@~A~@~Y~@~Y~@~Y
+237~@~Screen: Report Definition - View all and Edit~@~67~@~~@~4~@~A~@~N~@~N~@~N
+238~@~Screen: Report Definition - View all, Add, Edit and Delete~@~67~@~~@~5~@~A~@~N~@~N~@~N
+239~@~Screen: Report Definition - View self and Edit~@~67~@~~@~2~@~S~@~N~@~N~@~N
+240~@~Screen: Report Definition - View self, Add, Edit and Delete~@~67~@~~@~3~@~S~@~N~@~N~@~N
+241~@~Screen: Screen Filters - All access~@~59~@~~@~8~@~A~@~Y~@~Y~@~Y
+242~@~Screen: Screen Filters - View all and Edit~@~59~@~~@~4~@~A~@~N~@~N~@~N
+243~@~Screen: Screen Filters - View all, Add, Edit and Delete~@~59~@~~@~5~@~A~@~N~@~N~@~N
+244~@~Screen: Screen Filters - View self and Edit~@~59~@~~@~2~@~S~@~N~@~N~@~N
+245~@~Screen: Screen Filters - View self, Add, Edit and Delete~@~59~@~~@~3~@~S~@~N~@~N~@~N
+246~@~Screen: Screen Tab Folders - View all and Edit~@~54~@~~@~4~@~A~@~N~@~N~@~N
+247~@~Screen: Screen Tab Folders - View all, Add, Edit and Delete~@~54~@~~@~5~@~A~@~N~@~Y~@~N
+248~@~Screen: Screen Tab Folders - View self and Edit~@~54~@~~@~2~@~S~@~N~@~N~@~N
+249~@~Screen: Screen Tab Folders - View self, Add, Edit and Delete~@~54~@~~@~3~@~S~@~N~@~N~@~N
+250~@~Screen: User Manager - All access~@~1~@~~@~8~@~A~@~Y~@~Y~@~Y
+272~@~Screen: User Manager - View self only~@~1~@~~@~1~@~S~@~N~@~N~@~N
+274~@~Screen: Button Default - All access~@~81~@~~@~8~@~A~@~Y~@~Y~@~Y
+275~@~Screen: Foreign Key - View all, Add, Edit and Delete~@~15~@~~@~5~@~A~@~N~@~N~@~N
+276~@~Screen: User Manager - View all only~@~1~@~~@~6~@~S~@~N~@~N~@~N
+277~@~Screen: Custom Label - All access~@~112~@~~@~8~@~A~@~Y~@~Y~@~Y
+278~@~Screen: Custom Label - View all, Add, Edit and Delete~@~112~@~~@~5~@~A~@~Y~@~Y~@~Y
+279~@~Screen: Label View - All access~@~119~@~~@~8~@~A~@~N~@~N~@~N
+280~@~Screen: Label View - View all, Add, Edit and Delete~@~119~@~~@~5~@~A~@~N~@~N~@~N
+281~@~Screen: Label View - View self, Add, Edit and Delete~@~119~@~~@~3~@~S~@~N~@~N~@~N
+282~@~Screen: Menu IDE - All access~@~121~@~~@~8~@~A~@~N~@~Y~@~N
+283~@~Screen: Menu IDE - View all, Add, Edit and Delete~@~121~@~~@~5~@~A~@~N~@~Y~@~N
+284~@~Screen: Menu IDE - View self, Add, Edit and Delete~@~121~@~~@~3~@~S~@~N~@~Y~@~N
+285~@~Screen: User Impersonation - All access~@~66~@~~@~8~@~A~@~Y~@~Y~@~Y
+286~@~Screen: Release Content - View self, Add, Edit and Delete~@~83~@~~@~3~@~S~@~N~@~N~@~N
+287~@~Screen: Release Content - View all, Add, Edit and Delete~@~83~@~~@~5~@~A~@~N~@~N~@~N
+288~@~Screen: Data Table and Columns - View self, Add, Edit and Delete~@~2~@~~@~3~@~S~@~N~@~N~@~N
+289~@~Screen: Data Table and Columns - View all, Add, Edit and Delete~@~2~@~~@~5~@~A~@~N~@~N~@~N
+290~@~Screen: Foreign Key - View self, Add, Edit and Delete~@~15~@~~@~3~@~S~@~N~@~N~@~N
+291~@~Screen: Section Object - View self, Add, Edit and Delete~@~1001~@~~@~3~@~S~@~N~@~N~@~N
+292~@~Screen: Section Object - View all, Add, Edit and Delete~@~1001~@~~@~5~@~A~@~N~@~N~@~N
+293~@~Screen: Menu Item - All access~@~35~@~~@~8~@~A~@~N~@~Y~@~N
+294~@~Screen: Menu Label - View all and Edit~@~36~@~~@~4~@~A~@~N~@~N~@~N
+295~@~Screen: Menu Label - View self and Edit~@~36~@~~@~2~@~S~@~N~@~N~@~N
+296~@~Screen: Screen Object Label - All access~@~1006~@~~@~8~@~A~@~N~@~Y~@~N
+297~@~Screen: Screen Object Label - View all and Edit~@~1006~@~~@~4~@~A~@~N~@~N~@~N
+298~@~Screen: Screen Object Label - View all, Add, Edit and Delete~@~1006~@~~@~5~@~A~@~N~@~Y~@~N
+299~@~Screen: Screen Object Label - View self and Edit~@~1006~@~~@~2~@~S~@~N~@~N~@~N
+300~@~Screen: Screen Object Label - View self, Add, Edit and Delete~@~1006~@~~@~3~@~S~@~N~@~N~@~N
+301~@~Screen: Object IDE - All access~@~1007~@~~@~8~@~A~@~N~@~Y~@~N
+302~@~Screen: Object IDE - View all, Add, Edit and Delete~@~1007~@~~@~5~@~A~@~N~@~Y~@~N
+303~@~Screen: Object IDE - View self, Add, Edit and Delete~@~1007~@~~@~3~@~S~@~N~@~Y~@~N
+304~@~Screen: Object Authorization - All access~@~16~@~~@~8~@~A~@~N~@~Y~@~N
+305~@~Screen: Object Authorization - View self and Edit~@~16~@~~@~2~@~S~@~N~@~N~@~N
+306~@~Screen: Sign Up - No access~@~1018~@~~@~7~@~S~@~Y~@~N~@~N
+307~@~Screen: Report Definition - Administration Special~@~67~@~~@~9~@~A~@~N~@~Y~@~N
+308~@~Screen: Report Template - Administration Special~@~53~@~~@~9~@~A~@~Y~@~Y~@~Y
+312~@~Screen: Rintagi Installation - View all and Edit~@~1022~@~~@~4~@~A~@~N~@~N~@~N
+313~@~Screen: Rintagi Installation - View all, Add, Edit and Delete~@~1022~@~~@~5~@~A~@~N~@~N~@~N
+314~@~Screen: Rintagi Installation - View self, Add, Edit and Delete~@~1022~@~~@~3~@~A~@~N~@~N~@~N
+315~@~Screen: Rintagi Installation - View self and Edit~@~1022~@~~@~2~@~A~@~N~@~N~@~N
+317~@~Screen: Rintagi Installation - All access~@~1022~@~~@~8~@~A~@~N~@~Y~@~N

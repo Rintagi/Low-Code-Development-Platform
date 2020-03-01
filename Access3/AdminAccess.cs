@@ -662,12 +662,17 @@ namespace RO.Access3
             return dt;
         }
 
-        public void MkGetScreenIn(string screenId, string screenCriId, string procedureName, string appDatabase, string sysDatabase, string multiDesignDb, string dbConnectionString, string dbPassword)
+        public void MkGetScreenIn(string screenId, string screenCriId, string procedureName, string appDatabase, string sysDatabase, string multiDesignDb, string dbConnectionString, string dbPassword, bool reGen)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             cn.Open();
+            OleDbTransaction tr = cn.BeginTransaction();
             OleDbCommand cmd = new OleDbCommand("MkGetScreenIn", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 1800;
+            cmd.Transaction = tr;
+
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@screenId", OleDbType.Numeric).Value = screenId;
             cmd.Parameters.Add("@screenCriId", OleDbType.Numeric).Value = screenCriId;
@@ -675,9 +680,19 @@ namespace RO.Access3
             cmd.Parameters.Add("@appDatabase", OleDbType.VarChar).Value = appDatabase;
             cmd.Parameters.Add("@sysDatabase", OleDbType.VarChar).Value = sysDatabase;
             cmd.Parameters.Add("@multiDesignDb", OleDbType.Char).Value = multiDesignDb;
-            try { cmd.ExecuteNonQuery(); }
-            catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
+            cmd.Parameters.Add("@reGen", OleDbType.Char).Value = reGen ? "Y" : "N";
+            try
+            {
+                cmd.ExecuteNonQuery();
+                tr.Commit();
+            }
+            catch (Exception e)
+            {
+                tr.Rollback();
+                ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString());
+            }
             finally { cn.Close(); cmd.Dispose(); cmd = null; }
+
             return;
         }
 
@@ -719,7 +734,8 @@ namespace RO.Access3
             cmd.CommandTimeout = 1800;
             DataTable dt = new DataTable();
             da.Fill(dt);
-            if (RequiredValid != "Y" && dt.Rows.Count >= TotalCnt) { dt.Rows.InsertAt(dt.NewRow(), 0); }
+            //if (RequiredValid != "Y" && dt.Rows.Count >= TotalCnt) { dt.Rows.InsertAt(dt.NewRow(), 0); }
+            if (RequiredValid != "Y") { dt.Rows.InsertAt(dt.NewRow(), 0); }
             return dt;
         }
 
@@ -2966,9 +2982,15 @@ namespace RO.Access3
             try
             {
                 cn.Open();
-                OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON"
-                     + " SELECT * FROM " + ns + "Design.dbo.Systems"
-                     , cn);
+                OleDbCommand cmd = new OleDbCommand(
+                    "SET NOCOUNT ON "
+                    + "SELECT m.* FROM " + ns + "Design.dbo.Systems s "
+                    + "INNER JOIN " + ns + "Design.dbo.Systems m on m.dbDesDatabase LIKE REPLACE(s.dbDesDatabase,'Design','') + '%'  "
+                    + "WHERE s.SysProgram = 'Y' AND s.Active = 'Y' "
+                    + "AND m.dbAppUserId = s.dbAppUserId AND m.dbAppServer = s.dbAppServer "
+                   // + "AND m.SysProgram = 'N' "
+                    + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = s.dbDesDatabase) "
+                    + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = m.dbAppDatabase) ", cn);
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandTimeout = 1800;
                 da.SelectCommand = cmd;
@@ -3003,9 +3025,16 @@ namespace RO.Access3
             try
             {
                 cn.Open();
-                OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON"
-                     + " SELECT * FROM " + ns + "Design.dbo.Systems"
-                     , cn);
+                OleDbCommand cmd = new OleDbCommand(
+                    "SET NOCOUNT ON "
+                    + "SELECT * FROM " + ns + "Design.dbo.Systems s "
+                    + "INNER JOIN " + ns + "Design.dbo.Systems m on m.dbDesDatabase LIKE REPLACE(s.dbDesDatabase,'Design','') + '%'  "
+                    + "WHERE s.SysProgram = 'Y' AND s.Active = 'Y' "
+                    + "AND m.dbAppUserId = s.dbAppUserId AND m.dbAppServer = s.dbAppServer "
+                    + "AND m.SysProgram = 'N' "
+                    + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = s.dbDesDatabase) "
+                    + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = m.dbAppDatabase) ", cn);
+
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandTimeout = 1800;
                 da.SelectCommand = cmd;
@@ -3017,7 +3046,7 @@ namespace RO.Access3
                     if (dbName.ToLower().EndsWith("design") && ns.ToLower() != "ro") continue;
                     DataTable dtX = new DataTable();
                     cmd.CommandText = "SET NOCOUNT ON"
-                        + " SELECT Typ='Sreen', ProgramName = ProgramName, Description = ScreenDesc "
+                        + " SELECT Typ='Screen', ProgramName = ProgramName, Description = ScreenDesc "
                         + " FROM " + dbName + ".dbo.Screen WHERE NeedRegen = 'Y' and (GenerateSc = 'Y' or GenerateSr = 'Y') "
                         + " UNION "
                         + " SELECT Typ='Report', ProgramName = ProgramName, Description = ReportDesc "

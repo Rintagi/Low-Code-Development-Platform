@@ -1,12 +1,11 @@
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetInCompanyId') AND type='P')
-DROP PROCEDURE dbo._GetInCompanyId
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetInCompanyId') AND type='P')
+EXEC('CREATE PROCEDURE dbo._GetInCompanyId AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE dbo._GetInCompanyId
+ALTER PROCEDURE dbo._GetInCompanyId
  @wClause	varchar(4000)
 /* WITH ENCRYPTION */
 AS
@@ -18,19 +17,18 @@ SELECT @sClause = 'SELECT a.CompanyId, a.CompanyName'
 SELECT @fClause = 'FROM ROCmon.dbo.Company a'
 SELECT @oClause = 'ORDER BY a.CompanyName'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
-RETURN 0  
+RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetS05Rptwiz46R') AND type='P')
-DROP PROCEDURE dbo._GetS05Rptwiz46R
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetS05Rptwiz46R') AND type='P')
+EXEC('CREATE PROCEDURE dbo._GetS05Rptwiz46R AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE dbo._GetS05Rptwiz46R
+ALTER PROCEDURE dbo._GetS05Rptwiz46R
  @wClause	nvarchar(4000)
 ,@CompanyId10	SmallInt
 /* WITH ENCRYPTION */
@@ -45,19 +43,17 @@ IF @CompanyId10 is not null SELECT @wClause = @wClause + ' AND t1.CompanyId = ' 
 SELECT @oClause = ''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetS05Rptwiz46V') AND type='P')
-DROP PROCEDURE dbo._GetS05Rptwiz46V
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetS05Rptwiz46V') AND type='P')
+EXEC('CREATE PROCEDURE dbo._GetS05Rptwiz46V AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE dbo._GetS05Rptwiz46V
+ALTER PROCEDURE dbo._GetS05Rptwiz46V
  @wClause	nvarchar(4000)
 ,@CompanyId10	SmallInt
 /* WITH ENCRYPTION */
@@ -68,19 +64,17 @@ SET NOCOUNT ON
 SELECT @sClause = 'SELECT ReportName=''TestCompany_'''
 EXEC (@sClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetS05Rptwiz51R') AND type='P')
-DROP PROCEDURE dbo._GetS05Rptwiz51R
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetS05Rptwiz51R') AND type='P')
+EXEC('CREATE PROCEDURE dbo._GetS05Rptwiz51R AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE dbo._GetS05Rptwiz51R
+ALTER PROCEDURE dbo._GetS05Rptwiz51R
  @wClause	nvarchar(4000)
 ,@CompanyId10	SmallInt
 ,@CompanyName20	NVarChar(100)
@@ -97,19 +91,17 @@ IF @CompanyName20 is not null SELECT @wClause = @wClause + ' AND t1.CompanyName 
 SELECT @oClause = ''
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetS05Rptwiz51V') AND type='P')
-DROP PROCEDURE dbo._GetS05Rptwiz51V
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo._GetS05Rptwiz51V') AND type='P')
+EXEC('CREATE PROCEDURE dbo._GetS05Rptwiz51V AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE dbo._GetS05Rptwiz51V
+ALTER PROCEDURE dbo._GetS05Rptwiz51V
  @wClause	nvarchar(4000)
 ,@CompanyId10	SmallInt
 ,@CompanyName20	NVarChar(100)
@@ -121,19 +113,17 @@ SET NOCOUNT ON
 SELECT @sClause = 'SELECT ReportName=''Testcompany1_'''
 EXEC (@sClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmTestt2ById') AND type='P')
-DROP PROCEDURE dbo.GetAdmTestt2ById
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmTestt2ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmTestt2ById AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetAdmTestt2ById
+ALTER PROCEDURE GetAdmTestt2ById
  @KeyId1		nvarchar(1000)
 /* WITH ENCRYPTION */
 AS
@@ -166,19 +156,17 @@ SELECT @sClause = 'SELECT CompanyId1=b1.CompanyId'
 SELECT @wClause = 'WHERE b1.CompanyId' + isnull('='+@KeyId1,' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmTestt2') AND type='P')
-DROP PROCEDURE dbo.GetExpAdmTestt2
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmTestt2') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmTestt2 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetExpAdmTestt2
+ALTER PROCEDURE GetExpAdmTestt2
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -279,19 +267,17 @@ EXEC ROCmonD.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','b1.','N',nu
 IF @key is not null SELECT @wClause = @wClause + ' AND (b1.CompanyId = ' + @key + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetIn12CompanyId10') AND type='P')
-DROP PROCEDURE dbo.GetIn12CompanyId10
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetIn12CompanyId10') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetIn12CompanyId10 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetIn12CompanyId10
+ALTER PROCEDURE GetIn12CompanyId10
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
 ,@Usrs		varchar(1000)
@@ -320,19 +306,17 @@ DECLARE	 @wClause		varchar(max)
 SELECT @wClause = 'WHERE 1=1'
 EXEC dbo._GetInCompanyId @wClause
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmTestt2') AND type='P')
-DROP PROCEDURE dbo.GetLisAdmTestt2
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmTestt2') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmTestt2 AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-CREATE PROCEDURE GetLisAdmTestt2
+ALTER PROCEDURE GetLisAdmTestt2
  @useGlobalFilter	char(1)
 ,@screenId		int
 ,@Usrs			varchar(1000)
@@ -415,20 +399,17 @@ SELECT @FilterTxt = REPLACE(@FilterTxt, '''','''''')
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1.LegalName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkStoredProcedure') AND type='P')
-DROP PROCEDURE dbo.MkStoredProcedure
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MkStoredProcedure') AND type='P')
+EXEC('CREATE PROCEDURE dbo.MkStoredProcedure AS SELECT 1')
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-CREATE PROCEDURE [dbo].[MkStoredProcedure]
+ALTER PROCEDURE [dbo].[MkStoredProcedure]
   @spString1	varchar(max)
 , @spString2	varchar(max) = ''
 , @spString3	varchar(max) = ''
@@ -445,8 +426,6 @@ EXEC ('SET QUOTED_IDENTIFIER ON SET ANSI_NULLS ON')
 EXEC (@spString1 + @spString2 + @spString3 + @spString4 + @spString5 + @spString6 + @spString7 + @spString8 + @spString9)
 EXEC ('SET QUOTED_IDENTIFIER OFF')
 RETURN 0
- 
- 
 GO
 SET QUOTED_IDENTIFIER OFF
 GO

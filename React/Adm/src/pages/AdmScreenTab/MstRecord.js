@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmScreenTab || {});
+    this.GetReduxState = () => (this.props.AdmScreenTab || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'ScreenTabId19';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,59 +87,47 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-ScreenId19InputChange() { const _this = this; return function (name, v) {const filterBy = ''; _this.props.SearchScreenId19(v, filterBy);}}/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+  ScreenId19InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchScreenId19(v, filterBy); } }
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
     const columnLabel = (this.props.AdmScreenTab || {}).ColumnLabel || {};
     /* standard field validation */
-if (isEmptyId((values.cScreenId19 || {}).value)) { errors.cScreenId19 = (columnLabel.ScreenId19 || {}).ErrMessage;}
-if (!values.cTabFolderName19) { errors.cTabFolderName19 = (columnLabel.TabFolderName19 || {}).ErrMessage;}
-if (!values.cTabFolderOrder19) { errors.cTabFolderOrder19 = (columnLabel.TabFolderOrder19 || {}).ErrMessage;}
+    if (isEmptyId((values.cScreenId19 || {}).value)) { errors.cScreenId19 = (columnLabel.ScreenId19 || {}).ErrMessage; }
+    if (!values.cTabFolderName19) { errors.cTabFolderName19 = (columnLabel.TabFolderName19 || {}).ErrMessage; }
+    if (!values.cTabFolderOrder19) { errors.cTabFolderOrder19 = (columnLabel.TabFolderOrder19 || {}).ErrMessage; }
     return errors;
   }
 
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmScreenTab || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmScreenTab,
         {
-          ScreenTabId19: values.cScreenTabId19|| '',
-          ScreenId19: (values.cScreenId19|| {}).value || '',
-          TabFolderName19: values.cTabFolderName19|| '',
-          TabFolderOrder19: values.cTabFolderOrder19|| '',
+          ScreenTabId19: values.cScreenTabId19 || '',
+          ScreenId19: (values.cScreenId19 || {}).value || '',
+          TabFolderName19: values.cTabFolderName19 || '',
+          TabFolderOrder19: values.cTabFolderOrder19 || '',
         },
         [],
         {
@@ -176,12 +167,12 @@ if (!values.cTabFolderOrder19) { errors.cTabFolderOrder19 = (columnLabel.TabFold
       const fromMstId = mstId || (mst || {}).ScreenTabId19;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmScreenTab.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmScreenTab.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmScreenTab.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -263,7 +254,7 @@ if (!values.cTabFolderOrder19) { errors.cTabFolderOrder19 = (columnLabel.TabFold
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmScreenTab || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -287,7 +278,7 @@ if (!values.cTabFolderOrder19) { errors.cTabFolderOrder19 = (columnLabel.TabFold
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -316,6 +307,7 @@ if (!values.cTabFolderOrder19) { errors.cTabFolderOrder19 = (columnLabel.TabFold
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmScreenTabReduxObj.GetScreenButtons(AdmScreenTabState) || {};
     const itemList = AdmScreenTabState.Dtl || [];
@@ -327,22 +319,25 @@ if (!values.cTabFolderOrder19) { errors.cTabFolderOrder19 = (columnLabel.TabFold
     const authRow = (AdmScreenTabState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmScreenTab || {}).Mst || {});
     const currDtl = ((this.props.AdmScreenTab || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.ScreenTabId19));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.ScreenTabId19));
     const selectList = AdmScreenTabReduxObj.SearchListToSelectList(AdmScreenTabState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const ScreenTabId19 = currMst.ScreenTabId19;
-const ScreenId19List = AdmScreenTabReduxObj.ScreenDdlSelectors.ScreenId19(AdmScreenTabState);
-const ScreenId19 = currMst.ScreenId19;
-const TabFolderName19 = currMst.TabFolderName19;
-const TabFolderOrder19 = currMst.TabFolderOrder19;
+
+    const ScreenTabId19 = currMst.ScreenTabId19;
+    const ScreenId19List = AdmScreenTabReduxObj.ScreenDdlSelectors.ScreenId19(AdmScreenTabState);
+    const ScreenId19 = currMst.ScreenId19;
+    const TabFolderName19 = currMst.TabFolderName19;
+    const TabFolderOrder19 = currMst.TabFolderOrder19;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -360,10 +355,10 @@ const TabFolderOrder19 = currMst.TabFolderOrder19;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cScreenTabId19: ScreenTabId19 || '',
-                  cScreenId19: ScreenId19List.filter(obj => { return obj.key === ScreenId19 })[0],
-                  cTabFolderName19: TabFolderName19 || '',
-                  cTabFolderOrder19: TabFolderOrder19 || '',
+                    cScreenTabId19: formatContent(ScreenTabId19 || '', 'TextBox'),
+                    cScreenId19: ScreenId19List.filter(obj => { return obj.key === ScreenId19 })[0],
+                    cTabFolderName19: formatContent(TabFolderName19 || '', 'TextBox'),
+                    cTabFolderOrder19: formatContent(TabFolderOrder19 || '', 'TextBox'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -425,111 +420,140 @@ const TabFolderOrder19 = currMst.TabFolderOrder19;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.ScreenTabId19 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ScreenTabId19 || {}).ColumnHeader} {(columnLabel.ScreenTabId19 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ScreenTabId19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenTabId19 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cScreenTabId19'
-disabled = {(authCol.ScreenTabId19 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cScreenTabId19 && touched.cScreenTabId19 && <span className='form__form-group-error'>{errors.cScreenTabId19}</span>}
-</div>
-</Col>
-}
-{(authCol.ScreenId19 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ScreenId19 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScreenId19 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ScreenId19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ScreenId19 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<AutoCompleteField
-name='cScreenId19'
-onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId19', false)}
-onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId19', true)}
-onInputChange={this.ScreenId19InputChange()}
-value={values.cScreenId19}
-defaultSelected={ScreenId19List.filter(obj => { return obj.key === ScreenId19 })}
-options={ScreenId19List}
-filterBy={this.AutoCompleteFilterBy}
-disabled = {(authCol.ScreenId19 || {}).readonly ? true: false }/>
-</div>
-}
-{errors.cScreenId19 && touched.cScreenId19 && <span className='form__form-group-error'>{errors.cScreenId19}</span>}
-</div>
-</Col>
-}
-{(authCol.TabFolderName19 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.TabFolderName19 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TabFolderName19 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.TabFolderName19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TabFolderName19 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cTabFolderName19'
-disabled = {(authCol.TabFolderName19 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cTabFolderName19 && touched.cTabFolderName19 && <span className='form__form-group-error'>{errors.cTabFolderName19}</span>}
-</div>
-</Col>
-}
-{(authCol.TabFolderOrder19 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.TabFolderOrder19 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TabFolderOrder19 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.TabFolderOrder19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TabFolderOrder19 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cTabFolderOrder19'
-disabled = {(authCol.TabFolderOrder19 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cTabFolderOrder19 && touched.cTabFolderOrder19 && <span className='form__form-group-error'>{errors.cTabFolderOrder19}</span>}
-</div>
-</Col>
-}
-{(authCol.TabFolderLabel || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.TabFolderLabel || {}).ColumnHeader} {(columnLabel.TabFolderLabel || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.TabFolderLabel || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TabFolderLabel || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
+                              {(authCol.ScreenTabId19 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ScreenTabId19 || {}).ColumnHeader} {(columnLabel.ScreenTabId19 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ScreenTabId19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ScreenTabId19 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cScreenTabId19'
+                                          disabled={(authCol.ScreenTabId19 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cScreenTabId19 && touched.cScreenTabId19 && <span className='form__form-group-error'>{errors.cScreenTabId19}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ScreenId19 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ScreenId19 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ScreenId19 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ScreenId19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ScreenId19 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='cScreenId19'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId19', false)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId19', true)}
+                                          onInputChange={this.ScreenId19InputChange()}
+                                          value={values.cScreenId19}
+                                          defaultSelected={ScreenId19List.filter(obj => { return obj.key === ScreenId19 })}
+                                          options={ScreenId19List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol.ScreenId19 || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.cScreenId19 && touched.cScreenId19 && <span className='form__form-group-error'>{errors.cScreenId19}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.TabFolderName19 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.TabFolderName19 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TabFolderName19 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.TabFolderName19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.TabFolderName19 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cTabFolderName19'
+                                          disabled={(authCol.TabFolderName19 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cTabFolderName19 && touched.cTabFolderName19 && <span className='form__form-group-error'>{errors.cTabFolderName19}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.TabFolderOrder19 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.TabFolderOrder19 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.TabFolderOrder19 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.TabFolderOrder19 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.TabFolderOrder19 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cTabFolderOrder19'
+                                          disabled={(authCol.TabFolderOrder19 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cTabFolderOrder19 && touched.cTabFolderOrder19 && <span className='form__form-group-error'>{errors.cTabFolderOrder19}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.TabFolderLabel || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmScreenTabState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.TabFolderLabel || {}).ColumnHeader} {(columnLabel.TabFolderLabel || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.TabFolderLabel || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.TabFolderLabel || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -589,10 +613,7 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmScreenTabReduxObj.SavePage.bind(AdmScreenTabReduxObj) },
     { DelMst: AdmScreenTabReduxObj.DelMst.bind(AdmScreenTabReduxObj) },
     { AddMst: AdmScreenTabReduxObj.AddMst.bind(AdmScreenTabReduxObj) },
-//    { SearchMemberId64: AdmScreenTabReduxObj.SearchActions.SearchMemberId64.bind(AdmScreenTabReduxObj) },
-//    { SearchCurrencyId64: AdmScreenTabReduxObj.SearchActions.SearchCurrencyId64.bind(AdmScreenTabReduxObj) },
-//    { SearchCustomerJobId64: AdmScreenTabReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmScreenTabReduxObj) },
-{ SearchScreenId19: AdmScreenTabReduxObj.SearchActions.SearchScreenId19.bind(AdmScreenTabReduxObj) },
+    { SearchScreenId19: AdmScreenTabReduxObj.SearchActions.SearchScreenId19.bind(AdmScreenTabReduxObj) },
     { showNotification: showNotification },
     { setTitle: setTitle },
     { setSpinner: setSpinner },
@@ -600,5 +621,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

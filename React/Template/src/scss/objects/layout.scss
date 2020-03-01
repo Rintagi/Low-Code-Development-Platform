@@ -27,6 +27,17 @@
       @media screen and (min-width: 1060px) {
         padding-left: 0px;
       }
+
+      @media screen and (min-width: 1200px) {
+        div > .top-level-split > .row > .col-6:first-child {
+          width: 50% !important;
+          left: 0 !important;
+        }
+
+        div > .top-level-split > .row > .col-6:last-child:not(:first-child) {
+          width: 50% !important;
+        }
+      }
     }
   }
 
@@ -52,7 +63,7 @@
   // }
 
   @media screen and (min-width: 1060px) {
-    padding-left: 240px;
+    padding-left: 250px;
   }
 
   @media screen and (max-width: 767px) {

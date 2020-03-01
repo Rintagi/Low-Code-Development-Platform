@@ -100,6 +100,17 @@
     }
   }
 
+  &.progress-wrap--green {
+
+    .progress-bar {
+      background-color: $color-green;
+    }
+
+    .progress__label{
+      color: $color-green;
+    }
+  }
+
   &.progress-wrap--label-top{
 
     .progress__label{

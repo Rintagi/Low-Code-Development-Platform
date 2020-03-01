@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmRulTier || {});
+    this.GetReduxState = () => (this.props.AdmRulTier || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'RuleTierId196';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,63 +87,51 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
     const columnLabel = (this.props.AdmRulTier || {}).ColumnLabel || {};
     /* standard field validation */
-if (!values.cRuleTierName196) { errors.cRuleTierName196 = (columnLabel.RuleTierName196 || {}).ErrMessage;}
-if (isEmptyId((values.cEntityId196 || {}).value)) { errors.cEntityId196 = (columnLabel.EntityId196 || {}).ErrMessage;}
-if (isEmptyId((values.cLanguageCd196 || {}).value)) { errors.cLanguageCd196 = (columnLabel.LanguageCd196 || {}).ErrMessage;}
-if (isEmptyId((values.cFrameworkCd196 || {}).value)) { errors.cFrameworkCd196 = (columnLabel.FrameworkCd196 || {}).ErrMessage;}
-if (!values.cDevProgramPath196) { errors.cDevProgramPath196 = (columnLabel.DevProgramPath196 || {}).ErrMessage;}
+    if (!values.cRuleTierName196) { errors.cRuleTierName196 = (columnLabel.RuleTierName196 || {}).ErrMessage; }
+    if (isEmptyId((values.cEntityId196 || {}).value)) { errors.cEntityId196 = (columnLabel.EntityId196 || {}).ErrMessage; }
+    if (isEmptyId((values.cLanguageCd196 || {}).value)) { errors.cLanguageCd196 = (columnLabel.LanguageCd196 || {}).ErrMessage; }
+    if (isEmptyId((values.cFrameworkCd196 || {}).value)) { errors.cFrameworkCd196 = (columnLabel.FrameworkCd196 || {}).ErrMessage; }
+    if (!values.cDevProgramPath196) { errors.cDevProgramPath196 = (columnLabel.DevProgramPath196 || {}).ErrMessage; }
     return errors;
   }
 
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmRulTier || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmRulTier,
         {
-          RuleTierId196: values.cRuleTierId196|| '',
-          RuleTierName196: values.cRuleTierName196|| '',
-          EntityId196: (values.cEntityId196|| {}).value || '',
-          LanguageCd196: (values.cLanguageCd196|| {}).value || '',
-          FrameworkCd196: (values.cFrameworkCd196|| {}).value || '',
-          DevProgramPath196: values.cDevProgramPath196|| '',
+          RuleTierId196: values.cRuleTierId196 || '',
+          RuleTierName196: values.cRuleTierName196 || '',
+          EntityId196: (values.cEntityId196 || {}).value || '',
+          LanguageCd196: (values.cLanguageCd196 || {}).value || '',
+          FrameworkCd196: (values.cFrameworkCd196 || {}).value || '',
+          DevProgramPath196: values.cDevProgramPath196 || '',
           IsDefault196: values.cIsDefault196 ? 'Y' : 'N',
         },
         [],
@@ -181,12 +172,12 @@ if (!values.cDevProgramPath196) { errors.cDevProgramPath196 = (columnLabel.DevPr
       const fromMstId = mstId || (mst || {}).RuleTierId196;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmRulTier.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmRulTier.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmRulTier.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -268,7 +259,7 @@ if (!values.cDevProgramPath196) { errors.cDevProgramPath196 = (columnLabel.DevPr
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmRulTier || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -292,7 +283,7 @@ if (!values.cDevProgramPath196) { errors.cDevProgramPath196 = (columnLabel.DevPr
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -321,6 +312,7 @@ if (!values.cDevProgramPath196) { errors.cDevProgramPath196 = (columnLabel.DevPr
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmRulTierReduxObj.GetScreenButtons(AdmRulTierState) || {};
     const itemList = AdmRulTierState.Dtl || [];
@@ -332,27 +324,30 @@ if (!values.cDevProgramPath196) { errors.cDevProgramPath196 = (columnLabel.DevPr
     const authRow = (AdmRulTierState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmRulTier || {}).Mst || {});
     const currDtl = ((this.props.AdmRulTier || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.RuleTierId196));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.RuleTierId196));
     const selectList = AdmRulTierReduxObj.SearchListToSelectList(AdmRulTierState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const RuleTierId196 = currMst.RuleTierId196;
-const RuleTierName196 = currMst.RuleTierName196;
-const EntityId196List = AdmRulTierReduxObj.ScreenDdlSelectors.EntityId196(AdmRulTierState);
-const EntityId196 = currMst.EntityId196;
-const LanguageCd196List = AdmRulTierReduxObj.ScreenDdlSelectors.LanguageCd196(AdmRulTierState);
-const LanguageCd196 = currMst.LanguageCd196;
-const FrameworkCd196List = AdmRulTierReduxObj.ScreenDdlSelectors.FrameworkCd196(AdmRulTierState);
-const FrameworkCd196 = currMst.FrameworkCd196;
-const DevProgramPath196 = currMst.DevProgramPath196;
-const IsDefault196 = currMst.IsDefault196;
+
+    const RuleTierId196 = currMst.RuleTierId196;
+    const RuleTierName196 = currMst.RuleTierName196;
+    const EntityId196List = AdmRulTierReduxObj.ScreenDdlSelectors.EntityId196(AdmRulTierState);
+    const EntityId196 = currMst.EntityId196;
+    const LanguageCd196List = AdmRulTierReduxObj.ScreenDdlSelectors.LanguageCd196(AdmRulTierState);
+    const LanguageCd196 = currMst.LanguageCd196;
+    const FrameworkCd196List = AdmRulTierReduxObj.ScreenDdlSelectors.FrameworkCd196(AdmRulTierState);
+    const FrameworkCd196 = currMst.FrameworkCd196;
+    const DevProgramPath196 = currMst.DevProgramPath196;
+    const IsDefault196 = currMst.IsDefault196;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -370,13 +365,13 @@ const IsDefault196 = currMst.IsDefault196;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cRuleTierId196: RuleTierId196 || '',
-                  cRuleTierName196: RuleTierName196 || '',
-                  cEntityId196: EntityId196List.filter(obj => { return obj.key === EntityId196 })[0],
-                  cLanguageCd196: LanguageCd196List.filter(obj => { return obj.key === LanguageCd196 })[0],
-                  cFrameworkCd196: FrameworkCd196List.filter(obj => { return obj.key === FrameworkCd196 })[0],
-                  cDevProgramPath196: DevProgramPath196 || '',
-                  cIsDefault196: IsDefault196 === 'Y',
+                    cRuleTierId196: formatContent(RuleTierId196 || '', 'TextBox'),
+                    cRuleTierName196: formatContent(RuleTierName196 || '', 'TextBox'),
+                    cEntityId196: EntityId196List.filter(obj => { return obj.key === EntityId196 })[0],
+                    cLanguageCd196: LanguageCd196List.filter(obj => { return obj.key === LanguageCd196 })[0],
+                    cFrameworkCd196: FrameworkCd196List.filter(obj => { return obj.key === FrameworkCd196 })[0],
+                    cDevProgramPath196: formatContent(DevProgramPath196 || '', 'TextBox'),
+                    cIsDefault196: IsDefault196 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -438,165 +433,194 @@ const IsDefault196 = currMst.IsDefault196;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.RuleTierId196 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.RuleTierId196 || {}).ColumnHeader} {(columnLabel.RuleTierId196 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RuleTierId196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RuleTierId196 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cRuleTierId196'
-disabled = {(authCol.RuleTierId196 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRuleTierId196 && touched.cRuleTierId196 && <span className='form__form-group-error'>{errors.cRuleTierId196}</span>}
-</div>
-</Col>
-}
-{(authCol.RuleTierName196 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.RuleTierName196 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RuleTierName196 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RuleTierName196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RuleTierName196 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cRuleTierName196'
-disabled = {(authCol.RuleTierName196 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRuleTierName196 && touched.cRuleTierName196 && <span className='form__form-group-error'>{errors.cRuleTierName196}</span>}
-</div>
-</Col>
-}
-{(authCol.EntityId196 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.EntityId196 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.EntityId196 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.EntityId196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.EntityId196 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cEntityId196'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cEntityId196')}
-value={values.cEntityId196}
-options={EntityId196List}
-placeholder=''
-disabled = {(authCol.EntityId196 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cEntityId196 && touched.cEntityId196 && <span className='form__form-group-error'>{errors.cEntityId196}</span>}
-</div>
-</Col>
-}
-{(authCol.LanguageCd196 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.LanguageCd196 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.LanguageCd196 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.LanguageCd196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LanguageCd196 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cLanguageCd196'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cLanguageCd196')}
-value={values.cLanguageCd196}
-options={LanguageCd196List}
-placeholder=''
-disabled = {(authCol.LanguageCd196 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cLanguageCd196 && touched.cLanguageCd196 && <span className='form__form-group-error'>{errors.cLanguageCd196}</span>}
-</div>
-</Col>
-}
-{(authCol.FrameworkCd196 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.FrameworkCd196 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.FrameworkCd196 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.FrameworkCd196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.FrameworkCd196 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cFrameworkCd196'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cFrameworkCd196')}
-value={values.cFrameworkCd196}
-options={FrameworkCd196List}
-placeholder=''
-disabled = {(authCol.FrameworkCd196 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cFrameworkCd196 && touched.cFrameworkCd196 && <span className='form__form-group-error'>{errors.cFrameworkCd196}</span>}
-</div>
-</Col>
-}
-{(authCol.DevProgramPath196 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DevProgramPath196 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DevProgramPath196 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DevProgramPath196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DevProgramPath196 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cDevProgramPath196'
-disabled = {(authCol.DevProgramPath196 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cDevProgramPath196 && touched.cDevProgramPath196 && <span className='form__form-group-error'>{errors.cDevProgramPath196}</span>}
-</div>
-</Col>
-}
-{(authCol.IsDefault196 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cIsDefault196'
-onChange={handleChange}
-defaultChecked={values.cIsDefault196}
-disabled={(authCol.IsDefault196 || {}).readonly || !(authCol.IsDefault196 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.IsDefault196 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.IsDefault196 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.IsDefault196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.IsDefault196 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
+                              {(authCol.RuleTierId196 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.RuleTierId196 || {}).ColumnHeader} {(columnLabel.RuleTierId196 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.RuleTierId196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RuleTierId196 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cRuleTierId196'
+                                          disabled={(authCol.RuleTierId196 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cRuleTierId196 && touched.cRuleTierId196 && <span className='form__form-group-error'>{errors.cRuleTierId196}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.RuleTierName196 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.RuleTierName196 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RuleTierName196 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.RuleTierName196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RuleTierName196 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cRuleTierName196'
+                                          disabled={(authCol.RuleTierName196 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cRuleTierName196 && touched.cRuleTierName196 && <span className='form__form-group-error'>{errors.cRuleTierName196}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.EntityId196 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.EntityId196 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.EntityId196 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.EntityId196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.EntityId196 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cEntityId196'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cEntityId196')}
+                                          value={values.cEntityId196}
+                                          options={EntityId196List}
+                                          placeholder=''
+                                          disabled={(authCol.EntityId196 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cEntityId196 && touched.cEntityId196 && <span className='form__form-group-error'>{errors.cEntityId196}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.LanguageCd196 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.LanguageCd196 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.LanguageCd196 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.LanguageCd196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.LanguageCd196 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cLanguageCd196'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cLanguageCd196')}
+                                          value={values.cLanguageCd196}
+                                          options={LanguageCd196List}
+                                          placeholder=''
+                                          disabled={(authCol.LanguageCd196 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cLanguageCd196 && touched.cLanguageCd196 && <span className='form__form-group-error'>{errors.cLanguageCd196}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.FrameworkCd196 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.FrameworkCd196 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.FrameworkCd196 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.FrameworkCd196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.FrameworkCd196 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cFrameworkCd196'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cFrameworkCd196')}
+                                          value={values.cFrameworkCd196}
+                                          options={FrameworkCd196List}
+                                          placeholder=''
+                                          disabled={(authCol.FrameworkCd196 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cFrameworkCd196 && touched.cFrameworkCd196 && <span className='form__form-group-error'>{errors.cFrameworkCd196}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DevProgramPath196 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DevProgramPath196 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.DevProgramPath196 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DevProgramPath196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DevProgramPath196 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRulTierState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDevProgramPath196'
+                                          disabled={(authCol.DevProgramPath196 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDevProgramPath196 && touched.cDevProgramPath196 && <span className='form__form-group-error'>{errors.cDevProgramPath196}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.IsDefault196 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cIsDefault196'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cIsDefault196}
+                                        disabled={(authCol.IsDefault196 || {}).readonly || !(authCol.IsDefault196 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.IsDefault196 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.IsDefault196 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.IsDefault196 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.IsDefault196 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -656,9 +680,6 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmRulTierReduxObj.SavePage.bind(AdmRulTierReduxObj) },
     { DelMst: AdmRulTierReduxObj.DelMst.bind(AdmRulTierReduxObj) },
     { AddMst: AdmRulTierReduxObj.AddMst.bind(AdmRulTierReduxObj) },
-//    { SearchMemberId64: AdmRulTierReduxObj.SearchActions.SearchMemberId64.bind(AdmRulTierReduxObj) },
-//    { SearchCurrencyId64: AdmRulTierReduxObj.SearchActions.SearchCurrencyId64.bind(AdmRulTierReduxObj) },
-//    { SearchCustomerJobId64: AdmRulTierReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmRulTierReduxObj) },
 
     { showNotification: showNotification },
     { setTitle: setTitle },
@@ -667,5 +688,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

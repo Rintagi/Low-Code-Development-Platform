@@ -4,8 +4,8 @@
   left: 0;
   z-index: 99;
   height: 100vh;
-  width: 240px;
-  box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
+  width: 250px;
+  box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.15);
   padding-top: 60px;
   transition: transform 0.3s, width 0.3s;
   transform: translateX(calc(-100% - 20px));
@@ -48,7 +48,7 @@
   }
 
   .sidebar__scroll {
-    width: 240px;
+    width: 250px;
 
     & > div {
       height: calc(100vh - 60px);
@@ -171,7 +171,7 @@
 
   .sidebar__submenu {
     transition: height 0.5s 0s, padding 0.5s 0s, opacity 0.4s 0.1s;
-    padding: 15px 0;
+    padding: 5px 0;
 
     & .sidebar__submenu {
       margin-bottom: 0;
@@ -183,7 +183,8 @@
 
         p {
           left: 70px;
-          color: #666;
+          color: #555;
+          font-weight: 700;
           font-size: 12px;
         }
       }
@@ -217,7 +218,7 @@
     transition: opacity 0.5s 0.2s, transform 0.3s;
 
     @include themify($themes) {
-      color: white;
+      color: #333;
     }
   }
 
@@ -410,7 +411,7 @@
 
     .sidebar__category-icon {
       @include themify($themes) {
-        color: themed('colorIcon');
+        color: #333;
       }
     }
   }

@@ -1,0 +1,173 @@
+1~@~1~@~1~@~Active Original Users
+2~@~2~@~1~@~Active Legacy Users
+3~@~4~@~1~@~Inactive Original Users
+4~@~6~@~1~@~Inactive Legacy Users
+5~@~8~@~1~@~Active Legacy Users
+6~@~7~@~1~@~Active Original Users
+7~@~10~@~1~@~Inactive Legacy Users
+8~@~9~@~1~@~Inactive Original Users
+9~@~11~@~1~@~Screen Only
+10~@~12~@~1~@~Report Only
+11~@~13~@~1~@~Wizard Only
+12~@~14~@~1~@~All Users
+13~@~1~@~4~@~原来活跃用户
+14~@~2~@~4~@~活跃用户遗产
+15~@~4~@~4~@~原来活跃用户
+16~@~6~@~4~@~活跃用户遗产
+17~@~7~@~4~@~原来活跃用户
+18~@~8~@~4~@~活跃用户遗产
+19~@~9~@~4~@~原来活跃用户
+20~@~10~@~4~@~活跃用户遗产
+21~@~11~@~4~@~萤幕
+22~@~12~@~4~@~报告仅
+23~@~13~@~4~@~只有男巫
+24~@~14~@~4~@~所有用户
+25~@~1~@~2~@~Utilisateurs originaux actifs
+26~@~2~@~2~@~Utilisateurs actifs de legs
+27~@~4~@~2~@~Utilisateurs originaux inactifs
+28~@~6~@~2~@~Utilisateurs inactifs de legs
+29~@~7~@~2~@~Utilisateurs originaux actifs
+30~@~8~@~2~@~Utilisateurs actifs de legs
+31~@~9~@~2~@~Utilisateurs originaux inactifs
+32~@~10~@~2~@~Utilisateurs inactifs de legs
+33~@~11~@~2~@~Écran seulement
+34~@~12~@~2~@~Rapport seulement
+35~@~13~@~2~@~Magicien seulement
+36~@~14~@~2~@~Tous les utilisateurs
+47~@~25~@~1~@~All Users
+48~@~25~@~4~@~所有用户
+49~@~25~@~2~@~Tous les utilisateurs
+66~@~1~@~8~@~सक्रिय मूल उपयोगकर्ता
+67~@~2~@~8~@~सक्रिय लिगेसी उपयोगकर्ता
+68~@~4~@~8~@~निष्क्रिय मूल उपयोगकर्ता
+69~@~6~@~8~@~निष्क्रिय लिगेसी उपयोगकर्ता
+70~@~8~@~8~@~सक्रिय लिगेसी उपयोगकर्ता
+71~@~7~@~8~@~सक्रिय मूल उपयोगकर्ता
+72~@~10~@~8~@~निष्क्रिय लिगेसी उपयोगकर्ता
+73~@~9~@~8~@~निष्क्रिय मूल उपयोगकर्ता
+74~@~11~@~8~@~केवल स्क्रीन
+75~@~12~@~8~@~केवल रिपोर्ट
+76~@~13~@~8~@~केवल जादूगर
+77~@~14~@~8~@~सभी उपयोगकर्ता
+86~@~25~@~8~@~सभी उपयोगकर्ता
+87~@~1~@~9~@~Usuários ativos Original
+88~@~2~@~9~@~Usuários ativos Legado
+89~@~4~@~9~@~Usuários inativos Original
+90~@~6~@~9~@~Usuários inativos do Legacy
+91~@~8~@~9~@~Usuários ativos Legado
+92~@~7~@~9~@~Usuários ativos Original
+93~@~10~@~9~@~Usuários inativos do Legacy
+94~@~9~@~9~@~Usuários inativos Original
+95~@~11~@~9~@~Somente tela
+96~@~12~@~9~@~Apenas relatório
+97~@~13~@~9~@~Apenas assistente
+98~@~14~@~9~@~Todos os usuários
+107~@~25~@~9~@~Todos os usuários
+108~@~1~@~11~@~Aktif Orijinal Kullanıcılar
+109~@~2~@~11~@~Aktif Legacy Kullanıcıları
+110~@~4~@~11~@~İnaktif Orijinal Kullanıcı
+111~@~6~@~11~@~İnaktif Legacy Kullanıcıları
+112~@~8~@~11~@~Aktif Legacy Kullanıcıları
+113~@~7~@~11~@~Aktif Orijinal Kullanıcılar
+114~@~10~@~11~@~İnaktif Legacy Kullanıcıları
+115~@~9~@~11~@~İnaktif Orijinal Kullanıcı
+117~@~12~@~11~@~Sadece Raporu
+118~@~13~@~11~@~Sadece Sihirbazı
+119~@~14~@~11~@~Tüm Kullanıcılar
+128~@~25~@~11~@~Tüm Kullanıcılar
+129~@~1~@~14~@~アクティブオリジナルユーザー
+130~@~2~@~14~@~アクティブなレガシーユーザー
+131~@~4~@~14~@~非アクティブなオリジナルユーザー
+132~@~6~@~14~@~非アクティブなレガシーユーザー
+133~@~8~@~14~@~アクティブなレガシーユーザー
+134~@~7~@~14~@~アクティブオリジナルユーザー
+135~@~10~@~14~@~非アクティブなレガシーユーザー
+136~@~9~@~14~@~非アクティブなオリジナルユーザー
+137~@~11~@~14~@~専用画面
+138~@~12~@~14~@~レポートのみ
+139~@~13~@~14~@~専用ウィザード
+140~@~14~@~14~@~すべてのユーザー
+149~@~25~@~14~@~すべてのユーザー
+150~@~1~@~12~@~Активное Оригинальное пользователей
+151~@~2~@~12~@~Активных пользователей Наследие
+152~@~4~@~12~@~Неактивные Оригинальное пользователей
+153~@~6~@~12~@~Неактивных пользователей Наследие
+154~@~8~@~12~@~Активных пользователей Наследие
+155~@~7~@~12~@~Активное Оригинальное пользователей
+156~@~10~@~12~@~Неактивных пользователей Наследие
+157~@~9~@~12~@~Неактивные Оригинальное пользователей
+158~@~11~@~12~@~Только экран
+159~@~12~@~12~@~Только отчет
+160~@~13~@~12~@~Только мастера
+161~@~14~@~12~@~Все пользователи
+170~@~25~@~12~@~Все пользователи
+171~@~1~@~13~@~Usuarios activos al original
+172~@~2~@~13~@~Usuarios activos heredados
+173~@~4~@~13~@~Los usuarios inactivos original
+174~@~6~@~13~@~Los usuarios inactivos Legado
+175~@~8~@~13~@~Usuarios activos heredados
+176~@~7~@~13~@~Usuarios activos al original
+177~@~10~@~13~@~Los usuarios inactivos Legado
+178~@~9~@~13~@~Los usuarios inactivos original
+179~@~11~@~13~@~Sólo pantalla
+180~@~12~@~13~@~Sólo informe
+181~@~13~@~13~@~Sólo en el Asistente
+182~@~14~@~13~@~Todos los usuarios
+191~@~25~@~13~@~Todos los usuarios
+192~@~1~@~68~@~Aktive Original-Benutzer
+193~@~2~@~68~@~Aktive Legacy-Benutzer
+194~@~4~@~68~@~Inaktive Original-Benutzer
+195~@~6~@~68~@~Inaktive Legacy-Benutzer
+196~@~8~@~68~@~Aktive Legacy-Benutzer
+197~@~7~@~68~@~Aktive Original-Benutzer
+198~@~10~@~68~@~Inaktive Legacy-Benutzer
+199~@~9~@~68~@~Inaktive Original-Benutzer
+200~@~11~@~68~@~Bildschirm nur
+201~@~12~@~68~@~Nur Bericht
+202~@~13~@~68~@~Wizard Nur
+203~@~14~@~68~@~Alle Benutzer
+212~@~25~@~68~@~Alle Benutzer
+213~@~1~@~28~@~활성 원본 사용자
+214~@~2~@~28~@~활성 레거시 사용자
+215~@~4~@~28~@~비활성 원본 사용자
+216~@~6~@~28~@~비활성 기존 사용자
+217~@~8~@~28~@~활성 레거시 사용자
+218~@~7~@~28~@~활성 원본 사용자
+219~@~10~@~28~@~비활성 기존 사용자
+220~@~9~@~28~@~비활성 원본 사용자
+221~@~11~@~28~@~화면 만
+222~@~12~@~28~@~만 신고
+223~@~13~@~28~@~마법사 만
+224~@~14~@~28~@~모든 사용자
+233~@~25~@~28~@~모든 사용자
+234~@~27~@~1~@~Recently Entered (< 30 days)
+235~@~28~@~1~@~Entered Between 30 Days and 1 Year
+236~@~29~@~1~@~Entered one Year Ago
+237~@~27~@~4~@~最近进入（<30天）
+240~@~27~@~28~@~최근에 입력 (<삼십일)
+243~@~30~@~1~@~Entered Anytime
+244~@~31~@~1~@~Recent 3-Months
+245~@~32~@~1~@~Year to date
+246~@~33~@~1~@~Last year
+247~@~34~@~1~@~All dates
+248~@~1~@~114~@~Utilisateurs d'origine actifs
+249~@~2~@~114~@~Utilisateurs hérités actifs
+250~@~4~@~114~@~Utilisateurs d'origine inactifs
+251~@~6~@~114~@~Utilisateurs hérités inactifs
+252~@~8~@~114~@~Utilisateurs hérités actifs
+253~@~7~@~114~@~Utilisateurs d'origine actifs
+254~@~10~@~114~@~Utilisateurs hérités inactifs
+255~@~9~@~114~@~Utilisateurs d'origine inactifs
+256~@~11~@~114~@~Écran uniquement
+257~@~12~@~114~@~Rapport uniquement
+258~@~13~@~114~@~Assistant uniquement
+259~@~14~@~114~@~Tous les utilisateurs
+260~@~25~@~114~@~Tous les utilisateurs
+261~@~27~@~114~@~Entré récemment (<30 jours)
+262~@~28~@~114~@~Entré entre 30 jours et 1 an
+263~@~29~@~114~@~Entré il y a un an
+264~@~30~@~114~@~Entré à tout moment
+265~@~31~@~114~@~3 mois récents
+266~@~32~@~114~@~Année à ce jour
+267~@~33~@~114~@~L'année dernière
+268~@~34~@~114~@~Toutes les dates

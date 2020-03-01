@@ -13,8 +13,8 @@ namespace RO.Web
 {
 	public partial class MyProfileModule : RO.Web.ModuleBase
 	{
-		private string LcSysConnString;
-		private string LcAppPw;
+		//private string LcSysConnString;
+		//private string LcAppPw;
         
         public MyProfileModule()
 		{
@@ -38,8 +38,8 @@ namespace RO.Web
                 else
                 {
                     string extAppDomainUrl =
-                        !string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"])
-                            ? System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"]
+                        !string.IsNullOrWhiteSpace(Config.ExtBaseUrl) && !string.IsNullOrEmpty(Request.Headers["X-Forwarded-For"])
+                            ? Config.ExtBaseUrl
                             : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
                     cAppDomainUrl.Text = extAppDomainUrl.EndsWith("/") ? extAppDomainUrl.Substring(0, extAppDomainUrl.Length - 1) : extAppDomainUrl;
                     cAppDomainUrl.Visible = true;
@@ -160,7 +160,7 @@ namespace RO.Web
             {
                 string loginUrl = System.Web.Security.FormsAuthentication.LoginUrl;
                 if (string.IsNullOrEmpty(loginUrl)) loginUrl = "MyAccount.aspx";
-                Response.Redirect(loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "typ=" + Request.QueryString["typ"].ToString());
+                this.Redirect(loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "typ=" + Request.QueryString["typ"].ToString());
             }
         }
         private DataView GetCompanyList()
@@ -215,7 +215,7 @@ namespace RO.Web
             }
             else base.LCurr.ProjectId = 0;
             SwitchCmpPrj();
-            Response.Redirect(Request.RawUrl);
+            this.Redirect(Request.RawUrl);
         }
 
         private DataView GetProjectList()
@@ -237,7 +237,7 @@ namespace RO.Web
             }
             else { base.LCurr.ProjectId = 0; }
             SwitchCmpPrj();
-            Response.Redirect(Request.RawUrl);
+            this.Redirect(Request.RawUrl);
         }
 
         private DataView GetSystemsList()
@@ -264,7 +264,7 @@ namespace RO.Web
                     break;
                 }
             }
-            Response.Redirect(Request.Url.PathAndQuery);
+            this.Redirect(Request.Url.PathAndQuery);
         }
 
         protected void SystemsList_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -277,8 +277,10 @@ namespace RO.Web
             if (!string.IsNullOrEmpty(webAddress) && !webAddress.StartsWith("http"))
             {
                 string path = Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped);
-                webAddress = path.ToUpper().StartsWith(Config.AppNameSpace.ToUpper() + "/") ? "/" + Config.AppNameSpace + "/" + webAddress : "/" + webAddress;
-                webAddress = Request.Url.GetLeftPart(UriPartial.Scheme).Replace("http:",Config.EnableSsl ? "https:" : "http:") + Request.Url.Host + Request.Url.AbsolutePath.Replace("/" + path, webAddress);
+                string qs = Request.QueryString.ToString();
+                //webAddress = path.ToUpper().StartsWith(Config.AppNameSpace.ToUpper() + "/") ? "/" + Config.AppNameSpace + "/" + webAddress : "/" + webAddress;
+                //webAddress = Request.Url.GetLeftPart(UriPartial.Scheme).Replace("http:",Config.EnableSsl ? "https:" : "http:") + Request.Url.Host + Request.Url.AbsolutePath.Replace("/" + path, webAddress);
+                webAddress = ResolveUrlCustom(webAddress, !IsProxy(), true) + "?" + qs;
                 homeQs = (new Uri(webAddress)).GetComponents(UriComponents.Query, UriFormat.Unescaped);
             }
             else webAddress = "";
@@ -289,7 +291,7 @@ namespace RO.Web
                 System.Collections.Specialized.NameValueCollection qs = System.Web.HttpUtility.ParseQueryString(new System.Text.RegularExpressions.Regex("^[^?]*[\\?]?").Replace(strUrl, ""));
                 qs["msy"] = base.LCurr.SystemId.ToString();
                 if (Request.QueryString["ssd"] != null) qs["ssd"] = Request.QueryString["ssd"];
-                Response.Redirect((strUrl.IndexOf("?") < 0 ? strUrl : strUrl.Substring(0, strUrl.IndexOf("?"))) + "?" + qs.ToString());
+                this.Redirect((strUrl.IndexOf("?") < 0 ? strUrl : strUrl.Substring(0, strUrl.IndexOf("?"))) + "?" + qs.ToString());
             }
             else
             {
@@ -299,7 +301,7 @@ namespace RO.Web
                     System.Collections.Specialized.NameValueCollection qs = System.Web.HttpUtility.ParseQueryString(new System.Text.RegularExpressions.Regex("^[^?]*[\\?]?").Replace(defaultUrl, ""));
                     if (qs["msy"] == null) qs["msy"] = base.LCurr.SystemId.ToString();
                     if (Request.QueryString["ssd"] != null) qs["ssd"] = Request.QueryString["ssd"];
-                    Response.Redirect((defaultUrl.IndexOf("?") < 0 ? defaultUrl : defaultUrl.Substring(0, defaultUrl.IndexOf("?"))) + "?" + qs.ToString());
+                    this.Redirect((defaultUrl.IndexOf("?") < 0 ? defaultUrl : defaultUrl.Substring(0, defaultUrl.IndexOf("?"))) + "?" + qs.ToString());
                 }
                 catch (ThreadAbortException) { }
                 catch
@@ -307,7 +309,7 @@ namespace RO.Web
                     string defaultUrl = !string.IsNullOrEmpty(webAddress) ? webAddress : Config.SslUrl;
                     System.Collections.Specialized.NameValueCollection qs = System.Web.HttpUtility.ParseQueryString(new System.Text.RegularExpressions.Regex("^[^?]*[\\?]?").Replace(defaultUrl, ""));
                     if (qs["msy"] == null) qs["msy"] = base.LCurr.SystemId.ToString();
-                    Response.Redirect((defaultUrl.IndexOf("?") < 0 ? defaultUrl : defaultUrl.Substring(0, defaultUrl.IndexOf("?"))) + "?" + qs.ToString());
+                    this.Redirect((defaultUrl.IndexOf("?") < 0 ? defaultUrl : defaultUrl.Substring(0, defaultUrl.IndexOf("?"))) + "?" + qs.ToString());
                 }
             }
         }

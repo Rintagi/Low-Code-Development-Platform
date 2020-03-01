@@ -7,6 +7,7 @@ namespace RO.Common3
     using System.Security.Cryptography.X509Certificates;
     using System.Net;
     using System.IO;
+    using System.Collections.Generic;
 
     public class Encryption: Key
     {
@@ -166,6 +167,45 @@ namespace RO.Common3
 			des = null;
 			return outStr;
 		}
+        public Dictionary<string, Dictionary<string, string>> DecodeLicenseDetail(string licenseJSON)
+        {
+            Dictionary<string, Dictionary<string, string>> moduleList = new Dictionary<string, Dictionary<string, string>>();
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(licenseJSON);
+
+        }
+
+        private Tuple<string, bool, string> GetLicenseJSON()
+        {
+            bool fullyLicensed = false;
+            string licenseJSON = Newtonsoft.Json.JsonConvert.SerializeObject(new Dictionary<string, Dictionary<string, string>>(){
+                { "Design", new Dictionary<string, string>()
+                            {
+                                {"CompanyCount", "-1" },
+                                {"ProjectCount", "-1" },
+                                {"UserCount", "-1" },
+                                {"ModuleCount", fullyLicensed ? "-1" : "0" },
+                                {"Include", "All" },
+                                {"Exclude", fullyLicensed ? "" : "Deploy" },
+                                {"Expiry", DateTime.Today.ToUniversalTime().AddYears(fullyLicensed ? 100 : -1).AddMonths(0).AddDays(0).ToString("o")},
+                            }
+                },
+            });
+
+            return new Tuple<string, bool, string>(licenseJSON, fullyLicensed, Convert.ToBase64String(UTF8Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(new Dictionary<string, string>() { { "License", Convert.ToBase64String(UTF8Encoding.UTF8.GetBytes(licenseJSON)) }, { "LicenseSig", "" }, { "Encrypted", "N" } }))));
+        }
+
+        public Tuple<string, bool, string> DecodeLicenseString(string _licenseStringBase64 = null, Action<string> updateLicense = null)
+        {
+            string licenseStringBase64 = _licenseStringBase64 ?? Config.RintagiLicense;
+            Tuple<string, bool, string> defaultLicense = GetLicenseJSON();
+            return defaultLicense;
+        }
+
+
+        public string RenewLicense(string LicenseServerEndPoint)
+        {
+            return null;
+        }
 		protected string GetDesConnStr()
 		{
 			return Config.GetConnStr(Config.DesProvider, Config.DesServer, Config.DesDatabase, "", Config.DesUserId) + DecryptString(Config.DesPassword);

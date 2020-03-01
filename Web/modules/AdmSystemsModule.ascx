@@ -333,6 +333,26 @@
     	</div>
     </div></div></div>
     </div></div>
+    <div class="r-table rg-1-12"><div class="r-tr">
+    <div class="r-td rc-1-2"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cFromSystemIdP1" class="r-td r-labelR" runat="server"><asp:Label id="cFromSystemIdLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cFromSystemIdP2" class="r-td r-content" runat="server"><asp:TextBox id="cFromSystemId" CssClass="inp-txt" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-3-3"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cUpdBaseSystemIdP1" class="r-td r-labelR" runat="server"><asp:Label id="cUpdBaseSystemIdLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cUpdBaseSystemIdP2" class="r-td r-content" runat="server"><asp:CheckBox id="cUpdBaseSystemId" CssClass="inp-chk" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    <div class="r-td rc-4-4"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cUpdRefSystemIdP1" class="r-td r-labelR" runat="server"><asp:Label id="cUpdRefSystemIdLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cUpdRefSystemIdP2" class="r-td r-content" runat="server"><asp:CheckBox id="cUpdRefSystemId" CssClass="inp-chk" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    </div></div>
 </asp:Panel>
 <asp:label id="cFootLabel" CssClass="FootText" runat="server" />
 <input id="bUseCri" type="hidden" runat="server" />

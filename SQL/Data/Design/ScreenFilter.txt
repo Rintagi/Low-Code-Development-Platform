@@ -1,0 +1,21 @@
+1~@~1~@~Active Original Users~@~AdmUsr 010 Active Original Users~@~Active = 'Y' AND ExtPassword is null~@~10~@~Y
+2~@~1~@~Active Legacy Users~@~AdmUsr 020 Active Legacy Users~@~Active = 'Y' AND ExtPassword is not null~@~20~@~Y
+4~@~1~@~Inactive Original Users~@~AdmUsr 030 Inactive Original Users~@~Active <> 'Y' AND ExtPassword is null~@~30~@~Y
+6~@~1~@~Inactive Legacy Users~@~AdmUsr 040 Inactive Legacy Users~@~Active <> 'Y' AND ExtPassword is not null~@~40~@~Y
+7~@~71~@~Active Original Users~@~AdmChgPwd 010 Active Original Users~@~Active = 'Y' AND ExtPassword is null~@~10~@~Y
+8~@~71~@~Active Legacy Users~@~AdmChgPwd 020 Active Legacy Users~@~Active = 'Y' AND ExtPassword is not null~@~20~@~Y
+9~@~71~@~Inactive Original Users~@~AdmChgPwd 030 Inactive Original Users~@~Active <> 'Y' AND ExtPassword is null~@~30~@~Y
+10~@~71~@~Inactive Legacy Users~@~AdmChgPwd 040 Inactive Legacy Users~@~Active <> 'Y' AND ExtPassword is not null~@~40~@~Y
+11~@~76~@~Screen Only~@~AdmButtonHlp 010 Screen Only~@~b116.ScreenId is not null~@~10~@~Y
+12~@~76~@~Report Only~@~AdmButtonHlp 020 Report Only~@~b116.ReportId is not null~@~20~@~Y
+13~@~76~@~Wizard Only~@~AdmButtonHlp 030 Wizard Only~@~b116.WizardId is not null~@~30~@~Y
+14~@~1~@~All Users~@~AdmUsr 050 All Users~@~1=1~@~50~@~Y
+25~@~71~@~All Users~@~AdmChgPwd 050 All Users~@~1=1~@~50~@~Y
+27~@~123~@~Recently Entered (< 30 days)~@~AdmSredTime 010 Recently Entered (< 30 days)~@~dateadd(dd,30,EnteredOn) > getutcdate()~@~10~@~Y
+28~@~123~@~Entered Between 30 - 365 days~@~AdmSredTime 020 Entered Between 30 - 365 days~@~dateadd(dd,30,EnteredOn) <= getutcdate() AND dateadd(dd,365,EnteredOn) >= getutcdate()~@~20~@~Y
+29~@~123~@~Entered beyond 365 days~@~AdmSredTime 030 Entered beyond 365 days~@~dateadd(dd,365,EnteredOn) < getutcdate()~@~30~@~Y
+30~@~123~@~Entered anytime~@~AdmSredTime 040 Entered anytime~@~1=1~@~40~@~Y
+31~@~1019~@~Recent Three (3) Months~@~AdmScrAudit 010 Recent Three (3) Months~@~ChangedOn >= dateadd(mm,-3,getutcdate())~@~10~@~Y
+32~@~1019~@~Year to date~@~AdmScrAudit 020 Year to date~@~datepart(yyyy,ChangedOn) = datepart(yyyy,getutcdate())~@~20~@~Y
+33~@~1019~@~Last year~@~AdmScrAudit 030 Last year~@~datepart(yyyy,ChangedOn) = datepart(yyyy,getutcdate())-1~@~30~@~Y
+34~@~1019~@~All dates~@~AdmScrAudit 040 All dates~@~1 = 1~@~40~@~Y

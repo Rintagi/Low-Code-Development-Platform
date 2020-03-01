@@ -1,0 +1,17 @@
+1~@~onKeyDown~@~return CrMMDDYY();~@~Mask: 6-digit MMDDYY Date (event)~@~This is a MMDDYY date mask with postback.
+2~@~onKeypress~@~return CrDeciDot();~@~Mask: # decimal after Period (event,integer,true)~@~This is a mask for decimal only. 1st parameter is alwasy "event" to capture window's event. 2nd parameter is the maximum number of decimals allowed, 0 is unlimited. 3rd parameter if true then minus is allowed.
+6~@~onKeyUp~@~return AeAutoTab();~@~Tab after maxLenth  (event,oPrev,oNext)~@~This is a function to automatically jump from one textbox to another when the maximum characters are reached. 1st parameter is alwasys "event" to capture Window's event. 2nd parameter is the from previous ClientID or null object. 3rd parameter is the to next ClientID or null object.
+7~@~onBlur~@~return IrIfaThenb();~@~If a Then B  (event,typ,opr,val,oTar,sVal)~@~This is an inference function to assign a value to antoher textbox if the current textbox has certain value. The parameters are: ee,typ,opr,val,oTar,sVal where
+1. ee is alwasy "event" to capture Window's event; 
+2. typ is F-Float; (default is "string");
+3. opr is !=;>=;<=;>;<; (default is "==");
+4. val is the conditional value to be met;
+5. oTar is the ClientID of the target control;
+6. sVal is the value to assign target control to;
+
+8~@~onBlur~@~return CmCalc2Deci();~@~oTar=oSrc*oRate (oSrc,oCond,oRate,oTar)~@~N/A
+9~@~onKeypress~@~return CrInteger();~@~Mask: integer only (event,integer,true)~@~This is a mask for integer only. 1st parameter is always "event" to capture window's event. 2nd parameter is the maximum number of digits allowed, 0 is unlimited. 3rd parameter if true then minus is allowed.
+10~@~onKeypress~@~return CrMaxLength();~@~Mask: MaxLength override (event,integer)~@~This is a mask for any alphanumeric input. 1st parameter is always "event" to capture window's event. 2nd parameter is the maximum number of characters allowed, 0 is unlimited.
+12~@~onKeyDown~@~return CrNAPhone();~@~Mask: North American Phone (event)~@~This is North America (999)999-9999 phone number mask.
+
+13~@~onKeyDown~@~return AeFocusCtrl();~@~Focus on (event,'ctrl') upon Enter key press~@~This is an action to focus on the 2nd parameter which is a ClientID of a control upon Enter key pressed.

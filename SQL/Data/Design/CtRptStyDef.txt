@@ -1,0 +1,14 @@
+CD~@~Column Value Date
+CH~@~Column Heading
+CM~@~Column Value Money
+CN~@~Column Value Number
+CS~@~Column Value String
+GD~@~Group Value Date
+GM~@~Group Value Money
+GN~@~Group Value Number
+GS~@~Group Value String
+PL~@~Page Left
+PR~@~Page Right
+S1~@~1st SubTitle
+S2~@~2nd SubTitle
+TT~@~Title

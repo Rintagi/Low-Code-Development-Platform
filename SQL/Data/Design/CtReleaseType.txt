@@ -1,0 +1,6 @@
+1~@~DEV~@~Developer Upgrade
+2~@~PTY~@~Upgrade with Source Code
+3~@~PDT~@~Production Upgrade
+5~@~NPTY~@~New Install with Source Code
+6~@~NPDT~@~New Production
+7~@~NDEV~@~New Developer

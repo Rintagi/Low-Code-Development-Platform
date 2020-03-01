@@ -1,0 +1,210 @@
+1~@~en-US~@~English (United States)~@~Y~@~Y~@~USA~@~USD~@~N~@~
+2~@~fr-FR~@~French (France)
+~@~N~@~N~@~FRA~@~EUR~@~Y~@~
+4~@~zh-CN~@~Chinese (China)~@~N~@~N~@~CHN~@~CNY~@~Y~@~
+7~@~en-GB~@~English (United Kingdom)
+~@~N~@~Y~@~GBR~@~GBP~@~N~@~
+8~@~hi-IN~@~Hindi (India)
+~@~N~@~N~@~IND~@~INR~@~Y~@~
+9~@~pt-BR~@~Portuguese (Brazil)
+~@~N~@~N~@~BRA~@~BRL~@~Y~@~
+11~@~tr-TR~@~Turkish (Turkey)~@~N~@~N~@~TUR~@~TRY~@~N~@~
+12~@~ru-RU~@~Russian (Russia)~@~N~@~N~@~RUS~@~RUR~@~Y~@~
+13~@~es-ES~@~Spanish (Spain)
+~@~N~@~N~@~ESP~@~EUR~@~Y~@~
+14~@~ja-JP~@~Japanese (Japan)
+~@~N~@~N~@~JPN~@~JPY~@~Y~@~
+28~@~ko-KR~@~Korean (Korea)~@~N~@~N~@~KOR~@~KRW~@~Y~@~
+30~@~af-ZA~@~Afrikaans (South Africa)~@~N~@~N~@~ZAF~@~ZAR~@~N~@~CultureInfo.xlsx
+31~@~am-ET~@~Amharic (Ethiopia)~@~N~@~N~@~ETH~@~ETB~@~N~@~CultureInfo.xlsx
+32~@~ar-AE~@~Arabic (United Arab Emirates)~@~N~@~N~@~ARE~@~AED~@~N~@~CultureInfo.xlsx
+33~@~ar-BH~@~Arabic (Bahrain)~@~N~@~N~@~BHR~@~BHD~@~N~@~CultureInfo.xlsx
+34~@~ar-DZ~@~Arabic (Algeria)~@~N~@~N~@~DZA~@~DZD~@~N~@~CultureInfo.xlsx
+35~@~ar-EG~@~Arabic (Egypt)~@~N~@~N~@~EGY~@~EGP~@~N~@~CultureInfo.xlsx
+36~@~ar-IQ~@~Arabic (Iraq)~@~N~@~N~@~IRQ~@~IQD~@~N~@~CultureInfo.xlsx
+37~@~ar-JO~@~Arabic (Jordan)~@~N~@~N~@~JOR~@~JOD~@~N~@~CultureInfo.xlsx
+38~@~ar-KW~@~Arabic (Kuwait)~@~N~@~N~@~KWT~@~KWD~@~N~@~CultureInfo.xlsx
+39~@~ar-LB~@~Arabic (Lebanon)~@~N~@~N~@~LBN~@~LBP~@~N~@~CultureInfo.xlsx
+40~@~ar-LY~@~Arabic (Libya)~@~N~@~N~@~LBY~@~LYD~@~N~@~CultureInfo.xlsx
+41~@~ar-MA~@~Arabic (Morocco)~@~N~@~N~@~MAR~@~MAD~@~N~@~CultureInfo.xlsx
+42~@~ar-OM~@~Arabic (Oman)~@~N~@~N~@~OMN~@~OMR~@~N~@~CultureInfo.xlsx
+43~@~ar-QA~@~Arabic (Qatar)~@~N~@~N~@~QAT~@~QAR~@~N~@~CultureInfo.xlsx
+44~@~ar-SA~@~Arabic (Saudi Arabia)~@~N~@~N~@~SAU~@~SAR~@~N~@~CultureInfo.xlsx
+45~@~ar-SY~@~Arabic (Syrian Arab Republic)~@~N~@~N~@~SYR~@~SYP~@~N~@~CultureInfo.xlsx
+46~@~ar-TN~@~Arabic (Tunisia)~@~N~@~N~@~TUN~@~TND~@~N~@~CultureInfo.xlsx
+47~@~ar-YE~@~Arabic (Yemen)~@~N~@~N~@~YEM~@~YER~@~N~@~CultureInfo.xlsx
+48~@~arn-CL~@~Mapudungun (Chile)~@~N~@~N~@~CHL~@~CLP~@~N~@~CultureInfo.xlsx
+49~@~as-IN~@~Assamese (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+50~@~az-Cyrl-AZ~@~Azeri-Cyrillic (Azerbaijan)~@~N~@~N~@~AZE~@~AZM~@~N~@~CultureInfo.xlsx
+51~@~az-Latn-AZ~@~Azeri-Latin (Azerbaijan)~@~N~@~N~@~AZE~@~AZM~@~N~@~CultureInfo.xlsx
+52~@~ba-RU~@~Bashkir (Russia)~@~N~@~N~@~RUS~@~RUB~@~N~@~CultureInfo.xlsx
+53~@~be-BY~@~Belarusian (Belarus)~@~N~@~N~@~BLR~@~BYB~@~N~@~CultureInfo.xlsx
+54~@~bg-BG~@~Bulgarian (Bulgaria)~@~N~@~N~@~BGR~@~BGL~@~N~@~CultureInfo.xlsx
+55~@~bn-BD~@~Bengali (Bangladesh)~@~N~@~N~@~BGD~@~BDT~@~N~@~CultureInfo.xlsx
+56~@~bn-IN~@~Bengali (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+57~@~bo-CN~@~Tibetan (China)~@~N~@~N~@~CHN~@~CNY~@~N~@~CultureInfo.xlsx
+58~@~br-FR~@~Breton (France)~@~N~@~N~@~FRA~@~EUR~@~N~@~CultureInfo.xlsx
+59~@~bs-Cyrl-BA~@~Bosnian-Cyrillic (Bosnia and Herzegovina)~@~N~@~N~@~BIH~@~BAM~@~N~@~CultureInfo.xlsx
+60~@~bs-Latn-BA~@~Bosnian-Latin (Bosnia and Herzegovina)~@~N~@~N~@~BIH~@~BAM~@~N~@~CultureInfo.xlsx
+61~@~ca-ES~@~Catalan (Catalan)~@~N~@~N~@~~@~EUR~@~N~@~CultureInfo.xlsx
+62~@~co-FR~@~Corsican (France)~@~N~@~N~@~FRA~@~EUR~@~N~@~CultureInfo.xlsx
+63~@~cs-CZ~@~Czech (Czech Republic)~@~N~@~N~@~CZE~@~CZK~@~N~@~CultureInfo.xlsx
+64~@~cy-GB~@~Welsh (United Kingdom)~@~N~@~N~@~GBR~@~GBP~@~N~@~CultureInfo.xlsx
+65~@~da-DK~@~Danish (Denmark)~@~N~@~N~@~DNK~@~DKK~@~N~@~CultureInfo.xlsx
+66~@~de-AT~@~German (Austria)~@~N~@~N~@~AUT~@~EUR~@~N~@~CultureInfo.xlsx
+67~@~de-CH~@~German (Switzerland)~@~N~@~N~@~CHE~@~CHF~@~N~@~CultureInfo.xlsx
+68~@~de-DE~@~German (Germany)~@~N~@~N~@~DEU~@~EUR~@~Y~@~CultureInfo.xlsx
+69~@~de-LI~@~German (Liechtenstein)~@~N~@~N~@~LIE~@~CHF~@~N~@~CultureInfo.xlsx
+70~@~de-LU~@~German (Luxembourg)~@~N~@~N~@~LUX~@~EUR~@~N~@~CultureInfo.xlsx
+71~@~dsb-DE~@~Lower Sorbian (Germany)~@~N~@~N~@~DEU~@~EUR~@~N~@~CultureInfo.xlsx
+72~@~dv-MV~@~Divehi (Maldives)~@~N~@~N~@~MDV~@~MVR~@~N~@~CultureInfo.xlsx
+73~@~el-GR~@~Greek (Greece)~@~N~@~N~@~GRC~@~EUR~@~N~@~CultureInfo.xlsx
+74~@~en-029~@~English (Caribbean)~@~N~@~Y~@~~@~USD~@~N~@~CultureInfo.xlsx
+75~@~en-AU~@~English (Australia)~@~N~@~Y~@~AUS~@~AUD~@~N~@~CultureInfo.xlsx
+76~@~en-BZ~@~English (Belize)~@~N~@~Y~@~BLZ~@~BZD~@~N~@~CultureInfo.xlsx
+77~@~en-CA~@~English (Canada)~@~N~@~Y~@~CAN~@~CAD~@~N~@~CultureInfo.xlsx
+78~@~en-IE~@~English (Ireland)~@~N~@~Y~@~IRL~@~EUR~@~N~@~CultureInfo.xlsx
+79~@~en-IN~@~English (India)~@~N~@~Y~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+80~@~en-JM~@~English (Jamaica)~@~N~@~Y~@~JAM~@~JMD~@~N~@~CultureInfo.xlsx
+81~@~en-MY~@~English (Malaysia)~@~N~@~Y~@~MYS~@~MYR~@~N~@~CultureInfo.xlsx
+82~@~en-NZ~@~English (New Zealand)~@~N~@~Y~@~NZL~@~NZD~@~N~@~CultureInfo.xlsx
+83~@~en-PH~@~English (Philippines)~@~N~@~Y~@~PHL~@~PHP~@~N~@~CultureInfo.xlsx
+84~@~en-SG~@~English (Singapore)~@~N~@~Y~@~SGP~@~SGD~@~N~@~CultureInfo.xlsx
+85~@~en-TT~@~English (Trinidad and Tobago)~@~N~@~Y~@~TTO~@~TTD~@~N~@~CultureInfo.xlsx
+86~@~en-ZA~@~English (South Africa)~@~N~@~Y~@~ZAF~@~ZAR~@~N~@~CultureInfo.xlsx
+87~@~en-ZW~@~English (Zimbabwe)~@~N~@~Y~@~ZWE~@~ZWD~@~N~@~CultureInfo.xlsx
+88~@~es-AR~@~Spanish (Argentina)~@~N~@~N~@~ARG~@~ARS~@~N~@~CultureInfo.xlsx
+89~@~es-BO~@~Spanish (Bolivia)~@~N~@~N~@~BOL~@~BOB~@~N~@~CultureInfo.xlsx
+90~@~es-CL~@~Spanish (Chile)~@~N~@~N~@~CHL~@~CLP~@~N~@~CultureInfo.xlsx
+91~@~es-CO~@~Spanish (Colombia)~@~N~@~N~@~COL~@~COP~@~N~@~CultureInfo.xlsx
+92~@~es-CR~@~Spanish (Costa Rica)~@~N~@~N~@~CRI~@~CRC~@~N~@~CultureInfo.xlsx
+93~@~es-DO~@~Spanish (Dominican Republic)~@~N~@~N~@~DOM~@~DOP~@~N~@~CultureInfo.xlsx
+94~@~es-EC~@~Spanish (Ecuador)~@~N~@~N~@~ECU~@~USD~@~N~@~CultureInfo.xlsx
+95~@~es-GT~@~Spanish (Guatemala)~@~N~@~N~@~GTM~@~GTQ~@~N~@~CultureInfo.xlsx
+96~@~es-HN~@~Spanish (Honduras)~@~N~@~N~@~HND~@~HNL~@~N~@~CultureInfo.xlsx
+97~@~es-MX~@~Spanish (Mexico)~@~N~@~N~@~MEX~@~MXN~@~N~@~CultureInfo.xlsx
+98~@~es-NI~@~Spanish (Nicaragua)~@~N~@~N~@~NIC~@~NIO~@~N~@~CultureInfo.xlsx
+99~@~es-PA~@~Spanish (Panama)~@~N~@~N~@~PAN~@~PAB~@~N~@~CultureInfo.xlsx
+100~@~es-PE~@~Spanish (Peru)~@~N~@~N~@~PER~@~PEN~@~N~@~CultureInfo.xlsx
+101~@~es-PR~@~Spanish (Puerto Rico)~@~N~@~N~@~PRI~@~USD~@~N~@~CultureInfo.xlsx
+102~@~es-PY~@~Spanish (Paraguay)~@~N~@~N~@~PRY~@~PYG~@~N~@~CultureInfo.xlsx
+103~@~es-SV~@~Spanish (El Salvador)~@~N~@~N~@~SLV~@~USD~@~N~@~CultureInfo.xlsx
+104~@~es-US~@~Spanish (United States)~@~N~@~N~@~USA~@~USD~@~N~@~CultureInfo.xlsx
+105~@~es-UY~@~Spanish (Uruguay)~@~N~@~N~@~URY~@~UYU~@~N~@~CultureInfo.xlsx
+106~@~es-VE~@~Spanish (Venezuela)~@~N~@~N~@~VEN~@~VEB~@~N~@~CultureInfo.xlsx
+107~@~et-EE~@~Estonian (Estonia)~@~N~@~N~@~EST~@~EEK~@~N~@~CultureInfo.xlsx
+108~@~eu-ES~@~Basque (Basque)~@~N~@~N~@~~@~EUR~@~N~@~CultureInfo.xlsx
+109~@~fa-IR~@~Persian (Iran)~@~N~@~N~@~IRN~@~IRR~@~N~@~CultureInfo.xlsx
+110~@~fi-FI~@~Finnish (Finland)~@~N~@~N~@~FIN~@~EUR~@~N~@~CultureInfo.xlsx
+111~@~fil-PH~@~Filipino (Philippines)~@~N~@~N~@~PHL~@~PHP~@~N~@~CultureInfo.xlsx
+112~@~fo-FO~@~Faroese (Faroe Islands)~@~N~@~N~@~FRO~@~DKK~@~N~@~CultureInfo.xlsx
+113~@~fr-BE~@~French (Belgium)~@~N~@~N~@~BEL~@~EUR~@~N~@~CultureInfo.xlsx
+114~@~fr-CA~@~French (Canada)~@~N~@~N~@~CAN~@~CAD~@~Y~@~CultureInfo.xlsx
+115~@~fr-CH~@~French (Switzerland)~@~N~@~N~@~CHE~@~CHF~@~N~@~CultureInfo.xlsx
+116~@~fr-LU~@~French (Luxembourg)~@~N~@~N~@~LUX~@~EUR~@~N~@~CultureInfo.xlsx
+117~@~fr-MC~@~French (Monaco)~@~N~@~N~@~MNG~@~EUR~@~N~@~CultureInfo.xlsx
+118~@~fy-NL~@~Frisian (Netherlands)~@~N~@~N~@~NLD~@~EUR~@~N~@~CultureInfo.xlsx
+119~@~ga-IE~@~Irish (Ireland)~@~N~@~N~@~IRL~@~EUR~@~N~@~CultureInfo.xlsx
+120~@~gl-ES~@~Galician (Galician)~@~N~@~N~@~~@~EUR~@~N~@~CultureInfo.xlsx
+121~@~gsw-FR~@~Alsatian (France)~@~N~@~N~@~FRA~@~EUR~@~N~@~CultureInfo.xlsx
+122~@~gu-IN~@~Gujarati (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+123~@~ha-Latn-NG~@~Hausa-Latin (Nigeria)~@~N~@~N~@~NGA~@~NGN~@~N~@~CultureInfo.xlsx
+124~@~he-IL~@~Hebrew (Israel)~@~N~@~N~@~ISR~@~ILS~@~N~@~CultureInfo.xlsx
+125~@~hr-BA~@~Croatian (Bosnia and Herzegovina)~@~N~@~N~@~BIH~@~BAM~@~N~@~CultureInfo.xlsx
+126~@~hr-HR~@~Croatian (Croatia)~@~N~@~N~@~HRV~@~HRK~@~N~@~CultureInfo.xlsx
+127~@~hsb-DE~@~Upper Sorbian (Germany)~@~N~@~N~@~DEU~@~EUR~@~N~@~CultureInfo.xlsx
+128~@~hu-HU~@~Hungarian (Hungary)~@~N~@~N~@~HUN~@~HUF~@~N~@~CultureInfo.xlsx
+129~@~hy-AM~@~Armenian (Armenia)~@~N~@~N~@~ARM~@~AMD~@~N~@~CultureInfo.xlsx
+130~@~id-ID~@~Indonesian (Indonesia)~@~N~@~N~@~IDN~@~IDR~@~N~@~CultureInfo.xlsx
+131~@~ig-NG~@~Igbo (Nigeria)~@~N~@~N~@~NGA~@~NGN~@~N~@~CultureInfo.xlsx
+132~@~ii-CN~@~Yi (China)~@~N~@~N~@~CHN~@~CNY~@~N~@~CultureInfo.xlsx
+133~@~is-IS~@~Icelandic (Iceland)~@~N~@~N~@~ISL~@~ISK~@~N~@~CultureInfo.xlsx
+134~@~it-CH~@~Italian (Switzerland)~@~N~@~N~@~CHE~@~CHF~@~N~@~CultureInfo.xlsx
+135~@~it-IT~@~Italian (Italy)~@~N~@~N~@~ITA~@~EUR~@~N~@~CultureInfo.xlsx
+136~@~iu-Cans-CA~@~Inuktitut (Canada)~@~N~@~N~@~CAN~@~CAD~@~N~@~CultureInfo.xlsx
+137~@~iu-Latn-CA~@~Inuktitut-Latin (Canada)~@~N~@~N~@~CAN~@~CAD~@~N~@~CultureInfo.xlsx
+138~@~ka-GE~@~Georgian (Georgia)~@~N~@~N~@~GEO~@~GEL~@~N~@~CultureInfo.xlsx
+139~@~kk-KZ~@~Kazakh (Kazakhstan)~@~N~@~N~@~KAZ~@~KZT~@~N~@~CultureInfo.xlsx
+140~@~kl-GL~@~Greenlandic (Greenland)~@~N~@~N~@~GRL~@~DKK~@~N~@~CultureInfo.xlsx
+141~@~km-KH~@~Khmer (Cambodia)~@~N~@~N~@~KHM~@~KHR~@~N~@~CultureInfo.xlsx
+142~@~kn-IN~@~Kannada (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+143~@~kok-IN~@~Konkani (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+144~@~ky-KG~@~Kyrgyz (Kyrgyzstan)~@~N~@~N~@~KGZ~@~KGS~@~N~@~CultureInfo.xlsx
+145~@~lb-LU~@~Luxembourgish (Luxembourg)~@~N~@~N~@~LUX~@~EUR~@~N~@~CultureInfo.xlsx
+146~@~lo-LA~@~Lao (Lao P.D.R.)~@~N~@~N~@~LAO~@~LAK~@~N~@~CultureInfo.xlsx
+147~@~lt-LT~@~Lithuanian (Lithuania)~@~N~@~N~@~LTU~@~LTL~@~N~@~CultureInfo.xlsx
+148~@~lv-LV~@~Latvian (Latvia)~@~N~@~N~@~LVA~@~LVL~@~N~@~CultureInfo.xlsx
+149~@~mi-NZ~@~Maori (New Zealand)~@~N~@~N~@~NZL~@~NZD~@~N~@~CultureInfo.xlsx
+150~@~mk-MK~@~Macedonian (Macedonia)~@~N~@~N~@~MKD~@~MKD~@~N~@~CultureInfo.xlsx
+151~@~ml-IN~@~Malayalam (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+152~@~mn-MN~@~Mongolian-Cyrillic (Mongolia)~@~N~@~N~@~MNG~@~MNT~@~N~@~CultureInfo.xlsx
+153~@~mn-Mong-CN~@~Mongolian (China)~@~N~@~N~@~CHN~@~CNY~@~N~@~CultureInfo.xlsx
+154~@~moh-CA~@~Mohawk (Canada)~@~N~@~N~@~CAN~@~CAD~@~N~@~CultureInfo.xlsx
+155~@~mr-IN~@~Marathi (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+156~@~ms-BN~@~Malay (Brunei Darussalam)~@~N~@~N~@~BRN~@~BND~@~N~@~CultureInfo.xlsx
+157~@~ms-MY~@~Malay (Malaysia)~@~N~@~N~@~MYS~@~MYR~@~N~@~CultureInfo.xlsx
+158~@~mt-MT~@~Maltese (Malta)~@~N~@~N~@~MLT~@~EUR~@~N~@~CultureInfo.xlsx
+159~@~nb-NO~@~Norwegian, Bokmål (Norway)~@~N~@~N~@~NOR~@~NOK~@~N~@~CultureInfo.xlsx
+160~@~ne-NP~@~Nepali (Nepal)~@~N~@~N~@~NPL~@~NPR~@~N~@~CultureInfo.xlsx
+161~@~nl-BE~@~Dutch (Belgium)~@~N~@~N~@~BEL~@~EUR~@~N~@~CultureInfo.xlsx
+162~@~nl-NL~@~Dutch (Netherlands)~@~N~@~N~@~NLD~@~EUR~@~N~@~CultureInfo.xlsx
+163~@~nn-NO~@~Norwegian, Nynorsk (Norway)~@~N~@~N~@~NOR~@~NOK~@~N~@~CultureInfo.xlsx
+164~@~nso-ZA~@~Sesotho sa Leboa (South Africa)~@~N~@~N~@~ZAF~@~ZAR~@~N~@~CultureInfo.xlsx
+165~@~oc-FR~@~Occitan (France)~@~N~@~N~@~FRA~@~EUR~@~N~@~CultureInfo.xlsx
+166~@~or-IN~@~Oriya (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+167~@~pa-IN~@~Punjabi (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+168~@~pl-PL~@~Polish (Poland)~@~N~@~N~@~POL~@~PLN~@~N~@~CultureInfo.xlsx
+169~@~prs-AF~@~Dari (Afghanistan)~@~N~@~N~@~AFG~@~AFN~@~N~@~CultureInfo.xlsx
+170~@~ps-AF~@~Pashto (Afghanistan)~@~N~@~N~@~AFG~@~AFN~@~N~@~CultureInfo.xlsx
+171~@~pt-PT~@~Portuguese (Portugal)~@~N~@~N~@~PRT~@~EUR~@~N~@~CultureInfo.xlsx
+172~@~qut-GT~@~K'iche (Guatemala)~@~N~@~N~@~GTM~@~GTQ~@~N~@~CultureInfo.xlsx
+173~@~quz-BO~@~Quechua (Bolivia)~@~N~@~N~@~BOL~@~BOB~@~N~@~CultureInfo.xlsx
+174~@~quz-EC~@~Quechua (Ecuador)~@~N~@~N~@~ECU~@~USD~@~N~@~CultureInfo.xlsx
+175~@~quz-PE~@~Quechua (Peru)~@~N~@~N~@~PER~@~PEN~@~N~@~CultureInfo.xlsx
+176~@~rm-CH~@~Romansh (Switzerland)~@~N~@~N~@~CHE~@~CHF~@~N~@~CultureInfo.xlsx
+177~@~ro-RO~@~Romanian (Romania)~@~N~@~N~@~ROU~@~ROL~@~N~@~CultureInfo.xlsx
+178~@~rw-RW~@~Kinyarwanda (Rwanda)~@~N~@~N~@~RWA~@~RWF~@~N~@~CultureInfo.xlsx
+179~@~sa-IN~@~Sanskrit (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+180~@~sah-RU~@~Yakut (Russia)~@~N~@~N~@~RUS~@~RUB~@~N~@~CultureInfo.xlsx
+181~@~se-FI~@~Sami-Northern (Finland)~@~N~@~N~@~FIN~@~EUR~@~N~@~CultureInfo.xlsx
+182~@~se-NO~@~Sami-Northern (Norway)~@~N~@~N~@~NOR~@~NOK~@~N~@~CultureInfo.xlsx
+183~@~se-SE~@~Sami-Northern (Sweden)~@~N~@~N~@~SWE~@~SEK~@~N~@~CultureInfo.xlsx
+184~@~si-LK~@~Sinhala (Sri Lanka)~@~N~@~N~@~LKA~@~LKR~@~N~@~CultureInfo.xlsx
+185~@~sk-SK~@~Slovak (Slovakia)~@~N~@~N~@~SVK~@~EUR~@~N~@~CultureInfo.xlsx
+186~@~sl-SI~@~Slovenian (Slovenia)~@~N~@~N~@~SVN~@~EUR~@~N~@~CultureInfo.xlsx
+187~@~sma-NO~@~Sami-Southern (Norway)~@~N~@~N~@~NOR~@~NOK~@~N~@~CultureInfo.xlsx
+188~@~sma-SE~@~Sami-Southern (Sweden)~@~N~@~N~@~SWE~@~SEK~@~N~@~CultureInfo.xlsx
+189~@~smj-NO~@~Sami-Lule (Norway)~@~N~@~N~@~NOR~@~NOK~@~N~@~CultureInfo.xlsx
+190~@~smj-SE~@~Sami-Lule (Sweden)~@~N~@~N~@~SWE~@~SEK~@~N~@~CultureInfo.xlsx
+191~@~smn-FI~@~Sami-Inari (Finland)~@~N~@~N~@~FIN~@~EUR~@~N~@~CultureInfo.xlsx
+192~@~sms-FI~@~Sami-Skolt (Finland)~@~N~@~N~@~FIN~@~EUR~@~N~@~CultureInfo.xlsx
+193~@~sq-AL~@~Albanian (Albania)~@~N~@~N~@~ALB~@~ALL~@~N~@~CultureInfo.xlsx
+194~@~sr-Cyrl-BA~@~Serbian-Cyrillic (Bosnia and Herzegovina)~@~N~@~N~@~BIH~@~BAM~@~N~@~CultureInfo.xlsx
+195~@~sr-Cyrl-CS~@~Serbian-Cyrillic (Serbia and Montenegro)~@~N~@~N~@~SCG~@~CSD~@~N~@~CultureInfo.xlsx
+196~@~sr-Latn-BA~@~Serbian-Latin (Bosnia and Herzegovina)~@~N~@~N~@~BIH~@~BAM~@~N~@~CultureInfo.xlsx
+197~@~sr-Latn-CS~@~Serbian-Latin (Serbia and Montenegro)~@~N~@~N~@~SCG~@~CSD~@~N~@~CultureInfo.xlsx
+198~@~sv-FI~@~Swedish (Finland)~@~N~@~N~@~FIN~@~EUR~@~N~@~CultureInfo.xlsx
+199~@~sv-SE~@~Swedish (Sweden)~@~N~@~N~@~SWE~@~SEK~@~N~@~CultureInfo.xlsx
+200~@~sw-KE~@~Kiswahili (Kenya)~@~N~@~N~@~KEN~@~KES~@~N~@~CultureInfo.xlsx
+201~@~syr-SY~@~Syriac (Syrian Arab Republic)~@~N~@~N~@~SYR~@~SYP~@~N~@~CultureInfo.xlsx
+202~@~ta-IN~@~Tamil (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+203~@~te-IN~@~Telugu (India)~@~N~@~N~@~IND~@~INR~@~N~@~CultureInfo.xlsx
+204~@~tg-Cyrl-TJ~@~Tajik-Cyrillic (Tajikistan)~@~N~@~N~@~TJK~@~TJS~@~N~@~CultureInfo.xlsx
+205~@~th-TH~@~Thai (Thailand)~@~N~@~N~@~THA~@~THB~@~N~@~CultureInfo.xlsx
+206~@~tk-TM~@~Turkmen (Turkmenistan)~@~N~@~N~@~TKM~@~TMT~@~N~@~CultureInfo.xlsx
+207~@~tn-ZA~@~Setswana (South Africa)~@~N~@~N~@~ZAF~@~ZAR~@~N~@~CultureInfo.xlsx
+208~@~tt-RU~@~Tatar (Russia)~@~N~@~N~@~RUS~@~RUR~@~N~@~CultureInfo.xlsx
+210~@~ug-CN~@~Uighur (China)~@~N~@~N~@~CHN~@~CNY~@~N~@~CultureInfo.xlsx
+211~@~uk-UA~@~Ukrainian (Ukraine)~@~N~@~N~@~UKR~@~UAH~@~N~@~CultureInfo.xlsx
+212~@~ur-PK~@~Urdu (Pakistan)~@~N~@~N~@~PAK~@~PKR~@~N~@~CultureInfo.xlsx
+213~@~uz-Cyrl-UZ~@~Uzbek-Cyrillic (Uzbekistan)~@~N~@~N~@~UZB~@~UZS~@~N~@~CultureInfo.xlsx
+214~@~uz-Latn-UZ~@~Uzbek-Latin (Uzbekistan)~@~N~@~N~@~UZB~@~UZS~@~N~@~CultureInfo.xlsx
+215~@~vi-VN~@~Vietnamese (Vietnam)~@~N~@~N~@~VNM~@~VND~@~N~@~CultureInfo.xlsx
+216~@~wo-SN~@~Wolof (Senegal)~@~N~@~N~@~SEN~@~XOF~@~N~@~CultureInfo.xlsx
+217~@~xh-ZA~@~isiXhosa (South Africa)~@~N~@~N~@~ZAF~@~ZAR~@~N~@~CultureInfo.xlsx
+218~@~yo-NG~@~Yoruba (Nigeria)~@~N~@~N~@~NGA~@~NGN~@~N~@~CultureInfo.xlsx
+221~@~zh-HK~@~Chinese (Hong Kong S.A.R.)~@~N~@~N~@~HKG~@~HKD~@~N~@~CultureInfo.xlsx
+222~@~zh-MO~@~Chinese (Macao S.A.R.)~@~N~@~N~@~MAC~@~MOP~@~N~@~CultureInfo.xlsx
+223~@~zh-SG~@~Chinese (Singapore)~@~N~@~N~@~SGP~@~SGD~@~N~@~CultureInfo.xlsx
+224~@~zh-TW~@~Chinese (Taiwan)~@~N~@~N~@~TWN~@~TWD~@~N~@~CultureInfo.xlsx
+225~@~zu-ZA~@~isiZulu (South Africa)~@~N~@~N~@~ZAF~@~ZAR~@~N~@~CultureInfo.xlsx

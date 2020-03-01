@@ -1,0 +1,3 @@
+D~@~Double
+N~@~No Line
+S~@~Single

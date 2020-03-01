@@ -1,9 +1,10 @@
 
-                import {pagesRoutes as AccountRoute} from '../pages/Account/index'
-                import {pagesRoutes as SqlReportRoute} from '../pages/SqlReport/index'
-                import {pagesRoutes as DefaultRoute} from '../pages/Default/index'
-                /* all these are dynamic, add the required route for each page */
-            import {pagesRoutes as AdmAtRowAuthRoute} from '../pages/AdmAtRowAuth/index'
+import {pagesRoutes as AccountRoute} from '../pages/Account/index'
+import {pagesRoutes as SqlReportRoute} from '../pages/SqlReport/index'
+import {pagesRoutes as DefaultRoute} from '../pages/Default/index'
+import {CustomRoutePre, CustomRoutePost, SuppressGenRoute} from '../pages/CustomRoute'
+/* all these are dynamic, add the required route for each page */
+import {pagesRoutes as AdmAtRowAuthRoute} from '../pages/AdmAtRowAuth/index'
 import {pagesRoutes as AdmChgPwdRoute} from '../pages/AdmChgPwd/index'
 import {pagesRoutes as AdmClientRuleRoute} from '../pages/AdmClientRule/index'
 import {pagesRoutes as AdmClnTierRoute} from '../pages/AdmClnTier/index'
@@ -32,6 +33,7 @@ import {pagesRoutes as AdmReportRoute} from '../pages/AdmReport/index'
 import {pagesRoutes as AdmReportObjRoute} from '../pages/AdmReportObj/index'
 import {pagesRoutes as AdmRptStyleRoute} from '../pages/AdmRptStyle/index'
 import {pagesRoutes as AdmRptTblRoute} from '../pages/AdmRptTbl/index'
+import {pagesRoutes as AdmLicenseRoute} from '../pages/AdmLicense/index'
 import {pagesRoutes as AdmRowOvrdRoute} from '../pages/AdmRowOvrd/index'
 import {pagesRoutes as AdmRulTierRoute} from '../pages/AdmRulTier/index'
 import {pagesRoutes as AdmTbdRuleRoute} from '../pages/AdmTbdRule/index'
@@ -59,10 +61,17 @@ import {pagesRoutes as AdmAppInfoRoute} from '../pages/AdmAppInfo/index'
 import {pagesRoutes as AdmWebRuleRoute} from '../pages/AdmWebRule/index'
 import {pagesRoutes as AdmWizardObjRoute} from '../pages/AdmWizardObj/index'
 import {pagesRoutes as AdmWizardRuleRoute} from '../pages/AdmWizardRule/index'
-                export default [
-                ...AccountRoute,
-                ...DefaultRoute,
-                // ...SqlReportRoute,
+export default [
+...(CustomRoutePre || []),
+...(
+SuppressGenRoute ? [] : [
+...AccountRoute,
+...DefaultRoute,
+// ...SqlReportRoute,
+]
+),
+...(
+SuppressGenRoute ? [] : [
             ...AdmAtRowAuthRoute,
 ...AdmChgPwdRoute,
 ...AdmClientRuleRoute,
@@ -92,6 +101,7 @@ import {pagesRoutes as AdmWizardRuleRoute} from '../pages/AdmWizardRule/index'
 ...AdmReportObjRoute,
 ...AdmRptStyleRoute,
 ...AdmRptTblRoute,
+...AdmLicenseRoute,
 ...AdmRowOvrdRoute,
 ...AdmRulTierRoute,
 ...AdmTbdRuleRoute,
@@ -119,6 +129,8 @@ import {pagesRoutes as AdmWizardRuleRoute} from '../pages/AdmWizardRule/index'
 ...AdmWebRuleRoute,
 ...AdmWizardObjRoute,
 ...AdmWizardRuleRoute,
-                ];
+]),
+...(CustomRoutePost || []),
+];
 
-             document.Rintagi.systemId = '3';
+ document.Rintagi.systemId = '3';

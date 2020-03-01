@@ -36,6 +36,10 @@ public partial class SqlReportWs : RO.Web.AsmxBase
     protected override string GetDtlTableName(bool underlying = true) { throw new NotImplementedException(); }
     protected override string GetMstKeyColumnName(bool underlying = false) { throw new NotImplementedException(); }
     protected override string GetDtlKeyColumnName(bool underlying = false) { throw new NotImplementedException(); }
+    public override ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetNewMst() { throw new NotImplementedException(); }
+    public override ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetSearchList(string searchStr, int topN, string filterId, SerializableDictionary<string, string> desiredScreenCriteria){ throw new NotImplementedException(); }
+    public override ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetDtlById(string keyId, SerializableDictionary<string, string> options, int filterId){ throw new NotImplementedException(); }
+    public override ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetMstById(string keyId, SerializableDictionary<string, string> options){ throw new NotImplementedException(); }
         
     protected override DataTable _GetMstById(string pid)
     {

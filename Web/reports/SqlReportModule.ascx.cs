@@ -311,7 +311,7 @@ namespace RO.Web
                 if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && !string.IsNullOrEmpty(Request.QueryString["rpt"]) && (new AdminSystem()).IsRegenNeeded(string.Empty, 0, Int32.Parse(Request.QueryString["rpt"].ToString()), 0, LcSysConnString, LcAppPw))
                 {
                     (new GenReportsSystem()).CreateProgram(string.Empty, Int32.Parse(Request.QueryString["rpt"].ToString()), GetReportHlp().Rows[0]["ReportTitle"].ToString(), row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
-                    Response.Redirect(Request.RawUrl);
+                    this.Redirect(Request.RawUrl);
                 }
             }
             catch (Exception e) { throw new ApplicationException(e.Message); }
@@ -1469,15 +1469,18 @@ namespace RO.Web
 		{
 			DataView dvCri = GetSqlCriteria();
 			DataView dvObj = GetSqlColumns();
+            // must change pf pms count changed
 			int ii = dvCri.Count + dvObj.Count + 21;
 			dvObj.RowFilter = "RptObjTypeCd = 'P'"; ii = ii + dvObj.Count; dvObj.RowFilter = string.Empty;
 			cViewer.ProcessingMode = ProcessingMode.Local;
 			cViewer.LocalReport.EnableHyperlinks = true;
 			cViewer.LocalReport.EnableExternalImages = true;
+            // internal accessible from asp.net context
             string urlBase =
-                !string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"])
-                    ? System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"]
-                    : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+                !string.IsNullOrWhiteSpace(Config.IntBaseUrl) && !string.IsNullOrEmpty(Request.Headers["X-Forwarded-For"])
+                    ? Config.IntBaseUrl 
+                    //: Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+                    : base.IntUrlBase;
             System.Xml.XmlDocument rpt = new System.Xml.XmlDocument();
             string fileName = Request.MapPath("reports\\" + GetReportHlp().Rows[0]["ProgramName"].ToString() + "Report.rdl");
             if (File.Exists(fileName + "c")) { rpt.Load(fileName + "c"); } else { rpt.Load(fileName); }     // Run custom-built report if exists.
@@ -1558,7 +1561,12 @@ namespace RO.Web
 			pms[ii] = new ReportParameter("ReportTitle", GetReportHlp().Rows[0]["ReportTitle"].ToString()); ii = ii + 1;
 			pms[ii] = new ReportParameter("UsrName", base.LUser.UsrName); ii = ii + 1;
 			pms[ii] = new ReportParameter("UrlBase", base.UrlBase); ii = ii + 1;
-			DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), dvCri, base.LImpr, base.LCurr, UpdCriteria(false, false), LcAppConnString, LcAppPw, false, false, true);
+            /* this is technically needed for image as the viewer is rendered using the asp.net context, not browser context
+             * thus require 'private' local access to files that may not be exposed outside
+             * UrlBase on the other hand are for situation for href in report links, currently it is the external one 
+            pms[ii] = new ReportParameter("IntUrlBase", base.IntUrlBase); ii = ii + 1;
+             */
+            DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), dvCri, base.LImpr, base.LCurr, UpdCriteria(false, false), LcAppConnString, LcAppPw, false, false, true);
 			if (dt == null || dt.Rows.Count <= 0) { throw new ApplicationException("Currently there is nothing to report on. Please try again later."); }
             CovertRptUTC(dt);
             DataView dv;

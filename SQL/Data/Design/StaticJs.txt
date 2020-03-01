@@ -1,0 +1,4 @@
+1~@~Shared Sample JS~@~function test()
+{
+alert('test');
+}

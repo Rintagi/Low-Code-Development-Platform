@@ -1,0 +1,3636 @@
+1~@~Top Apple Side Accordian~@~First level menu Apple style on top, second level on the left vertically as Accordian menu.~@~~/images/menu/show.gif~@~~/images/menu/show.gif~@~/** Top And Bottom Style BEGINS **/
+.sf-menu, .sf-menu * {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sf-menu {
+	line-height:	 1em;
+}
+.sf-menu ul {
+	position: absolute;
+	top: -999em;
+}
+.sf-menu a {
+	display: block;
+	position: relative;
+    font-family: Helvetica, Verdana, sans-serif;
+	color: #333;
+}
+.sf-menu li:hover {
+	visibility: inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu a {
+	padding: .5em 1em;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color: #333;
+}
+.sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+	background: url(images/menu/ui-bg_highlight-hard_100_fdf5ce_1x100.png) 50% 50% repeat-x;
+	outline: 0;
+}
+a.sf-with-ul {
+	padding-right: 	2.25em;
+	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
+}
+#VrMenu .sf-sub-indicator {
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-topleft: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+	border-top-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-topright: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-top-right-radius: 3px;
+	position: absolute;
+	display: block;
+	right: 2px;
+	top: .6em;
+	width: 11px;
+	height: 11px;
+	text-indent: -999em;
+	overflow:		hidden;
+	background:		#5C759D url('images/menu/arrows-ffffff.png') no-repeat -10px 0px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+}
+/** Top And Bottom Style ENDS **/
+
+.TpMenuLink {
+	border: 1px solid #CFDEFF;
+	background: #f6f6f6 ;
+	text-align: center;
+	font-size: 14px;
+}
+#TpMenu li {
+	float: left;
+	position: relative;
+}
+
+#TpMenu a
+{
+   border: 1px solid #a4b0ce;
+   background-color: #e3e7f1;
+
+   box-shadow: inset 0 1px 3px #fff, inset 0 -15px #d5dceb, 0 0 3px #a4b0ce;
+   -o-box-shadow: inset 0 1px 3px #fff, inset 0 -15px #d5dceb, 0 0 3px #a4b0ce;
+   -webkit-box-shadow: inset 0 1px 3px #fff, inset 0 -15px #d5dceb, 0 0 3px #a4b0ce;
+   -moz-box-shadow: inset 0 1px 3px #fff, inset 0 -15px #d5dceb, 0 0 3px #a4b0ce;
+   color: #225e79;
+   text-shadow: 0 1px #fff;
+}
+#TpMenu a:hover 
+{
+    color: #225e79;
+	background-image: none;
+	outline: 0;
+	background-color: #C1E8FB;
+    border: 1px solid #8EC1DA;
+    box-shadow: 0 1px 3px #FFFFFF inset, 0 -15px #9DD7F1 inset, 0 0 3px #8EC1DA;
+}
+
+#TpMenu .TpMenuItemSelected a, #TpMenu .TpMenuItemSelected a:active {
+	color: #134860;
+	background-image: none;
+	outline: 0;
+	background-color: #aed1e2;
+    border: 1px solid #8EC1DA;
+    box-shadow: 0 1px 3px #FFFFFF inset, 0 -15px #9DD7F1 inset, 0 0 3px #80aec5;
+}
+
+.TpMenuItemFirst a, .TpMenuLevel_0.TpMenuItemFirst a:hover {
+	-moz-border-radius-bottomleft: 5px;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+}
+.TpMenuItemLast a, .TpMenuLevel_0.TpMenuItemLast a:hover {
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-topright: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.sf-shadow ul {
+	background:	url('images/menu/shadow.png') no-repeat bottom right;
+	-moz-border-radius-bottomleft: 17px;
+	-moz-border-radius-topright: 17px;
+	-webkit-border-top-right-radius: 17px;
+	-webkit-border-bottom-left-radius: 17px;
+	border-bottom-left-radius: 17px;
+	border-top-right-radius: 17px;
+}
+.TpMenuLink img, .VrMenuLink img{
+    width: 16px;
+	height: 16px;
+	border: none;
+margin-right: 4px;
+}~@~/*
+ * Superfish v1.4.8 - jQuery menu widget
+ * Copyright (c) 2008 Joel Birch
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ * 	http://www.opensource.org/licenses/mit-license.php
+ * 	http://www.gnu.org/licenses/gpl.html
+ *
+ * CHANGELOG: http://users.tpg.com.au/j_birch/plugins/superfish/changelog.txt
+ */
+
+;(function($){
+	$.fn.superfish = function(op){
+
+		var sf = $.fn.superfish,
+			c = sf.c,
+			$arrow = $(['<span class="',c.arrowClass,'"> &#187;</span>'].join('')),
+			over = function(){
+				var $$ = $(this), menu = getMenu($$);
+				clearTimeout(menu.sfTimer);
+				$$.showSuperfishUl().siblings().hideSuperfishUl();
+			},
+			out = function(){
+				var $$ = $(this), menu = getMenu($$), o = sf.op;
+				clearTimeout(menu.sfTimer);
+				menu.sfTimer=setTimeout(function(){
+					o.retainPath=($.inArray($$[0],o.$path)>-1);
+					$$.hideSuperfishUl();
+					if (o.$path.length && $$.parents(['li.',o.hoverClass].join('')).length<1){over.call(o.$path);}
+				},o.delay);	
+			},
+			getMenu = function($menu){
+				var menu = $menu.parents(['ul.',c.menuClass,':first'].join(''))[0];
+				sf.op = sf.o[menu.serial];
+				return menu;
+			},
+			addArrow = function($a){ $a.addClass(c.anchorClass).append($arrow.clone()); };
+			
+		return this.each(function() {
+			var s = this.serial = sf.o.length;
+			var o = $.extend({},sf.defaults,op);
+			o.$path = $('li.'+o.pathClass,this).slice(0,o.pathLevels).each(function(){
+				$(this).addClass([o.hoverClass,c.bcClass].join(' '))
+					.filter('li:has(ul)').removeClass(o.pathClass);
+			});
+			sf.o[s] = sf.op = o;
+			
+			$('li:has(ul)',this)[($.fn.hoverIntent && !o.disableHI) ? 'hoverIntent' : 'hover'](over,out).each(function() {
+				if (o.autoArrows) addArrow( $('>a:first-child',this) );
+			})
+			.not('.'+c.bcClass)
+				.hideSuperfishUl();
+			
+			var $a = $('a',this);
+			$a.each(function(i){
+				var $li = $a.eq(i).parents('li');
+				$a.eq(i).focus(function(){over.call($li);}).blur(function(){out.call($li);});
+			});
+			o.onInit.call(this);
+			
+		}).each(function() {
+			var menuClasses = [c.menuClass];
+			if (sf.op.dropShadows  && !($.browser.msie && $.browser.version < 7)) menuClasses.push(c.shadowClass);
+			$(this).addClass(menuClasses.join(' '));
+		});
+	};
+
+	var sf = $.fn.superfish;
+	sf.o = [];
+	sf.op = {};
+	sf.IE7fix = function(){
+		var o = sf.op;
+		if ($.browser.msie && $.browser.version > 6 && o.dropShadows && o.animation.opacity!=undefined)
+			this.toggleClass(sf.c.shadowClass+'-off');
+		};
+	sf.c = {
+		bcClass     : 'sf-breadcrumb',
+		menuClass   : 'sf-js-enabled',
+		anchorClass : 'sf-with-ul',
+		arrowClass  : 'sf-sub-indicator',
+		shadowClass : 'sf-shadow'
+	};
+	sf.defaults = {
+		hoverClass	: 'sfHover',
+		pathClass	: 'overideThisToUse',
+		pathLevels	: 1,
+		delay		: 800,
+		animation	: {opacity:'show'},
+		speed		: 'normal',
+		autoArrows	: true,
+		dropShadows : true,
+		disableHI	: false,		// true disables hoverIntent detection
+		onInit		: function(){}, // callback functions
+		onBeforeShow: function(){},
+		onShow		: function(){},
+		onHide		: function(){}
+	};
+	$.fn.extend({
+		hideSuperfishUl : function(){
+			var o = sf.op,
+				not = (o.retainPath===true) ? o.$path : '';
+			o.retainPath = false;
+			var $ul = $(['li.',o.hoverClass].join(''),this).add(this).not(not).removeClass(o.hoverClass)
+					.find('>ul').hide().css('visibility','hidden');
+			o.onHide.call($ul);
+			return this;
+		},
+		showSuperfishUl : function(){
+			var o = sf.op,
+				sh = sf.c.shadowClass+'-off',
+				$ul = this.addClass(o.hoverClass)
+					.find('>ul:hidden').css('visibility','visible');
+			sf.IE7fix.call($ul);
+			o.onBeforeShow.call($ul);
+			$ul.animate(o.animation,o.speed,function(){ sf.IE7fix.call($ul); o.onShow.call($ul); });
+			return this;
+		}
+	});
+
+})(jQuery);~@~(function() { 
+	$('#TpMenu').addClass('sf-menu'); 
+	$('#TpMenu').superfish({
+		animation: {height:'show'},   // slide-down effect without fade-in 
+		delay:     1200               // 1.2 second delay on mouseout 
+	}); 
+	var arrow = $(['<span class="','sf-sub-indicator','"> &#187;</span>'].join(''));
+	$('li:has(ul)',$('#TpMenu')).each(function(i,e) {
+	$('>div a',$(e)).append(arrow.clone());
+	});
+	$('#TpMenu').show();
+})();~@~.VrMenuLevel_0 a{
+	color: #3985A8;
+	font-size: 14px;
+}
+.VrMenuLevel_1{
+margin-left: 6px;
+}
+
+.VrMenuLevel_1 a {
+	font-size: 12px;
+	font-weight: normal;
+	color: #343434;
+}
+.VrMenuLevel_2{
+	margin-left: 15px;
+}
+.VrMenuLevel_2 a {
+	font-size: 12px;
+	color: #707070;
+}
+.VrMenuLevel_3 {
+	margin-left: 20px;
+}
+.VrMenuLevel_3 a {
+	color: #707070;
+	font-size:12px;
+}
+.VrMenuLevel_4 a {
+	color: #707070;
+	font-size:11px;
+}
+.VrMenuLevel_4 {
+	margin-left: 20px;
+}
+.VrMenuSub {
+	list-style: none;
+	padding-left:10px;
+}
+.VrMenuItem {
+    clear:both;
+}
+
+.VrMenuLink
+{
+	font-family: Verdana, Geneva, Helvetica, san-serif;
+	font-weight: normal;
+	color: #808080;
+	font-size:0.8em;
+	line-height:1.3em;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.VrMenuLink:hover {
+	color: #c77405;
+}
+.VrMenuIcon {
+	width: 18px; height: 18px;
+	vertical-align: middle;
+	padding: 5px;
+	border:0;
+}
+.VrMenuNode .VrMenuSub {
+	padding-left:5px;
+	width:11em;
+}
+
+.VrMenuGrpTitle.VrMenuLevel_0
+{
+	margin-top: 0.8em; 
+	margin-bottom: 0.3em;
+	border-top: solid 1px grey;
+}
+#MenuTable
+{
+ margin-top: 12px;
+}~@~(function(h){h.fn.hoverAccordion=function(a){function m(d,f,b){var e=h(o).find("."+a.classOpen).closest("li").find("ul:first");if(false===e.is(":animated")){if(a.keepHeight==true)b=k;if(f.hasClass(a.classOpen)==false){d.children().show();d.animate({height:b},{step:function(c){d.height(b-c)},duration:a.speed});e.animate({height:0},{step:function(c){d.height(b-c)},duration:a.speed}).children().hide();f.addClass(a.classOpen).removeClass(a.classClosed);e.closest("li").removeClass(a.classActive).find("a:first").addClass(a.classClosed).removeClass(a.classOpen)}}} a=jQuery.extend({speed:"fast",activateItem:true,keepHeight:false,onClickOnly:false,classActive:"active",classHeader:"header",classHover:"hover",classOpen:"opened",classClosed:"closed"},a);var o=this,g=window.location.href,l=0,n=0,k=0;h(this).children("li").each(function(){var d=h(this),f=false;n++;var b=d.find("a:first").addClass(a.classHeader);if(b.length>0){b.hover(function(){b.addClass(a.classHover)},function(){b.removeClass(a.classHover)});var e=b.attr("href");if(e=="#")b.click(function(){this.blur(); return false});else if(a.activateItem==true&&g.indexOf(e)>0&&g.length-g.lastIndexOf(e)==e.length){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}}var c=d.find("ul:first");if(c.length>0){var i=c.height();if(k<i)k=i;a.onClickOnly==true?b.click(function(){m(c,b,i)}):b.hover(function(){l=setInterval(function(){m(c,b,i);clearInterval(l)},400)},function(){clearInterval(l)});if(a.activateItem==true && a.activateItem != 1)c.children("li").each(function(){var j=h(this).find("a").attr("href"); if(j)if(g.indexOf(j)>0&&g.length-g.lastIndexOf(j)==j.length){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}});else if(parseInt(a.activateItem,10)==n){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}}if(!f){b.removeClass(a.classOpen);if(c.length>0){c.children().hide();b.addClass(a.classClosed)}}});return this}})(jQuery);~@~(function() {
+var curr = 0;
+$('#VrMenu>li').each(function(i,e) {
+    $('div.VrMenuItemSelected',$(e)).each(function() {
+        if (curr == 0) {
+        curr = i+1;    
+        }
+    });
+});
+$('#VrMenu').hoverAccordion(
+    {keepHeight: false,onClickOnly: true,
+        classOpen:'VrMenuOpened',
+        classClosed:'VrMenuClosed',
+        timeout:1500,
+        activateItem: curr,
+        speed:'normal'}).css('display','block');
+$('#VrMenu').css('visibility','visible');
+})();~@~0~@~55~@~2012-12-13 19:54:30.430~@~
+2~@~Top Smooth Flyout (responsive)~@~Top Smooth Flyout Menu (responsive)~@~~@~~@~/** Top And Bottom Style BEGINS **/
+.sf-menu, .sf-menu * {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+#TpMenu.sf-menu {
+	line-height:	 1em;
+        background-color: #ddeef6;
+        display: inline-block;
+        width: 100%;
+}
+.sf-menu ul {
+	position: absolute;
+}
+.sf-menu a {
+	display: block;
+	position: relative;
+    font-family: Helvetica, Verdana, sans-serif;
+	color: #333;
+}
+.sf-menu li:hover {
+	visibility: inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu a {
+	padding: .5em 1em;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color: #333;
+}
+.sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+	background: url(images/menu/ui-bg_highlight-hard_100_fdf5ce_1x100.png) 50% 50% repeat-x;
+	outline: 0;
+}
+a.sf-with-ul {
+	padding-right: 	2.25em;
+	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
+}
+.TpMenuLevel_0 .sf-sub-indicator {
+	display: none;
+}
+.sf-sub-indicator {
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-topleft: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+	border-top-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-topright: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-top-right-radius: 3px;
+	position: absolute;
+	display: block;
+	right: 2px;
+	top: .6em;
+	width: 11px;
+	height: 11px;
+	text-indent: -999em;
+	overflow:		hidden;
+	background:		#5C759D url('images/menu/arrows-ffffff.png') no-repeat -10px 0px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+}
+/** Top And Bottom Style ENDS **/
+
+.TpMenuLevel_0  a{
+	border: 1px solid #CFDEFF;
+	text-align: center;
+	font-size: 14px;
+}
+#TpMenu li {
+	float: left;
+	position: relative;
+}
+
+#TpMenu .TpMenuLevel_0 a
+{
+   color: #225e79;
+}
+#TpMenu .TpMenuLevel_0 a:hover, #TpMenu .TpMenuLevel_0 .TpMenuItemSelected a, #TpMenu .TpMenuLevel_0 .TpMenuItemSelected a:active 
+{
+    color: #4D6180;
+	background-color: #ddeef6;
+	background-image: none;
+	outline: 0;
+	background-color: #C1E8FB;
+    border: 1px solid #8EC1DA;
+    box-shadow: 0 1px 3px #FFFFFF inset, 0 -15px #9DD7F1 inset, 0 0 3px #8EC1DA;
+}
+
+.TpMenuLevel_0.TpMenuItemFirst a, .TpMenuLevel_0.TpMenuItemFirst a:hover {
+
+}
+.TpMenuLevel_0.TpMenuItemLast a, .TpMenuLevel_0.TpMenuItemLast a:hover {
+
+}
+.sf-shadow ul {
+
+}
+.sf-menu ul {
+	position: absolute;
+	top: -999em;
+}
+.sf-menu li:hover ul, .sf-menu li.sfHover ul {
+	left: 0;
+	top: 30px; /* match top ul list item height */
+	z-index: 99;
+}
+ul.sf-menu li:hover li ul, ul.sf-menu li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li:hover ul, ul.sf-menu li li.sfHover ul {
+	left: 235px; /* match ul width */
+	top:  -1px; /* match border width*/
+}
+ul.sf-menu li li:hover li ul, ul.sf-menu li li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul {
+	left: 235px; /* match ul width */
+	top: -1px;
+}
+ul.sf-menu li li li:hover li ul, ul.sf-menu li li li.sfHover li ul {
+	top: -999em;
+}
+
+.TpMenuLevel_1.TpMenuItemFirst a, .TpMenuLevel_2.TpMenuItemFirst a, .TpMenuLevel_3.TpMenuItemFirst a, .TpMenuLevel_4.TpMenuItemFirst a, .TpMenuLevel_1.TpMenuItemFirst a:hover, .TpMenuLevel_2.TpMenuItemFirst a:hover, .TpMenuLevel_3.TpMenuItemFirst a:hover, .TpMenuLevel_4.TpMenuItemFirst a:hover {
+
+}
+.TpMenuLevel_1.TpMenuItemLast a, .TpMenuLevel_2.TpMenuItemLast a, .TpMenuLevel_3.TpMenuItemLast a, .TpMenuLevel_4.TpMenuItemLast a, .TpMenuLevel_1.TpMenuItemLast a:hover, .TpMenuLevel_2.TpMenuItemLast a:hover, .TpMenuLevel_3.TpMenuItemLast a:hover, .TpMenuLevel_4.TpMenuItemLast a:hover {
+
+}
+
+
+.sf-menu .TpMenuLevel_1 li, .sf-menu .TpMenuLevel_2 li, .sf-menu .TpMenuLevel_3 li {
+	float: left;
+	position: relative;
+	width: 100%;
+}
+.TpMenuLink {
+	display: block;
+	position: relative;
+	text-align: left;
+}
+.TpMenuSub a.TpMenuLink:hover
+{
+	background-color: #ccc;
+}
+
+.TpMenuSub{background-color: #efefef;}
+
+.sf-menu ul{
+       left: 235px;
+       border: 1px solid #cdcdcd;
+}
+.TpMenuLevel_1, .TpMenuLevel_2, .TpMenuLevel_3{
+        width: 235px;
+        font-size: 13px;
+}
+#TpMenu .TpMenuLevel_1 li, #TpMenu .TpMenuLevel_2 li, #TpMenu .TpMenuLevel_3 li{
+	text-align:left;
+}
+.TpMenuLink img, .VrMenuLink img{
+    width: 16px;
+	height: 16px;
+	border: none;
+margin-right: 4px;
+vertical-align: sub;
+}~@~/*
+ * Superfish v1.4.8 - jQuery menu widget
+ * Copyright (c) 2008 Joel Birch
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ * 	http://www.opensource.org/licenses/mit-license.php
+ * 	http://www.gnu.org/licenses/gpl.html
+ *
+ * CHANGELOG: http://users.tpg.com.au/j_birch/plugins/superfish/changelog.txt
+ */
+
+;(function($){
+	$.fn.superfish = function(op){
+
+		var sf = $.fn.superfish,
+			c = sf.c,
+			$arrow = $(['<span class="',c.arrowClass,'"> &#187;</span>'].join('')),
+			over = function(){
+				var $$ = $(this), menu = getMenu($$);
+				clearTimeout(menu.sfTimer);
+				$$.showSuperfishUl().siblings().hideSuperfishUl();
+			},
+			out = function(){
+				var $$ = $(this), menu = getMenu($$), o = sf.op;
+				clearTimeout(menu.sfTimer);
+				menu.sfTimer=setTimeout(function(){
+					o.retainPath=($.inArray($$[0],o.$path)>-1);
+					$$.hideSuperfishUl();
+					if (o.$path.length && $$.parents(['li.',o.hoverClass].join('')).length<1){over.call(o.$path);}
+				},o.delay);	
+			},
+			getMenu = function($menu){
+				var menu = $menu.parents(['ul.',c.menuClass,':first'].join(''))[0];
+				sf.op = sf.o[menu.serial];
+				return menu;
+			},
+			addArrow = function($a){ $a.addClass(c.anchorClass).append($arrow.clone()); };
+			
+		return this.each(function() {
+			var s = this.serial = sf.o.length;
+			var o = $.extend({},sf.defaults,op);
+			o.$path = $('li.'+o.pathClass,this).slice(0,o.pathLevels).each(function(){
+				$(this).addClass([o.hoverClass,c.bcClass].join(' '))
+					.filter('li:has(ul)').removeClass(o.pathClass);
+			});
+			sf.o[s] = sf.op = o;
+			
+			$('li:has(ul)',this)[($.fn.hoverIntent && !o.disableHI) ? 'hoverIntent' : 'hover'](over,out).each(function() {
+				if (o.autoArrows) addArrow( $('>a:first-child',this) );
+			})
+			.not('.'+c.bcClass)
+				.hideSuperfishUl();
+			
+			var $a = $('a',this);
+			$a.each(function(i){
+				var $li = $a.eq(i).parents('li');
+				$a.eq(i).focus(function(){over.call($li);}).blur(function(){out.call($li);});
+			});
+			o.onInit.call(this);
+			
+		}).each(function() {
+			var menuClasses = [c.menuClass];
+			if (sf.op.dropShadows  && !($.browser.msie && $.browser.version < 7)) menuClasses.push(c.shadowClass);
+			$(this).addClass(menuClasses.join(' '));
+		});
+	};
+
+	var sf = $.fn.superfish;
+	sf.o = [];
+	sf.op = {};
+	sf.IE7fix = function(){
+		var o = sf.op;
+		if ($.browser.msie && $.browser.version > 6 && o.dropShadows && o.animation.opacity!=undefined)
+			this.toggleClass(sf.c.shadowClass+'-off');
+		};
+	sf.c = {
+		bcClass     : 'sf-breadcrumb',
+		menuClass   : 'sf-js-enabled',
+		anchorClass : 'sf-with-ul',
+		arrowClass  : 'sf-sub-indicator',
+		shadowClass : 'sf-shadow'
+	};
+	sf.defaults = {
+		hoverClass	: 'sfHover',
+		pathClass	: 'overideThisToUse',
+		pathLevels	: 1,
+		delay		: 800,
+		animation	: {opacity:'show'},
+		speed		: 'normal',
+		autoArrows	: true,
+		dropShadows : true,
+		disableHI	: false,		// true disables hoverIntent detection
+		onInit		: function(){}, // callback functions
+		onBeforeShow: function(){},
+		onShow		: function(){},
+		onHide		: function(){}
+	};
+	$.fn.extend({
+		hideSuperfishUl : function(){
+			var o = sf.op,
+				not = (o.retainPath===true) ? o.$path : '';
+			o.retainPath = false;
+			var $ul = $(['li.',o.hoverClass].join(''),this).add(this).not(not).removeClass(o.hoverClass)
+					.find('>ul').hide().css('visibility','hidden');
+			o.onHide.call($ul);
+			return this;
+		},
+		showSuperfishUl : function(){
+			var o = sf.op,
+				sh = sf.c.shadowClass+'-off',
+				$ul = this.addClass(o.hoverClass)
+					.find('>ul:hidden').css('visibility','visible');
+			sf.IE7fix.call($ul);
+			o.onBeforeShow.call($ul);
+			$ul.animate(o.animation,o.speed,function(){ sf.IE7fix.call($ul); o.onShow.call($ul); });
+			return this;
+		}
+	});
+
+})(jQuery);~@~(function() { 
+	$('#TpMenu').addClass('sf-menu'); 
+	$('#TpMenu').superfish({
+		animation: {height:'show'},   // slide-down effect without fade-in 
+		delay:     1200               // 1.2 second delay on mouseout 
+	}); 
+	var arrow = $(['<span class="','sf-sub-indicator','"> &#187;</span>'].join(''));
+	$('li:has(ul)',$('#TpMenu')).each(function(i,e) {
+	$('>div a',$(e)).append(arrow.clone());
+	});
+	$('#TpMenu').show();
+})();~@~~@~~@~~@~0~@~55~@~2012-12-13 19:46:00.000~@~
+3~@~Side Accordion Original~@~Side Accordion Original Menu~@~~@~~@~~@~~@~~@~.VrMenuLevel_1 a {
+	font-weight: 600;
+}
+.VrMenuLevel_2 a {
+	color: #444444;
+}
+.VrMenuLevel_3 a {
+	font-size:0.7em;
+}
+.VrMenuSub {
+	list-style: none;
+	padding-left:10px;
+}
+.VrMenuItem {
+    clear:both;
+}
+
+.VrMenuLink
+{
+	font-family: Verdana, Geneva, Helvetica, san-serif;
+	font-weight: normal;
+	color: #808080;
+	font-size:0.8em;
+	line-height:1.3em;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.VrMenuLink:hover {
+	color: #c77405;
+}
+.VrMenuIcon {
+	width: 18px; height: 18px;
+	vertical-align: middle;
+	padding: 5px;
+	border:0;
+}
+.VrMenuNode .VrMenuSub {
+	padding-left:5px;
+	width:11em;
+}
+
+.VrMenuGrpTitle
+{
+	margin-top: 0.8em; margin-bottom: 0.8em;
+	border-top: solid 1px grey;
+}
+
+.VrMenuOpened {
+	color: black;
+}
+.VrMenuClosed {
+	color:#0073ea;;
+}
+.VrMenuItemFocus a {
+	color: orange;
+}
+#MenuTable
+{
+ margin-top: 12px;
+}~@~(function(h){h.fn.hoverAccordion=function(a){function m(d,f,b){var e=h(o).find("."+a.classOpen).closest("li").find("ul:first");if(false===e.is(":animated")){if(a.keepHeight==true)b=k;if(f.hasClass(a.classOpen)==false){d.children().show();d.animate({height:b},{step:function(c){d.height(b-c)},duration:a.speed});e.animate({height:0},{step:function(c){d.height(b-c)},duration:a.speed}).children().hide();f.addClass(a.classOpen).removeClass(a.classClosed);e.closest("li").removeClass(a.classActive).find("a:first").addClass(a.classClosed).removeClass(a.classOpen)}}} a=jQuery.extend({speed:"fast",activateItem:true,keepHeight:false,onClickOnly:false,classActive:"active",classHeader:"header",classHover:"hover",classOpen:"opened",classClosed:"closed"},a);var o=this,g=window.location.href,l=0,n=0,k=0;h(this).children("li").each(function(){var d=h(this),f=false;n++;var b=d.find("a:first").addClass(a.classHeader);if(b.length>0){b.hover(function(){b.addClass(a.classHover)},function(){b.removeClass(a.classHover)});var e=b.attr("href");if(e=="#")b.click(function(){this.blur(); return false});else if(a.activateItem==true&&g.indexOf(e)>0&&g.length-g.lastIndexOf(e)==e.length){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}}var c=d.find("ul:first");if(c.length>0){var i=c.height();if(k<i)k=i;a.onClickOnly==true?b.click(function(){m(c,b,i)}):b.hover(function(){l=setInterval(function(){m(c,b,i);clearInterval(l)},400)},function(){clearInterval(l)});if(a.activateItem==true && a.activateItem != 1)c.children("li").each(function(){var j=h(this).find("a").attr("href"); if(j)if(g.indexOf(j)>0&&g.length-g.lastIndexOf(j)==j.length){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}});else if(parseInt(a.activateItem,10)==n){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}}if(!f){b.removeClass(a.classOpen);if(c.length>0){c.children().hide();b.addClass(a.classClosed)}}});return this}})(jQuery);~@~(function() {
+var curr = 0;
+$('#VrMenu>li').each(function(i,e) {
+    $('div.VrMenuItemSelected',$(e)).each(function() {
+        if (curr == 0) {
+        curr = i+1;    
+        }
+    });
+});
+$('#VrMenu').hoverAccordion(
+    {keepHeight: false,onClickOnly: true,
+        classOpen:'VrMenuOpened',
+        classClosed:'VrMenuClosed',
+        timeout:1500,
+        activateItem: curr,
+        speed:'normal'}).css('display','block');
+$('#VrMenu').css('visibility','visible');
+})();~@~0~@~55~@~2012-12-13 19:43:00.000~@~
+6~@~Top Apple Animated Side Accordian~@~Top Apple Animated Side Accordian Menu~@~~@~~@~.kwicks {
+	list-style: none;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+.kwicks li{
+	/* these are required, but the values are up to you (must be pixel) */
+	width: 170px;
+	height: 40px;
+
+	/*do not change these */
+	display: block;
+	overflow: hidden;
+	padding: 0;  /* if you need padding, do so with an inner div (or implement your own box-model hack) */
+}
+.kwicks.horizontal li {
+	/* This is optional and will be disregarded by the script.  However, it should be provided for non-JS enabled browsers. */
+	margin-right: 5px; /*Set to same as spacing option. */	
+	float: left;
+}
+.kwicks.vertical  li{
+	/* This is optional and will be disregarded by the script.  However, it should be provided for non-JS enabled browsers. */
+	margin-bottom: 5px; /*Set to same as spacing option. */	
+}
+
+.TpMenuItem {
+	margin: 5px;
+	background-color: #dcdcdc;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.85);
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#bbb));
+	background-image: -moz-linear-gradient(0 100% 90deg, #fff, #bbb);
+	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+}
+.TpMenuItem:hover {
+	-webkit-box-shadow: 0 0px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0 0px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 0px 2px rgba(0, 0, 0, 0.5);
+}
+.TpMenuLink {
+	font-family: Verdana, Geneva, Helvetica, san-serif;
+	font-size:0.8em;
+	color: #0073ea;
+	text-decoration: none;
+	white-space: nowrap;
+	padding: 4px 5px 4px 8px;
+	display: block;
+    text-align: center;
+}
+.TpMenuLink:hover {
+	color: #c77405;
+}
+.TpMenuIcon {
+	width: 18px; height: 18px;
+	vertical-align: middle;
+	padding: 4px 5px 4px 8px;
+	border:0;
+}
+.TpMenuItemSelected a {
+	color: #c77405;
+}~@~/*
+	Kwicks for jQuery (version 1.5.1)
+	Copyright (c) 2008 Jeremy Martin
+	http://www.jeremymartin.name/projects.php?project=kwicks
+	
+	Licensed under the MIT license:
+		http://www.opensource.org/licenses/mit-license.php
+
+	Any and all use of this script must be accompanied by this copyright/license notice in its present form.
+*/
+(function($){$.fn.kwicks=function(n){var p={isVertical:false,sticky:false,defaultKwick:0,event:'mouseover',spacing:0,duration:500};var o=$.extend(p,n);var q=(o.isVertical?'height':'width');var r=(o.isVertical?'top':'left');return this.each(function(){container=$(this);var k=container.children('li');var l=k.eq(0).css(q).replace(/px/,'');if(!o.max){o.max=(l*k.size())-(o.min*(k.size()-1))}else{o.min=((l*k.size())-o.max)/(k.size()-1)}if(o.isVertical){container.css({width:k.eq(0).css('width'),height:(l*k.size())+(o.spacing*(k.size()-1))+'px'})}else{container.css({width:(l*k.size())+(o.spacing*(k.size()-1))+'px',height:k.eq(0).css('height')})}var m=[];for(i=0;i<k.size();i++){m[i]=[];for(j=1;j<k.size()-1;j++){if(i==j){m[i][j]=o.isVertical?j*o.min+(j*o.spacing):j*o.min+(j*o.spacing)}else{m[i][j]=(j<=i?(j*o.min):(j-1)*o.min+o.max)+(j*o.spacing)}}}k.each(function(i){var h=$(this);if(i===0){h.css(r,'0px')}else if(i==k.size()-1){h.css(o.isVertical?'bottom':'right','0px')}else{if(o.sticky){h.css(r,m[o.defaultKwick][i])}else{h.css(r,(i*l)+(i*o.spacing))}}if(o.sticky){if(o.defaultKwick==i){h.css(q,o.max+'px');h.addClass('active')}else{h.css(q,o.min+'px')}}h.css({margin:0,position:'absolute'});h.bind(o.event,function(){var c=[];var d=[];k.stop().removeClass('active');for(j=0;j<k.size();j++){c[j]=k.eq(j).css(q).replace(/px/,'');d[j]=k.eq(j).css(r).replace(/px/,'')}var e={};e[q]=o.max;var f=o.max-c[i];var g=c[i]/f;h.addClass('active').animate(e,{step:function(a){var b=f!=0?a/f-g:1;k.each(function(j){if(j!=i){k.eq(j).css(q,c[j]-((c[j]-o.min)*b)+'px')}if(j>0&&j<k.size()-1){k.eq(j).css(r,d[j]-((d[j]-m[i][j])*b)+'px')}})},duration:o.duration,easing:o.easing})})});if(!o.sticky){container.bind("mouseleave",function(){var c=[];var d=[];k.removeClass('active').stop();for(i=0;i<k.size();i++){c[i]=k.eq(i).css(q).replace(/px/,'');d[i]=k.eq(i).css(r).replace(/px/,'')}var e={};e[q]=l;var f=l-c[0];k.eq(0).animate(e,{step:function(a){var b=f!=0?(a-c[0])/f:1;for(i=1;i<k.size();i++){k.eq(i).css(q,c[i]-((c[i]-l)*b)+'px');if(i<k.size()-1){k.eq(i).css(r,d[i]-((d[i]-((i*l)+(i*o.spacing)))*b)+'px')}}},duration:o.duration,easing:o.easing})})}})}})(jQuery);~@~(function(){
+        $('#TpMenu').addClass('kwicks').kwicks({
+        duration: 300,
+        max: 200,
+        spacing:  0
+    }); 
+	$('#TpMenu').show();
+})();~@~.VrMenuLevel_1 a {
+	font-weight: 600;
+}
+.VrMenuLevel_2 a {
+	color: #444444;
+}
+.VrMenuLevel_3 a {
+	font-size:0.7em;
+}
+.VrMenuSub {
+	list-style: none;
+	padding-left:10px;
+}
+.VrMenuItem {
+    clear:both;
+}
+
+.VrMenuLink
+{
+	font-family: Verdana, Geneva, Helvetica, san-serif;
+	font-weight: normal;
+	color: #808080;
+	font-size:0.8em;
+	line-height:1.3em;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.VrMenuLink:hover {
+	color: #c77405;
+}
+.VrMenuIcon {
+	width: 18px; height: 18px;
+	vertical-align: middle;
+	padding: 5px;
+	border:0;
+}
+.VrMenuNode .VrMenuSub {
+	padding-left:5px;
+	width:11em;
+}
+
+.VrMenuGrpTitle
+{
+	margin-top: 0.8em; margin-bottom: 0.8em;
+	border-top: solid 1px grey;
+}
+
+.VrMenuOpened {
+	color: black;
+}
+.VrMenuClosed {
+	color:#0073ea;;
+}
+.VrMenuItemFocus a {
+	color: orange;
+}~@~(function(h){h.fn.hoverAccordion=function(a){function m(d,f,b){var e=h(o).find("."+a.classOpen).closest("li").find("ul:first");if(false===e.is(":animated")){if(a.keepHeight==true)b=k;if(f.hasClass(a.classOpen)==false){d.children().show();d.animate({height:b},{step:function(c){d.height(b-c)},duration:a.speed});e.animate({height:0},{step:function(c){d.height(b-c)},duration:a.speed}).children().hide();f.addClass(a.classOpen).removeClass(a.classClosed);e.closest("li").removeClass(a.classActive).find("a:first").addClass(a.classClosed).removeClass(a.classOpen)}}} a=jQuery.extend({speed:"fast",activateItem:true,keepHeight:false,onClickOnly:false,classActive:"active",classHeader:"header",classHover:"hover",classOpen:"opened",classClosed:"closed"},a);var o=this,g=window.location.href,l=0,n=0,k=0;h(this).children("li").each(function(){var d=h(this),f=false;n++;var b=d.find("a:first").addClass(a.classHeader);if(b.length>0){b.hover(function(){b.addClass(a.classHover)},function(){b.removeClass(a.classHover)});var e=b.attr("href");if(e=="#")b.click(function(){this.blur(); return false});else if(a.activateItem==true&&g.indexOf(e)>0&&g.length-g.lastIndexOf(e)==e.length){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}}var c=d.find("ul:first");if(c.length>0){var i=c.height();if(k<i)k=i;a.onClickOnly==true?b.click(function(){m(c,b,i)}):b.hover(function(){l=setInterval(function(){m(c,b,i);clearInterval(l)},400)},function(){clearInterval(l)});if(a.activateItem==true && a.activateItem != 1)c.children("li").each(function(){var j=h(this).find("a").attr("href"); if(j)if(g.indexOf(j)>0&&g.length-g.lastIndexOf(j)==j.length){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}});else if(parseInt(a.activateItem,10)==n){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}}if(!f){b.removeClass(a.classOpen);if(c.length>0){c.children().hide();b.addClass(a.classClosed)}}});return this}})(jQuery);~@~(function() {
+var curr = 0;
+$('#VrMenu>li').each(function(i,e) {
+    $('div.VrMenuItemSelected',$(e)).each(function() {
+        if (curr == 0) {
+        curr = i+1;    
+        }
+    });
+});
+$('#VrMenu').hoverAccordion(
+    {keepHeight: false,onClickOnly: true,
+        classOpen:'VrMenuOpened',
+        classClosed:'VrMenuClosed',
+        timeout:1500,
+        activateItem: curr,
+        speed:'normal'}).css('display','block');
+$('#VrMenu').css('visibility','visible');
+})();~@~0~@~55~@~2011-02-16 13:03:48.960~@~
+7~@~Side Smooth Flyout~@~Side smooth Flyout Menu~@~~@~~@~~@~~@~~@~/** Top And Bottom Style BEGINS **/
+.sf-menu, .sf-menu * {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sf-menu {
+	line-height:	 1em;
+}
+.sf-menu ul {
+	position: absolute;
+	top: -999em;
+}
+.sf-menu a {
+	display: block;
+	position: relative;
+    font-family: Arial, Verdana;
+	color: #333;
+}
+.sf-menu li:hover {
+	visibility: inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu a {
+	padding: .5em 1em;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color: #333;
+}
+.sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+	background: url(images/menu/ui-bg_highlight-hard_100_fdf5ce_1x100.png) 50% 50% repeat-x;
+	outline: 0;
+}
+a.sf-with-ul {
+	padding-right: 	2.25em;
+	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
+}
+#VrMenu .sf-sub-indicator {
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-topleft: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+	border-top-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-topright: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-top-right-radius: 3px;
+	position: absolute;
+	display: block;
+	right: 2px;
+	top: .6em;
+	width: 11px;
+	height: 11px;
+	text-indent: -999em;
+	overflow:		hidden;
+	background:		#5C759D url('images/menu/arrows-ffffff.png') no-repeat -10px 0px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+}
+/** Top And Bottom Style ENDS **/
+
+.TpMenuLink {
+	border: 1px solid #CFDEFF;
+	background: #f6f6f6 ;
+	text-align: center;
+}
+.TpMenuSub a.TpMenuLink:hover
+{
+background-color: #ccc;
+}
+
+#TpMenu li {
+	float: left;
+	position: relative;
+}
+
+#TpMenu a
+{
+	background-color: #5C759D;
+    border: 1px solid #4D6180;
+    color: #FAFAFA;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 0.5em 1.5em 6px;
+	border-right-color: #879EC0;
+	border-top-color: #879EC0;
+}
+#TpMenu a:hover
+{
+    color: #4D6180;
+}
+
+.TpMenuItemFirst a, .TpMenuLevel_0.TpMenuItemFirst a:hover {
+	-moz-border-radius-bottomleft: 15px;
+	-moz-border-radius-topleft: 15px;
+	-webkit-border-bottom-left-radius: 15px;
+	-webkit-border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+	border-top-left-radius: 15px;
+}
+.TpMenuItemLast a, .TpMenuLevel_0.TpMenuItemLast a:hover {
+	-moz-border-radius-bottomright: 15px;
+	-moz-border-radius-topright: 15px;
+	-webkit-border-bottom-right-radius: 15px;
+	-webkit-border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+	border-top-right-radius: 15px;
+}
+.sf-shadow ul {
+	background:	url('images/menu/shadow.png') no-repeat bottom right;
+	-moz-border-radius-bottomleft: 17px;
+	-moz-border-radius-topright: 17px;
+	-webkit-border-top-right-radius: 17px;
+	-webkit-border-bottom-left-radius: 17px;
+	border-bottom-left-radius: 17px;
+	border-top-right-radius: 17px;
+}
+
+.sf-menu ul {
+	position: absolute;
+	top: -999em;
+	width: 235px; /* left offset of submenus need to match (see below) */
+}
+.sf-menu li:hover ul, .sf-menu li.sfHover ul {
+	left: 0;
+	top: 0em; /* match top ul list item height */
+	z-index: 99;
+}
+ul.sf-menu li:hover li ul, ul.sf-menu li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li:hover ul, ul.sf-menu li li.sfHover ul {
+	left: 235px; /* match ul width */
+	top: 0;
+}
+ul.sf-menu li li:hover li ul, ul.sf-menu li li.sfHover li ul {
+	top: -999em;
+}
+
+ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul {
+	left: 12em; /* match ul width */
+	top: 0;
+}
+
+#VrMenu.sf-menu li {
+	float: left;
+	position: relative;
+	width: 100%;
+}
+#VrMenu.sf-menu a {
+	display: block;
+	position: relative;
+}
+
+#VrMenu ul.VrMenuSub{
+       left: 235px;
+       border: 1px solid #404040;
+}
+#VrMenu{
+        width: 235px;
+        font-size: 13px;
+}
+.VrMenuNode a
+{
+background-color: #f2f2f2
+}
+
+.VrMenuSub .VrMenuItemFirst  a{
+	-moz-border-radius-topright: 15px;
+	-webkit-border-top-right-radius: 15px;
+	border-top-right-radius: 15px;
+}
+.VrMenuSub .VrMenuItemLast  a{
+	-moz-border-radius-bottomleft: 15px;
+	-webkit-border-bottom-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+.TpMenuLink img, .VrMenuLink img{
+    width: 16px;
+	height: 16px;
+	border: none;
+margin-right: 4px;
+}
+.VrMenuLevel_0.VrMenuItemFirst a
+{
+	border-top: 1px solid #d9d9d9;
+	-moz-border-radius-topleft: 15px;
+	-webkit-border-top-left-radius: 15px;
+	border-top-left-radius: 15px;
+}
+.VrMenuLevel_0.VrMenuItemLast a
+{
+	border-bottom: 1px solid #d9d9d9;
+	-moz-border-radius-bottomright: 15px;
+	-webkit-border-bottom-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+	
+}
+.VrMenuLevel_0.VrMenuItem a
+{
+	border-left: 1px solid #D9D9D9;
+	border-right: 1px solid #D9D9D9;
+}
+ul.VrMenuSub li { z-index: 999; }~@~/*
+ * Superfish v1.4.8 - jQuery menu widget
+ * Copyright (c) 2008 Joel Birch
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ * 	http://www.opensource.org/licenses/mit-license.php
+ * 	http://www.gnu.org/licenses/gpl.html
+ *
+ * CHANGELOG: http://users.tpg.com.au/j_birch/plugins/superfish/changelog.txt
+ */
+
+;(function($){
+	$.fn.superfish = function(op){
+
+		var sf = $.fn.superfish,
+			c = sf.c,
+			$arrow = $(['<span class="',c.arrowClass,'"> &#187;</span>'].join('')),
+			over = function(){
+				var $$ = $(this), menu = getMenu($$);
+				clearTimeout(menu.sfTimer);
+				$$.showSuperfishUl().siblings().hideSuperfishUl();
+			},
+			out = function(){
+				var $$ = $(this), menu = getMenu($$), o = sf.op;
+				clearTimeout(menu.sfTimer);
+				menu.sfTimer=setTimeout(function(){
+					o.retainPath=($.inArray($$[0],o.$path)>-1);
+					$$.hideSuperfishUl();
+					if (o.$path.length && $$.parents(['li.',o.hoverClass].join('')).length<1){over.call(o.$path);}
+				},o.delay);	
+			},
+			getMenu = function($menu){
+				var menu = $menu.parents(['ul.',c.menuClass,':first'].join(''))[0];
+				sf.op = sf.o[menu.serial];
+				return menu;
+			},
+			addArrow = function($a){ $a.addClass(c.anchorClass).append($arrow.clone()); };
+			
+		return this.each(function() {
+			var s = this.serial = sf.o.length;
+			var o = $.extend({},sf.defaults,op);
+			o.$path = $('li.'+o.pathClass,this).slice(0,o.pathLevels).each(function(){
+				$(this).addClass([o.hoverClass,c.bcClass].join(' '))
+					.filter('li:has(ul)').removeClass(o.pathClass);
+			});
+			sf.o[s] = sf.op = o;
+			
+			$('li:has(ul)',this)[($.fn.hoverIntent && !o.disableHI) ? 'hoverIntent' : 'hover'](over,out).each(function() {
+				if (o.autoArrows) addArrow( $('>a:first-child',this) );
+			})
+			.not('.'+c.bcClass)
+				.hideSuperfishUl();
+			
+			var $a = $('a',this);
+			$a.each(function(i){
+				var $li = $a.eq(i).parents('li');
+				$a.eq(i).focus(function(){over.call($li);}).blur(function(){out.call($li);});
+			});
+			o.onInit.call(this);
+			
+		}).each(function() {
+			var menuClasses = [c.menuClass];
+			if (sf.op.dropShadows  && !($.browser.msie && $.browser.version < 7)) menuClasses.push(c.shadowClass);
+			$(this).addClass(menuClasses.join(' '));
+		});
+	};
+
+	var sf = $.fn.superfish;
+	sf.o = [];
+	sf.op = {};
+	sf.IE7fix = function(){
+		var o = sf.op;
+		if ($.browser.msie && $.browser.version > 6 && o.dropShadows && o.animation.opacity!=undefined)
+			this.toggleClass(sf.c.shadowClass+'-off');
+		};
+	sf.c = {
+		bcClass     : 'sf-breadcrumb',
+		menuClass   : 'sf-js-enabled',
+		anchorClass : 'sf-with-ul',
+		arrowClass  : 'sf-sub-indicator',
+		shadowClass : 'sf-shadow'
+	};
+	sf.defaults = {
+		hoverClass	: 'sfHover',
+		pathClass	: 'overideThisToUse',
+		pathLevels	: 1,
+		delay		: 800,
+		animation	: {opacity:'show'},
+		speed		: 'normal',
+		autoArrows	: true,
+		dropShadows : true,
+		disableHI	: false,		// true disables hoverIntent detection
+		onInit		: function(){}, // callback functions
+		onBeforeShow: function(){},
+		onShow		: function(){},
+		onHide		: function(){}
+	};
+	$.fn.extend({
+		hideSuperfishUl : function(){
+			var o = sf.op,
+				not = (o.retainPath===true) ? o.$path : '';
+			o.retainPath = false;
+			var $ul = $(['li.',o.hoverClass].join(''),this).add(this).not(not).removeClass(o.hoverClass)
+					.find('>ul').hide().css('visibility','hidden');
+			o.onHide.call($ul);
+			return this;
+		},
+		showSuperfishUl : function(){
+			var o = sf.op,
+				sh = sf.c.shadowClass+'-off',
+				$ul = this.addClass(o.hoverClass)
+					.find('>ul:hidden').css('visibility','visible');
+					
+			sf.IE7fix.call($ul);
+			o.onBeforeShow.call($ul);
+			$ul.animate(o.animation,o.speed,function(){ sf.IE7fix.call($ul); o.onShow.call($ul); });
+			return this;
+		}
+	});
+
+})(jQuery);~@~(function() { 
+	$('#VrMenu').addClass('sf-menu sf-vertical'); 
+	$('#VrMenu').superfish({
+            
+		animation: {height:'show'},   // slide-down effect without fade-in 
+		delay:     1200               // 1.2 second delay on mouseout 
+	}); 
+	$('#VrMenu').css('visibility','visible');
+	var arrow = $(['<span class="','sf-sub-indicator','"> &#187;</span>'].join(''));
+	$('li:has(ul)',$('#VrMenu')).each(function(i,e) {
+	$('>div a',$(e)).append(arrow.clone());
+	});
+})();~@~4~@~55~@~2011-02-17 12:37:52.023~@~
+8~@~Top Superfish and Side Superfish Flyout~@~Top Superfish and Side Superfish Flyout Menu~@~~@~~@~.sf-menu, .sf-menu * {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sf-menu {
+	line-height:	 1em;
+}
+.sf-menu ul {
+	position: absolute;
+	top: -999em;
+	width: 12em; /* left offset of submenus need to match (see below) */
+}
+.sf-menu ul li {
+	width: 100%;
+}
+.sf-menu li:hover {
+	visibility: inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu li {
+	float: left;
+	position: relative;
+}
+.sf-menu a {
+	display: block;
+	position: relative;
+}
+.sf-menu li:hover ul, .sf-menu li.sfHover ul {
+	left: 0;
+	top: 1em; /* match top ul list item height */
+	z-index: 99;
+}
+ul.sf-menu li:hover li ul, ul.sf-menu li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li:hover ul, ul.sf-menu li li.sfHover ul {
+	left: 12em; /* match ul width */
+	top: 0;
+}
+ul.sf-menu li li:hover li ul, ul.sf-menu li li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul {
+	left: 12em; /* match ul width */
+	top: 0;
+}
+
+.sf-menu {
+	float: left;
+}
+.sf-menu a {
+	padding: .5em 1em;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color: #13a;
+}
+.sf-menu li:hover, .sf-menu li.sfHover, .sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+	background: #fdf5ce url(images/menu/ui-bg_highlight-hard_100_fdf5ce_1x100.png) 50% 50% repeat-x;
+	outline: 0;
+}
+
+/*** arrows **/
+.sf-menu a.sf-with-ul {
+	padding-right: 	2.25em;
+	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
+}
+.sf-sub-indicator {
+	position:		absolute;
+	display:		block;
+	right:			.75em;
+	top:			1.05em; /* IE6 only */
+	width:			10px;
+	height:			10px;
+	text-indent: 	-999em;
+	overflow:		hidden;
+	background:		url('images/menu/arrows-ffffff.png') no-repeat -10px -100px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+}
+a > .sf-sub-indicator {  /* give all except IE6 the correct values */
+	top:			.8em;
+	background-position: 0 -100px; /* use translucent arrow for modern browsers*/
+}
+/* apply hovers to modern browsers */
+a:focus > .sf-sub-indicator,
+a:hover > .sf-sub-indicator,
+a:active > .sf-sub-indicator,
+li:hover > a > .sf-sub-indicator,
+li.sfHover > a > .sf-sub-indicator {
+	background-position: -10px -100px; /* arrow hovers for modern browsers*/
+}
+
+/* point right for anchors in subs */
+.sf-menu ul .sf-sub-indicator { background-position:  -10px 0; }
+.sf-menu ul a > .sf-sub-indicator { background-position:  0 0; }
+/* apply hovers to modern browsers */
+.sf-menu ul a:focus > .sf-sub-indicator,
+.sf-menu ul a:hover > .sf-sub-indicator,
+.sf-menu ul a:active > .sf-sub-indicator,
+.sf-menu ul li:hover > a > .sf-sub-indicator,
+.sf-menu ul li.sfHover > a > .sf-sub-indicator {
+	background-position: -10px 0; /* arrow hovers for modern browsers*/
+}
+
+/*** shadows for all but IE6 ***/
+.sf-shadow ul {
+	background:	url('images/menu/shadow.png') no-repeat bottom right;
+	padding: 0 8px 9px 0;
+	-moz-border-radius-bottomleft: 17px;
+	-moz-border-radius-topright: 17px;
+	-webkit-border-top-right-radius: 17px;
+	-webkit-border-bottom-left-radius: 17px;
+}
+.sf-shadow ul.sf-shadow-off {
+	background: transparent;
+}
+.TpMenuIcon {
+	width: 18px; height: 18px;
+	vertical-align: middle;
+	padding: 0px 5px 0px 5px;
+	border:0;
+}
+.TpMenuItem {
+	border-left:	1px solid #fff;
+	background: #f6f6f6 url(images/menu/ui-bg_highlight-soft_100_f6f6f6_1x100.png) 50% 50% repeat-x;
+}
+.TpMenuLevel_0{ width: 10em; }
+.TpMenuLevel_0.TpMenuItemFirst {
+	-moz-border-radius-bottomleft: 15px;
+	-webkit-border-bottom-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+.TpMenuLevel_0.TpMenuItemLast {
+	-moz-border-radius-bottomright: 15px;
+	-webkit-border-bottom-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+}
+.TpMenuItemSelected a {
+	color: orange;
+}~@~/*
+ * Superfish v1.4.8 - jQuery menu widget
+ * Copyright (c) 2008 Joel Birch
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ * 	http://www.opensource.org/licenses/mit-license.php
+ * 	http://www.gnu.org/licenses/gpl.html
+ *
+ * CHANGELOG: http://users.tpg.com.au/j_birch/plugins/superfish/changelog.txt
+ */
+
+;(function($){
+	$.fn.superfish = function(op){
+
+		var sf = $.fn.superfish,
+			c = sf.c,
+			$arrow = $(['<span class="',c.arrowClass,'"> &#187;</span>'].join('')),
+			over = function(){
+				var $$ = $(this), menu = getMenu($$);
+				clearTimeout(menu.sfTimer);
+				$$.showSuperfishUl().siblings().hideSuperfishUl();
+			},
+			out = function(){
+				var $$ = $(this), menu = getMenu($$), o = sf.op;
+				clearTimeout(menu.sfTimer);
+				menu.sfTimer=setTimeout(function(){
+					o.retainPath=($.inArray($$[0],o.$path)>-1);
+					$$.hideSuperfishUl();
+					if (o.$path.length && $$.parents(['li.',o.hoverClass].join('')).length<1){over.call(o.$path);}
+				},o.delay);	
+			},
+			getMenu = function($menu){
+				var menu = $menu.parents(['ul.',c.menuClass,':first'].join(''))[0];
+				sf.op = sf.o[menu.serial];
+				return menu;
+			},
+			addArrow = function($a){ $a.addClass(c.anchorClass).append($arrow.clone()); };
+			
+		return this.each(function() {
+			var s = this.serial = sf.o.length;
+			var o = $.extend({},sf.defaults,op);
+			o.$path = $('li.'+o.pathClass,this).slice(0,o.pathLevels).each(function(){
+				$(this).addClass([o.hoverClass,c.bcClass].join(' '))
+					.filter('li:has(ul)').removeClass(o.pathClass);
+			});
+			sf.o[s] = sf.op = o;
+			
+			$('li:has(ul)',this)[($.fn.hoverIntent && !o.disableHI) ? 'hoverIntent' : 'hover'](over,out).each(function() {
+				if (o.autoArrows) addArrow( $('>a:first-child',this) );
+			})
+			.not('.'+c.bcClass)
+				.hideSuperfishUl();
+			
+			var $a = $('a',this);
+			$a.each(function(i){
+				var $li = $a.eq(i).parents('li');
+				$a.eq(i).focus(function(){over.call($li);}).blur(function(){out.call($li);});
+			});
+			o.onInit.call(this);
+			
+		}).each(function() {
+			var menuClasses = [c.menuClass];
+			if (sf.op.dropShadows  && !($.browser.msie && $.browser.version < 7)) menuClasses.push(c.shadowClass);
+			$(this).addClass(menuClasses.join(' '));
+		});
+	};
+
+	var sf = $.fn.superfish;
+	sf.o = [];
+	sf.op = {};
+	sf.IE7fix = function(){
+		var o = sf.op;
+		if ($.browser.msie && $.browser.version > 6 && o.dropShadows && o.animation.opacity!=undefined)
+			this.toggleClass(sf.c.shadowClass+'-off');
+		};
+	sf.c = {
+		bcClass     : 'sf-breadcrumb',
+		menuClass   : 'sf-js-enabled',
+		anchorClass : 'sf-with-ul',
+		arrowClass  : 'sf-sub-indicator',
+		shadowClass : 'sf-shadow'
+	};
+	sf.defaults = {
+		hoverClass	: 'sfHover',
+		pathClass	: 'overideThisToUse',
+		pathLevels	: 1,
+		delay		: 800,
+		animation	: {opacity:'show'},
+		speed		: 'normal',
+		autoArrows	: true,
+		dropShadows : true,
+		disableHI	: false,		// true disables hoverIntent detection
+		onInit		: function(){}, // callback functions
+		onBeforeShow: function(){},
+		onShow		: function(){},
+		onHide		: function(){}
+	};
+	$.fn.extend({
+		hideSuperfishUl : function(){
+			var o = sf.op,
+				not = (o.retainPath===true) ? o.$path : '';
+			o.retainPath = false;
+			var $ul = $(['li.',o.hoverClass].join(''),this).add(this).not(not).removeClass(o.hoverClass)
+					.find('>ul').hide().css('visibility','hidden');
+			o.onHide.call($ul);
+			return this;
+		},
+		showSuperfishUl : function(){
+			var o = sf.op,
+				sh = sf.c.shadowClass+'-off',
+				$ul = this.addClass(o.hoverClass)
+					.find('>ul:hidden').css('visibility','visible');
+			sf.IE7fix.call($ul);
+			o.onBeforeShow.call($ul);
+			$ul.animate(o.animation,o.speed,function(){ sf.IE7fix.call($ul); o.onShow.call($ul); });
+			return this;
+		}
+	});
+
+})(jQuery);~@~(function() { 
+	$('#TpMenu').addClass('sf-menu'); 
+	$('#TpMenu').superfish({
+		animation: {height:'show'},   // slide-down effect without fade-in 
+		delay:     1200               // 1.2 second delay on mouseout 
+	}); 
+	var arrow = $(['<span class="','sf-sub-indicator','"> &#187;</span>'].join(''));
+	$('li:has(ul)',$('#TpMenu')).each(function(i,e) {
+	$('>div a',$(e)).append(arrow.clone());
+	});
+	$('#TpMenu').show();
+})();~@~.sf-menu, .sf-menu * {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sf-menu {
+	line-height:	 1.3em;
+}
+.sf-menu ul {
+	position: absolute;
+	top: -999em;
+	width: 12em; /* left offset of submenus need to match (see below) */
+}
+.sf-menu ul li {
+	width: 100%;
+}
+.sf-menu li:hover {
+	visibility: inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu li {
+	float: left;
+	position: relative;
+}
+.sf-menu a {
+	display: block;
+	position: relative;
+}
+.sf-menu li:hover ul, .sf-menu li.sfHover ul {
+	left: 0;
+	top: 1em; /* match top ul list item height */
+	z-index: 99;
+}
+ul.sf-menu li:hover li ul, ul.sf-menu li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li:hover ul, ul.sf-menu li li.sfHover ul {
+	left: 12em; /* match ul width */
+	top: 0;
+}
+ul.sf-menu li li:hover li ul, ul.sf-menu li li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul {
+	left: 12em; /* match ul width */
+	top: 0;
+}
+
+.sf-menu {
+	float: left;
+	margin-bottom: 1em;
+}
+.sf-menu a {
+	border-left:	1px solid #fff;
+	border-top:	 1px solid #CFDEFF;
+	padding: .75em 1em;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color: #13a;
+}
+.sf-menu li {
+	background: #f6f6f6 url(images/menu/ui-bg_highlight-soft_100_f6f6f6_1x100.png) 50% 50% repeat-x;
+}
+.sf-menu li:hover, .sf-menu li.sfHover, .sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+	background: #fdf5ce url(images/menu/ui-bg_highlight-hard_100_fdf5ce_1x100.png) 50% 50% repeat-x;
+	outline: 0;
+}
+
+/*** arrows **/
+.sf-menu a.sf-with-ul {
+	padding-right: 	2.25em;
+	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
+}
+.sf-sub-indicator {
+	position:		absolute;
+	display:		block;
+	right:			.75em;
+	top:			1.05em; /* IE6 only */
+	width:			10px;
+	height:			10px;
+	text-indent: 	-999em;
+	overflow:		hidden;
+	background:		url('images/menu/arrows-ffffff.png') no-repeat -10px -100px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+}
+a > .sf-sub-indicator {  /* give all except IE6 the correct values */
+	top:			.8em;
+	background-position: 0 -100px; /* use translucent arrow for modern browsers*/
+}
+/* apply hovers to modern browsers */
+a:focus > .sf-sub-indicator,
+a:hover > .sf-sub-indicator,
+a:active > .sf-sub-indicator,
+li:hover > a > .sf-sub-indicator,
+li.sfHover > a > .sf-sub-indicator {
+	background-position: -10px -100px; /* arrow hovers for modern browsers*/
+}
+
+/* point right for anchors in subs */
+.sf-menu ul .sf-sub-indicator { background-position:  -10px 0; }
+.sf-menu ul a > .sf-sub-indicator { background-position:  0 0; }
+/* apply hovers to modern browsers */
+.sf-menu ul a:focus > .sf-sub-indicator,
+.sf-menu ul a:hover > .sf-sub-indicator,
+.sf-menu ul a:active > .sf-sub-indicator,
+.sf-menu ul li:hover > a > .sf-sub-indicator,
+.sf-menu ul li.sfHover > a > .sf-sub-indicator {
+	background-position: -10px 0; /* arrow hovers for modern browsers*/
+}
+
+/*** shadows for all but IE6 ***/
+.sf-shadow ul {
+	background:	url('images/menu/shadow.png') no-repeat bottom right;
+	padding: 0 8px 9px 0;
+	-moz-border-radius-bottomleft: 17px;
+	-moz-border-radius-topright: 17px;
+	-webkit-border-top-right-radius: 17px;
+	-webkit-border-bottom-left-radius: 17px;
+}
+.sf-shadow ul.sf-shadow-off {
+	background: transparent;
+}
+
+/*** adding sf-vertical in addition to sf-menu creates a vertical menu ***/
+.sf-vertical, .sf-vertical li {
+             width:    10em;
+}
+/* this lacks ul at the start of the selector, so the styles from the main CSS file override it where needed */
+.sf-vertical li:hover ul,
+.sf-vertical li.sfHover ul {
+             left:       10em; /* match ul width */
+             top:       0;
+}
+
+/*** alter arrow directions ***/
+.sf-vertical .sf-sub-indicator { background-position: -10px 0; } /* IE6 gets solid image only */
+.sf-vertical a > .sf-sub-indicator { background-position: 0 0; } /* use translucent arrow for modern browsers*/
+
+/* hover arrow direction for modern browsers*/
+.sf-vertical a:focus > .sf-sub-indicator,
+.sf-vertical a:hover > .sf-sub-indicator,
+.sf-vertical a:active > .sf-sub-indicator,
+.sf-vertical li:hover > a > .sf-sub-indicator,
+.sf-vertical li.sfHover > a > .sf-sub-indicator {
+	background-position: -10px 0; /* arrow hovers for modern browsers*/
+}
+.VrMenuIcon {
+	width: 18px; height: 18px;
+	vertical-align: middle;
+	padding: 0px 5px 0px 5px;
+	border:0;
+}
+.VrMenuItemSelected a {
+	color: orange;
+}~@~/*
+ * Superfish v1.4.8 - jQuery menu widget
+ * Copyright (c) 2008 Joel Birch
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ * 	http://www.opensource.org/licenses/mit-license.php
+ * 	http://www.gnu.org/licenses/gpl.html
+ *
+ * CHANGELOG: http://users.tpg.com.au/j_birch/plugins/superfish/changelog.txt
+ */
+
+;(function($){
+	$.fn.superfish = function(op){
+
+		var sf = $.fn.superfish,
+			c = sf.c,
+			$arrow = $(['<span class="',c.arrowClass,'"> &#187;</span>'].join('')),
+			over = function(){
+				var $$ = $(this), menu = getMenu($$);
+				clearTimeout(menu.sfTimer);
+				$$.showSuperfishUl().siblings().hideSuperfishUl();
+			},
+			out = function(){
+				var $$ = $(this), menu = getMenu($$), o = sf.op;
+				clearTimeout(menu.sfTimer);
+				menu.sfTimer=setTimeout(function(){
+					o.retainPath=($.inArray($$[0],o.$path)>-1);
+					$$.hideSuperfishUl();
+					if (o.$path.length && $$.parents(['li.',o.hoverClass].join('')).length<1){over.call(o.$path);}
+				},o.delay);	
+			},
+			getMenu = function($menu){
+				var menu = $menu.parents(['ul.',c.menuClass,':first'].join(''))[0];
+				sf.op = sf.o[menu.serial];
+				return menu;
+			},
+			addArrow = function($a){ $a.addClass(c.anchorClass).append($arrow.clone()); };
+			
+		return this.each(function() {
+			var s = this.serial = sf.o.length;
+			var o = $.extend({},sf.defaults,op);
+			o.$path = $('li.'+o.pathClass,this).slice(0,o.pathLevels).each(function(){
+				$(this).addClass([o.hoverClass,c.bcClass].join(' '))
+					.filter('li:has(ul)').removeClass(o.pathClass);
+			});
+			sf.o[s] = sf.op = o;
+			
+			$('li:has(ul)',this)[($.fn.hoverIntent && !o.disableHI) ? 'hoverIntent' : 'hover'](over,out).each(function() {
+				if (o.autoArrows) addArrow( $('>a:first-child',this) );
+			})
+			.not('.'+c.bcClass)
+				.hideSuperfishUl();
+			
+			var $a = $('a',this);
+			$a.each(function(i){
+				var $li = $a.eq(i).parents('li');
+				$a.eq(i).focus(function(){over.call($li);}).blur(function(){out.call($li);});
+			});
+			o.onInit.call(this);
+			
+		}).each(function() {
+			var menuClasses = [c.menuClass];
+			if (sf.op.dropShadows  && !($.browser.msie && $.browser.version < 7)) menuClasses.push(c.shadowClass);
+			$(this).addClass(menuClasses.join(' '));
+		});
+	};
+
+	var sf = $.fn.superfish;
+	sf.o = [];
+	sf.op = {};
+	sf.IE7fix = function(){
+		var o = sf.op;
+		if ($.browser.msie && $.browser.version > 6 && o.dropShadows && o.animation.opacity!=undefined)
+			this.toggleClass(sf.c.shadowClass+'-off');
+		};
+	sf.c = {
+		bcClass     : 'sf-breadcrumb',
+		menuClass   : 'sf-js-enabled',
+		anchorClass : 'sf-with-ul',
+		arrowClass  : 'sf-sub-indicator',
+		shadowClass : 'sf-shadow'
+	};
+	sf.defaults = {
+		hoverClass	: 'sfHover',
+		pathClass	: 'overideThisToUse',
+		pathLevels	: 1,
+		delay		: 800,
+		animation	: {opacity:'show'},
+		speed		: 'normal',
+		autoArrows	: true,
+		dropShadows : true,
+		disableHI	: false,		// true disables hoverIntent detection
+		onInit		: function(){}, // callback functions
+		onBeforeShow: function(){},
+		onShow		: function(){},
+		onHide		: function(){}
+	};
+	$.fn.extend({
+		hideSuperfishUl : function(){
+			var o = sf.op,
+				not = (o.retainPath===true) ? o.$path : '';
+			o.retainPath = false;
+			var $ul = $(['li.',o.hoverClass].join(''),this).add(this).not(not).removeClass(o.hoverClass)
+					.find('>ul').hide().css('visibility','hidden');
+			o.onHide.call($ul);
+			return this;
+		},
+		showSuperfishUl : function(){
+			var o = sf.op,
+				sh = sf.c.shadowClass+'-off',
+				$ul = this.addClass(o.hoverClass)
+					.find('>ul:hidden').css('visibility','visible');
+			sf.IE7fix.call($ul);
+			o.onBeforeShow.call($ul);
+			$ul.animate(o.animation,o.speed,function(){ sf.IE7fix.call($ul); o.onShow.call($ul); });
+			return this;
+		}
+	});
+
+})(jQuery);~@~(function() { 
+	$('#VrMenu').addClass('sf-menu sf-vertical'); 
+	$('#VrMenu').superfish({
+	    
+		animation: {height:'show'},   // slide-down effect without fade-in 
+		delay:     1200               // 1.2 second delay on mouseout 
+	}); 
+	$('#VrMenu').css('visibility','visible');
+	var arrow = $(['<span class="','sf-sub-indicator','"> &#187;</span>'].join(''));
+	$('li:has(ul)',$('#VrMenu')).each(function(i,e) {
+	$('>div a',$(e)).append(arrow.clone());
+	});
+})();~@~0~@~55~@~2011-04-26 12:59:15.850~@~
+9~@~Top Apple and Side Smooth Flyout~@~First level menu Apple style on top, second level on the left as smooth flyout menu.~@~~@~~@~/** Top And Bottom Style BEGINS **/
+.sf-menu, .sf-menu * {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sf-menu {
+	line-height:	 1em;
+}
+.sf-menu ul {
+	position: absolute;
+	top: -999em;
+}
+.sf-menu a {
+	display: block;
+	position: relative;
+    font-family: Helvetica, Verdana, sans-serif;
+	color: #333;
+}
+.sf-menu li:hover {
+	visibility: inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu a {
+	padding: .5em 1em;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color: #333;
+}
+.sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+	background: url(images/menu/ui-bg_highlight-hard_100_fdf5ce_1x100.png) 50% 50% repeat-x;
+	outline: 0;
+}
+a.sf-with-ul {
+	padding-right: 	2.25em;
+	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
+}
+#VrMenu .sf-sub-indicator {
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-topleft: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+	border-top-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-topright: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-top-right-radius: 3px;
+	position: absolute;
+	display: block;
+	right: 2px;
+	top: .6em;
+	width: 11px;
+	height: 11px;
+	text-indent: -999em;
+	overflow:		hidden;
+	background:		#5C759D url('images/menu/arrows-ffffff.png') no-repeat -10px 0px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+}
+/** Top And Bottom Style ENDS **/
+
+.TpMenuLink {
+	border: 1px solid #CFDEFF;
+	background: #f6f6f6 ;
+	text-align: center;
+	font-size: 14px;
+}
+#TpMenu li {
+	float: left;
+	position: relative;
+}
+
+#TpMenu a
+{
+   border: 1px solid #a4b0ce;
+   background-color: #e3e7f1;
+
+   box-shadow: inset 0 1px 3px #fff, inset 0 -15px #d5dceb, 0 0 3px #a4b0ce;
+   -o-box-shadow: inset 0 1px 3px #fff, inset 0 -15px #d5dceb, 0 0 3px #a4b0ce;
+   -webkit-box-shadow: inset 0 1px 3px #fff, inset 0 -15px #d5dceb, 0 0 3px #a4b0ce;
+   -moz-box-shadow: inset 0 1px 3px #fff, inset 0 -15px #d5dceb, 0 0 3px #a4b0ce;
+   color: #225e79;
+   text-shadow: 0 1px #fff;
+}
+#TpMenu a:hover 
+{
+    color: #225e79;
+	background-image: none;
+	outline: 0;
+	background-color: #C1E8FB;
+    border: 1px solid #8EC1DA;
+    box-shadow: 0 1px 3px #FFFFFF inset, 0 -15px #9DD7F1 inset, 0 0 3px #8EC1DA;
+}
+
+#TpMenu .TpMenuItemSelected a, #TpMenu .TpMenuItemSelected a:active {
+	color: #134860;
+	background-image: none;
+	outline: 0;
+	background-color: #aed1e2;
+    border: 1px solid #8EC1DA;
+    box-shadow: 0 1px 3px #FFFFFF inset, 0 -15px #9DD7F1 inset, 0 0 3px #80aec5;
+}
+
+.TpMenuItemFirst a, .TpMenuLevel_0.TpMenuItemFirst a:hover {
+	-moz-border-radius-bottomleft: 5px;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+}
+.TpMenuItemLast a, .TpMenuLevel_0.TpMenuItemLast a:hover {
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-topright: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.sf-shadow ul {
+	background:	url('images/menu/shadow.png') no-repeat bottom right;
+	-moz-border-radius-bottomleft: 17px;
+	-moz-border-radius-topright: 17px;
+	-webkit-border-top-right-radius: 17px;
+	-webkit-border-bottom-left-radius: 17px;
+	border-bottom-left-radius: 17px;
+	border-top-right-radius: 17px;
+}
+.TpMenuLink img, .VrMenuLink img{
+    width: 16px;
+	height: 16px;
+	border: none;
+margin-right: 4px;
+}~@~/*
+ * Superfish v1.4.8 - jQuery menu widget
+ * Copyright (c) 2008 Joel Birch
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ * 	http://www.opensource.org/licenses/mit-license.php
+ * 	http://www.gnu.org/licenses/gpl.html
+ *
+ * CHANGELOG: http://users.tpg.com.au/j_birch/plugins/superfish/changelog.txt
+ */
+
+;(function($){
+	$.fn.superfish = function(op){
+
+		var sf = $.fn.superfish,
+			c = sf.c,
+			$arrow = $(['<span class="',c.arrowClass,'"> &#187;</span>'].join('')),
+			over = function(){
+				var $$ = $(this), menu = getMenu($$);
+				clearTimeout(menu.sfTimer);
+				$$.showSuperfishUl().siblings().hideSuperfishUl();
+			},
+			out = function(){
+				var $$ = $(this), menu = getMenu($$), o = sf.op;
+				clearTimeout(menu.sfTimer);
+				menu.sfTimer=setTimeout(function(){
+					o.retainPath=($.inArray($$[0],o.$path)>-1);
+					$$.hideSuperfishUl();
+					if (o.$path.length && $$.parents(['li.',o.hoverClass].join('')).length<1){over.call(o.$path);}
+				},o.delay);	
+			},
+			getMenu = function($menu){
+				var menu = $menu.parents(['ul.',c.menuClass,':first'].join(''))[0];
+				sf.op = sf.o[menu.serial];
+				return menu;
+			},
+			addArrow = function($a){ $a.addClass(c.anchorClass).append($arrow.clone()); };
+			
+		return this.each(function() {
+			var s = this.serial = sf.o.length;
+			var o = $.extend({},sf.defaults,op);
+			o.$path = $('li.'+o.pathClass,this).slice(0,o.pathLevels).each(function(){
+				$(this).addClass([o.hoverClass,c.bcClass].join(' '))
+					.filter('li:has(ul)').removeClass(o.pathClass);
+			});
+			sf.o[s] = sf.op = o;
+			
+			$('li:has(ul)',this)[($.fn.hoverIntent && !o.disableHI) ? 'hoverIntent' : 'hover'](over,out).each(function() {
+				if (o.autoArrows) addArrow( $('>a:first-child',this) );
+			})
+			.not('.'+c.bcClass)
+				.hideSuperfishUl();
+			
+			var $a = $('a',this);
+			$a.each(function(i){
+				var $li = $a.eq(i).parents('li');
+				$a.eq(i).focus(function(){over.call($li);}).blur(function(){out.call($li);});
+			});
+			o.onInit.call(this);
+			
+		}).each(function() {
+			var menuClasses = [c.menuClass];
+			if (sf.op.dropShadows  && !($.browser.msie && $.browser.version < 7)) menuClasses.push(c.shadowClass);
+			$(this).addClass(menuClasses.join(' '));
+		});
+	};
+
+	var sf = $.fn.superfish;
+	sf.o = [];
+	sf.op = {};
+	sf.IE7fix = function(){
+		var o = sf.op;
+		if ($.browser.msie && $.browser.version > 6 && o.dropShadows && o.animation.opacity!=undefined)
+			this.toggleClass(sf.c.shadowClass+'-off');
+		};
+	sf.c = {
+		bcClass     : 'sf-breadcrumb',
+		menuClass   : 'sf-js-enabled',
+		anchorClass : 'sf-with-ul',
+		arrowClass  : 'sf-sub-indicator',
+		shadowClass : 'sf-shadow'
+	};
+	sf.defaults = {
+		hoverClass	: 'sfHover',
+		pathClass	: 'overideThisToUse',
+		pathLevels	: 1,
+		delay		: 800,
+		animation	: {opacity:'show'},
+		speed		: 'normal',
+		autoArrows	: true,
+		dropShadows : true,
+		disableHI	: false,		// true disables hoverIntent detection
+		onInit		: function(){}, // callback functions
+		onBeforeShow: function(){},
+		onShow		: function(){},
+		onHide		: function(){}
+	};
+	$.fn.extend({
+		hideSuperfishUl : function(){
+			var o = sf.op,
+				not = (o.retainPath===true) ? o.$path : '';
+			o.retainPath = false;
+			var $ul = $(['li.',o.hoverClass].join(''),this).add(this).not(not).removeClass(o.hoverClass)
+					.find('>ul').hide().css('visibility','hidden');
+			o.onHide.call($ul);
+			return this;
+		},
+		showSuperfishUl : function(){
+			var o = sf.op,
+				sh = sf.c.shadowClass+'-off',
+				$ul = this.addClass(o.hoverClass)
+					.find('>ul:hidden').css('visibility','visible');
+			sf.IE7fix.call($ul);
+			o.onBeforeShow.call($ul);
+			$ul.animate(o.animation,o.speed,function(){ sf.IE7fix.call($ul); o.onShow.call($ul); });
+			return this;
+		}
+	});
+
+})(jQuery);~@~(function() { 
+	$('#TpMenu').addClass('sf-menu'); 
+	$('#TpMenu').superfish({
+		animation: {height:'show'},   // slide-down effect without fade-in 
+		delay:     1200               // 1.2 second delay on mouseout 
+	}); 
+	var arrow = $(['<span class="','sf-sub-indicator','"> &#187;</span>'].join(''));
+	$('li:has(ul)',$('#TpMenu')).each(function(i,e) {
+	$('>div a',$(e)).append(arrow.clone());
+	});
+	$('#TpMenu').show();
+})();~@~.sf-menu ul {
+	position: absolute;
+	top: -999em;
+	width: 235px; /* left offset of submenus need to match (see below) */
+}
+.sf-menu li:hover ul, .sf-menu li.sfHover ul {
+	left: 0;
+	top: 0em; /* match top ul list item height */
+	z-index: 99;
+}
+ul.sf-menu li:hover li ul, ul.sf-menu li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li:hover ul, ul.sf-menu li li.sfHover ul {
+	left: 235px; /* match ul width */
+	top: 0;
+}
+ul.sf-menu li li:hover li ul, ul.sf-menu li li.sfHover li ul {
+	top: -999em;
+}
+
+#VrMenu.sf-menu li {
+	float: left;
+	position: relative;
+	width: 100%;
+}
+#VrMenu.sf-menu a {
+	display: block;
+	position: relative;
+}
+
+#VrMenu ul.VrMenuSub{
+       left: 235px;
+       border: 1px solid #404040;
+}
+#VrMenu{
+        width: 235px;
+        font-size: 13px;
+}
+.VrMenuNode a
+{
+background-color: #f2f2f2
+}
+
+.VrMenuSub .VrMenuItemFirst  a{
+	-moz-border-radius-topright: 15px;
+	-webkit-border-top-right-radius: 15px;
+	border-top-right-radius: 15px;
+}
+.VrMenuSub .VrMenuItemLast  a{
+	-moz-border-radius-bottomleft: 15px;
+	-webkit-border-bottom-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+	
+}
+.VrMenuLevel_0.VrMenuItemFirst a
+{
+	border-top: 1px solid #d9d9d9;
+	-moz-border-radius-topleft: 15px;
+	-webkit-border-top-left-radius: 15px;
+	border-top-left-radius: 15px;
+}
+.VrMenuLevel_0.VrMenuItemLast a
+{
+	border-bottom: 1px solid #d9d9d9;
+	-moz-border-radius-bottomright: 15px;
+	-webkit-border-bottom-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+}
+.VrMenuLevel_0.VrMenuItem a
+{
+	border-left: 1px solid #d9d9d9;
+	border-right: 1px solid #d9d9d9;
+}
+ul.VrMenuSub li { z-index: 999; }~@~/*
+ * Superfish v1.4.8 - jQuery menu widget
+ * Copyright (c) 2008 Joel Birch
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ * 	http://www.opensource.org/licenses/mit-license.php
+ * 	http://www.gnu.org/licenses/gpl.html
+ *
+ * CHANGELOG: http://users.tpg.com.au/j_birch/plugins/superfish/changelog.txt
+ */
+
+;(function($){
+	$.fn.superfish = function(op){
+
+		var sf = $.fn.superfish,
+			c = sf.c,
+			$arrow = $(['<span class="',c.arrowClass,'"> &#187;</span>'].join('')),
+			over = function(){
+				var $$ = $(this), menu = getMenu($$);
+				clearTimeout(menu.sfTimer);
+				$$.showSuperfishUl().siblings().hideSuperfishUl();
+			},
+			out = function(){
+				var $$ = $(this), menu = getMenu($$), o = sf.op;
+				clearTimeout(menu.sfTimer);
+				menu.sfTimer=setTimeout(function(){
+					o.retainPath=($.inArray($$[0],o.$path)>-1);
+					$$.hideSuperfishUl();
+					if (o.$path.length && $$.parents(['li.',o.hoverClass].join('')).length<1){over.call(o.$path);}
+				},o.delay);	
+			},
+			getMenu = function($menu){
+				var menu = $menu.parents(['ul.',c.menuClass,':first'].join(''))[0];
+				sf.op = sf.o[menu.serial];
+				return menu;
+			},
+			addArrow = function($a){ $a.addClass(c.anchorClass).append($arrow.clone()); };
+			
+		return this.each(function() {
+			var s = this.serial = sf.o.length;
+			var o = $.extend({},sf.defaults,op);
+			o.$path = $('li.'+o.pathClass,this).slice(0,o.pathLevels).each(function(){
+				$(this).addClass([o.hoverClass,c.bcClass].join(' '))
+					.filter('li:has(ul)').removeClass(o.pathClass);
+			});
+			sf.o[s] = sf.op = o;
+			
+			$('li:has(ul)',this)[($.fn.hoverIntent && !o.disableHI) ? 'hoverIntent' : 'hover'](over,out).each(function() {
+				if (o.autoArrows) addArrow( $('>a:first-child',this) );
+			})
+			.not('.'+c.bcClass)
+				.hideSuperfishUl();
+			
+			var $a = $('a',this);
+			$a.each(function(i){
+				var $li = $a.eq(i).parents('li');
+				$a.eq(i).focus(function(){over.call($li);}).blur(function(){out.call($li);});
+			});
+			o.onInit.call(this);
+			
+		}).each(function() {
+			var menuClasses = [c.menuClass];
+			if (sf.op.dropShadows  && !($.browser.msie && $.browser.version < 7)) menuClasses.push(c.shadowClass);
+			$(this).addClass(menuClasses.join(' '));
+		});
+	};
+
+	var sf = $.fn.superfish;
+	sf.o = [];
+	sf.op = {};
+	sf.IE7fix = function(){
+		var o = sf.op;
+		if ($.browser.msie && $.browser.version > 6 && o.dropShadows && o.animation.opacity!=undefined)
+			this.toggleClass(sf.c.shadowClass+'-off');
+		};
+	sf.c = {
+		bcClass     : 'sf-breadcrumb',
+		menuClass   : 'sf-js-enabled',
+		anchorClass : 'sf-with-ul',
+		arrowClass  : 'sf-sub-indicator',
+		shadowClass : 'sf-shadow'
+	};
+	sf.defaults = {
+		hoverClass	: 'sfHover',
+		pathClass	: 'overideThisToUse',
+		pathLevels	: 1,
+		delay		: 800,
+		animation	: {opacity:'show'},
+		speed		: 'normal',
+		autoArrows	: true,
+		dropShadows : true,
+		disableHI	: false,		// true disables hoverIntent detection
+		onInit		: function(){}, // callback functions
+		onBeforeShow: function(){},
+		onShow		: function(){},
+		onHide		: function(){}
+	};
+	$.fn.extend({
+		hideSuperfishUl : function(){
+			var o = sf.op,
+				not = (o.retainPath===true) ? o.$path : '';
+			o.retainPath = false;
+			var $ul = $(['li.',o.hoverClass].join(''),this).add(this).not(not).removeClass(o.hoverClass)
+					.find('>ul').hide().css('visibility','hidden');
+			o.onHide.call($ul);
+			return this;
+		},
+		showSuperfishUl : function(){
+			var o = sf.op,
+				sh = sf.c.shadowClass+'-off',
+				$ul = this.addClass(o.hoverClass)
+					.find('>ul:hidden').css('visibility','visible');
+			sf.IE7fix.call($ul);
+			o.onBeforeShow.call($ul);
+			$ul.animate(o.animation,o.speed,function(){ sf.IE7fix.call($ul); o.onShow.call($ul); });
+			return this;
+		}
+	});
+
+})(jQuery);~@~(function() { 
+	$('#VrMenu').addClass('sf-menu sf-vertical'); 
+	$('#VrMenu').superfish({
+	    
+		animation: {height:'show'},   // slide-down effect without fade-in 
+		delay:     1200               // 1.2 second delay on mouseout 
+	}); 
+	$('#VrMenu').css('visibility','visible');
+	var arrow = $(['<span class="','sf-sub-indicator','"> &#187;</span>'].join(''));
+	$('li:has(ul)',$('#VrMenu')).each(function(i,e) {
+	$('>div a',$(e)).append(arrow.clone());
+	});
+})();~@~0~@~55~@~2011-05-03 15:44:27.783~@~
+10~@~Simple Flyout (Left)~@~Simple smooth flyout menu left justified.~@~~@~~@~/** Top And Bottom Style BEGINS **/
+.sf-menu, .sf-menu * {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sf-menu {
+	line-height:	 1em;
+}
+.sf-menu ul {
+	position: absolute;
+}
+.sf-menu a {
+	display: block;
+	position: relative;
+    font-family: Helvetica, Verdana, sans-serif;
+	color: #333;
+}
+.sf-menu li:hover {
+	visibility: inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu a {
+	padding: .5em 1em;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color: #333;
+}
+.sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+	background: url(images/menu/ui-bg_highlight-hard_100_fdf5ce_1x100.png) 50% 50% repeat-x;
+	outline: 0;
+}
+a.sf-with-ul {
+	padding-right: 	2.25em;
+	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
+}
+.TpMenuLevel_0 .sf-sub-indicator {
+	display: none;
+}
+.sf-sub-indicator {
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-topleft: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+	border-top-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-topright: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-top-right-radius: 3px;
+	position: absolute;
+	display: block;
+	right: 2px;
+	top: .6em;
+	width: 11px;
+	height: 11px;
+	text-indent: -999em;
+	overflow:		hidden;
+	background:		#5C759D url('images/menu/arrows-ffffff.png') no-repeat -10px 0px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+}
+/** Top And Bottom Style ENDS **/
+
+#TpMenu li {
+	float: left;
+	position: relative;
+}
+
+.sf-shadow ul {
+	background:	url('images/menu/shadow.png') no-repeat bottom right;
+	-moz-border-radius-bottomleft: 17px;
+	-moz-border-radius-topright: 17px;
+	-webkit-border-top-right-radius: 17px;
+	-webkit-border-bottom-left-radius: 17px;
+	border-bottom-left-radius: 17px;
+	border-top-right-radius: 17px;
+}
+.sf-menu ul {
+	position: absolute;
+	top: -999em;
+	width: 235px; /* left offset of submenus need to match (see below) */
+}
+.sf-menu li:hover ul, .sf-menu li.sfHover ul {
+	left: 0;
+	top: 26px; /* match top ul list item height */
+	z-index: 99;
+}
+ul.sf-menu li:hover li ul, ul.sf-menu li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li:hover ul, ul.sf-menu li li.sfHover ul {
+	left: 235px; /* match ul width */
+	top:  -1px; /* match border width*/
+}
+ul.sf-menu li li:hover li ul, ul.sf-menu li li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul {
+	left: 235px; /* match ul width */
+	top: -1px;
+}
+ul.sf-menu li li li:hover li ul, ul.sf-menu li li li.sfHover li ul {
+	top: -999em;
+}
+
+.TpMenuLevel_1.TpMenuItemFirst a, .TpMenuLevel_2.TpMenuItemFirst a, .TpMenuLevel_3.TpMenuItemFirst a, .TpMenuLevel_4.TpMenuItemFirst a, .TpMenuLevel_1.TpMenuItemFirst a:hover, .TpMenuLevel_2.TpMenuItemFirst a:hover, .TpMenuLevel_3.TpMenuItemFirst a:hover, .TpMenuLevel_4.TpMenuItemFirst a:hover {
+	-moz-border-radius-topright: 15px;
+
+	-webkit-border-top-right-radius: 15px;
+
+	border-top-right-radius: 15px;
+    
+	
+}
+.TpMenuLevel_1.TpMenuItemLast a, .TpMenuLevel_2.TpMenuItemLast a, .TpMenuLevel_3.TpMenuItemLast a, .TpMenuLevel_4.TpMenuItemLast a, .TpMenuLevel_1.TpMenuItemLast a:hover, .TpMenuLevel_2.TpMenuItemLast a:hover, .TpMenuLevel_3.TpMenuItemLast a:hover, .TpMenuLevel_4.TpMenuItemLast a:hover {
+
+	-moz-border-radius-bottomleft: 15px;
+
+	-webkit-border-bottom-left-radius: 15px;
+
+	border-bottom-left-radius: 15px;
+	
+}
+
+
+.sf-menu .TpMenuLevel_1 li, .sf-menu .TpMenuLevel_2 li, .sf-menu .TpMenuLevel_3 li {
+	float: left;
+	position: relative;
+	width: 100%;
+}
+.TpMenuLink {
+	display: block;
+	position: relative;
+	background-color: #f2f2f2;
+	text-align: left;
+}
+.TpMenuSub a.TpMenuLink:hover
+{
+	background-color: #ccc;
+}
+
+.sf-menu ul{
+       left: 235px;
+       border: 1px solid #404040;
+}
+.TpMenuLevel_1, .TpMenuLevel_2, .TpMenuLevel_3{
+        width: 233px;
+        font-size: 13px;
+}
+#TpMenu .TpMenuLevel_1 li, #TpMenu .TpMenuLevel_2 li, #TpMenu .TpMenuLevel_3 li{
+	text-align:left;
+}
+.TpMenuLink img, .VrMenuLink img{
+    width: 16px;
+	height: 16px;
+	border: none;
+margin-right: 4px;
+}
+ul.TpMenuSub li { z-index: 999; }
+
+
+
+
+
+
+#TpMenu{
+    clear: both;
+    position: relative;
+}
+#TpMenu .TpMenuLevel_0 a.TpMenuLink {
+    border-bottom: 1px solid Transparent;
+    color: #5F5F5F;
+    display: block;
+    float: left;
+    font-family: Tahoma,Arial,Sans-Serif;
+    font-size: 15px;
+    font-variant: small-caps;
+    padding: 5px 10px 6px;
+    text-decoration: none;
+}
+#TpMenu .TpMenuLevel_0,
+#TpMenu .TpMenuLevel_0 a.TpMenuLink
+{
+   background: Transparent none;
+}
+#TpMenu .TpMenuLevel_0 a.TpMenuLink:hover,
+#TpMenu .sfHover .TpMenuLevel_0 a.TpMenuLink{
+    background: url("../home/images/alert-overlay.png") repeat-x scroll 0 0 #F37934;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+    cursor: pointer;
+    padding: 5px 10px 6px;
+    position: relative;
+    text-decoration: none;
+}
+#TpMenu .TpMenuLevel_0.TpMenuItemSelected a.TpMenuLink {
+    color: #D55711;
+    text-decoration: none;
+}
+#TpMenu .TpMenuLevel_0.TpMenuItemSelected a.TpMenuLink:hover {
+    color: #FFFFFF;
+}
+#TpMenu .TpMenuNode
+{
+   float: left;
+   display: inline-block;
+}
+#menutop-container
+{
+   border-bottom: 1px solid #ccc;
+}~@~/*
+ * Superfish v1.4.8 - jQuery menu widget
+ * Copyright (c) 2008 Joel Birch
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ * 	http://www.opensource.org/licenses/mit-license.php
+ * 	http://www.gnu.org/licenses/gpl.html
+ *
+ * CHANGELOG: http://users.tpg.com.au/j_birch/plugins/superfish/changelog.txt
+ */
+
+;(function($){
+	$.fn.superfish = function(op){
+
+		var sf = $.fn.superfish,
+			c = sf.c,
+			$arrow = $(['<span class="',c.arrowClass,'"> &#187;</span>'].join('')),
+			over = function(){
+				var $$ = $(this), menu = getMenu($$);
+				clearTimeout(menu.sfTimer);
+				$$.showSuperfishUl().siblings().hideSuperfishUl();
+			},
+			out = function(){
+				var $$ = $(this), menu = getMenu($$), o = sf.op;
+				clearTimeout(menu.sfTimer);
+				menu.sfTimer=setTimeout(function(){
+					o.retainPath=($.inArray($$[0],o.$path)>-1);
+					$$.hideSuperfishUl();
+					if (o.$path.length && $$.parents(['li.',o.hoverClass].join('')).length<1){over.call(o.$path);}
+				},o.delay);	
+			},
+			getMenu = function($menu){
+				var menu = $menu.parents(['ul.',c.menuClass,':first'].join(''))[0];
+				sf.op = sf.o[menu.serial];
+				return menu;
+			},
+			addArrow = function($a){ $a.addClass(c.anchorClass).append($arrow.clone()); };
+			
+		return this.each(function() {
+			var s = this.serial = sf.o.length;
+			var o = $.extend({},sf.defaults,op);
+			o.$path = $('li.'+o.pathClass,this).slice(0,o.pathLevels).each(function(){
+				$(this).addClass([o.hoverClass,c.bcClass].join(' '))
+					.filter('li:has(ul)').removeClass(o.pathClass);
+			});
+			sf.o[s] = sf.op = o;
+			
+			$('li:has(ul)',this)[($.fn.hoverIntent && !o.disableHI) ? 'hoverIntent' : 'hover'](over,out).each(function() {
+				if (o.autoArrows) addArrow( $('>a:first-child',this) );
+			})
+			.not('.'+c.bcClass)
+				.hideSuperfishUl();
+			
+			var $a = $('a',this);
+			$a.each(function(i){
+				var $li = $a.eq(i).parents('li');
+				$a.eq(i).focus(function(){over.call($li);}).blur(function(){out.call($li);});
+			});
+			o.onInit.call(this);
+			
+		}).each(function() {
+			var menuClasses = [c.menuClass];
+			if (sf.op.dropShadows  && !($.browser.msie && $.browser.version < 7)) menuClasses.push(c.shadowClass);
+			$(this).addClass(menuClasses.join(' '));
+		});
+	};
+
+	var sf = $.fn.superfish;
+	sf.o = [];
+	sf.op = {};
+	sf.IE7fix = function(){
+		var o = sf.op;
+		if ($.browser.msie && $.browser.version > 6 && o.dropShadows && o.animation.opacity!=undefined)
+			this.toggleClass(sf.c.shadowClass+'-off');
+		};
+	sf.c = {
+		bcClass     : 'sf-breadcrumb',
+		menuClass   : 'sf-js-enabled',
+		anchorClass : 'sf-with-ul',
+		arrowClass  : 'sf-sub-indicator',
+		shadowClass : 'sf-shadow'
+	};
+	sf.defaults = {
+		hoverClass	: 'sfHover',
+		pathClass	: 'overideThisToUse',
+		pathLevels	: 1,
+		delay		: 800,
+		animation	: {opacity:'show'},
+		speed		: 'normal',
+		autoArrows	: true,
+		dropShadows : true,
+		disableHI	: false,		// true disables hoverIntent detection
+		onInit		: function(){}, // callback functions
+		onBeforeShow: function(){},
+		onShow		: function(){},
+		onHide		: function(){}
+	};
+	$.fn.extend({
+		hideSuperfishUl : function(){
+			var o = sf.op,
+				not = (o.retainPath===true) ? o.$path : '';
+			o.retainPath = false;
+			var $ul = $(['li.',o.hoverClass].join(''),this).add(this).not(not).removeClass(o.hoverClass)
+					.find('>ul').hide().css('visibility','hidden');
+			o.onHide.call($ul);
+			return this;
+		},
+		showSuperfishUl : function(){
+			var o = sf.op,
+				sh = sf.c.shadowClass+'-off',
+				$ul = this.addClass(o.hoverClass)
+					.find('>ul:hidden').css('visibility','visible');
+			sf.IE7fix.call($ul);
+			o.onBeforeShow.call($ul);
+			$ul.animate(o.animation,o.speed,function(){ sf.IE7fix.call($ul); o.onShow.call($ul); });
+			return this;
+		}
+	});
+
+})(jQuery);~@~(function() { 
+	$('#TpMenu').addClass('sf-menu'); 
+	$('#TpMenu').superfish({
+		animation: {height:'show'},   // slide-down effect without fade-in 
+		delay:     1200               // 1.2 second delay on mouseout 
+	}); 
+	var arrow = $(['<span class="','sf-sub-indicator','"> &#187;</span>'].join(''));
+	$('li:has(ul)',$('#TpMenu')).each(function(i,e) {
+	$('>div a',$(e)).append(arrow.clone());
+	});
+	$('#TpMenu').show();
+})();~@~~@~~@~~@~0~@~55~@~2011-09-13 17:12:00.000~@~
+11~@~Simple Flyout (Right)~@~Simple smooth flyout menu right justified.~@~~@~~@~/** Top And Bottom Style BEGINS **/
+.sf-menu, .sf-menu * {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sf-menu {
+	line-height:	 1em;
+}
+.sf-menu ul {
+	position: absolute;
+}
+.sf-menu a {
+	display: block;
+	position: relative;
+    font-family: Helvetica, Verdana, sans-serif;
+	color: #333;
+	padding: .5em 1px .5em 20px;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.sf-menu li:hover {
+	visibility: inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color: #333;
+}
+.sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+	background: url(images/menu/ui-bg_highlight-hard_100_fdf5ce_1x100.png) 50% 50% repeat-x;
+	outline: 0;
+}
+a.sf-with-ul {
+	padding-right: 	2.25em;
+	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
+}
+.TpMenuLevel_0 .sf-sub-indicator {
+	display: none;
+}
+.sf-sub-indicator {
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-topleft: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+	border-top-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-topright: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-top-right-radius: 3px;
+	position: absolute;
+	display: block;
+	left: 2px;
+	top: .6em;
+	width: 11px;
+	height: 11px;
+	text-indent: -999em;
+	overflow:		hidden;
+	background:		#5C759D url('images/menu/arrows-ffffff-left.png') no-repeat -10px 0px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+}
+/** Top And Bottom Style ENDS **/
+
+#TpMenu li {
+	float: left;
+	position: relative;
+}
+
+.sf-shadow ul {
+	background:	url('images/menu/shadow.png') no-repeat bottom right;
+	-moz-border-radius-bottomright: 15px;
+	-webkit-border-bottom-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+	-moz-border-radius-topleft: 15px;
+	-webkit-border-top-left-radius: 15px;
+	border-top-left-radius: 15px;
+}
+.sf-menu ul {
+	position: absolute;
+	top: -999em;
+	width: 235px; /* left offset of submenus need to match (see below) */
+}
+.sf-menu li:hover ul, .sf-menu li.sfHover ul {
+	left: 0;
+	top: 26px; /* match top ul list item height */
+	z-index: 99;
+}
+ul.sf-menu li:hover li ul, ul.sf-menu li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li:hover ul, ul.sf-menu li li.sfHover ul {
+	left: -238px; /* match ul width */
+	top:  -1px; /* match border width*/
+}
+ul.sf-menu li li:hover li ul, ul.sf-menu li li.sfHover li ul {
+	top: -999em;
+}
+ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul {
+	left: -238px; /* match ul width */
+	top: -1px;
+}
+ul.sf-menu li li li:hover li ul, ul.sf-menu li li li.sfHover li ul {
+	top: -999em;
+}
+
+.TpMenuLevel_1.TpMenuItemFirst a,
+.TpMenuLevel_2.TpMenuItemFirst a,
+.TpMenuLevel_3.TpMenuItemFirst a,
+.TpMenuLevel_4.TpMenuItemFirst a,
+.TpMenuLevel_1.TpMenuItemFirst a:hover,
+.TpMenuLevel_2.TpMenuItemFirst a:hover,
+.TpMenuLevel_3.TpMenuItemFirst a:hover,
+.TpMenuLevel_4.TpMenuItemFirst a:hover {
+	-moz-border-radius-topleft: 15px;
+	-webkit-border-top-left-radius: 15px;
+	border-top-left-radius: 15px;
+}
+.TpMenuLevel_1.TpMenuItemLast a,
+.TpMenuLevel_2.TpMenuItemLast a,
+.TpMenuLevel_3.TpMenuItemLast a,
+.TpMenuLevel_4.TpMenuItemLast a,
+.TpMenuLevel_1.TpMenuItemLast a:hover,
+.TpMenuLevel_2.TpMenuItemLast a:hover,
+.TpMenuLevel_3.TpMenuItemLast a:hover,
+.TpMenuLevel_4.TpMenuItemLast a:hover {
+	-moz-border-radius-bottomright: 15px;
+	-webkit-border-bottom-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+}
+
+.sf-menu .TpMenuLevel_1 li, .sf-menu .TpMenuLevel_2 li, .sf-menu .TpMenuLevel_3 li {
+	float: left;
+	position: relative;
+	width: 100%;
+}
+.TpMenuLink {
+	display: block;
+	position: relative;
+	background-color: #f2f2f2;
+	text-align: left;
+}
+.TpMenuSub a.TpMenuLink:hover
+{
+	background-color: #ccc;
+}
+
+.sf-menu ul{
+       left: 235px;
+       border: 1px solid #404040;
+}
+.TpMenuLevel_1, .TpMenuLevel_2, .TpMenuLevel_3{
+        width: 233px;
+        font-size: 13px;
+}
+#TpMenu .TpMenuLevel_1 li, #TpMenu .TpMenuLevel_2 li, #TpMenu .TpMenuLevel_3 li{
+	text-align:left;
+}
+.TpMenuLink img, .VrMenuLink img{
+    width: 16px;
+	height: 16px;
+	border: none;
+margin-right: 4px;
+}
+ul.TpMenuSub li { z-index: 999; }
+
+#TpMenu{
+    clear: both;
+    position: relative;
+	float: right;
+}
+#TpMenu .TpMenuLevel_0 a.TpMenuLink {
+    border-bottom: 1px solid Transparent;
+    color: #5F5F5F;
+    display: block;
+    float: left;
+    font-family: Tahoma,Arial,Sans-Serif;
+    font-size: 15px;
+    font-variant: small-caps;
+    padding: 5px 10px 6px;
+    text-decoration: none;
+}
+#TpMenu .TpMenuLevel_0,
+#TpMenu .TpMenuLevel_0 a.TpMenuLink
+{
+   background: Transparent none;
+}
+#TpMenu .TpMenuLevel_0 a.TpMenuLink:hover,
+#TpMenu .sfHover .TpMenuLevel_0 a.TpMenuLink{
+    background: url("../home/images/alert-overlay.png") repeat-x scroll 0 0 #F37934;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+    cursor: pointer;
+    padding: 5px 10px 6px;
+    position: relative;
+    text-decoration: none;
+}
+#TpMenu .TpMenuLevel_0.TpMenuItemSelected a.TpMenuLink {
+    color: #D55711;
+    text-decoration: none;
+}
+#TpMenu .TpMenuLevel_0.TpMenuItemSelected a.TpMenuLink:hover {
+    color: #FFFFFF;
+}
+#TpMenu .TpMenuNode
+{
+   float: left;
+   display: inline-block;
+}
+#menutop-container
+{
+   border-bottom: 1px solid #ccc;
+}~@~/*
+ * Superfish v1.4.8 - jQuery menu widget
+ * Copyright (c) 2008 Joel Birch
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ * 	http://www.opensource.org/licenses/mit-license.php
+ * 	http://www.gnu.org/licenses/gpl.html
+ *
+ * CHANGELOG: http://users.tpg.com.au/j_birch/plugins/superfish/changelog.txt
+ */
+
+;(function($){
+	$.fn.superfish = function(op){
+
+		var sf = $.fn.superfish,
+			c = sf.c,
+			$arrow = $(['<span class="',c.arrowClass,'"> &#187;</span>'].join('')),
+			over = function(){
+				var $$ = $(this), menu = getMenu($$);
+				clearTimeout(menu.sfTimer);
+				$$.showSuperfishUl().siblings().hideSuperfishUl();
+			},
+			out = function(){
+				var $$ = $(this), menu = getMenu($$), o = sf.op;
+				clearTimeout(menu.sfTimer);
+				menu.sfTimer=setTimeout(function(){
+					o.retainPath=($.inArray($$[0],o.$path)>-1);
+					$$.hideSuperfishUl();
+					if (o.$path.length && $$.parents(['li.',o.hoverClass].join('')).length<1){over.call(o.$path);}
+				},o.delay);	
+			},
+			getMenu = function($menu){
+				var menu = $menu.parents(['ul.',c.menuClass,':first'].join(''))[0];
+				sf.op = sf.o[menu.serial];
+				return menu;
+			},
+			addArrow = function($a){ $a.addClass(c.anchorClass).append($arrow.clone()); };
+			
+		return this.each(function() {
+			var s = this.serial = sf.o.length;
+			var o = $.extend({},sf.defaults,op);
+			o.$path = $('li.'+o.pathClass,this).slice(0,o.pathLevels).each(function(){
+				$(this).addClass([o.hoverClass,c.bcClass].join(' '))
+					.filter('li:has(ul)').removeClass(o.pathClass);
+			});
+			sf.o[s] = sf.op = o;
+			
+			$('li:has(ul)',this)[($.fn.hoverIntent && !o.disableHI) ? 'hoverIntent' : 'hover'](over,out).each(function() {
+				if (o.autoArrows) addArrow( $('>a:first-child',this) );
+			})
+			.not('.'+c.bcClass)
+				.hideSuperfishUl();
+			
+			var $a = $('a',this);
+			$a.each(function(i){
+				var $li = $a.eq(i).parents('li');
+				$a.eq(i).focus(function(){over.call($li);}).blur(function(){out.call($li);});
+			});
+			o.onInit.call(this);
+			
+		}).each(function() {
+			var menuClasses = [c.menuClass];
+			if (sf.op.dropShadows  && !($.browser.msie && $.browser.version < 7)) menuClasses.push(c.shadowClass);
+			$(this).addClass(menuClasses.join(' '));
+		});
+	};
+
+	var sf = $.fn.superfish;
+	sf.o = [];
+	sf.op = {};
+	sf.IE7fix = function(){
+		var o = sf.op;
+		if ($.browser.msie && $.browser.version > 6 && o.dropShadows && o.animation.opacity!=undefined)
+			this.toggleClass(sf.c.shadowClass+'-off');
+		};
+	sf.c = {
+		bcClass     : 'sf-breadcrumb',
+		menuClass   : 'sf-js-enabled',
+		anchorClass : 'sf-with-ul',
+		arrowClass  : 'sf-sub-indicator',
+		shadowClass : 'sf-shadow'
+	};
+	sf.defaults = {
+		hoverClass	: 'sfHover',
+		pathClass	: 'overideThisToUse',
+		pathLevels	: 1,
+		delay		: 800,
+		animation	: {opacity:'show'},
+		speed		: 'normal',
+		autoArrows	: true,
+		dropShadows : true,
+		disableHI	: false,		// true disables hoverIntent detection
+		onInit		: function(){}, // callback functions
+		onBeforeShow: function(){},
+		onShow		: function(){},
+		onHide		: function(){}
+	};
+	$.fn.extend({
+		hideSuperfishUl : function(){
+			var o = sf.op,
+				not = (o.retainPath===true) ? o.$path : '';
+			o.retainPath = false;
+			var $ul = $(['li.',o.hoverClass].join(''),this).add(this).not(not).removeClass(o.hoverClass)
+					.find('>ul').hide().css('visibility','hidden');
+			o.onHide.call($ul);
+			return this;
+		},
+		showSuperfishUl : function(){
+			var o = sf.op,
+				sh = sf.c.shadowClass+'-off',
+				$ul = this.addClass(o.hoverClass)
+					.find('>ul:hidden').css('visibility','visible');
+			sf.IE7fix.call($ul);
+			o.onBeforeShow.call($ul);
+			$ul.animate(o.animation,o.speed,function(){ sf.IE7fix.call($ul); o.onShow.call($ul); });
+			return this;
+		}
+	});
+
+})(jQuery);~@~(function() { 
+	$('#TpMenu').addClass('sf-menu'); 
+	$('#TpMenu').superfish({
+		animation: {height:'show'},   // slide-down effect without fade-in 
+		delay:     1200               // 1.2 second delay on mouseout 
+	}); 
+	var arrow = $(['<span class="','sf-sub-indicator','"> &#187;</span>'].join(''));
+	$('li:has(ul)',$('#TpMenu')).each(function(i,e) {
+	$('>div a',$(e)).append(arrow.clone());
+	});
+	$('#TpMenu').show();
+	
+	$('#TpMenu > .TpMenuNode > .TpMenuSub').each(function(){
+		var left_value = 236 - $(this).parent('.TpMenuNode').width();
+		$(this).css('left', '-' + left_value + 'px');
+	});
+})();~@~~@~~@~~@~0~@~55~@~2011-09-27 12:01:00.000~@~
+12~@~Top Menu with One Level Side~@~Top Menu with One Level Side, used by rintagi.com.~@~~@~~@~.kwicks {
+	list-style: none;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+.kwicks li{
+	/* these are required, but the values are up to you (must be pixel) */
+        width:100px;
+	height: auto;
+
+	/*do not change these */
+	display: block;
+	overflow: hidden;
+	padding: 0;  /* if you need padding, do so with an inner div (or implement your own box-model hack) */
+}
+
+.kwicks.horizontal li {
+	/* This is optional and will be disregarded by the script.  However, it should be provided for non-JS enabled browsers. */
+	margin-right: 5px; /*Set to same as spacing option. */	
+	float: left;
+}
+.kwicks.vertical  li{
+	/* This is optional and will be disregarded by the script.  However, it should be provided for non-JS enabled browsers. */
+	margin-bottom: 5px; /*Set to same as spacing option. */	
+}
+
+.TpMenuItem {
+	margin: 0;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+        color: #69747A;
+}
+.TpMenuItem:hover {
+        color:#E2952B;
+}
+
+.TpMenuLink {
+	font-family: georgia, Arial, Helvetica, Verdana, sans-serif;
+	font-size:14px;
+	color: rgb(255, 255, 255); 
+	text-decoration: none;
+	white-space: nowrap;
+        margin: 0px 20px 0px 0px;
+	padding: 0 5px;
+	display: block;
+       text-align: center;
+}
+.TpMenuLink:hover {
+	color: #c77405;
+}
+.TpMenuIcon {
+	width: 18px; height: 18px;
+	vertical-align: middle;
+	padding: 4px 5px 4px 8px;
+	border:0;
+}
+.TpMenuItemSelected a {
+	border-radius: 8px; color: orange; padding: 2px 10px; background-color: rgba(0, 0, 0, 0.7);
+}
+
+li.TpMenuNode{
+      display: inline-block;
+}
+
+.TpMenuItemSelected a{
+     -webkit-box-shadow:0 0 25px rgba(0, 0, 0, 0.1) inset;
+	-moz-box-shadow:0 0 25px rgba(0, 0, 0, 0.1) inset;
+	box-shadow: 0 0 25px rgba(0, 0, 0, 0.1) inset;
+}
+
+ #menutop-container-wrapper{
+    float:right;
+    min-height:30px;
+    margin-right:10%;
+    background-color: #464646;
+}
+
+#TpMenu {
+	margin: 0px; border-radius: 4px; padding-top:5px;
+}~@~/*
+	Kwicks for jQuery (version 1.5.1)
+	Copyright (c) 2008 Jeremy Martin
+	http://www.jeremymartin.name/projects.php?project=kwicks
+	
+	Licensed under the MIT license:
+		http://www.opensource.org/licenses/mit-license.php
+
+	Any and all use of this script must be accompanied by this copyright/license notice in its present form.
+*/
+(function($){$.fn.kwicks=function(n){var p={isVertical:false,sticky:false,defaultKwick:0,event:'mouseover',spacing:0,duration:500};var o=$.extend(p,n);var q=(o.isVertical?'height':'width');var r=(o.isVertical?'top':'left');return this.each(function(){container=$(this);var k=container.children('li');var l=k.eq(0).css(q).replace(/px/,'');if(!o.max){o.max=(l*k.size())-(o.min*(k.size()-1))}else{o.min=((l*k.size())-o.max)/(k.size()-1)}if(o.isVertical){container.css({width:k.eq(0).css('width'),height:(l*k.size())+(o.spacing*(k.size()-1))+'px'})}else{container.css({width:(l*k.size())+(o.spacing*(k.size()-1))+'px',height:k.eq(0).css('height')})}var m=[];for(i=0;i<k.size();i++){m[i]=[];for(j=1;j<k.size()-1;j++){if(i==j){m[i][j]=o.isVertical?j*o.min+(j*o.spacing):j*o.min+(j*o.spacing)}else{m[i][j]=(j<=i?(j*o.min):(j-1)*o.min+o.max)+(j*o.spacing)}}}k.each(function(i){var h=$(this);if(i===0){h.css(r,'0px')}else if(i==k.size()-1){h.css(o.isVertical?'bottom':'right','0px')}else{if(o.sticky){h.css(r,m[o.defaultKwick][i])}else{h.css(r,(i*l)+(i*o.spacing))}}if(o.sticky){if(o.defaultKwick==i){h.css(q,o.max+'px');h.addClass('active')}else{h.css(q,o.min+'px')}}h.css({margin:0,position:'absolute'});h.bind(o.event,function(){var c=[];var d=[];k.stop().removeClass('active');for(j=0;j<k.size();j++){c[j]=k.eq(j).css(q).replace(/px/,'');d[j]=k.eq(j).css(r).replace(/px/,'')}var e={};e[q]=o.max;var f=o.max-c[i];var g=c[i]/f;h.addClass('active').animate(e,{step:function(a){var b=f!=0?a/f-g:1;k.each(function(j){if(j!=i){k.eq(j).css(q,c[j]-((c[j]-o.min)*b)+'px')}if(j>0&&j<k.size()-1){k.eq(j).css(r,d[j]-((d[j]-m[i][j])*b)+'px')}})},duration:o.duration,easing:o.easing})})});if(!o.sticky){container.bind("mouseleave",function(){var c=[];var d=[];k.removeClass('active').stop();for(i=0;i<k.size();i++){c[i]=k.eq(i).css(q).replace(/px/,'');d[i]=k.eq(i).css(r).replace(/px/,'')}var e={};e[q]=l;var f=l-c[0];k.eq(0).animate(e,{step:function(a){var b=f!=0?(a-c[0])/f:1;for(i=1;i<k.size();i++){k.eq(i).css(q,c[i]-((c[i]-l)*b)+'px');if(i<k.size()-1){k.eq(i).css(r,d[i]-((d[i]-((i*l)+(i*o.spacing)))*b)+'px')}}},duration:o.duration,easing:o.easing})})}})}})(jQuery);~@~(function(){
+	$('#TpMenu').show();
+})();~@~.VrMenuLevel_1 a {
+	font-weight: 600;
+}
+.VrMenuLevel_2 a {
+	color: #444444;
+}
+.VrMenuLevel_3 a {
+	font-size:0.7em;
+}
+.VrMenuSub {
+	list-style: none;
+        padding-left:0px;
+        margin:0px;
+        padding-top: 30px;
+}
+.VrMenuItem {
+    clear:both;
+    border:1px solid #dedede;
+    padding: 15px 10px;
+    background-color: #f3f3f3;
+    border-radius: 4px;
+    min-width:150px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.VrMenuLink
+{
+	font-family: Verdana, Geneva, Helvetica, san-serif;
+	font-weight: normal;
+	color: #808080;
+	font-size:16px;
+	text-decoration:none;
+	white-space: nowrap;
+        padding: 15px 15px 15x 15px;
+}
+.VrMenuLink:hover {
+	color: orange;
+}
+.VrMenuIcon {
+	width: 18px; height: 18px;
+	vertical-align: middle;
+	padding: 5px;
+	border:0;
+}
+.VrMenuNode .VrMenuSub {
+	padding-left:5px;
+	width:11em;
+}
+
+.VrMenuNode{
+      padding-right:20px;
+}
+
+.VrMenuGrpTitle
+{
+	margin-top: 0.8em; margin-bottom: 0.8em;
+	border-top: solid 1px grey;
+}
+
+.VrMenuOpened {
+	color: black;
+}
+.VrMenuClosed {
+	color:#0073ea;;
+}
+.VrMenuItemFocus a {
+	color: orange;
+}
+
+.VrMenuItemSelected {
+        background-image:none;
+        background-color: #4d4d4d;
+}~@~(function(h){h.fn.hoverAccordion=function(a){function m(d,f,b){var e=h(o).find("."+a.classOpen).closest("li").find("ul:first");if(false===e.is(":animated")){if(a.keepHeight==true)b=k;if(f.hasClass(a.classOpen)==false){d.children().show();d.animate({height:b},{step:function(c){d.height(b-c)},duration:a.speed});e.animate({height:0},{step:function(c){d.height(b-c)},duration:a.speed}).children().hide();f.addClass(a.classOpen).removeClass(a.classClosed);e.closest("li").removeClass(a.classActive).find("a:first").addClass(a.classClosed).removeClass(a.classOpen)}}} a=jQuery.extend({speed:"fast",activateItem:true,keepHeight:false,onClickOnly:false,classActive:"active",classHeader:"header",classHover:"hover",classOpen:"opened",classClosed:"closed"},a);var o=this,g=window.location.href,l=0,n=0,k=0;h(this).children("li").each(function(){var d=h(this),f=false;n++;var b=d.find("a:first").addClass(a.classHeader);if(b.length>0){b.hover(function(){b.addClass(a.classHover)},function(){b.removeClass(a.classHover)});var e=b.attr("href");if(e=="#")b.click(function(){this.blur(); return false});else if(a.activateItem==true&&g.indexOf(e)>0&&g.length-g.lastIndexOf(e)==e.length){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}}var c=d.find("ul:first");if(c.length>0){var i=c.height();if(k<i)k=i;a.onClickOnly==true?b.click(function(){m(c,b,i)}):b.hover(function(){l=setInterval(function(){m(c,b,i);clearInterval(l)},400)},function(){clearInterval(l)});if(a.activateItem==true && a.activateItem != 1)c.children("li").each(function(){var j=h(this).find("a").attr("href"); if(j)if(g.indexOf(j)>0&&g.length-g.lastIndexOf(j)==j.length){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}});else if(parseInt(a.activateItem,10)==n){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}}if(!f){b.removeClass(a.classOpen);if(c.length>0){c.children().hide();b.addClass(a.classClosed)}}});return this}})(jQuery);~@~(function() {
+var curr = 0;
+$('#VrMenu>li').each(function(i,e) {
+    $('div.VrMenuItemSelected',$(e)).each(function() {
+        if (curr == 0) {
+        curr = i+1;    
+        }
+    });
+});
+$('#VrMenu').hoverAccordion(
+    {keepHeight: false,onClickOnly: true,
+        classOpen:'VrMenuOpened',
+        classClosed:'VrMenuClosed',
+        timeout:1500,
+        activateItem: curr,
+        speed:'normal'}).css('display','block');
+$('#VrMenu').css('visibility','visible');
+})();~@~0~@~55~@~2012-11-22 18:27:00.000~@~
+13~@~Top Menu with Two Levels Horizontal Only~@~Top Menu with Two Levels Horizontal Only.~@~~@~~@~.kwicks {
+	list-style: none; margin: 0px; padding: 0px; position: relative;
+}
+.kwicks li {
+	padding: 0px; width: auto; height: auto; overflow: hidden; display: block;
+}
+.horizontal.kwicks li {
+	margin-right: 5px; float: left;
+}
+.vertical.kwicks li {
+	margin-bottom: 5px;
+}
+.TpMenuItem {
+	margin: 0px; color: rgb(105, 116, 122);
+        padding: 5px 0;
+}
+.TpMenuItem:hover {
+	color: rgb(226, 149, 43);
+}
+.TpMenuLink {
+	 margin: 0px 20px 0px 0px; padding: 0px 5px; text-align: center; color: rgb(255, 255, 255); font-family: georgia, Arial, Helvetica, Verdana, sans-serif; font-size: 16px; font-variant: small-caps; text-decoration: none; display: block; white-space: nowrap;
+}
+.TpMenuLink:hover {
+	text-decoration: underline;
+}
+.TpMenuIcon {
+	padding: 4px 5px 4px 8px; border: 0px currentColor; width: 18px; height: 18px; vertical-align: middle;
+}
+li.TpMenuNode {
+	display: inline-block;
+}
+.TpMenuItemSelected a {
+	border-radius: 8px; color: orange; padding-bottom: 2px; background-color: rgba(0, 0, 0, 0.7);
+}
+#menutop-container-wrapper {
+	float: right; min-height: 30px;
+}
+#TpMenu {
+	margin: 0px; border-radius: 4px; background-color: rgba(0, 0, 0, 0.5); float:right;
+}~@~/*
+	Kwicks for jQuery (version 1.5.1)
+	Copyright (c) 2008 Jeremy Martin
+	http://www.jeremymartin.name/projects.php?project=kwicks
+	
+	Licensed under the MIT license:
+		http://www.opensource.org/licenses/mit-license.php
+
+	Any and all use of this script must be accompanied by this copyright/license notice in its present form.
+*/
+(function($){$.fn.kwicks=function(n){var p={isVertical:false,sticky:false,defaultKwick:0,event:'mouseover',spacing:0,duration:500};var o=$.extend(p,n);var q=(o.isVertical?'height':'width');var r=(o.isVertical?'top':'left');return this.each(function(){container=$(this);var k=container.children('li');var l=k.eq(0).css(q).replace(/px/,'');if(!o.max){o.max=(l*k.size())-(o.min*(k.size()-1))}else{o.min=((l*k.size())-o.max)/(k.size()-1)}if(o.isVertical){container.css({width:k.eq(0).css('width'),height:(l*k.size())+(o.spacing*(k.size()-1))+'px'})}else{container.css({width:(l*k.size())+(o.spacing*(k.size()-1))+'px',height:k.eq(0).css('height')})}var m=[];for(i=0;i<k.size();i++){m[i]=[];for(j=1;j<k.size()-1;j++){if(i==j){m[i][j]=o.isVertical?j*o.min+(j*o.spacing):j*o.min+(j*o.spacing)}else{m[i][j]=(j<=i?(j*o.min):(j-1)*o.min+o.max)+(j*o.spacing)}}}k.each(function(i){var h=$(this);if(i===0){h.css(r,'0px')}else if(i==k.size()-1){h.css(o.isVertical?'bottom':'right','0px')}else{if(o.sticky){h.css(r,m[o.defaultKwick][i])}else{h.css(r,(i*l)+(i*o.spacing))}}if(o.sticky){if(o.defaultKwick==i){h.css(q,o.max+'px');h.addClass('active')}else{h.css(q,o.min+'px')}}h.css({margin:0,position:'absolute'});h.bind(o.event,function(){var c=[];var d=[];k.stop().removeClass('active');for(j=0;j<k.size();j++){c[j]=k.eq(j).css(q).replace(/px/,'');d[j]=k.eq(j).css(r).replace(/px/,'')}var e={};e[q]=o.max;var f=o.max-c[i];var g=c[i]/f;h.addClass('active').animate(e,{step:function(a){var b=f!=0?a/f-g:1;k.each(function(j){if(j!=i){k.eq(j).css(q,c[j]-((c[j]-o.min)*b)+'px')}if(j>0&&j<k.size()-1){k.eq(j).css(r,d[j]-((d[j]-m[i][j])*b)+'px')}})},duration:o.duration,easing:o.easing})})});if(!o.sticky){container.bind("mouseleave",function(){var c=[];var d=[];k.removeClass('active').stop();for(i=0;i<k.size();i++){c[i]=k.eq(i).css(q).replace(/px/,'');d[i]=k.eq(i).css(r).replace(/px/,'')}var e={};e[q]=l;var f=l-c[0];k.eq(0).animate(e,{step:function(a){var b=f!=0?(a-c[0])/f:1;for(i=1;i<k.size();i++){k.eq(i).css(q,c[i]-((c[i]-l)*b)+'px');if(i<k.size()-1){k.eq(i).css(r,d[i]-((d[i]-((i*l)+(i*o.spacing)))*b)+'px')}}},duration:o.duration,easing:o.easing})})}})}})(jQuery);~@~(function(){
+	$('#TpMenu').show();
+})();~@~#VrMenu {
+        margin-bottom: 2px;
+        margin-top: 2px;
+}
+
+.VrMenuLevel_1 a {
+	font-weight: normal;
+}
+.VrMenuLevel_2 a {
+	color: #444444;
+}
+.VrMenuLevel_3 a {
+	font-size:0.7em;
+}
+.VrMenuSub {
+	list-style: none;
+        margin:0px;
+        float:right;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 4px;
+        clear:both;
+}
+.VrMenuItem {
+    clear:both;
+    padding: 5px 0;
+}
+
+.VrMenuLink
+{
+	font-family:  georgia, Arial, Helvetica, Verdana, sans-serif; .VrMenuItem;
+	font-weight: normal;
+	color: rgb(255, 255, 255);
+	font-size:16px;
+	text-decoration:none; 
+	white-space: nowrap;
+        padding: 2px 5px;
+        font-variant: small-caps;
+}
+.VrMenuLink:hover {
+	text-decoration: underline;
+}
+.VrMenuIcon {
+	width: 18px; height: 18px;
+	vertical-align: middle;
+	padding: 5px;
+	border:0;
+}
+.VrMenuNode .VrMenuSub {
+	padding-left:5px;
+	width:11em;
+}
+
+.VrMenuNode{
+      padding-right:20px;
+      display: table-cell;
+}
+
+.VrMenuGrpTitle
+{
+	margin: 0px;
+}
+
+.VrMenuOpened {
+	color: #FFA500;
+        background-color: rgba(0,0,0,0.7);
+        border-radius: 8px;
+}
+.VrMenuClosed {
+	color: white;;
+}
+.VrMenuItemFocus a {
+	border-radius: 8px; color: orange; padding-bottom: 2px; background-color: rgba(0, 0, 0, 0.7);
+}
+
+.VrMenuItemSelected {
+        background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.07) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.07) 100%);
+}
+
+#menu-container-wrapper { margin-bottom:2px;
+}
+
+.VrMenuNode { vertical-align: middle;}
+.VrMenuNode:first-child { padding-right:10px; padding-top: 2px;}
+.IndicationSign{width: 20px; padding-right: 10px;}
+.TpMenuIcon{padding:0 5px 0 0;}
+.VrMenuIcon{padding:0 5px 0 0;}~@~(function(h){h.fn.hoverAccordion=function(a){function m(d,f,b){var e=h(o).find("."+a.classOpen).closest("li").find("ul:first");if(false===e.is(":animated")){if(a.keepHeight==true)b=k;if(f.hasClass(a.classOpen)==false){d.children().show();d.animate({height:b},{step:function(c){d.height(b-c)},duration:a.speed});e.animate({height:0},{step:function(c){d.height(b-c)},duration:a.speed}).children().hide();f.addClass(a.classOpen).removeClass(a.classClosed);e.closest("li").removeClass(a.classActive).find("a:first").addClass(a.classClosed).removeClass(a.classOpen)}}} a=jQuery.extend({speed:"fast",activateItem:true,keepHeight:false,onClickOnly:false,classActive:"active",classHeader:"header",classHover:"hover",classOpen:"opened",classClosed:"closed"},a);var o=this,g=window.location.href,l=0,n=0,k=0;h(this).children("li").each(function(){var d=h(this),f=false;n++;var b=d.find("a:first").addClass(a.classHeader);if(b.length>0){b.hover(function(){b.addClass(a.classHover)},function(){b.removeClass(a.classHover)});var e=b.attr("href");if(e=="#")b.click(function(){this.blur(); return false});else if(a.activateItem==true&&g.indexOf(e)>0&&g.length-g.lastIndexOf(e)==e.length){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}}var c=d.find("ul:first");if(c.length>0){var i=c.height();if(k<i)k=i;a.onClickOnly==true?b.click(function(){m(c,b,i)}):b.hover(function(){l=setInterval(function(){m(c,b,i);clearInterval(l)},400)},function(){clearInterval(l)});if(a.activateItem==true && a.activateItem != 1)c.children("li").each(function(){var j=h(this).find("a").attr("href"); if(j)if(g.indexOf(j)>0&&g.length-g.lastIndexOf(j)==j.length){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}});else if(parseInt(a.activateItem,10)==n){f=true;d.addClass(a.classActive);b.removeClass(a.classClosed).addClass(a.classOpen)}}if(!f){b.removeClass(a.classOpen);if(c.length>0){c.children().hide();b.addClass(a.classClosed)}}});return this}})(jQuery);~@~$(function() {
+$("#menuThird").css('display', 'block');
+
+if($('#menuThird').length <=0){
+$("#menu-container").append("<div id='menuThird'></div>");
+}
+
+var curr = 0;
+$('#VrMenu>li').each(function(i,e) {
+    $('div.VrMenuItemSelected',$(e)).each(function() {
+        if (curr == 0) {
+        curr = i+1;    
+        }
+    });
+});
+
+$('#VrMenu').hoverAccordion(
+    {keepHeight: false,onClickOnly: true,
+        classOpen:'VrMenuOpened',
+        classClosed:'VrMenuClosed',
+        activateItem: curr}).css('display','inline');
+
+$('#VrMenu').css('visibility','visible');
+
+var menuWrapContainer = $('#VrMenu').parent().parent().detach();
+$('#menutop-container-wrapper').append(menuWrapContainer);
+
+if($('#VrMenu .VrMenuNode').length > 0 && $('#VrMenu .VrMenuNode .SubMenuSign .IndicationSign').length <= 0){
+     $("#VrMenu").prepend("<li class='VrMenuNode'><div class='SubMenuSign'><img class= 'IndicationSign' src='images/menu/arrowSubMenu.png' /></div></li>");
+}
+
+
+var element = $('#VrMenu .VrMenuNode .VrMenuSub').detach();
+$("#menuThird").append(element);
+
+
+if($("#menuThird .VrMenuSub .VrMenuNode:first-child .VrMenuItem .IndicationSign").length<=0){
+$("#menuThird .VrMenuSub .VrMenuNode:first-child .VrMenuItem").prepend("<img class= 'IndicationSign' src='images/menu/arrowSubMenu.png' />");
+}
+
+$( ".VrMenuLink" ).click(function() {
+$("#menuThird").css('display', 'none');
+});
+
+});~@~0~@~55~@~2012-11-22 18:27:00.000~@~
+14~@~Mega Dropdown Float - 4 levels max (responsive)~@~Responsive Dropdown floating maximum 4 levels menu~@~~@~~@~#TpMenu{border-radius: 4px; padding-left: 5px;}
+.mega-menu li {list-style: none;}
+.mega-menu li a {font-family: Georgia, Century Gothic, Lucida Sans Unicode;}
+.mega-menu ul {position: relative; padding: 0; margin: 0;}
+.mega-menu ul li ul {display: none;}
+.mega-menu .sub {display: none;}
+.mega-menu .sub ul {display: block;}
+
+.white {line-height: 16px;}
+.white ul.mega-menu, .white ul.mega-menu, .white ul.mega-menu li {margin: 0; padding: 0; border: none;}
+.white ul.mega-menu {background: #222 ; width: 100%; height: 28px; border-right: 1px solid #1B1B1B; border-left: 1px solid #1B1B1B; position: relative;}
+.white ul.mega-menu li {float: left; margin: 0; padding: 0; font-size: 13px; font-weight: bold;}
+.white ul.mega-menu li a {float: left; display: block; color: #fff; padding: 5px 10px; background:#222; text-shadow: 1px 1px 1px #000; text-decoration: none; font-size: 16px; font-weight: normal;}
+.white ul.mega-menu li a.dc-mega {position: relative;}
+.white ul.mega-menu li a.dc-mega:hover{background-color: #fafafa; color: #333;}
+.white ul.mega-menu li.mega-hover a, .white ul.mega-menu li a:hover {background-position: 100% -40px; text-shadow: none; color: #333; background-color:#fafafa;}
+.white ul.mega-menu li.mega-hover a .dc-mega-icon {background-position: 0 100%;}
+.white ul.mega-menu li .sub-container {position: absolute; background: #fafafa; margin-left: -3px;}
+.white ul.mega-menu li .sub {background:#fafafa; padding: 20px 20px 20px 10px; border: 1px solid #cdcdcd; border-radius: 4px; border-top: none;}
+.white ul.mega-menu li .sub-container.mega .sub {padding: 20px 20px 10px 20px; border: 1px solid #cdcdcd; border-radius: 4px; border-top: none;}
+.white ul.mega-menu li .sub .row {width: 100%; overflow: hidden; clear: both;}
+.white ul.mega-menu li .sub li {list-style: none; float: none; width: 170px; font-size: 1em; font-weight: normal;}
+.white ul.mega-menu li .sub li.mega-hdr {margin: 0 10px 10px 0; float: left;}
+.white ul.mega-menu li .sub li.mega-hdr.last {margin-right: 0;}
+.white ul.mega-menu li .sub a {background: none; border: none; text-shadow: none; color: #3D72C1; padding: 7px 10px; display: block; float: none; text-decoration: none; font-size: 13px;}
+.white ul.mega-menu li .sub li.mega-hdr .TpMenuGrpTitle a.mega-hdr-a{background-color: #e3e3e3;}
+.white ul.mega-menu li .sub li.mega-hdr .TpMenuGrpTitle a.mega-hdr-a:hover{background-color: #e3e3e3;}
+.white ul.mega-menu li .sub li.mega-hdr a.mega-hdr-a.menuNoClick {padding: 5px 5px 5px 15px; margin-bottom: 5px; background: #E3E3E3 url(css/images/bg_mega_hdr.png) no-repeat 0 0;  font-weight: normal; color: #3D72C1; font-size: 14px; font-variant:small-caps;}
+.white ul.mega-menu li .sub li.mega-hdr a.mega-hdr-a.menuNoClick:hover {color: #3D72C1; padding: 5px 5px 5px 15px; background: url("css/images/bg_mega_hdr.png") no-repeat scroll 0 0 #E3E3E3;}
+.white ul.mega-menu li .sub li.mega-hdr a.mega-hdr-a{padding: 4px 5px 4px 20px; font-weight: normal; color: #3D72C1; background: url("css/images/arrow_off.png") no-repeat scroll 4px 8px rgba(0, 0, 0, 0);}
+.white ul.mega-menu li .sub li.mega-hdr a.mega-hdr-a:hover {padding: 4px 5px 4px 20px; color: #a32403; text-shadow: none; background: #fafafa url(css/images/arrow_on.png) no-repeat 4px 8px;}
+.white ul.mega-menu .sub li.mega-hdr li .TpMenuGrpTitle a{background-color: #efefef; background-position: 5px 8px; margin-left:15px;}
+.white ul.mega-menu .sub li.mega-hdr li .TpMenuGrpTitle a:hover{background-color: #efefef; background-position: 5px 8px; margin-left: 15px;}
+.white ul.mega-menu .sub li.mega-hdr li a {padding: 4px 5px 4px 20px; background: url(css/images/arrow_off.png) no-repeat 5px 8px; color: #555;}
+.white ul.mega-menu .sub li.mega-hdr li a:hover {color: #a32403; background: #fafafa url(css/images/arrow_on.png) no-repeat 5px 8px;}
+.white ul.mega-menu .sub li.mega-hdr li a.menuNoClick{padding: 4px 5px 4px 5px; margin-left: 15px; background-image:none; background-color: #efefef;}
+.white ul.mega-menu .sub li.mega-hdr li a.menuNoClick:hover{color: #555;}
+.white ul.mega-menu .sub ul li {padding-right: 0;}
+.white ul.mega-menu li .sub-container.non-mega .sub {padding: 20px 20px 20px 0;}
+.white ul.mega-menu li .sub-container.non-mega li {padding: 0; width: 190px; margin: 0;}
+.white ul.mega-menu li .sub-container.non-mega li a {padding: 7px 5px 7px 22px; background: url(css/images/arrow_off.png) no-repeat 7px 10px;}
+.white ul.mega-menu li .sub-container.non-mega li a:hover {color: #a32403; background: #fafafa url(css/images/arrow_on.png) no-repeat 7px 10px;}
+
+.white ul.mega-menu .sub li.mega-hdr li .TpMenuLevel_3 a{ padding: 4px 5px 4px 35px; font-weight: normal; color: #888; background: url(css/images/arrow_off.png) no-repeat 20px 8px;}
+.white ul.mega-menu .sub li.mega-hdr li .TpMenuLevel_3 a:hover{color: #A32403; background: #fafafa url(css/images/arrow_on.png) no-repeat 20px 8px;}
+.white ul.mega-menu img{vertical-align: text-top; padding-right: 4px;}
+ .moveMenu { left: -1000px; position: absolute; }
+.TpMenuLevel_0 > a {font-variant:small-caps;}
+.white ul.mega-menu li .TpMenuLevel_0 > .menuNoClick:not(.dc-mega){padding: 6px 20px 5px 20px; font-size: 16px; font-weight: normal; background: url(css/images/arrow_main.png) no-repeat 10px 10px;}
+.white ul.mega-menu li .TpMenuLevel_0 > .menuNoClick:not(.dc-mega):hover{color: #a32403; padding: 6px 20px 5px 20px; font-size: 16px; font-weight: normal; background: url(css/images/arrow_on.png) no-repeat 10px 10px; cursor: pointer; background-color: #fafafa;}
+#TpMenu .TpMenuLevel_0.TpMenuItemSelected a.TpMenuLink{color: #DE7E3D;}
+.white ul.mega-menu li.mega-hover .dc-mega{background-color: #e3e3e3;}~@~(function($){
+	//define the defaults for the plugin and how to call it	
+	$.fn.dcMegaMenu = function(options){
+		//set default options  
+		var defaults = {
+			classParent: 'dc-mega',
+			classContainer: 'sub-container',
+			classSubParent: 'mega-hdr',
+			classSubLink: 'mega-hdr',
+			classWidget: 'dc-extra',
+			rowItems: 3,
+			speed: 'fast',
+			effect: 'fade',
+			event: 'hover',
+			fullWidth: false,
+			onLoad : function(){},
+            beforeOpen : function(){},
+			beforeClose: function(){}
+		};
+
+		//call in the default otions
+		var options = $.extend(defaults, options);
+		var $dcMegaMenuObj = this;
+
+		//act upon the element that is passed into the design    
+		return $dcMegaMenuObj.each(function(options){
+
+			var clSubParent = defaults.classSubParent;
+			var clSubLink = defaults.classSubLink;
+			var clParent = defaults.classParent;
+			var clContainer = defaults.classContainer;
+			var clWidget = defaults.classWidget;
+			
+			megaSetup();
+			
+			function megaOver(){
+				var subNav = $('.sub',this);
+				$(this).addClass('mega-hover');
+				if(defaults.effect == 'fade'){
+					$(subNav).fadeIn(defaults.speed);
+				}
+				if(defaults.effect == 'slide'){
+					$(subNav).show(defaults.speed);
+				}
+				// beforeOpen callback;
+				defaults.beforeOpen.call(this);
+			}
+			function megaAction(obj){
+				var subNav = $('.sub',obj);
+				$(obj).addClass('mega-hover');
+				if(defaults.effect == 'fade'){
+					$(subNav).fadeIn(defaults.speed);
+				}
+				if(defaults.effect == 'slide'){
+					$(subNav).show(defaults.speed);
+				}
+				// beforeOpen callback;
+				defaults.beforeOpen.call(this);
+			}
+			function megaOut(){
+				var subNav = $('.sub',this);
+				$(this).removeClass('mega-hover');
+				$(subNav).hide();
+				// beforeClose callback;
+				defaults.beforeClose.call(this);
+			}
+			function megaActionClose(obj){
+				var subNav = $('.sub',obj);
+				$(obj).removeClass('mega-hover');
+				$(subNav).hide();
+				// beforeClose callback;
+				defaults.beforeClose.call(this);
+			}
+			function megaReset(){
+				$('li',$dcMegaMenuObj).removeClass('mega-hover');
+				$('.sub',$dcMegaMenuObj).hide();
+			}
+
+			function megaSetup(){
+				$arrow = '<span class="dc-mega-icon"></span>';
+				var clParentLi = clParent+'-li';
+				var menuWidth = $dcMegaMenuObj.outerWidth();
+				$('> li',$dcMegaMenuObj).each(function(){
+					//Set Width of sub
+					var $mainSub = $('> ul',this);
+					var $primaryLink = $('> div > a',this);
+					if($mainSub.length){
+						$primaryLink.addClass(clParent).append($arrow);
+						$mainSub.addClass('sub').wrap('<div class="'+clContainer+'" />');
+						
+						var pos = $(this).position();
+						pl = pos.left;
+							
+						if($('ul',$mainSub).length){
+							$(this).addClass(clParentLi);
+							$('.'+clContainer,this).addClass('mega');
+							$('> li',$mainSub).each(function(){
+								if(!$(this).hasClass(clWidget)){
+									$(this).addClass('mega-unit');
+									if($('> ul',this).length){
+										$(this).addClass(clSubParent);
+										$('> div > a',this).addClass(clSubParent+'-a');
+									} else {
+										$(this).addClass(clSubLink);
+										$('> div > a',this).addClass(clSubLink+'-a');
+									}
+								}
+							});
+
+							// Create Rows
+							var hdrs = $('.mega-unit',this);
+							rowSize = parseInt(defaults.rowItems);
+							for(var i = 0; i < hdrs.length; i+=rowSize){
+								hdrs.slice(i, i+rowSize).wrapAll('<div class="row" />');
+							}
+
+							// Get Sub Dimensions & Set Row Height
+							$mainSub.show();
+							
+							// Get Position of Parent Item
+							var pw = $(this).width();
+							var pr = pl + pw;
+							
+							// Check available right margin
+							var mr = menuWidth - pr;
+							
+							// // Calc Width of Sub Menu
+							var subw = $mainSub.outerWidth();
+							var totw = $mainSub.parent('.'+clContainer).outerWidth();
+							var cpad = totw - subw;
+							
+							if(defaults.fullWidth == true){
+								var fw = menuWidth - cpad;
+								$mainSub.parent('.'+clContainer).css({width: fw+'px'});
+								$dcMegaMenuObj.addClass('full-width');
+							}
+							var iw = $('.mega-unit',$mainSub).outerWidth(true);
+							var rowItems = $('.row:eq(0) .mega-unit',$mainSub).length;
+							var inneriw = iw * rowItems;
+							var totiw = inneriw + cpad;
+							
+							// Set mega header height
+							$('.row',this).each(function(){
+								$('.mega-unit:last',this).addClass('last');
+								var maxValue = undefined;
+								$('.mega-unit > div > a',this).each(function(){
+									var val = parseInt($(this).height());
+									if (maxValue === undefined || maxValue < val){
+										maxValue = val + 10;
+									}
+								});
+								$('.mega-unit > div > a',this).css('height',maxValue+'px');
+								$(this).css('width',inneriw+'px');
+							});
+							
+							// Calc Required Left Margin incl additional required for right align
+							
+							if(defaults.fullWidth == true){
+								params = {left: 0};
+							} else {
+								
+								var ml = mr < ml ? ml + ml - mr : (totiw - pw)/2;
+								var subLeft = pl - ml;
+
+								// If Left Position Is Negative Set To Left Margin
+								var params = {left: pl+'px', marginLeft: -ml+'px'};
+								
+								if(subLeft < 0){
+									params = {left: 0};
+								}else if(mr < ml){
+									params = {right: 0};
+								}
+							}
+							$('.'+clContainer,this).css(params);
+							
+							// Calculate Row Height
+							$('.row',$mainSub).each(function(){
+								var rh = $(this).height();
+								$('.mega-unit',this).css({height: rh+'px'});
+								$(this).parent('.row').css({height: rh+'px'});
+							});
+							$mainSub.hide();
+					
+						} else {
+							$('.'+clContainer,this).addClass('non-mega').css('left',pl+'px');
+						}
+					}
+				});
+				// Set position of mega dropdown to bottom of main menu
+				var menuHeight = $('> li > div > a',$dcMegaMenuObj).outerHeight(true);
+				$('.'+clContainer,$dcMegaMenuObj).css({top: menuHeight+'px'}).css('z-index','1000');
+				
+				if(defaults.event == 'hover'){
+					// HoverIntent Configuration
+					var config = {
+						sensitivity: 2,
+						interval: 100,
+						over: megaOver,
+						timeout: 400,
+						out: megaOut
+					};
+					$('li',$dcMegaMenuObj).hoverIntent(config);
+				}
+				
+				if(defaults.event == 'click'){
+				
+					$('body').mouseup(function(e){
+						if(!$(e.target).parents('.mega-hover').length){
+							megaReset();
+						}
+					});
+
+					$('> li > div > a.'+clParent,$dcMegaMenuObj).click(function(e){
+						var $parentLi = $(this).parent();
+						if($parentLi.hasClass('mega-hover')){
+							megaActionClose($parentLi);
+						} else {
+							megaAction($parentLi);
+						}
+						e.preventDefault();
+					});
+				}
+				
+				// onLoad callback;
+				defaults.onLoad.call(this);
+			}
+		});
+	};
+})(jQuery);
+
+/**
+* hoverIntent r5 // 2007.03.27 // jQuery 1.1.2+
+* <http://cherne.net/brian/resources/jquery.hoverIntent.html>
+* 
+* @param  f  onMouseOver function || An object with configuration options
+* @param  g  onMouseOut function  || Nothing (use configuration options object)
+* @author    Brian Cherne <brian@cherne.net>
+*/
+(function($){$.fn.hoverIntent=function(f,g){var cfg={sensitivity:7,interval:100,timeout:0};cfg=$.extend(cfg,g?{over:f,out:g}:f);var cX,cY,pX,pY;var track=function(ev){cX=ev.pageX;cY=ev.pageY;};var compare=function(ev,ob){ob.hoverIntent_t=clearTimeout(ob.hoverIntent_t);if((Math.abs(pX-cX)+Math.abs(pY-cY))<cfg.sensitivity){$(ob).unbind("mousemove",track);ob.hoverIntent_s=1;return cfg.over.apply(ob,[ev]);}else{pX=cX;pY=cY;ob.hoverIntent_t=setTimeout(function(){compare(ev,ob);},cfg.interval);}};var delay=function(ev,ob){ob.hoverIntent_t=clearTimeout(ob.hoverIntent_t);ob.hoverIntent_s=0;return cfg.out.apply(ob,[ev]);};var handleHover=function(e){var p=(e.type=="mouseover"?e.fromElement:e.toElement)||e.relatedTarget;while(p&&p!=this){try{p=p.parentNode;}catch(e){p=this;}}if(p==this){return false;}var ev=jQuery.extend({},e);var ob=this;if(ob.hoverIntent_t){ob.hoverIntent_t=clearTimeout(ob.hoverIntent_t);}if(e.type=="mouseover"){pX=ev.pageX;pY=ev.pageY;$(ob).bind("mousemove",track);if(ob.hoverIntent_s!=1){ob.hoverIntent_t=setTimeout(function(){compare(ev,ob);},cfg.interval);}}else{$(ob).unbind("mousemove",track);if(ob.hoverIntent_s==1){ob.hoverIntent_t=setTimeout(function(){delay(ev,ob);},cfg.timeout);}}};return this.mouseover(handleHover).mouseout(handleHover);};})(jQuery);~@~    (function () {
+        if ($('#mobileMenu').is(':visible')) return;
+        $('#menutop-container').addClass(' white');
+        if ($('#TpMenu').html() != ''){
+              $('#TpMenu').addClass(' mega-menu');
+        }
+        $('#TpMenu').addClass('moveMenu');
+        $('#TpMenu').css('display', 'inline-table');
+	$('#TpMenu').dcMegaMenu({
+		rowItems: '3',
+		speed: 'fast',
+		effect: 'fade'
+	});
+        $('#TpMenu').removeClass('moveMenu');
+})();
+
+    $(window).resize(function () {
+        if ($('#mobileMenu').is(':visible')) return;
+        $('#menutop-container').addClass(' white');
+        if ($('#TpMenu').html() != ''){
+              $('#TpMenu').addClass(' mega-menu');
+        }
+        $('#TpMenu').addClass('moveMenu');
+        $('#TpMenu').css('display', 'inline-table');
+	$('#TpMenu').dcMegaMenu({
+		rowItems: '3',
+		speed: 'fast',
+		effect: 'fade'
+	});
+        $('#TpMenu').removeClass('moveMenu');
+});~@~~@~~@~~@~0~@~55~@~2014-04-04 18:46:00.000~@~

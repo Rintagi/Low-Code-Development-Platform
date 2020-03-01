@@ -1,0 +1,7 @@
+C~@~Chart~@~This is the graphical representation of summary data.~@~Y
+I~@~Image~@~This is any jpeg or gif file.~@~N
+L~@~List~@~This is the simplest and fastest way to list your data, grouped or ungrouped.~@~Y
+N~@~Line~@~This is a horizontal line.~@~N
+R~@~Rectangle~@~This is rectangle and it can be a container for other report controls.~@~Y
+T~@~Table~@~This list your data with subtotals and other summary information.~@~Y
+X~@~Textbox~@~This is commonely used to display a text field.~@~N

@@ -1,0 +1,10 @@
+1~@~1~@~1216~@~33~@~~@~~@~~@~~@~~@~
+2~@~6~@~5329~@~3~@~MultiDesignDb~@~MultiDesignDesc~@~~@~~@~EXEC dbo._GetInMultiDesign~@~EXEC ('IF EXISTS (SELECT 1 FROM sysobjects WHERE name = ''_GetInMultiDesign'') DROP PROCEDURE dbo._GetInMultiDesign')
+EXEC ('CREATE PROCEDURE dbo._GetInMultiDesign AS SELECT MultiDesignDb=''Y'', MultiDesignDesc=''YES'' UNION SELECT MultiDesignDb=''N'', MultiDesignDesc=''NO''')
+3~@~7~@~5334~@~4~@~CheckBoxCd~@~CheckBoxName~@~~@~~@~EXEC dbo._GetInCBox~@~EXEC ('IF EXISTS (SELECT 1 FROM sysobjects WHERE name = ''_GetInCBox'') DROP PROCEDURE dbo._GetInCBox')
+EXEC ('CREATE PROCEDURE dbo._GetInCBox AS SELECT CheckBoxCd, CheckBoxName FROM dbo.CtCheckBox WHERE CultureId = 1')
+4~@~7~@~5335~@~3~@~CheckBoxCd~@~CheckBoxName~@~~@~~@~EXEC dbo._GetInCBox~@~EXEC ('IF EXISTS (SELECT 1 FROM sysobjects WHERE name = ''_GetInCBox'') DROP PROCEDURE dbo._GetInCBox')
+EXEC ('CREATE PROCEDURE dbo._GetInCBox AS SELECT CheckBoxCd, CheckBoxName FROM dbo.CtCheckBox WHERE CultureId = 1')
+5~@~7~@~5331~@~33~@~~@~~@~~@~~@~~@~
+6~@~8~@~5386~@~17~@~CheckBoxCd~@~CheckBoxName~@~~@~~@~EXEC dbo._GetInCBox~@~EXEC ('IF EXISTS (SELECT 1 FROM sysobjects WHERE name = ''_GetInCBox'') DROP PROCEDURE dbo._GetInCBox')
+EXEC ('CREATE PROCEDURE dbo._GetInCBox AS SELECT CheckBoxCd, CheckBoxName FROM dbo.CtCheckBox WHERE CultureId = 1')

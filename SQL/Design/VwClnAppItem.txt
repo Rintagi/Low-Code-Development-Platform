@@ -1,0 +1,9 @@
+   8.  58.40910~@~20~@~C~@~MenuModule.*~@~EXEC ('DELETE FROM dbo.PageObj WHERE SectionCd = ''M''')
+EXEC ('UPDATE dbo.PageObj SET SectionCd = ''D'' WHERE SectionCd = ''P''')
+
+   9.  16.50228~@~20~@~C~@~LinkModule*.*~@~
+   9.  49.50730~@~10~@~C~@~Dsh*.*~@~
+   9.  49.50730~@~20~@~C~@~AdmListDsh*.*~@~
+   9.  49.50730~@~30~@~C~@~AdmListRpt*.*~@~
+   9.  49.50730~@~40~@~C~@~WebPart*.*~@~
+   9.  49.50730~@~50~@~C~@~DashBoard*.*~@~

@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmUsrGroup || {});
+    this.GetReduxState = () => (this.props.AdmUsrGroup || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'UsrGroupId7';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,58 +87,46 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
     const columnLabel = (this.props.AdmUsrGroup || {}).ColumnLabel || {};
     /* standard field validation */
-if (!values.cUsrGroupName7) { errors.cUsrGroupName7 = (columnLabel.UsrGroupName7 || {}).ErrMessage;}
-if (isEmptyId((values.cRowAuthorityId7 || {}).value)) { errors.cRowAuthorityId7 = (columnLabel.RowAuthorityId7 || {}).ErrMessage;}
+    if (!values.cUsrGroupName7) { errors.cUsrGroupName7 = (columnLabel.UsrGroupName7 || {}).ErrMessage; }
+    if (isEmptyId((values.cRowAuthorityId7 || {}).value)) { errors.cRowAuthorityId7 = (columnLabel.RowAuthorityId7 || {}).ErrMessage; }
     return errors;
   }
 
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmUsrGroup || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmUsrGroup,
         {
-          UsrGroupId7: values.cUsrGroupId7|| '',
-          UsrGroupName7: values.cUsrGroupName7|| '',
-          RowAuthorityId7: (values.cRowAuthorityId7|| {}).value || '',
-          CompanyId7: (values.cCompanyId7|| {}).value || '',
+          UsrGroupId7: values.cUsrGroupId7 || '',
+          UsrGroupName7: values.cUsrGroupName7 || '',
+          RowAuthorityId7: (values.cRowAuthorityId7 || {}).value || '',
+          CompanyId7: (values.cCompanyId7 || {}).value || '',
         },
         [],
         {
@@ -175,12 +166,12 @@ if (isEmptyId((values.cRowAuthorityId7 || {}).value)) { errors.cRowAuthorityId7 
       const fromMstId = mstId || (mst || {}).UsrGroupId7;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmUsrGroup.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmUsrGroup.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmUsrGroup.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -262,7 +253,7 @@ if (isEmptyId((values.cRowAuthorityId7 || {}).value)) { errors.cRowAuthorityId7 
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmUsrGroup || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -286,7 +277,7 @@ if (isEmptyId((values.cRowAuthorityId7 || {}).value)) { errors.cRowAuthorityId7 
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -315,6 +306,7 @@ if (isEmptyId((values.cRowAuthorityId7 || {}).value)) { errors.cRowAuthorityId7 
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmUsrGroupReduxObj.GetScreenButtons(AdmUsrGroupState) || {};
     const itemList = AdmUsrGroupState.Dtl || [];
@@ -326,23 +318,26 @@ if (isEmptyId((values.cRowAuthorityId7 || {}).value)) { errors.cRowAuthorityId7 
     const authRow = (AdmUsrGroupState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmUsrGroup || {}).Mst || {});
     const currDtl = ((this.props.AdmUsrGroup || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.UsrGroupId7));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.UsrGroupId7));
     const selectList = AdmUsrGroupReduxObj.SearchListToSelectList(AdmUsrGroupState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const UsrGroupId7 = currMst.UsrGroupId7;
-const UsrGroupName7 = currMst.UsrGroupName7;
-const RowAuthorityId7List = AdmUsrGroupReduxObj.ScreenDdlSelectors.RowAuthorityId7(AdmUsrGroupState);
-const RowAuthorityId7 = currMst.RowAuthorityId7;
-const CompanyId7List = AdmUsrGroupReduxObj.ScreenDdlSelectors.CompanyId7(AdmUsrGroupState);
-const CompanyId7 = currMst.CompanyId7;
+
+    const UsrGroupId7 = currMst.UsrGroupId7;
+    const UsrGroupName7 = currMst.UsrGroupName7;
+    const RowAuthorityId7List = AdmUsrGroupReduxObj.ScreenDdlSelectors.RowAuthorityId7(AdmUsrGroupState);
+    const RowAuthorityId7 = currMst.RowAuthorityId7;
+    const CompanyId7List = AdmUsrGroupReduxObj.ScreenDdlSelectors.CompanyId7(AdmUsrGroupState);
+    const CompanyId7 = currMst.CompanyId7;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -360,10 +355,10 @@ const CompanyId7 = currMst.CompanyId7;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cUsrGroupId7: UsrGroupId7 || '',
-                  cUsrGroupName7: UsrGroupName7 || '',
-                  cRowAuthorityId7: RowAuthorityId7List.filter(obj => { return obj.key === RowAuthorityId7 })[0],
-                  cCompanyId7: CompanyId7List.filter(obj => { return obj.key === CompanyId7 })[0],
+                    cUsrGroupId7: formatContent(UsrGroupId7 || '', 'TextBox'),
+                    cUsrGroupName7: formatContent(UsrGroupName7 || '', 'TextBox'),
+                    cRowAuthorityId7: RowAuthorityId7List.filter(obj => { return obj.key === RowAuthorityId7 })[0],
+                    cCompanyId7: CompanyId7List.filter(obj => { return obj.key === CompanyId7 })[0],
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -425,99 +420,128 @@ const CompanyId7 = currMst.CompanyId7;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.UsrGroupId7 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.UsrGroupId7 || {}).ColumnHeader} {(columnLabel.UsrGroupId7 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.UsrGroupId7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrGroupId7 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cUsrGroupId7'
-disabled = {(authCol.UsrGroupId7 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cUsrGroupId7 && touched.cUsrGroupId7 && <span className='form__form-group-error'>{errors.cUsrGroupId7}</span>}
-</div>
-</Col>
-}
-{(authCol.UsrGroupName7 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.UsrGroupName7 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.UsrGroupName7 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.UsrGroupName7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrGroupName7 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cUsrGroupName7'
-disabled = {(authCol.UsrGroupName7 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cUsrGroupName7 && touched.cUsrGroupName7 && <span className='form__form-group-error'>{errors.cUsrGroupName7}</span>}
-</div>
-</Col>
-}
-{(authCol.RowAuthorityId7 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.RowAuthorityId7 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RowAuthorityId7 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RowAuthorityId7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowAuthorityId7 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cRowAuthorityId7'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cRowAuthorityId7')}
-value={values.cRowAuthorityId7}
-options={RowAuthorityId7List}
-placeholder=''
-disabled = {(authCol.RowAuthorityId7 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRowAuthorityId7 && touched.cRowAuthorityId7 && <span className='form__form-group-error'>{errors.cRowAuthorityId7}</span>}
-</div>
-</Col>
-}
-{(authCol.CompanyId7 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.CompanyId7 || {}).ColumnHeader} {(columnLabel.CompanyId7 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.CompanyId7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CompanyId7 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<DropdownField
-name='cCompanyId7'
-onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'cCompanyId7')}
-value={values.cCompanyId7}
-options={CompanyId7List}
-placeholder=''
-disabled = {(authCol.CompanyId7 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cCompanyId7 && touched.cCompanyId7 && <span className='form__form-group-error'>{errors.cCompanyId7}</span>}
-</div>
-</Col>
-}
+                              {(authCol.UsrGroupId7 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.UsrGroupId7 || {}).ColumnHeader} {(columnLabel.UsrGroupId7 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.UsrGroupId7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.UsrGroupId7 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cUsrGroupId7'
+                                          disabled={(authCol.UsrGroupId7 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cUsrGroupId7 && touched.cUsrGroupId7 && <span className='form__form-group-error'>{errors.cUsrGroupId7}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.UsrGroupName7 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.UsrGroupName7 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.UsrGroupName7 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.UsrGroupName7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.UsrGroupName7 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cUsrGroupName7'
+                                          disabled={(authCol.UsrGroupName7 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cUsrGroupName7 && touched.cUsrGroupName7 && <span className='form__form-group-error'>{errors.cUsrGroupName7}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.RowAuthorityId7 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.RowAuthorityId7 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RowAuthorityId7 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.RowAuthorityId7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RowAuthorityId7 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cRowAuthorityId7'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cRowAuthorityId7')}
+                                          value={values.cRowAuthorityId7}
+                                          options={RowAuthorityId7List}
+                                          placeholder=''
+                                          disabled={(authCol.RowAuthorityId7 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cRowAuthorityId7 && touched.cRowAuthorityId7 && <span className='form__form-group-error'>{errors.cRowAuthorityId7}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.CompanyId7 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.CompanyId7 || {}).ColumnHeader} {(columnLabel.CompanyId7 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.CompanyId7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CompanyId7 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cCompanyId7'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cCompanyId7')}
+                                          value={values.cCompanyId7}
+                                          options={CompanyId7List}
+                                          placeholder=''
+                                          disabled={(authCol.CompanyId7 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cCompanyId7 && touched.cCompanyId7 && <span className='form__form-group-error'>{errors.cCompanyId7}</span>}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -577,9 +601,6 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmUsrGroupReduxObj.SavePage.bind(AdmUsrGroupReduxObj) },
     { DelMst: AdmUsrGroupReduxObj.DelMst.bind(AdmUsrGroupReduxObj) },
     { AddMst: AdmUsrGroupReduxObj.AddMst.bind(AdmUsrGroupReduxObj) },
-//    { SearchMemberId64: AdmUsrGroupReduxObj.SearchActions.SearchMemberId64.bind(AdmUsrGroupReduxObj) },
-//    { SearchCurrencyId64: AdmUsrGroupReduxObj.SearchActions.SearchCurrencyId64.bind(AdmUsrGroupReduxObj) },
-//    { SearchCustomerJobId64: AdmUsrGroupReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmUsrGroupReduxObj) },
 
     { showNotification: showNotification },
     { setTitle: setTitle },
@@ -588,5 +609,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

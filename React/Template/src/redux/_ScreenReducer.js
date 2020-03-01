@@ -652,10 +652,31 @@ export class RintagiScreenRedux {
       const apiService = (webApi || {})[webServiceName] || this.GetWebService();
       const current = getState()[screenName] || {};
       const user = (getState().auth || {}).user; // use with cautions, if possible should be passed in from callers if the coupling is tight
-      apiService.LoadInitPage(options)
+      const GET_SEARCH_LIST = this.GetActionType("GET_SEARCH_LIST");
+
+      dispatchWithNotification(dispatch, { type: GET_SEARCH_LIST.STARTED, payload: {} });
+      return apiService.LoadInitPage(options)
         .then(ret => {
+          dispatchWithNotification(dispatch, {
+            type: GET_SEARCH_LIST.SUCCEEDED,
+            payload: {
+              SearchStr: '',
+              TopN: 50,
+              Total: (ret.data.SearchList || []).length,
+              FilterId: '',
+              SearchList: ret.data.SearchList || [],
+              SelectedKeyId: '',
+              MatchCount: (ret.data.SearchList || []).length,
+            } 
+          });
+          return ret;
         },
-          (err => {
+          (error => {
+            dispatchWithNotification(dispatch, { type: GET_SEARCH_LIST.FAILED, payload: { error: error } })
+          })
+        ).catch(
+          (error => {
+            dispatchWithNotification(dispatch, { type: GET_SEARCH_LIST.FAILED, payload: { error: error } })
           })
         )
     }).bind(this);
@@ -697,7 +718,9 @@ export class RintagiScreenRedux {
               }
             }).then(
               () => {
-                this.LoadMst(currKeyId || mstId, src, options)(dispatch, getState, { webApi });
+                //this.LoadMst(currKeyId || mstId, src, options)(dispatch, getState, { webApi });
+                const _currKeyId = mstId === '!' ? ((((SearchList || {}).data || {}).data || [])[0] || {}).key : currKeyId;
+                this.LoadMst((mstId === '!' && !_currKeyId) ? 0 : (_currKeyId || mstId), src, options)(dispatch, getState, { webApi });
               }
             )
           })
@@ -764,6 +787,7 @@ export class RintagiScreenRedux {
               }
             } 
             else {
+                RememberCurrent(persistMstName,null);
                 dispatchWithNotification(dispatch, { type: GET_MST.FAILED, payload: {message: "failed to load required record " + keyId} });
             }
           },
@@ -976,6 +1000,8 @@ export class RintagiScreenRedux {
       apiService.DelMst(_mst, { ...rest })
         .then(
           (ret => {
+            const persistMstName = this.GetPersistMstName();
+            RememberCurrent(persistMstName,null);
             dispatchWithNotification(dispatch, { type: DEL_MST.SUCCEEDED, payload: { message: ret.data.message } })
             this.LoadPage("MstList", {})(dispatch, getState, { webApi });
           })
@@ -1156,6 +1182,12 @@ export class RintagiScreenRedux {
           const name = "Search" + v.columnName;
           this.SearchActions[("Search" + v.columnName)](MakeAutocompleteSearchValue((mst || {})[v.columnName]),v.filterByColumnName ? (mst || {})[v.filterByColumnName] : null)(dispatch,getState,{webApi})}
         )
+      this.ScreenOnDemandDef
+      .filter(v=>v.forMst)
+      .forEach(v=>{
+        const name = "Get" + v.columnName;
+        this.SearchActions[name]((mst || {})[this.GetMstKeyColumnName()],(mst || {})[this.GetMstKeyColumnName()])(dispatch,getState,{webApi})
+      })        
   }
   BackFillCriAsyncColumns(screenCriteria, dispatch, getState,{webApi}) {
     this.ScreenCriDdlDef

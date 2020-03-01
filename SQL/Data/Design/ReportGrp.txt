@@ -1,0 +1,9 @@
+1~@~~@~~@~*C-Horizontal L-Vertical~@~0~@~~@~N~@~Y~@~0~@~
+2~@~~@~~@~*C&L-Horizontal~@~0~@~~@~N~@~N~@~0~@~
+3~@~~@~~@~*C-Vertical L-Horizontal~@~0~@~~@~Y~@~N~@~0~@~
+4~@~~@~~@~*C&L-Vertical~@~0~@~~@~Y~@~Y~@~0~@~
+5~@~54~@~4~@~Time Group~@~0.0~@~300~@~N~@~N~@~1~@~padding: 8px 6px;
+6~@~54~@~4~@~Perm Group~@~0.1~@~930~@~N~@~N~@~1~@~padding: 8px 6px;
+7~@~54~@~6~@~Perm Group1~@~0.1.0~@~600~@~Y~@~N~@~0~@~
+8~@~54~@~6~@~Perm Group2~@~0.1.1~@~930~@~Y~@~N~@~0~@~
+9~@~54~@~4~@~User Group~@~0.2~@~1100~@~N~@~N~@~1~@~padding: 8px 6px;

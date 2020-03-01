@@ -3,6 +3,8 @@ import log from '../helpers/logger';
 export const SET_PAGE_TITLE = 'SET_PAGE_TITLE';
 export const SHOW_SPINNER = 'SHOW_SPINNER';
 
+let spinnerCount = 0;
+
 // Reducer
 export function globalReducer(state = {}, action) {
     switch (action.type) {
@@ -23,9 +25,15 @@ export function setTitle(title) {
     };
 }
 
-export function setSpinner(showSpinner) {
-    return {
-        type: SHOW_SPINNER,
-        payload: { showSpinner: showSpinner }
-    };
+export function setSpinner(showSpinner, source) {
+  if (!source) {
+    // debugger;
+  }
+  if (showSpinner) spinnerCount++;
+  else if (spinnerCount > 0) spinnerCount--;
+  log.debug('#####spinner log', spinnerCount, showSpinner, source);
+  return {
+    type: SHOW_SPINNER,
+    payload: { showSpinner: spinnerCount === 0 || showSpinner ? showSpinner : true }
+  };
 }

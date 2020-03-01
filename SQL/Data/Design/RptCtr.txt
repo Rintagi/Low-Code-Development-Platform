@@ -1,0 +1,94 @@
+91~@~Data Dictionary [PageFooter] 000[Textbox] PUsrName~@~~@~10~@~~@~57~@~X~@~PUsrName~@~4~@~.30~@~.00~@~.20~@~2.00~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="By: " &amp; Parameters!UsrName.Value~@~N~@~N~@~N
+92~@~Data Dictionary [PageFooter] 005[Textbox] GPageNumber~@~~@~10~@~~@~57~@~X~@~GPageNumber~@~1~@~.30~@~5.00~@~.20~@~1.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="Page " &amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages~@~N~@~N~@~N
+93~@~Data Dictionary [Body] 000[Table] TTbl~@~~@~11~@~~@~57~@~T~@~TTbl~@~~@~.00~@~.00~@~7.50~@~6.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+94~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 200[Column] 000[Textbox] Hd200~@~~@~~@~55~@~57~@~X~@~Hd200~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+95~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 200[Column] 000[Textbox] Dt200~@~~@~~@~56~@~57~@~X~@~Dt200~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~~@~Y~@~N~@~N
+96~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 200[Column] 000[Textbox] Ft200~@~~@~~@~57~@~57~@~X~@~Ft200~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+97~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 210[Column] 000[Textbox] Hd210~@~~@~~@~58~@~57~@~X~@~Hd210~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+98~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 210[Column] 000[Textbox] Dt210~@~~@~~@~59~@~57~@~X~@~Dt210~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~~@~Y~@~N~@~N
+99~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 210[Column] 000[Textbox] Ft210~@~~@~~@~60~@~57~@~X~@~Ft210~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+100~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 220[Column] 000[Textbox] Hd220~@~~@~~@~61~@~57~@~X~@~Hd220~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_ExternalTable.Value~@~N~@~N~@~N
+101~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 220[Column] 000[Textbox] Dt220~@~~@~~@~62~@~57~@~X~@~Dt220~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!ExternalTable.Value~@~N~@~N~@~N
+102~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 220[Column] 000[Textbox] Ft220~@~~@~~@~63~@~57~@~X~@~Ft220~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+103~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 230[Column] 000[Textbox] Hd230~@~~@~~@~64~@~57~@~X~@~Hd230~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_ColumnName.Value~@~N~@~N~@~N
+104~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 230[Column] 000[Textbox] Dt230~@~~@~~@~65~@~57~@~X~@~Dt230~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!ColumnName.Value~@~N~@~N~@~N
+105~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 230[Column] 000[Textbox] Ft230~@~~@~~@~66~@~57~@~X~@~Ft230~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+106~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 240[Column] 000[Textbox] Hd240~@~~@~~@~67~@~57~@~X~@~Hd240~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_ColObjective.Value~@~N~@~N~@~N
+107~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 240[Column] 000[Textbox] Dt240~@~~@~~@~68~@~57~@~X~@~Dt240~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!ColObjective.Value~@~Y~@~N~@~N
+108~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 240[Column] 000[Textbox] Ft240~@~~@~~@~69~@~57~@~X~@~Ft240~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+109~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 250[Column] 000[Textbox] Hd250~@~~@~~@~70~@~57~@~X~@~Hd250~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_DataTypeName.Value~@~N~@~N~@~N
+110~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 250[Column] 000[Textbox] Dt250~@~~@~~@~71~@~57~@~X~@~Dt250~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!DataTypeName.Value~@~N~@~N~@~N
+111~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 250[Column] 000[Textbox] Ft250~@~~@~~@~72~@~57~@~X~@~Ft250~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+112~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 260[Column] 000[Textbox] Hd260~@~~@~~@~73~@~57~@~X~@~Hd260~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_ColumnLength.Value~@~N~@~N~@~N
+113~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 260[Column] 000[Textbox] Dt260~@~~@~~@~74~@~57~@~X~@~Dt260~@~13~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!ColumnLength.Value~@~N~@~N~@~N
+114~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 260[Column] 000[Textbox] Ft260~@~~@~~@~75~@~57~@~X~@~Ft260~@~16~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+115~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 270[Column] 000[Textbox] Hd270~@~~@~~@~76~@~57~@~X~@~Hd270~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_AllowNulls.Value~@~N~@~N~@~N
+116~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 270[Column] 000[Textbox] Dt270~@~~@~~@~77~@~57~@~X~@~Dt270~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!AllowNulls.Value~@~N~@~N~@~N
+117~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 270[Column] 000[Textbox] Ft270~@~~@~~@~78~@~57~@~X~@~Ft270~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+118~@~Data Dictionary [Body] 000[Table] TTbl 010[Header] #001 280[Column] 000[Textbox] Hd280~@~~@~~@~79~@~57~@~X~@~Hd280~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_PrimaryKey.Value~@~N~@~N~@~N
+119~@~Data Dictionary [Body] 000[Table] TTbl 020[Details] #001 280[Column] 000[Textbox] Dt280~@~~@~~@~80~@~57~@~X~@~Dt280~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!PrimaryKey.Value~@~N~@~N~@~N
+120~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer] #001 280[Column] 000[Textbox] Ft280~@~~@~~@~81~@~57~@~X~@~Ft280~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+121~@~Data Dictionary [PageHeader] 000[Textbox] PReportTitle~@~~@~12~@~~@~57~@~X~@~PReportTitle~@~2~@~.25~@~.00~@~.30~@~6.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Parameters!ReportTitle.Value~@~N~@~N~@~N
+122~@~Data Dictionary [PageHeader] 005[Textbox] GExecutionTime~@~~@~12~@~~@~57~@~X~@~GExecutionTime~@~1~@~.00~@~5.00~@~.20~@~1.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Globals!ExecutionTime~@~N~@~N~@~N
+124~@~SR&ED Time Report [PageFooter] 000[Textbox] PUsrName~@~~@~13~@~~@~60~@~X~@~PUsrName~@~4~@~.30~@~.00~@~.20~@~2.00~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="By: " &amp; Parameters!UsrName.Value~@~N~@~N~@~N
+125~@~SR&ED Time Report [PageFooter] 007[Textbox] GPageNumber~@~~@~13~@~~@~60~@~X~@~GPageNumber~@~1~@~.30~@~7.50~@~.20~@~1.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="Page " &amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages~@~N~@~N~@~N
+126~@~SR&ED Time Report [Body] 000[Table] TTbl~@~~@~14~@~~@~60~@~T~@~TTbl~@~~@~.00~@~.00~@~5.00~@~9.00~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+127~@~SR&ED Time Details [Body] 000[Table] TTbl 100[Group]: 100[Header] #001 200[Column] 000[Textbox] G1h100~@~~@~~@~101~@~60~@~X~@~G1h100~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Parameters!L_MemberName.Value &amp; ": " &amp; Fields!MemberName.Value~@~N~@~N~@~N
+128~@~SR&ED Time Details [Body] 000[Table] TTbl 100[Group]: 100[Footer] #001 200[Column] 000[Textbox] G1f100~@~~@~~@~102~@~60~@~X~@~G1f100~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="Total " &amp; Fields!MemberName.Value~@~N~@~N~@~N
+129~@~SR&ED Time Details [Body] 000[Table] TTbl 010[Header] #001 200[Column] 000[Textbox] Hd200~@~~@~~@~91~@~60~@~X~@~Hd200~@~7~@~~@~~@~~@~~@~~@~~@~~@~Y~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+130~@~SR&ED Time Details [Body] 000[Table] TTbl 020[Details] #001 200[Column] 000[Textbox] Dt200~@~~@~~@~95~@~60~@~X~@~Dt200~@~12~@~~@~~@~~@~~@~~@~~@~~@~Y~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+131~@~SR&ED Time Details [Body] 000[Table] TTbl 030[Footer] #001 200[Column] 000[Textbox] Ft200~@~~@~~@~99~@~60~@~X~@~Ft200~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="GRAND TOTAL"~@~N~@~N~@~N
+132~@~SR&ED Time Details [Body] 000[Table] TTbl 010[Header] #001 210[Column] 000[Textbox] Hd210~@~~@~~@~92~@~60~@~X~@~Hd210~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_SredTimeDt.Value~@~N~@~N~@~N
+133~@~SR&ED Time Details [Body] 000[Table] TTbl 020[Details] #001 210[Column] 000[Textbox] Dt210~@~~@~~@~96~@~60~@~X~@~Dt210~@~10~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!SredTimeDt.Value~@~N~@~N~@~N
+134~@~SR&ED Time Details [Body] 000[Table] TTbl 010[Header] #001 220[Column] 000[Textbox] Hd220~@~~@~~@~93~@~60~@~X~@~Hd220~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_Accomplished.Value~@~N~@~N~@~N
+135~@~SR&ED Time Details [Body] 000[Table] TTbl 020[Details] #001 220[Column] 000[Textbox] Dt220~@~~@~~@~97~@~60~@~X~@~Dt220~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!Accomplished.Value~@~Y~@~N~@~Y
+136~@~SR&ED Time Details [Body] 000[Table] TTbl 010[Header] #001 230[Column] 000[Textbox] Hd230~@~~@~~@~94~@~60~@~X~@~Hd230~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_HourSpent.Value~@~N~@~N~@~N
+137~@~SR&ED Time Details [Body] 000[Table] TTbl 020[Details] #001 230[Column] 000[Textbox] Dt230~@~~@~~@~98~@~60~@~X~@~Dt230~@~14~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!HourSpent.Value~@~N~@~N~@~N
+138~@~SR&ED Time Details [Body] 000[Table] TTbl 030[Footer] #001 230[Column] 000[Textbox] Ft230~@~~@~~@~100~@~60~@~X~@~Ft230~@~15~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=SUM(Fields!HourSpent.Value)~@~N~@~N~@~N
+139~@~SR&ED Time Details [Body] 000[Table] TTbl 100[Group]: 100[Footer] #001 230[Column] 000[Textbox] G1230~@~~@~~@~103~@~60~@~X~@~G1230~@~15~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=SUM(Fields!HourSpent.Value)~@~N~@~N~@~N
+140~@~SR&ED Time Report [PageHeader] 000[Textbox] PReportTitle~@~~@~15~@~~@~60~@~X~@~PReportTitle~@~2~@~.25~@~.00~@~.30~@~9.00~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Parameters!ReportTitle.Value &amp; " - For " &amp; Parameters!NumMonths.Value &amp; " Month(s) Ending " &amp; Parameters!MonthEnding.Value~@~N~@~N~@~N
+141~@~SR&ED Time Report [PageHeader] 007[Textbox] GExecutionTime~@~~@~15~@~~@~60~@~X~@~GExecutionTime~@~1~@~.00~@~7.50~@~.20~@~1.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Globals!ExecutionTime~@~N~@~N~@~N
+142~@~SR&ED Statistic [Body] 000[Chart] CCha~@~~@~16~@~~@~61~@~C~@~CCha~@~~@~.00~@~~@~~@~4.00~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="Work %"~@~N~@~N~@~Y
+148~@~AdmRptPerm [PageFooter] 000[Textbox] PUsrName~@~~@~20~@~~@~62~@~X~@~PUsrName~@~4~@~.30~@~.00~@~.20~@~2.00~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="By: " &amp; Parameters!UsrName.Value~@~N~@~N~@~N
+149~@~AdmRptPerm [PageFooter] 005[Textbox] GPageNumber~@~~@~20~@~~@~62~@~X~@~GPageNumber~@~1~@~.30~@~5.00~@~.20~@~1.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="Page " &amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages~@~N~@~N~@~N
+150~@~AdmRptPerm [Body] 000[Table] TTbl~@~~@~21~@~~@~62~@~T~@~TTbl~@~~@~.00~@~.00~@~5.00~@~9.00~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+151~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 200[Column] 000[Textbox] Hd200~@~~@~~@~104~@~62~@~X~@~Hd200~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+153~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 200[Column] 000[Textbox] Dt200~@~~@~~@~105~@~62~@~X~@~Dt200~@~8~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+154~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 210[Column] 000[Textbox] Hd210~@~~@~~@~107~@~62~@~X~@~Hd210~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_PermTitle.Value~@~N~@~N~@~N
+156~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 210[Column] 000[Textbox] Dt210~@~~@~~@~108~@~62~@~X~@~Dt210~@~8~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=IIf(Previous(Fields!PermTitle.Value) = Fields!PermTitle.Value, Nothing, Fields!PermTitle.Value)~@~Y~@~N~@~N
+157~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 220[Column] 000[Textbox] Hd220~@~~@~~@~110~@~62~@~X~@~Hd220~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_UserName.Value~@~N~@~N~@~N
+159~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 220[Column] 000[Textbox] Dt220~@~~@~~@~111~@~62~@~X~@~Dt220~@~8~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Fields!UserName.Value~@~Y~@~N~@~N
+160~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 230[Column] 000[Textbox] Hd230~@~~@~~@~113~@~62~@~X~@~Hd230~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_Psel.Value~@~N~@~N~@~N
+162~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 230[Column] 000[Textbox] Dt230~@~~@~~@~114~@~62~@~X~@~Dt230~@~8~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Fields!Psel.Value~@~N~@~N~@~N
+163~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 240[Column] 000[Textbox] Hd240~@~~@~~@~116~@~62~@~X~@~Hd240~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_Padd.Value~@~N~@~N~@~N
+165~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 240[Column] 000[Textbox] Dt240~@~~@~~@~117~@~62~@~X~@~Dt240~@~8~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Fields!Padd.Value~@~N~@~N~@~N
+166~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 250[Column] 000[Textbox] Hd250~@~~@~~@~119~@~62~@~X~@~Hd250~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_Pupd.Value~@~N~@~N~@~N
+168~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 250[Column] 000[Textbox] Dt250~@~~@~~@~120~@~62~@~X~@~Dt250~@~8~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Fields!Pupd.Value~@~N~@~N~@~N
+169~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header] #001 260[Column] 000[Textbox] Hd260~@~~@~~@~122~@~62~@~X~@~Hd260~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_Pdel.Value~@~N~@~N~@~N
+171~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details] #001 260[Column] 000[Textbox] Dt260~@~~@~~@~123~@~62~@~X~@~Dt260~@~8~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Fields!Pdel.Value~@~N~@~N~@~N
+184~@~AdmRptPerm [PageHeader] 000[Textbox] PReportTitle~@~~@~22~@~~@~62~@~X~@~PReportTitle~@~2~@~.20~@~.00~@~.30~@~6.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Parameters!ReportTitle.Value~@~N~@~N~@~N
+185~@~AdmRptPerm [PageHeader] 005[Textbox] GExecutionTime~@~~@~22~@~~@~62~@~X~@~GExecutionTime~@~1~@~.00~@~5.00~@~.20~@~1.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Globals!ExecutionTime~@~N~@~N~@~N
+191~@~AdmRptPerm [Body] 000[Table] TTbl 100[Group]: 100[Header] #001 200[Column] 000[Textbox] G1h200~@~~@~~@~137~@~62~@~X~@~G1h200~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Fields!PermType.Value~@~Y~@~N~@~N
+192~@~Data Dictionary [Body] 000[Table] TTbl 100[Group]: 100[Header] #001 200[Column] 000[Textbox] G1h200~@~~@~~@~138~@~57~@~X~@~G1h200~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Fields!TableDesc.Value &amp; ": " &amp; Fields!TblObjective.Value~@~N~@~N~@~N
+193~@~User Login Audit Report [PageFooter] 000[Textbox] PUsrName~@~~@~26~@~~@~64~@~X~@~PUsrName~@~4~@~.30~@~.00~@~.20~@~2.00~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="By: " &amp; Parameters!UsrName.Value~@~N~@~N~@~N
+194~@~User Login Audit Report [PageFooter] 005[Textbox] GPageNumber~@~~@~26~@~~@~64~@~X~@~GPageNumber~@~1~@~.30~@~5.00~@~.20~@~1.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~="Page " &amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages~@~N~@~N~@~N
+195~@~User Login Audit Report [Body] 000[Table] TTbl~@~~@~27~@~~@~64~@~T~@~TTbl~@~~@~.00~@~.00~@~7.50~@~6.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+196~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header] #001 200[Column] 000[Textbox] Hd200~@~~@~~@~139~@~64~@~X~@~Hd200~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_AttemptDt.Value~@~N~@~N~@~N
+197~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details] #001 200[Column] 000[Textbox] Dt200~@~~@~~@~144~@~64~@~X~@~Dt200~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!AttemptDt.Value~@~N~@~N~@~N
+198~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer] #001 200[Column] 000[Textbox] Ft200~@~~@~~@~149~@~64~@~X~@~Ft200~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+199~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header] #001 210[Column] 000[Textbox] Hd210~@~~@~~@~140~@~64~@~X~@~Hd210~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_IpAddress.Value~@~N~@~N~@~N
+200~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details] #001 210[Column] 000[Textbox] Dt210~@~~@~~@~145~@~64~@~X~@~Dt210~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!IpAddress.Value~@~N~@~N~@~N
+201~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer] #001 210[Column] 000[Textbox] Ft210~@~~@~~@~150~@~64~@~X~@~Ft210~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+202~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header] #001 220[Column] 000[Textbox] Hd220~@~~@~~@~141~@~64~@~X~@~Hd220~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_LoginName.Value~@~N~@~N~@~N
+203~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details] #001 220[Column] 000[Textbox] Dt220~@~~@~~@~146~@~64~@~X~@~Dt220~@~8~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!LoginName.Value~@~N~@~N~@~N
+204~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer] #001 220[Column] 000[Textbox] Ft220~@~~@~~@~151~@~64~@~X~@~Ft220~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+205~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header] #001 230[Column] 000[Textbox] Hd230~@~~@~~@~142~@~64~@~X~@~Hd230~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_ValidUser.Value~@~N~@~N~@~N
+206~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details] #001 230[Column] 000[Textbox] Dt230~@~~@~~@~147~@~64~@~X~@~Dt230~@~18~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!ValidUser.Value~@~N~@~N~@~N
+207~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer] #001 230[Column] 000[Textbox] Ft230~@~~@~~@~152~@~64~@~X~@~Ft230~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+208~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header] #001 240[Column] 000[Textbox] Hd240~@~~@~~@~143~@~64~@~X~@~Hd240~@~7~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Parameters!L_LoginSuccess.Value~@~N~@~N~@~N
+209~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details] #001 240[Column] 000[Textbox] Dt240~@~~@~~@~148~@~64~@~X~@~Dt240~@~18~@~~@~~@~~@~~@~~@~~@~~@~N~@~~@~~@~N~@~N~@~=Fields!LoginSuccess.Value~@~N~@~N~@~N
+210~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer] #001 240[Column] 000[Textbox] Ft240~@~~@~~@~153~@~64~@~X~@~Ft240~@~12~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~~@~N~@~N~@~~@~N~@~N~@~N
+211~@~User Login Audit Report [PageHeader] 000[Textbox] PReportTitle~@~~@~28~@~~@~64~@~X~@~PReportTitle~@~2~@~.25~@~.00~@~.30~@~6.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Parameters!ReportTitle.Value~@~N~@~N~@~N
+212~@~User Login Audit Report [PageHeader] 005[Textbox] GExecutionTime~@~~@~28~@~~@~64~@~X~@~GExecutionTime~@~1~@~.00~@~5.00~@~.20~@~1.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Globals!ExecutionTime~@~N~@~N~@~N
+213~@~User Login Audit Report [PageHeader] 000[Textbox] PReportCriteria~@~~@~28~@~~@~64~@~X~@~PReportCriteria~@~9~@~.55~@~.00~@~.20~@~6.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Parameters!ReportCriteria.Value~@~N~@~N~@~N
+214~@~AdmRptPerm [PageHeader] 000[Textbox] PReportCriteria~@~~@~22~@~~@~62~@~X~@~PReportCriteria~@~9~@~.55~@~.00~@~.20~@~6.50~@~~@~~@~~@~~@~~@~~@~N~@~N~@~=Parameters!ReportCriteria.Value~@~N~@~N~@~N

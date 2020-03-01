@@ -1,5 +1,5 @@
 
-import {fetchData,getAccessControlInfo, getAccessScope, baseUrl} from './webAPIBase';
+import { fetchData, getAccessControlInfo, getAccessScope, baseUrl } from './webAPIBase';
 
 let activeScope = {};
 
@@ -10,9 +10,9 @@ export function setAccessScope(scope) {
     }
 }
 
-export function GetAuthCol(accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetAuthCol'
-        ,{
+export function GetAuthCol(accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetAuthCol'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -22,9 +22,9 @@ export function GetAuthCol(accessScope){
         }
     )
 }
-export function GetAuthRow(accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetAuthRow'
-        ,{
+export function GetAuthRow(accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetAuthRow'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -35,9 +35,9 @@ export function GetAuthRow(accessScope){
     )
 
 }
-export function GetScreenLabel(accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetScreenLabel'
-        ,{
+export function GetScreenLabel(accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetScreenLabel'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -49,12 +49,12 @@ export function GetScreenLabel(accessScope){
 
 }
 
-export function GetLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetLabels'
-        ,{
+export function GetLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -63,12 +63,12 @@ export function GetLabels(labelCat,accessScope){
     )
 }
 
-export function GetSystemLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetSystemLabels'
-        ,{
+export function GetSystemLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetSystemLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -77,9 +77,9 @@ export function GetSystemLabels(labelCat,accessScope){
     )
 }
 
-export function GetScreenButtonHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetScreenButtonHlp'
-        ,{
+export function GetScreenButtonHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetScreenButtonHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -89,9 +89,9 @@ export function GetScreenButtonHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetScreenHlp'
-        ,{
+export function GetScreenHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetScreenHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -101,9 +101,9 @@ export function GetScreenHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenCriteria(accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetScreenCriteria'
-        ,{
+export function GetScreenCriteria(accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -113,9 +113,9 @@ export function GetScreenCriteria(accessScope){
         }
     )
 }
-export function GetNewMst(accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetNewMst'
-        ,{
+export function GetNewMst(accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetNewMst'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -125,9 +125,9 @@ export function GetNewMst(accessScope){
         }
     )
 }
-export function GetNewDtl(accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetNewDtl'
-        ,{
+export function GetNewDtl(accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetNewDtl'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -137,9 +137,9 @@ export function GetNewDtl(accessScope){
         }
     )
 }
-export function GetScreenFilter(accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetScreenFilter'
-        ,{
+export function GetScreenFilter(accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetScreenFilter'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -149,31 +149,14 @@ export function GetScreenFilter(accessScope){
         }
     )
 }
-export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetColumnContent'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    mstId: mstId || '',
-                    dtlId: dtlId || '',
-                    screenColumnName: screenColumnName,
-                    columnName: columnName,
-                    isMaster: isMaster,
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function GetAdmAppItem83List(searchStr, topN, filterId,accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetAdmAppItem83List'
-        ,{
+export function GetAdmAppItem83List(searchStr, topN, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetAdmAppItem83List'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     searchStr: searchStr || '',
                     topN: topN || 0,
-                    filterId: ('' +  (filterId || 0)),
+                    filterId: ('' + (filterId || 0)),
                 }),
             },
             ...(getAccessControlInfo()),
@@ -181,14 +164,15 @@ export function GetAdmAppItem83List(searchStr, topN, filterId,accessScope){
         }
     )
 }
-export function GetAdmAppItem83ById(keyId,accessScope){   
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetAdmAppItem83ById'
-        ,{
+export const GetSearchList = GetAdmAppItem83List;
+export function GetAdmAppItem83ById(keyId, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetAdmAppItem83ById'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
                     options: {
-                        currentScreenCriteria : JSON.stringify({}),
+                        CurrentScreenCriteria: JSON.stringify({}),
                     },
                 }),
             },
@@ -197,14 +181,15 @@ export function GetAdmAppItem83ById(keyId,accessScope){
         }
     )
 }
-export function GetAdmAppItem83DtlById(keyId,filterId,accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetAdmAppItem83DtlById'
-        ,{
+export const GetMstById = GetAdmAppItem83ById;
+export function GetAdmAppItem83DtlById(keyId, filterId, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetAdmAppItem83DtlById'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
                     options: {
-                        currentScreenCriteria : JSON.stringify({}),
+                        CurrentScreenCriteria: JSON.stringify({}),
                     },
                     filterId: filterId || 0,
                 }),
@@ -214,13 +199,13 @@ export function GetAdmAppItem83DtlById(keyId,filterId,accessScope){
         }
     )
 }
-
-export function LoadInitPage(options,accessScope) {
+export const GetDtlById = GetAdmAppItem83DtlById;
+export function LoadInitPage(options, accessScope) {
     const reqJson = JSON.stringify({
         options: options
     });
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/LoadInitPage'
-        ,{
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/LoadInitPage'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -229,14 +214,29 @@ export function LoadInitPage(options,accessScope) {
         }
     )
 }
-export function SaveData(mst,dtl,options,accessScope){
+export function SaveData(mst, dtl, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mst: mst || {},
+        dtl: dtl || [],
+        options: options || {}
+    });
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/SaveData'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function DelMst(mst, options, accessScope) {
     const reqJson = JSON.stringify({
         mst: mst,
-        dtl: dtl,
         options: options
     });
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/SaveData'
-        ,{
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/DelMst'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -245,26 +245,9 @@ export function SaveData(mst,dtl,options,accessScope){
         }
     )
 }
-
-export function DelMst(mst,options,accessScope){
-    const reqJson = JSON.stringify({
-        mst: mst,
-        options: options
-    });
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/DelMst'
-        ,{
-            requestOptions: {
-                body: reqJson,
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-
-export function SetScreenCriteria(criteriaValues, accessScope){
-    return fetchData(baseUrl+'/AdmAppItemWs.asmx/SetScreenCriteria'
-        ,{
+export function SetScreenCriteria(criteriaValues, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/SetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     criteriaValues: criteriaValues
@@ -276,147 +259,161 @@ export function SetScreenCriteria(criteriaValues, accessScope){
     )
 }
 
-/*screen criteria dll and screen dropdownlist/autocomplete*/           
-            export function GetScreenCriAppItemCode10List(query, topN, filterBy, accessScope){
-return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetScreenCriteriaDdlList'
-,{
-requestOptions: {
-body: JSON.stringify({
-screenCriId: 44,
-query: query || '',
-topN: topN || 0,
-filterBy: filterBy || null
-}),
-},
-...(getAccessControlInfo()),
-...(accessScope)
+/*screen criteria dll and screen dropdownlist/autocomplete*/
+
+export function GetScreenCriAppItemCode10List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetScreenCriteriaDdlList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    screenCriId: 44,
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
 }
-)
-}export function GetAppInfoId136List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetAppInfoId136List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetLanguageCd136List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetLanguageCd136List'
+export function GetAppInfoId136List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetAppInfoId136List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetFrameworkCd136List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetFrameworkCd136List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetObjectTypeCd136List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetObjectTypeCd136List'
+export function GetLanguageCd136List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetLanguageCd136List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetDbProviderCd136List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetDbProviderCd136List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetScreenId136List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetScreenId136List'
+export function GetFrameworkCd136List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetFrameworkCd136List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetReportId136List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetReportId136List'
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }
-export function GetWizardId136List(query, topN, filterBy,accessScope){
-return fetchData(baseUrl+'/AdmAppItemWs.asmx/GetWizardId136List'
+export function GetObjectTypeCd136List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetObjectTypeCd136List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }/* ReactRule: Service Custom Function *//* ReactRule End: Service Custom Function */
+
+export function GetDbProviderCd136List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetDbProviderCd136List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetScreenId136List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetScreenId136List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetReportId136List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetReportId136List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
+export function GetWizardId136List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmAppItemWs.asmx/GetWizardId136List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+/* ReactRule: Service Custom Function */
+
+
+/* ReactRule End: Service Custom Function */

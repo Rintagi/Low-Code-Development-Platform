@@ -1,0 +1,4 @@
+1~@~Key Match Only~@~1
+2~@~All above then Exact Name~@~2
+3~@~All above then StartsWith~@~3
+4~@~All above then Wild Search~@~4

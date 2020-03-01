@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmSignup || {});
+    this.GetReduxState = () => (this.props.AdmSignup || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'UsrId270';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,17 +87,32 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+  ResnedToken({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
+    return function (evt) {
+      this.OnClickColumeName = 'ResnedToken';
+      //Enter Custom Code here, eg: submitForm();
+      evt.preventDefault();
+    }.bind(this);
+  }
+  Submit({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
+    return function (evt) {
+      this.OnClickColumeName = 'Submit';
+      //Enter Custom Code here, eg: submitForm();
+      evt.preventDefault();
+    }.bind(this);
+  }
+  SignUpBtn({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
+    return function (evt) {
+      this.OnClickColumeName = 'SignUpBtn';
+      //Enter Custom Code here, eg: submitForm();
+      evt.preventDefault();
+    }.bind(this);
+  }
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
@@ -107,37 +125,30 @@ class MstRecord extends RintagiScreen {
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmSignup || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmSignup,
         {
-          UsrId270: values.cUsrId270|| '',
-          UsrName270: values.cUsrName270|| '',
-          LoginName270: values.cLoginName270|| '',
-          UsrEmail270: values.cUsrEmail270|| '',
-          UsrPassword270: values.cUsrPassword270|| '',
-          ConfirmationToken: values.cConfirmationToken|| '',
-          Token: values.cToken|| '',
+          UsrId270: values.cUsrId270 || '',
+          UsrName270: values.cUsrName270 || '',
+          LoginName270: values.cLoginName270 || '',
+          UsrEmail270: values.cUsrEmail270 || '',
+          UsrPassword270: values.cUsrPassword270 || '',
+          ConfirmationToken: values.cConfirmationToken || '',
+          Token: values.cToken || '',
         },
         [],
         {
@@ -177,12 +188,12 @@ class MstRecord extends RintagiScreen {
       const fromMstId = mstId || (mst || {}).UsrId270;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmSignup.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmSignup.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmSignup.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -264,7 +275,7 @@ class MstRecord extends RintagiScreen {
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmSignup || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -288,7 +299,7 @@ class MstRecord extends RintagiScreen {
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -317,6 +328,7 @@ class MstRecord extends RintagiScreen {
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmSignupReduxObj.GetScreenButtons(AdmSignupState) || {};
     const itemList = AdmSignupState.Dtl || [];
@@ -328,24 +340,27 @@ class MstRecord extends RintagiScreen {
     const authRow = (AdmSignupState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmSignup || {}).Mst || {});
     const currDtl = ((this.props.AdmSignup || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.UsrId270));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.UsrId270));
     const selectList = AdmSignupReduxObj.SearchListToSelectList(AdmSignupState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const UsrId270 = currMst.UsrId270;
-const UsrName270 = currMst.UsrName270;
-const LoginName270 = currMst.LoginName270;
-const UsrEmail270 = currMst.UsrEmail270;
-const UsrPassword270 = currMst.UsrPassword270;
-const ConfirmationToken = currMst.ConfirmationToken;
-const Token = currMst.Token;
+
+    const UsrId270 = currMst.UsrId270;
+    const UsrName270 = currMst.UsrName270;
+    const LoginName270 = currMst.LoginName270;
+    const UsrEmail270 = currMst.UsrEmail270;
+    const UsrPassword270 = currMst.UsrPassword270;
+    const ConfirmationToken = currMst.ConfirmationToken;
+    const Token = currMst.Token;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -363,13 +378,13 @@ const Token = currMst.Token;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cUsrId270: UsrId270 || '',
-                  cUsrName270: UsrName270 || '',
-                  cLoginName270: LoginName270 || '',
-                  cUsrEmail270: UsrEmail270 || '',
-                  cUsrPassword270: UsrPassword270 || '',
-                  cConfirmationToken: ConfirmationToken || '',
-                  cToken: Token || '',
+                    cUsrId270: formatContent(UsrId270 || '', 'TextBox'),
+                    cUsrName270: formatContent(UsrName270 || '', 'TextBox'),
+                    cLoginName270: formatContent(LoginName270 || '', 'TextBox'),
+                    cUsrEmail270: formatContent(UsrEmail270 || '', 'TextBox'),
+                    cUsrPassword270: formatContent(UsrPassword270 || '', 'Password'),
+                    cConfirmationToken: formatContent(ConfirmationToken || '', 'TextBox'),
+                    cToken: formatContent(Token || '', 'TextBox'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -431,372 +446,401 @@ const Token = currMst.Token;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.DummyWhiteSpace7 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace7 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace7 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace7 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.SignUpTitle || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.SignUpTitle || {}).ColumnHeader} {(columnLabel.SignUpTitle || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.SignUpTitle || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SignUpTitle || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.SignUpTopMsg || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.SignUpTopMsg || {}).ColumnHeader} {(columnLabel.SignUpTopMsg || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.SignUpTopMsg || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SignUpTopMsg || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.DummyWhiteSpace8 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace8 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace8 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace8 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace8 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.DummyWhiteSpace1 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace1 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace1 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace1 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace1 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.UsrId270 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.UsrId270 || {}).ColumnHeader} {(columnLabel.UsrId270 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.UsrId270 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrId270 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cUsrId270'
-disabled = {(authCol.UsrId270 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cUsrId270 && touched.cUsrId270 && <span className='form__form-group-error'>{errors.cUsrId270}</span>}
-</div>
-</Col>
-}
-{(authCol.UsrName270 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.UsrName270 || {}).ColumnHeader} {(columnLabel.UsrName270 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.UsrName270 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrName270 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cUsrName270'
-disabled = {(authCol.UsrName270 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cUsrName270 && touched.cUsrName270 && <span className='form__form-group-error'>{errors.cUsrName270}</span>}
-</div>
-</Col>
-}
-{(authCol.LoginName270 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.LoginName270 || {}).ColumnHeader} {(columnLabel.LoginName270 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.LoginName270 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.LoginName270 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cLoginName270'
-disabled = {(authCol.LoginName270 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cLoginName270 && touched.cLoginName270 && <span className='form__form-group-error'>{errors.cLoginName270}</span>}
-</div>
-</Col>
-}
-{(authCol.UsrEmail270 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.UsrEmail270 || {}).ColumnHeader} {(columnLabel.UsrEmail270 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.UsrEmail270 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrEmail270 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cUsrEmail270'
-disabled = {(authCol.UsrEmail270 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cUsrEmail270 && touched.cUsrEmail270 && <span className='form__form-group-error'>{errors.cUsrEmail270}</span>}
-</div>
-</Col>
-}
-{(authCol.UsrPassword270 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.UsrPassword270 || {}).ColumnHeader} {(columnLabel.UsrPassword270 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.UsrPassword270 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.UsrPassword270 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cUsrPassword270'
-disabled = {(authCol.UsrPassword270 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cUsrPassword270 && touched.cUsrPassword270 && <span className='form__form-group-error'>{errors.cUsrPassword270}</span>}
-</div>
-</Col>
-}
-{(authCol.DummyWhiteSpace2 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace2 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace2 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace2 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace2 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.DummyWhiteSpace3 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace3 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace3 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace3 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.TokenMsg || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.TokenMsg || {}).ColumnHeader} {(columnLabel.TokenMsg || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.TokenMsg || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.TokenMsg || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.ConfirmationToken || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ConfirmationToken || {}).ColumnHeader} {(columnLabel.ConfirmationToken || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ConfirmationToken || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ConfirmationToken || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cConfirmationToken'
-disabled = {(authCol.ConfirmationToken || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cConfirmationToken && touched.cConfirmationToken && <span className='form__form-group-error'>{errors.cConfirmationToken}</span>}
-</div>
-</Col>
-}
-{(authCol.Token || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.Token || {}).ColumnHeader} {(columnLabel.Token || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.Token || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Token || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cToken'
-disabled = {(authCol.Token || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cToken && touched.cToken && <span className='form__form-group-error'>{errors.cToken}</span>}
-</div>
-</Col>
-}
-{(authCol.DummyWhiteSpace9 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace9 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace9 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace9 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace9 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.ResnedToken || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.ResnedToken || {}).ColumnHeader} {(columnLabel.ResnedToken || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.ResnedToken || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.ResnedToken || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.DummyWhiteSpace4 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace4 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace4 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace4 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace4 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.DummyWhiteSpace5 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace5 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace5 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace5 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.Submit || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.Submit || {}).ColumnHeader} {(columnLabel.Submit || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.Submit || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.Submit || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.SignUpBtn || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.SignUpBtn || {}).ColumnHeader} {(columnLabel.SignUpBtn || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.SignUpBtn || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SignUpBtn || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.DummyWhiteSpace6 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace6 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace6 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace6 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace6 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.DummyWhiteSpace10 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace10 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace10 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace10 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace10 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.SignUpMsg || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.SignUpMsg || {}).ColumnHeader} {(columnLabel.SignUpMsg || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.SignUpMsg || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.SignUpMsg || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
-{(authCol.DummyWhiteSpace11 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace11 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace11 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.DummyWhiteSpace11 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.DummyWhiteSpace11 || {}).ToolTip} />
-)}
-</label>
-}
-</div>
-</Col>
-}
+                              {(authCol.DummyWhiteSpace7 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace7 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace7 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace7 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace7 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.SignUpTitle || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.SignUpTitle || {}).ColumnHeader} {(columnLabel.SignUpTitle || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.SignUpTitle || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SignUpTitle || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.SignUpTopMsg || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.SignUpTopMsg || {}).ColumnHeader} {(columnLabel.SignUpTopMsg || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.SignUpTopMsg || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SignUpTopMsg || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DummyWhiteSpace8 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace8 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace8 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace8 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace8 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DummyWhiteSpace1 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace1 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace1 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace1 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace1 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.UsrId270 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.UsrId270 || {}).ColumnHeader} {(columnLabel.UsrId270 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.UsrId270 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.UsrId270 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cUsrId270'
+                                          disabled={(authCol.UsrId270 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cUsrId270 && touched.cUsrId270 && <span className='form__form-group-error'>{errors.cUsrId270}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.UsrName270 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.UsrName270 || {}).ColumnHeader} {(columnLabel.UsrName270 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.UsrName270 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.UsrName270 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cUsrName270'
+                                          disabled={(authCol.UsrName270 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cUsrName270 && touched.cUsrName270 && <span className='form__form-group-error'>{errors.cUsrName270}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.LoginName270 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.LoginName270 || {}).ColumnHeader} {(columnLabel.LoginName270 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.LoginName270 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.LoginName270 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cLoginName270'
+                                          disabled={(authCol.LoginName270 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cLoginName270 && touched.cLoginName270 && <span className='form__form-group-error'>{errors.cLoginName270}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.UsrEmail270 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.UsrEmail270 || {}).ColumnHeader} {(columnLabel.UsrEmail270 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.UsrEmail270 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.UsrEmail270 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cUsrEmail270'
+                                          disabled={(authCol.UsrEmail270 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cUsrEmail270 && touched.cUsrEmail270 && <span className='form__form-group-error'>{errors.cUsrEmail270}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.UsrPassword270 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.UsrPassword270 || {}).ColumnHeader} {(columnLabel.UsrPassword270 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.UsrPassword270 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.UsrPassword270 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cUsrPassword270'
+                                          disabled={(authCol.UsrPassword270 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cUsrPassword270 && touched.cUsrPassword270 && <span className='form__form-group-error'>{errors.cUsrPassword270}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DummyWhiteSpace2 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace2 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace2 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace2 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace2 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DummyWhiteSpace3 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace3 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace3 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace3 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace3 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.TokenMsg || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.TokenMsg || {}).ColumnHeader} {(columnLabel.TokenMsg || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.TokenMsg || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.TokenMsg || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ConfirmationToken || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ConfirmationToken || {}).ColumnHeader} {(columnLabel.ConfirmationToken || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ConfirmationToken || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ConfirmationToken || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cConfirmationToken'
+                                          disabled={(authCol.ConfirmationToken || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cConfirmationToken && touched.cConfirmationToken && <span className='form__form-group-error'>{errors.cConfirmationToken}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.Token || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.Token || {}).ColumnHeader} {(columnLabel.Token || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.Token || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.Token || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cToken'
+                                          disabled={(authCol.Token || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cToken && touched.cToken && <span className='form__form-group-error'>{errors.cToken}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DummyWhiteSpace9 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace9 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace9 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace9 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace9 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              <Col lg={6} xl={6}>
+                                <div className='form__form-group'>
+                                  <div className='d-block'>
+                                    {(authCol.ResnedToken || {}).visible &&
+                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                        disabled={(authCol.ResnedToken || {}).readonly || !(authCol.ResnedToken || {}).visible}
+                                        onClick={this.ResnedToken({ naviBar, submitForm, currMst })} >
+                                        {auxLabels.ResnedToken || (columnLabel.ResnedToken || {}).ColumnName}
+                                      </Button>}
+                                  </div>
+                                </div>
+                              </Col>
+                              {(authCol.DummyWhiteSpace4 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace4 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace4 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace4 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace4 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DummyWhiteSpace5 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace5 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace5 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace5 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              <Col lg={6} xl={6}>
+                                <div className='form__form-group'>
+                                  <div className='d-block'>
+                                    {(authCol.Submit || {}).visible &&
+                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                        disabled={(authCol.Submit || {}).readonly || !(authCol.Submit || {}).visible}
+                                        onClick={this.Submit({ naviBar, submitForm, currMst })} >
+                                        {auxLabels.Submit || (columnLabel.Submit || {}).ColumnName}
+                                      </Button>}
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col lg={6} xl={6}>
+                                <div className='form__form-group'>
+                                  <div className='d-block'>
+                                    {(authCol.SignUpBtn || {}).visible &&
+                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                        disabled={(authCol.SignUpBtn || {}).readonly || !(authCol.SignUpBtn || {}).visible}
+                                        onClick={this.SignUpBtn({ naviBar, submitForm, currMst })} >
+                                        {auxLabels.SignUpBtn || (columnLabel.SignUpBtn || {}).ColumnName}
+                                      </Button>}
+                                  </div>
+                                </div>
+                              </Col>
+                              {(authCol.DummyWhiteSpace6 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace6 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace6 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace6 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace6 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DummyWhiteSpace10 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace10 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace10 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace10 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace10 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.SignUpMsg || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.SignUpMsg || {}).ColumnHeader} {(columnLabel.SignUpMsg || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.SignUpMsg || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SignUpMsg || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DummyWhiteSpace11 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSignupState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DummyWhiteSpace11 || {}).ColumnHeader} {(columnLabel.DummyWhiteSpace11 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DummyWhiteSpace11 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DummyWhiteSpace11 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -856,9 +900,6 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmSignupReduxObj.SavePage.bind(AdmSignupReduxObj) },
     { DelMst: AdmSignupReduxObj.DelMst.bind(AdmSignupReduxObj) },
     { AddMst: AdmSignupReduxObj.AddMst.bind(AdmSignupReduxObj) },
-//    { SearchMemberId64: AdmSignupReduxObj.SearchActions.SearchMemberId64.bind(AdmSignupReduxObj) },
-//    { SearchCurrencyId64: AdmSignupReduxObj.SearchActions.SearchCurrencyId64.bind(AdmSignupReduxObj) },
-//    { SearchCustomerJobId64: AdmSignupReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmSignupReduxObj) },
 
     { showNotification: showNotification },
     { setTitle: setTitle },
@@ -867,5 +908,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

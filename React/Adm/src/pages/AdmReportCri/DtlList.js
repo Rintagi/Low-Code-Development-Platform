@@ -17,7 +17,7 @@ import RintagiScreen from '../../components/custom/Screen'
 import ModalDialog from '../../components/custom/ModalDialog';
 import classNames from 'classnames';
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
-import { getSelectedFromList, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getListDisplayContet } from '../../helpers/utils'
+import { getSelectedFromList, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getListDisplayContent } from '../../helpers/utils'
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -27,7 +27,7 @@ import AdmReportCriReduxObj from '../../redux/AdmReportCri';
 class DtlList extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmReportCri || {});
+    this.GetReduxState = () => (this.props.AdmReportCri || {});
     this.titleSet = false;
     this.hasChangedContent = false;
     this.SystemName = 'FintruX';
@@ -58,7 +58,7 @@ class DtlList extends RintagiScreen {
       isMobile: false,
     };
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
@@ -82,7 +82,7 @@ class DtlList extends RintagiScreen {
           const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
           if (useMobileView) {
             const naviBar = getNaviBar('DtlList', mst, {}, this.props.AdmReportCri.Label);
-            const path = getEditDtlPath(getNaviPath(naviBar, 'Dtl', '/'), '_');
+            const path = getEditDtlPath(getNaviPath(naviBar, 'DtlRecord', '/'), '_');
             this.props.history.push(path);
           }
           else {
@@ -92,7 +92,7 @@ class DtlList extends RintagiScreen {
           }
         }
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
 
@@ -176,7 +176,7 @@ class DtlList extends RintagiScreen {
     const { mstId, dtlId } = { ...this.props.match.params };
 
     if (!(this.props.AdmReportCri || {}).AuthCol || true)
-      this.props.LoadPage('DtlList', { mstId:mstId || '_', dtlId:dtlId || '_' });
+      this.props.LoadPage('DtlList', { mstId: mstId || '_', dtlId: dtlId || '_' });
 
     this.mediaqueryresponse(this.mobileView);
     this.mobileView.addListener(this.mediaqueryresponse) // attach listener function to listen in on state changes
@@ -185,7 +185,7 @@ class DtlList extends RintagiScreen {
   componentDidUpdate(prevProps, prevStates) {
     const currReduxScreenState = this.props.AdmReportCri || {};
 
-    if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
       const _this = this;
       setTimeout(() => _this.props.setSpinner(false), 500);
     }
@@ -219,22 +219,22 @@ class DtlList extends RintagiScreen {
     const screenButtons = AdmReportCriReduxObj.GetScreenButtons(AdmReportCriState) || {};
     const itemList = AdmReportCriReduxObj.DtlListToSelectList(AdmReportCriState, 'ReportCriHlpId98');
     const selectList = AdmReportCriReduxObj.SearchListToSelectList(AdmReportCriState);
-    const selectedMst = (selectList || []).filter(v=>v.isSelected)[0] || {};
+    const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
     const auxLabels = AdmReportCriState.Label || {};
     const auxSystemLabels = AdmReportCriState.SystemLabel || {};
     const columnLabel = AdmReportCriState.ColumnLabel;
-    const columnDefinition = Object.keys(columnLabel).reduce((a,o,i)=>{
-    const x = columnLabel[o];
-       if (x['DtlLstPosId'] == '1'){ a['dTopL'] = x;};
-       if (x['DtlLstPosId'] == '2'){ a['dBottomL'] = x;};
-       if (x['DtlLstPosId'] == '3'){ a['dTopR'] = x;};
-       if (x['DtlLstPosId'] == '4'){ a['dBottomR'] = x;};  
-       return a;
-    },{});     
-    const dTopL =  columnDefinition['dTopL'] || {};
-    const dBottomL =  columnDefinition['dBottomL'] || {};
-    const dTopR =  columnDefinition['dTopR'] || {};
-    const dBottomR =  columnDefinition['dBottomR'] || {};
+    const columnDefinition = Object.keys(columnLabel).reduce((a, o, i) => {
+      const x = columnLabel[o];
+      if (x['DtlLstPosId'] == '1') { a['dTopL'] = x; };
+      if (x['DtlLstPosId'] == '2') { a['dBottomL'] = x; };
+      if (x['DtlLstPosId'] == '3') { a['dTopR'] = x; };
+      if (x['DtlLstPosId'] == '4') { a['dBottomR'] = x; };
+      return a;
+    }, {});
+    const dTopL = columnDefinition['dTopL'] || {};
+    const dBottomL = columnDefinition['dBottomL'] || {};
+    const dTopR = columnDefinition['dTopR'] || {};
+    const dBottomR = columnDefinition['dBottomR'] || {};
     const currMst = AdmReportCriState.Mst;
     const currDtl = AdmReportCriState.EditDtl;
     const dtlFilter = AdmReportCriState.DtlFilter;
@@ -325,7 +325,7 @@ class DtlList extends RintagiScreen {
                                         {activeSelectionVisible &&
                                           dropdownMenuButtonList
                                             .filter(v => !v.expose)
-                                            .filter(v => (!this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ReportCriId97,(currDtl || {}).ReportCriHlpId98)))
+                                            .filter(v => (!this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ReportCriId97, (currDtl || {}).ReportCriHlpId98)))
                                             .length > 0 &&
                                           <DropdownToggle className='mw-50' outline>
                                             <i className='fa fa-ellipsis-h icon-holder'></i>
@@ -336,13 +336,13 @@ class DtlList extends RintagiScreen {
                                       {activeSelectionVisible &&
                                         dropdownMenuButtonList
                                           .filter(v => !v.expose)
-                                          .filter(v => (!this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ReportCriId97,(currDtl || {}).ReportCriHlpId98)))
+                                          .filter(v => (!this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ReportCriId97, (currDtl || {}).ReportCriHlpId98)))
                                           .length > 0 &&
                                         <DropdownMenu right className={`dropdown__menu dropdown-options`}>
                                           {
 
                                             dropdownMenuButtonList.filter(v => !v.expose).map(v => {
-                                              if ((!activeSelectionVisible && v.buttonType !== 'InsRow') || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ReportCriId97,(currDtl || {}).ReportCriHlpId98)) return null;
+                                              if ((!activeSelectionVisible && v.buttonType !== 'InsRow') || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ReportCriId97, (currDtl || {}).ReportCriHlpId98)) return null;
                                               return (
                                                 <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, mst: currMst, dtl: currDtl, useMobileView })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
                                             })
@@ -360,8 +360,14 @@ class DtlList extends RintagiScreen {
                                   <div className='form__form-group-field'>
                                     <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
                                       <span className='radio-btn__label color-blue fw-700 f-16'>{selectedMst.label || NoMasterMsg}</span>
-                                      <span className='radio-btn__label__right color-blue fw-700 f-16'><span className='mr-5'>{(columnLabel.TrxTotal64 || {}).ColumnHeader}</span>
-                                      {/* :{!isNaN(selectedMst.labelR) ? toLocalAmountFormat(selectedMst.labelR) : toLocalAmountFormat('0.00')} {selectedMst.detailR} */}
+                                      <span className='radio-btn__label__right color-blue fw-700 f-16'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                      </span>
+                                    </span>
+                                  </div>
+                                  <div className='form__form-group-field'>
+                                    <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                      <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                      <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
                                       </span>
                                     </span>
                                   </div>
@@ -394,11 +400,7 @@ class DtlList extends RintagiScreen {
                                             onBlur={(e) => this.SearchBoxFocus(e)}
                                             className='FilteredValueClass'
                                           />
-                                          <div className='rbt-aux custom-filter-clear' onClick={handleReset}>
-                                            <button className='close rbt-close' type='button'>
-                                              <span aria-hidden='true'>×</span>
-                                            </button>
-                                          </div>
+                                         
                                           <span onClick={handleSubmit} className={`form__form-group-button desktop-filter-button search-btn-fix ${this.state.searchFocus ? ' active' : ''}`}><MagnifyIcon /></span>
                                         </div>
                                       </Col>
@@ -431,12 +433,12 @@ class DtlList extends RintagiScreen {
                                                 </span>
                                               }
                                               <span className={`radio-btn__label ${colorDark}`}>
-                                                <div className='row-cut'>{getListDisplayContet(obj, dTopL)}</div>
-                                                <div className='row-cut row-bottom-report'>{getListDisplayContet(obj, dBottomL)}</div>
+                                                <div className='row-cut'>{getListDisplayContent(obj, dTopL)}</div>
+                                                <div className='row-cut row-bottom-report'>{getListDisplayContent(obj, dBottomL)}</div>
                                               </span>
                                               <span className={`radio-btn__label__right ${colorDark}`}>
-                                                <div className='row-cut'>{getListDisplayContet(obj, dTopR)}</div>
-                                                <div className='row-bottom-report f-right'>{getListDisplayContet(obj, dBottomR)}</div>
+                                                <div className='row-cut'>{getListDisplayContent(obj, dTopR)}</div>
+                                                <div className='row-bottom-report f-right'>{getListDisplayContent(obj, dBottomR)}</div>
                                               </span>
                                               {
                                                 rowMenuButtonList
@@ -457,7 +459,7 @@ class DtlList extends RintagiScreen {
                                                     {rowMenuButtonList
                                                       .filter(v => !v.expose || useMobileView)
                                                       .map((v) => {
-                                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ReportCriId97,obj.ReportCriHlpId98)) return null;
+                                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).ReportCriId97, obj.ReportCriHlpId98)) return null;
                                                         return <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, mst: currMst, useMobileView, dtlId: obj.ReportCriHlpId98 })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>
                                                       })
                                                     }
@@ -521,7 +523,7 @@ class DtlList extends RintagiScreen {
                   <p className='create-new-message'>{NoDetailMsg}. <span className='link-imitation' onClick={this.AddNewDtl({ naviBar, mstId: currMst.ReportCriId97 })}>{AddDetailMsg}</span></p>
                 </div>}
 
-              {(activeSelectionVisible || this.state.ShowDtl || (targetDtlId ==='_')) && <DtlRecord OnCopy={this.OnDtlCopy} updateChangedState={this.SetCurrentRecordState} suppressLoadPage={true} />}
+              {(activeSelectionVisible || this.state.ShowDtl || (targetDtlId === '_')) && <DtlRecord OnCopy={this.OnDtlCopy} updateChangedState={this.SetCurrentRecordState} suppressLoadPage={true} />}
 
             </Col>}
           </Row>
@@ -553,5 +555,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
-
-            

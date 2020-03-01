@@ -1,0 +1,357 @@
+1~@~AdmRptDbTable    10: Id (en-US)~@~1~@~1~@~Table
+2~@~AdmRptDbTable   100: ModifiedAfter (en-US)~@~2~@~1~@~Modified On or After
+3~@~AdmRptUsr    20: UsrGroupId (en-US)~@~3~@~1~@~User Group
+4~@~AdmRptUsr    10: Active (en-US)~@~4~@~1~@~Active Users
+5~@~AdmRptUsage   100: SystemId (en-US)~@~5~@~1~@~System
+6~@~AdmRptUsage   200: FrDate (en-US)~@~6~@~1~@~From
+7~@~AdmRptUsage   300: ToDate (en-US)~@~7~@~1~@~To
+8~@~AdmRptUsage   400: AgentId (en-US)~@~8~@~1~@~Agent
+9~@~AdmRptUsage   800: InvestorId (en-US)~@~9~@~1~@~Investor
+10~@~AdmRptUsage    50: Summary (en-US)~@~10~@~1~@~Summary
+11~@~AdmRptUsage   500: BrokerId (en-US)~@~11~@~1~@~Broker
+12~@~AdmRptUsage   600: VendorId (en-US)~@~12~@~1~@~Vendor
+13~@~AdmRptUsage   700: CustomerId (en-US)~@~13~@~1~@~Customer
+14~@~AdmRptUsage   900: MemberId (en-US)~@~14~@~1~@~Member
+15~@~AdmRptUsage  1000: UsrGroupId (en-US)~@~15~@~1~@~User Group
+16~@~AdmRptUsage  1100: UserId (en-US)~@~16~@~1~@~User
+18~@~AdmRptBizRule   200: SystemId (en-US)~@~18~@~1~@~System
+19~@~AdmRptMsg   200: SystemId (en-US)~@~19~@~1~@~System
+20~@~AdmRptMsg   100: CultureId (en-US)~@~20~@~1~@~Human Language
+21~@~AdmRptDataDict    10: SystemId (en-US)~@~22~@~1~@~System
+22~@~AdmRptPrgList   200: SystemId (en-US)~@~23~@~1~@~System
+23~@~AdmRptPrgList   100: CultureId (en-US)~@~24~@~1~@~Human Language
+31~@~AdmRptDbTable    10: Id (fr-FR)~@~1~@~2~@~Table
+32~@~AdmRptDbTable   100: ModifiedAfter (fr-FR)~@~2~@~2~@~Mis à jour le ou après le
+33~@~AdmRptUsr    20: UsrGroupId (fr-FR)~@~3~@~2~@~User Group
+34~@~AdmRptUsr    10: Active (fr-FR)~@~4~@~2~@~Utilisateurs actifs
+35~@~AdmRptUsage   100: SystemId (fr-FR)~@~5~@~2~@~Système
+36~@~AdmRptUsage   200: FrDate (fr-FR)~@~6~@~2~@~À partir de
+37~@~AdmRptUsage   300: ToDate (fr-FR)~@~7~@~2~@~À
+38~@~AdmRptUsage   400: AgentId (fr-FR)~@~8~@~2~@~Agent
+39~@~AdmRptUsage   800: InvestorId (fr-FR)~@~9~@~2~@~Investisseurs
+40~@~AdmRptUsage    50: Summary (fr-FR)~@~10~@~2~@~Sommaire
+41~@~AdmRptUsage   500: BrokerId (fr-FR)~@~11~@~2~@~Broker
+42~@~AdmRptUsage   600: VendorId (fr-FR)~@~12~@~2~@~Vendeur
+43~@~AdmRptUsage   700: CustomerId (fr-FR)~@~13~@~2~@~Client
+44~@~AdmRptUsage   900: MemberId (fr-FR)~@~14~@~2~@~Membres
+45~@~AdmRptUsage  1000: UsrGroupId (fr-FR)~@~15~@~2~@~User Group
+46~@~AdmRptUsage  1100: UserId (fr-FR)~@~16~@~2~@~Utilisateur
+47~@~AdmRptBizRule   200: SystemId (fr-FR)~@~18~@~2~@~Système
+48~@~AdmRptMsg   200: SystemId (fr-FR)~@~19~@~2~@~Système
+49~@~AdmRptMsg   100: CultureId (fr-FR)~@~20~@~2~@~Human Language
+50~@~AdmRptDataDict    10: SystemId (fr-FR)~@~22~@~2~@~Système
+51~@~AdmRptPrgList   200: SystemId (fr-FR)~@~23~@~2~@~Système
+52~@~AdmRptPrgList   100: CultureId (fr-FR)~@~24~@~2~@~Human Language
+56~@~AdmRptDbTable    10: Id (zh-CN)~@~1~@~4~@~表
+57~@~AdmRptDbTable   100: ModifiedAfter (zh-CN)~@~2~@~4~@~修改日期或之后
+58~@~AdmRptUsr    20: UsrGroupId (zh-CN)~@~3~@~4~@~用户组
+59~@~AdmRptUsr    10: Active (zh-CN)~@~4~@~4~@~活跃\u200b\u200b用户
+60~@~AdmRptUsage   100: SystemId (zh-CN)~@~5~@~4~@~系统
+61~@~AdmRptUsage   200: FrDate (zh-CN)~@~6~@~4~@~从
+62~@~AdmRptUsage   300: ToDate (zh-CN)~@~7~@~4~@~要
+63~@~AdmRptUsage   400: AgentId (zh-CN)~@~8~@~4~@~代理
+64~@~AdmRptUsage   800: InvestorId (zh-CN)~@~9~@~4~@~投资者
+65~@~AdmRptUsage    50: Summary (zh-CN)~@~10~@~4~@~摘要
+66~@~AdmRptUsage   500: BrokerId (zh-CN)~@~11~@~4~@~代理
+67~@~AdmRptUsage   600: VendorId (zh-CN)~@~12~@~4~@~供应商
+68~@~AdmRptUsage   700: CustomerId (zh-CN)~@~13~@~4~@~客户
+69~@~AdmRptUsage   900: MemberId (zh-CN)~@~14~@~4~@~会员
+70~@~AdmRptUsage  1000: UsrGroupId (zh-CN)~@~15~@~4~@~用户组
+71~@~AdmRptUsage  1100: UserId (zh-CN)~@~16~@~4~@~用户
+72~@~AdmRptBizRule   200: SystemId (zh-CN)~@~18~@~4~@~系统
+73~@~AdmRptMsg   200: SystemId (zh-CN)~@~19~@~4~@~系统
+74~@~AdmRptMsg   100: CultureId (zh-CN)~@~20~@~4~@~人类语言
+75~@~AdmRptDataDict    10: SystemId (zh-CN)~@~22~@~4~@~系统
+76~@~AdmRptPrgList   200: SystemId (zh-CN)~@~23~@~4~@~系统
+77~@~AdmRptPrgList   100: CultureId (zh-CN)~@~24~@~4~@~人类语言
+81~@~AdmRptDbTable    10: Id (pt-BR)~@~1~@~9~@~Tabela
+82~@~AdmRptDbTable   100: ModifiedAfter (pt-BR)~@~2~@~9~@~Em ou Depois de modificado
+83~@~AdmRptUsr    20: UsrGroupId (pt-BR)~@~3~@~9~@~Grupo de Usuários
+84~@~AdmRptUsr    10: Active (pt-BR)~@~4~@~9~@~Usuários ativos
+85~@~AdmRptUsage   100: SystemId (pt-BR)~@~5~@~9~@~Sistema
+86~@~AdmRptUsage   200: FrDate (pt-BR)~@~6~@~9~@~A partir de
+87~@~AdmRptUsage   300: ToDate (pt-BR)~@~7~@~9~@~Para
+88~@~AdmRptUsage   400: AgentId (pt-BR)~@~8~@~9~@~Agente
+89~@~AdmRptUsage   800: InvestorId (pt-BR)~@~9~@~9~@~Investidor
+90~@~AdmRptUsage    50: Summary (pt-BR)~@~10~@~9~@~Sumário
+91~@~AdmRptUsage   500: BrokerId (pt-BR)~@~11~@~9~@~Corretor
+92~@~AdmRptUsage   600: VendorId (pt-BR)~@~12~@~9~@~Vendedor
+93~@~AdmRptUsage   700: CustomerId (pt-BR)~@~13~@~9~@~Cliente
+94~@~AdmRptUsage   900: MemberId (pt-BR)~@~14~@~9~@~Membro
+95~@~AdmRptUsage  1000: UsrGroupId (pt-BR)~@~15~@~9~@~Grupo de Usuários
+96~@~AdmRptUsage  1100: UserId (pt-BR)~@~16~@~9~@~Usuário
+97~@~AdmRptBizRule   200: SystemId (pt-BR)~@~18~@~9~@~Sistema
+98~@~AdmRptMsg   200: SystemId (pt-BR)~@~19~@~9~@~Sistema
+99~@~AdmRptMsg   100: CultureId (pt-BR)~@~20~@~9~@~Linguagem Humana
+100~@~AdmRptDataDict    10: SystemId (pt-BR)~@~22~@~9~@~Sistema
+101~@~AdmRptPrgList   200: SystemId (pt-BR)~@~23~@~9~@~Sistema
+102~@~AdmRptPrgList   100: CultureId (pt-BR)~@~24~@~9~@~Linguagem Humana
+106~@~AdmRptDbTable    10: Id (hi-IN)~@~1~@~8~@~तालिका
+107~@~AdmRptDbTable   100: ModifiedAfter (hi-IN)~@~2~@~8~@~पर या बाद में संशोधित
+108~@~AdmRptUsr    20: UsrGroupId (hi-IN)~@~3~@~8~@~यूज़र ग्रुप
+109~@~AdmRptUsr    10: Active (hi-IN)~@~4~@~8~@~सक्रिय उपयोगकर्ता
+110~@~AdmRptUsage   100: SystemId (hi-IN)~@~5~@~8~@~प्रणाली
+111~@~AdmRptUsage   200: FrDate (hi-IN)~@~6~@~8~@~से
+112~@~AdmRptUsage   300: ToDate (hi-IN)~@~7~@~8~@~से
+113~@~AdmRptUsage   400: AgentId (hi-IN)~@~8~@~8~@~एजेंट
+114~@~AdmRptUsage   800: InvestorId (hi-IN)~@~9~@~8~@~निवेशक
+115~@~AdmRptUsage    50: Summary (hi-IN)~@~10~@~8~@~सारांश
+116~@~AdmRptUsage   500: BrokerId (hi-IN)~@~11~@~8~@~दलाल
+117~@~AdmRptUsage   600: VendorId (hi-IN)~@~12~@~8~@~विक्रेता
+118~@~AdmRptUsage   700: CustomerId (hi-IN)~@~13~@~8~@~ग्राहक
+119~@~AdmRptUsage   900: MemberId (hi-IN)~@~14~@~8~@~सदस्य
+120~@~AdmRptUsage  1000: UsrGroupId (hi-IN)~@~15~@~8~@~यूज़र ग्रुप
+121~@~AdmRptUsage  1100: UserId (hi-IN)~@~16~@~8~@~उपयोगकर्ता
+122~@~AdmRptBizRule   200: SystemId (hi-IN)~@~18~@~8~@~प्रणाली
+123~@~AdmRptMsg   200: SystemId (hi-IN)~@~19~@~8~@~प्रणाली
+124~@~AdmRptMsg   100: CultureId (hi-IN)~@~20~@~8~@~मानव भाषा
+125~@~AdmRptDataDict    10: SystemId (hi-IN)~@~22~@~8~@~प्रणाली
+126~@~AdmRptPrgList   200: SystemId (hi-IN)~@~23~@~8~@~प्रणाली
+127~@~AdmRptPrgList   100: CultureId (hi-IN)~@~24~@~8~@~मानव भाषा
+131~@~AdmRptDbTable    10: Id (tr-TR)~@~1~@~11~@~Tablo
+132~@~AdmRptDbTable   100: ModifiedAfter (tr-TR)~@~2~@~11~@~Açık ya da modifiye edilmiştir
+133~@~AdmRptUsr    20: UsrGroupId (tr-TR)~@~3~@~11~@~Kullanıcı Grubu
+134~@~AdmRptUsr    10: Active (tr-TR)~@~4~@~11~@~Aktif Kullanıcılar
+135~@~AdmRptUsage   100: SystemId (tr-TR)~@~5~@~11~@~Sistem
+136~@~AdmRptUsage   200: FrDate (tr-TR)~@~6~@~11~@~Itibaren
+137~@~AdmRptUsage   300: ToDate (tr-TR)~@~7~@~11~@~Için
+138~@~AdmRptUsage   400: AgentId (tr-TR)~@~8~@~11~@~Ajan
+139~@~AdmRptUsage   800: InvestorId (tr-TR)~@~9~@~11~@~Yatırımcı
+140~@~AdmRptUsage    50: Summary (tr-TR)~@~10~@~11~@~Özet
+141~@~AdmRptUsage   500: BrokerId (tr-TR)~@~11~@~11~@~Komisyoncu
+142~@~AdmRptUsage   600: VendorId (tr-TR)~@~12~@~11~@~Satıcı
+143~@~AdmRptUsage   700: CustomerId (tr-TR)~@~13~@~11~@~Müşteri
+144~@~AdmRptUsage   900: MemberId (tr-TR)~@~14~@~11~@~Üye
+145~@~AdmRptUsage  1000: UsrGroupId (tr-TR)~@~15~@~11~@~Kullanıcı Grubu
+146~@~AdmRptUsage  1100: UserId (tr-TR)~@~16~@~11~@~Kullanıcı
+147~@~AdmRptBizRule   200: SystemId (tr-TR)~@~18~@~11~@~Sistem
+148~@~AdmRptMsg   200: SystemId (tr-TR)~@~19~@~11~@~Sistem
+149~@~AdmRptMsg   100: CultureId (tr-TR)~@~20~@~11~@~İnsan Dilleri
+150~@~AdmRptDataDict    10: SystemId (tr-TR)~@~22~@~11~@~Sistem
+151~@~AdmRptPrgList   200: SystemId (tr-TR)~@~23~@~11~@~Sistem
+152~@~AdmRptPrgList   100: CultureId (tr-TR)~@~24~@~11~@~İnsan Dilleri
+156~@~AdmRptDbTable    10: Id (ja-JP)~@~1~@~14~@~表
+157~@~AdmRptDbTable   100: ModifiedAfter (ja-JP)~@~2~@~14~@~日以降に変更
+158~@~AdmRptUsr    20: UsrGroupId (ja-JP)~@~3~@~14~@~ユーザグループ
+159~@~AdmRptUsr    10: Active (ja-JP)~@~4~@~14~@~アクティブユーザー
+160~@~AdmRptUsage   100: SystemId (ja-JP)~@~5~@~14~@~システム
+161~@~AdmRptUsage   200: FrDate (ja-JP)~@~6~@~14~@~からの
+162~@~AdmRptUsage   300: ToDate (ja-JP)~@~7~@~14~@~への
+163~@~AdmRptUsage   400: AgentId (ja-JP)~@~8~@~14~@~エージェント
+164~@~AdmRptUsage   800: InvestorId (ja-JP)~@~9~@~14~@~投資家
+165~@~AdmRptUsage    50: Summary (ja-JP)~@~10~@~14~@~まとめ
+166~@~AdmRptUsage   500: BrokerId (ja-JP)~@~11~@~14~@~ブローカー
+167~@~AdmRptUsage   600: VendorId (ja-JP)~@~12~@~14~@~ベンダ
+168~@~AdmRptUsage   700: CustomerId (ja-JP)~@~13~@~14~@~お客様
+169~@~AdmRptUsage   900: MemberId (ja-JP)~@~14~@~14~@~メンバー
+170~@~AdmRptUsage  1000: UsrGroupId (ja-JP)~@~15~@~14~@~ユーザグループ
+171~@~AdmRptUsage  1100: UserId (ja-JP)~@~16~@~14~@~ユーザー
+172~@~AdmRptBizRule   200: SystemId (ja-JP)~@~18~@~14~@~システム
+173~@~AdmRptMsg   200: SystemId (ja-JP)~@~19~@~14~@~システム
+174~@~AdmRptMsg   100: CultureId (ja-JP)~@~20~@~14~@~人間の言語
+175~@~AdmRptDataDict    10: SystemId (ja-JP)~@~22~@~14~@~システム
+176~@~AdmRptPrgList   200: SystemId (ja-JP)~@~23~@~14~@~システム
+177~@~AdmRptPrgList   100: CultureId (ja-JP)~@~24~@~14~@~人間の言語
+181~@~AdmRptDbTable    10: Id (ru-RU)~@~1~@~12~@~Стол
+182~@~AdmRptDbTable   100: ModifiedAfter (ru-RU)~@~2~@~12~@~Изменение или после
+183~@~AdmRptUsr    20: UsrGroupId (ru-RU)~@~3~@~12~@~Группа пользователей
+184~@~AdmRptUsr    10: Active (ru-RU)~@~4~@~12~@~Активные пользователи
+185~@~AdmRptUsage   100: SystemId (ru-RU)~@~5~@~12~@~Система
+186~@~AdmRptUsage   200: FrDate (ru-RU)~@~6~@~12~@~От
+187~@~AdmRptUsage   300: ToDate (ru-RU)~@~7~@~12~@~К
+188~@~AdmRptUsage   400: AgentId (ru-RU)~@~8~@~12~@~Агент
+189~@~AdmRptUsage   800: InvestorId (ru-RU)~@~9~@~12~@~Инвестор
+190~@~AdmRptUsage    50: Summary (ru-RU)~@~10~@~12~@~Резюме
+191~@~AdmRptUsage   500: BrokerId (ru-RU)~@~11~@~12~@~Брокер
+192~@~AdmRptUsage   600: VendorId (ru-RU)~@~12~@~12~@~Продавец
+193~@~AdmRptUsage   700: CustomerId (ru-RU)~@~13~@~12~@~Клиент
+194~@~AdmRptUsage   900: MemberId (ru-RU)~@~14~@~12~@~Член
+195~@~AdmRptUsage  1000: UsrGroupId (ru-RU)~@~15~@~12~@~Группа пользователей
+196~@~AdmRptUsage  1100: UserId (ru-RU)~@~16~@~12~@~Пользователь
+197~@~AdmRptBizRule   200: SystemId (ru-RU)~@~18~@~12~@~Система
+198~@~AdmRptMsg   200: SystemId (ru-RU)~@~19~@~12~@~Система
+199~@~AdmRptMsg   100: CultureId (ru-RU)~@~20~@~12~@~Язык человека
+200~@~AdmRptDataDict    10: SystemId (ru-RU)~@~22~@~12~@~Система
+201~@~AdmRptPrgList   200: SystemId (ru-RU)~@~23~@~12~@~Система
+202~@~AdmRptPrgList   100: CultureId (ru-RU)~@~24~@~12~@~Язык человека
+206~@~AdmRptDbTable    10: Id (es-ES)~@~1~@~13~@~Mesa
+207~@~AdmRptDbTable   100: ModifiedAfter (es-ES)~@~2~@~13~@~Modificado en o después
+208~@~AdmRptUsr    20: UsrGroupId (es-ES)~@~3~@~13~@~Grupo de usuarios
+209~@~AdmRptUsr    10: Active (es-ES)~@~4~@~13~@~Usuarios activos
+210~@~AdmRptUsage   100: SystemId (es-ES)~@~5~@~13~@~Sistema
+211~@~AdmRptUsage   200: FrDate (es-ES)~@~6~@~13~@~De
+212~@~AdmRptUsage   300: ToDate (es-ES)~@~7~@~13~@~A
+213~@~AdmRptUsage   400: AgentId (es-ES)~@~8~@~13~@~Agente
+214~@~AdmRptUsage   800: InvestorId (es-ES)~@~9~@~13~@~Inversor
+215~@~AdmRptUsage    50: Summary (es-ES)~@~10~@~13~@~Resumen
+216~@~AdmRptUsage   500: BrokerId (es-ES)~@~11~@~13~@~Corredor
+217~@~AdmRptUsage   600: VendorId (es-ES)~@~12~@~13~@~Vendedor
+218~@~AdmRptUsage   700: CustomerId (es-ES)~@~13~@~13~@~Cliente
+219~@~AdmRptUsage   900: MemberId (es-ES)~@~14~@~13~@~Miembro
+220~@~AdmRptUsage  1000: UsrGroupId (es-ES)~@~15~@~13~@~Grupo de usuarios
+221~@~AdmRptUsage  1100: UserId (es-ES)~@~16~@~13~@~Usuario
+222~@~AdmRptBizRule   200: SystemId (es-ES)~@~18~@~13~@~Sistema
+223~@~AdmRptMsg   200: SystemId (es-ES)~@~19~@~13~@~Sistema
+224~@~AdmRptMsg   100: CultureId (es-ES)~@~20~@~13~@~Lenguaje Humano
+225~@~AdmRptDataDict    10: SystemId (es-ES)~@~22~@~13~@~Sistema
+226~@~AdmRptPrgList   200: SystemId (es-ES)~@~23~@~13~@~Sistema
+227~@~AdmRptPrgList   100: CultureId (es-ES)~@~24~@~13~@~Lenguaje Humano
+231~@~AdmRptUsage   395: CompanyId (en-US)~@~25~@~1~@~Company
+232~@~AdmRptUsage   695: ProjectId (en-US)~@~26~@~1~@~Project
+235~@~AdmRptUsr    30: CompanyId (en-US)~@~29~@~1~@~Company
+237~@~AdmRptUsage   395: CompanyId (zh-CN)~@~25~@~4~@~公司
+238~@~AdmRptUsage   695: ProjectId (zh-CN)~@~26~@~4~@~项目
+239~@~AdmRptUsr    30: CompanyId (zh-CN)~@~29~@~4~@~公司
+240~@~AdmRptUsage   395: CompanyId (fr-FR)~@~25~@~2~@~Entreprise
+241~@~AdmRptUsage   695: ProjectId (fr-FR)~@~26~@~2~@~Projet
+242~@~AdmRptUsr    30: CompanyId (fr-FR)~@~29~@~2~@~Entreprise
+243~@~AdmRptDbTable    10: Id (de-DE)~@~1~@~68~@~Tabelle
+244~@~AdmRptDbTable   100: ModifiedAfter (de-DE)~@~2~@~68~@~Geändert Am oder nach
+245~@~AdmRptUsr    20: UsrGroupId (de-DE)~@~3~@~68~@~User Group
+246~@~AdmRptUsr    10: Active (de-DE)~@~4~@~68~@~Active Users
+247~@~AdmRptUsage   100: SystemId (de-DE)~@~5~@~68~@~System
+248~@~AdmRptUsage   200: FrDate (de-DE)~@~6~@~68~@~Von
+249~@~AdmRptUsage   300: ToDate (de-DE)~@~7~@~68~@~Auf
+250~@~AdmRptUsage   400: AgentId (de-DE)~@~8~@~68~@~Agent
+251~@~AdmRptUsage   800: InvestorId (de-DE)~@~9~@~68~@~Investor
+252~@~AdmRptUsage    50: Summary (de-DE)~@~10~@~68~@~Zusammenfassung
+253~@~AdmRptUsage   500: BrokerId (de-DE)~@~11~@~68~@~Makler
+254~@~AdmRptUsage   600: VendorId (de-DE)~@~12~@~68~@~Verkäufer
+255~@~AdmRptUsage   700: CustomerId (de-DE)~@~13~@~68~@~Kunde
+256~@~AdmRptUsage   900: MemberId (de-DE)~@~14~@~68~@~Mitglied
+257~@~AdmRptUsage  1000: UsrGroupId (de-DE)~@~15~@~68~@~User Group
+258~@~AdmRptUsage  1100: UserId (de-DE)~@~16~@~68~@~Benutzer
+259~@~AdmRptBizRule   200: SystemId (de-DE)~@~18~@~68~@~System
+260~@~AdmRptMsg   200: SystemId (de-DE)~@~19~@~68~@~System
+261~@~AdmRptMsg   100: CultureId (de-DE)~@~20~@~68~@~Human Language
+262~@~AdmRptDataDict    10: SystemId (de-DE)~@~22~@~68~@~System
+263~@~AdmRptPrgList   200: SystemId (de-DE)~@~23~@~68~@~System
+264~@~AdmRptPrgList   100: CultureId (de-DE)~@~24~@~68~@~Human Language
+268~@~AdmRptUsage   395: CompanyId (de-DE)~@~25~@~68~@~Firma
+269~@~AdmRptUsage   695: ProjectId (de-DE)~@~26~@~68~@~Projekt
+270~@~AdmRptUsr    30: CompanyId (de-DE)~@~29~@~68~@~Firma
+271~@~AdmRptUsage   395: CompanyId (hi-IN)~@~25~@~8~@~कंपनी
+272~@~AdmRptUsage   695: ProjectId (hi-IN)~@~26~@~8~@~परियोजना
+273~@~AdmRptUsr    30: CompanyId (hi-IN)~@~29~@~8~@~कंपनी
+274~@~AdmRptUsage   395: CompanyId (ja-JP)~@~25~@~14~@~会社
+275~@~AdmRptUsage   695: ProjectId (ja-JP)~@~26~@~14~@~プロジェクト
+276~@~AdmRptUsr    30: CompanyId (ja-JP)~@~29~@~14~@~会社
+277~@~AdmRptDbTable    10: Id (ko-KR)~@~1~@~28~@~표
+278~@~AdmRptDbTable   100: ModifiedAfter (ko-KR)~@~2~@~28~@~이후에 수정
+279~@~AdmRptUsr    20: UsrGroupId (ko-KR)~@~3~@~28~@~사용자 그룹
+280~@~AdmRptUsr    10: Active (ko-KR)~@~4~@~28~@~활성 사용자
+281~@~AdmRptUsage   100: SystemId (ko-KR)~@~5~@~28~@~체계
+282~@~AdmRptUsage   200: FrDate (ko-KR)~@~6~@~28~@~부터
+283~@~AdmRptUsage   300: ToDate (ko-KR)~@~7~@~28~@~에
+284~@~AdmRptUsage   400: AgentId (ko-KR)~@~8~@~28~@~대리인
+285~@~AdmRptUsage   800: InvestorId (ko-KR)~@~9~@~28~@~투자자
+286~@~AdmRptUsage    50: Summary (ko-KR)~@~10~@~28~@~개요
+287~@~AdmRptUsage   500: BrokerId (ko-KR)~@~11~@~28~@~브로커
+288~@~AdmRptUsage   600: VendorId (ko-KR)~@~12~@~28~@~공급 업체
+289~@~AdmRptUsage   700: CustomerId (ko-KR)~@~13~@~28~@~고객
+290~@~AdmRptUsage   900: MemberId (ko-KR)~@~14~@~28~@~회원
+291~@~AdmRptUsage  1000: UsrGroupId (ko-KR)~@~15~@~28~@~사용자 그룹
+292~@~AdmRptUsage  1100: UserId (ko-KR)~@~16~@~28~@~사용자
+293~@~AdmRptBizRule   200: SystemId (ko-KR)~@~18~@~28~@~체계
+294~@~AdmRptMsg   200: SystemId (ko-KR)~@~19~@~28~@~체계
+295~@~AdmRptMsg   100: CultureId (ko-KR)~@~20~@~28~@~인간의 언어
+296~@~AdmRptDataDict    10: SystemId (ko-KR)~@~22~@~28~@~체계
+297~@~AdmRptPrgList   200: SystemId (ko-KR)~@~23~@~28~@~체계
+298~@~AdmRptPrgList   100: CultureId (ko-KR)~@~24~@~28~@~인간의 언어
+302~@~AdmRptUsage   395: CompanyId (ko-KR)~@~25~@~28~@~회사
+303~@~AdmRptUsage   695: ProjectId (ko-KR)~@~26~@~28~@~계획
+304~@~AdmRptUsr    30: CompanyId (ko-KR)~@~29~@~28~@~회사
+305~@~AdmRptUsage   395: CompanyId (pt-BR)~@~25~@~9~@~Companhia
+306~@~AdmRptUsage   695: ProjectId (pt-BR)~@~26~@~9~@~Projeto
+307~@~AdmRptUsr    30: CompanyId (pt-BR)~@~29~@~9~@~Companhia
+308~@~AdmRptUsage   395: CompanyId (ru-RU)~@~25~@~12~@~Компания
+309~@~AdmRptUsage   695: ProjectId (ru-RU)~@~26~@~12~@~Проект
+310~@~AdmRptUsr    30: CompanyId (ru-RU)~@~29~@~12~@~Компания
+311~@~AdmRptUsage   395: CompanyId (es-ES)~@~25~@~13~@~Empresa
+312~@~AdmRptUsage   695: ProjectId (es-ES)~@~26~@~13~@~Proyecto
+313~@~AdmRptUsr    30: CompanyId (es-ES)~@~29~@~13~@~Empresa
+314~@~AdmRptSred    20: MonthEnding (en-US)~@~30~@~1~@~Month Ending
+316~@~AdmRptSred    30: NumMonths (en-US)~@~32~@~1~@~For # of Months
+317~@~AdmRptTime    10: MonthEnding (en-US)~@~33~@~1~@~Month Ending
+318~@~AdmRptTime    20: NumMonths (en-US)~@~34~@~1~@~For # of Months
+319~@~AdmRptStat    10: MemberId (en-US)~@~35~@~1~@~Member
+320~@~AdmRptStat    20: MnFr (en-US)~@~36~@~1~@~Month From (>=)
+321~@~AdmRptStat    30: MnTo (en-US)~@~37~@~1~@~Month To (<=)
+326~@~AdmRptDataDict    20: TableName (en-US)~@~42~@~1~@~Table Name
+328~@~AdmRptDataDict    30: ColumnName (en-US)~@~44~@~1~@~Column Name
+329~@~AdmRptSred    20: MonthEnding (zh-CN)~@~30~@~4~@~一个月止
+330~@~AdmRptSred    30: NumMonths (zh-CN)~@~32~@~4~@~对于＃个月的
+331~@~AdmRptTime    10: MonthEnding (zh-CN)~@~33~@~4~@~一个月止
+332~@~AdmRptTime    20: NumMonths (zh-CN)~@~34~@~4~@~对于＃个月的
+333~@~AdmRptStat    10: MemberId (zh-CN)~@~35~@~4~@~会员
+334~@~AdmRptStat    20: MnFr (zh-CN)~@~36~@~4~@~从本月（> =）
+335~@~AdmRptStat    30: MnTo (zh-CN)~@~37~@~4~@~一个月（<=）
+336~@~AdmRptDataDict    20: TableName (zh-CN)~@~42~@~4~@~表名
+337~@~AdmRptDataDict    30: ColumnName (zh-CN)~@~44~@~4~@~列名
+338~@~AdmRptSred    20: MonthEnding (ko-KR)~@~30~@~28~@~월 엔딩
+339~@~AdmRptSred    30: NumMonths (ko-KR)~@~32~@~28~@~달의 번호
+340~@~AdmRptTime    10: MonthEnding (ko-KR)~@~33~@~28~@~월 엔딩
+341~@~AdmRptTime    20: NumMonths (ko-KR)~@~34~@~28~@~달의 번호
+342~@~AdmRptStat    10: MemberId (ko-KR)~@~35~@~28~@~회원
+343~@~AdmRptStat    20: MnFr (ko-KR)~@~36~@~28~@~에서 월 (> =)
+344~@~AdmRptStat    30: MnTo (ko-KR)~@~37~@~28~@~한달 (<=)
+345~@~AdmRptDataDict    20: TableName (ko-KR)~@~42~@~28~@~테이블 이름
+346~@~AdmRptDataDict    30: ColumnName (ko-KR)~@~44~@~28~@~열 이름
+347~@~AdmRptPerm   100: CultureId (en-US)~@~45~@~1~@~Human Language
+348~@~AdmRptPerm   200: SystemId (en-US)~@~46~@~1~@~System
+353~@~AdmRptPerm    50: ActiveOnly (en-US)~@~51~@~1~@~Active User Only
+354~@~AdmRptUsrAudit    10: LoginSuccess10 (en-US)~@~52~@~1~@~Successful
+355~@~AdmRptUsrAudit    20: ValidUser20 (en-US)~@~53~@~1~@~Valid User
+356~@~AdmRptUsrAudit    30: LoginName30 (en-US)~@~54~@~1~@~Login Name
+357~@~AdmRptUsrAudit    40: AttemptDt40 (en-US)~@~55~@~1~@~From Date
+358~@~AdmRptUsrAudit    50: AttemptDt50 (en-US)~@~56~@~1~@~To Date
+359~@~AdmRptPerm    55: EntityName (en-US)~@~57~@~1~@~Contains
+366~@~AdmRptUsage   901: BorrowerId (en-US)~@~58~@~1~@~Borrower
+367~@~AdmRptUsage   920: GuarantorId (en-US)~@~59~@~1~@~Guarantor
+368~@~AdmRptUsage   930: LenderId (en-US)~@~60~@~1~@~Lender
+369~@~~@~1~@~114~@~Table
+370~@~~@~2~@~114~@~Modifié le ou après
+371~@~~@~3~@~114~@~Groupe d'utilisateurs
+372~@~~@~4~@~114~@~Utilisateurs actifs
+373~@~~@~5~@~114~@~Système
+374~@~~@~6~@~114~@~De
+375~@~~@~7~@~114~@~À
+376~@~~@~8~@~114~@~Agent
+377~@~~@~9~@~114~@~Investisseur
+378~@~~@~10~@~114~@~Sommaire
+379~@~~@~11~@~114~@~Courtier
+380~@~~@~12~@~114~@~Vendeur
+381~@~~@~13~@~114~@~Client
+382~@~~@~14~@~114~@~Membre
+383~@~~@~15~@~114~@~Groupe d'utilisateurs
+384~@~~@~16~@~114~@~Utilisateur
+385~@~~@~18~@~114~@~Système
+386~@~~@~19~@~114~@~Système
+387~@~~@~20~@~114~@~Langage humain
+388~@~~@~22~@~114~@~Système
+389~@~~@~23~@~114~@~Système
+390~@~~@~24~@~114~@~Langage humain
+391~@~~@~25~@~114~@~Entreprise
+392~@~~@~26~@~114~@~Projet
+393~@~~@~29~@~114~@~Entreprise
+394~@~~@~30~@~114~@~Mois se terminant
+395~@~~@~32~@~114~@~Pendant # de mois
+396~@~~@~33~@~114~@~Mois se terminant
+397~@~~@~34~@~114~@~Pendant # de mois
+398~@~~@~35~@~114~@~Membre
+399~@~~@~36~@~114~@~Mois à partir de (> =)
+400~@~~@~37~@~114~@~Mois à (<=)
+401~@~~@~42~@~114~@~Nom de la table
+402~@~~@~44~@~114~@~Nom de colonne
+403~@~~@~45~@~114~@~Langage humain
+404~@~~@~46~@~114~@~Système
+405~@~~@~51~@~114~@~Utilisateur actif uniquement
+406~@~~@~52~@~114~@~Réussi
+407~@~~@~53~@~114~@~Utilisateur valide
+408~@~~@~54~@~114~@~Identifiant
+409~@~~@~55~@~114~@~Partir de la date
+410~@~~@~56~@~114~@~À ce jour
+411~@~~@~57~@~114~@~Contient
+412~@~~@~58~@~114~@~Emprunteur
+413~@~~@~59~@~114~@~Garant
+414~@~~@~60~@~114~@~Prêteur

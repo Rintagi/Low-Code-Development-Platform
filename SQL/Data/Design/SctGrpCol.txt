@@ -1,0 +1,23 @@
+1~@~Default: Column  1 to  4 of 12~@~D~@~834~@~padding-right:5px; background-color:#ededed; border-radius:4px; opacity:0.8; vertical-align: top;~@~
+2~@~Default: Column  5 to  8 of 12~@~D~@~838~@~padding-right:5px; background-color:#ededed; border-radius:4px; opacity:0.8; vertical-align: top;~@~
+3~@~Default: Column  9 to 12 of 12~@~D~@~842~@~background-color:#ededed; border-radius:4px; opacity:0.8; vertical-align: top;~@~
+4~@~Default: Column  6 to 12 of 12~@~D~@~863~@~~@~width:100%; height:120px; background-color:#efefef; padding:5px 30px; border-radius:4px; opacity:0.8;
+5~@~Default: Column  1 to  5 of 12~@~D~@~843~@~padding-right:5px;~@~width:100%; height:120px; background-color:#efefef; padding:5px 30px; border-radius:4px; opacity:0.8;
+6~@~Default: Column  1 to 12 of 12~@~D~@~878~@~~@~
+7~@~Footer: Column  1 to  1 of 12~@~F~@~801~@~~@~
+8~@~Footer: Column  2 to 11 of 12~@~F~@~874~@~~@~
+9~@~Footer: Column 12 to 12 of 12~@~F~@~812~@~~@~
+10~@~Header: Column  1 to  3 of 12~@~H~@~824~@~~@~
+11~@~Header: Column  4 to 11 of 12~@~H~@~867~@~~@~
+12~@~Header: Column 12 to 12 of 12~@~H~@~812~@~white-space:nowrap; vertical-align:middle; text-align:right; font-size:14px; font-weight:bold;~@~
+13~@~Header: Column  5 to 11 of 12~@~H~@~862~@~vertical-align:middle; text-align:right; font-size:14px;~@~
+14~@~Header: Column  5 to 12 of 12~@~H~@~868~@~white-space:nowrap; vertical-align:middle; text-align:right;~@~
+15~@~Header: Column  1 to 12 of 12~@~H~@~878~@~~@~
+16~@~Header: Column  1 to  2 of 12~@~H~@~813~@~white-space:nowrap; vertical-align:middle; padding: 5px 10px;~@~color:#333;
+17~@~Header: Column  3 to  8 of 12~@~H~@~853~@~vertical-align:middle; text-align:center; color:#151515; font-size:11px; font-family: Verdana, Tahoma;~@~
+18~@~Header: Column  9 to 12 of 12~@~H~@~842~@~~@~
+19~@~Header: Column  1 to  4 of 12~@~H~@~834~@~~@~
+20~@~Header: Column  1 to 11 of 12~@~H~@~876~@~~@~
+21~@~Header: Column  1 to  6 of 12~@~H~@~851~@~~@~
+22~@~Header: Column  7 to 12 of 12~@~H~@~857~@~~@~
+23~@~Footer: Column  1 to 12 of 12~@~F~@~878~@~~@~

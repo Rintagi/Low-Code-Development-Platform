@@ -13,12 +13,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -29,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmOvride || {});
+    this.GetReduxState = () => (this.props.AdmOvride || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'OvrideId122';
@@ -43,7 +44,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -84,55 +87,43 @@ class MstRecord extends RintagiScreen {
     }
   }
 
-/* ReactRule: Master Record Custom Function */
-/* ReactRule End: Master Record Custom Function */
+
+  /* ReactRule: Master Record Custom Function */
+
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
     const columnLabel = (this.props.AdmOvride || {}).ColumnLabel || {};
     /* standard field validation */
-if (!values.cOvrideName122) { errors.cOvrideName122 = (columnLabel.OvrideName122 || {}).ErrMessage;}
+    if (!values.cOvrideName122) { errors.cOvrideName122 = (columnLabel.OvrideName122 || {}).ErrMessage; }
     return errors;
   }
 
   SavePage(values, { setSubmitting, setErrors, resetForm, setFieldValue, setValues }) {
     const errors = [];
     const currMst = (this.props.AdmOvride || {}).Mst || {};
-/* ReactRule: Master Record Save */
-/* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
+    /* ReactRule: Master Record Save */
+
+    /* ReactRule End: Master Record Save */
+
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
         this.props.AdmOvride,
         {
-          OvrideId122: values.cOvrideId122|| '',
-          OvrideName122: values.cOvrideName122|| '',
+          OvrideId122: values.cOvrideId122 || '',
+          OvrideName122: values.cOvrideName122 || '',
           PromptAlways122: values.cPromptAlways122 ? 'Y' : 'N',
           PromptModal122: values.cPromptModal122 ? 'Y' : 'N',
         },
@@ -174,12 +165,12 @@ if (!values.cOvrideName122) { errors.cOvrideName122 = (columnLabel.OvrideName122
       const fromMstId = mstId || (mst || {}).OvrideId122;
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.AdmOvride.Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.AdmOvride.Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.AdmOvride.Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -261,7 +252,7 @@ if (!values.cOvrideName122) { errors.cOvrideName122 = (columnLabel.OvrideName122
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.AdmOvride || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -285,7 +276,7 @@ if (!values.cOvrideName122) { errors.cOvrideName122 = (columnLabel.OvrideName122
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -314,6 +305,7 @@ if (!values.cOvrideName122) { errors.cOvrideName122 = (columnLabel.OvrideName122
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = AdmOvrideReduxObj.GetScreenButtons(AdmOvrideState) || {};
     const itemList = AdmOvrideState.Dtl || [];
@@ -325,21 +317,24 @@ if (!values.cOvrideName122) { errors.cOvrideName122 = (columnLabel.OvrideName122
     const authRow = (AdmOvrideState.AuthRow || [])[0] || {};
     const currMst = ((this.props.AdmOvride || {}).Mst || {});
     const currDtl = ((this.props.AdmOvride || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.OvrideId122));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.OvrideId122));
     const selectList = AdmOvrideReduxObj.SearchListToSelectList(AdmOvrideState);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
-const OvrideId122 = currMst.OvrideId122;
-const OvrideName122 = currMst.OvrideName122;
-const PromptAlways122 = currMst.PromptAlways122;
-const PromptModal122 = currMst.PromptModal122;
+
+    const OvrideId122 = currMst.OvrideId122;
+    const OvrideName122 = currMst.OvrideName122;
+    const PromptAlways122 = currMst.PromptAlways122;
+    const PromptModal122 = currMst.PromptModal122;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-/* ReactRule: Master Render */
-/* ReactRule End: Master Render */
+
+    /* ReactRule: Master Render */
+
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -357,10 +352,10 @@ const PromptModal122 = currMst.PromptModal122;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cOvrideId122: OvrideId122 || '',
-                  cOvrideName122: OvrideName122 || '',
-                  cPromptAlways122: PromptAlways122 === 'Y',
-                  cPromptModal122: PromptModal122 === 'Y',
+                    cOvrideId122: formatContent(OvrideId122 || '', 'TextBox'),
+                    cOvrideName122: formatContent(OvrideName122 || '', 'TextBox'),
+                    cPromptAlways122: PromptAlways122 === 'Y',
+                    cPromptModal122: PromptModal122 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -422,93 +417,122 @@ const PromptModal122 = currMst.PromptModal122;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            {(authCol.OvrideId122 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.OvrideId122 || {}).ColumnHeader} {(columnLabel.OvrideId122 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.OvrideId122 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.OvrideId122 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cOvrideId122'
-disabled = {(authCol.OvrideId122 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cOvrideId122 && touched.cOvrideId122 && <span className='form__form-group-error'>{errors.cOvrideId122}</span>}
-</div>
-</Col>
-}
-{(authCol.OvrideName122 || {}).visible &&
- <Col lg={6} xl={6}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.OvrideName122 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.OvrideName122 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.OvrideName122 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.OvrideName122 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cOvrideName122'
-disabled = {(authCol.OvrideName122 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cOvrideName122 && touched.cOvrideName122 && <span className='form__form-group-error'>{errors.cOvrideName122}</span>}
-</div>
-</Col>
-}
-{(authCol.PromptAlways122 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cPromptAlways122'
-onChange={handleChange}
-defaultChecked={values.cPromptAlways122}
-disabled={(authCol.PromptAlways122 || {}).readonly || !(authCol.PromptAlways122 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.PromptAlways122 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.PromptAlways122 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PromptAlways122 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PromptAlways122 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
-{(authCol.PromptModal122 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-<label className='checkbox-btn checkbox-btn--colored-click'>
-<Field
-className='checkbox-btn__checkbox'
-type='checkbox'
-name='cPromptModal122'
-onChange={handleChange}
-defaultChecked={values.cPromptModal122}
-disabled={(authCol.PromptModal122 || {}).readonly || !(authCol.PromptModal122 || {}).visible}
-/>
-<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
-<span className='checkbox-btn__label'>{(columnLabel.PromptModal122 || {}).ColumnHeader}</span>
-</label>
-{(columnLabel.PromptModal122 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.PromptModal122 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.PromptModal122 || {}).ToolTip} />
-)}
-</div>
-</Col>
-}
+                              {(authCol.OvrideId122 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.OvrideId122 || {}).ColumnHeader} {(columnLabel.OvrideId122 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.OvrideId122 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.OvrideId122 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cOvrideId122'
+                                          disabled={(authCol.OvrideId122 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cOvrideId122 && touched.cOvrideId122 && <span className='form__form-group-error'>{errors.cOvrideId122}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.OvrideName122 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.OvrideName122 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.OvrideName122 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.OvrideName122 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.OvrideName122 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmOvrideState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cOvrideName122'
+                                          disabled={(authCol.OvrideName122 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cOvrideName122 && touched.cOvrideName122 && <span className='form__form-group-error'>{errors.cOvrideName122}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.PromptAlways122 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cPromptAlways122'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cPromptAlways122}
+                                        disabled={(authCol.PromptAlways122 || {}).readonly || !(authCol.PromptAlways122 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.PromptAlways122 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.PromptAlways122 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.PromptAlways122 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PromptAlways122 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.PromptModal122 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cPromptModal122'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cPromptModal122}
+                                        disabled={(authCol.PromptModal122 || {}).readonly || !(authCol.PromptModal122 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.PromptModal122 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.PromptModal122 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.PromptModal122 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PromptModal122 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>
@@ -568,9 +592,6 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmOvrideReduxObj.SavePage.bind(AdmOvrideReduxObj) },
     { DelMst: AdmOvrideReduxObj.DelMst.bind(AdmOvrideReduxObj) },
     { AddMst: AdmOvrideReduxObj.AddMst.bind(AdmOvrideReduxObj) },
-//    { SearchMemberId64: AdmOvrideReduxObj.SearchActions.SearchMemberId64.bind(AdmOvrideReduxObj) },
-//    { SearchCurrencyId64: AdmOvrideReduxObj.SearchActions.SearchCurrencyId64.bind(AdmOvrideReduxObj) },
-//    { SearchCustomerJobId64: AdmOvrideReduxObj.SearchActions.SearchCustomerJobId64.bind(AdmOvrideReduxObj) },
 
     { showNotification: showNotification },
     { setTitle: setTitle },
@@ -579,5 +600,3 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            

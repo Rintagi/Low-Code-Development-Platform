@@ -1,0 +1,804 @@
+1~@~SortDirection: 0001 A (en-US)~@~1~@~SortDirection~@~A~@~Ascending~@~~@~1
+2~@~SortDirection: 0002 D (en-US)~@~1~@~SortDirection~@~D~@~Descending~@~~@~2
+3~@~SqlReport: 0001 SelectAll (en-US)~@~1~@~SqlReport~@~SelectAll~@~Please check the desired column(s) one by one or click here to select all columns.~@~~@~1
+4~@~SqlReport: 0002 DeselectAll (en-US)~@~1~@~SqlReport~@~DeselectAll~@~Please uncheck the undesired column(s) one by one or click here to de-select all columns.~@~~@~2
+5~@~DashboardType: 0001 G (en-US)~@~1~@~DashboardType~@~G~@~Gauges~@~~@~1
+7~@~DashboardType: 0002 R (en-US)~@~1~@~DashboardType~@~R~@~Reports~@~~@~2
+8~@~DashboardType: 0003 D (en-US)~@~1~@~DashboardType~@~D~@~Documents~@~~@~3
+9~@~DashboardType: 0004 S (en-US)~@~1~@~DashboardType~@~S~@~Screens~@~~@~4
+10~@~Shortcut: Shortcut (en-US)~@~1~@~Shortcut~@~Shortcut~@~Shortcuts~@~~@~
+11~@~QFilter: QFilter (en-US)~@~1~@~QFilter~@~QFilter~@~Quick Filter:~@~~@~
+12~@~MyProfileModule: 0001 Company (en-US)~@~1~@~MyProfileModule~@~Company~@~Company~@~~@~1
+13~@~MyProfileModule: 0002 Project (en-US)~@~1~@~MyProfileModule~@~Project~@~Project~@~~@~2
+14~@~MyProfileModule: 0003 System (en-US)~@~1~@~MyProfileModule~@~System~@~System~@~~@~3
+16~@~MyProfileModule: 0004 SignOut (en-US)~@~1~@~MyProfileModule~@~SignOut~@~Sign Out~@~~@~4
+17~@~MyProfileModule: 0005 HomePage (en-US)~@~1~@~MyProfileModule~@~HomePage~@~Back to Homepage~@~~@~5
+18~@~MyProfileModule: 0006 SignOutToolTip (en-US)~@~1~@~MyProfileModule~@~SignOutToolTip~@~Press this to exit the system.~@~~@~6
+19~@~SortDirection: 0001 A (zh-CN)~@~4~@~SortDirection~@~A~@~递增~@~~@~1
+20~@~SortDirection: 0002 D (zh-CN)~@~4~@~SortDirection~@~D~@~递减~@~~@~2
+21~@~SqlReport: 0001 SelectAll (zh-CN)~@~4~@~SqlReport~@~SelectAll~@~请检查所需的列（S）逐个或点击这里以选择所有列。~@~~@~1
+25~@~SqlReport: 0002 DeselectAll (zh-CN)~@~4~@~SqlReport~@~DeselectAll~@~请取消选中不需要的列（S）逐一或点击这里取消选择所有列。~@~~@~2
+26~@~DashboardType: 0001 G (zh-CN)~@~4~@~DashboardType~@~G~@~压力表~@~~@~1
+27~@~DashboardType: 0002 R (zh-CN)~@~4~@~DashboardType~@~R~@~报告~@~~@~2
+28~@~DashboardType: 0003 D (zh-CN)~@~4~@~DashboardType~@~D~@~文件~@~~@~3
+29~@~DashboardType: 0004 S (zh-CN)~@~4~@~DashboardType~@~S~@~屏幕~@~~@~4
+30~@~Shortcut: Shortcut (zh-CN)~@~4~@~Shortcut~@~Shortcut~@~捷径~@~~@~
+31~@~QFilter: QFilter (zh-CN)~@~4~@~QFilter~@~QFilter~@~快速筛选:~@~~@~
+32~@~MyProfileModule: 0001 Company (zh-CN)~@~4~@~MyProfileModule~@~Company~@~公司~@~~@~1
+33~@~MyProfileModule: 0001 Project (zh-CN)~@~4~@~MyProfileModule~@~Project~@~项目~@~~@~1
+34~@~MyProfileModule: 0003 System (zh-CN)~@~4~@~MyProfileModule~@~System~@~系统~@~~@~3
+35~@~MyProfileModule: 0004 SignOut (zh-CN)~@~4~@~MyProfileModule~@~SignOut~@~登出~@~~@~4
+36~@~MyProfileModule: 0005 HomePage (zh-CN)~@~4~@~MyProfileModule~@~HomePage~@~返回首页~@~~@~5
+37~@~MyProfileModule: 0006 SignOutToolTip (zh-CN)~@~4~@~MyProfileModule~@~SignOutToolTip~@~按此退出系统。~@~~@~6
+38~@~cSystem: 0010 Label (en-US)~@~1~@~cSystem~@~Label~@~Module:~@~~@~10
+39~@~cSystem: Label (zh-CN)~@~4~@~cSystem~@~Label~@~标签:~@~~@~
+41~@~cGrid: 0001 Filter (en-US)~@~1~@~cGrid~@~Filter~@~Filter:~@~~@~1
+42~@~cGrid: 0002 Find (en-US)~@~1~@~cGrid~@~Find~@~On:~@~~@~2
+43~@~cGrid: 0003 ImpPwd (en-US)~@~1~@~cGrid~@~ImpPwd~@~Import Password Override:~@~~@~3
+44~@~cGrid: 0004 ImpPwdToolTip (en-US)~@~1~@~cGrid~@~ImpPwdToolTip~@~Please enter a supervisory override password to import!~@~~@~4
+46~@~cGrid: 0005 Worksheet (en-US)~@~1~@~cGrid~@~Worksheet~@~WorkSheet:~@~~@~5
+47~@~cGrid: 0006 Startrow (en-US)~@~1~@~cGrid~@~Startrow~@~StartRow:~@~~@~6
+48~@~cGrid: 0007 ImportToolTip (en-US)~@~1~@~cGrid~@~ImportToolTip~@~Please enter the starting row to be imported and must be greater than or equal to 2 because heading is compulsory.~@~~@~7
+49~@~cGrid: 0001 Filter (zh-CN)~@~4~@~cGrid~@~Filter~@~过滤器：~@~~@~1
+50~@~cGrid: 0002 Find (zh-CN)~@~4~@~cGrid~@~Find~@~在：~@~~@~2
+51~@~cGrid: 0003 ImpPwd (zh-CN)~@~4~@~cGrid~@~ImpPwd~@~导入密码改写：~@~~@~3
+52~@~cGrid: 0004 ImpPwdToolTip (zh-CN)~@~4~@~cGrid~@~ImpPwdToolTip~@~请输入监督的覆盖密码导入！~@~~@~4
+53~@~cGrid: 0005 Worksheet (zh-CN)~@~4~@~cGrid~@~Worksheet~@~表：~@~~@~5
+54~@~cGrid: 0006 Startrow (zh-CN)~@~4~@~cGrid~@~Startrow~@~StartRow：~@~~@~6
+55~@~cGrid: 0007 ImportToolTip (zh-CN)~@~4~@~cGrid~@~ImportToolTip~@~请输入要导入和必须大于或等于2，因为标题是义务教育的起始行。~@~~@~7
+56~@~SortDirection: 0001 A (fr-FR)~@~2~@~SortDirection~@~A~@~Croissant~@~~@~1
+57~@~SortDirection: 0002 D (fr-FR)~@~2~@~SortDirection~@~D~@~Décroissant~@~~@~2
+58~@~SqlReport: 0001 SelectAll (fr-FR)~@~2~@~SqlReport~@~SelectAll~@~S'il vous plaît vérifiez la colonne souhaitée (s) un par un, ou cliquez ici pour sélectionner toutes les colonnes.~@~~@~1
+59~@~SqlReport: 0002 DeselectAll (fr-FR)~@~2~@~SqlReport~@~DeselectAll~@~S'il vous plaît décocher la colonne indésirable (s) un par un ou cliquez ici pour dé-sélectionner toutes les colonnes.~@~~@~2
+60~@~DashboardType: 0001 G (fr-FR)~@~2~@~DashboardType~@~G~@~Jauges~@~~@~1
+61~@~DashboardType: 0002 R (fr-FR)~@~2~@~DashboardType~@~R~@~Rapports~@~~@~2
+62~@~DashboardType: 0003 D (fr-FR)~@~2~@~DashboardType~@~D~@~Documents~@~~@~3
+63~@~DashboardType: 0004 S (fr-FR)~@~2~@~DashboardType~@~S~@~Écrans~@~~@~4
+64~@~Shortcut: Shortcut (fr-FR)~@~2~@~Shortcut~@~Shortcut~@~Raccourcis~@~~@~
+65~@~QFilter: QFilter (fr-FR)~@~2~@~QFilter~@~QFilter~@~Filtre rapide:~@~~@~
+66~@~MyProfileModule: 0001 Company (fr-FR)~@~2~@~MyProfileModule~@~Company~@~Société~@~~@~1
+67~@~MyProfileModule: 0002 Project (fr-FR)~@~2~@~MyProfileModule~@~Project~@~Projet~@~~@~2
+68~@~MyProfileModule: 0003 System (fr-FR)~@~2~@~MyProfileModule~@~System~@~Système~@~~@~3
+69~@~MyProfileModule: 0004 SignOut (fr-FR)~@~2~@~MyProfileModule~@~SignOut~@~Se déconnecter~@~~@~4
+70~@~MyProfileModule: 0005 HomePage (fr-FR)~@~2~@~MyProfileModule~@~HomePage~@~Retour à l'accueil~@~~@~5
+71~@~MyProfileModule: 0006 SignOutToolTip (fr-FR)~@~2~@~MyProfileModule~@~SignOutToolTip~@~Appuyez ici pour quitter le système.~@~~@~6
+72~@~cSystem: Label (fr-FR)~@~2~@~cSystem~@~Label~@~Module:~@~~@~
+73~@~cGrid: 0001 Filter (fr-FR)~@~2~@~cGrid~@~Filter~@~Filtre:~@~~@~1
+74~@~cGrid: 0002 Find (fr-FR)~@~2~@~cGrid~@~Find~@~Sur:~@~~@~2
+75~@~cGrid: 0003 ImpPwd (fr-FR)~@~2~@~cGrid~@~ImpPwd~@~Mot de passe importation Surcharge:~@~~@~3
+76~@~cGrid: 0004 ImpPwdToolTip (fr-FR)~@~2~@~cGrid~@~ImpPwdToolTip~@~S'il vous plaît entrer un mot de passe de remplacer surveillance à l'importation!~@~~@~4
+77~@~cGrid: 0005 Worksheet (fr-FR)~@~2~@~cGrid~@~Worksheet~@~Feuille de travail:~@~~@~5
+78~@~cGrid: 0006 Startrow (fr-FR)~@~2~@~cGrid~@~Startrow~@~StartRow:~@~~@~6
+79~@~cGrid: 0007 ImportToolTip (fr-FR)~@~2~@~cGrid~@~ImportToolTip~@~S'il vous plaît entrez la ligne de départ à être importés et doit être supérieur ou égal à 2 parce que la position est obligatoire.~@~~@~7
+80~@~SortDirection: 0001 A (pt-BR)~@~9~@~SortDirection~@~A~@~Ascendente~@~~@~1
+81~@~SortDirection: 0002 D (pt-BR)~@~9~@~SortDirection~@~D~@~Descendente~@~~@~2
+82~@~SqlReport: 0001 SelectAll (pt-BR)~@~9~@~SqlReport~@~SelectAll~@~Por favor, verifique a coluna desejada (s), um por um, ou clique aqui para selecionar todas as colunas.~@~~@~1
+83~@~SqlReport: 0002 DeselectAll (pt-BR)~@~9~@~SqlReport~@~DeselectAll~@~Por favor, desmarque a coluna indesejada (s), um por um ou clique aqui para cancelar a seleção de todas as colunas.~@~~@~2
+84~@~DashboardType: 0001 G (pt-BR)~@~9~@~DashboardType~@~G~@~Gauges~@~~@~1
+85~@~DashboardType: 0002 R (pt-BR)~@~9~@~DashboardType~@~R~@~Relatórios~@~~@~2
+86~@~DashboardType: 0003 D (pt-BR)~@~9~@~DashboardType~@~D~@~Documentos~@~~@~3
+87~@~DashboardType: 0004 S (pt-BR)~@~9~@~DashboardType~@~S~@~Telas~@~~@~4
+88~@~Shortcut: Shortcut (pt-BR)~@~9~@~Shortcut~@~Shortcut~@~Atalhos~@~~@~
+89~@~QFilter: QFilter (pt-BR)~@~9~@~QFilter~@~QFilter~@~Filtro Rápido:~@~~@~
+90~@~MyProfileModule: 0001 Company (pt-BR)~@~9~@~MyProfileModule~@~Company~@~Companhia~@~~@~1
+91~@~MyProfileModule: 0002 Project (pt-BR)~@~9~@~MyProfileModule~@~Project~@~Projeto~@~~@~2
+92~@~MyProfileModule: 0003 System (pt-BR)~@~9~@~MyProfileModule~@~System~@~Sistema~@~~@~3
+93~@~MyProfileModule: 0004 SignOut (pt-BR)~@~9~@~MyProfileModule~@~SignOut~@~Sair~@~~@~4
+94~@~MyProfileModule: 0005 HomePage (pt-BR)~@~9~@~MyProfileModule~@~HomePage~@~Voltar para a Página Inicial~@~~@~5
+95~@~MyProfileModule: 0006 SignOutToolTip (pt-BR)~@~9~@~MyProfileModule~@~SignOutToolTip~@~Prima para sair do sistema.~@~~@~6
+96~@~cSystem: Label (pt-BR)~@~9~@~cSystem~@~Label~@~Módulo:~@~~@~
+97~@~cGrid: 0001 Filter (pt-BR)~@~9~@~cGrid~@~Filter~@~Filtro:~@~~@~1
+98~@~cGrid: 0002 Find (pt-BR)~@~9~@~cGrid~@~Find~@~Em:~@~~@~2
+99~@~cGrid: 0003 ImpPwd (pt-BR)~@~9~@~cGrid~@~ImpPwd~@~Senha importação Override:~@~~@~3
+100~@~cGrid: 0004 ImpPwdToolTip (pt-BR)~@~9~@~cGrid~@~ImpPwdToolTip~@~Digite uma senha de supervisão substituir a importação!~@~~@~4
+101~@~cGrid: 0005 Worksheet (pt-BR)~@~9~@~cGrid~@~Worksheet~@~Planilha:~@~~@~5
+102~@~cGrid: 0006 Startrow (pt-BR)~@~9~@~cGrid~@~Startrow~@~StartRow:~@~~@~6
+103~@~cGrid: 0007 ImportToolTip (pt-BR)~@~9~@~cGrid~@~ImportToolTip~@~Por favor digite a linha começa a ser importado e deve ser maior ou igual a 2, porque título é obrigatório.~@~~@~7
+104~@~SortDirection: 0001 A (hi-IN)~@~8~@~SortDirection~@~A~@~आरोही~@~~@~1
+105~@~SortDirection: 0002 D (hi-IN)~@~8~@~SortDirection~@~D~@~अवरोही~@~~@~2
+106~@~SqlReport: 0001 SelectAll (hi-IN)~@~8~@~SqlReport~@~SelectAll~@~कृपया वांछित स्तंभ (ओं) की जांच एक के बाद एक या सभी स्तंभों का चयन करने के लिए यहाँ क्लिक करें.~@~~@~1
+107~@~SqlReport: 0002 DeselectAll (hi-IN)~@~8~@~SqlReport~@~DeselectAll~@~कृपया अनचेक अवांछित स्तंभ (ओं) या एक एक करके यहाँ क्लिक करें सभी स्तंभों डे का चयन करें.~@~~@~2
+108~@~DashboardType: 0001 G (hi-IN)~@~8~@~DashboardType~@~G~@~गेज~@~~@~1
+109~@~DashboardType: 0002 R (hi-IN)~@~8~@~DashboardType~@~R~@~रिपोर्ट~@~~@~2
+110~@~DashboardType: 0003 D (hi-IN)~@~8~@~DashboardType~@~D~@~दस्तावेज़~@~~@~3
+111~@~DashboardType: 0004 S (hi-IN)~@~8~@~DashboardType~@~S~@~स्क्रीन~@~~@~4
+112~@~Shortcut: Shortcut (hi-IN)~@~8~@~Shortcut~@~Shortcut~@~शॉर्टकट~@~~@~
+113~@~QFilter: QFilter (hi-IN)~@~8~@~QFilter~@~QFilter~@~त्वरित फ़िल्टर:~@~~@~
+114~@~MyProfileModule: 0001 Company (hi-IN)~@~8~@~MyProfileModule~@~Company~@~कंपनी~@~~@~1
+115~@~MyProfileModule: 0002 Project (hi-IN)~@~8~@~MyProfileModule~@~Project~@~परियोजना~@~~@~2
+116~@~MyProfileModule: 0003 System (hi-IN)~@~8~@~MyProfileModule~@~System~@~प्रणाली~@~~@~3
+117~@~MyProfileModule: 0004 SignOut (hi-IN)~@~8~@~MyProfileModule~@~SignOut~@~साइन आउट करें~@~~@~4
+118~@~MyProfileModule: 0005 HomePage (hi-IN)~@~8~@~MyProfileModule~@~HomePage~@~पर वापस जाएँ होमपेज~@~~@~5
+119~@~MyProfileModule: 0006 SignOutToolTip (hi-IN)~@~8~@~MyProfileModule~@~SignOutToolTip~@~इस प्रेस प्रणाली से बाहर निकलें.~@~~@~6
+120~@~cSystem: Label (hi-IN)~@~8~@~cSystem~@~Label~@~मॉड्यूल:~@~~@~
+121~@~cGrid: 0001 Filter (hi-IN)~@~8~@~cGrid~@~Filter~@~फ़िल्टर:~@~~@~1
+122~@~cGrid: 0002 Find (hi-IN)~@~8~@~cGrid~@~Find~@~में:~@~~@~2
+123~@~cGrid: 0003 ImpPwd (hi-IN)~@~8~@~cGrid~@~ImpPwd~@~आयात पासवर्ड ओवरराइड:~@~~@~3
+124~@~cGrid: 0004 ImpPwdToolTip (hi-IN)~@~8~@~cGrid~@~ImpPwdToolTip~@~आयात करने के लिए एक पर्यवेक्षी ओवरराइड पासवर्ड दर्ज करें!~@~~@~4
+125~@~cGrid: 0005 Worksheet (hi-IN)~@~8~@~cGrid~@~Worksheet~@~कार्यपत्रक:~@~~@~5
+126~@~cGrid: 0006 Startrow (hi-IN)~@~8~@~cGrid~@~Startrow~@~StartRow:~@~~@~6
+127~@~cGrid: 0007 ImportToolTip (hi-IN)~@~8~@~cGrid~@~ImportToolTip~@~शुरू करने के लिए आयात और से अधिक या 2 के बराबर हो सकता है क्योंकि शीर्ष अनिवार्य है चाहिए पंक्ति दर्ज करें.~@~~@~7
+128~@~SortDirection: 0001 A (tr-TR)~@~11~@~SortDirection~@~A~@~Yükselen~@~~@~1
+129~@~SortDirection: 0002 D (tr-TR)~@~11~@~SortDirection~@~D~@~Azalan~@~~@~2
+130~@~SqlReport: 0001 SelectAll (tr-TR)~@~11~@~SqlReport~@~SelectAll~@~Lütfen tek tek istediğiniz sütun (ler) kontrol edin veya tüm sütunları seçmek için buraya tıklayın.~@~~@~1
+131~@~SqlReport: 0002 DeselectAll (tr-TR)~@~11~@~SqlReport~@~DeselectAll~@~Istenmeyen bir sütun (ler) tek tek ya da buraya tıklayın tüm sütunları seçmek işaretini kaldırın lütfen.~@~~@~2
+132~@~DashboardType: 0001 G (tr-TR)~@~11~@~DashboardType~@~G~@~Göstergeler~@~~@~1
+133~@~DashboardType: 0002 R (tr-TR)~@~11~@~DashboardType~@~R~@~Raporlar~@~~@~2
+134~@~DashboardType: 0003 D (tr-TR)~@~11~@~DashboardType~@~D~@~Belgeler~@~~@~3
+135~@~DashboardType: 0004 S (tr-TR)~@~11~@~DashboardType~@~S~@~Ekranlar~@~~@~4
+136~@~Shortcut: Shortcut (tr-TR)~@~11~@~Shortcut~@~Shortcut~@~Kısayollar~@~~@~
+137~@~QFilter: QFilter (tr-TR)~@~11~@~QFilter~@~QFilter~@~Hızlı Filtre:~@~~@~
+138~@~MyProfileModule: 0001 Company (tr-TR)~@~11~@~MyProfileModule~@~Company~@~Şirket~@~~@~1
+139~@~MyProfileModule: 0002 Project (tr-TR)~@~11~@~MyProfileModule~@~Project~@~Proje~@~~@~2
+140~@~MyProfileModule: 0003 System (tr-TR)~@~11~@~MyProfileModule~@~System~@~Sistem~@~~@~3
+141~@~MyProfileModule: 0004 SignOut (tr-TR)~@~11~@~MyProfileModule~@~SignOut~@~Oturumu~@~~@~4
+142~@~MyProfileModule: 0005 HomePage (tr-TR)~@~11~@~MyProfileModule~@~HomePage~@~Anasayfaya Dön~@~~@~5
+143~@~MyProfileModule: 0006 SignOutToolTip (tr-TR)~@~11~@~MyProfileModule~@~SignOutToolTip~@~Sisteminden çıkmak için tuşuna basın.~@~~@~6
+144~@~cSystem: Label (tr-TR)~@~11~@~cSystem~@~Label~@~Modül:~@~~@~
+145~@~cGrid: 0001 Filter (tr-TR)~@~11~@~cGrid~@~Filter~@~Filtre:~@~~@~1
+146~@~cGrid: 0002 Find (tr-TR)~@~11~@~cGrid~@~Find~@~Açık:~@~~@~2
+147~@~cGrid: 0003 ImpPwd (tr-TR)~@~11~@~cGrid~@~ImpPwd~@~İthalat Şifre geçersiz kılma:~@~~@~3
+148~@~cGrid: 0004 ImpPwdToolTip (tr-TR)~@~11~@~cGrid~@~ImpPwdToolTip~@~Almak için bir denetim geçersiz kılma şifrenizi giriniz!~@~~@~4
+149~@~cGrid: 0005 Worksheet (tr-TR)~@~11~@~cGrid~@~Worksheet~@~Çalışma:~@~~@~5
+150~@~cGrid: 0006 Startrow (tr-TR)~@~11~@~cGrid~@~Startrow~@~StartRow:~@~~@~6
+151~@~cGrid: 0007 ImportToolTip (tr-TR)~@~11~@~cGrid~@~ImportToolTip~@~İthal edilecek ve başlığı zorunlu olması nedeniyle, daha büyük veya 2 eşit olmalıdır başlangıç ​​satır yazınız.~@~~@~7
+152~@~SortDirection: 0001 A (ja-JP)~@~14~@~SortDirection~@~A~@~上昇~@~~@~1
+153~@~SortDirection: 0002 D (ja-JP)~@~14~@~SortDirection~@~D~@~下行~@~~@~2
+154~@~SqlReport: 0001 SelectAll (ja-JP)~@~14~@~SqlReport~@~SelectAll~@~一つずつ、目的の列（複数可）をチェックしたり、すべての列を選択するには、ここをクリックしてください。~@~~@~1
+155~@~SqlReport: 0002 DeselectAll (ja-JP)~@~14~@~SqlReport~@~DeselectAll~@~不要な列（複数可）を1つずつまたはここをクリックし、すべての列を選択解除チェックを外してください。~@~~@~2
+156~@~DashboardType: 0001 G (ja-JP)~@~14~@~DashboardType~@~G~@~ゲージ~@~~@~1
+157~@~DashboardType: 0002 R (ja-JP)~@~14~@~DashboardType~@~R~@~レポート~@~~@~2
+158~@~DashboardType: 0003 D (ja-JP)~@~14~@~DashboardType~@~D~@~ドキュメント~@~~@~3
+159~@~DashboardType: 0004 S (ja-JP)~@~14~@~DashboardType~@~S~@~画面~@~~@~4
+160~@~Shortcut: Shortcut (ja-JP)~@~14~@~Shortcut~@~Shortcut~@~ショートカット~@~~@~
+161~@~QFilter: QFilter (ja-JP)~@~14~@~QFilter~@~QFilter~@~クイックフィルタ：~@~~@~
+162~@~MyProfileModule: 0001 Company (ja-JP)~@~14~@~MyProfileModule~@~Company~@~会社~@~~@~1
+163~@~MyProfileModule: 0002 Project (ja-JP)~@~14~@~MyProfileModule~@~Project~@~プロジェクト~@~~@~2
+164~@~MyProfileModule: 0003 System (ja-JP)~@~14~@~MyProfileModule~@~System~@~システム~@~~@~3
+165~@~MyProfileModule: 0004 SignOut (ja-JP)~@~14~@~MyProfileModule~@~SignOut~@~ログアウト~@~~@~4
+166~@~MyProfileModule: 0005 HomePage (ja-JP)~@~14~@~MyProfileModule~@~HomePage~@~ホームページに戻る~@~~@~5
+167~@~MyProfileModule: 0006 SignOutToolTip (ja-JP)~@~14~@~MyProfileModule~@~SignOutToolTip~@~システムを終了するときに押します。~@~~@~6
+168~@~cSystem: Label (ja-JP)~@~14~@~cSystem~@~Label~@~モジュール：~@~~@~
+169~@~cGrid: 0001 Filter (ja-JP)~@~14~@~cGrid~@~Filter~@~フィルタ：~@~~@~1
+170~@~cGrid: 0002 Find (ja-JP)~@~14~@~cGrid~@~Find~@~上：~@~~@~2
+171~@~cGrid: 0003 ImpPwd (ja-JP)~@~14~@~cGrid~@~ImpPwd~@~オーバーライドパスワードをインポートします。~@~~@~3
+172~@~cGrid: 0004 ImpPwdToolTip (ja-JP)~@~14~@~cGrid~@~ImpPwdToolTip~@~インポートする監督オーバーライドパスワードを入力してください！~@~~@~4
+173~@~cGrid: 0005 Worksheet (ja-JP)~@~14~@~cGrid~@~Worksheet~@~ワークシート：~@~~@~5
+174~@~cGrid: 0006 Startrow (ja-JP)~@~14~@~cGrid~@~Startrow~@~startRow値：~@~~@~6
+175~@~cGrid: 0007 ImportToolTip (ja-JP)~@~14~@~cGrid~@~ImportToolTip~@~インポートすると見出しが必須であるため、2以上でなければならない始まる行を入力してください。~@~~@~7
+176~@~SortDirection: 0001 A (ru-RU)~@~12~@~SortDirection~@~A~@~Восходящий~@~~@~1
+177~@~SortDirection: 0002 D (ru-RU)~@~12~@~SortDirection~@~D~@~Нисходящий~@~~@~2
+178~@~SqlReport: 0001 SelectAll (ru-RU)~@~12~@~SqlReport~@~SelectAll~@~Пожалуйста, проверьте нужный столбец (ы) по одному или нажмите здесь, чтобы выбрать все столбцы.~@~~@~1
+179~@~SqlReport: 0002 DeselectAll (ru-RU)~@~12~@~SqlReport~@~DeselectAll~@~Пожалуйста, снимите нежелательные столбец (ы) по одному или щелкните здесь, чтобы отменить выбор всех столбцов.~@~~@~2
+180~@~DashboardType: 0001 G (ru-RU)~@~12~@~DashboardType~@~G~@~Датчики~@~~@~1
+181~@~DashboardType: 0002 R (ru-RU)~@~12~@~DashboardType~@~R~@~Отчеты~@~~@~2
+182~@~DashboardType: 0003 D (ru-RU)~@~12~@~DashboardType~@~D~@~Документация~@~~@~3
+183~@~DashboardType: 0004 S (ru-RU)~@~12~@~DashboardType~@~S~@~Экраны~@~~@~4
+184~@~Shortcut: Shortcut (ru-RU)~@~12~@~Shortcut~@~Shortcut~@~Ярлыки~@~~@~
+185~@~QFilter: QFilter (ru-RU)~@~12~@~QFilter~@~QFilter~@~Быстрый фильтр:~@~~@~
+186~@~MyProfileModule: 0001 Company (ru-RU)~@~12~@~MyProfileModule~@~Company~@~Компания~@~~@~1
+187~@~MyProfileModule: 0002 Project (ru-RU)~@~12~@~MyProfileModule~@~Project~@~Проект~@~~@~2
+188~@~MyProfileModule: 0003 System (ru-RU)~@~12~@~MyProfileModule~@~System~@~Система~@~~@~3
+189~@~MyProfileModule: 0004 SignOut (ru-RU)~@~12~@~MyProfileModule~@~SignOut~@~Выход~@~~@~4
+190~@~MyProfileModule: 0005 HomePage (ru-RU)~@~12~@~MyProfileModule~@~HomePage~@~Вернуться на главную~@~~@~5
+191~@~MyProfileModule: 0006 SignOutToolTip (ru-RU)~@~12~@~MyProfileModule~@~SignOutToolTip~@~Нажмите для выхода из системы.~@~~@~6
+192~@~cSystem: Label (ru-RU)~@~12~@~cSystem~@~Label~@~Модуль:~@~~@~
+193~@~cGrid: 0001 Filter (ru-RU)~@~12~@~cGrid~@~Filter~@~Фильтр:~@~~@~1
+194~@~cGrid: 0002 Find (ru-RU)~@~12~@~cGrid~@~Find~@~На:~@~~@~2
+195~@~cGrid: 0003 ImpPwd (ru-RU)~@~12~@~cGrid~@~ImpPwd~@~Импорт паролей Override:~@~~@~3
+196~@~cGrid: 0004 ImpPwdToolTip (ru-RU)~@~12~@~cGrid~@~ImpPwdToolTip~@~Пожалуйста, введите пароль надзора переопределить для импорта!~@~~@~4
+197~@~cGrid: 0005 Worksheet (ru-RU)~@~12~@~cGrid~@~Worksheet~@~Рабочий лист:~@~~@~5
+198~@~cGrid: 0006 Startrow (ru-RU)~@~12~@~cGrid~@~Startrow~@~StartRow:~@~~@~6
+199~@~cGrid: 0007 ImportToolTip (ru-RU)~@~12~@~cGrid~@~ImportToolTip~@~Пожалуйста, введите начальной строки для импорта и должна быть больше или равно 2, потому что заголовок является обязательным.~@~~@~7
+200~@~SortDirection: 0001 A (es-ES)~@~13~@~SortDirection~@~A~@~Ascendente~@~~@~1
+201~@~SortDirection: 0002 D (es-ES)~@~13~@~SortDirection~@~D~@~Descendente~@~~@~2
+202~@~SqlReport: 0001 SelectAll (es-ES)~@~13~@~SqlReport~@~SelectAll~@~Por favor, consulte la columna deseada (s) uno por uno, o haga clic aquí para seleccionar todas las columnas.~@~~@~1
+203~@~SqlReport: 0002 DeselectAll (es-ES)~@~13~@~SqlReport~@~DeselectAll~@~Por favor, desactive la columna no deseado (s) uno por uno, o haga clic aquí para cancelar la selección de todas las columnas.~@~~@~2
+204~@~DashboardType: 0001 G (es-ES)~@~13~@~DashboardType~@~G~@~Medidores~@~~@~1
+205~@~DashboardType: 0002 R (es-ES)~@~13~@~DashboardType~@~R~@~Informes~@~~@~2
+206~@~DashboardType: 0003 D (es-ES)~@~13~@~DashboardType~@~D~@~Documentos~@~~@~3
+207~@~DashboardType: 0004 S (es-ES)~@~13~@~DashboardType~@~S~@~Pantallas~@~~@~4
+208~@~Shortcut: Shortcut (es-ES)~@~13~@~Shortcut~@~Shortcut~@~Atajos~@~~@~
+209~@~QFilter: QFilter (es-ES)~@~13~@~QFilter~@~QFilter~@~Filtro rápido:~@~~@~
+210~@~MyProfileModule: 0001 Company (es-ES)~@~13~@~MyProfileModule~@~Company~@~Empresa~@~~@~1
+211~@~MyProfileModule: 0002 Project (es-ES)~@~13~@~MyProfileModule~@~Project~@~Proyecto~@~~@~2
+212~@~MyProfileModule: 0003 System (es-ES)~@~13~@~MyProfileModule~@~System~@~Sistema~@~~@~3
+213~@~MyProfileModule: 0004 SignOut (es-ES)~@~13~@~MyProfileModule~@~SignOut~@~Salir~@~~@~4
+214~@~MyProfileModule: 0005 HomePage (es-ES)~@~13~@~MyProfileModule~@~HomePage~@~Volver a la página principal~@~~@~5
+215~@~MyProfileModule: 0006 SignOutToolTip (es-ES)~@~13~@~MyProfileModule~@~SignOutToolTip~@~Pulse este botón para salir del sistema.~@~~@~6
+216~@~cSystem: Label (es-ES)~@~13~@~cSystem~@~Label~@~Módulo:~@~~@~
+217~@~cGrid: 0001 Filter (es-ES)~@~13~@~cGrid~@~Filter~@~Filtro:~@~~@~1
+218~@~cGrid: 0002 Find (es-ES)~@~13~@~cGrid~@~Find~@~En:~@~~@~2
+219~@~cGrid: 0003 ImpPwd (es-ES)~@~13~@~cGrid~@~ImpPwd~@~Contraseña importación Override:~@~~@~3
+220~@~cGrid: 0004 ImpPwdToolTip (es-ES)~@~13~@~cGrid~@~ImpPwdToolTip~@~Por favor, introduzca una contraseña anulación de supervisión para importar!~@~~@~4
+221~@~cGrid: 0005 Worksheet (es-ES)~@~13~@~cGrid~@~Worksheet~@~Hoja de cálculo:~@~~@~5
+222~@~cGrid: 0006 Startrow (es-ES)~@~13~@~cGrid~@~Startrow~@~StartRow:~@~~@~6
+223~@~cGrid: 0007 ImportToolTip (es-ES)~@~13~@~cGrid~@~ImportToolTip~@~Por favor, introduzca la fila comienza a ser importado y debe ser mayor que o igual a 2, porque la partida es obligatorio.~@~~@~7
+224~@~cSystem: 0010 AccessDeny (en-US)~@~1~@~cSystem~@~AccessDeny~@~Access Denied.  Please contact administrator if you have any questions.~@~~@~10
+225~@~cSystem: 0001 AccessDeny (zh-CN)~@~4~@~cSystem~@~AccessDeny~@~访问被拒绝。如果您有任何疑问，请联系管理员。~@~~@~1
+226~@~MyAccountModule: 0010 cLoginName (en-US)~@~1~@~MyAccountModule~@~cLoginName~@~Login Name~@~~@~10
+227~@~MyAccountModule: 0020 cUsrPassword (en-US)~@~1~@~MyAccountModule~@~cUsrPassword~@~Password~@~~@~20
+228~@~MyAccountModule: 0030 cForgetBtn (en-US)~@~1~@~MyAccountModule~@~cForgetBtn~@~Password Help~@~~@~30
+229~@~MyAccountModule: 0040 cLoginBtn (en-US)~@~1~@~MyAccountModule~@~cLoginBtn~@~Login~@~~@~40
+230~@~MyAccountModule: 0050 cResetLoginName (en-US)~@~1~@~MyAccountModule~@~cResetLoginName~@~Login Name~@~~@~50
+231~@~MyAccountModule: 0055 cResetUsrEmail (en-US)~@~1~@~MyAccountModule~@~cResetUsrEmail~@~Email~@~~@~55
+232~@~MyAccountModule: 0060 cResetPwdBtn (en-US)~@~1~@~MyAccountModule~@~cResetPwdBtn~@~Reset~@~~@~60
+233~@~MyAccountModule: 0070 cNewLoginName (en-US)~@~1~@~MyAccountModule~@~cNewLoginName~@~Login Name~@~~@~70
+234~@~MyAccountModule: 0080 cNewUserName (en-US)~@~1~@~MyAccountModule~@~cNewUserName~@~Shown as~@~~@~80
+235~@~MyAccountModule: 0090 cNewUsrEmail (en-US)~@~1~@~MyAccountModule~@~cNewUsrEmail~@~Email~@~~@~90
+236~@~MyAccountModule: 0100 cNewUsrPassword (en-US)~@~1~@~MyAccountModule~@~cNewUsrPassword~@~New Password~@~~@~100
+237~@~MyAccountModule: 0110 cConfirmPwd (en-US)~@~1~@~MyAccountModule~@~cConfirmPwd~@~Confirm Password~@~~@~110
+238~@~MyAccountModule: 0120 cUpdPwdBtn (en-US)~@~1~@~MyAccountModule~@~cUpdPwdBtn~@~Change Password~@~~@~120
+239~@~MyAccountModule: 0130 cUsrPasswordVerify (en-US)~@~1~@~MyAccountModule~@~cUsrPasswordVerify~@~Current Password~@~~@~130
+240~@~MyAccountModule: 0140 ResetPwdEmailMsg1 (en-US)~@~1~@~MyAccountModule~@~ResetPwdEmailMsg1~@~A Password Reset Request has been initiated recently, please click the link below to complete the reset process~@~~@~140
+241~@~MyAccountModule: 0150 ResetPwdEmailMsg2 (en-US)~@~1~@~MyAccountModule~@~ResetPwdEmailMsg2~@~If you are not aware of such request, please contact customer support ASAP as there may be intruder(s) attempting to break into your account~@~~@~150
+242~@~MyAccountModule: 0160 ResetPwdEmailSubject (en-US)~@~1~@~MyAccountModule~@~ResetPwdEmailSubject~@~Password Reset Request for {0}~@~~@~160
+243~@~MyAccountModule: 0170 NoEmailOnFileMsg (en-US)~@~1~@~MyAccountModule~@~NoEmailOnFileMsg~@~User record not found or inactive or there is no email on file, please contact customer support service if you have any questions.~@~~@~170
+244~@~MyAccountModule: 0180 ResetEmailSentMsg (en-US)~@~1~@~MyAccountModule~@~ResetEmailSentMsg~@~A password request email has been sent to {0}, please check mailbox for the next step. You may need to check bulk email/spam folder if cannot find it within the next few minutes or so.~@~~@~180
+245~@~MyAccountModule: 0190 cUpdProfileBtn (en-US)~@~1~@~MyAccountModule~@~cUpdProfileBtn~@~Update~@~~@~190
+246~@~MyAccountModule: 0190 PasswordChangedMsg (en-US)~@~1~@~MyAccountModule~@~PasswordChangedMsg~@~Password changed successfully. Please press the icon on the top-left-corner or wait for automatic redirection!~@~~@~190
+247~@~MyAccountModule: 0200 LoginInfoChangedMsg (en-US)~@~1~@~MyAccountModule~@~LoginInfoChangedMsg~@~Login profile changed successfully. Please press the icon on the top-left-corner or wait for automatic redirection.~@~~@~200
+248~@~MyAccountModule: 0210 PasswordVerificationFailed (en-US)~@~1~@~MyAccountModule~@~PasswordVerificationFailed~@~Cannot verify your identify~@~~@~210
+249~@~MyAccountModule: 0220 AccountLockedMsg (en-US)~@~1~@~MyAccountModule~@~AccountLockedMsg~@~Current system does not allow more than five unsuccessful attempts to login. Please contact customer service at your convenience or try getting a new password.~@~~@~220
+250~@~MyAccountModule: 0230 RequiredFieldMsg (en-US)~@~1~@~MyAccountModule~@~RequiredFieldMsg~@~* Required Field~@~~@~230
+251~@~MyAccountModule: 0240 NeedLoginOrEmailMsg (en-US)~@~1~@~MyAccountModule~@~NeedLoginOrEmailMsg~@~Must provide at least one of these~@~~@~240
+252~@~MyAccountModule: 0250 InvalidEmailMsg (en-US)~@~1~@~MyAccountModule~@~InvalidEmailMsg~@~Invalid Email~@~~@~250
+253~@~MyAccountModule: 0260 PasswordNotMatchMsg (en-US)~@~1~@~MyAccountModule~@~PasswordNotMatchMsg~@~Password not match~@~~@~260
+254~@~MyAccountModule: 0270 WeakPasswordMsg (en-US)~@~1~@~MyAccountModule~@~WeakPasswordMsg~@~Weak~@~~@~270
+255~@~MyAccountModule: 0280 NormalPasswordMsg (en-US)~@~1~@~MyAccountModule~@~NormalPasswordMsg~@~Normal~@~~@~280
+256~@~MyAccountModule: 0290 GoodPasswordMsg (en-US)~@~1~@~MyAccountModule~@~GoodPasswordMsg~@~Good~@~~@~290
+257~@~MyAccountModule: 0300 StrongPasswordMsg (en-US)~@~1~@~MyAccountModule~@~StrongPasswordMsg~@~Strong~@~~@~300
+258~@~MyAccountModule: 0310 LoginFailedMsg (en-US)~@~1~@~MyAccountModule~@~LoginFailedMsg~@~Login failed~@~~@~310
+259~@~MyAccountModule: 0320 WrongMathAnswerMsg (en-US)~@~1~@~MyAccountModule~@~WrongMathAnswerMsg~@~Incorrect math answer~@~~@~320
+260~@~MyAccountModule: 0330 cHumanLogin (en-US)~@~1~@~MyAccountModule~@~cHumanLogin~@~Answer this simple math test~@~~@~330
+261~@~MyAccountModule: 0010 cLoginName (zh-CN)~@~4~@~MyAccountModule~@~cLoginName~@~登录名~@~~@~10
+262~@~MyAccountModule: 0020 cUsrPassword (zh-CN)~@~4~@~MyAccountModule~@~cUsrPassword~@~密码~@~~@~20
+263~@~MyAccountModule: 0030 cForgetBtn (zh-CN)~@~4~@~MyAccountModule~@~cForgetBtn~@~密码帮助~@~~@~30
+264~@~MyAccountModule: 0040 cLoginBtn (zh-CN)~@~4~@~MyAccountModule~@~cLoginBtn~@~注册~@~~@~40
+265~@~MyAccountModule: 0050 cResetLoginName (zh-CN)~@~4~@~MyAccountModule~@~cResetLoginName~@~登录名~@~~@~50
+267~@~MyAccountModule: 0060 cResetPwdBtn (zh-CN)~@~4~@~MyAccountModule~@~cResetPwdBtn~@~复位~@~~@~60
+268~@~MyAccountModule: 0070 cNewLoginName (zh-CN)~@~4~@~MyAccountModule~@~cNewLoginName~@~登录名~@~~@~70
+269~@~MyAccountModule: 0080 cNewUserName (zh-CN)~@~4~@~MyAccountModule~@~cNewUserName~@~显示为~@~~@~80
+270~@~MyAccountModule: 0090 cNewUsrEmail (zh-CN)~@~4~@~MyAccountModule~@~cNewUsrEmail~@~电子邮件~@~~@~90
+271~@~MyAccountModule: 0100 cNewUsrPassword (zh-CN)~@~4~@~MyAccountModule~@~cNewUsrPassword~@~新密码~@~~@~100
+272~@~MyAccountModule: 0110 cConfirmPwd (zh-CN)~@~4~@~MyAccountModule~@~cConfirmPwd~@~确认密码~@~~@~110
+273~@~MyAccountModule: 0120 cUpdPwdBtn (zh-CN)~@~4~@~MyAccountModule~@~cUpdPwdBtn~@~更改密码~@~~@~120
+274~@~MyAccountModule: 0130 cUsrPasswordVerify (zh-CN)~@~4~@~MyAccountModule~@~cUsrPasswordVerify~@~目前的密码~@~~@~130
+275~@~MyAccountModule: 0140 ResetPwdEmailMsg1 (zh-CN)~@~4~@~MyAccountModule~@~ResetPwdEmailMsg1~@~最近已经开始要求重设密码，请点击下面的链接来完成复位过程~@~~@~140
+276~@~MyAccountModule: 0150 ResetPwdEmailMsg2 (zh-CN)~@~4~@~MyAccountModule~@~ResetPwdEmailMsg2~@~如果你不知道这样的要求，请尽快联系客户支持，因为有可能是入侵者（S）试图打入您的帐户~@~~@~150
+277~@~MyAccountModule: 0160 ResetPwdEmailSubject (zh-CN)~@~4~@~MyAccountModule~@~ResetPwdEmailSubject~@~密码重置请求{0}~@~~@~160
+279~@~MyAccountModule: 0180 ResetEmailSentMsg (zh-CN)~@~4~@~MyAccountModule~@~ResetEmailSentMsg~@~一个密码的邮件已发送到{0}，请检查邮箱，为下一步。您可能需要检查的批量电子邮件/垃圾邮件文件夹中，如果不能找到它在接下来的几分钟左右。~@~~@~180
+280~@~MyAccountModule: 0190 cUpdProfileBtn (zh-CN)~@~4~@~MyAccountModule~@~cUpdProfileBtn~@~更新~@~~@~190
+283~@~MyAccountModule: 0210 PasswordVerificationFailed (zh-CN)~@~4~@~MyAccountModule~@~PasswordVerificationFailed~@~无法验证您识别~@~~@~210
+284~@~MyAccountModule: 0220 AccountLockedMsg (zh-CN)~@~4~@~MyAccountModule~@~AccountLockedMsg~@~当前的系统不允许超过五不成功的尝试登录。在您方便的，或试图得到一个新的密码，请联系客户服务。~@~~@~220
+285~@~MyAccountModule: 0230 RequiredFieldMsg (zh-CN)~@~4~@~MyAccountModule~@~RequiredFieldMsg~@~*必填项~@~~@~230
+286~@~MyAccountModule: 0240 NeedLoginOrEmailMsg (zh-CN)~@~4~@~MyAccountModule~@~NeedLoginOrEmailMsg~@~必须提供至少有一个~@~~@~240
+287~@~MyAccountModule: 0250 InvalidEmailMsg (zh-CN)~@~4~@~MyAccountModule~@~InvalidEmailMsg~@~无效的电子邮件~@~~@~250
+288~@~MyAccountModule: 0260 PasswordNotMatchMsg (zh-CN)~@~4~@~MyAccountModule~@~PasswordNotMatchMsg~@~密码不匹配~@~~@~260
+289~@~MyAccountModule: 0270 WeakPasswordMsg (zh-CN)~@~4~@~MyAccountModule~@~WeakPasswordMsg~@~弱~@~~@~270
+290~@~MyAccountModule: 0280 NormalPasswordMsg (zh-CN)~@~4~@~MyAccountModule~@~NormalPasswordMsg~@~正常~@~~@~280
+291~@~MyAccountModule: 0290 GoodPasswordMsg (zh-CN)~@~4~@~MyAccountModule~@~GoodPasswordMsg~@~好~@~~@~290
+292~@~MyAccountModule: 0300 StrongPasswordMsg (zh-CN)~@~4~@~MyAccountModule~@~StrongPasswordMsg~@~强烈~@~~@~300
+293~@~MyAccountModule: 0310 LoginFailedMsg (zh-CN)~@~4~@~MyAccountModule~@~LoginFailedMsg~@~登录失败~@~~@~310
+294~@~MyAccountModule: 0320 WrongMathAnswerMsg (zh-CN)~@~4~@~MyAccountModule~@~WrongMathAnswerMsg~@~不正确的数学答案~@~~@~320
+295~@~MyAccountModule: 0330 cHumanLogin (zh-CN)~@~4~@~MyAccountModule~@~cHumanLogin~@~回答这个简单的数学考试~@~~@~330
+297~@~SamplePg: 0010 pgTitle (en-US)~@~1~@~SamplePg~@~pgTitle~@~Sample static page~@~~@~10
+298~@~MyProfileModule: 0007 MyAccount (en-US)~@~1~@~MyProfileModule~@~MyAccount~@~My Account~@~~@~7
+299~@~MyAccountModule: 0101 LoginAreaTitle (en-US)~@~1~@~MyAccountModule~@~LoginAreaTitle~@~Secured Login Area~@~~@~101
+300~@~MyAccountModule: 0102 RestPwdTitle (en-US)~@~1~@~MyAccountModule~@~RestPwdTitle~@~Reset Password~@~~@~102
+301~@~MyAccountModule: 0103 PwdTitle (en-US)~@~1~@~MyAccountModule~@~PwdTitle~@~Profile~@~~@~103
+302~@~MyAccountModule: 0104 NewPwdTitle (en-US)~@~1~@~MyAccountModule~@~NewPwdTitle~@~New Password~@~~@~104
+303~@~SamplePg: Sample Page (zh-CN)~@~4~@~SamplePg~@~Sample Page~@~样品的静态页面~@~~@~
+304~@~MyProfileModule: 0007 MyAccount (zh-CN)~@~4~@~MyProfileModule~@~MyAccount~@~我的帐户~@~~@~7
+305~@~MyAccountModule: 0101 LoginAreaTitle (zh-CN)~@~4~@~MyAccountModule~@~LoginAreaTitle~@~安全登录区~@~~@~101
+306~@~MyAccountModule: 0102 RestPwdTitle (zh-CN)~@~4~@~MyAccountModule~@~RestPwdTitle~@~“重设密码”~@~~@~102
+307~@~MyAccountModule: 0103 PwdTitle (zh-CN)~@~4~@~MyAccountModule~@~PwdTitle~@~个人资料~@~~@~103
+308~@~MyAccountModule: 0104 NewPwdTitle (zh-CN)~@~4~@~MyAccountModule~@~NewPwdTitle~@~新密码~@~~@~104
+309~@~MyAccountModule: 0105 cWarnMsg1 (en-US)~@~1~@~MyAccountModule~@~cWarnMsg1~@~Security: You are attempting to access a secure area of the site reserved exclusively for registered users. Please enter your user login name and password from above.~@~~@~105
+310~@~MyAccountModule: 0105 cWarnMsg1 (zh-CN)~@~4~@~MyAccountModule~@~cWarnMsg1~@~安全: 您正在尝试访问的网站专为注册用户一个安全的地方。请输入您的用户名和密码登录以上。~@~~@~105
+311~@~MyAccountModule: 0106 cWarnMsg2 (en-US)~@~1~@~MyAccountModule~@~cWarnMsg2~@~Security: The requested is a secured area and the current session has expired. Please login again.~@~~@~106
+312~@~SamplePg: 0020 ERR (en-US)~@~1~@~SamplePg~@~ERR~@~This is Good~@~~@~20
+313~@~MyAccountModule: 0106 cWarnMsg2 (zh-CN)~@~4~@~MyAccountModule~@~cWarnMsg2~@~安全性：所请求的是一个安全的地方，并在当前的会话已过期。请重新登录。~@~~@~106
+314~@~SamplePg: 0020 ERR (zh-CN)~@~4~@~SamplePg~@~ERR~@~这是件好事~@~~@~20
+315~@~SamplePg: 0001 (en-US)~@~1~@~SamplePg~@~0001~@~test 1~@~~@~
+316~@~SamplePg: 0002 (en-US)~@~1~@~SamplePg~@~0002~@~test 2~@~~@~
+321~@~cSystem: 0001 AccessDeny (fr-FR)~@~2~@~cSystem~@~AccessDeny~@~Accès refusé. S'il vous plaît contacter l'administrateur si vous avez des questions.~@~~@~1
+322~@~MyAccountModule: 0010 cLoginName (fr-FR)~@~2~@~MyAccountModule~@~cLoginName~@~Connexion Nom~@~~@~10
+323~@~MyAccountModule: 0020 cUsrPassword (fr-FR)~@~2~@~MyAccountModule~@~cUsrPassword~@~Mot de passe~@~~@~20
+324~@~MyAccountModule: 0030 cForgetBtn (fr-FR)~@~2~@~MyAccountModule~@~cForgetBtn~@~Mot de passe Aide~@~~@~30
+325~@~MyAccountModule: 0040 cLoginBtn (fr-FR)~@~2~@~MyAccountModule~@~cLoginBtn~@~Login~@~~@~40
+326~@~MyAccountModule: 0050 cResetLoginName (fr-FR)~@~2~@~MyAccountModule~@~cResetLoginName~@~Connexion Nom~@~~@~50
+328~@~MyAccountModule: 0060 cResetPwdBtn (fr-FR)~@~2~@~MyAccountModule~@~cResetPwdBtn~@~Remettre~@~~@~60
+329~@~MyAccountModule: 0070 cNewLoginName (fr-FR)~@~2~@~MyAccountModule~@~cNewLoginName~@~Connexion Nom~@~~@~70
+330~@~MyAccountModule: 0080 cNewUserName (fr-FR)~@~2~@~MyAccountModule~@~cNewUserName~@~Montré que~@~~@~80
+331~@~MyAccountModule: 0090 cNewUsrEmail (fr-FR)~@~2~@~MyAccountModule~@~cNewUsrEmail~@~Email~@~~@~90
+332~@~MyAccountModule: 0100 cNewUsrPassword (fr-FR)~@~2~@~MyAccountModule~@~cNewUsrPassword~@~Nouveau mot de passe~@~~@~100
+333~@~MyAccountModule: 0110 cConfirmPwd (fr-FR)~@~2~@~MyAccountModule~@~cConfirmPwd~@~Confirmer mot de passe~@~~@~110
+334~@~MyAccountModule: 0120 cUpdPwdBtn (fr-FR)~@~2~@~MyAccountModule~@~cUpdPwdBtn~@~Changer mot de passe~@~~@~120
+335~@~MyAccountModule: 0130 cUsrPasswordVerify (fr-FR)~@~2~@~MyAccountModule~@~cUsrPasswordVerify~@~Mot de passe actuel~@~~@~130
+336~@~MyAccountModule: 0140 ResetPwdEmailMsg1 (fr-FR)~@~2~@~MyAccountModule~@~ResetPwdEmailMsg1~@~Une demande de réinitialisation de mot a été lancé récemment, s'il vous plaît cliquer sur le lien ci-dessous pour compléter le processus de réinitialisation~@~~@~140
+337~@~MyAccountModule: 0150 ResetPwdEmailMsg2 (fr-FR)~@~2~@~MyAccountModule~@~ResetPwdEmailMsg2~@~Si vous n'êtes pas au courant de cette demande, s'il vous plaît contacter le service client le plus tôt possible car il peut y avoir intrus (s) en tentant de s'introduire dans votre compte~@~~@~150
+338~@~MyAccountModule: 0160 ResetPwdEmailSubject (fr-FR)~@~2~@~MyAccountModule~@~ResetPwdEmailSubject~@~Demande de réinitialisation de mot de {0}~@~~@~160
+340~@~MyAccountModule: 0180 ResetEmailSentMsg (fr-FR)~@~2~@~MyAccountModule~@~ResetEmailSentMsg~@~Un email de demande de mot de passe a été envoyé à {0}, s'il vous plaît vérifier boîte aux lettres pour l'étape suivante. Vous devrez peut-être vérifier email en vrac / Spam dossier si elle ne peut pas trouver dans les prochaines minutes ou plus.~@~~@~180
+341~@~MyAccountModule: 0190 cUpdProfileBtn (fr-FR)~@~2~@~MyAccountModule~@~cUpdProfileBtn~@~Mettre à jour~@~~@~190
+344~@~MyAccountModule: 0210 PasswordVerificationFailed (fr-FR)~@~2~@~MyAccountModule~@~PasswordVerificationFailed~@~Impossible de vérifier votre identité~@~~@~210
+345~@~MyAccountModule: 0220 AccountLockedMsg (fr-FR)~@~2~@~MyAccountModule~@~AccountLockedMsg~@~Le système actuel ne permet pas plus de cinq tentatives infructueuses de vous identifier. S'il vous plaît contacter le service client à votre convenance ou essayer d'obtenir un nouveau mot de passe.~@~~@~220
+346~@~MyAccountModule: 0230 RequiredFieldMsg (fr-FR)~@~2~@~MyAccountModule~@~RequiredFieldMsg~@~* Champ obligatoire~@~~@~230
+347~@~MyAccountModule: 0240 NeedLoginOrEmailMsg (fr-FR)~@~2~@~MyAccountModule~@~NeedLoginOrEmailMsg~@~Doit fournir au moins une d'entre elles~@~~@~240
+348~@~MyAccountModule: 0250 InvalidEmailMsg (fr-FR)~@~2~@~MyAccountModule~@~InvalidEmailMsg~@~E-mail incorrect~@~~@~250
+349~@~MyAccountModule: 0260 PasswordNotMatchMsg (fr-FR)~@~2~@~MyAccountModule~@~PasswordNotMatchMsg~@~Mot de passe correspond pas~@~~@~260
+350~@~MyAccountModule: 0270 WeakPasswordMsg (fr-FR)~@~2~@~MyAccountModule~@~WeakPasswordMsg~@~Faible~@~~@~270
+351~@~MyAccountModule: 0280 NormalPasswordMsg (fr-FR)~@~2~@~MyAccountModule~@~NormalPasswordMsg~@~Normal~@~~@~280
+352~@~MyAccountModule: 0290 GoodPasswordMsg (fr-FR)~@~2~@~MyAccountModule~@~GoodPasswordMsg~@~Bon~@~~@~290
+353~@~MyAccountModule: 0300 StrongPasswordMsg (fr-FR)~@~2~@~MyAccountModule~@~StrongPasswordMsg~@~Fort~@~~@~300
+354~@~MyAccountModule: 0310 LoginFailedMsg (fr-FR)~@~2~@~MyAccountModule~@~LoginFailedMsg~@~Échec de la connexion~@~~@~310
+355~@~MyAccountModule: 0320 WrongMathAnswerMsg (fr-FR)~@~2~@~MyAccountModule~@~WrongMathAnswerMsg~@~Réponse incorrecte mathématiques~@~~@~320
+356~@~MyAccountModule: 0330 cHumanLogin (fr-FR)~@~2~@~MyAccountModule~@~cHumanLogin~@~Répondez à ce test simple de math~@~~@~330
+357~@~SamplePg: Sample Page (fr-FR)~@~2~@~SamplePg~@~Sample Page~@~Echantillon Echantillon page statique statique statique Exemple de page Exemple de page statique Exemple de page statique Exemple de page statique Page statique échantillon~@~~@~
+358~@~MyProfileModule: 0007 MyAccount (fr-FR)~@~2~@~MyProfileModule~@~MyAccount~@~Mon compte~@~~@~7
+359~@~MyAccountModule: 0101 LoginAreaTitle (fr-FR)~@~2~@~MyAccountModule~@~LoginAreaTitle~@~Zone Connexion sécurisée~@~~@~101
+360~@~MyAccountModule: 0102 RestPwdTitle (fr-FR)~@~2~@~MyAccountModule~@~RestPwdTitle~@~Réinitialiser mot de passe~@~~@~102
+361~@~MyAccountModule: 0103 PwdTitle (fr-FR)~@~2~@~MyAccountModule~@~PwdTitle~@~Profil~@~~@~103
+362~@~MyAccountModule: 0104 NewPwdTitle (fr-FR)~@~2~@~MyAccountModule~@~NewPwdTitle~@~Nouveau mot de passe~@~~@~104
+363~@~MyAccountModule: 0105 cWarnMsg1 (fr-FR)~@~2~@~MyAccountModule~@~cWarnMsg1~@~Sécurité: Vous tentez d'accéder à une zone sécurisée du site réservé exclusivement pour les utilisateurs enregistrés. S'il vous plaît entrez votre nom de connexion utilisateur et mot de passe ci-dessus.~@~~@~105
+364~@~MyAccountModule: 0106 cWarnMsg2 (fr-FR)~@~2~@~MyAccountModule~@~cWarnMsg2~@~Sécurité: Le demandée est une zone sécurisée et la session en cours a expiré. S'il vous plaît vous connecter à nouveau.~@~~@~106
+365~@~SamplePg: 0020 ERR (fr-FR)~@~2~@~SamplePg~@~ERR~@~C'est une bonne chose~@~~@~20
+368~@~SortDirection: 0001 A (de-DE)~@~68~@~SortDirection~@~A~@~Aufsteigend~@~~@~1
+369~@~SortDirection: 0002 D (de-DE)~@~68~@~SortDirection~@~D~@~Absteigend~@~~@~2
+370~@~SqlReport: 0001 SelectAll (de-DE)~@~68~@~SqlReport~@~SelectAll~@~Bitte überprüfen Sie die gewünschte Spalte (s) ein durch ein oder klicken Sie hier, um alle Spalten auszuwählen.~@~~@~1
+371~@~SqlReport: 0002 DeselectAll (de-DE)~@~68~@~SqlReport~@~DeselectAll~@~Bitte deaktivieren Sie das unerwünschte Spalte (n) ein, indem ein oder klicken Sie hier, um die Auswahl alle Spalten.~@~~@~2
+372~@~DashboardType: 0001 G (de-DE)~@~68~@~DashboardType~@~G~@~Gauges~@~~@~1
+373~@~DashboardType: 0002 R (de-DE)~@~68~@~DashboardType~@~R~@~Reports~@~~@~2
+374~@~DashboardType: 0003 D (de-DE)~@~68~@~DashboardType~@~D~@~Unterlagen~@~~@~3
+375~@~DashboardType: 0004 S (de-DE)~@~68~@~DashboardType~@~S~@~Screens~@~~@~4
+376~@~Shortcut: Shortcut (de-DE)~@~68~@~Shortcut~@~Shortcut~@~Shortcuts~@~~@~
+377~@~QFilter: QFilter (de-DE)~@~68~@~QFilter~@~QFilter~@~Quick Filter:~@~~@~
+378~@~MyProfileModule: 0001 Company (de-DE)~@~68~@~MyProfileModule~@~Company~@~Firma~@~~@~1
+379~@~MyProfileModule: 0002 Project (de-DE)~@~68~@~MyProfileModule~@~Project~@~Projekt~@~~@~2
+380~@~MyProfileModule: 0003 System (de-DE)~@~68~@~MyProfileModule~@~System~@~System~@~~@~3
+381~@~MyProfileModule: 0004 SignOut (de-DE)~@~68~@~MyProfileModule~@~SignOut~@~Austragen~@~~@~4
+382~@~MyProfileModule: 0005 HomePage (de-DE)~@~68~@~MyProfileModule~@~HomePage~@~Zurück zur Startseite~@~~@~5
+383~@~MyProfileModule: 0006 SignOutToolTip (de-DE)~@~68~@~MyProfileModule~@~SignOutToolTip~@~Drücken Sie diese, um das System zu verlassen.~@~~@~6
+384~@~cSystem: Label (de-DE)~@~68~@~cSystem~@~Label~@~Modul:~@~~@~
+385~@~cGrid: 0001 Filter (de-DE)~@~68~@~cGrid~@~Filter~@~Filter:~@~~@~1
+386~@~cGrid: 0002 Find (de-DE)~@~68~@~cGrid~@~Find~@~On:~@~~@~2
+387~@~cGrid: 0003 ImpPwd (de-DE)~@~68~@~cGrid~@~ImpPwd~@~Import Passwort Override:~@~~@~3
+388~@~cGrid: 0004 ImpPwdToolTip (de-DE)~@~68~@~cGrid~@~ImpPwdToolTip~@~Bitte geben Sie eine Aufsichtsfunktion override vergessen zu importieren!~@~~@~4
+389~@~cGrid: 0005 Worksheet (de-DE)~@~68~@~cGrid~@~Worksheet~@~Arbeitsblatt:~@~~@~5
+390~@~cGrid: 0006 Startrow (de-DE)~@~68~@~cGrid~@~Startrow~@~StartRow:~@~~@~6
+391~@~cGrid: 0007 ImportToolTip (de-DE)~@~68~@~cGrid~@~ImportToolTip~@~Bitte geben Sie die Startreihe zu importieren und muss größer als oder gleich 2, da Überschrift ist obligatorisch.~@~~@~7
+392~@~cSystem: 0001 AccessDeny (de-DE)~@~68~@~cSystem~@~AccessDeny~@~Zugriff verweigert. Bitte kontaktieren Sie den Administrator, wenn Sie Fragen haben.~@~~@~1
+393~@~MyAccountModule: 0010 cLoginName (de-DE)~@~68~@~MyAccountModule~@~cLoginName~@~Login-Name~@~~@~10
+394~@~MyAccountModule: 0020 cUsrPassword (de-DE)~@~68~@~MyAccountModule~@~cUsrPassword~@~Kennwort~@~~@~20
+395~@~MyAccountModule: 0030 cForgetBtn (de-DE)~@~68~@~MyAccountModule~@~cForgetBtn~@~Kennwort Hilfe~@~~@~30
+396~@~MyAccountModule: 0040 cLoginBtn (de-DE)~@~68~@~MyAccountModule~@~cLoginBtn~@~Login~@~~@~40
+397~@~MyAccountModule: 0050 cResetLoginName (de-DE)~@~68~@~MyAccountModule~@~cResetLoginName~@~Login-Name~@~~@~50
+399~@~MyAccountModule: 0060 cResetPwdBtn (de-DE)~@~68~@~MyAccountModule~@~cResetPwdBtn~@~Rücksetzen~@~~@~60
+400~@~MyAccountModule: 0070 cNewLoginName (de-DE)~@~68~@~MyAccountModule~@~cNewLoginName~@~Login-Name~@~~@~70
+401~@~MyAccountModule: 0080 cNewUserName (de-DE)~@~68~@~MyAccountModule~@~cNewUserName~@~Dargestellt als~@~~@~80
+402~@~MyAccountModule: 0090 cNewUsrEmail (de-DE)~@~68~@~MyAccountModule~@~cNewUsrEmail~@~E-Mail~@~~@~90
+403~@~MyAccountModule: 0100 cNewUsrPassword (de-DE)~@~68~@~MyAccountModule~@~cNewUsrPassword~@~New Password~@~~@~100
+404~@~MyAccountModule: 0110 cConfirmPwd (de-DE)~@~68~@~MyAccountModule~@~cConfirmPwd~@~Passwort bestätigen~@~~@~110
+405~@~MyAccountModule: 0120 cUpdPwdBtn (de-DE)~@~68~@~MyAccountModule~@~cUpdPwdBtn~@~Kennwort ändern~@~~@~120
+406~@~MyAccountModule: 0130 cUsrPasswordVerify (de-DE)~@~68~@~MyAccountModule~@~cUsrPasswordVerify~@~Current Password~@~~@~130
+407~@~MyAccountModule: 0140 ResetPwdEmailMsg1 (de-DE)~@~68~@~MyAccountModule~@~ResetPwdEmailMsg1~@~Ein Password Reset Anfrage wurde vor kurzem begonnen, klicken Sie bitte den Link unten, um den Reset-Vorgang abzuschließen~@~~@~140
+408~@~MyAccountModule: 0150 ResetPwdEmailMsg2 (de-DE)~@~68~@~MyAccountModule~@~ResetPwdEmailMsg2~@~Wenn Sie nicht wissen, wie Anfrage, kontaktieren Sie bitte Kundendienst so schnell wie möglich, da es sein kann Eindringling (s) versucht, in Ihrem Konto zu brechen~@~~@~150
+409~@~MyAccountModule: 0160 ResetPwdEmailSubject (de-DE)~@~68~@~MyAccountModule~@~ResetPwdEmailSubject~@~Password Reset Request for {0}~@~~@~160
+411~@~MyAccountModule: 0180 ResetEmailSentMsg (de-DE)~@~68~@~MyAccountModule~@~ResetEmailSentMsg~@~Ein Passwort Anfrage E-Mail an {0} gesendet wurde, überprüfen Sie bitte Postfach für den nächsten Schritt. Möglicherweise müssen Sie Massen-E / Spam-Ordner überprüfen, ob sie nicht finden kann innerhalb der nächsten paar Minuten oder so.~@~~@~180
+412~@~MyAccountModule: 0190 cUpdProfileBtn (de-DE)~@~68~@~MyAccountModule~@~cUpdProfileBtn~@~Aktualisieren~@~~@~190
+415~@~MyAccountModule: 0210 PasswordVerificationFailed (de-DE)~@~68~@~MyAccountModule~@~PasswordVerificationFailed~@~Kann nicht überprüfen Ihre Identität~@~~@~210
+416~@~MyAccountModule: 0220 AccountLockedMsg (de-DE)~@~68~@~MyAccountModule~@~AccountLockedMsg~@~Aktuelle System erlaubt nicht mehr als fünf erfolglose Versuche um sich anzumelden. Bitte kontaktieren Sie den Kundendienst an Ihrer Bequemlichkeit oder versuchen Sie ein neues Passwort.~@~~@~220
+417~@~MyAccountModule: 0230 RequiredFieldMsg (de-DE)~@~68~@~MyAccountModule~@~RequiredFieldMsg~@~* Pflichtfeld~@~~@~230
+418~@~MyAccountModule: 0240 NeedLoginOrEmailMsg (de-DE)~@~68~@~MyAccountModule~@~NeedLoginOrEmailMsg~@~Mindestens eine davon bereitzustellen~@~~@~240
+419~@~MyAccountModule: 0250 InvalidEmailMsg (de-DE)~@~68~@~MyAccountModule~@~InvalidEmailMsg~@~Ungültige E-Mail~@~~@~250
+420~@~MyAccountModule: 0260 PasswordNotMatchMsg (de-DE)~@~68~@~MyAccountModule~@~PasswordNotMatchMsg~@~Passwort nicht überein~@~~@~260
+421~@~MyAccountModule: 0270 WeakPasswordMsg (de-DE)~@~68~@~MyAccountModule~@~WeakPasswordMsg~@~Schwach~@~~@~270
+422~@~MyAccountModule: 0280 NormalPasswordMsg (de-DE)~@~68~@~MyAccountModule~@~NormalPasswordMsg~@~Normal~@~~@~280
+423~@~MyAccountModule: 0290 GoodPasswordMsg (de-DE)~@~68~@~MyAccountModule~@~GoodPasswordMsg~@~Gut~@~~@~290
+424~@~MyAccountModule: 0300 StrongPasswordMsg (de-DE)~@~68~@~MyAccountModule~@~StrongPasswordMsg~@~Stark~@~~@~300
+425~@~MyAccountModule: 0310 LoginFailedMsg (de-DE)~@~68~@~MyAccountModule~@~LoginFailedMsg~@~Fehler bei der Anmeldung~@~~@~310
+426~@~MyAccountModule: 0320 WrongMathAnswerMsg (de-DE)~@~68~@~MyAccountModule~@~WrongMathAnswerMsg~@~Falsche Matheantwort~@~~@~320
+427~@~MyAccountModule: 0330 cHumanLogin (de-DE)~@~68~@~MyAccountModule~@~cHumanLogin~@~Beantworten Sie diese einfache Rechenaufgabe~@~~@~330
+428~@~SamplePg: Sample Page (de-DE)~@~68~@~SamplePg~@~Sample Page~@~Beispiel statische Seite Beispiel statische Seite Beispiel statische Seite Beispiel statische Seite Beispiel statische Seite Beispiel statische Seite Beispiel statische Seite~@~~@~
+429~@~MyProfileModule: 0007 MyAccount (de-DE)~@~68~@~MyProfileModule~@~MyAccount~@~Ihr Konto~@~~@~7
+430~@~MyAccountModule: 0101 LoginAreaTitle (de-DE)~@~68~@~MyAccountModule~@~LoginAreaTitle~@~Gesicherte Login-Bereich~@~~@~101
+431~@~MyAccountModule: 0102 RestPwdTitle (de-DE)~@~68~@~MyAccountModule~@~RestPwdTitle~@~Passwort zurücksetzen~@~~@~102
+432~@~MyAccountModule: 0103 PwdTitle (de-DE)~@~68~@~MyAccountModule~@~PwdTitle~@~Profil~@~~@~103
+433~@~MyAccountModule: 0104 NewPwdTitle (de-DE)~@~68~@~MyAccountModule~@~NewPwdTitle~@~New Password~@~~@~104
+434~@~MyAccountModule: 0105 cWarnMsg1 (de-DE)~@~68~@~MyAccountModule~@~cWarnMsg1~@~Sicherheit: Sie versuchen, einen sicheren Bereich der Website ausschließlich für registrierte Benutzer vorbehalten sind. Bitte geben Sie Ihren Benutzernamen und das Kennwort von oben.~@~~@~105
+435~@~MyAccountModule: 0106 cWarnMsg2 (de-DE)~@~68~@~MyAccountModule~@~cWarnMsg2~@~Sicherheit: Die aufgerufene ist ein gesicherter Bereich und die aktuelle Sitzung ist abgelaufen. Bitte loggen Sie sich erneut.~@~~@~106
+436~@~SamplePg: 0020 ERR (de-DE)~@~68~@~SamplePg~@~ERR~@~Dies ist eine gute~@~~@~20
+439~@~cSystem: 0001 AccessDeny (hi-IN)~@~8~@~cSystem~@~AccessDeny~@~पहुंच अस्वीकृत. व्यवस्थापक से संपर्क करें यदि आप कोई प्रश्न हैं.~@~~@~1
+440~@~MyAccountModule: 0010 cLoginName (hi-IN)~@~8~@~MyAccountModule~@~cLoginName~@~नाम कीजिये~@~~@~10
+441~@~MyAccountModule: 0020 cUsrPassword (hi-IN)~@~8~@~MyAccountModule~@~cUsrPassword~@~पासवर्ड~@~~@~20
+442~@~MyAccountModule: 0030 cForgetBtn (hi-IN)~@~8~@~MyAccountModule~@~cForgetBtn~@~पासवर्ड सहायता~@~~@~30
+443~@~MyAccountModule: 0040 cLoginBtn (hi-IN)~@~8~@~MyAccountModule~@~cLoginBtn~@~लॉगिन~@~~@~40
+444~@~MyAccountModule: 0050 cResetLoginName (hi-IN)~@~8~@~MyAccountModule~@~cResetLoginName~@~नाम कीजिये~@~~@~50
+446~@~MyAccountModule: 0060 cResetPwdBtn (hi-IN)~@~8~@~MyAccountModule~@~cResetPwdBtn~@~रीसेट करें~@~~@~60
+447~@~MyAccountModule: 0070 cNewLoginName (hi-IN)~@~8~@~MyAccountModule~@~cNewLoginName~@~नाम कीजिये~@~~@~70
+448~@~MyAccountModule: 0080 cNewUserName (hi-IN)~@~8~@~MyAccountModule~@~cNewUserName~@~के रूप में दिखाया~@~~@~80
+449~@~MyAccountModule: 0090 cNewUsrEmail (hi-IN)~@~8~@~MyAccountModule~@~cNewUsrEmail~@~ईमेल~@~~@~90
+450~@~MyAccountModule: 0100 cNewUsrPassword (hi-IN)~@~8~@~MyAccountModule~@~cNewUsrPassword~@~नया पासवर्ड~@~~@~100
+451~@~MyAccountModule: 0110 cConfirmPwd (hi-IN)~@~8~@~MyAccountModule~@~cConfirmPwd~@~पासवर्ड की पुष्टि~@~~@~110
+452~@~MyAccountModule: 0120 cUpdPwdBtn (hi-IN)~@~8~@~MyAccountModule~@~cUpdPwdBtn~@~पासवर्ड बदलें~@~~@~120
+453~@~MyAccountModule: 0130 cUsrPasswordVerify (hi-IN)~@~8~@~MyAccountModule~@~cUsrPasswordVerify~@~वर्तमान पासवर्ड~@~~@~130
+454~@~MyAccountModule: 0140 ResetPwdEmailMsg1 (hi-IN)~@~8~@~MyAccountModule~@~ResetPwdEmailMsg1~@~पासवर्ड रीसेट अनुरोध हाल ही में शुरू किया गया है, रीसेट करने की प्रक्रिया को पूरा करने के लिए नीचे दिए गए लिंक पर क्लिक करें~@~~@~140
+455~@~MyAccountModule: 0150 ResetPwdEmailMsg2 (hi-IN)~@~8~@~MyAccountModule~@~ResetPwdEmailMsg2~@~यदि आप इस तरह के अनुरोध के बारे में पता नहीं कर रहे हैं, कृपया ग्राहक सहायता ASAP संपर्क के रूप में वहाँ घुसपैठिया (ओं) अपने खाते में तोड़ने का प्रयास हो सकता है~@~~@~150
+456~@~MyAccountModule: 0160 ResetPwdEmailSubject (hi-IN)~@~8~@~MyAccountModule~@~ResetPwdEmailSubject~@~पासवर्ड रीसेट के लिए अनुरोध {0}~@~~@~160
+458~@~MyAccountModule: 0180 ResetEmailSentMsg (hi-IN)~@~8~@~MyAccountModule~@~ResetEmailSentMsg~@~एक पासवर्ड अनुरोध ईमेल {0} के लिए भेज दिया गया है, अगले कदम के लिए मेलबॉक्स जाँच कृपया. आप थोक फ़ोल्डर / ईमेल स्पैम की जांच की जरूरत है अगर यह अगले कुछ मिनट के भीतर या तो नहीं पा सकते हैं.~@~~@~180
+459~@~MyAccountModule: 0190 cUpdProfileBtn (hi-IN)~@~8~@~MyAccountModule~@~cUpdProfileBtn~@~अद्यतन~@~~@~190
+462~@~MyAccountModule: 0210 PasswordVerificationFailed (hi-IN)~@~8~@~MyAccountModule~@~PasswordVerificationFailed~@~अपनी पहचान सत्यापित नहीं कर सकते~@~~@~210
+463~@~MyAccountModule: 0220 AccountLockedMsg (hi-IN)~@~8~@~MyAccountModule~@~AccountLockedMsg~@~वर्तमान प्रणाली से अधिक पांच असफल प्रयासों लॉगइन करने की अनुमति नहीं है. अपनी सुविधानुसार ग्राहक सेवा से संपर्क करें या एक नया पासवर्ड प्राप्त करने की कोशिश करें.~@~~@~220
+464~@~MyAccountModule: 0230 RequiredFieldMsg (hi-IN)~@~8~@~MyAccountModule~@~RequiredFieldMsg~@~* आवश्यक फ़ील्ड~@~~@~230
+465~@~MyAccountModule: 0240 NeedLoginOrEmailMsg (hi-IN)~@~8~@~MyAccountModule~@~NeedLoginOrEmailMsg~@~इनमें से कम से कम एक प्रदान अवश्य~@~~@~240
+466~@~MyAccountModule: 0250 InvalidEmailMsg (hi-IN)~@~8~@~MyAccountModule~@~InvalidEmailMsg~@~अमान्य ईमेल~@~~@~250
+467~@~MyAccountModule: 0260 PasswordNotMatchMsg (hi-IN)~@~8~@~MyAccountModule~@~PasswordNotMatchMsg~@~मैच नहीं पासवर्ड~@~~@~260
+468~@~MyAccountModule: 0270 WeakPasswordMsg (hi-IN)~@~8~@~MyAccountModule~@~WeakPasswordMsg~@~कमज़ोर~@~~@~270
+469~@~MyAccountModule: 0280 NormalPasswordMsg (hi-IN)~@~8~@~MyAccountModule~@~NormalPasswordMsg~@~साधारण~@~~@~280
+470~@~MyAccountModule: 0290 GoodPasswordMsg (hi-IN)~@~8~@~MyAccountModule~@~GoodPasswordMsg~@~अच्छा~@~~@~290
+471~@~MyAccountModule: 0300 StrongPasswordMsg (hi-IN)~@~8~@~MyAccountModule~@~StrongPasswordMsg~@~मज़बूत~@~~@~300
+472~@~MyAccountModule: 0310 LoginFailedMsg (hi-IN)~@~8~@~MyAccountModule~@~LoginFailedMsg~@~लॉगिन विफल~@~~@~310
+473~@~MyAccountModule: 0320 WrongMathAnswerMsg (hi-IN)~@~8~@~MyAccountModule~@~WrongMathAnswerMsg~@~गलत गणित जवाब~@~~@~320
+474~@~MyAccountModule: 0330 cHumanLogin (hi-IN)~@~8~@~MyAccountModule~@~cHumanLogin~@~इस सरल गणित की परीक्षा का उत्तर दें~@~~@~330
+475~@~SamplePg: Sample Page (hi-IN)~@~8~@~SamplePg~@~Sample Page~@~नमूना स्थैतिक पृष्ठ नमूना स्थैतिक पृष्ठ नमूना स्थैतिक पृष्ठ नमूना स्थैतिक पृष्ठ नमूना स्थैतिक पृष्ठ नमूना स्थैतिक पृष्ठ नमूना स्थैतिक पृष्ठ~@~~@~
+476~@~MyProfileModule: 0007 MyAccount (hi-IN)~@~8~@~MyProfileModule~@~MyAccount~@~मेरा खाता~@~~@~7
+477~@~MyAccountModule: 0101 LoginAreaTitle (hi-IN)~@~8~@~MyAccountModule~@~LoginAreaTitle~@~सुरक्षित लॉगइन क्षेत्र~@~~@~101
+478~@~MyAccountModule: 0102 RestPwdTitle (hi-IN)~@~8~@~MyAccountModule~@~RestPwdTitle~@~पासवर्ड रीसेट करें~@~~@~102
+479~@~MyAccountModule: 0103 PwdTitle (hi-IN)~@~8~@~MyAccountModule~@~PwdTitle~@~रूपरेखा~@~~@~103
+480~@~MyAccountModule: 0104 NewPwdTitle (hi-IN)~@~8~@~MyAccountModule~@~NewPwdTitle~@~नया पासवर्ड~@~~@~104
+481~@~MyAccountModule: 0105 cWarnMsg1 (hi-IN)~@~8~@~MyAccountModule~@~cWarnMsg1~@~सुरक्षा: आप पंजीकृत उपयोगकर्ताओं के लिए विशेष रूप से आरक्षित साइट के एक सुरक्षित क्षेत्र का उपयोग करने के लिए प्रयास कर रहे हैं. ऊपर से अपने उपयोगकर्ता लॉगिन नाम और पासवर्ड दर्ज करें.~@~~@~105
+482~@~MyAccountModule: 0106 cWarnMsg2 (hi-IN)~@~8~@~MyAccountModule~@~cWarnMsg2~@~सुरक्षा: एक सुरक्षित क्षेत्र का अनुरोध किया है और मौजूदा सत्र समाप्त हो गया. कृपया फिर से प्रवेश करें.~@~~@~106
+483~@~SamplePg: 0020 ERR (hi-IN)~@~8~@~SamplePg~@~ERR~@~यह अच्छा है~@~~@~20
+486~@~cSystem: 0001 AccessDeny (ja-JP)~@~14~@~cSystem~@~AccessDeny~@~アクセスが拒否されました。ご質問があれば管理者に連絡してください。~@~~@~1
+487~@~MyAccountModule: 0010 cLoginName (ja-JP)~@~14~@~MyAccountModule~@~cLoginName~@~ログイン名~@~~@~10
+488~@~MyAccountModule: 0020 cUsrPassword (ja-JP)~@~14~@~MyAccountModule~@~cUsrPassword~@~パスワード~@~~@~20
+489~@~MyAccountModule: 0030 cForgetBtn (ja-JP)~@~14~@~MyAccountModule~@~cForgetBtn~@~パスワード·ヘルプ~@~~@~30
+490~@~MyAccountModule: 0040 cLoginBtn (ja-JP)~@~14~@~MyAccountModule~@~cLoginBtn~@~ログイン~@~~@~40
+491~@~MyAccountModule: 0050 cResetLoginName (ja-JP)~@~14~@~MyAccountModule~@~cResetLoginName~@~ログイン名~@~~@~50
+493~@~MyAccountModule: 0060 cResetPwdBtn (ja-JP)~@~14~@~MyAccountModule~@~cResetPwdBtn~@~リセット~@~~@~60
+494~@~MyAccountModule: 0070 cNewLoginName (ja-JP)~@~14~@~MyAccountModule~@~cNewLoginName~@~ログイン名~@~~@~70
+495~@~MyAccountModule: 0080 cNewUserName (ja-JP)~@~14~@~MyAccountModule~@~cNewUserName~@~として示されて~@~~@~80
+496~@~MyAccountModule: 0090 cNewUsrEmail (ja-JP)~@~14~@~MyAccountModule~@~cNewUsrEmail~@~メール~@~~@~90
+497~@~MyAccountModule: 0100 cNewUsrPassword (ja-JP)~@~14~@~MyAccountModule~@~cNewUsrPassword~@~新パスワード~@~~@~100
+498~@~MyAccountModule: 0110 cConfirmPwd (ja-JP)~@~14~@~MyAccountModule~@~cConfirmPwd~@~パスワードの確認~@~~@~110
+499~@~MyAccountModule: 0120 cUpdPwdBtn (ja-JP)~@~14~@~MyAccountModule~@~cUpdPwdBtn~@~パスワードの変更~@~~@~120
+500~@~MyAccountModule: 0130 cUsrPasswordVerify (ja-JP)~@~14~@~MyAccountModule~@~cUsrPasswordVerify~@~現在のパスワード~@~~@~130
+501~@~MyAccountModule: 0140 ResetPwdEmailMsg1 (ja-JP)~@~14~@~MyAccountModule~@~ResetPwdEmailMsg1~@~パスワードのリセット要求が最近開始された、リセット処理を完了するには、下記のリンクをクリックしてください。~@~~@~140
+502~@~MyAccountModule: 0150 ResetPwdEmailMsg2 (ja-JP)~@~14~@~MyAccountModule~@~ResetPwdEmailMsg2~@~あなたがそのような要求を認識していない場合は、アカウントに侵入しようとする侵入者（複数可）があるかもしれないので、至急カスタマーサポートにご連絡ください~@~~@~150
+503~@~MyAccountModule: 0160 ResetPwdEmailSubject (ja-JP)~@~14~@~MyAccountModule~@~ResetPwdEmailSubject~@~のパスワードのリセット要求{0}~@~~@~160
+505~@~MyAccountModule: 0180 ResetEmailSentMsg (ja-JP)~@~14~@~MyAccountModule~@~ResetEmailSentMsg~@~パスワード要求メールは{0}に送信されましたが、次のステップのためのメールボックスをチェックしてください。次の数分かそこらでそれを見つけることができない場合は、大量のメール/迷惑メールフォルダを確認する必要があるかもしれません。~@~~@~180
+506~@~MyAccountModule: 0190 cUpdProfileBtn (ja-JP)~@~14~@~MyAccountModule~@~cUpdProfileBtn~@~アップデート~@~~@~190
+509~@~MyAccountModule: 0210 PasswordVerificationFailed (ja-JP)~@~14~@~MyAccountModule~@~PasswordVerificationFailed~@~あなたの識別を確認することはできません~@~~@~210
+510~@~MyAccountModule: 0220 AccountLockedMsg (ja-JP)~@~14~@~MyAccountModule~@~AccountLockedMsg~@~現在のシステムでは、以上の5回失敗すると、ログインすることはできません。あなたの都合に合わせて、顧客サービスに連絡するか、または新規パスワードを取得してみてください。~@~~@~220
+511~@~MyAccountModule: 0230 RequiredFieldMsg (ja-JP)~@~14~@~MyAccountModule~@~RequiredFieldMsg~@~*必須フィールド~@~~@~230
+512~@~MyAccountModule: 0240 NeedLoginOrEmailMsg (ja-JP)~@~14~@~MyAccountModule~@~NeedLoginOrEmailMsg~@~これらのうち少なくとも1つを提供する必要があります~@~~@~240
+513~@~MyAccountModule: 0250 InvalidEmailMsg (ja-JP)~@~14~@~MyAccountModule~@~InvalidEmailMsg~@~無効な電子メール~@~~@~250
+514~@~MyAccountModule: 0260 PasswordNotMatchMsg (ja-JP)~@~14~@~MyAccountModule~@~PasswordNotMatchMsg~@~パスワードが一致しませ~@~~@~260
+515~@~MyAccountModule: 0270 WeakPasswordMsg (ja-JP)~@~14~@~MyAccountModule~@~WeakPasswordMsg~@~弱い~@~~@~270
+516~@~MyAccountModule: 0280 NormalPasswordMsg (ja-JP)~@~14~@~MyAccountModule~@~NormalPasswordMsg~@~ノーマル~@~~@~280
+517~@~MyAccountModule: 0290 GoodPasswordMsg (ja-JP)~@~14~@~MyAccountModule~@~GoodPasswordMsg~@~グッド~@~~@~290
+518~@~MyAccountModule: 0300 StrongPasswordMsg (ja-JP)~@~14~@~MyAccountModule~@~StrongPasswordMsg~@~強い~@~~@~300
+519~@~MyAccountModule: 0310 LoginFailedMsg (ja-JP)~@~14~@~MyAccountModule~@~LoginFailedMsg~@~ログインに失敗しました~@~~@~310
+520~@~MyAccountModule: 0320 WrongMathAnswerMsg (ja-JP)~@~14~@~MyAccountModule~@~WrongMathAnswerMsg~@~間違った数学の答え~@~~@~320
+521~@~MyAccountModule: 0330 cHumanLogin (ja-JP)~@~14~@~MyAccountModule~@~cHumanLogin~@~この簡単な数学のテストに答える~@~~@~330
+522~@~SamplePg: Sample Page (ja-JP)~@~14~@~SamplePg~@~Sample Page~@~サンプルの静的ページのサンプル静的ページ静的ページサンプルサンプル静的ページ静的ページサンプルサンプル静的ページのサンプル静的ページ~@~~@~
+523~@~MyProfileModule: 0007 MyAccount (ja-JP)~@~14~@~MyProfileModule~@~MyAccount~@~マイアカウント~@~~@~7
+524~@~MyAccountModule: 0101 LoginAreaTitle (ja-JP)~@~14~@~MyAccountModule~@~LoginAreaTitle~@~保護されたログインエリア~@~~@~101
+525~@~MyAccountModule: 0102 RestPwdTitle (ja-JP)~@~14~@~MyAccountModule~@~RestPwdTitle~@~パスワードのリセット~@~~@~102
+526~@~MyAccountModule: 0103 PwdTitle (ja-JP)~@~14~@~MyAccountModule~@~PwdTitle~@~プロフィール~@~~@~103
+527~@~MyAccountModule: 0104 NewPwdTitle (ja-JP)~@~14~@~MyAccountModule~@~NewPwdTitle~@~新パスワード~@~~@~104
+528~@~MyAccountModule: 0105 cWarnMsg1 (ja-JP)~@~14~@~MyAccountModule~@~cWarnMsg1~@~セキュリティ：あなたが登録ユーザのために排他的に予約サイトの安全な領域にアクセスしようとしている。上から自分のユーザーログイン名とパスワードを入力してください。~@~~@~105
+529~@~MyAccountModule: 0106 cWarnMsg2 (ja-JP)~@~14~@~MyAccountModule~@~cWarnMsg2~@~セキュリティ：要求されたが、保護された領域であり、現在のセッションが期限切れになっています。再度ログインしてください。~@~~@~106
+530~@~SamplePg: 0020 ERR (ja-JP)~@~14~@~SamplePg~@~ERR~@~これは良いです~@~~@~20
+533~@~SortDirection: 0001 A (ko-KR)~@~28~@~SortDirection~@~A~@~상승~@~~@~1
+534~@~SortDirection: 0002 D (ko-KR)~@~28~@~SortDirection~@~D~@~내림차순~@~~@~2
+535~@~SqlReport: 0001 SelectAll (ko-KR)~@~28~@~SqlReport~@~SelectAll~@~원하는 항목 (들에게) 하나 하나를 확인하거나 모든 항목을 선택하려면 여기를 클릭하십시오.~@~~@~1
+536~@~SqlReport: 0002 DeselectAll (ko-KR)~@~28~@~SqlReport~@~DeselectAll~@~원치 않는 열 (들) 하나 하나 또는 여기를 클릭하여 모든 항목을 선택 해제 선택 취소하십시오.~@~~@~2
+537~@~DashboardType: 0001 G (ko-KR)~@~28~@~DashboardType~@~G~@~게이지~@~~@~1
+538~@~DashboardType: 0002 R (ko-KR)~@~28~@~DashboardType~@~R~@~보고서~@~~@~2
+539~@~DashboardType: 0003 D (ko-KR)~@~28~@~DashboardType~@~D~@~서류~@~~@~3
+540~@~DashboardType: 0004 S (ko-KR)~@~28~@~DashboardType~@~S~@~화면~@~~@~4
+541~@~Shortcut: Shortcut (ko-KR)~@~28~@~Shortcut~@~Shortcut~@~바로 가기~@~~@~
+542~@~QFilter: QFilter (ko-KR)~@~28~@~QFilter~@~QFilter~@~빠른 필터 :~@~~@~
+543~@~MyProfileModule: 0001 Company (ko-KR)~@~28~@~MyProfileModule~@~Company~@~회사~@~~@~1
+544~@~MyProfileModule: 0002 Project (ko-KR)~@~28~@~MyProfileModule~@~Project~@~계획~@~~@~2
+545~@~MyProfileModule: 0003 System (ko-KR)~@~28~@~MyProfileModule~@~System~@~체계~@~~@~3
+546~@~MyProfileModule: 0004 SignOut (ko-KR)~@~28~@~MyProfileModule~@~SignOut~@~로그 아웃~@~~@~4
+547~@~MyProfileModule: 0005 HomePage (ko-KR)~@~28~@~MyProfileModule~@~HomePage~@~홈페이지로 돌아 가기~@~~@~5
+548~@~MyProfileModule: 0006 SignOutToolTip (ko-KR)~@~28~@~MyProfileModule~@~SignOutToolTip~@~시스템을 종료하려면이 키를 누릅니다.~@~~@~6
+549~@~cSystem: Label (ko-KR)~@~28~@~cSystem~@~Label~@~모듈 :~@~~@~
+550~@~cGrid: 0001 Filter (ko-KR)~@~28~@~cGrid~@~Filter~@~필터 :~@~~@~1
+551~@~cGrid: 0002 Find (ko-KR)~@~28~@~cGrid~@~Find~@~에 :~@~~@~2
+552~@~cGrid: 0003 ImpPwd (ko-KR)~@~28~@~cGrid~@~ImpPwd~@~가져 오기 비밀번호 덮어 쓰기 :~@~~@~3
+553~@~cGrid: 0004 ImpPwdToolTip (ko-KR)~@~28~@~cGrid~@~ImpPwdToolTip~@~가져올 감독 재정의 비밀번호를 입력하세요!~@~~@~4
+554~@~cGrid: 0005 Worksheet (ko-KR)~@~28~@~cGrid~@~Worksheet~@~워크 시트 :~@~~@~5
+555~@~cGrid: 0006 Startrow (ko-KR)~@~28~@~cGrid~@~Startrow~@~StartRow :~@~~@~6
+556~@~cGrid: 0007 ImportToolTip (ko-KR)~@~28~@~cGrid~@~ImportToolTip~@~수입하고 제목은 의무이기 때문에보다 크거나 2 같아야합니다 시작 행을 입력하십시오.~@~~@~7
+557~@~cSystem: 0001 AccessDeny (ko-KR)~@~28~@~cSystem~@~AccessDeny~@~액세스가 거부되었습니다. 당신은 질문이 있으면 관리자에게 문의하시기 바랍니다.~@~~@~1
+558~@~MyAccountModule: 0010 cLoginName (ko-KR)~@~28~@~MyAccountModule~@~cLoginName~@~이름 로그인~@~~@~10
+559~@~MyAccountModule: 0020 cUsrPassword (ko-KR)~@~28~@~MyAccountModule~@~cUsrPassword~@~암호~@~~@~20
+560~@~MyAccountModule: 0030 cForgetBtn (ko-KR)~@~28~@~MyAccountModule~@~cForgetBtn~@~비밀번호 도움말~@~~@~30
+561~@~MyAccountModule: 0040 cLoginBtn (ko-KR)~@~28~@~MyAccountModule~@~cLoginBtn~@~로그인~@~~@~40
+562~@~MyAccountModule: 0050 cResetLoginName (ko-KR)~@~28~@~MyAccountModule~@~cResetLoginName~@~이름 로그인~@~~@~50
+564~@~MyAccountModule: 0060 cResetPwdBtn (ko-KR)~@~28~@~MyAccountModule~@~cResetPwdBtn~@~재설정~@~~@~60
+565~@~MyAccountModule: 0070 cNewLoginName (ko-KR)~@~28~@~MyAccountModule~@~cNewLoginName~@~이름 로그인~@~~@~70
+566~@~MyAccountModule: 0080 cNewUserName (ko-KR)~@~28~@~MyAccountModule~@~cNewUserName~@~그림과 같이~@~~@~80
+567~@~MyAccountModule: 0090 cNewUsrEmail (ko-KR)~@~28~@~MyAccountModule~@~cNewUsrEmail~@~이메일~@~~@~90
+568~@~MyAccountModule: 0100 cNewUsrPassword (ko-KR)~@~28~@~MyAccountModule~@~cNewUsrPassword~@~새 암호~@~~@~100
+569~@~MyAccountModule: 0110 cConfirmPwd (ko-KR)~@~28~@~MyAccountModule~@~cConfirmPwd~@~비밀번호 확인~@~~@~110
+570~@~MyAccountModule: 0120 cUpdPwdBtn (ko-KR)~@~28~@~MyAccountModule~@~cUpdPwdBtn~@~비밀번호를 변경~@~~@~120
+571~@~MyAccountModule: 0130 cUsrPasswordVerify (ko-KR)~@~28~@~MyAccountModule~@~cUsrPasswordVerify~@~현재 비밀번호~@~~@~130
+572~@~MyAccountModule: 0140 ResetPwdEmailMsg1 (ko-KR)~@~28~@~MyAccountModule~@~ResetPwdEmailMsg1~@~비밀번호 재설정 요청이 최근에 시작되었습니다 재설정을 완료하려면 아래 링크를 클릭하십시오~@~~@~140
+573~@~MyAccountModule: 0150 ResetPwdEmailMsg2 (ko-KR)~@~28~@~MyAccountModule~@~ResetPwdEmailMsg2~@~당신은 이러한 요청에 대해 알고하지 않은 경우, 침입자 (들) 귀하의 계정에 침입하려고 시도가있을 수 있으므로 가능한 한 빨리 고객 지원 부서에 문의하십시오~@~~@~150
+574~@~MyAccountModule: 0160 ResetPwdEmailSubject (ko-KR)~@~28~@~MyAccountModule~@~ResetPwdEmailSubject~@~에 대한 비밀번호 재설정 요청이 {0}~@~~@~160
+576~@~MyAccountModule: 0180 ResetEmailSentMsg (ko-KR)~@~28~@~MyAccountModule~@~ResetEmailSentMsg~@~비밀번호를 요청하는 이메일이 {0} (으)로 전송되었습니다, 다음 단계에 대한 사서함을 확인하시기 바랍니다. 다음 몇 분 정도 이내에 찾을 수없는 경우 대량 메일 / 스팸 폴더를 확인해야 할 수 있습니다.~@~~@~180
+577~@~MyAccountModule: 0190 cUpdProfileBtn (ko-KR)~@~28~@~MyAccountModule~@~cUpdProfileBtn~@~업데이트~@~~@~190
+580~@~MyAccountModule: 0210 PasswordVerificationFailed (ko-KR)~@~28~@~MyAccountModule~@~PasswordVerificationFailed~@~귀하의 식별을 확인할 수 없습니다~@~~@~210
+581~@~MyAccountModule: 0220 AccountLockedMsg (ko-KR)~@~28~@~MyAccountModule~@~AccountLockedMsg~@~현재 시스템은 개 이상의 실패 로그인을 허용하지 않습니다. 고객님의 편의에 고객 서비스에 문의하거나 새 암호를 받고 시도해 보시기 바랍니다.~@~~@~220
+582~@~MyAccountModule: 0230 RequiredFieldMsg (ko-KR)~@~28~@~MyAccountModule~@~RequiredFieldMsg~@~* 필수 필드~@~~@~230
+583~@~MyAccountModule: 0240 NeedLoginOrEmailMsg (ko-KR)~@~28~@~MyAccountModule~@~NeedLoginOrEmailMsg~@~이 중 적어도 하나를 제공해야합니다~@~~@~240
+584~@~MyAccountModule: 0250 InvalidEmailMsg (ko-KR)~@~28~@~MyAccountModule~@~InvalidEmailMsg~@~유효하지 않은 이메일~@~~@~250
+585~@~MyAccountModule: 0260 PasswordNotMatchMsg (ko-KR)~@~28~@~MyAccountModule~@~PasswordNotMatchMsg~@~비밀번호가 일치하지 않습니다~@~~@~260
+586~@~MyAccountModule: 0270 WeakPasswordMsg (ko-KR)~@~28~@~MyAccountModule~@~WeakPasswordMsg~@~약한~@~~@~270
+587~@~MyAccountModule: 0280 NormalPasswordMsg (ko-KR)~@~28~@~MyAccountModule~@~NormalPasswordMsg~@~표준~@~~@~280
+588~@~MyAccountModule: 0290 GoodPasswordMsg (ko-KR)~@~28~@~MyAccountModule~@~GoodPasswordMsg~@~좋은~@~~@~290
+589~@~MyAccountModule: 0300 StrongPasswordMsg (ko-KR)~@~28~@~MyAccountModule~@~StrongPasswordMsg~@~강한~@~~@~300
+590~@~MyAccountModule: 0310 LoginFailedMsg (ko-KR)~@~28~@~MyAccountModule~@~LoginFailedMsg~@~로그인이 실패했습니다~@~~@~310
+591~@~MyAccountModule: 0320 WrongMathAnswerMsg (ko-KR)~@~28~@~MyAccountModule~@~WrongMathAnswerMsg~@~잘못된 수학 답변~@~~@~320
+592~@~MyAccountModule: 0330 cHumanLogin (ko-KR)~@~28~@~MyAccountModule~@~cHumanLogin~@~이 간단한 수학 시험에 답~@~~@~330
+593~@~SamplePg: Sample Page (ko-KR)~@~28~@~SamplePg~@~Sample Page~@~샘플 정적 페이지 샘플 정적 페이지 샘플 정적 페이지 샘플 정적 페이지 샘플 정적 페이지 샘플 정적 페이지 샘플 정적 페이지~@~~@~
+594~@~MyProfileModule: 0007 MyAccount (ko-KR)~@~28~@~MyProfileModule~@~MyAccount~@~내 계정~@~~@~7
+595~@~MyAccountModule: 0101 LoginAreaTitle (ko-KR)~@~28~@~MyAccountModule~@~LoginAreaTitle~@~보안 로그인 영역~@~~@~101
+596~@~MyAccountModule: 0102 RestPwdTitle (ko-KR)~@~28~@~MyAccountModule~@~RestPwdTitle~@~비밀번호를 재설정~@~~@~102
+597~@~MyAccountModule: 0103 PwdTitle (ko-KR)~@~28~@~MyAccountModule~@~PwdTitle~@~프로필~@~~@~103
+598~@~MyAccountModule: 0104 NewPwdTitle (ko-KR)~@~28~@~MyAccountModule~@~NewPwdTitle~@~새 암호~@~~@~104
+599~@~MyAccountModule: 0105 cWarnMsg1 (ko-KR)~@~28~@~MyAccountModule~@~cWarnMsg1~@~보안 : 당신은 등록 된 사용자 전용 예약 사이트의 보안 영역에 액세스하려고 시도 중입니다. 위에서 사용자 로그인 이름과 암호를 입력하세요.~@~~@~105
+600~@~MyAccountModule: 0106 cWarnMsg2 (ko-KR)~@~28~@~MyAccountModule~@~cWarnMsg2~@~보안 : 요청은 보안 영역이며, 현재 세션이 만료되었습니다. 다시 로그인 해주십시오.~@~~@~106
+601~@~SamplePg: 0020 ERR (ko-KR)~@~28~@~SamplePg~@~ERR~@~이 좋은~@~~@~20
+604~@~cSystem: 0001 AccessDeny (pt-BR)~@~9~@~cSystem~@~AccessDeny~@~Acesso negado. Por favor, contate o administrador se você tiver alguma dúvida.~@~~@~1
+605~@~MyAccountModule: 0010 cLoginName (pt-BR)~@~9~@~MyAccountModule~@~cLoginName~@~Nome de login~@~~@~10
+606~@~MyAccountModule: 0020 cUsrPassword (pt-BR)~@~9~@~MyAccountModule~@~cUsrPassword~@~Senha~@~~@~20
+607~@~MyAccountModule: 0030 cForgetBtn (pt-BR)~@~9~@~MyAccountModule~@~cForgetBtn~@~Ajuda Senha~@~~@~30
+608~@~MyAccountModule: 0040 cLoginBtn (pt-BR)~@~9~@~MyAccountModule~@~cLoginBtn~@~Login~@~~@~40
+609~@~MyAccountModule: 0050 cResetLoginName (pt-BR)~@~9~@~MyAccountModule~@~cResetLoginName~@~Nome de login~@~~@~50
+611~@~MyAccountModule: 0060 cResetPwdBtn (pt-BR)~@~9~@~MyAccountModule~@~cResetPwdBtn~@~Restabelecer~@~~@~60
+612~@~MyAccountModule: 0070 cNewLoginName (pt-BR)~@~9~@~MyAccountModule~@~cNewLoginName~@~Nome de login~@~~@~70
+613~@~MyAccountModule: 0080 cNewUserName (pt-BR)~@~9~@~MyAccountModule~@~cNewUserName~@~Mostrado como~@~~@~80
+614~@~MyAccountModule: 0090 cNewUsrEmail (pt-BR)~@~9~@~MyAccountModule~@~cNewUsrEmail~@~E-mail~@~~@~90
+615~@~MyAccountModule: 0100 cNewUsrPassword (pt-BR)~@~9~@~MyAccountModule~@~cNewUsrPassword~@~Nova senha~@~~@~100
+616~@~MyAccountModule: 0110 cConfirmPwd (pt-BR)~@~9~@~MyAccountModule~@~cConfirmPwd~@~Confirmar senha~@~~@~110
+617~@~MyAccountModule: 0120 cUpdPwdBtn (pt-BR)~@~9~@~MyAccountModule~@~cUpdPwdBtn~@~Alterar senha~@~~@~120
+618~@~MyAccountModule: 0130 cUsrPasswordVerify (pt-BR)~@~9~@~MyAccountModule~@~cUsrPasswordVerify~@~Senha atual~@~~@~130
+619~@~MyAccountModule: 0140 ResetPwdEmailMsg1 (pt-BR)~@~9~@~MyAccountModule~@~ResetPwdEmailMsg1~@~Um pedido de redefinição de senha foi iniciada recentemente, por favor clique no link abaixo para concluir o processo de redefinição~@~~@~140
+620~@~MyAccountModule: 0150 ResetPwdEmailMsg2 (pt-BR)~@~9~@~MyAccountModule~@~ResetPwdEmailMsg2~@~Se você não está ciente de tal pedido, por favor, entre em contato com o suporte ao cliente o mais rápido possível, pois pode haver intruso (s) tentando invadir sua conta~@~~@~150
+621~@~MyAccountModule: 0160 ResetPwdEmailSubject (pt-BR)~@~9~@~MyAccountModule~@~ResetPwdEmailSubject~@~Pedido de redefinição de senha para {0}~@~~@~160
+623~@~MyAccountModule: 0180 ResetEmailSentMsg (pt-BR)~@~9~@~MyAccountModule~@~ResetEmailSentMsg~@~Um e-mail de solicitação de senha foi enviada para {0}, por favor, verifique caixa de correio para a próxima etapa. Você pode precisar verificar pasta-mail em massa / spam se não pode encontrá-lo dentro dos próximos minutos ou mais.~@~~@~180
+624~@~MyAccountModule: 0190 cUpdProfileBtn (pt-BR)~@~9~@~MyAccountModule~@~cUpdProfileBtn~@~Atualizar~@~~@~190
+627~@~MyAccountModule: 0210 PasswordVerificationFailed (pt-BR)~@~9~@~MyAccountModule~@~PasswordVerificationFailed~@~Não é possível verificar a sua identidade~@~~@~210
+628~@~MyAccountModule: 0220 AccountLockedMsg (pt-BR)~@~9~@~MyAccountModule~@~AccountLockedMsg~@~Sistema atual não permite mais de cinco tentativas frustradas de login. Por favor, entre em contato com o serviço ao cliente em sua conveniência ou tentar obter uma nova senha.~@~~@~220
+629~@~MyAccountModule: 0230 RequiredFieldMsg (pt-BR)~@~9~@~MyAccountModule~@~RequiredFieldMsg~@~* Campo Obrigatório~@~~@~230
+630~@~MyAccountModule: 0240 NeedLoginOrEmailMsg (pt-BR)~@~9~@~MyAccountModule~@~NeedLoginOrEmailMsg~@~Deve fornecer, pelo menos, um desses~@~~@~240
+631~@~MyAccountModule: 0250 InvalidEmailMsg (pt-BR)~@~9~@~MyAccountModule~@~InvalidEmailMsg~@~E-mail inválido~@~~@~250
+632~@~MyAccountModule: 0260 PasswordNotMatchMsg (pt-BR)~@~9~@~MyAccountModule~@~PasswordNotMatchMsg~@~A senha não corresponder~@~~@~260
+633~@~MyAccountModule: 0270 WeakPasswordMsg (pt-BR)~@~9~@~MyAccountModule~@~WeakPasswordMsg~@~Fraco~@~~@~270
+634~@~MyAccountModule: 0280 NormalPasswordMsg (pt-BR)~@~9~@~MyAccountModule~@~NormalPasswordMsg~@~Normal~@~~@~280
+635~@~MyAccountModule: 0290 GoodPasswordMsg (pt-BR)~@~9~@~MyAccountModule~@~GoodPasswordMsg~@~Bom~@~~@~290
+636~@~MyAccountModule: 0300 StrongPasswordMsg (pt-BR)~@~9~@~MyAccountModule~@~StrongPasswordMsg~@~Forte~@~~@~300
+637~@~MyAccountModule: 0310 LoginFailedMsg (pt-BR)~@~9~@~MyAccountModule~@~LoginFailedMsg~@~Login falhou~@~~@~310
+638~@~MyAccountModule: 0320 WrongMathAnswerMsg (pt-BR)~@~9~@~MyAccountModule~@~WrongMathAnswerMsg~@~Matemática resposta incorreta~@~~@~320
+639~@~MyAccountModule: 0330 cHumanLogin (pt-BR)~@~9~@~MyAccountModule~@~cHumanLogin~@~Responder a esta prova de matemática simples~@~~@~330
+640~@~SamplePg: Sample Page (pt-BR)~@~9~@~SamplePg~@~Sample Page~@~Amostra estática página estática Amostra Amostra página estática página estática Amostra Amostra página estática página Amostra Amostra página estática página estática~@~~@~
+641~@~MyProfileModule: 0007 MyAccount (pt-BR)~@~9~@~MyProfileModule~@~MyAccount~@~Minha Conta~@~~@~7
+642~@~MyAccountModule: 0101 LoginAreaTitle (pt-BR)~@~9~@~MyAccountModule~@~LoginAreaTitle~@~Área de Login seguro~@~~@~101
+643~@~MyAccountModule: 0102 RestPwdTitle (pt-BR)~@~9~@~MyAccountModule~@~RestPwdTitle~@~Redefinir senha~@~~@~102
+644~@~MyAccountModule: 0103 PwdTitle (pt-BR)~@~9~@~MyAccountModule~@~PwdTitle~@~Perfil~@~~@~103
+645~@~MyAccountModule: 0104 NewPwdTitle (pt-BR)~@~9~@~MyAccountModule~@~NewPwdTitle~@~Nova senha~@~~@~104
+646~@~MyAccountModule: 0105 cWarnMsg1 (pt-BR)~@~9~@~MyAccountModule~@~cWarnMsg1~@~Segurança: Você está tentando acessar uma área segura do site reservada exclusivamente para usuários registrados. Digite seu nome de login de usuário e senha de cima.~@~~@~105
+647~@~MyAccountModule: 0106 cWarnMsg2 (pt-BR)~@~9~@~MyAccountModule~@~cWarnMsg2~@~Segurança: A pedida é uma área segura e actual sessão expirou. Por favor, faça login novamente.~@~~@~106
+648~@~SamplePg: 0020 ERR (pt-BR)~@~9~@~SamplePg~@~ERR~@~Isso é bom~@~~@~20
+651~@~cSystem: 0001 AccessDeny (ru-RU)~@~12~@~cSystem~@~AccessDeny~@~Отказано в доступе. Пожалуйста, свяжитесь с администратором, если у вас есть какие-либо вопросы.~@~~@~1
+652~@~MyAccountModule: 0010 cLoginName (ru-RU)~@~12~@~MyAccountModule~@~cLoginName~@~Войти Имя~@~~@~10
+653~@~MyAccountModule: 0020 cUsrPassword (ru-RU)~@~12~@~MyAccountModule~@~cUsrPassword~@~Пароль~@~~@~20
+654~@~MyAccountModule: 0030 cForgetBtn (ru-RU)~@~12~@~MyAccountModule~@~cForgetBtn~@~Пароль Справка~@~~@~30
+655~@~MyAccountModule: 0040 cLoginBtn (ru-RU)~@~12~@~MyAccountModule~@~cLoginBtn~@~Войти~@~~@~40
+656~@~MyAccountModule: 0050 cResetLoginName (ru-RU)~@~12~@~MyAccountModule~@~cResetLoginName~@~Войти Имя~@~~@~50
+658~@~MyAccountModule: 0060 cResetPwdBtn (ru-RU)~@~12~@~MyAccountModule~@~cResetPwdBtn~@~Сброс~@~~@~60
+659~@~MyAccountModule: 0070 cNewLoginName (ru-RU)~@~12~@~MyAccountModule~@~cNewLoginName~@~Войти Имя~@~~@~70
+660~@~MyAccountModule: 0080 cNewUserName (ru-RU)~@~12~@~MyAccountModule~@~cNewUserName~@~Показано, как~@~~@~80
+661~@~MyAccountModule: 0090 cNewUsrEmail (ru-RU)~@~12~@~MyAccountModule~@~cNewUsrEmail~@~E-mail~@~~@~90
+662~@~MyAccountModule: 0100 cNewUsrPassword (ru-RU)~@~12~@~MyAccountModule~@~cNewUsrPassword~@~Новый пароль~@~~@~100
+663~@~MyAccountModule: 0110 cConfirmPwd (ru-RU)~@~12~@~MyAccountModule~@~cConfirmPwd~@~Подтвердите пароль~@~~@~110
+664~@~MyAccountModule: 0120 cUpdPwdBtn (ru-RU)~@~12~@~MyAccountModule~@~cUpdPwdBtn~@~Изменить пароль~@~~@~120
+665~@~MyAccountModule: 0130 cUsrPasswordVerify (ru-RU)~@~12~@~MyAccountModule~@~cUsrPasswordVerify~@~Текущий пароль~@~~@~130
+666~@~MyAccountModule: 0140 ResetPwdEmailMsg1 (ru-RU)~@~12~@~MyAccountModule~@~ResetPwdEmailMsg1~@~Запрос сброса пароля была начата недавно, пожалуйста, нажмите на ссылку ниже, чтобы завершить процесс перезагрузки~@~~@~140
+667~@~MyAccountModule: 0150 ResetPwdEmailMsg2 (ru-RU)~@~12~@~MyAccountModule~@~ResetPwdEmailMsg2~@~Если вы не знаете такого запроса, пожалуйста, свяжитесь со службой поддержки можно скорее, так как может быть злоумышленник (и) пытающихся прорваться в свой аккаунт~@~~@~150
+668~@~MyAccountModule: 0160 ResetPwdEmailSubject (ru-RU)~@~12~@~MyAccountModule~@~ResetPwdEmailSubject~@~Сброс пароля Запрос {0}~@~~@~160
+670~@~MyAccountModule: 0180 ResetEmailSentMsg (ru-RU)~@~12~@~MyAccountModule~@~ResetEmailSentMsg~@~E-mail Пароль запрос был отправлен в {0}, пожалуйста, проверьте почтовый ящик для следующего шага. Вам может понадобиться для проверки электронных писем / папку для спама, если не можете найти его в течение следующих нескольких минут или около того.~@~~@~180
+671~@~MyAccountModule: 0190 cUpdProfileBtn (ru-RU)~@~12~@~MyAccountModule~@~cUpdProfileBtn~@~Обновление~@~~@~190
+674~@~MyAccountModule: 0210 PasswordVerificationFailed (ru-RU)~@~12~@~MyAccountModule~@~PasswordVerificationFailed~@~Не удается проверить ваши идентифицировать~@~~@~210
+675~@~MyAccountModule: 0220 AccountLockedMsg (ru-RU)~@~12~@~MyAccountModule~@~AccountLockedMsg~@~Существующая система не позволяет более пяти неудачных попыток входа в систему. Пожалуйста, обратитесь в службу в удобное для Вас или попытаться получить новый пароль.~@~~@~220
+676~@~MyAccountModule: 0230 RequiredFieldMsg (ru-RU)~@~12~@~MyAccountModule~@~RequiredFieldMsg~@~* Обязательные для заполнения поля~@~~@~230
+677~@~MyAccountModule: 0240 NeedLoginOrEmailMsg (ru-RU)~@~12~@~MyAccountModule~@~NeedLoginOrEmailMsg~@~Необходимо предоставить по крайней мере, одна из этих~@~~@~240
+678~@~MyAccountModule: 0250 InvalidEmailMsg (ru-RU)~@~12~@~MyAccountModule~@~InvalidEmailMsg~@~Неверный e-mail~@~~@~250
+679~@~MyAccountModule: 0260 PasswordNotMatchMsg (ru-RU)~@~12~@~MyAccountModule~@~PasswordNotMatchMsg~@~Пароль не совпадает~@~~@~260
+680~@~MyAccountModule: 0270 WeakPasswordMsg (ru-RU)~@~12~@~MyAccountModule~@~WeakPasswordMsg~@~Слабый~@~~@~270
+681~@~MyAccountModule: 0280 NormalPasswordMsg (ru-RU)~@~12~@~MyAccountModule~@~NormalPasswordMsg~@~Нормальный~@~~@~280
+682~@~MyAccountModule: 0290 GoodPasswordMsg (ru-RU)~@~12~@~MyAccountModule~@~GoodPasswordMsg~@~Хорошо~@~~@~290
+683~@~MyAccountModule: 0300 StrongPasswordMsg (ru-RU)~@~12~@~MyAccountModule~@~StrongPasswordMsg~@~Сильный~@~~@~300
+684~@~MyAccountModule: 0310 LoginFailedMsg (ru-RU)~@~12~@~MyAccountModule~@~LoginFailedMsg~@~Войти не удалось~@~~@~310
+685~@~MyAccountModule: 0320 WrongMathAnswerMsg (ru-RU)~@~12~@~MyAccountModule~@~WrongMathAnswerMsg~@~Неправильный ответ математике~@~~@~320
+686~@~MyAccountModule: 0330 cHumanLogin (ru-RU)~@~12~@~MyAccountModule~@~cHumanLogin~@~Ответить на этот простой тест по математике~@~~@~330
+687~@~SamplePg: Sample Page (ru-RU)~@~12~@~SamplePg~@~Sample Page~@~Примеры статических страниц Примеры статических страниц Примеры статических страниц Примеры статических страниц Примеры статических страниц Примеры статических страниц Примеры статических страниц~@~~@~
+688~@~MyProfileModule: 0007 MyAccount (ru-RU)~@~12~@~MyProfileModule~@~MyAccount~@~Моя учетная запись~@~~@~7
+689~@~MyAccountModule: 0101 LoginAreaTitle (ru-RU)~@~12~@~MyAccountModule~@~LoginAreaTitle~@~Охраняемая территория Логин~@~~@~101
+690~@~MyAccountModule: 0102 RestPwdTitle (ru-RU)~@~12~@~MyAccountModule~@~RestPwdTitle~@~Сброс пароля~@~~@~102
+691~@~MyAccountModule: 0103 PwdTitle (ru-RU)~@~12~@~MyAccountModule~@~PwdTitle~@~Профиль~@~~@~103
+692~@~MyAccountModule: 0104 NewPwdTitle (ru-RU)~@~12~@~MyAccountModule~@~NewPwdTitle~@~Новый пароль~@~~@~104
+693~@~MyAccountModule: 0105 cWarnMsg1 (ru-RU)~@~12~@~MyAccountModule~@~cWarnMsg1~@~Безопасность: Вы пытаетесь получить доступ к защищенной области на сайте исключительно для зарегистрированных пользователей. Пожалуйста, введите ваше имя пользователя и пароль сверху.~@~~@~105
+694~@~MyAccountModule: 0106 cWarnMsg2 (ru-RU)~@~12~@~MyAccountModule~@~cWarnMsg2~@~Безопасность: запрашиваемая охраняемой территории и на нынешней сессии истек. Пожалуйста, войдите снова.~@~~@~106
+695~@~SamplePg: 0020 ERR (ru-RU)~@~12~@~SamplePg~@~ERR~@~Это хорошо~@~~@~20
+698~@~cSystem: 0001 AccessDeny (es-ES)~@~13~@~cSystem~@~AccessDeny~@~Acceso Denegado. Por favor comuníquese con el administrador si tiene alguna pregunta.~@~~@~1
+699~@~MyAccountModule: 0010 cLoginName (es-ES)~@~13~@~MyAccountModule~@~cLoginName~@~Nombre de conexión~@~~@~10
+700~@~MyAccountModule: 0020 cUsrPassword (es-ES)~@~13~@~MyAccountModule~@~cUsrPassword~@~Contraseña~@~~@~20
+701~@~MyAccountModule: 0030 cForgetBtn (es-ES)~@~13~@~MyAccountModule~@~cForgetBtn~@~Contraseña Ayuda~@~~@~30
+702~@~MyAccountModule: 0040 cLoginBtn (es-ES)~@~13~@~MyAccountModule~@~cLoginBtn~@~Login~@~~@~40
+703~@~MyAccountModule: 0050 cResetLoginName (es-ES)~@~13~@~MyAccountModule~@~cResetLoginName~@~Nombre de conexión~@~~@~50
+705~@~MyAccountModule: 0060 cResetPwdBtn (es-ES)~@~13~@~MyAccountModule~@~cResetPwdBtn~@~Reajustar~@~~@~60
+706~@~MyAccountModule: 0070 cNewLoginName (es-ES)~@~13~@~MyAccountModule~@~cNewLoginName~@~Nombre de conexión~@~~@~70
+707~@~MyAccountModule: 0080 cNewUserName (es-ES)~@~13~@~MyAccountModule~@~cNewUserName~@~Se muestra como~@~~@~80
+708~@~MyAccountModule: 0090 cNewUsrEmail (es-ES)~@~13~@~MyAccountModule~@~cNewUsrEmail~@~Email~@~~@~90
+709~@~MyAccountModule: 0100 cNewUsrPassword (es-ES)~@~13~@~MyAccountModule~@~cNewUsrPassword~@~Nueva contraseña~@~~@~100
+710~@~MyAccountModule: 0110 cConfirmPwd (es-ES)~@~13~@~MyAccountModule~@~cConfirmPwd~@~Confirme su contraseña~@~~@~110
+711~@~MyAccountModule: 0120 cUpdPwdBtn (es-ES)~@~13~@~MyAccountModule~@~cUpdPwdBtn~@~Cambiar contraseña~@~~@~120
+712~@~MyAccountModule: 0130 cUsrPasswordVerify (es-ES)~@~13~@~MyAccountModule~@~cUsrPasswordVerify~@~Contraseña actual~@~~@~130
+713~@~MyAccountModule: 0140 ResetPwdEmailMsg1 (es-ES)~@~13~@~MyAccountModule~@~ResetPwdEmailMsg1~@~Una solicitud de restablecimiento de contraseña se ha iniciado recientemente, por favor haga clic en el enlace de abajo para completar el proceso de restablecimiento~@~~@~140
+714~@~MyAccountModule: 0150 ResetPwdEmailMsg2 (es-ES)~@~13~@~MyAccountModule~@~ResetPwdEmailMsg2~@~Si usted no es consciente de dicha solicitud, por favor póngase en contacto con atención al cliente lo antes posible, ya que puede ser intruso (s) intentar entrar en su cuenta~@~~@~150
+715~@~MyAccountModule: 0160 ResetPwdEmailSubject (es-ES)~@~13~@~MyAccountModule~@~ResetPwdEmailSubject~@~Solicitar contraseña Cambiar para {0}~@~~@~160
+717~@~MyAccountModule: 0180 ResetEmailSentMsg (es-ES)~@~13~@~MyAccountModule~@~ResetEmailSentMsg~@~Un correo electrónico de solicitud de contraseña ha sido enviada a {0}, por favor revise buzón para el siguiente paso. Puede que tenga que revisar correo electrónico masivo / spam carpeta si no lo encuentra dentro de los próximos minutos más o menos.~@~~@~180
+718~@~MyAccountModule: 0190 cUpdProfileBtn (es-ES)~@~13~@~MyAccountModule~@~cUpdProfileBtn~@~Actualizar~@~~@~190
+721~@~MyAccountModule: 0210 PasswordVerificationFailed (es-ES)~@~13~@~MyAccountModule~@~PasswordVerificationFailed~@~No se puede verificar el identificar~@~~@~210
+722~@~MyAccountModule: 0220 AccountLockedMsg (es-ES)~@~13~@~MyAccountModule~@~AccountLockedMsg~@~El sistema actual no permite más de cinco intentos fallidos de inicio de sesión. Por favor, póngase en contacto con el servicio al cliente a su conveniencia o trate de obtener una nueva contraseña.~@~~@~220
+723~@~MyAccountModule: 0230 RequiredFieldMsg (es-ES)~@~13~@~MyAccountModule~@~RequiredFieldMsg~@~* Campo Obligatorio~@~~@~230
+724~@~MyAccountModule: 0240 NeedLoginOrEmailMsg (es-ES)~@~13~@~MyAccountModule~@~NeedLoginOrEmailMsg~@~Debe proporcionar al menos uno de estos~@~~@~240
+725~@~MyAccountModule: 0250 InvalidEmailMsg (es-ES)~@~13~@~MyAccountModule~@~InvalidEmailMsg~@~Email no válido~@~~@~250
+726~@~MyAccountModule: 0260 PasswordNotMatchMsg (es-ES)~@~13~@~MyAccountModule~@~PasswordNotMatchMsg~@~La contraseña no coincide~@~~@~260
+727~@~MyAccountModule: 0270 WeakPasswordMsg (es-ES)~@~13~@~MyAccountModule~@~WeakPasswordMsg~@~Débil~@~~@~270
+728~@~MyAccountModule: 0280 NormalPasswordMsg (es-ES)~@~13~@~MyAccountModule~@~NormalPasswordMsg~@~Normal~@~~@~280
+729~@~MyAccountModule: 0290 GoodPasswordMsg (es-ES)~@~13~@~MyAccountModule~@~GoodPasswordMsg~@~Bueno~@~~@~290
+730~@~MyAccountModule: 0300 StrongPasswordMsg (es-ES)~@~13~@~MyAccountModule~@~StrongPasswordMsg~@~Fuerte~@~~@~300
+731~@~MyAccountModule: 0310 LoginFailedMsg (es-ES)~@~13~@~MyAccountModule~@~LoginFailedMsg~@~Error de acceso~@~~@~310
+732~@~MyAccountModule: 0320 WrongMathAnswerMsg (es-ES)~@~13~@~MyAccountModule~@~WrongMathAnswerMsg~@~Respuesta incorrecta matemáticas~@~~@~320
+733~@~MyAccountModule: 0330 cHumanLogin (es-ES)~@~13~@~MyAccountModule~@~cHumanLogin~@~Responder a esta prueba matemática simple~@~~@~330
+734~@~SamplePg: Sample Page (es-ES)~@~13~@~SamplePg~@~Sample Page~@~Muestra estática de la página estática página muestra estática página muestra estática página muestra estática página muestra estática página muestra estática página~@~~@~
+735~@~MyProfileModule: 0007 MyAccount (es-ES)~@~13~@~MyProfileModule~@~MyAccount~@~Mi cuenta~@~~@~7
+736~@~MyAccountModule: 0101 LoginAreaTitle (es-ES)~@~13~@~MyAccountModule~@~LoginAreaTitle~@~Área de login con seguridad~@~~@~101
+737~@~MyAccountModule: 0102 RestPwdTitle (es-ES)~@~13~@~MyAccountModule~@~RestPwdTitle~@~Restablecer contraseña~@~~@~102
+738~@~MyAccountModule: 0103 PwdTitle (es-ES)~@~13~@~MyAccountModule~@~PwdTitle~@~Perfil~@~~@~103
+739~@~MyAccountModule: 0104 NewPwdTitle (es-ES)~@~13~@~MyAccountModule~@~NewPwdTitle~@~Nueva contraseña~@~~@~104
+740~@~MyAccountModule: 0105 cWarnMsg1 (es-ES)~@~13~@~MyAccountModule~@~cWarnMsg1~@~Seguridad: Está intentando acceder a una zona segura del sitio reservado exclusivamente para usuarios registrados. Por favor, introduzca su nombre de usuario y contraseña anteriores.~@~~@~105
+741~@~MyAccountModule: 0106 cWarnMsg2 (es-ES)~@~13~@~MyAccountModule~@~cWarnMsg2~@~Seguridad: La solicitada es una zona restringida y la sesión actual ha caducado. Por favor ingresa de nuevo.~@~~@~106
+742~@~SamplePg: 0020 ERR (es-ES)~@~13~@~SamplePg~@~ERR~@~Esto es bueno~@~~@~20
+745~@~MyAccountModule: 0053 cResetOr (en-US)~@~1~@~MyAccountModule~@~cResetOr~@~OR~@~~@~53
+746~@~MyAccountModule: 0055 cResetUsrEmail (zh-CN)~@~4~@~MyAccountModule~@~cResetUsrEmail~@~电子邮件~@~~@~55
+747~@~SamplePg: 0001 (zh-CN)~@~4~@~SamplePg~@~0001~@~测试1~@~~@~
+748~@~SamplePg: 0002 (zh-CN)~@~4~@~SamplePg~@~0002~@~测试2~@~~@~
+749~@~MyAccountModule: 0053 cResetOr (zh-CN)~@~4~@~MyAccountModule~@~cResetOr~@~或~@~~@~53
+750~@~MyAccountModule: 0055 cResetUsrEmail (fr-FR)~@~2~@~MyAccountModule~@~cResetUsrEmail~@~Email~@~~@~55
+751~@~SamplePg: 0001 (fr-FR)~@~2~@~SamplePg~@~0001~@~Test 1~@~~@~
+752~@~SamplePg: 0002 (fr-FR)~@~2~@~SamplePg~@~0002~@~Test 2~@~~@~
+753~@~MyAccountModule: 0053 cResetOr (fr-FR)~@~2~@~MyAccountModule~@~cResetOr~@~OU~@~~@~53
+754~@~MyAccountModule: 0055 cResetUsrEmail (de-DE)~@~68~@~MyAccountModule~@~cResetUsrEmail~@~Email~@~~@~55
+755~@~SamplePg: 0001 (de-DE)~@~68~@~SamplePg~@~0001~@~test 1~@~~@~
+756~@~SamplePg: 0002 (de-DE)~@~68~@~SamplePg~@~0002~@~Test 2~@~~@~
+757~@~MyAccountModule: 0053 cResetOr (de-DE)~@~68~@~MyAccountModule~@~cResetOr~@~OR~@~~@~53
+758~@~MyAccountModule: 0055 cResetUsrEmail (hi-IN)~@~8~@~MyAccountModule~@~cResetUsrEmail~@~ईमेल~@~~@~55
+759~@~SamplePg: 0001 (hi-IN)~@~8~@~SamplePg~@~0001~@~परीक्षण 1~@~~@~
+760~@~SamplePg: 0002 (hi-IN)~@~8~@~SamplePg~@~0002~@~परीक्षण 2~@~~@~
+761~@~MyAccountModule: 0053 cResetOr (hi-IN)~@~8~@~MyAccountModule~@~cResetOr~@~या~@~~@~53
+762~@~MyAccountModule: 0055 cResetUsrEmail (ja-JP)~@~14~@~MyAccountModule~@~cResetUsrEmail~@~メール~@~~@~55
+763~@~SamplePg: 0001 (ja-JP)~@~14~@~SamplePg~@~0001~@~テスト1~@~~@~
+764~@~SamplePg: 0002 (ja-JP)~@~14~@~SamplePg~@~0002~@~テスト2~@~~@~
+765~@~MyAccountModule: 0053 cResetOr (ja-JP)~@~14~@~MyAccountModule~@~cResetOr~@~OR~@~~@~53
+766~@~MyAccountModule: 0055 cResetUsrEmail (ko-KR)~@~28~@~MyAccountModule~@~cResetUsrEmail~@~이메일~@~~@~55
+767~@~SamplePg: 0001 (ko-KR)~@~28~@~SamplePg~@~0001~@~테스트 1~@~~@~
+768~@~SamplePg: 0002 (ko-KR)~@~28~@~SamplePg~@~0002~@~테스트 2~@~~@~
+769~@~MyAccountModule: 0053 cResetOr (ko-KR)~@~28~@~MyAccountModule~@~cResetOr~@~OR~@~~@~53
+770~@~MyAccountModule: 0055 cResetUsrEmail (pt-BR)~@~9~@~MyAccountModule~@~cResetUsrEmail~@~Email~@~~@~55
+771~@~SamplePg: 0001 (pt-BR)~@~9~@~SamplePg~@~0001~@~teste 1~@~~@~
+772~@~SamplePg: 0002 (pt-BR)~@~9~@~SamplePg~@~0002~@~ensaio 2~@~~@~
+773~@~MyAccountModule: 0053 cResetOr (pt-BR)~@~9~@~MyAccountModule~@~cResetOr~@~OR~@~~@~53
+774~@~MyAccountModule: 0055 cResetUsrEmail (ru-RU)~@~12~@~MyAccountModule~@~cResetUsrEmail~@~E-mail~@~~@~55
+775~@~SamplePg: 0001 (ru-RU)~@~12~@~SamplePg~@~0001~@~Тест 1~@~~@~
+776~@~SamplePg: 0002 (ru-RU)~@~12~@~SamplePg~@~0002~@~тест 2~@~~@~
+777~@~MyAccountModule: 0053 cResetOr (ru-RU)~@~12~@~MyAccountModule~@~cResetOr~@~ИЛИ~@~~@~53
+778~@~MyAccountModule: 0055 cResetUsrEmail (es-ES)~@~13~@~MyAccountModule~@~cResetUsrEmail~@~Email~@~~@~55
+779~@~SamplePg: 0001 (es-ES)~@~13~@~SamplePg~@~0001~@~prueba 1~@~~@~
+780~@~SamplePg: 0002 (es-ES)~@~13~@~SamplePg~@~0002~@~prueba 2~@~~@~
+781~@~MyAccountModule: 0053 cResetOr (es-ES)~@~13~@~MyAccountModule~@~cResetOr~@~Oregón~@~~@~53
+782~@~MyAccountModule: 0010 cCancelAccountLn (en-US)~@~1~@~MyAccountModule~@~cCancelAccountLn~@~Deactivate My Account~@~~@~10
+783~@~MyAccountModule: 0010 cCancelAccountMsg (en-US)~@~1~@~MyAccountModule~@~cCancelAccountMsg~@~Press OK to continue or Cancel this deactivation.~@~~@~10
+784~@~MyAccountModule: 0010 AccountCancelledMsg (en-US)~@~1~@~MyAccountModule~@~AccountCancelledMsg~@~This account has been deactivated successfully.~@~~@~10
+785~@~MyAccountModule: 0170 NoEmailOnFileMsg (de-DE)~@~68~@~MyAccountModule~@~NoEmailOnFileMsg~@~Benutzer Datensatz nicht gefunden oder inaktiv oder es ist kein E-Mail auf Datei, kontaktieren Sie bitte Kundenbetreuung, wenn Sie irgendwelche Fragen haben.~@~~@~170
+787~@~MyAccountModule: 0200 LoginInfoChangedMsg (de-DE)~@~68~@~MyAccountModule~@~LoginInfoChangedMsg~@~Loggen Sie sich ein Profil erfolgreich geändert. Bitte drücken Sie auf das Symbol in der oberen linken Ecke-oder warten Sie die automatische Umleitung.~@~~@~200
+788~@~MyAccountModule: 0010 cCancelAccountLn (de-DE)~@~68~@~MyAccountModule~@~cCancelAccountLn~@~Meinen Account deaktivieren~@~~@~10
+789~@~MyAccountModule: 0010 cCancelAccountMsg (de-DE)~@~68~@~MyAccountModule~@~cCancelAccountMsg~@~Drücken Sie auf OK, um fortzufahren, oder Abbrechen dieses Deaktivierung.~@~~@~10
+790~@~MyAccountModule: 0010 AccountCancelledMsg (de-DE)~@~68~@~MyAccountModule~@~AccountCancelledMsg~@~Dieses Konto wurde erfolgreich deaktiviert.~@~~@~10
+791~@~cGrid: 0008 Sort (en-US)~@~1~@~cGrid~@~Sort~@~Sort:~@~~@~8
+792~@~MyAccountModule: 0111 cTermsOfService (en-US)~@~1~@~MyAccountModule~@~cTermsOfService~@~I have read and agree to the Terms of Service.~@~~@~111
+793~@~MyAccountModule: 0335 GoogleLoginTitle (en-US)~@~1~@~MyAccountModule~@~GoogleLoginTitle~@~Please select an account to sign in:~@~~@~335
+794~@~HelpModule: 0010 cHelpImg (en-US)~@~1~@~HelpModule~@~cHelpImg~@~HELP~@~~@~10
+795~@~MyAccountModule: 0170 NoEmailOnFileMsg (zh-CN)~@~4~@~MyAccountModule~@~NoEmailOnFileMsg~@~用户记录未找到或无效的或有对文件中没有邮件，请如果您有任何疑问请联系客户支持服务。~@~~@~170
+796~@~MyAccountModule: 0190 PasswordChangedMsg (zh-CN)~@~4~@~MyAccountModule~@~PasswordChangedMsg~@~密码修改成功。请按图示左上角角或等待自动重定向！~@~~@~190
+797~@~MyAccountModule: 0200 LoginInfoChangedMsg (zh-CN)~@~4~@~MyAccountModule~@~LoginInfoChangedMsg~@~登录配置文件更改成功。请按下左上角角的图标或等待自动重定向。~@~~@~200
+798~@~SamplePg: 0010 pgTitle (zh-CN)~@~4~@~SamplePg~@~pgTitle~@~样品静态页面~@~~@~10
+799~@~MyAccountModule: 0010 cCancelAccountLn (zh-CN)~@~4~@~MyAccountModule~@~cCancelAccountLn~@~关闭我的账户~@~~@~10
+800~@~MyAccountModule: 0010 cCancelAccountMsg (zh-CN)~@~4~@~MyAccountModule~@~cCancelAccountMsg~@~按确定继续或取消此失活。~@~~@~10
+801~@~MyAccountModule: 0010 AccountCancelledMsg (zh-CN)~@~4~@~MyAccountModule~@~AccountCancelledMsg~@~该帐户已被成功激活。~@~~@~10
+802~@~cGrid: 0008 Sort (zh-CN)~@~4~@~cGrid~@~Sort~@~排序：~@~~@~8
+803~@~MyAccountModule: 0111 cTermsOfService (zh-CN)~@~4~@~MyAccountModule~@~cTermsOfService~@~我已阅读并同意服务条款。~@~~@~111
+804~@~MyAccountModule: 0335 GoogleLoginTitle (zh-CN)~@~4~@~MyAccountModule~@~GoogleLoginTitle~@~请选择一个帐号登录：~@~~@~335
+805~@~HelpModule: 0010 cHelpImg (zh-CN)~@~4~@~HelpModule~@~cHelpImg~@~帮助~@~~@~10
+806~@~MyAccountModule: 0170 NoEmailOnFileMsg (ko-KR)~@~28~@~MyAccountModule~@~NoEmailOnFileMsg~@~당신은 질문이있는 경우 사용자 레코드가 또는 비활성 또는 어떤 가상 파일에 존재하지, 고객 지원 서비스에 문의하십시오.~@~~@~170
+807~@~MyAccountModule: 0190 PasswordChangedMsg (ko-KR)~@~28~@~MyAccountModule~@~PasswordChangedMsg~@~비밀번호가 성공적으로 변경되었습니다. 왼쪽 위 모서리에있는 아이콘을 누르거나 자동 재 지정 잠시만 기다려주십시오!~@~~@~190
+808~@~MyAccountModule: 0200 LoginInfoChangedMsg (ko-KR)~@~28~@~MyAccountModule~@~LoginInfoChangedMsg~@~로그인 프로파일이 성공적으로 변경. 왼쪽 위 모서리에있는 아이콘을 누르거나 자동 재 기다려주십시오.~@~~@~200
+809~@~SamplePg: 0010 pgTitle (ko-KR)~@~28~@~SamplePg~@~pgTitle~@~샘플 정적 페이지~@~~@~10
+810~@~MyAccountModule: 0010 cCancelAccountLn (ko-KR)~@~28~@~MyAccountModule~@~cCancelAccountLn~@~내 계정을 비활성화~@~~@~10
+811~@~MyAccountModule: 0010 cCancelAccountMsg (ko-KR)~@~28~@~MyAccountModule~@~cCancelAccountMsg~@~확인을 눌러 계속하거나 비활성화를 취소 할 수 있습니다.~@~~@~10
+812~@~MyAccountModule: 0010 AccountCancelledMsg (ko-KR)~@~28~@~MyAccountModule~@~AccountCancelledMsg~@~이 계정은 성공적으로 비활성화되었습니다.~@~~@~10
+813~@~cGrid: 0008 Sort (ko-KR)~@~28~@~cGrid~@~Sort~@~정렬 :~@~~@~8
+814~@~MyAccountModule: 0111 cTermsOfService (ko-KR)~@~28~@~MyAccountModule~@~cTermsOfService~@~나는 읽고 서비스 약관에 동의합니다.~@~~@~111
+815~@~MyAccountModule: 0335 GoogleLoginTitle (ko-KR)~@~28~@~MyAccountModule~@~GoogleLoginTitle~@~로그인 할 계정을 선택하십시오 :~@~~@~335
+816~@~HelpModule: 0010 cHelpImg (ko-KR)~@~28~@~HelpModule~@~cHelpImg~@~HELP~@~~@~10
+818~@~HomePg: 0002 (en-US)~@~1~@~HomePg~@~0002~@~On Future-Proof Enterprise Application Development Platform~@~~@~
+819~@~MyAccountModule: 0010 cTwoFactorSecretKeyHelp (en-US)~@~1~@~MyAccountModule~@~cTwoFactorSecretKeyHelp~@~Scan this QR Code with your mobile app or enter the secret key below it manually into the app~@~~@~10
+820~@~MyAccountModule: 0010 cTwoFactorSecretKeyLabel (en-US)~@~1~@~MyAccountModule~@~cTwoFactorSecretKeyLabel~@~Secret Key~@~~@~10
+821~@~MyAccountModule: 0010 cTwoFactorSecretCodeHelp (en-US)~@~1~@~MyAccountModule~@~cTwoFactorSecretCodeHelp~@~An access code has been sent to your email, please enter it below to retrieve your secret key~@~~@~10
+822~@~MyAccountModule: 0010 cTwoFactorSecretCodeLabel (en-US)~@~1~@~MyAccountModule~@~cTwoFactorSecretCodeLabel~@~Access Code~@~~@~10
+823~@~MyAccountModule: 0010 cOTPAccessCodeHelp (en-US)~@~1~@~MyAccountModule~@~cOTPAccessCodeHelp~@~This account is protected by two factor authentication, please enter the generated code from the mobile app or request it to be sent to your email~@~~@~10
+824~@~MyAccountModule: 0010 cOTPAccessCodeLabel (en-US)~@~1~@~MyAccountModule~@~cOTPAccessCodeLabel~@~Access Code~@~~@~10
+825~@~MyAccountModule: 0010 cSendOTPAccessCodeBtn (en-US)~@~1~@~MyAccountModule~@~cSendOTPAccessCodeBtn~@~Send me the code~@~~@~10
+826~@~MyAccountModule: 0010 cRememberOTPAccessCode (en-US)~@~1~@~MyAccountModule~@~cRememberOTPAccessCode~@~Bypass two factor authentication on my current machine for 90 days~@~~@~10
+827~@~MyAccountModule: 0010 OTPAccessCodeEmailSubject (en-US)~@~1~@~MyAccountModule~@~OTPAccessCodeEmailSubject~@~Access Code for ~@~~@~10
+828~@~MyAccountModule: 0010 OTPAccessCodeEmailBody (en-US)~@~1~@~MyAccountModule~@~OTPAccessCodeEmailBody~@~Please enter this code: {0} to complete the two factor authentication setup~@~~@~10
+829~@~MyAccountModule: 0010 OTPDisableEmailSubject (en-US)~@~1~@~MyAccountModule~@~OTPDisableEmailSubject~@~Two Factor Authentication for ~@~~@~10
+831~@~MyAccountModule: 0010 OTPDisableEmailBody (en-US)~@~1~@~MyAccountModule~@~OTPDisableEmailBody~@~Two factor authentication has been disabled for your account. Please delete the associated key generator from your mobile apps. If you haven't initiated this, please reset your account immediately as there may be an intrusion happening~@~~@~10
+832~@~MyAccountModule: 0010 OTPAccessCodeSent (en-US)~@~1~@~MyAccountModule~@~OTPAccessCodeSent~@~Access Code has been sent to your email on file, please follow the instruction for next step~@~~@~10
+833~@~MyAccountModule: 0010 OTPRequiredEmail (en-US)~@~1~@~MyAccountModule~@~OTPRequiredEmail~@~You need to have an email on file for this feature~@~~@~10
+834~@~MyAccountModule: 0010 OTPEnableEmailBody (en-US)~@~1~@~MyAccountModule~@~OTPEnableEmailBody~@~Your Two Factor Authentication key has been changed, please remove the old key generator from your mobile app and create a new one follow the instruction on the site. If you haven't initiated this, reset everything for your account immediately as there may be an intrusion going on~@~~@~10
+835~@~MyAccountModule: 0010 OTPAccessCodeIncorrectMsg (en-US)~@~1~@~MyAccountModule~@~OTPAccessCodeIncorrectMsg~@~Incorrect Access Code~@~~@~10
+837~@~MyAccountModule: 0010 cEnableTwoFactorKey (en-US)~@~1~@~MyAccountModule~@~cEnableTwoFactorKey~@~Enable Two Factor Authentication~@~~@~10
+838~@~MyAccountModule: 0010 cResentTwoFactorKey (en-US)~@~1~@~MyAccountModule~@~cResentTwoFactorKey~@~Re-sent Access Code~@~~@~10
+840~@~MyAccountModule: 0010 OTPEnableEmailSubject (en-US)~@~1~@~MyAccountModule~@~OTPEnableEmailSubject~@~Two Factor Authentication ~@~~@~10
+841~@~MyAccountModule: 0190 PasswordChangedEmailBody (en-US)~@~1~@~MyAccountModule~@~PasswordChangedEmailBody~@~Your login password to this site has been changed. If you haven't initiated this, please contact us immediately as there may be an intrusion going on.~@~~@~190
+842~@~MyAccountModule: 0190 PasswordChangedEmailSubject (en-US)~@~1~@~MyAccountModule~@~PasswordChangedEmailSubject~@~Password Change~@~~@~190
+843~@~MyAccountModule: 0190 ProfileChangedEmailSubject (en-US)~@~1~@~MyAccountModule~@~ProfileChangedEmailSubject~@~Account Profile Change~@~~@~190
+844~@~MyAccountModule: 0190 ProfileChangedEmailBody (en-US)~@~1~@~MyAccountModule~@~ProfileChangedEmailBody~@~Your account profile has been changed. If you haven't initiated this, please contact us immediately as there may be an intrusion going on.~@~~@~190
+845~@~MyAccountModule: 0010 cShowTwoFactorKey (en-US)~@~1~@~MyAccountModule~@~cShowTwoFactorKey~@~Show Two Factor Authentication Key~@~~@~10
+846~@~MyAccountModule: 0010 OTPRetrieveEmailBody (en-US)~@~1~@~MyAccountModule~@~OTPRetrieveEmailBody~@~You have just retrieved your Two Factor Authentication Secret Key. If you haven't initiated this, reset everything for your account immediately as there may be an intrusion going on~@~~@~10
+847~@~MyAccountModule: 0010 cDisableTwoFactor (en-US)~@~1~@~MyAccountModule~@~cDisableTwoFactor~@~Disable Two Factor Authentication~@~~@~10
+848~@~MyAccountModule: 0010 cResetTwoFactorKey (en-US)~@~1~@~MyAccountModule~@~cResetTwoFactorKey~@~Reset Two Factor Authentication Key~@~~@~10
+849~@~HomePg: 0003 (en-US)~@~1~@~HomePg~@~0003~@~Enable Everyone to Build~@~~@~
+850~@~HomePg: 0004 (en-US)~@~1~@~HomePg~@~0004~@~Great Mission-Critical Systems That Last~@~~@~
+851~@~MyAccountModule: 0340 cLinkMicrosoftBtn (en-US)~@~1~@~MyAccountModule~@~cLinkMicrosoftBtn~@~Link Microsoft Account~@~~@~340
+852~@~MyAccountModule: 0350 cUnlinkMicrosoftBtn (en-US)~@~1~@~MyAccountModule~@~cUnlinkMicrosoftBtn~@~Unlink Microsoft Account - {0}~@~~@~350
+853~@~MyAccountModule: 0360 cLinkGoogleBtn (en-US)~@~1~@~MyAccountModule~@~cLinkGoogleBtn~@~Link Google Account~@~~@~360
+854~@~MyAccountModule: 0370 cUnlinkGoogleBtn (en-US)~@~1~@~MyAccountModule~@~cUnlinkGoogleBtn~@~Unlink Google Account - {0}~@~~@~370
+855~@~MyAccountModule: 0390 cUnlinkFacebookBtn (en-US)~@~1~@~MyAccountModule~@~cUnlinkFacebookBtn~@~Unlink Facebook Account - {0}~@~~@~390
+856~@~MyAccountModule: 0380 cLinkFacebookBtn (en-US)~@~1~@~MyAccountModule~@~cLinkFacebookBtn~@~Link Facebook Account~@~~@~380
+857~@~MyAccountModule: 0400 cLinkWindowsBtn (en-US)~@~1~@~MyAccountModule~@~cLinkWindowsBtn~@~Link Windows Account~@~~@~400
+858~@~MyAccountModule: 0410 cUnlinkWindowsBtn (en-US)~@~1~@~MyAccountModule~@~cUnlinkWindowsBtn~@~Unlink Windows Account - {0}~@~~@~410
+859~@~MyAccountModule: 0430 LoginLinkAddedEmailBody (en-US)~@~1~@~MyAccountModule~@~LoginLinkAddedEmailBody~@~Your account {0} has been linked to {1}:{2} as a alternative login identity to this site. If you haven't initiated this, please contact us immediately as there may be an intrusion going on.~@~~@~430
+860~@~MyAccountModule: 0440 LoginLinkRemovedEmailBody (en-US)~@~1~@~MyAccountModule~@~LoginLinkRemovedEmailBody~@~{0}:{1} has been removed from your account {2} as a alternative login identity to this site and you will no longer able to use it to login to this site. If you haven't initiated this, please contact us immediately as there may be an intrusion going on.~@~~@~440
+861~@~MyAccountModule: 0450 cRemoveLinkedLogin (en-US)~@~1~@~MyAccountModule~@~cRemoveLinkedLogin~@~Remove all linked Login after password change~@~~@~450
+862~@~MyAccountModule: 0460 ProfileChangedEmailBodyForAdmin (en-US)~@~1~@~MyAccountModule~@~ProfileChangedEmailBodyForAdmin~@~The account profile for account {0} has been changed which didn't have a email address on file and has two factor authentication enabled. Please review if necessary to see if this is allowed. ~@~~@~460
+863~@~cSystem: 0010 PickFileBtnLabel (en-US)~@~1~@~cSystem~@~PickFileBtnLabel~@~Pick a file~@~~@~10
+864~@~cSystem: 0010 CancelFileBtnLabel (en-US)~@~1~@~cSystem~@~CancelFileBtnLabel~@~Cancel~@~~@~10
+865~@~cSystem: 0010 DeleteFileBtnLabel (en-US)~@~1~@~cSystem~@~DeleteFileBtnLabel~@~Delete~@~~@~10
+866~@~cSystem: 0010 NewMasterLabel (en-US)~@~1~@~cSystem~@~NewMasterLabel~@~New Master~@~~@~10
+867~@~cSystem: 0010 UnsavedPageMsg (en-US)~@~1~@~cSystem~@~UnsavedPageMsg~@~You have unsaved data on this page. Are you sure you want to perform this action?~@~~@~10
+874~@~cSystem: 0010 FilterSearchLabel (en-US)~@~1~@~cSystem~@~FilterSearchLabel~@~On~@~~@~10
+875~@~cSystem: 0010 UnsavedPageTitle (en-US)~@~1~@~cSystem~@~UnsavedPageTitle~@~Unsaved Changes~@~~@~10
+876~@~cSystem: 0010 DeletePageMsg (en-US)~@~1~@~cSystem~@~DeletePageMsg~@~Are you sure you want to delete this?~@~~@~10
+877~@~cSystem: 0010 WarningTitle (en-US)~@~1~@~cSystem~@~WarningTitle~@~Warning~@~~@~10
+878~@~cSystem: 0010 ErrorTitle (en-US)~@~1~@~cSystem~@~ErrorTitle~@~Error~@~~@~10
+879~@~cSystem: 0010 InfoTitle (en-US)~@~1~@~cSystem~@~InfoTitle~@~Information~@~~@~10

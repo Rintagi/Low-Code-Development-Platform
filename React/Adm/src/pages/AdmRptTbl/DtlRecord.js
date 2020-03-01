@@ -11,15 +11,15 @@ import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
-import FileInputField from '../../components/custom/FileInput';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import DropdownField from '../../components/custom/DropdownField';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import {isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
-import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
 import { getNaviBar } from './index';
@@ -30,7 +30,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class DtlRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.AdmRptTbl || {});
+    this.GetReduxState = () => (this.props.AdmRptTbl || {});
     this.blocker = null;
     this.titleSet = false;
     this.SystemName = 'FintruX';
@@ -45,8 +45,8 @@ class DtlRecord extends RintagiScreen {
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
     this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
-    this.FileUploadChange = this.FileUploadChange.bind(this);
-//    this.BGlChartId65InputChange = this.BGlChartId65InputChange.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
 
@@ -63,12 +63,12 @@ class DtlRecord extends RintagiScreen {
       isMobile: false
     }
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
   }
-  
+
   mediaqueryresponse(value) {
     if (value.matches) { // if media query matches
       this.setState({ isMobile: true });
@@ -78,8 +78,14 @@ class DtlRecord extends RintagiScreen {
     }
   }
 
-CelNum164InputChange() { const _this = this; return function (name, v) {const filterBy = ''; _this.props.SearchCelNum164(v, filterBy);}}
-/* ReactRule: Detail Record Custom Function */
+  CelNum164InputChange() {
+    const _this = this; 
+    return function (name, v) { 
+      const filterBy = ''; 
+      _this.props.SearchCelNum164(v, filterBy);
+    } 
+  }
+  /* ReactRule: Detail Record Custom Function */
   /* ReactRule End: Detail Record Custom Function */
 
   ValidatePage(values) {
@@ -87,9 +93,9 @@ CelNum164InputChange() { const _this = this; return function (name, v) {const fi
     const columnLabel = (this.props.AdmRptTbl || {}).ColumnLabel || {};
     const regex = new RegExp(/^-?(?:\d+|\d{1,3}(?:\d{3})+)(?:(\.|,)\d+)?$/);
     /* standard field validation */
-if (!values.cRowNum164) { errors.cRowNum164 = (columnLabel.RowNum164 || {}).ErrMessage;}
-if (!values.cRowHeight164) { errors.cRowHeight164 = (columnLabel.RowHeight164 || {}).ErrMessage;}
-if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLabel.CelNum164 || {}).ErrMessage;}
+    if (!values.cRowNum164) { errors.cRowNum164 = (columnLabel.RowNum164 || {}).ErrMessage; }
+    if (!values.cRowHeight164) { errors.cRowHeight164 = (columnLabel.RowHeight164 || {}).ErrMessage; }
+    if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLabel.CelNum164 || {}).ErrMessage; }
     return errors;
   }
 
@@ -98,7 +104,7 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
 
     this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting });
     const ScreenButton = this.state.ScreenButton || {};
-/* ReactRule: Detail Record Save */
+    /* ReactRule: Detail Record Save */
     /* ReactRule End: Detail Record Save */
 
     this.props.SavePage(
@@ -107,11 +113,11 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
       [
         {
           RptCelId164: values.cRptCelId164 || null,
-          RowNum164: values.cRowNum164|| '',
-          RowHeight164: values.cRowHeight164|| '',
-          RowVisibility164: values.cRowVisibility164|| '',
-          CelNum164: (values.cCelNum164|| {}).value || '',
-          CelColSpan164: values.cCelColSpan164|| '',
+          RowNum164: values.cRowNum164 || '',
+          RowHeight164: values.cRowHeight164 || '',
+          RowVisibility164: values.cRowVisibility164 || '',
+          CelNum164: (values.cCelNum164 || {}).value || '',
+          CelColSpan164: values.cCelColSpan164 || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cRptCelId164 ? 'upd' : 'add'),
         }
       ],
@@ -121,8 +127,8 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
       }
     )
   }
- 
-   /* standard screen button actions */
+
+  /* standard screen button actions */
   CopyRow({ mst, dtl, dtlId, useMobileView }) {
     const AdmRptTblState = this.props.AdmRptTbl || {};
     const auxSystemLabels = AdmRptTblState.SystemLabel || {};
@@ -133,8 +139,8 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
         if (currDtlId) {
           this.props.AddDtl(mst.RptTblId162, currDtlId);
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', mst, {}, this.props.AdmRptTbl.Label);
-            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'Dtl', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', mst, {}, this.props.AdmRptTbl.Label);
+            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'DtlRecord', '/'), '_'));
           }
           else {
             if (this.props.OnCopy) this.props.OnCopy();
@@ -144,7 +150,7 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
           this.setState({ ModalOpen: true, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
         }
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   }
@@ -228,7 +234,7 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
     return revisedState;
   }
 
- confirmUnload(message, callback) {
+  confirmUnload(message, callback) {
     const AdmRptTblState = this.props.AdmRptTbl || {};
     const auxSystemLabels = AdmRptTblState.SystemLabel || {};
     const confirm = () => {
@@ -239,9 +245,9 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
     }
     this.setState({ ModalOpen: true, ModalSuccess: confirm, ModalCancel: cancel, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: message });
   }
-  
+
   setDirtyFlag(dirty) {
-   /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
+    /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
     if (dirty) {
       if (this.blocker) unregisterBlocker(this.blocker);
       this.blocker = this.confirmUnload;
@@ -265,7 +271,7 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
     if (!suppressLoadPage) {
       const { mstId, dtlId } = { ...this.props.match.params };
       if (!(this.props.AdmRptTbl || {}).AuthCol || true)
-        this.props.LoadPage('Item', { mstId : mstId || '_', dtlId:dtlId || '_' });
+        this.props.LoadPage('Item', { mstId: mstId || '_', dtlId: dtlId || '_' });
     }
     else {
       return;
@@ -274,13 +280,13 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
   componentDidUpdate(prevprops, prevstates) {
     const currReduxScreenState = this.props.AdmRptTbl || {};
 
-    if(!this.props.suppressLoadPage) {
-      if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!this.props.suppressLoadPage) {
+      if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
         const _this = this;
         setTimeout(() => _this.props.setSpinner(false), 500);
       }
     }
-    
+
     this.SetPageTitle(currReduxScreenState);
     if (prevstates.key !== (currReduxScreenState.EditDtl || {}).key) {
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveCloseDtl') {
@@ -288,7 +294,7 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
         const currDtl = (currReduxScreenState.EditDtl);
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
 
-        const naviBar = getNaviBar('Dtl', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('DtlRecord', currMst, currDtl, currReduxScreenState.Label);
         const dtlListPath = getDefaultPath(getNaviPath(naviBar, 'DtlList', '/'));
 
         this.props.history.push(dtlListPath);
@@ -322,13 +328,15 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
     const DetailRecSubtitle = ((screenHlp || {}).DetailRecSubtitle || '');
     const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
+    const selectList = AdmRptTblReduxObj.SearchListToSelectList(AdmRptTblState);
+    const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
     const screenButtons = AdmRptTblReduxObj.GetScreenButtons(AdmRptTblState) || {};
     const auxLabels = AdmRptTblState.Label || {};
     const auxSystemLabels = AdmRptTblState.SystemLabel || {};
     const columnLabel = AdmRptTblState.ColumnLabel || {};
     const currMst = AdmRptTblState.Mst;
     const currDtl = AdmRptTblState.EditDtl;
-    const naviBar = getNaviBar('Dtl', currMst, currDtl, screenButtons);
+    const naviBar = getNaviBar('DtlRecord', currMst, currDtl, screenButtons);
     const authCol = this.GetAuthCol(AdmRptTblState);
     const authRow = (AdmRptTblState.AuthRow || [])[0] || {};
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -336,28 +344,14 @@ if (isEmptyId((values.cCelNum164 || {}).value)) { errors.cCelNum164 = (columnLab
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
-const RowNum164 = currDtl.RowNum164;
-const RowHeight164 = currDtl.RowHeight164;
-const RowVisibility164 = currDtl.RowVisibility164;
-const CelNum164List = AdmRptTblReduxObj.ScreenDdlSelectors.CelNum164(AdmRptTblState);
-const CelNum164 = currDtl.CelNum164;
-const CelColSpan164 = currDtl.CelColSpan164;
-// custome image upload code
-//    const TrxDetImg65 = currDtl.TrxDetImg65 ? (currDtl.TrxDetImg65.startsWith('{') ? JSON.parse(currDtl.TrxDetImg65) : { fileName: '', mimeType: 'image/jpeg', base64: currDtl.TrxDetImg65 }) : null;
-//    const TrxDetImg65FileUploadOptions = {
-//      CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
-//      DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
-//      MaxImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ResizeWidth,
-//        Height:(columnLabel.TrxDetImg65 || {}).ResizeHeight,
-//      },
-//      MinImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ColumnSize,
-//        Height:(columnLabel.TrxDetImg65 || {}).ColumnHeight,
-//      },
-//    }
-/* ReactRule: Detail Record Render */
-/* ReactRule End: Detail Record Render */
+    const RowNum164 = currDtl.RowNum164;
+    const RowHeight164 = currDtl.RowHeight164;
+    const RowVisibility164 = currDtl.RowVisibility164;
+    const CelNum164List = AdmRptTblReduxObj.ScreenDdlSelectors.CelNum164(AdmRptTblState);
+    const CelNum164 = currDtl.CelNum164;
+    const CelColSpan164 = currDtl.CelColSpan164;
+    /* ReactRule: Detail Record Render */
+    /* ReactRule End: Detail Record Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -375,11 +369,12 @@ const CelColSpan164 = currDtl.CelColSpan164;
                 <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
                 <Formik
                   initialValues={{
-                  cRowNum164: currDtl.RowNum164 || '',
-                  cRowHeight164: currDtl.RowHeight164 || '',
-                  cRowVisibility164: currDtl.RowVisibility164 || '',
-                  cCelNum164: CelNum164List.filter(obj => { return obj.key === currDtl.CelNum164 })[0],
-                  cCelColSpan164: currDtl.CelColSpan164 || '',
+                    cRptCelId164: currDtl.RptCelId164 || '',
+                    cRowNum164: formatContent(currDtl.RowNum164 || '', 'TextBox'),
+                    cRowHeight164: formatContent(currDtl.RowHeight164 || '', 'TextBox'),
+                    cRowVisibility164: formatContent(currDtl.RowVisibility164 || '', 'TextBox'),
+                    cCelNum164: CelNum164List.filter(obj => { return obj.key === currDtl.CelNum164 })[0],
+                    cCelColSpan164: formatContent(currDtl.CelColSpan164 || '', 'TextBox'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -416,7 +411,7 @@ const CelColSpan164 = currDtl.CelColSpan164;
                                   <ButtonGroup className='btn-group--icons'>
                                     <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
                                     {
-                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RptTblId162,currDtl.RptCelId164)).length > 0 &&
+                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RptTblId162, currDtl.RptCelId164)).length > 0 &&
                                       <DropdownToggle className='mw-50' outline>
                                         <i className='fa fa-ellipsis-h icon-holder'></i>
                                         {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
@@ -428,7 +423,7 @@ const CelColSpan164 = currDtl.CelColSpan164;
                                     <DropdownMenu right className={`dropdown__menu dropdown-options`}>
                                       {
                                         dropdownMenuButtonList.filter(v => !v.expose).map(v => {
-                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RptTblId162,currDtl.RptCelId164)) return null;
+                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RptTblId162, currDtl.RptCelId164)) return null;
                                           return (
                                             <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, submitForm, mst: currMst, dtl: currDtl, useMobileView })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
                                         })
@@ -441,120 +436,137 @@ const CelColSpan164 = currDtl.CelColSpan164;
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          <div className='form__form-group'>
+                            <div className='form__form-group-narrow'>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                           <div className='w-100'>
                             <Row>
-            {(authCol.RowNum164 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.RowNum164 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RowNum164 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RowNum164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowNum164 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cRowNum164'
-disabled = {(authCol.RowNum164 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRowNum164 && touched.cRowNum164 && <span className='form__form-group-error'>{errors.cRowNum164}</span>}
-</div>
-</Col>
-}
-{(authCol.RowHeight164 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.RowHeight164 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RowHeight164 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RowHeight164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowHeight164 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cRowHeight164'
-disabled = {(authCol.RowHeight164 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRowHeight164 && touched.cRowHeight164 && <span className='form__form-group-error'>{errors.cRowHeight164}</span>}
-</div>
-</Col>
-}
-{(authCol.RowVisibility164 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.RowVisibility164 || {}).ColumnHeader} {(columnLabel.RowVisibility164 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.RowVisibility164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.RowVisibility164 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cRowVisibility164'
-disabled = {(authCol.RowVisibility164 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cRowVisibility164 && touched.cRowVisibility164 && <span className='form__form-group-error'>{errors.cRowVisibility164}</span>}
-</div>
-</Col>
-}
-{(authCol.CelNum164 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.CelNum164 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CelNum164 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.CelNum164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CelNum164 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<AutoCompleteField
-name='cCelNum164'
-onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCelNum164', false)}
-onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cCelNum164', true)}
-onInputChange={this.CelNum164InputChange()}
-value={values.cCelNum164}
-defaultSelected={CelNum164List.filter(obj => { return obj.key === CelNum164 })}
-options={CelNum164List}
-filterBy={this.AutoCompleteFilterBy}
-disabled = {(authCol.CelNum164 || {}).readonly ? true: false }/>
-</div>
-}
-{errors.cCelNum164 && touched.cCelNum164 && <span className='form__form-group-error'>{errors.cCelNum164}</span>}
-</div>
-</Col>
-}
-{(authCol.CelColSpan164 || {}).visible &&
- <Col lg={12} xl={12}>
-<div className='form__form-group'>
-{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
-<label className='form__form-group-label'>{(columnLabel.CelColSpan164 || {}).ColumnHeader} {(columnLabel.CelColSpan164 || {}).ToolTip && 
- (<ControlledPopover id={(columnLabel.CelColSpan164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel.CelColSpan164 || {}).ToolTip} />
-)}
-</label>
-}
-{((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
-<div className='form__form-group-field'>
-<Field
-type='text'
-name='cCelColSpan164'
-disabled = {(authCol.CelColSpan164 || {}).readonly ? 'disabled': '' }/>
-</div>
-}
-{errors.cCelColSpan164 && touched.cCelColSpan164 && <span className='form__form-group-error'>{errors.cCelColSpan164}</span>}
-</div>
-</Col>
-}
+                              {(authCol.RowNum164 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.RowNum164 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RowNum164 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.RowNum164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RowNum164 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cRowNum164'
+                                          disabled={(authCol.RowNum164 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cRowNum164 && touched.cRowNum164 && <span className='form__form-group-error'>{errors.cRowNum164}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.RowHeight164 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.RowHeight164 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.RowHeight164 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.RowHeight164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RowHeight164 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cRowHeight164'
+                                          disabled={(authCol.RowHeight164 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cRowHeight164 && touched.cRowHeight164 && <span className='form__form-group-error'>{errors.cRowHeight164}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.RowVisibility164 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.RowVisibility164 || {}).ColumnHeader} {(columnLabel.RowVisibility164 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.RowVisibility164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RowVisibility164 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cRowVisibility164'
+                                          disabled={(authCol.RowVisibility164 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cRowVisibility164 && touched.cRowVisibility164 && <span className='form__form-group-error'>{errors.cRowVisibility164}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.CelNum164 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.CelNum164 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.CelNum164 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.CelNum164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CelNum164 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='cCelNum164'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCelNum164', false)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cCelNum164', true)}
+                                          onInputChange={this.CelNum164InputChange()}
+                                          value={values.cCelNum164}
+                                          defaultSelected={CelNum164List.filter(obj => { return obj.key === CelNum164 })}
+                                          options={CelNum164List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol.CelNum164 || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.cCelNum164 && touched.cCelNum164 && <span className='form__form-group-error'>{errors.cCelNum164}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.CelColSpan164 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.CelColSpan164 || {}).ColumnHeader} {(columnLabel.CelColSpan164 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.CelColSpan164 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CelColSpan164 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmRptTblState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cCelColSpan164'
+                                          disabled={(authCol.CelColSpan164 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cCelColSpan164 && touched.cCelColSpan164 && <span className='form__form-group-error'>{errors.cCelColSpan164}</span>}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mb-0'>
@@ -570,7 +582,7 @@ disabled = {(authCol.CelColSpan164 || {}).readonly ? 'disabled': '' }/>
                                     bottomButtonList
                                       .filter(v => v.expose)
                                       .map((v, i, a) => {
-                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RptTblId162,currDtl.RptCelId164)) return null;
+                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).RptTblId162, currDtl.RptCelId164)) return null;
                                         const buttonCount = a.length;
                                         const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
@@ -613,11 +625,10 @@ const mapDispatchToProps = (dispatch) => (
     { LoadPage: AdmRptTblReduxObj.LoadPage.bind(AdmRptTblReduxObj) },
     { AddDtl: AdmRptTblReduxObj.AddDtl.bind(AdmRptTblReduxObj) },
     { SavePage: AdmRptTblReduxObj.SavePage.bind(AdmRptTblReduxObj) },
-{ SearchCelNum164: AdmRptTblReduxObj.SearchActions.SearchCelNum164.bind(AdmRptTblReduxObj) },
-  { setTitle: setTitle },
+    { SearchCelNum164: AdmRptTblReduxObj.SearchActions.SearchCelNum164.bind(AdmRptTblReduxObj) },
+    { setTitle: setTitle },
     { setSpinner: setSpinner },
   ), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
-

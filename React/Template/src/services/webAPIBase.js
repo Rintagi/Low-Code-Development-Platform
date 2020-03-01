@@ -1,7 +1,6 @@
 import { fetchService } from './fetchService';
 import { authService } from './authService';
 import log from '../helpers/logger';
-import {setupRuntime} from '../helpers/utils';
 
 export const baseUrl = (document.Rintagi || {}).apiBasename + "/webservices";
 export const fetchAPIResult = fetchService.fetchAPIResult;
@@ -73,3 +72,27 @@ export function ddlSuggests (url, query, contextStr, topN,accessScope)
     }
     )
 }
+
+export function MakeDdlServiceFn(serviceUrl, getAccessControlInfo, currentScope) {
+    return function (query, topN, filterBy, accessScope){
+        return fetchData(serviceUrl
+            ,{
+                requestOptions: {
+                    body: JSON.stringify({
+                        query: query || "",
+                        topN: topN || 0,
+                        filterBy: filterBy || null
+                    }),
+                },
+                ...(getAccessControlInfo()),
+                ...(accessScope)
+            }
+        )
+    }
+}
+
+export function keepNullOrUndefinedFields (o)
+{
+    if (!o || typeof o !== "object" || true) return o;
+    return Object.keys(o||{}).reduce((a,k)=>{o[k] = o[k] === undefined || o[k] === null ?  '' : o[k];  return a;},o)
+};

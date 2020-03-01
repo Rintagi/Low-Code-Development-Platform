@@ -1,0 +1,43 @@
+25~@~Data Dictionary [Body] 000[Table] TTbl 010[Header]~@~~@~93~@~57~@~H~@~Y~@~10~@~~@~~@~~@~
+26~@~Data Dictionary [Body] 000[Table] TTbl 020[Details]~@~~@~93~@~57~@~D~@~N~@~20~@~~@~~@~~@~
+27~@~Data Dictionary [Body] 000[Table] TTbl 030[Footer]~@~~@~93~@~57~@~F~@~N~@~30~@~~@~~@~~@~
+28~@~Data Dictionary [Body] 000[Table] TTbl 200[Column]~@~~@~93~@~57~@~C~@~N~@~200~@~.25~@~~@~~@~
+29~@~Data Dictionary [Body] 000[Table] TTbl 210[Column]~@~~@~93~@~57~@~C~@~N~@~210~@~.25~@~~@~~@~
+30~@~Data Dictionary [Body] 000[Table] TTbl 290[Column]~@~~@~93~@~57~@~C~@~N~@~290~@~1.00~@~~@~~@~
+31~@~Data Dictionary [Body] 000[Table] TTbl 230[Column]~@~~@~93~@~57~@~C~@~N~@~230~@~1.00~@~~@~~@~
+32~@~Data Dictionary [Body] 000[Table] TTbl 240[Column]~@~~@~93~@~57~@~C~@~N~@~240~@~3.00~@~~@~~@~
+33~@~Data Dictionary [Body] 000[Table] TTbl 250[Column]~@~~@~93~@~57~@~C~@~N~@~250~@~.90~@~~@~~@~
+34~@~Data Dictionary [Body] 000[Table] TTbl 260[Column]~@~~@~93~@~57~@~C~@~N~@~260~@~.50~@~~@~~@~
+35~@~Data Dictionary [Body] 000[Table] TTbl 270[Column]~@~~@~93~@~57~@~C~@~N~@~270~@~.30~@~~@~~@~
+36~@~Data Dictionary [Body] 000[Table] TTbl 280[Column]~@~~@~93~@~57~@~C~@~N~@~280~@~.30~@~~@~~@~
+38~@~SR&ED Time Report [Body] 000[Table] TTbl 010[Header]~@~~@~126~@~60~@~H~@~Y~@~10~@~~@~~@~~@~
+39~@~SR&ED Time Report [Body] 000[Table] TTbl 020[Details]~@~~@~126~@~60~@~D~@~N~@~20~@~~@~~@~~@~
+40~@~SR&ED Time Report [Body] 000[Table] TTbl 030[Footer]~@~~@~126~@~60~@~F~@~N~@~30~@~~@~~@~~@~
+41~@~SR&ED Time Report [Body] 000[Table] TTbl 200[Column]~@~~@~126~@~60~@~C~@~N~@~200~@~.20~@~~@~~@~
+42~@~SR&ED Time Report [Body] 000[Table] TTbl 100[Group]~@~~@~126~@~60~@~G~@~N~@~100~@~~@~1041~@~~@~
+43~@~SR&ED Time Report [Body] 000[Table] TTbl 100[Group]: 100[Header]~@~42~@~126~@~60~@~H~@~N~@~100~@~~@~~@~~@~
+44~@~SR&ED Time Report [Body] 000[Table] TTbl 100[Group]: 100[Footer]~@~42~@~126~@~60~@~F~@~N~@~100~@~~@~~@~~@~
+45~@~SR&ED Time Report [Body] 000[Table] TTbl 210[Column]~@~~@~126~@~60~@~C~@~N~@~210~@~1.00~@~~@~~@~
+46~@~SR&ED Time Report [Body] 000[Table] TTbl 220[Column]~@~~@~126~@~60~@~C~@~N~@~220~@~6.80~@~~@~~@~
+47~@~SR&ED Time Report [Body] 000[Table] TTbl 230[Column]~@~~@~126~@~60~@~C~@~N~@~230~@~1.00~@~~@~~@~
+51~@~AdmRptPerm [Body] 000[Table] TTbl 010[Header]~@~~@~150~@~62~@~H~@~Y~@~10~@~~@~~@~~@~
+52~@~AdmRptPerm [Body] 000[Table] TTbl 020[Details]~@~~@~150~@~62~@~D~@~N~@~20~@~~@~~@~~@~
+54~@~AdmRptPerm [Body] 000[Table] TTbl 200[Column]~@~~@~150~@~62~@~C~@~N~@~200~@~.25~@~~@~~@~
+55~@~AdmRptPerm [Body] 000[Table] TTbl 210[Column]~@~~@~150~@~62~@~C~@~N~@~210~@~1.75~@~~@~~@~
+56~@~AdmRptPerm [Body] 000[Table] TTbl 220[Column]~@~~@~150~@~62~@~C~@~N~@~220~@~2.50~@~~@~~@~
+57~@~AdmRptPerm [Body] 000[Table] TTbl 230[Column]~@~~@~150~@~62~@~C~@~N~@~230~@~.50~@~~@~~@~
+58~@~AdmRptPerm [Body] 000[Table] TTbl 240[Column]~@~~@~150~@~62~@~C~@~N~@~240~@~.50~@~~@~~@~
+59~@~AdmRptPerm [Body] 000[Table] TTbl 250[Column]~@~~@~150~@~62~@~C~@~N~@~250~@~.50~@~~@~~@~
+60~@~AdmRptPerm [Body] 000[Table] TTbl 260[Column]~@~~@~150~@~62~@~C~@~N~@~260~@~.50~@~~@~~@~
+68~@~AdmRptPerm [Body] 000[Table] TTbl 100[Group]~@~~@~150~@~62~@~G~@~N~@~100~@~~@~1052~@~~@~
+69~@~AdmRptPerm [Body] 000[Table] TTbl 100[Group]: 100[Header]~@~68~@~150~@~62~@~H~@~N~@~100~@~~@~~@~~@~
+70~@~Data Dictionary [Body] 000[Table] TTbl 100[Group]~@~~@~93~@~57~@~G~@~N~@~100~@~~@~1008~@~~@~
+71~@~Data Dictionary [Body] 000[Table] TTbl 100[Group]: 100[Header]~@~70~@~93~@~57~@~H~@~N~@~100~@~~@~1008~@~~@~
+72~@~User Login Audit Report [Body] 000[Table] TTbl 010[Header]~@~~@~195~@~64~@~H~@~Y~@~10~@~~@~~@~~@~
+73~@~User Login Audit Report [Body] 000[Table] TTbl 020[Details]~@~~@~195~@~64~@~D~@~N~@~20~@~~@~~@~~@~
+74~@~User Login Audit Report [Body] 000[Table] TTbl 030[Footer]~@~~@~195~@~64~@~F~@~N~@~30~@~~@~~@~~@~
+75~@~User Login Audit Report [Body] 000[Table] TTbl 200[Column]~@~~@~195~@~64~@~C~@~N~@~200~@~1.30~@~~@~~@~
+76~@~User Login Audit Report [Body] 000[Table] TTbl 210[Column]~@~~@~195~@~64~@~C~@~N~@~210~@~1.30~@~~@~~@~
+77~@~User Login Audit Report [Body] 000[Table] TTbl 220[Column]~@~~@~195~@~64~@~C~@~N~@~220~@~2.30~@~~@~~@~
+78~@~User Login Audit Report [Body] 000[Table] TTbl 230[Column]~@~~@~195~@~64~@~C~@~N~@~230~@~.80~@~~@~~@~
+79~@~User Login Audit Report [Body] 000[Table] TTbl 240[Column]~@~~@~195~@~64~@~C~@~N~@~240~@~.80~@~~@~~@~

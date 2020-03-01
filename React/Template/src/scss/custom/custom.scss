@@ -463,12 +463,12 @@
 
 .rbt-menu-pagination-option > .dropdown-item {
   // font-size: 12px;
-  background: #efefef !important;
+  background: #f0f1f6 !important;
   color: $color-fintrux !important;
 }
 
 .rbt-menu-pagination-option > .dropdown-item:hover {
-  background: #efefef;
+  background: #f0f1f6;
   color: $color-fintrux !important;
 }
 
@@ -591,10 +591,6 @@ mark {
   border-color: transparent !important;
   color: $color-fintrux !important;
   padding: 0px !important;
-}
-
-.btn-view-more-blue:hover {
-  color: $color-blue-hover !important;
 }
 
 .btn-view-more-fintrux:hover {
@@ -1023,7 +1019,7 @@ mark {
 .row-bottom-report {
   margin-top: 2px;
   font-size: 12px;
-  line-height: 14px;
+  line-height: 15px;
   font-weight: 700;
 }
 
@@ -1095,11 +1091,13 @@ mark {
 
 .no-margin-right {
   margin-right: 0px !important;
+  margin-left: 0px !important;
 }
 
 @media screen and (max-width: 1059px){
   .no-padding-right {
     padding-right: 0px;
+    padding-left: 0px;
   }
 
   .topbar-chevron {
@@ -1236,21 +1234,21 @@ mark {
   //   // height: 59px !important;
   // }
 
-  .form__form-group-narrow:nth-child(2) > .form__form-group-field > label.radio-btn > .radio-bg-solver {
-    border-radius: 5px;
-    height: 59px !important;
-  }
+  // .form__form-group-narrow:nth-child(2) > .form__form-group-field > label.radio-btn > .radio-bg-solver {
+  //   border-radius: 5px;
+  //   height: 59px !important;
+  // }
 
   // .form__form-group-narrow:last-child > .form__form-group-field > label.radio-btn > .radio-bg-solver {
   //   // border-radius: 5px;
   //   // height: 60px !important;
   // }
 
-  .form__form-group-narrow:nth-child(2) > .form__form-group-field > label.radio-btn > .edit-icon:last-child,
-  .form__form-group-narrow:nth-child(2) > .form__form-group-field > label.radio-btn > .btn-row-dropdown {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
+  // .form__form-group-narrow:nth-child(2) > .form__form-group-field > label.radio-btn > .edit-icon:last-child,
+  // .form__form-group-narrow:nth-child(2) > .form__form-group-field > label.radio-btn > .btn-row-dropdown {
+  //   border-top-right-radius: 5px;
+  //   border-bottom-right-radius: 5px;
+  // }
 
   .form__form-group-narrow:last-child > .form__form-group-field > label.radio-btn > .edit-icon {
     height: 50px !important;
@@ -1407,7 +1405,7 @@ mark {
     // margin-left: 20px !important;
     z-index: 1;
     // padding-top: 10px;
-    padding: 20px 0 15px 30px;
+    padding: 20px 0 15px 34px;
   }
  //aaron changes
   .project-title-desktop:empty{
@@ -1522,7 +1520,7 @@ mark {
 }
 
 .btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle {
-  color: #555555 !important;
+  color: #555555;
 }
 
 .btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle {
@@ -1538,7 +1536,7 @@ mark {
 }
 
 .btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle {
-  color: #fff !important;
+  color: #fff;
 }
 
 .cssload-loader {
@@ -2089,6 +2087,7 @@ mark {
 // .account{background-color: #f9f9f9;}
 .color-light-grey{color: #d8d8d8 !important;}
 .fs-20{font-size:20px !important;}
+.fs-15{font-size:15px !important;}
 .pl-10{padding-left: 10px;}
 .v-align-sub{vertical-align: sub;}
 .no_sidebar{padding-left: 0 !important;}
@@ -2105,13 +2104,6 @@ mark {
   max-width: 50% !important;
 }
 
-.col-6:last-child:not(:first-child) {
-  border-left: 1px solid #f0f1f6;
-  border-left-height: 100px; 
-  min-height: 100vh;
-  padding-right: 0px;
-}
-
 .dashboard.container {
   padding-right: 0px;
   padding-left: 0px;
@@ -2125,12 +2117,36 @@ mark {
 // }
 
 @media (min-width: 1200px) {
-  .col-6:first-child > .account > .account__wrapper > .account__card {
-    padding-left: 30px;
+  // .col-6:first-child > .account > .account__wrapper > .account__card {
+  //   padding-left: 30px;
+  // }
+
+  // .col-6:last-child:not(:first-child) > div > .account > .account__wrapper > .account__card {
+  //   padding-right: 30px;
+  // }
+
+  .no-margin-right > .col-6:last-child:not(:first-child) {
+    border-left: 1px solid #f0f1f6;
+    // min-height: 100vh;
+    // padding-right: 0px;
   }
 
-  .col-6:last-child:not(:first-child) > div > .account > .account__wrapper > .account__card {
-    padding-right: 30px;
+  .no-margin-right > .col-6:first-child {
+    position: absolute;
+    top: 133px;
+    bottom: 0px;
+    overflow-y: auto;
+    width: calc(50% - 125px);
+    left: calc(0px + 250px);
+  }
+
+  .no-margin-right > .col-6:last-child:not(:first-child) {
+    position: absolute;
+    top: 133px;
+    bottom: 0px;
+    width: calc(50% - 125px);
+    right: 0;
+    overflow-y: auto;
   }
 }
 
@@ -2574,7 +2590,7 @@ label {
   padding-left: 10px;
 }
 
-.btn-as-input-disabled {
+.btn-as-input-disabled{
   background: #ccc !important;
 }
 
@@ -2611,10 +2627,14 @@ label {
   top: 15px;
 }
 
-.sticky-icon {
-  // position: absolute;
-  // padding-top: 3px;
-  vertical-align: middle !important;
+// .sticky-icon {
+//   // position: absolute;
+//   // padding-top: 3px;
+//   vertical-align: middle !important;
+// }
+
+label.form__form-group-label{
+  min-height: 32px;
 }
 
 .filter-form-border > .form__form-group-button {
@@ -2627,4 +2647,39 @@ label {
 
 .radio-btn__label__right > div:first-child { 
   text-align: right;
+}
+
+// ::-webkit-scrollbar {
+//   width: 5px;
+// }
+
+// ::-webkit-scrollbar-track {
+//   background: transparent; 
+// }
+ 
+// ::-webkit-scrollbar-thumb {
+//   background: #f0f1f6; 
+//   border-radius: 50px;
+// }
+
+// ::-webkit-scrollbar-thumb:hover {
+//   background: #B4BFD0; 
+// }
+
+.filter-padding > .mb-5 > .col-12:not(:last-child),
+.filter-padding > .mb-5 ~ .row > .col-12:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.btn-view-more-blue:hover,
+.btn-view-more-blue:active {
+  color: $color-blue !important;
+}
+
+// .btn-bottom-column.col-6.col-sm-6{
+//   min-height: auto;
+// }
+
+input[type=checkbox][disabled] ~ span.checkbox-btn__checkbox-custom{
+  background-color: #ededed;
 }

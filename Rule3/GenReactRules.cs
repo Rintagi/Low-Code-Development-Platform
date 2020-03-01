@@ -101,7 +101,7 @@ namespace RO.Rule3
                     try { sw.Write(sbReactJsService); }
                     finally { sw.Close(); }
 
-                    sw = new StreamWriter("C:/Rintagi/" + Config.AppNameSpace + "/Web/webservices/" + di.Name + "Ws.asmx");
+                    sw = new StreamWriter(Config.ClientTierPath + "/webservices/" + di.Name + "Ws.asmx");
                     try { sw.Write(sbAsmx); }
                     finally { sw.Close(); }
                 }
@@ -118,12 +118,12 @@ namespace RO.Rule3
         private StringBuilder MakeReactJsRoute(string screenId)
         {
             DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
-            string SystemId = "";
+            string SystemId = DbId.ToString() ;
             foreach (DataRowView drv in dvItms)
             {
                 if (drv["MasterTable"].ToString() == "Y" && !string.IsNullOrEmpty(drv["PrimaryKey"].ToString()))
                 {
-                    SystemId = drv["SystemId"].ToString();
+                    //SystemId = drv["SystemId"].ToString();
                     break;
                 }
             }
@@ -160,23 +160,33 @@ namespace RO.Rule3
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
-                import {pagesRoutes as AccountRoute} from '../pages/Account/index'
-                import {pagesRoutes as SqlReportRoute} from '../pages/SqlReport/index'
-                import {pagesRoutes as DefaultRoute} from '../pages/Default/index'
-                /* all these are dynamic, add the required route for each page */
-            ");
+import {pagesRoutes as AccountRoute} from '../pages/Account/index'
+import {pagesRoutes as SqlReportRoute} from '../pages/SqlReport/index'
+import {pagesRoutes as DefaultRoute} from '../pages/Default/index'
+import {CustomRoutePre, CustomRoutePost, SuppressGenRoute} from '../pages/CustomRoute'
+/* all these are dynamic, add the required route for each page */
+");
             sb.Append(ImportInitialCnt);
             sb.Append(@"
-                export default [
-                ...AccountRoute,
-                ...DefaultRoute,
-                // ...SqlReportRoute,
+export default [
+...(CustomRoutePre || []),
+...(
+SuppressGenRoute ? [] : [
+...AccountRoute,
+...DefaultRoute,
+// ...SqlReportRoute,
+]
+),
+...(
+SuppressGenRoute ? [] : [
             ");
             sb.Append(ExportDefaultCnt);
             sb.Append(@"
-                ];
+]),
+...(CustomRoutePost || []),
+];
 
-            ");
+");
             sb.Append(" document.Rintagi.systemId = '" + SystemId + "';");
             return sb;
         }
@@ -212,33 +222,34 @@ namespace RO.Rule3
             }
 
             string ImportInitialCnt = string.Join(Environment.NewLine, ImportInitialResults.Select(s => addIndent(s, 0)));
-            string ExportDefaultCnt = string.Join(Environment.NewLine, ExportDefaultResults.Select(s => addIndent(s, 0)));
+            string ExportDefaultCnt = string.Join(Environment.NewLine, ExportDefaultResults.Select(s => addIndent(s, 4)));
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
-                import { sidebarReducer } from './SideBar';
-                import { authReducer } from './Auth';
-                import { notificationReducer } from './Notification';
-                import { globalReducer } from './Global';
-                import { SqlReportReducer } from './SqlReport';
+import { sidebarReducer } from './SideBar';
+import { authReducer } from './Auth';
+import { notificationReducer } from './Notification';
+import { globalReducer } from './Global';
+import { SqlReportReducer } from './SqlReport';
+import { CustomReducer } from './Custom';
 
-                /* below are dynamic, put shared static one above this */
-            ");
+/* below are dynamic, put shared static one above this */
+");
             sb.Append(ImportInitialCnt);
             sb.Append(@"
-              export default {
-              auth: authReducer,
-              global: globalReducer,
-              sidebar: sidebarReducer,
-              notification: notificationReducer,
-              SqlReport: SqlReportReducer,
-
-              /* dynamic go to here */
-            ");
+export default {
+    auth: authReducer,
+    global: globalReducer,
+    sidebar: sidebarReducer,
+    notification: notificationReducer,
+    SqlReport: SqlReportReducer,
+    ...(CustomReducer || {}),
+    /* dynamic go to here */
+");
             sb.Append(ExportDefaultCnt);
             sb.Append(@"
-              }
-            ");
+}
+");
             return sb;
         }
 
@@ -276,31 +287,33 @@ namespace RO.Rule3
             }
             else if ("I2".IndexOf(screenTypeName) >= 0)
             {
-                ImportRouter = @" import DtlList from './DtlList';
-                                  import DtlRecord from './DtlRecord';";
+                ImportRouter = @"
+import DtlList from './DtlList';
+import DtlRecord from './DtlRecord';";
                 DetailRouter = @"
-                    {
-                        path: '/[[---ScreenName---]]/:mstId?/DtlList/:dtlId?',
-                        name: 'Detail List',
-                        short: 'DetailList',
-                        component: DtlList,
-                        icon: 'list-ul',
-                        isPublic: false,
-                        type: 'DtlList',
-                        order: 3,
-                        screenId : [[---ScreenId---]]
-                      },
-                      {
-                        path: '/[[---ScreenName---]]/:mstId?/Dtl/:dtlId?',
-                        name: 'Detail Record',
-                        short: 'DetailRecord',
-                        component: DtlRecord,
-                        icon: 'picture-o',
-                        isPublic: false,
-                        type: 'DtlRecord',
-                        order: 4,
-                        screenId : [[---ScreenId---]]
-                      },";
+  {
+    path: '/[[---ScreenName---]]/:mstId?/DtlList/:dtlId?',
+    name: 'Detail List',
+    short: 'DetailList',
+    component: DtlList,
+    icon: 'list-ul',
+    isPublic: false,
+    type: 'DtlList',
+    order: 3,
+    screenId : [[---ScreenId---]]
+  },
+  {
+    path: '/[[---ScreenName---]]/:mstId?/Dtl/:dtlId?',
+    name: 'Detail Record',
+    short: 'DetailRecord',
+    component: DtlRecord,
+    icon: 'picture-o',
+    isPublic: false,
+    type: 'DtlRecord',
+    order: 4,
+    screenId: [[---ScreenId---]]
+  },
+";
 
                 NaviPath = "path: naviPath(v.type === 'MstList' ? '_' : mst.[[---ScreenPrimaryKey---]], v.type === 'DtlList' ? '_' : dtl.[[---ScreenDetailKey---]], v.path),";
             }
@@ -311,7 +324,7 @@ namespace RO.Rule3
 import { naviPath } from '../../helpers/utils'
 import MstList from './MstList';
 import MstRecord from './MstRecord';
-   ");
+");
             sb.Append(ImportRouter);
             sb.Append(@"
 /* react router match by order of appearance in list so make sure wider match comes last, use order to control display order */
@@ -325,9 +338,9 @@ export const pagesRoutes = [
     isPublic: false,
     type: 'MstRecord',
     order: 2,
-    screenId : [[---ScreenId---]]
+    screenId: [[---ScreenId---]]
   },
-   ");
+");
             sb.Append(DetailRouter);
             sb.Append(@"
   {
@@ -341,7 +354,7 @@ export const pagesRoutes = [
     order: 1,
     inMenu: true,
     menuLabel: '[[---ScreenName---]]',
-    screenId : [[---ScreenId---]]
+    screenId: [[---ScreenId---]]
   },
 ]
 
@@ -367,7 +380,7 @@ export function getNaviBar(type, mst, dtl, label) {
       }
     });
 }
-            ").Replace("[[---ScreenName---]]", screenName)
+").Replace("[[---ScreenName---]]", screenName)
               .Replace("[[---ScreenPrimaryKey---]]", screenPrimaryKey)
               .Replace("[[---ScreenDetailKey---]]", screenDetailKey)
               .Replace("[[---ScreenId---]]", screenId);
@@ -412,79 +425,79 @@ export function getNaviBar(type, mst, dtl, label) {
                 string FormikControlValue = "";
                 string GetCriteriaBotValue = "";
 
-                if (displayMode == "TextBox")
+                if (displayMode == "AutoComplete")
                 {
-                    FormikControlValue = "<Col xs={12} md={12}>" + Environment.NewLine
-                                          + "<label className='form__form-group-label filter-label'>{(screenCriteria." + columnName + " || {}).ColumnHeader}</label>" + Environment.NewLine
-                                          + "<div className='form__form-group-field filter-form-border'>" + Environment.NewLine
-                                            + "<Field" + Environment.NewLine
-                                               + "type='text'" + Environment.NewLine
-                                               + "name='cCri" + columnName + "'" + Environment.NewLine
-                                               + "value={values.cCri" + columnName + "}" + Environment.NewLine
-                                               + "onBlur = {this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cCri" + columnName + "')}" + Environment.NewLine
-                                         + "/>" + Environment.NewLine
-                                          + "</div>" + Environment.NewLine
-                                        + "</Col>";
-
-                    FormikInitialCriValue = "cCri" + columnName + ": ((screenCriteria || {})." + columnName + " || {}).LastCriteria,";
-
-                    RefreshSearchListValue = columnName + ": (values.cCri" + columnName + ") ? values.cCri" + columnName + " : ''," + Environment.NewLine;
-                }
-                else if (displayMode == "AutoComplete")
-                {
-                    GetCriteriaFuncValue = "Cri" + columnName + "InputChange() {" + Environment.NewLine
-                                           + "return function (name, v) {" + Environment.NewLine
-                                             + "this.props.SearchCri" + columnName + "(v);" + Environment.NewLine
-                                           + "}.bind(this);" + Environment.NewLine
-                                         + "}";
-
-                    FormikControlValue = "<Col xs={12} md={12}>" + Environment.NewLine
-                                          + "<label className='form__form-group-label filter-label'>{(screenCriteria." + columnName + " || {}).ColumnHeader}</label>" + Environment.NewLine
-                                          + "<div className='form__form-group-field filter-form-border'>" + Environment.NewLine
-                                            + "<AutoCompleteField" + Environment.NewLine
-                                              + "name='cCri" + columnName + "'" + Environment.NewLine
-                                              + "onChange={this.SearchFilterValueChange(handleSubmit, setFieldValue, 'autocomplete', 'cCri" + columnName + "')}" + Environment.NewLine
-                                              + "onInputChange={this.Cri" + columnName + "InputChange()}" + Environment.NewLine
-                                              + "value={values.cCri" + columnName + "}" + Environment.NewLine
-                                              + "defaultSelected={Cri" + columnName + "Selected}" + Environment.NewLine
-                                              + "options={Cri" + columnName + "List}" + Environment.NewLine
-                                            + "/>" + Environment.NewLine
-                                          + "</div>" + Environment.NewLine
-                                        + "</Col>";
+                    GetCriteriaFuncValue = "  Cri" + columnName + @"InputChange() {
+    return function (name, v) {
+      this.props.SearchCri" + columnName + @"(v);
+    }.bind(this);
+  }";
+                    FormikControlValue = @"
+                                    <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{(screenCriteria." + columnName + @" || {}).ColumnHeader}</label>
+                                      <div className='form__form-group-field filter-form-border'>
+                                        <AutoCompleteField
+                                          name='cCri" + columnName + @"'
+                                          onChange={this.SearchFilterValueChange(handleSubmit, setFieldValue, 'autocomplete', 'cCri" + columnName + @"')}
+                                          onInputChange={this.Cri" + columnName + @"InputChange()}
+                                          value={values.cCri" + columnName + @"}
+                                          defaultSelected={Cri" + columnName + @"Selected}
+                                          options={Cri" + columnName + @"List}
+                                        />
+                                      </div>
+                                    </Col>";
 
                     GetCriteriaBotValue = "{ SearchCri" + columnName + ": [[---ScreenName---]]ReduxObj.SearchActions.SearchCri" + columnName + ".bind([[---ScreenName---]]ReduxObj) },";
                     RenderInitialCriValue = "const Cri" + columnName + "List = screenCriDdlSelectors." + columnName + "([[---ScreenName---]]State);" + Environment.NewLine
-                                     + "const Cri" + columnName + "Selected = Cri" + columnName + "List.filter(obj => { return obj.key === screenCriteria." + columnName + ".LastCriteria });";
+                                     + "    const Cri" + columnName + "Selected = Cri" + columnName + "List.filter(obj => { return obj.key === screenCriteria." + columnName + ".LastCriteria });";
 
                     FormikInitialCriValue = "cCri" + columnName + ": Cri" + columnName + "Selected[0],";
 
-                    RefreshSearchListValue = columnName + ": (values.cCri" + columnName + ") ? values.cCri" + columnName + ".value : ''," + Environment.NewLine;
+                    RefreshSearchListValue = columnName + ": (values.cCri" + columnName + ") ? values.cCri" + columnName + ".value : '',";
                 }
                 else if (displayMode == "DropDownList")
                 {
-                    FormikControlValue = "<Col xs={12} md={12}>" + Environment.NewLine
-                                          + "<label className='form__form-group-label filter-label'>{(screenCriteria." + columnName + " || {}).ColumnHeader}</label>" + Environment.NewLine
-                                          + "<div className='form__form-group-field filter-form-border'>" + Environment.NewLine
-                                            + "<DropdownField" + Environment.NewLine
-                                              + "name='cCri" + columnName + "'" + Environment.NewLine
-                                              + "onChange={this.SearchFilterValueChange(handleSubmit, setFieldValue, 'ddl', 'cCri" + columnName + "')}" + Environment.NewLine
-                                              + "value={values.cCri" + columnName + "}" + Environment.NewLine
-                                              + "options={Cri" + columnName + "List}" + Environment.NewLine
-                                              + "placeholder=''" + Environment.NewLine
-                                            + "/>" + Environment.NewLine
-                                          + "</div>" + Environment.NewLine
-                                        + "</Col>";
+                    FormikControlValue = @"
+                                    <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{(screenCriteria." + columnName + @" || {}).ColumnHeader}</label>
+                                      <div className='form__form-group-field filter-form-border'>
+                                        <DropdownField
+                                          name='cCri" + columnName + @"'
+                                          onChange={this.SearchFilterValueChange(handleSubmit, setFieldValue, 'ddl', 'cCri" + columnName + @"')}
+                                          value={values.cCri" + columnName + @"}
+                                          options={Cri" + columnName + @"List}
+                                          placeholder=''
+                                        />
+                                      </div>
+                                    </Col>
+";
                     RenderInitialCriValue = "const Cri" + columnName + "List = screenCriDdlSelectors." + columnName + "([[---ScreenName---]]State);" + Environment.NewLine
-                                     + "const Cri" + columnName + "Selected = Cri" + columnName + "List.filter(obj => { return obj.key === screenCriteria." + columnName + ".LastCriteria });";
+                                     + "    const Cri" + columnName + "Selected = Cri" + columnName + "List.filter(obj => { return obj.key === screenCriteria." + columnName + ".LastCriteria });";
 
                     FormikInitialCriValue = "cCri" + columnName + ": Cri" + columnName + "Selected[0],";
 
-                    RefreshSearchListValue = columnName + ": (values.cCri" + columnName + ") ? values.cCri" + columnName + ".value : ''," + Environment.NewLine;
+                    RefreshSearchListValue = columnName + ": (values.cCri" + columnName + ") ? values.cCri" + columnName + ".value : '',";
                 }
+                else //if (displayMode == "TextBox")
+                {
+                    FormikControlValue = @"
+                                    <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{(screenCriteria." + columnName + @" || {}).ColumnHeader}</label>
+                                      <div className='form__form-group-field filter-form-border'>
+                                        <Field
+                                          type='text'
+                                          name='c" + columnName + @"'
+                                          value={values.c" + columnName + @"}
+                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'c" + columnName + @"')}
+                                        />
+                                      </div>
+                                    </Col>
 
+";
+                    FormikInitialCriValue = "cCri" + columnName + ": ((screenCriteria || {})." + columnName + " || {}).LastCriteria,";
 
-
-
+                    RefreshSearchListValue = columnName + ": (values.cCri" + columnName + ") ? values.cCri" + columnName + " : '',";
+                };
 
                 GetCriteriaFuncResults.Add(GetCriteriaFuncValue);
                 RefreshSearchListResults.Add(RefreshSearchListValue);
@@ -500,18 +513,18 @@ export function getNaviBar(type, mst, dtl, label) {
                                  : "";
 
             string GetCriteriaFuncCnt = string.Join(Environment.NewLine, GetCriteriaFuncResults.Select(s => addIndent(s, 0)));
-            string RefreshSearchListCnt = string.Join(Environment.NewLine, RefreshSearchListResults.Select(s => addIndent(s, 0)));
-            string RenderInitialCriCnt = string.Join(Environment.NewLine, RenderInitialCriResults.Select(s => addIndent(s, 0)));
-            string FormikInitialCriCnt = string.Join(Environment.NewLine, FormikInitialCriResults.Select(s => addIndent(s, 0)));
-            string FormikControlCnt = string.Join(Environment.NewLine, FormikControlResults.Select(s => addIndent(s, 0)));
-            string GetCriteriaBotCnt = string.Join(Environment.NewLine, GetCriteriaBotResults.Select(s => addIndent(s, 0)));
+            string RefreshSearchListCnt = string.Join(Environment.NewLine, RefreshSearchListResults.Select(s => addIndent(s, 10)));
+            string RenderInitialCriCnt = string.Join(Environment.NewLine, RenderInitialCriResults.Where(s => !string.IsNullOrWhiteSpace(s.Trim())).Select(s => addIndent(s, 4)));
+            string FormikInitialCriCnt = string.Join(Environment.NewLine, FormikInitialCriResults.Select(s => addIndent(s, 24)));
+            string FormikControlCnt = string.Join(Environment.NewLine, FormikControlResults.Select(s => addIndent(s, 0).Trim(new char[]{'\r','\n'})));
+            string GetCriteriaBotCnt = string.Join(Environment.NewLine, GetCriteriaBotResults.Where(s => !string.IsNullOrWhiteSpace(s.Trim())).Select(s => addIndent(s, 4)));
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect,withRouter } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import { Formik, Field, Form } from 'formik';
 import { Button, Row, Col, ButtonToolbar, ButtonGroup, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Nav, NavItem, NavLink } from 'reactstrap';
 import LoadingIcon from 'mdi-react/LoadingIcon';
@@ -537,7 +550,7 @@ import DocumentTitle from 'react-document-title';
 class MstList extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.[[---ScreenName---]] || {});
+    this.GetReduxState = () => (this.props.[[---ScreenName---]] || {});
     this.hasChangedContent = false;
     this.titleSet = false;
     this.MstKeyColumnName = '[[---ScreenPrimaryKey---]]';
@@ -564,22 +577,22 @@ class MstList extends RintagiScreen {
       ShowMst: false,
       isMobile: false,
     };
-//    const lastAppUrl = GetCurrent('LastAppUrl',true);
-      const lastAppUrl = null;
- 
+    //const lastAppUrl = GetCurrent('LastAppUrl',true);
+    const lastAppUrl = null;
+
     if (lastAppUrl && !(this.props.[[---ScreenName---]] || {}).initialized) {
       if (lastAppUrl.pathname !== ((this.props.history || {}).location || {}).pathname) {
-          this.props.history.push(lastAppUrl.pathname);
+        this.props.history.push(lastAppUrl.pathname);
       }
     }
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
   }
 
- ");
+");
             sb.Append(GetWebRules);
             sb.Append(GetCriteriaFuncCnt);
             sb.Append(@"
@@ -603,7 +616,7 @@ class MstList extends RintagiScreen {
           ShowMst: true,
         });
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   }
@@ -621,7 +634,7 @@ class MstList extends RintagiScreen {
           ShowMst: true,
         });
       }
-      if(!this.hasChangedContent) addFn();
+      if (!this.hasChangedContent) addFn();
       else this.setState({ ModalOpen: true, ModalSuccess: addFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   };
@@ -636,7 +649,7 @@ class MstList extends RintagiScreen {
         this.props.AddDtl(mstId, null, -1);
         this.props.history.push(getAddDtlPath(getNaviPath(naviBar, 'DtlList', '/')) + '_');
       }
-      if(!this.hasChangedContent) addFn();
+      if (!this.hasChangedContent) addFn();
       else this.setState({ ModalOpen: true, ModalSuccess: addFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   };
@@ -645,12 +658,12 @@ class MstList extends RintagiScreen {
     const [[---ScreenName---]]State = this.props.[[---ScreenName---]] || {};
     const auxSystemLabels = [[---ScreenName---]]State.SystemLabel || {};
     return this.Prompt({
-      okFn: function(evt) {
+      okFn: function (evt) {
         const fromMstId = mstId || mst.[[---ScreenPrimaryKey---]];
-        this.props.DelMst(this.props.[[---ScreenName---]], fromMstId);        
-      }.bind(this) ,
+        this.props.DelMst(this.props.[[---ScreenName---]], fromMstId);
+      }.bind(this),
       message: auxSystemLabels.DeletePageMsg || ''
-    }).bind(this); 
+    }).bind(this);
   }
 
   ExpMstTxt() {
@@ -666,13 +679,13 @@ class MstList extends RintagiScreen {
     const refreshFn = (() => {
       this.props.SetScreenCriteria(values.search,
         {
-           ");
+");
             sb.Append(RefreshSearchListCnt);
             sb.Append(@"
         },
         (values.cFilterId) ? values.cFilterId.value : 0);
-      }).bind(this);
-    if(true || !this.hasChangedContent) refreshFn();
+    }).bind(this);
+    if (true || !this.hasChangedContent) refreshFn();
     else this.setState({ ModalOpen: true, ModalSuccess: refreshFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
   }
 
@@ -713,14 +726,14 @@ class MstList extends RintagiScreen {
     // const isMobileView = this.state.isMobile;
     // const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
 
-    if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
       const _this = this;
       setTimeout(() => _this.props.setSpinner(false), 500);
     }
-    // else if(currReduxScreenState.initialized && this.props.global.pageSpinner) {
+    // else if (currReduxScreenState.initialized && this.props.global.pageSpinner) {
     //   this.props.setSpinner(false);
     // }
-    
+
     this.SetPageTitle(currReduxScreenState);
 
     if (prevStates.key !== (currReduxScreenState.Mst || {}).[[---ScreenPrimaryKey---]]) {
@@ -729,7 +742,7 @@ class MstList extends RintagiScreen {
 
       if (prevStates.ScreenButton === 'Copy' && useMobileView) {
         const naviBar = getNaviBar('MstList', {}, {}, currReduxScreenState.Label);
-        const editMstPath = getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_');
+        const editMstPath = getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_');
         this.props.history.push(editMstPath);
       }
     }
@@ -769,7 +782,7 @@ class MstList extends RintagiScreen {
     const columnLabel = [[---ScreenName---]]State.ColumnLabel || {};
     const currMst = [[---ScreenName---]]State.Mst;
     const currDtl = [[---ScreenName---]]State.EditDtl;
-    const naviBar = getNaviBar('MstList', currMst, {}, screenButtons).filter(v=>((v.type !== 'Dtl' && v.type !=='DtlList') || currMst.[[---ScreenPrimaryKey---]]));
+    const naviBar = getNaviBar('MstList', currMst, {}, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.[[---ScreenPrimaryKey---]]));
     const naviSelectBar = getNaviBar('MstList', {}, {}, screenButtons);
     const screenFilterList = [[---ScreenName---]]ReduxObj.QuickFilterDdlToSelectList([[---ScreenName---]]State);
     const screenFilterSelected = screenFilterList.filter(obj => { return obj.key === screenCriteria.FilterId });
@@ -788,7 +801,7 @@ class MstList extends RintagiScreen {
     let filterBtnStyle = classNames({ 'filter-button-clicked': screenCriteria.ShowFilter });
     let filterActive = classNames({ 'filter-icon-active': screenCriteria.ShowFilter });
 
- ");
+");
             sb.Append(RenderInitialCriCnt);
             sb.Append(@"
 
@@ -800,248 +813,244 @@ class MstList extends RintagiScreen {
     const getMainRowDesc = (desc) => (desc.replace(/^[0-9.]+\s\[\w*\]/));
     return (
       <DocumentTitle title={siteTitle}>
-      <div className='top-level-split'>
-        <ModalDialog color={this.state.ModalColor} title={this.state.ModalTitle} onChange={this.OnModalReturn} ModalOpen={this.state.ModalOpen} message={this.state.ModalMsg} />
-        <Row className='no-margin-right'>
-          <Col className='no-padding-right' xs='6'>
-            <div className='account'>
-              <div className='account__wrapper account-col'>
-                <div className='account__card rad-4'>
-                  {/* {this.constructor.ShowSpinner([[---ScreenName---]]State,'MstList') && siteSpinner} */}
-                  {useMobileView && <div className='tabs tabs--justify tabs--bordered-bottom'>
-                    <div className='tabs__wrap'>
-                      <NaviBar history={this.props.history} navi={naviBar} key={currMst.key} mstListCount={(selectList||[]).length} />
-                    </div>
-                  </div>}
-                  <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
-                  <div className='account__head'>
-                    <Row>
-                      <Col xs={8}>
-                        <h3 className='account__title'>{MasterLstTitle}</h3>
-                        <h4 className='account__subhead subhead'>{MasterLstSubtitle}</h4>
-                      </Col>
-                      <Col xs={4}>
-                        <ButtonToolbar className='f-right'>
-                          <UncontrolledDropdown>
-                            <ButtonGroup className='btn-group--icons'>
-                              <Button className={`mw-50 ${filterBtnStyle}`} onClick={this.props.changeMstListFilterVisibility} outline>
-                                <i className={`fa fa-filter icon-holder ${filterActive}`}></i>{ShowMstFilterApplied([[---ScreenName---]]State) && <i className='filter-applied'></i>}
-                                {!useMobileView && <p className='action-menu-label'>{(screenButtons.Filter || {}).label}</p>}
-                              </Button>
-                              {
-                                dropdownMenuButtonList.filter(v => v.expose).map(v => {
-                                  return (
-                                    <Button
-                                      key={v.tid || v.buttonType}
-                                      // disabled={!activeSelectionVisible || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]])}
-                                      onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}
-                                      className='mw-50 add-report-expense'
-                                      outline>
-                                      <i className={`${v.iconClassName} icon-holder`}></i>
-                                      {!useMobileView && <p className='action-menu-label'>{v.label}</p>}
-                                    </Button>)
-                                })
-                              }
-                              {activeSelectionVisible &&
-                                dropdownMenuButtonList.filter(v => !v.expose).length > 0 &&
-                                <DropdownToggle className='mw-50' outline>
-                                  <i className='fa fa-ellipsis-h icon-holder'></i>
-                                  {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
-                                </DropdownToggle>
-                              }
-                            </ButtonGroup>
-                            {dropdownMenuButtonList.filter(v => !v.expose).length > 0 &&
-                              <DropdownMenu right className={`dropdown__menu dropdown-options`}>
+        <div className='top-level-split'>
+          <ModalDialog color={this.state.ModalColor} title={this.state.ModalTitle} onChange={this.OnModalReturn} ModalOpen={this.state.ModalOpen} message={this.state.ModalMsg} />
+          <Row className='no-margin-right'>
+            <Col className='no-padding-right' xs='6'>
+              <div className='account'>
+                <div className='account__wrapper account-col'>
+                  <div className='account__card rad-4'>
+                    {/* {this.constructor.ShowSpinner([[---ScreenName---]]State,'MstList') && siteSpinner} */}
+                    {useMobileView && <div className='tabs tabs--justify tabs--bordered-bottom'>
+                      <div className='tabs__wrap'>
+                        <NaviBar history={this.props.history} navi={naviBar} key={currMst.key} mstListCount={(selectList || []).length} />
+                      </div>
+                    </div>}
+                    <p className='project-title-mobile mb-10'>{siteTitle.substring(0, document.title.indexOf('-') - 1)}</p>
+                    <div className='account__head'>
+                      <Row>
+                        <Col xs={8}>
+                          <h3 className='account__title'>{MasterLstTitle}</h3>
+                          <h4 className='account__subhead subhead'>{MasterLstSubtitle}</h4>
+                        </Col>
+                        <Col xs={4}>
+                          <ButtonToolbar className='f-right'>
+                            <UncontrolledDropdown>
+                              <ButtonGroup className='btn-group--icons'>
+                                <Button className={`mw-50 ${filterBtnStyle}`} onClick={this.props.changeMstListFilterVisibility} outline>
+                                  <i className={`fa fa-filter icon-holder ${filterActive}`}></i>{ShowMstFilterApplied([[---ScreenName---]]State) && <i className='filter-applied'></i>}
+                                  {!useMobileView && <p className='action-menu-label'>{(screenButtons.Filter || {}).label}</p>}
+                                </Button>
                                 {
-                                  dropdownMenuButtonList.filter(v => !v.expose).map(v => {
+                                  dropdownMenuButtonList.filter(v => v.expose).map(v => {
                                     return (
-                                      <DropdownItem
-                                        key={v.tid || v.order}
-                                        disabled={!activeSelectionVisible || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]])}
-                                        onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}
-                                        className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
+                                      <Button
+                                        key={v.tid || v.buttonType}
+                                        // disabled={!activeSelectionVisible || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]])}
+                                        onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}
+                                        className='mw-50 add-report-expense'
+                                        outline>
+                                        <i className={`${v.iconClassName} icon-holder`}></i>
+                                        {!useMobileView && <p className='action-menu-label'>{v.label}</p>}
+                                      </Button>)
                                   })
                                 }
-                              </DropdownMenu>
-                            }
-                          </UncontrolledDropdown>
-                        </ButtonToolbar>
-                      </Col>
-                    </Row>
-                  </div>
-                  <Formik
-                    initialValues={{
-
- ");
+                                {activeSelectionVisible &&
+                                  dropdownMenuButtonList.filter(v => !v.expose).length > 0 &&
+                                  <DropdownToggle className='mw-50' outline>
+                                    <i className='fa fa-ellipsis-h icon-holder'></i>
+                                    {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
+                                  </DropdownToggle>
+                                }
+                              </ButtonGroup>
+                              {dropdownMenuButtonList.filter(v => !v.expose).length > 0 &&
+                                <DropdownMenu right className={`dropdown__menu dropdown-options`}>
+                                  {
+                                    dropdownMenuButtonList.filter(v => !v.expose).map(v => {
+                                      return (
+                                        <DropdownItem
+                                          key={v.tid || v.order}
+                                          disabled={!activeSelectionVisible || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]])}
+                                          onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}
+                                          className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
+                                    })
+                                  }
+                                </DropdownMenu>
+                              }
+                            </UncontrolledDropdown>
+                          </ButtonToolbar>
+                        </Col>
+                      </Row>
+                    </div>
+                    <Formik
+                      initialValues={{
+");
             sb.Append(FormikInitialCriCnt);
             sb.Append(@"
-                      search: screenCriteria.SearchStr || '',
-                      cFilterId: (screenFilterSelected.length > 0 ? screenFilterSelected[0] : screenFilterList[0])
-                    }}
-                    key={[[---ScreenName---]]State.searchListVersion}
-                    onSubmit={this.RefreshSearchList}
-                    render={({
-                      values,
-                      isSubmitting,
-                      handleChange,
-                      handleSubmit,
-                      handleBlur,
-                      setFieldValue,
-                      setFieldTouched
-                    }) => (
-                        <div>
-                          <Form className='form'>
-                            <div className='form__form-group'>
-                              <div className={`form__form-group filter-padding ${filterVisibility}`} key={screenCriteria.key}>
-                                <Row className='mb-5'>
-                                  ");
+                        search: screenCriteria.SearchStr || '',
+                        cFilterId: (screenFilterSelected.length > 0 ? screenFilterSelected[0] : screenFilterList[0])
+                      }}
+                      key={[[---ScreenName---]]State.searchListVersion}
+                      onSubmit={this.RefreshSearchList}
+                      render={({
+                        values,
+                        isSubmitting,
+                        handleChange,
+                        handleSubmit,
+                        handleBlur,
+                        setFieldValue,
+                        setFieldTouched
+                      }) => (
+                          <div>
+                            <Form className='form'>
+                              <div className='form__form-group'>
+                                <div className={`form__form-group filter-padding ${filterVisibility}`} key={screenCriteria.key}>
+                                  <Row className='mb-5'>
+");
             sb.Append(FormikControlCnt);
             sb.Append(@"
-                                </Row>
-                                <Row>
-                                  {hasScreenFilter && <Col xs={12} md={12}>
-                                    <label className='form__form-group-label filter-label'>{auxSystemLabels.QFilter}</label>
-                                    <div className='form__form-group-field filter-form-border'>
-                                      <DropdownField
-                                        name='cFilterId'
-                                        onBlur={setFieldTouched}
-                                        // onChange={setFieldValue}
-                                        onChange={this.SearchFilterValueChange(handleSubmit, setFieldValue, 'ddl', 'cFilterId')}
-                                        value={values.cFilterId}
-                                        options={screenFilterList}
-                                      />
-                                    </div>
-                                  </Col>}
-                                  <Col xs={12} md={12}>
-                                    <label className='form__form-group-label filter-label'>{auxSystemLabels.FilterSearchLabel}</label>
-                                    <div className='form__form-group-field filter-form-border'>
-                                      <Field
-                                        className='white-left-border'
-                                        type='text'
-                                        name='search'
-                                        value={values.search}
-                                        onFocus={(e) => this.SearchBoxFocus(e)}
-                                        onBlur={(e) => this.SearchBoxFocus(e)}
-                                      />
-                                      <span onClick={handleSubmit} className={`form__form-group-button desktop-filter-button search-btn-fix ${this.state.searchFocus ? ' active' : ''}`}><MagnifyIcon /></span>
-                                    </div>
-                                  </Col>
-                                </Row>
-                              </div>
-                              <h5 className='fill-fintrux pb-10 fw-700'><span className='color-dark mr-5'>{MasterFoundMsg}:</span> {screenCriteria.MatchCount}</h5>
-                              {selectList.map((obj, i) => {
-                                return (
-                                  <div className='form__form-group-narrow list-divider' key={i}>
-                                    <div className='form__form-group-field'>
-                                      <label className='radio-btn radio-btn--button margin-narrow'>
-                                        <Field
-                                          className='radio-btn__radio'
-                                          name='[[---ScreenPrimaryKey---]]'
-                                          listidx={obj.idx}
-                                          keyid={obj.key}
-                                          type='radio'
-                                          value={obj.key || ''}
-                                          onClick={this.SelectMstListRow({naviBar:naviSelectBar,useMobileView})}
-                                          defaultChecked={obj.isSelected ? true : false}
+                                  </Row>
+                                  <Row>
+                                    {hasScreenFilter && <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{auxSystemLabels.QFilter}</label>
+                                      <div className='form__form-group-field filter-form-border'>
+                                        <DropdownField
+                                          name='cFilterId'
+                                          onBlur={setFieldTouched}
+                                          // onChange={setFieldValue}
+                                          onChange={this.SearchFilterValueChange(handleSubmit, setFieldValue, 'ddl', 'cFilterId')}
+                                          value={values.cFilterId}
+                                          options={screenFilterList}
                                         />
-                                        <span className='radio-bg-solver'></span>
-                                        {hasActableButtons &&
-                                          <span className='radio-btn__label-svg'>
-                                            <CheckIcon className='radio-btn__label-check' />
-                                            <RadioboxBlankIcon className='radio-btn__label-uncheck' />
-                                          </span>
-                                        }
-                                        <span className={`radio-btn__label ${colorDark}`}>
-                                          <div className='row-cut'>{this.FormatSearchTitleL(obj.label)}</div>
-                                          <div className='row-cut row-bottom-report'>{this.FormatSearchSubTitleL(obj.detail)}</div>
-                                        </span>
-                                        <span className={`radio-btn__label__right ${colorDark}`}>
-                                          <div>{this.FormatSearchTitleR(obj.labelR)}</div>
-                                          <div className='row-bottom-report f-right'>{this.FormatSearchSubTitleR(obj.detailR)}</div>
-                                        </span>
-                                        {
-                                          rowMenuButtonList
-                                            .filter(v => v.expose && !useMobileView)
-                                            .map((v, i) => {
-                                              if (this.ActionSuppressed(authRow, v.buttonType, obj.key)) return null;
-                                              return (
-                                                <button type='button' key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, useMobileView, mstId: obj.key })} className={`${v.exposedClassName}`}><i className={`${v.iconClassName}`}></i></button>
-                                              )
-                                            })
-                                        }
-                                        {
-                                          rowMenuButtonList.filter(v => !v.expose || useMobileView).length > 0 &&
-                                          <UncontrolledDropdown className={`btn-row-dropdown`}>
-                                            <DropdownToggle className='btn-row-dropdown-icon btn-row-menu' onClick={(e) => { e.preventDefault() }}>
-                                              <i className='fa fa-ellipsis-h icon-holder menu-icon'></i>
-                                            </DropdownToggle>
-                                            <DropdownMenu right className={`dropdown__menu dropdown-options`}>
-                                              {rowMenuButtonList
-                                                .filter(v => !v.expose || useMobileView)
-                                                .map((v) => {
-                                                  if (this.ActionSuppressed(authRow, v.buttonType, obj.key)) return null;
-                                                  return <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, useMobileView, mstId: obj.key })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.labelLong}</DropdownItem>
-                                                })
-                                              }
-                                            </DropdownMenu>
-                                          </UncontrolledDropdown>
-                                        }
-                                      </label>
-                                    </div>
-                                  </div>
-                                )
-                              })}
-                            </div>
-                            {this.constructor.ShowMoreMstBtn([[---ScreenName---]]State) && <Button className={`btn btn-view-more-blue account__btn ${noMargin}`} onClick={this.ShowMoreSearchList} type='button'>{strFormat(IncrementMsg, [[---ScreenName---]]State.ScreenCriteria.Increment)}<br /><i className='fa fa-arrow-down'></i></Button>}
-                            {useMobileView && activeSelectionVisible &&
-                              bottomButtonList.filter(v => v.expose).length > 0 &&
-                              <div className='width-wrapper'>
-                                <div className='buttons-bottom-container'>
-                                  <Row className='btn-bottom-row'>
-                                    {
-                                      bottomButtonList
-                                        .filter(v => v.expose)
-                                        .map((v, i, a) => {
-                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]])) return null;
-                                          const buttonCount = a.length;
-                                          const colWidth = parseInt(12 / buttonCount, 10);
-                                          const lastBtn = i === a.length - 1;
-                                          const outlineProperty = lastBtn ? false : true;
-                                          return (
-                                            <Col key={v.tid} xs={colWidth} sm={colWidth} className='btn-bottom-column'>
-                                              <Button color='success' type='button' outline={outlineProperty} className='account__btn' onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}>{v.labelLong}</Button>
-                                            </Col>
-                                          )
-                                        })
-                                    }
+                                      </div>
+                                    </Col>}
+                                    <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{auxSystemLabels.FilterSearchLabel}</label>
+                                      <div className='form__form-group-field filter-form-border'>
+                                        <Field
+                                          className='white-left-border'
+                                          type='text'
+                                          name='search'
+                                          value={values.search}
+                                          onFocus={(e) => this.SearchBoxFocus(e)}
+                                          onBlur={(e) => this.SearchBoxFocus(e)}
+                                        />
+                                        <span onClick={handleSubmit} className={`form__form-group-button desktop-filter-button search-btn-fix ${this.state.searchFocus ? ' active' : ''}`}><MagnifyIcon /></span>
+                                      </div>
+                                    </Col>
                                   </Row>
                                 </div>
+                                <h5 className='fill-fintrux pb-10 fw-700'><span className='color-dark mr-5'>{MasterFoundMsg}:</span> {screenCriteria.MatchCount}</h5>
+                                {selectList.map((obj, i) => {
+                                  return (
+                                    <div className='form__form-group-narrow list-divider' key={i}>
+                                      <div className='form__form-group-field'>
+                                        <label className='radio-btn radio-btn--button margin-narrow'>
+                                          <Field
+                                            className='radio-btn__radio'
+                                            name='[[---ScreenPrimaryKey---]]'
+                                            listidx={obj.idx}
+                                            keyid={obj.key}
+                                            type='radio'
+                                            value={obj.key || ''}
+                                            onClick={this.SelectMstListRow({ naviBar: naviSelectBar, useMobileView })}
+                                            defaultChecked={obj.isSelected ? true : false}
+                                          />
+                                          <span className='radio-bg-solver'></span>
+                                          {hasActableButtons &&
+                                            <span className='radio-btn__label-svg'>
+                                              <CheckIcon className='radio-btn__label-check' />
+                                              <RadioboxBlankIcon className='radio-btn__label-uncheck' />
+                                            </span>
+                                          }
+                                          <span className={`radio-btn__label ${colorDark}`}>
+                                            <div className='row-cut'>{this.FormatSearchTitleL(obj.label)}</div>
+                                            <div className='row-cut row-bottom-report'>{this.FormatSearchSubTitleL(obj.detail)}</div>
+                                          </span>
+                                          <span className={`radio-btn__label__right ${colorDark}`}>
+                                            <div>{this.FormatSearchTitleR(obj.labelR)}</div>
+                                            <div className='row-bottom-report f-right'>{this.FormatSearchSubTitleR(obj.detailR)}</div>
+                                          </span>
+                                          {
+                                            rowMenuButtonList
+                                              .filter(v => v.expose && !useMobileView)
+                                              .map((v, i) => {
+                                                if (this.ActionSuppressed(authRow, v.buttonType, obj.key)) return null;
+                                                return (
+                                                  <button type='button' key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, useMobileView, mstId: obj.key })} className={`${v.exposedClassName}`}><i className={`${v.iconClassName}`}></i></button>
+                                                )
+                                              })
+                                          }
+                                          {
+                                            rowMenuButtonList.filter(v => !v.expose || useMobileView).length > 0 &&
+                                            <UncontrolledDropdown className={`btn-row-dropdown`}>
+                                              <DropdownToggle className='btn-row-dropdown-icon btn-row-menu' onClick={(e) => { e.preventDefault() }}>
+                                                <i className='fa fa-ellipsis-h icon-holder menu-icon'></i>
+                                              </DropdownToggle>
+                                              <DropdownMenu right className={`dropdown__menu dropdown-options`}>
+                                                {rowMenuButtonList
+                                                  .filter(v => !v.expose || useMobileView)
+                                                  .map((v) => {
+                                                    if (this.ActionSuppressed(authRow, v.buttonType, obj.key)) return null;
+                                                    return <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, ScreenButton: v, useMobileView, mstId: obj.key })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.labelLong}</DropdownItem>
+                                                  })
+                                                }
+                                              </DropdownMenu>
+                                            </UncontrolledDropdown>
+                                          }
+                                        </label>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
                               </div>
-                            }
-                          </Form>
-                        </div>
-                      )}
-                  />
+                              {this.constructor.ShowMoreMstBtn([[---ScreenName---]]State) && <Button className={`btn btn-view-more-blue account__btn ${noMargin}`} onClick={this.ShowMoreSearchList} type='button'>{strFormat(IncrementMsg, [[---ScreenName---]]State.ScreenCriteria.Increment)}<br /><i className='fa fa-arrow-down'></i></Button>}
+                              {useMobileView && activeSelectionVisible &&
+                                bottomButtonList.filter(v => v.expose).length > 0 &&
+                                <div className='width-wrapper'>
+                                  <div className='buttons-bottom-container'>
+                                    <Row className='btn-bottom-row'>
+                                      {
+                                        bottomButtonList
+                                          .filter(v => v.expose)
+                                          .map((v, i, a) => {
+                                            if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]])) return null;
+                                            const buttonCount = a.length;
+                                            const colWidth = parseInt(12 / buttonCount, 10);
+                                            const lastBtn = i === a.length - 1;
+                                            const outlineProperty = lastBtn ? false : true;
+                                            return (
+                                              <Col key={v.tid} xs={colWidth} sm={colWidth} className='btn-bottom-column'>
+                                                <Button color='success' type='button' outline={outlineProperty} className='account__btn' onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, mst: currMst, dtl: currDtl, useMobileView })}>{v.labelLong}</Button>
+                                              </Col>
+                                            )
+                                          })
+                                      }
+                                    </Row>
+                                  </div>
+                                </div>
+                              }
+                            </Form>
+                          </div>
+                        )}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          </Col>
-          {!useMobileView &&
-            <Col xs={6}>
-              {!activeSelectionVisible &&
-                !this.state.ShowMst &&
-                <div className='empty-block'>
-                  <img className='folder-img' alt='' src={require('../../img/folder.png')} />
-                  <p className='create-new-message'>{NoMasterMsg}. <span className='link-imitation' onClick={this.AddNewMst({ naviBar: naviSelectBar, useMobileView })}>{AddMasterMsg}</span></p>
-                </div>
-              }
-
-              {(activeSelectionVisible || this.state.ShowMst) && <MstRecord key={currMst.key} history={this.props.history} updateChangedState={this.SetCurrentRecordState} onCopy={this.OnMstCopy} suppressLoadPage={true} />}
-
-            </Col>}
-        </Row>
-
-      </div>
+            </Col>
+            {!useMobileView &&
+              <Col xs={6}>
+                {!activeSelectionVisible &&
+                  !this.state.ShowMst &&
+                  <div className='empty-block'>
+                    <img className='folder-img' alt='' src={require('../../img/folder.png')} />
+                    <p className='create-new-message'>{NoMasterMsg}. <span className='link-imitation' onClick={this.AddNewMst({ naviBar: naviSelectBar, useMobileView })}>{AddMasterMsg}</span></p>
+                  </div>
+                }
+                {(activeSelectionVisible || this.state.ShowMst) && <MstRecord key={currMst.key} history={this.props.history} updateChangedState={this.SetCurrentRecordState} onCopy={this.OnMstCopy} suppressLoadPage={true} />}
+              </Col>}
+          </Row>
+        </div>
       </DocumentTitle>
     );
   };
@@ -1063,10 +1072,10 @@ const mapDispatchToProps = (dispatch) => (
     { SelectMst: [[---ScreenName---]]ReduxObj.SelectMst.bind([[---ScreenName---]]ReduxObj) },
     { DelMst: [[---ScreenName---]]ReduxObj.DelMst.bind([[---ScreenName---]]ReduxObj) },
     { AddMst: [[---ScreenName---]]ReduxObj.AddMst.bind([[---ScreenName---]]ReduxObj) },
-    { AddDtl: [[---ScreenName---]]ReduxObj.AddDtl.bind([[---ScreenName---]]ReduxObj) },    
+    { AddDtl: [[---ScreenName---]]ReduxObj.AddDtl.bind([[---ScreenName---]]ReduxObj) },
     { changeMstListFilterVisibility: [[---ScreenName---]]ReduxObj.ChangeMstListFilterVisibility.bind([[---ScreenName---]]ReduxObj) },
     { SetScreenCriteria: [[---ScreenName---]]ReduxObj.SetScreenCriteria.bind([[---ScreenName---]]ReduxObj) },
- ");
+");
             sb.Append(GetCriteriaBotCnt);
             sb.Append(@"
     { setTitle: setTitle },
@@ -1075,8 +1084,7 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList));
-
-            ").Replace("[[---ScreenName---]]", screenName).Replace("[[---ScreenPrimaryKey---]]", screenPrimaryKey);
+").Replace("[[---ScreenName---]]", screenName).Replace("[[---ScreenPrimaryKey---]]", screenPrimaryKey);
 
             return sb;
         }
@@ -1106,28 +1114,28 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
             {
                 if (drv["ReactEventId"].ToString() == "1") //Master Record Custom Function
                 {
-                    string MasterCustomFunctionValue = drv["ReactRuleProg"].ToString();
+                    string MasterCustomFunctionValue = drv["ReactRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     MasterCustomFunctionResults.Add(MasterCustomFunctionValue);
                 }
                 else if (drv["ReactEventId"].ToString() == "2") //Master Record Save
                 {
-                    string MasterSaveValue = drv["ReactRuleProg"].ToString();
+                    string MasterSaveValue = drv["ReactRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     MasterSaveResults.Add(MasterSaveValue);
                 }
                 else if (drv["ReactEventId"].ToString() == "3") //Master Record Render
                 {
-                    string MasterRenderValue = drv["ReactRuleProg"].ToString();
+                    string MasterRenderValue = drv["ReactRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     MasterRenderResults.Add(MasterRenderValue);
                 }
                 //This is not being used yet. No test case yet. 
                 else if (drv["ReactEventId"].ToString() == "4") //Master Record Screen Column
                 {
-                    string MasterScreenColumnValue = drv["ReactRuleProg"].ToString();
+                    string MasterScreenColumnValue = drv["ReactRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     MasterScreenColumnResults.Add(MasterScreenColumnValue);
                 }
             }
 
-            string MasterCustomFunctionCnt = string.Join(Environment.NewLine, MasterCustomFunctionResults.Select(s => addIndent(s, 24)));
+            string MasterCustomFunctionCnt = string.Join(Environment.NewLine, MasterCustomFunctionResults.Select(s => addIndent(s, 0)));
             string MasterSaveCnt = string.Join(Environment.NewLine, MasterSaveResults.Select(s => addIndent(s, 24)));
             string MasterRenderCnt = string.Join(Environment.NewLine, MasterRenderResults.Select(s => addIndent(s, 24)));
             string MasterScreenColumnCnt = string.Join(Environment.NewLine, MasterScreenColumnResults.Select(s => addIndent(s, 24)));
@@ -1165,110 +1173,113 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                     string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
                     string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
 
-                    if (drv["DisplayMode"].ToString() == "TextBox") //---------Textbox
+                    if (drv["DisplayMode"].ToString() == "TextBox" || drv["DisplayMode"].ToString() == "Password") //---------Textbox || Password
                     {
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
                         {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage;}";
+                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
                             validatorResults.Add(validatorValue);
                         }
 
                         //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + "|| '',";
+                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + " = currMst." + columnId + ";";
+                        string renderLabelValue = "    const " + columnId + " = currMst." + columnId + ";";
                         renderLabelResults.Add(renderLabelValue);
 
                         //formik initial value
-                        string formikInitialValue = "c" + columnId + ": " + columnId + " || '',";
+                        string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + drv["DisplayMode"].ToString() + "'),";
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                                + " <Col lg={6} xl={6}>" + Environment.NewLine
-                                    + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                      + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                      + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                      + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                      + ")}" + Environment.NewLine
-                                      + "</label>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                        + "<div className='form__form-group-field'>" + Environment.NewLine
-                                          + "<Field" + Environment.NewLine
-                                            + "type='text'" + Environment.NewLine
-                                            + "name='c" + columnId + "'" + Environment.NewLine
-                                            + "disabled = {(authCol." + columnId + " || {}).readonly ? 'disabled': '' }"
-                                          + "/>" + Environment.NewLine
-                                        + "</div>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                    + "</div>" + Environment.NewLine
-                                + "</Col>" + Environment.NewLine
-                              + "}";
-                        formikControlResults.Add(formikControlValue);
+                        string textboxType = drv["DisplayMode"].ToString() == "Password" ? "password" : "text";
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='c" + columnId + @"'
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
+                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
                     }
                     else if (drv["DisplayMode"].ToString() == "AutoComplete") //---------Autocomplete
                     {
                         //autocomplete function
-                        string functionValue = columnId + "InputChange() { const _this = this; return function (name, v) {const filterBy = " + (string.IsNullOrEmpty(DdlFtrColumnName) ? "'';" : ("((_this.props.[[---ScreenName---]] || {})." + RefColSrc + " || {})." + DdlFtrColumnName + DdlFtrTableId + ";")) + " _this.props.Search" + columnId + "(v, filterBy);}}";
+                        string functionValue = columnId + "InputChange() { const _this = this; return function (name, v) { const filterBy = " + (string.IsNullOrEmpty(DdlFtrColumnName) ? "'';" : ("((_this.props.[[---ScreenName---]] || {})." + RefColSrc + " || {})." + DdlFtrColumnName + DdlFtrTableId + ";")) + " _this.props.Search" + columnId + "(v, filterBy); } }";
                         functionResults.Add(functionValue);
 
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
                         {
-                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage;}";
+                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
                             validatorResults.Add(validatorValue);
                         }
 
                         //save button function call
-                        string saveBtnValue = columnId + ": (values.c" + columnId + "|| {}).value || '',";
+                        string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + "List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + "([[---ScreenName---]]State);" + Environment.NewLine
-                                                + "const " + columnId + " = currMst." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                        string renderLabelValue = @"
+    const " + columnId + @"List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + @"([[---ScreenName---]]State);
+    const " + columnId + @" = currMst." + columnId + @";
+";
+                        renderLabelResults.Add(renderLabelValue.Trim(new char[] { '\r', '\n' }));
 
                         //formik initial value
                         string formikInitialValue = "c" + columnId + ": " + columnId + "List.filter(obj => { return obj.key === " + columnId + " })[0],";
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                              + " <Col lg={6} xl={6}>" + Environment.NewLine
-                                    + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                        + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                        + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                        + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                        + ")}" + Environment.NewLine
-                                        + "</label>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                        + "<div className='form__form-group-field'>" + Environment.NewLine
-                                          + "<AutoCompleteField" + Environment.NewLine
-                                            + "name='c" + columnId + "'" + Environment.NewLine
-                                            + "onChange={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + "', false)}" + Environment.NewLine
-                                            + "onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + "', true)}" + Environment.NewLine
-                                            + "onInputChange={this." + columnId + "InputChange()}" + Environment.NewLine
-                                            + "value={values.c" + columnId + "}" + Environment.NewLine
-                                            + "defaultSelected={" + columnId + "List.filter(obj => { return obj.key === " + columnId + " })}" + Environment.NewLine
-                                            + "options={" + columnId + "List}" + Environment.NewLine
-                                            + "filterBy={this.AutoCompleteFilterBy}" + Environment.NewLine
-                                            + "disabled = {(authCol." + columnId + " || {}).readonly ? true: false }"
-                                          + "/>" + Environment.NewLine
-                                        + "</div>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                    + "</div>" + Environment.NewLine
-                                 + "</Col>" + Environment.NewLine
-                              + "}";
-                        formikControlResults.Add(formikControlValue);
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='c" + columnId + @"'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', false)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', true)}
+                                          onInputChange={this." + columnId + @"InputChange()}
+                                          value={values.c" + columnId + @"}
+                                          defaultSelected={" + columnId + @"List.filter(obj => { return obj.key === " + columnId + @" })}
+                                          options={" + columnId + @"List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
+                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
 
                         //mapDispatchToProps: bindActionCreatorsResults
                         string bindActionCreatorsValue = "{ Search" + columnId + ": [[---ScreenName---]]ReduxObj.SearchActions.Search" + columnId + ".bind([[---ScreenName---]]ReduxObj) },";
@@ -1280,51 +1291,53 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
                         {
-                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage;}";
+                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
                             validatorResults.Add(validatorValue);
                         }
 
                         //save button function call
-                        string saveBtnValue = columnId + ": (values.c" + columnId + "|| {}).value || '',";
+                        string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + "List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + "([[---ScreenName---]]State);" + Environment.NewLine
-                                                + "const " + columnId + " = currMst." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                        string renderLabelValue = @"
+    const " + columnId + @"List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + @"([[---ScreenName---]]State);
+    const " + columnId + " = currMst." + columnId + @";
+";
+                        renderLabelResults.Add(renderLabelValue.Trim(new char[]{'\r','\n'}));
 
                         //formik initial value
                         string formikInitialValue = "c" + columnId + ": " + columnId + "List.filter(obj => { return obj.key === " + columnId + " })[0],";
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                              + " <Col lg={6} xl={6}>" + Environment.NewLine
-                                    + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                        + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                        + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                        + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                        + ")}" + Environment.NewLine
-                                        + "</label>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                        + "<div className='form__form-group-field'>" + Environment.NewLine
-                                          + "<DropdownField" + Environment.NewLine
-                                            + "name='c" + columnId + "'" + Environment.NewLine
-                                            + "onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'c" + columnId + "')}" + Environment.NewLine
-                                            + "value={values.c" + columnId + "}" + Environment.NewLine
-                                            + "options={" + columnId + "List}" + Environment.NewLine
-                                            + "placeholder=''" + Environment.NewLine
-                                            + "disabled = {(authCol." + columnId + " || {}).readonly ? 'disabled': '' }"
-                                          + "/>" + Environment.NewLine
-                                        + "</div>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                    + "</div>" + Environment.NewLine
-                                 + "</Col>" + Environment.NewLine
-                              + "}";
-                        formikControlResults.Add(formikControlValue);
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='c" + columnId + @"'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
+                                          value={values.c" + columnId + @"}
+                                          options={" + columnId + @"List}
+                                          placeholder=''
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
+                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
 
                     }
                     else if (drv["DisplayMode"].ToString().Contains("Date")) //---------Date (Any type)
@@ -1332,16 +1345,16 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
                         {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage;}";
+                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
                             validatorResults.Add(validatorValue);
                         }
 
                         //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + "|| '',";
+                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + " = currMst." + columnId + ";";
+                        string renderLabelValue = "    const " + columnId + " = currMst." + columnId + ";";
                         renderLabelResults.Add(renderLabelValue);
 
                         //formik initial value
@@ -1349,33 +1362,33 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                              + " <Col lg={6} xl={6}>" + Environment.NewLine
-                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                       + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                         + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                         + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                         + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                         + ")}" + Environment.NewLine
-                                         + "</label>" + Environment.NewLine
-                                       + "}" + Environment.NewLine
-                                       + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                       + "<div className='form__form-group-field'>" + Environment.NewLine
-                                          + "<DatePicker" + Environment.NewLine
-                                             + "name='c" + columnId + "'" + Environment.NewLine
-                                             + "onChange={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + "', false)}" + Environment.NewLine
-                                             + "onBlur={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + "', true)}" + Environment.NewLine
-                                             + "value={values.c" + columnId + "}" + Environment.NewLine
-                                             + "selected={values.c" + columnId + "}" + Environment.NewLine
-                                             + "disabled = {(authCol." + columnId + " || {}).readonly ? true: false }"
-                                           + "/>" + Environment.NewLine
-                                         + "</div>" + Environment.NewLine
-                                       + "}" + Environment.NewLine
-                                       + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                     + "</div>" + Environment.NewLine
-                                 + "</Col>" + Environment.NewLine
-                              + "}";
-                        formikControlResults.Add(formikControlValue);
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DatePicker
+                                          name='c" + columnId + @"'
+                                          onChange={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', false)}
+                                          onBlur={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', true)}
+                                          value={values.c" + columnId + @"}
+                                          selected={values.c" + columnId + @"}
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
+                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
                     }
                     else if (drv["DisplayMode"].ToString() == "CheckBox") //---------Checkbox
                     {
@@ -1384,7 +1397,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + " = currMst." + columnId + ";";
+                        string renderLabelValue = "    const " + columnId + " = currMst." + columnId + ";";
                         renderLabelResults.Add(renderLabelValue);
 
                         //formik initial value
@@ -1392,127 +1405,211 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                              + " <Col lg={12} xl={12}>" + Environment.NewLine
-                                           + "<div className='form__form-group'>" + Environment.NewLine
-                                                + "<label className='checkbox-btn checkbox-btn--colored-click'>" + Environment.NewLine
-                                                  + "<Field" + Environment.NewLine
-                                                    + "className='checkbox-btn__checkbox'" + Environment.NewLine
-                                                    + "type='checkbox'" + Environment.NewLine
-                                                    + "name='c" + columnId + "'" + Environment.NewLine
-                                                    + "onChange={handleChange}" + Environment.NewLine
-                                                    + "defaultChecked={values.c" + columnId + "}" + Environment.NewLine
-                                                    + "disabled={(authCol." + columnId + " || {}).readonly || !(authCol." + columnId + " || {}).visible}" + Environment.NewLine
-                                                  + "/>" + Environment.NewLine
-                                                  + "<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>" + Environment.NewLine
-                                                  + "<span className='checkbox-btn__label'>{(columnLabel." + columnId + " || {}).ColumnHeader}</span>" + Environment.NewLine
-                                                + "</label>" + Environment.NewLine
-                                                 + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                                  + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                                  + ")}" + Environment.NewLine
-                                            + "</div>" + Environment.NewLine
-                                         + "</Col>" + Environment.NewLine
-                                        + "}";
-                        formikControlResults.Add(formikControlValue);
-                    }
-                    else if (drv["DisplayMode"].ToString() == "ImageButton") //---------ImageButton
-                    {
-                        //ImageButton function
-                        string functionValue = " " + ColumnName + "({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {" + Environment.NewLine
-                                        + "return function (evt) {" + Environment.NewLine
-                                          + "this.OnClickColumeName = '" + ColumnName + "';" + Environment.NewLine
-                                          + "//Enter Custom Code here, eg: submitForm();" + Environment.NewLine
-                                          + "evt.preventDefault();" + Environment.NewLine
-                                        + "}.bind(this);" + Environment.NewLine
-                                      + "}";
-                        functionResults.Add(functionValue);
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='c" + columnId + @"'
+                                        onChange={handleChange}
+                                        defaultChecked={values.c" + columnId + @"}
+                                        disabled={(authCol." + columnId + @" || {}).readonly || !(authCol." + columnId + @" || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel." + columnId + @" || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel." + columnId + @" || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
 
-                        //formik control
-                        string formikControlValue = "<Col lg={6} xl={6}>" + Environment.NewLine
-                                            + "<div className='form__form-group'>" + Environment.NewLine
-                                                + "<div className='d-block'>" + Environment.NewLine
-                                                    + "{(authCol." + ColumnName + " || {}).visible && <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10' disabled={(authCol." + ColumnName + " || {}).readonly || !(authCol." + ColumnName + " || {}).visible} onClick={this." + ColumnName + "({ naviBar, submitForm, currMst })} >{auxLabels." + ColumnName + " || (columnLabel." + ColumnName + " || {}).ColumnName}</Button>}" + Environment.NewLine
-                                                + "</div>" + Environment.NewLine
-                                            + "</div>" + Environment.NewLine
-                                         + "</Col>";
-                        formikControlResults.Add(formikControlValue);
+";
+                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                    }
+                    else if (drv["DisplayMode"].ToString() == "ImageButton"
+                        ||
+                        drv["DisplayMode"].ToString().EndsWith("Button")
+                        ) //---------ImageButton
+                    {
+                        if (string.IsNullOrEmpty(drv["ColumnId"].ToString()))
+                        {
+                            //ImageButton function
+                            string functionValue = ColumnName + @"({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
+    return function (evt) {
+      this.OnClickColumeName = '" + ColumnName + @"';
+      //Enter Custom Code here, eg: submitForm();
+      evt.preventDefault();
+    }.bind(this);
+  }";
+                            functionResults.Add(functionValue);
+
+                            //formik control
+                            string formikControlValue = @"
+                              <Col lg={6} xl={6}>
+                                <div className='form__form-group'>
+                                  <div className='d-block'>
+                                    {(authCol." + ColumnName + @" || {}).visible &&
+                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                        disabled={(authCol." + ColumnName + @" || {}).readonly || !(authCol." + ColumnName + @" || {}).visible}
+                                        onClick={this." + ColumnName + @"({ naviBar, submitForm, currMst })} >
+                                        {auxLabels." + ColumnName + @" || (columnLabel." + ColumnName + @" || {}).ColumnName}
+                                      </Button>}
+                                  </div>
+                                </div>
+                              </Col>
+
+";
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                        }
+                        else
+                        {
+                            //save button function call
+                            string saveBtnValue = columnId + ": values.c" + columnId + @" ?
+            JSON.stringify({
+              ...values.c" + columnId + @",
+              base64: this.StripEmbeddedBase64Prefix(values.c" + columnId + @".base64)
+            }) : null,";
+                            saveBtnResults.Add(saveBtnValue);
+
+                            //render label
+                            string renderLabelValue = "    const " + columnId + " = currMst." + columnId + " ? (currMst." + columnId + ".startsWith('{') ? JSON.parse(currMst." + columnId + ") : { fileName: '', mimeType: 'image/jpeg', base64: currMst." + columnId + " }) : null;" + Environment.NewLine
+                                                    + "    const " + columnId + @"FileUploadOptions = {
+      CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
+      DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
+      MaxImageSize: {
+        Width: (columnLabel." + columnId + @" || {}).ResizeWidth,
+        Height: (columnLabel." + columnId + @" || {}).ResizeHeight,
+      },
+      MinImageSize: {
+        Width: (columnLabel." + columnId + @" || {}).ColumnSize,
+        Height: (columnLabel." + columnId + @" || {}).ColumnHeight,
+      },
+    }";
+                            renderLabelResults.Add(renderLabelValue);
+
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": " + columnId + ",";
+                            formikInitialResults.Add(formikInitialValue);
+
+                            //formik control
+                            string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + @"{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <FileInputFieldV1
+                                          name='c" + columnId + @"'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
+                                          fileInfo={{ filename: this.state.filename }}
+                                          options={" + columnId + @"FileUploadOptions}
+                                          value={values.c" + columnId + @" || " + columnId + @"}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
+                            formikControlResults.Add(formikControlValue);
+                        }
+
                     }
                     else if (drv["DisplayMode"].ToString() == "Label" || drv["DisplayMode"].ToString() == "Action Button" ||
                              drv["DisplayMode"].ToString() == "DataGridLink" || drv["DisplayMode"].ToString() == "PlaceHolder") //---------Label / Action Button / DataGridLink / PlaceHolder
                     {
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                              + " <Col lg={6} xl={6}>" + Environment.NewLine
-                                    + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                        + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                        + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                        + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                        + ")}" + Environment.NewLine
-                                        + "</label>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                    + "</div>" + Environment.NewLine
-                                + "</Col>" + Environment.NewLine
-                              + "}";
-                        formikControlResults.Add(formikControlValue);
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+
+";
+                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
                     }
-                    else  //--------------------------------For the rest of the control, using textbox instead
+                    else  //--------------------------------For the rest of the control, using textbox instead and hide it if it's not mandatory field
                     {
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
                         {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage;}";
+                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
                             validatorResults.Add(validatorValue);
                         }
 
                         //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + "|| '',";
+                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + " = currMst." + columnId + ";";
+                        string renderLabelValue = "    const " + columnId + " = currMst." + columnId + ";";
                         renderLabelResults.Add(renderLabelValue);
 
                         //formik initial value
-                        string formikInitialValue = "c" + columnId + ": " + columnId + " || '',";
+                        string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + drv["DisplayMode"].ToString() + "'),";
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                              + " <Col lg={6} xl={6}>" + Environment.NewLine
-                                    + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                        + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                        + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                        + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                        + ")}" + Environment.NewLine
-                                        + "</label>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                        + "<div className='form__form-group-field'>" + Environment.NewLine
-                                          + "<Field" + Environment.NewLine
-                                            + "type='text'" + Environment.NewLine
-                                            + "name='c" + columnId + "'" + Environment.NewLine
-                                            + "disabled = {(authCol." + columnId + " || {}).readonly ? 'disabled': '' }"
-                                          + "/>" + Environment.NewLine
-                                        + "</div>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                    + "</div>" + Environment.NewLine
-                                + "</Col>" + Environment.NewLine
-                              + "}";
-                        formikControlResults.Add(formikControlValue);
+                        bool hide = drv["RequiredValid"].ToString() != "Y" && drv["DisplayMode"].ToString() != "Currency" && drv["DisplayMode"].ToString() != "Money";
+
+                        string formikControlValue = @"
+                              {" + (hide ? "false && " : "") + @"(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='c" + columnId + @"'
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+
+";
+                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
                     }
                 }
 
             }
-            string functionCnt = string.Join(Environment.NewLine, functionResults);
-            string validatorCnt = string.Join(Environment.NewLine, validatorResults);
+            string functionCnt = string.Join(Environment.NewLine, functionResults.Select(s => addIndent(s, 2)));
+            string validatorCnt = string.Join(Environment.NewLine, validatorResults.Select(s => addIndent(s, 4)));
             string saveBtnCnt = string.Join(Environment.NewLine, saveBtnResults.Select(s => addIndent(s, 10)));
-            string renderLabelCnt = string.Join(Environment.NewLine, renderLabelResults);
-            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Select(s => addIndent(s, 18)));
+            string renderLabelCnt = string.Join(Environment.NewLine, renderLabelResults.Select(s => addIndent(s, 0)));
+            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Select(s => addIndent(s, 20)));
             string formikControlCnt = string.Join(Environment.NewLine, formikControlResults);
-            string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults);
+            string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults.Select(s => addIndent(s, 4)));
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
@@ -1530,12 +1627,13 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
 import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
-import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -1546,7 +1644,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class MstRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.[[---ScreenName---]] || {});
+    this.GetReduxState = () => (this.props.[[---ScreenName---]] || {});
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = '[[---screenPrimaryKey---]]';
@@ -1560,7 +1658,9 @@ class MstRecord extends RintagiScreen {
     this.SavePage = this.SavePage.bind(this);
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
-    this.DropdownChange = this.DropdownChange.bind(this);
+    this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.SubmitForm = ((submitForm, options = {}) => {
@@ -1603,19 +1703,14 @@ class MstRecord extends RintagiScreen {
 
 ");
             sb.Append(functionCnt);
-            sb.Append("/* ReactRule: Master Record Custom Function */");
+            sb.Append(@"
+  /* ReactRule: Master Record Custom Function */
+");
             sb.Append(MasterCustomFunctionCnt);
             sb.Append(@"
-/* ReactRule End: Master Record Custom Function */
+  /* ReactRule End: Master Record Custom Function */
 
   /* form related input handling */
-//  PostToAp({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
-//    return function (evt) {
-//      this.OnClickColumeName = 'PostToAp';
-//      submitForm();
-//      evt.preventDefault();
-//    }.bind(this);
-//  }
 
   ValidatePage(values) {
     const errors = {};
@@ -1631,27 +1726,20 @@ class MstRecord extends RintagiScreen {
     const errors = [];
     const currMst = (this.props.[[---ScreenName---]] || {}).Mst || {};
 ");
-            sb.Append("/* ReactRule: Master Record Save */");
+            sb.Append(@"
+    /* ReactRule: Master Record Save */
+");
             sb.Append(MasterSaveCnt);
             sb.Append(@"
-/* ReactRule End: Master Record Save */
+    /* ReactRule End: Master Record Save */
 
-// No need to generate this, put this in the webrule
-//    if ((+(currMst.TrxTotal64)) === 0 && (this.ScreenButton || {}).buttonType === 'SaveClose') {
-//      errors.push('Please add at least one expense.');
-//    } else if ((this.ScreenButton || {}).buttonType === 'Save' && values.cTrxNote64 !== 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      // errors.push('Please do not change the Memo on Chq if Save Only');
-//      // setFieldValue('cTrxNote64', 'ENTER-PURPOSE-OF-THIS-EXPENSE');
-//    } else if ((this.ScreenButton || {}).buttonType === 'SaveClose' && values.cTrxNote64 === 'ENTER-PURPOSE-OF-THIS-EXPENSE') {
-//      errors.push('Please change the Memo on Chq if Save & Pay Me');
-//    }
     if (errors.length > 0) {
       this.props.showNotification('E', { message: errors[0] });
       setSubmitting(false);
     }
     else {
       const { ScreenButton, OnClickColumeName } = this;
-      this.setState({submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
+      this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting, key: currMst.key, ScreenButton: ScreenButton, OnClickColumeName: OnClickColumeName });
       this.ScreenButton = null;
       this.OnClickColumeName = null;
       this.props.SavePage(
@@ -1699,12 +1787,12 @@ class MstRecord extends RintagiScreen {
       const fromMstId = mstId || (mst || {}).[[---screenPrimaryKey---]];
       const copyFn = () => {
         if (fromMstId) {
-          this.props.AddMst(fromMstId, 'Mst', 0);
+          this.props.AddMst(fromMstId, 'MstRecord', 0);
           /* this is application specific rule as the Posted flag needs to be reset */
           this.props.[[---ScreenName---]].Mst.Posted64 = 'N';
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', {}, {}, this.props.[[---ScreenName---]].Label);
-            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'Mst', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', {}, {}, this.props.[[---ScreenName---]].Label);
+            this.props.history.push(getEditMstPath(getNaviPath(naviBar, 'MstRecord', '/'), '_'));
           }
           else {
             if (this.props.onCopy) this.props.onCopy();
@@ -1786,7 +1874,7 @@ class MstRecord extends RintagiScreen {
     if (!suppressLoadPage) {
       const { mstId } = { ...this.props.match.params };
       if (!(this.props.[[---ScreenName---]] || {}).AuthCol || true) {
-        this.props.LoadPage('Mst', { mstId: mstId || '_' });
+        this.props.LoadPage('MstRecord', { mstId: mstId || '_' });
       }
     }
     else {
@@ -1810,7 +1898,7 @@ class MstRecord extends RintagiScreen {
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveClose') {
         const currDtl = currReduxScreenState.EditDtl || {};
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
-        const naviBar = getNaviBar('Mst', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('MstRecord', currMst, currDtl, currReduxScreenState.Label);
         const searchListPath = getDefaultPath(getNaviPath(naviBar, 'MstList', '/'))
         this.props.history.push(searchListPath);
       }
@@ -1839,6 +1927,7 @@ class MstRecord extends RintagiScreen {
     const siteTitle = (this.props.global || {}).pageTitle || '';
     const MasterRecTitle = ((screenHlp || {}).MasterRecTitle || '');
     const MasterRecSubtitle = ((screenHlp || {}).MasterRecSubtitle || '');
+    const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
     const screenButtons = [[---ScreenName---]]ReduxObj.GetScreenButtons([[---ScreenName---]]State) || {};
     const itemList = [[---ScreenName---]]State.Dtl || [];
@@ -1850,9 +1939,10 @@ class MstRecord extends RintagiScreen {
     const authRow = ([[---ScreenName---]]State.AuthRow || [])[0] || {};
     const currMst = ((this.props.[[---ScreenName---]] || {}).Mst || {});
     const currDtl = ((this.props.[[---ScreenName---]] || {}).EditDtl || {});
-    const naviBar = getNaviBar('Mst', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'Dtl' && v.type !== 'DtlList') || currMst.[[---screenPrimaryKey---]]));
+    const naviBar = getNaviBar('MstRecord', currMst, currDtl, screenButtons).filter(v => ((v.type !== 'DtlRecord' && v.type !== 'DtlList') || currMst.[[---screenPrimaryKey---]]));
     const selectList = [[---ScreenName---]]ReduxObj.SearchListToSelectList([[---ScreenName---]]State);
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
+
 ");
 
             sb.Append(renderLabelCnt);
@@ -1864,10 +1954,12 @@ class MstRecord extends RintagiScreen {
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
 ");
-            sb.Append("/* ReactRule: Master Render */");
+            sb.Append(@"
+    /* ReactRule: Master Render */
+");
             sb.Append(MasterRenderCnt);
             sb.Append(@"
-/* ReactRule End: Master Render */
+    /* ReactRule End: Master Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -1949,10 +2041,39 @@ class MstRecord extends RintagiScreen {
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          {!isNaN(selectedMst) ?
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            :
+                            <div className='form__form-group'>
+                              <div className='form__form-group-narrow'>
+                                <div className='form__form-group-field'>
+                                  <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{NoMasterMsg}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          }
                           <div className='w-100'>
                             <Row>
-            ");
+");
             sb.Append(formikControlCnt);
             sb.Append(@"
                             </Row>
@@ -2014,9 +2135,6 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: [[---ScreenName---]]ReduxObj.SavePage.bind([[---ScreenName---]]ReduxObj) },
     { DelMst: [[---ScreenName---]]ReduxObj.DelMst.bind([[---ScreenName---]]ReduxObj) },
     { AddMst: [[---ScreenName---]]ReduxObj.AddMst.bind([[---ScreenName---]]ReduxObj) },
-//    { SearchMemberId64: [[---ScreenName---]]ReduxObj.SearchActions.SearchMemberId64.bind([[---ScreenName---]]ReduxObj) },
-//    { SearchCurrencyId64: [[---ScreenName---]]ReduxObj.SearchActions.SearchCurrencyId64.bind([[---ScreenName---]]ReduxObj) },
-//    { SearchCustomerJobId64: [[---ScreenName---]]ReduxObj.SearchActions.SearchCustomerJobId64.bind([[---ScreenName---]]ReduxObj) },
 ");
             sb.Append(bindActionCreatorsCnt);
             sb.Append(@"
@@ -2027,8 +2145,7 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
-
-            ").Replace("[[---ScreenName---]]", screenName).Replace("[[---screenPrimaryKey---]]", screenPrimaryKey).Replace("[[---ScreenDetailKey---]]", screenDetailKey);
+").Replace("[[---ScreenName---]]", screenName).Replace("[[---screenPrimaryKey---]]", screenPrimaryKey).Replace("[[---ScreenDetailKey---]]", screenDetailKey);
 
             return sb;
         }
@@ -2075,7 +2192,7 @@ import RintagiScreen from '../../components/custom/Screen'
 import ModalDialog from '../../components/custom/ModalDialog';
 import classNames from 'classnames';
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
-import { getSelectedFromList, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getListDisplayContet } from '../../helpers/utils'
+import { getSelectedFromList, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getListDisplayContent } from '../../helpers/utils'
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -2085,7 +2202,7 @@ import [[---ScreenName---]]ReduxObj from '../../redux/[[---ScreenName---]]';
 class DtlList extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.[[---ScreenName---]] || {});
+    this.GetReduxState = () => (this.props.[[---ScreenName---]] || {});
     this.titleSet = false;
     this.hasChangedContent = false;
     this.SystemName = 'FintruX';
@@ -2116,7 +2233,7 @@ class DtlList extends RintagiScreen {
       isMobile: false,
     };
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
@@ -2140,7 +2257,7 @@ class DtlList extends RintagiScreen {
           const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
           if (useMobileView) {
             const naviBar = getNaviBar('DtlList', mst, {}, this.props.[[---ScreenName---]].Label);
-            const path = getEditDtlPath(getNaviPath(naviBar, 'Dtl', '/'), '_');
+            const path = getEditDtlPath(getNaviPath(naviBar, 'DtlRecord', '/'), '_');
             this.props.history.push(path);
           }
           else {
@@ -2150,7 +2267,7 @@ class DtlList extends RintagiScreen {
           }
         }
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
 
@@ -2234,7 +2351,7 @@ class DtlList extends RintagiScreen {
     const { mstId, dtlId } = { ...this.props.match.params };
 
     if (!(this.props.[[---ScreenName---]] || {}).AuthCol || true)
-      this.props.LoadPage('DtlList', { mstId:mstId || '_', dtlId:dtlId || '_' });
+      this.props.LoadPage('DtlList', { mstId: mstId || '_', dtlId: dtlId || '_' });
 
     this.mediaqueryresponse(this.mobileView);
     this.mobileView.addListener(this.mediaqueryresponse) // attach listener function to listen in on state changes
@@ -2243,7 +2360,7 @@ class DtlList extends RintagiScreen {
   componentDidUpdate(prevProps, prevStates) {
     const currReduxScreenState = this.props.[[---ScreenName---]] || {};
 
-    if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
       const _this = this;
       setTimeout(() => _this.props.setSpinner(false), 500);
     }
@@ -2277,22 +2394,22 @@ class DtlList extends RintagiScreen {
     const screenButtons = [[---ScreenName---]]ReduxObj.GetScreenButtons([[---ScreenName---]]State) || {};
     const itemList = [[---ScreenName---]]ReduxObj.DtlListToSelectList([[---ScreenName---]]State, '[[---screenDetailKey---]]');
     const selectList = [[---ScreenName---]]ReduxObj.SearchListToSelectList([[---ScreenName---]]State);
-    const selectedMst = (selectList || []).filter(v=>v.isSelected)[0] || {};
+    const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
     const auxLabels = [[---ScreenName---]]State.Label || {};
     const auxSystemLabels = [[---ScreenName---]]State.SystemLabel || {};
     const columnLabel = [[---ScreenName---]]State.ColumnLabel;
-    const columnDefinition = Object.keys(columnLabel).reduce((a,o,i)=>{
-    const x = columnLabel[o];
-       if (x['DtlLstPosId'] == '1'){ a['dTopL'] = x;};
-       if (x['DtlLstPosId'] == '2'){ a['dBottomL'] = x;};
-       if (x['DtlLstPosId'] == '3'){ a['dTopR'] = x;};
-       if (x['DtlLstPosId'] == '4'){ a['dBottomR'] = x;};  
-       return a;
-    },{});     
-    const dTopL =  columnDefinition['dTopL'] || {};
-    const dBottomL =  columnDefinition['dBottomL'] || {};
-    const dTopR =  columnDefinition['dTopR'] || {};
-    const dBottomR =  columnDefinition['dBottomR'] || {};
+    const columnDefinition = Object.keys(columnLabel).reduce((a, o, i) => {
+      const x = columnLabel[o];
+      if (x['DtlLstPosId'] == '1') { a['dTopL'] = x; };
+      if (x['DtlLstPosId'] == '2') { a['dBottomL'] = x; };
+      if (x['DtlLstPosId'] == '3') { a['dTopR'] = x; };
+      if (x['DtlLstPosId'] == '4') { a['dBottomR'] = x; };
+      return a;
+    }, {});
+    const dTopL = columnDefinition['dTopL'] || {};
+    const dBottomL = columnDefinition['dBottomL'] || {};
+    const dTopR = columnDefinition['dTopR'] || {};
+    const dBottomR = columnDefinition['dBottomR'] || {};
     const currMst = [[---ScreenName---]]State.Mst;
     const currDtl = [[---ScreenName---]]State.EditDtl;
     const dtlFilter = [[---ScreenName---]]State.DtlFilter;
@@ -2383,7 +2500,7 @@ class DtlList extends RintagiScreen {
                                         {activeSelectionVisible &&
                                           dropdownMenuButtonList
                                             .filter(v => !v.expose)
-                                            .filter(v => (!this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]],(currDtl || {}).[[---screenDetailKey---]])))
+                                            .filter(v => (!this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]], (currDtl || {}).[[---screenDetailKey---]])))
                                             .length > 0 &&
                                           <DropdownToggle className='mw-50' outline>
                                             <i className='fa fa-ellipsis-h icon-holder'></i>
@@ -2394,13 +2511,13 @@ class DtlList extends RintagiScreen {
                                       {activeSelectionVisible &&
                                         dropdownMenuButtonList
                                           .filter(v => !v.expose)
-                                          .filter(v => (!this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]],(currDtl || {}).[[---screenDetailKey---]])))
+                                          .filter(v => (!this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]], (currDtl || {}).[[---screenDetailKey---]])))
                                           .length > 0 &&
                                         <DropdownMenu right className={`dropdown__menu dropdown-options`}>
                                           {
 
                                             dropdownMenuButtonList.filter(v => !v.expose).map(v => {
-                                              if ((!activeSelectionVisible && v.buttonType !== 'InsRow') || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]],(currDtl || {}).[[---screenDetailKey---]])) return null;
+                                              if ((!activeSelectionVisible && v.buttonType !== 'InsRow') || this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]], (currDtl || {}).[[---screenDetailKey---]])) return null;
                                               return (
                                                 <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, mst: currMst, dtl: currDtl, useMobileView })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
                                             })
@@ -2418,8 +2535,14 @@ class DtlList extends RintagiScreen {
                                   <div className='form__form-group-field'>
                                     <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
                                       <span className='radio-btn__label color-blue fw-700 f-16'>{selectedMst.label || NoMasterMsg}</span>
-                                      <span className='radio-btn__label__right color-blue fw-700 f-16'><span className='mr-5'>{(columnLabel.TrxTotal64 || {}).ColumnHeader}</span>
-                                      {/* :{!isNaN(selectedMst.labelR) ? toLocalAmountFormat(selectedMst.labelR) : toLocalAmountFormat('0.00')} {selectedMst.detailR} */}
+                                      <span className='radio-btn__label__right color-blue fw-700 f-16'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                      </span>
+                                    </span>
+                                  </div>
+                                  <div className='form__form-group-field'>
+                                    <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                      <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                      <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
                                       </span>
                                     </span>
                                   </div>
@@ -2452,11 +2575,7 @@ class DtlList extends RintagiScreen {
                                             onBlur={(e) => this.SearchBoxFocus(e)}
                                             className='FilteredValueClass'
                                           />
-                                          <div className='rbt-aux custom-filter-clear' onClick={handleReset}>
-                                            <button className='close rbt-close' type='button'>
-                                              <span aria-hidden='true'>×</span>
-                                            </button>
-                                          </div>
+                                         
                                           <span onClick={handleSubmit} className={`form__form-group-button desktop-filter-button search-btn-fix ${this.state.searchFocus ? ' active' : ''}`}><MagnifyIcon /></span>
                                         </div>
                                       </Col>
@@ -2489,12 +2608,12 @@ class DtlList extends RintagiScreen {
                                                 </span>
                                               }
                                               <span className={`radio-btn__label ${colorDark}`}>
-                                                <div className='row-cut'>{getListDisplayContet(obj, dTopL)}</div>
-                                                <div className='row-cut row-bottom-report'>{getListDisplayContet(obj, dBottomL)}</div>
+                                                <div className='row-cut'>{getListDisplayContent(obj, dTopL)}</div>
+                                                <div className='row-cut row-bottom-report'>{getListDisplayContent(obj, dBottomL)}</div>
                                               </span>
                                               <span className={`radio-btn__label__right ${colorDark}`}>
-                                                <div className='row-cut'>{getListDisplayContet(obj, dTopR)}</div>
-                                                <div className='row-bottom-report f-right'>{getListDisplayContet(obj, dBottomR)}</div>
+                                                <div className='row-cut'>{getListDisplayContent(obj, dTopR)}</div>
+                                                <div className='row-bottom-report f-right'>{getListDisplayContent(obj, dBottomR)}</div>
                                               </span>
                                               {
                                                 rowMenuButtonList
@@ -2515,7 +2634,7 @@ class DtlList extends RintagiScreen {
                                                     {rowMenuButtonList
                                                       .filter(v => !v.expose || useMobileView)
                                                       .map((v) => {
-                                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]],obj.[[---screenDetailKey---]])) return null;
+                                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]], obj.[[---screenDetailKey---]])) return null;
                                                         return <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar: naviSelectBar, mst: currMst, useMobileView, dtlId: obj.[[---screenDetailKey---]] })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>
                                                       })
                                                     }
@@ -2579,7 +2698,7 @@ class DtlList extends RintagiScreen {
                   <p className='create-new-message'>{NoDetailMsg}. <span className='link-imitation' onClick={this.AddNewDtl({ naviBar, mstId: currMst.[[---ScreenPrimaryKey---]] })}>{AddDetailMsg}</span></p>
                 </div>}
 
-              {(activeSelectionVisible || this.state.ShowDtl || (targetDtlId ==='_')) && <DtlRecord OnCopy={this.OnDtlCopy} updateChangedState={this.SetCurrentRecordState} suppressLoadPage={true} />}
+              {(activeSelectionVisible || this.state.ShowDtl || (targetDtlId === '_')) && <DtlRecord OnCopy={this.OnDtlCopy} updateChangedState={this.SetCurrentRecordState} suppressLoadPage={true} />}
 
             </Col>}
           </Row>
@@ -2611,8 +2730,7 @@ const mapDispatchToProps = (dispatch) => (
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
-
-            ").Replace("[[---ScreenName---]]", screenName)
+").Replace("[[---ScreenName---]]", screenName)
               .Replace("[[---ScreenPrimaryKey---]]", screenPrimaryKey)
               .Replace("[[---screenDetailKey---]]", screenDetailKey);
 
@@ -2661,22 +2779,22 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
 
                 if (drv["ReactEventId"].ToString() == "5") //Detail Record Custom Function
                 {
-                    string DetailCustomFunctionValue = drv["ReactRuleProg"].ToString();
+                    string DetailCustomFunctionValue = drv["ReactRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     DetailCustomFunctionResults.Add(DetailCustomFunctionValue);
                 }
                 else if (drv["ReactEventId"].ToString() == "6") //Detail Record Save
                 {
-                    string DetailSaveValue = drv["ReactRuleProg"].ToString();
+                    string DetailSaveValue = drv["ReactRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     DetailSaveResults.Add(DetailSaveValue);
                 }
                 else if (drv["ReactEventId"].ToString() == "7") //Detail Record Render
                 {
-                    string DetailRenderValue = drv["ReactRuleProg"].ToString();
+                    string DetailRenderValue = drv["ReactRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     DetailRenderResults.Add(DetailRenderValue);
                 }
                 else if (drv["ReactEventId"].ToString() == "8") //Detail Record Screen Column
                 {
-                    string DetailScreenColumnValue = drv["ReactRuleProg"].ToString();
+                    string DetailScreenColumnValue = drv["ReactRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     DetailScreenColumnResults.Add(DetailScreenColumnValue);
                 }
             }
@@ -2700,75 +2818,89 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                     string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
                     string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
 
-                    if (columnId == screenDetailKey) continue; // skip key column as it is produced else where
+                    if (columnId == screenDetailKey)
+                    {
+                        /* still needed for init value */
+                        string formikInitialValue = "c" + columnId + ": currDtl." + columnId + " || '',";
+                        formikInitialResults.Add(formikInitialValue);
+                        continue; // skip key column as it is produced else where
+                    }
 
-                    if (drv["DisplayMode"].ToString() == "TextBox") //---------Textbox
+                    if (drv["DisplayMode"].ToString() == "TextBox" || drv["DisplayMode"].ToString() == "Password") //---------Textbox || Password
                     {
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
                         {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage;}";
+                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
                             validatorResults.Add(validatorValue);
                         }
 
                         //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + "|| '',";
+                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + " = currDtl." + columnId + ";";
+                        string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + ";";
                         renderLabelResults.Add(renderLabelValue);
 
                         //formik initial value
-                        string formikInitialValue = "c" + columnId + ": currDtl." + columnId + " || '',";
+
+                        string formikInitialValue = "c" + columnId + ": formatContent(currDtl." + columnId + " || '', '" + drv["DisplayMode"].ToString() + "'),";
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                                + " <Col lg={12} xl={12}>" + Environment.NewLine
-                                    + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                        + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                         + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                        + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                        + ")}" + Environment.NewLine
-                                        + "</label>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                        + "<div className='form__form-group-field'>" + Environment.NewLine
-                                          + "<Field" + Environment.NewLine
-                                            + "type='text'" + Environment.NewLine
-                                            + "name='c" + columnId + "'" + Environment.NewLine
-                                            + "disabled = {(authCol." + columnId + " || {}).readonly ? 'disabled': '' }"
-                                          + "/>" + Environment.NewLine
-                                        + "</div>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                    + "</div>" + Environment.NewLine
-                                 + "</Col>" + Environment.NewLine
-                              + "}";
+                        string textboxType = drv["DisplayMode"].ToString() == "Password" ? "password" : "text";
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + @"{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='c" + columnId + @"'
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
                         formikControlResults.Add(formikControlValue);
                     }
                     else if (drv["DisplayMode"].ToString() == "AutoComplete") //---------Autocomplete
                     {
                         //autocomplete function
-                        string functionValue = columnId + "InputChange() { const _this = this; return function (name, v) {const filterBy = " + (string.IsNullOrEmpty(DdlFtrColumnName) ? "'';" : ("((_this.props.[[---ScreenName---]] || {})." + RefColSrc + " || {})." + DdlFtrColumnName + DdlFtrTableId + ";")) + " _this.props.Search" + columnId + "(v, filterBy);}}";
+                        string functionValue = "  " + columnId + @"InputChange() {
+    const _this = this; 
+    return function (name, v) { 
+      const filterBy = " + (string.IsNullOrEmpty(DdlFtrColumnName) ? "'';" : ("((_this.props.[[---ScreenName---]] || {})." + RefColSrc + " || {})." + DdlFtrColumnName + DdlFtrTableId + ";")) + @" 
+      _this.props.Search" + columnId + @"(v, filterBy);
+    } 
+  }";
                         functionResults.Add(functionValue);
 
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
                         {
-                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage;}";
+                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
                             validatorResults.Add(validatorValue);
                         }
 
                         //save button function call
-                        string saveBtnValue = columnId + ": (values.c" + columnId + "|| {}).value || '',";
+                        string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + "List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + "([[---ScreenName---]]State);" + Environment.NewLine
-                                                + "const " + columnId + " = currDtl." + columnId + ";";
+                        string renderLabelValue = "    const " + columnId + "List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + "([[---ScreenName---]]State);" + Environment.NewLine
+                                                + "    const " + columnId + " = currDtl." + columnId + ";";
                         renderLabelResults.Add(renderLabelValue);
 
                         //formik initial value
@@ -2776,35 +2908,36 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                              + " <Col lg={12} xl={12}>" + Environment.NewLine
-                                    + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                        + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                         + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                        + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                        + ")}" + Environment.NewLine
-                                        + "</label>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                        + "<div className='form__form-group-field'>" + Environment.NewLine
-                                          + "<AutoCompleteField" + Environment.NewLine
-                                            + "name='c" + columnId + "'" + Environment.NewLine
-                                            + "onChange={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + "', false)}" + Environment.NewLine
-                                            + "onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + "', true)}" + Environment.NewLine
-                                            + "onInputChange={this." + columnId + "InputChange()}" + Environment.NewLine
-                                            + "value={values.c" + columnId + "}" + Environment.NewLine
-                                            + "defaultSelected={" + columnId + "List.filter(obj => { return obj.key === " + columnId + " })}" + Environment.NewLine
-                                            + "options={" + columnId + "List}" + Environment.NewLine
-                                            + "filterBy={this.AutoCompleteFilterBy}" + Environment.NewLine
-                                            + "disabled = {(authCol." + columnId + " || {}).readonly ? true: false }"
-                                          + "/>" + Environment.NewLine
-                                        + "</div>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                    + "</div>" + Environment.NewLine
-                                  + "</Col>" + Environment.NewLine
-                              + "}";
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + @"{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='c" + columnId + @"'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', false)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', true)}
+                                          onInputChange={this." + columnId + @"InputChange()}
+                                          value={values.c" + columnId + @"}
+                                          defaultSelected={" + columnId + @"List.filter(obj => { return obj.key === " + columnId + @" })}
+                                          options={" + columnId + @"List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+
+";
                         formikControlResults.Add(formikControlValue);
 
                         //mapDispatchToProps: bindActionCreatorsResults
@@ -2817,17 +2950,17 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
                         {
-                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage;}";
+                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
                             validatorResults.Add(validatorValue);
                         }
 
                         //save button function call
-                        string saveBtnValue = columnId + ": (values.c" + columnId + "|| {}).value || '',";
+                        string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + "List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + "([[---ScreenName---]]State);" + Environment.NewLine
-                                                + "const " + columnId + " = currDtl." + columnId + ";";
+                        string renderLabelValue = "    const " + columnId + "List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + "([[---ScreenName---]]State);" + Environment.NewLine
+                                                + "    const " + columnId + " = currDtl." + columnId + ";";
                         renderLabelResults.Add(renderLabelValue);
 
                         //formik initial value
@@ -2835,32 +2968,33 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                             + " <Col lg={12} xl={12}>" + Environment.NewLine
-                                    + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                        + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                         + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                        + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                        + ")}" + Environment.NewLine
-                                        + "</label>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                        + "<div className='form__form-group-field'>" + Environment.NewLine
-                                          + "<DropdownField" + Environment.NewLine
-                                            + "name='c" + columnId + "'" + Environment.NewLine
-                                            + "onChange={this.DropdownChange(setFieldValue, setFieldTouched, 'c" + columnId + "')}" + Environment.NewLine
-                                            + "value={values.c" + columnId + "}" + Environment.NewLine
-                                            + "options={" + columnId + "List}" + Environment.NewLine
-                                            + "placeholder=''" + Environment.NewLine
-                                            + "disabled = {(authCol." + columnId + " || {}).readonly ? 'disabled': '' }"
-                                          + "/>" + Environment.NewLine
-                                        + "</div>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                    + "</div>" + Environment.NewLine
-                                  + "</Col>" + Environment.NewLine
-                              + "}";
+                        string formikControlValue =@"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + @"{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='c" + columnId + @"'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
+                                          value={values.c" + columnId + @"}
+                                          options={" + columnId + @"List}
+                                          placeholder=''
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+
+";
                         formikControlResults.Add(formikControlValue);
 
                     }
@@ -2869,7 +3003,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
                         {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage;}";
+                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
                             validatorResults.Add(validatorValue);
                         }
 
@@ -2878,7 +3012,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + " = currDtl." + columnId + ";";
+                        string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + ";";
                         renderLabelResults.Add(renderLabelValue);
 
                         //formik initial value
@@ -2886,32 +3020,33 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                             + " <Col lg={12} xl={12}>" + Environment.NewLine
-                                     + "<div className='form__form-group'>" + Environment.NewLine
-                                       + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                         + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                          + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                        + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                        + ")}" + Environment.NewLine
-                                         + "</label>" + Environment.NewLine
-                                       + "}" + Environment.NewLine
-                                       + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                       + "<div className='form__form-group-field'>" + Environment.NewLine
-                                          + "<DatePicker" + Environment.NewLine
-                                             + "name='c" + columnId + "'" + Environment.NewLine
-                                             + "onChange={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + "', false)}" + Environment.NewLine
-                                             + "onBlur={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + "', true)}" + Environment.NewLine
-                                             + "value={values.c" + columnId + "}" + Environment.NewLine
-                                             + "selected={values.c" + columnId + "}" + Environment.NewLine
-                                             + "disabled = {(authCol." + columnId + " || {}).readonly ? 'disabled': '' }"
-                                           + "/>" + Environment.NewLine
-                                         + "</div>" + Environment.NewLine
-                                       + "}" + Environment.NewLine
-                                       + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                     + "</div>" + Environment.NewLine
-                                  + "</Col>" + Environment.NewLine
-                              + "}";
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + @"{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DatePicker
+                                          name='c" + columnId + @"'
+                                          onChange={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', false)}
+                                          onBlur={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', true)}
+                                          value={values.c" + columnId + @"}
+                                          selected={values.c" + columnId + @"}
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+
+";
                         formikControlResults.Add(formikControlValue);
                     }
                     else if (drv["DisplayMode"].ToString() == "CheckBox") //---------Checkbox
@@ -2921,7 +3056,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + " = currDtl." + columnId + ";";
+                        string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + ";";
                         renderLabelResults.Add(renderLabelValue);
 
                         //formik initial value
@@ -2929,27 +3064,30 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                             + " <Col lg={12} xl={12}>" + Environment.NewLine
-                                           + "<div className='form__form-group'>" + Environment.NewLine
-                                                + "<label className='checkbox-btn checkbox-btn--colored-click'>" + Environment.NewLine
-                                                  + "<Field" + Environment.NewLine
-                                                    + "className='checkbox-btn__checkbox'" + Environment.NewLine
-                                                    + "type='checkbox'" + Environment.NewLine
-                                                    + "name='c" + columnId + "'" + Environment.NewLine
-                                                    + "onChange={handleChange}" + Environment.NewLine
-                                                    + "defaultChecked={values.c" + columnId + "}" + Environment.NewLine
-                                                    + "disabled={(authCol." + columnId + " || {}).readonly || !(authCol." + columnId + " || {}).visible}" + Environment.NewLine
-                                                  + "/>" + Environment.NewLine
-                                                  + "<span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>" + Environment.NewLine
-                                                  + "<span className='checkbox-btn__label'>{(columnLabel." + columnId + " || {}).ColumnHeader}</span>" + Environment.NewLine
-                                                + "</label>" + Environment.NewLine
-                                                + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                                  + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                                + ")}" + Environment.NewLine
-                                            + "</div>" + Environment.NewLine
-                                          + "</Col>" + Environment.NewLine
-                                        + "}";
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='c" + columnId + @"'
+                                        onChange={handleChange}
+                                        defaultChecked={values.c" + columnId + @"}
+                                        disabled={(authCol." + columnId + @" || {}).readonly || !(authCol." + columnId + @" || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel." + columnId + @" || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel." + columnId + @" || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+
+";
                         formikControlResults.Add(formikControlValue);
                     }
                     else if (drv["DisplayMode"].ToString() == "ImageButton") //---------ImageButton
@@ -2957,49 +3095,57 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         if (string.IsNullOrEmpty(drv["ColumnId"].ToString()))
                         {
                             //ImageButton function
-                            string functionValue = " " + ColumnName + "({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {" + Environment.NewLine
-                                            + "return function (evt) {" + Environment.NewLine
-                                              + "this.OnClickColumeName = '" + ColumnName + "';" + Environment.NewLine
-                                              + "//Enter Custom Code here, eg: submitForm();" + Environment.NewLine
-                                              + "evt.preventDefault();" + Environment.NewLine
-                                            + "}.bind(this);" + Environment.NewLine
-                                          + "}";
+                            string functionValue = " " + ColumnName + @"({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
+    return function (evt) {
+      this.OnClickColumeName = '" + ColumnName + @"'; 
+      //Enter Custom Code here, eg: submitForm();
+      evt.preventDefault();
+    }.bind(this);
+  }";
                             functionResults.Add(functionValue);
 
                             //formik control
-                            string formikControlValue = "<Col lg={12} xl={12}>" + Environment.NewLine
-                                                + "<div className='form__form-group'>" + Environment.NewLine
-                                                    + "<div className='d-block'>" + Environment.NewLine
-                                                        + "{(authCol." + ColumnName + " || {}).visible && <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10' disabled={(authCol." + ColumnName + " || {}).readonly || !(authCol." + ColumnName + " || {}).visible} onClick={this." + ColumnName + "({ naviBar, submitForm, currMst })} >{auxLabels." + ColumnName + " || (columnLabel." + ColumnName + " || {}).ColumnName}</Button>}" + Environment.NewLine
-                                                    + "</div>" + Environment.NewLine
-                                                + "</div>" + Environment.NewLine
-                                             + "</Col>";
+                            string formikControlValue = @"
+                              <Col lg={12} xl={12}>
+                                <div className='form__form-group'>
+                                  <div className='d-block'>
+                                    {(authCol." + ColumnName + @" || {}).visible &&
+                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                        disabled={(authCol." + ColumnName + @" || {}).readonly || !(authCol." + ColumnName + @" || {}).visible}
+                                        onClick={this." + ColumnName + @"({ naviBar, submitForm, currMst })} >
+                                        {auxLabels." + ColumnName + @" || (columnLabel." + ColumnName + @" || {}).ColumnName}
+                                      </Button>}
+                                  </div>
+                                </div>
+                              </Col>
+
+";
                             formikControlResults.Add(formikControlValue);
                         }
                         else
                         {
                             //save button function call
-                            string saveBtnValue = columnId + ": values.c" + columnId + " ? " + Environment.NewLine
-                                                 + "JSON.stringify({" + Environment.NewLine
-                                                     + "...values.c" + columnId + "," + Environment.NewLine
-                                                     + "base64: this.StripEmbeddedBase64Prefix(values.c" + columnId + ".base64)"
-                                                    + "}) : null,";
+                            string saveBtnValue = columnId + ": values.c" + columnId + @" ?
+            JSON.stringify({
+              ...values.c" + columnId + @",
+              base64: this.StripEmbeddedBase64Prefix(values.c" + columnId + @".base64)
+            }) : null,";
                             saveBtnResults.Add(saveBtnValue);
 
                             //render label
-                            string renderLabelValue = "const " + columnId + " = currDtl." + columnId + " ? (currDtl." + columnId + ".startsWith('{') ? JSON.parse(currDtl." + columnId + ") : { fileName: '', mimeType: 'image/jpeg', base64: currDtl." + columnId + " }) : null; " + Environment.NewLine
-                                                      + "const " + columnId + "FileUploadOptions = { " + Environment.NewLine
-                                                        + "CancelFileButton: auxSystemLabels.CancelFileBtnLabel, " + Environment.NewLine
-                                                        + "DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel, " + Environment.NewLine
-                                                        + "MaxImageSize: { " + Environment.NewLine
-                                                          + "Width:(columnLabel." + columnId + " || {}).ResizeWidth, " + Environment.NewLine
-                                                          + "Height:(columnLabel." + columnId + " || {}).ResizeHeight, " + Environment.NewLine
-                                                        + "}, " + Environment.NewLine
-                                                        + "MinImageSize: { " + Environment.NewLine
-                                                          + "Width:(columnLabel." + columnId + " || {}).ColumnSize, " + Environment.NewLine
-                                                          + "Height:(columnLabel." + columnId + " || {}).ColumnHeight, " + Environment.NewLine
-                                                        + "}, " + Environment.NewLine
-                                                      + "} ";
+                            string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + " ? (currDtl." + columnId + ".startsWith('{') ? JSON.parse(currDtl." + columnId + ") : { fileName: '', mimeType: 'image/jpeg', base64: currDtl." + columnId + " }) : null;" + Environment.NewLine
+                                                      + "    const " + columnId + @"FileUploadOptions = {
+      CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
+      DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
+      MaxImageSize: {
+        Width: (columnLabel." + columnId + @" || {}).ResizeWidth,
+        Height: (columnLabel." + columnId + @" || {}).ResizeHeight,
+      },
+      MinImageSize: {
+        Width: (columnLabel." + columnId + @" || {}).ColumnSize,
+        Height: (columnLabel." + columnId + @" || {}).ColumnHeight,
+      },
+    }";
                             renderLabelResults.Add(renderLabelValue);
 
                             //formik initial value
@@ -3007,52 +3153,55 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                             formikInitialResults.Add(formikInitialValue);
 
                             //formik control
-                            string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                                  + " <Col lg={12} xl={12}>" + Environment.NewLine
-                                        + "<div className='form__form-group'>" + Environment.NewLine
-                                          + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                            + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                             + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                            + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                            + ")}" + Environment.NewLine
-                                            + "</label>" + Environment.NewLine
-                                          + "}" + Environment.NewLine
-                                          + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                            + "<div className='form__form-group-field'>" + Environment.NewLine
-                                              + "<FileInputField" + Environment.NewLine
-                                                + "name='c" + columnId + "'" + Environment.NewLine
-                                                + "onChange={this.FileUploadChange(setFieldValue, 'c" + columnId + "')}" + Environment.NewLine
-                                                + "fileInfo={{ filename: this.state.filename }}" + Environment.NewLine
-                                                + "options={" + columnId + "FileUploadOptions}" + Environment.NewLine
-                                                + "value={values.c" + columnId + " || " + columnId + "}" + Environment.NewLine
-                                                + "label={auxSystemLabels.PickFileBtnLabel}" + Environment.NewLine
-                                                + "onError={(e, fileName) => {this.props.showNotification('E', { message: 'problem loading file ' + fileName })}}" + Environment.NewLine
-                                              + "/>" + Environment.NewLine
-                                            + "</div>" + Environment.NewLine
-                                          + "}" + Environment.NewLine
-                                          + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                        + "</div>" + Environment.NewLine
-                                    + "</Col>" + Environment.NewLine
-                                  + "}";
+                            string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + @"{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <FileInputFieldV1
+                                          name='c" + columnId + @"'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
+                                          fileInfo={{ filename: this.state.filename }}
+                                          options={" + columnId + @"FileUploadOptions}
+                                          value={values.c" + columnId + @" || " + columnId + @"}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
                             formikControlResults.Add(formikControlValue);
                         }
                     }
                     else if (drv["DisplayMode"].ToString() == "Label" || drv["DisplayMode"].ToString() == "Action Button" ||
                              drv["DisplayMode"].ToString() == "DataGridLink" || drv["DisplayMode"].ToString() == "PlaceHolder") //---------Label / Action Button / DataGridLink / PlaceHolder
                     {
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                            + " <Col lg={12} xl={12}>" + Environment.NewLine
-                                  + "<div className='form__form-group'>" + Environment.NewLine
-                                    + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                      + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                       + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                      + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                      + ")}" + Environment.NewLine
-                                      + "</label>" + Environment.NewLine
-                                    + "}" + Environment.NewLine
-                                  + "</div>" + Environment.NewLine
-                              + "</Col>" + Environment.NewLine
-                            + "}";
+                        string formikControlValue =@"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} {(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                  </div>
+                                </Col>
+                              }
+
+";
                         formikControlResults.Add(formikControlValue);
                     }
                     else //Treat all the other control as textbox for now
@@ -3060,7 +3209,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
                         {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage;}";
+                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
                             validatorResults.Add(validatorValue);
                         }
 
@@ -3069,49 +3218,51 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         saveBtnResults.Add(saveBtnValue);
 
                         //render label
-                        string renderLabelValue = "const " + columnId + " = currDtl." + columnId + ";";
+                        string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + ";";
                         renderLabelResults.Add(renderLabelValue);
 
                         //formik initial value
-                        string formikInitialValue = "c" + columnId + ": currDtl." + columnId + " || '',";
+                        string formikInitialValue = "c" + columnId + ": formatContent(currDtl." + columnId + " || '', '" + drv["DisplayMode"].ToString() + "'),";
                         formikInitialResults.Add(formikInitialValue);
 
                         //formik control
-                        string formikControlValue = "{(authCol." + columnId + " || {}).visible &&" + Environment.NewLine
-                              + " <Col lg={12} xl={12}>" + Environment.NewLine
-                                    + "<div className='form__form-group'>" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||" + Environment.NewLine
-                                        + "<label className='form__form-group-label'>{(columnLabel." + columnId + " || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "")
-                                         + "{(columnLabel." + columnId + " || {}).ToolTip && " + Environment.NewLine
-                                        + " (<ControlledPopover id={(columnLabel." + columnId + " || {}).ColumnName} className='sticky-icon pt-0 lh-23' message= {(columnLabel." + columnId + " || {}).ToolTip} />" + Environment.NewLine
-                                        + ")}" + Environment.NewLine
-                                        + "</label>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{((" + skeletonEnabled + " && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||" + Environment.NewLine
-                                        + "<div className='form__form-group-field'>" + Environment.NewLine
-                                          + "<Field" + Environment.NewLine
-                                            + "type='text'" + Environment.NewLine
-                                            + "name='c" + columnId + "'" + Environment.NewLine
-                                            + "disabled = {(authCol." + columnId + " || {}).readonly ? 'disabled': '' }"
-                                          + "/>" + Environment.NewLine
-                                        + "</div>" + Environment.NewLine
-                                      + "}" + Environment.NewLine
-                                      + "{errors.c" + columnId + " && touched.c" + columnId + " && <span className='form__form-group-error'>{errors.c" + columnId + "}</span>}" + Environment.NewLine
-                                    + "</div>" + Environment.NewLine
-                                + "</Col>" + Environment.NewLine
-                              + "}";
+                        bool hide = drv["RequiredValid"].ToString() != "Y" && drv["DisplayMode"].ToString() != "Currency" && drv["DisplayMode"].ToString() != "Money";
+
+                        string formikControlValue = @"
+                              {" + (hide ? "false && " : "") + "(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + @"{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='c" + columnId + @"'
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
                         formikControlResults.Add(formikControlValue);
                     }
                 }
 
             }
             string functionCnt = string.Join(Environment.NewLine, functionResults);
-            string validatorCnt = string.Join(Environment.NewLine, validatorResults);
+            string validatorCnt = string.Join(Environment.NewLine, validatorResults.Select(s => addIndent(s, 4)));
             string saveBtnCnt = string.Join(Environment.NewLine, saveBtnResults.Select(s=>addIndent(s,10)));
             string renderLabelCnt = string.Join(Environment.NewLine, renderLabelResults);
-            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Select(s => addIndent(s, 18)));
-            string formikControlCnt = string.Join(Environment.NewLine, formikControlResults);
-            string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults);
+            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Select(s => addIndent(s, 20)));
+            string formikControlCnt = string.Join(Environment.NewLine, formikControlResults.Select(s => s.Trim(new char[]{'\r','\n'})));
+            string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults.Select(s => addIndent(s, 4)));
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
@@ -3127,15 +3278,15 @@ import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
-import FileInputField from '../../components/custom/FileInput';
+import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import DropdownField from '../../components/custom/DropdownField';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import {isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
-import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
 import { getNaviBar } from './index';
@@ -3146,7 +3297,7 @@ import ControlledPopover from '../../components/custom/ControlledPopover';
 class DtlRecord extends RintagiScreen {
   constructor(props) {
     super(props);
-    this.GetReduxState = ()=> (this.props.[[---ScreenName---]] || {});
+    this.GetReduxState = () => (this.props.[[---ScreenName---]] || {});
     this.blocker = null;
     this.titleSet = false;
     this.SystemName = 'FintruX';
@@ -3161,8 +3312,8 @@ class DtlRecord extends RintagiScreen {
     this.FieldChange = this.FieldChange.bind(this);
     this.DateChange = this.DateChange.bind(this);
     this.StripEmbeddedBase64Prefix = this.StripEmbeddedBase64Prefix.bind(this);
-    this.FileUploadChange = this.FileUploadChange.bind(this);
-//    this.BGlChartId65InputChange = this.BGlChartId65InputChange.bind(this);
+    this.DropdownChangeV1 = this.DropdownChangeV1.bind(this);
+    this.FileUploadChangeV1 = this.FileUploadChangeV1.bind(this);
     this.mediaqueryresponse = this.mediaqueryresponse.bind(this);
     this.mobileView = window.matchMedia('(max-width: 1200px)');
 
@@ -3179,12 +3330,12 @@ class DtlRecord extends RintagiScreen {
       isMobile: false
     }
     if (!this.props.suppressLoadPage && this.props.history) {
-      RememberCurrent('LastAppUrl',(this.props.history || {}).location,true);
+      RememberCurrent('LastAppUrl', (this.props.history || {}).location, true);
     }
 
     this.props.setSpinner(true);
   }
-  
+
   mediaqueryresponse(value) {
     if (value.matches) { // if media query matches
       this.setState({ isMobile: true });
@@ -3196,7 +3347,7 @@ class DtlRecord extends RintagiScreen {
 
 ");
             sb.Append(functionCnt + Environment.NewLine);
-            sb.Append("/* ReactRule: Detail Record Custom Function */");
+            sb.Append("  /* ReactRule: Detail Record Custom Function */");
             sb.Append(DetailCustomFunctionCnt);
             sb.Append(@"
   /* ReactRule End: Detail Record Custom Function */
@@ -3218,7 +3369,7 @@ class DtlRecord extends RintagiScreen {
     this.setState({ submittedOn: Date.now(), submitting: true, setSubmitting: setSubmitting });
     const ScreenButton = this.state.ScreenButton || {};
 ");
-            sb.Append("/* ReactRule: Detail Record Save */");
+            sb.Append("    /* ReactRule: Detail Record Save */");
             sb.Append(DetailSaveCnt);
             sb.Append(@"
     /* ReactRule End: Detail Record Save */
@@ -3241,8 +3392,8 @@ class DtlRecord extends RintagiScreen {
       }
     )
   }
- 
-   /* standard screen button actions */
+
+  /* standard screen button actions */
   CopyRow({ mst, dtl, dtlId, useMobileView }) {
     const [[---ScreenName---]]State = this.props.[[---ScreenName---]] || {};
     const auxSystemLabels = [[---ScreenName---]]State.SystemLabel || {};
@@ -3253,8 +3404,8 @@ class DtlRecord extends RintagiScreen {
         if (currDtlId) {
           this.props.AddDtl(mst.[[---ScreenPrimaryKey---]], currDtlId);
           if (useMobileView) {
-            const naviBar = getNaviBar('Mst', mst, {}, this.props.[[---ScreenName---]].Label);
-            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'Dtl', '/'), '_'));
+            const naviBar = getNaviBar('MstRecord', mst, {}, this.props.[[---ScreenName---]].Label);
+            this.props.history.push(getEditDtlPath(getNaviPath(naviBar, 'DtlRecord', '/'), '_'));
           }
           else {
             if (this.props.OnCopy) this.props.OnCopy();
@@ -3264,7 +3415,7 @@ class DtlRecord extends RintagiScreen {
           this.setState({ ModalOpen: true, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
         }
       }
-      if(!this.hasChangedContent) copyFn();
+      if (!this.hasChangedContent) copyFn();
       else this.setState({ ModalOpen: true, ModalSuccess: copyFn, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: auxSystemLabels.UnsavedPageMsg || '' });
     }.bind(this);
   }
@@ -3348,7 +3499,7 @@ class DtlRecord extends RintagiScreen {
     return revisedState;
   }
 
- confirmUnload(message, callback) {
+  confirmUnload(message, callback) {
     const [[---ScreenName---]]State = this.props.[[---ScreenName---]] || {};
     const auxSystemLabels = [[---ScreenName---]]State.SystemLabel || {};
     const confirm = () => {
@@ -3359,9 +3510,9 @@ class DtlRecord extends RintagiScreen {
     }
     this.setState({ ModalOpen: true, ModalSuccess: confirm, ModalCancel: cancel, ModalColor: 'warning', ModalTitle: auxSystemLabels.UnsavedPageTitle || '', ModalMsg: message });
   }
-  
+
   setDirtyFlag(dirty) {
-   /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
+    /* this is called during rendering but has side-effect, undesirable but only way to pass formik dirty flag around */
     if (dirty) {
       if (this.blocker) unregisterBlocker(this.blocker);
       this.blocker = this.confirmUnload;
@@ -3385,7 +3536,7 @@ class DtlRecord extends RintagiScreen {
     if (!suppressLoadPage) {
       const { mstId, dtlId } = { ...this.props.match.params };
       if (!(this.props.[[---ScreenName---]] || {}).AuthCol || true)
-        this.props.LoadPage('Item', { mstId : mstId || '_', dtlId:dtlId || '_' });
+        this.props.LoadPage('Item', { mstId: mstId || '_', dtlId: dtlId || '_' });
     }
     else {
       return;
@@ -3394,13 +3545,13 @@ class DtlRecord extends RintagiScreen {
   componentDidUpdate(prevprops, prevstates) {
     const currReduxScreenState = this.props.[[---ScreenName---]] || {};
 
-    if(!this.props.suppressLoadPage) {
-      if(!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
+    if (!this.props.suppressLoadPage) {
+      if (!currReduxScreenState.page_loading && this.props.global.pageSpinner) {
         const _this = this;
         setTimeout(() => _this.props.setSpinner(false), 500);
       }
     }
-    
+
     this.SetPageTitle(currReduxScreenState);
     if (prevstates.key !== (currReduxScreenState.EditDtl || {}).key) {
       if ((prevstates.ScreenButton || {}).buttonType === 'SaveCloseDtl') {
@@ -3408,7 +3559,7 @@ class DtlRecord extends RintagiScreen {
         const currDtl = (currReduxScreenState.EditDtl);
         const dtlList = (currReduxScreenState.DtlList || {}).data || [];
 
-        const naviBar = getNaviBar('Dtl', currMst, currDtl, currReduxScreenState.Label);
+        const naviBar = getNaviBar('DtlRecord', currMst, currDtl, currReduxScreenState.Label);
         const dtlListPath = getDefaultPath(getNaviPath(naviBar, 'DtlList', '/'));
 
         this.props.history.push(dtlListPath);
@@ -3442,13 +3593,15 @@ class DtlRecord extends RintagiScreen {
     const DetailRecSubtitle = ((screenHlp || {}).DetailRecSubtitle || '');
     const NoMasterMsg = ((screenHlp || {}).NoMasterMsg || '');
 
+    const selectList = [[---ScreenName---]]ReduxObj.SearchListToSelectList([[---ScreenName---]]State);
+    const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
     const screenButtons = [[---ScreenName---]]ReduxObj.GetScreenButtons([[---ScreenName---]]State) || {};
     const auxLabels = [[---ScreenName---]]State.Label || {};
     const auxSystemLabels = [[---ScreenName---]]State.SystemLabel || {};
     const columnLabel = [[---ScreenName---]]State.ColumnLabel || {};
     const currMst = [[---ScreenName---]]State.Mst;
     const currDtl = [[---ScreenName---]]State.EditDtl;
-    const naviBar = getNaviBar('Dtl', currMst, currDtl, screenButtons);
+    const naviBar = getNaviBar('DtlRecord', currMst, currDtl, screenButtons);
     const authCol = this.GetAuthCol([[---ScreenName---]]State);
     const authRow = ([[---ScreenName---]]State.AuthRow || [])[0] || {};
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -3459,25 +3612,11 @@ class DtlRecord extends RintagiScreen {
 ");
             sb.Append(renderLabelCnt);
             sb.Append(@"
-// custome image upload code
-//    const TrxDetImg65 = currDtl.TrxDetImg65 ? (currDtl.TrxDetImg65.startsWith('{') ? JSON.parse(currDtl.TrxDetImg65) : { fileName: '', mimeType: 'image/jpeg', base64: currDtl.TrxDetImg65 }) : null;
-//    const TrxDetImg65FileUploadOptions = {
-//      CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
-//      DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
-//      MaxImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ResizeWidth,
-//        Height:(columnLabel.TrxDetImg65 || {}).ResizeHeight,
-//      },
-//      MinImageSize: {
-//        Width:(columnLabel.TrxDetImg65 || {}).ColumnSize,
-//        Height:(columnLabel.TrxDetImg65 || {}).ColumnHeight,
-//      },
-//    }
 ");
-            sb.Append("/* ReactRule: Detail Record Render */");
+            sb.Append("    /* ReactRule: Detail Record Render */");
             sb.Append(DetailRenderCnt);
             sb.Append(@"
-/* ReactRule End: Detail Record Render */
+    /* ReactRule End: Detail Record Render */
 
     return (
       <DocumentTitle title={siteTitle}>
@@ -3534,7 +3673,7 @@ class DtlRecord extends RintagiScreen {
                                   <ButtonGroup className='btn-group--icons'>
                                     <i className={dirty ? 'fa fa-exclamation exclamation-icon' : ''}></i>
                                     {
-                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]],currDtl.[[---ScreenDetailKey---]])).length > 0 &&
+                                      dropdownMenuButtonList.filter(v => !v.expose && !this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]], currDtl.[[---ScreenDetailKey---]])).length > 0 &&
                                       <DropdownToggle className='mw-50' outline>
                                         <i className='fa fa-ellipsis-h icon-holder'></i>
                                         {!useMobileView && <p className='action-menu-label'>{(screenButtons.More || {}).label}</p>}
@@ -3546,7 +3685,7 @@ class DtlRecord extends RintagiScreen {
                                     <DropdownMenu right className={`dropdown__menu dropdown-options`}>
                                       {
                                         dropdownMenuButtonList.filter(v => !v.expose).map(v => {
-                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]],currDtl.[[---ScreenDetailKey---]])) return null;
+                                          if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]], currDtl.[[---ScreenDetailKey---]])) return null;
                                           return (
                                             <DropdownItem key={v.tid} onClick={this.ScreenButtonAction[v.buttonType]({ naviBar, ScreenButton: v, submitForm, mst: currMst, dtl: currDtl, useMobileView })} className={`${v.className}`}><i className={`${v.iconClassName} mr-10`}></i>{v.label}</DropdownItem>)
                                         })
@@ -3559,10 +3698,27 @@ class DtlRecord extends RintagiScreen {
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-
+                          <div className='form__form-group'>
+                            <div className='form__form-group-narrow'>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                              <div className='form__form-group-field'>
+                                <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                           <div className='w-100'>
                             <Row>
-            ");
+");
             sb.Append(formikControlCnt);
             sb.Append(@"
                             </Row>
@@ -3580,7 +3736,7 @@ class DtlRecord extends RintagiScreen {
                                     bottomButtonList
                                       .filter(v => v.expose)
                                       .map((v, i, a) => {
-                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]],currDtl.[[---ScreenDetailKey---]])) return null;
+                                        if (this.ActionSuppressed(authRow, v.buttonType, (currMst || {}).[[---ScreenPrimaryKey---]], currDtl.[[---ScreenDetailKey---]])) return null;
                                         const buttonCount = a.length;
                                         const colWidth = parseInt(12 / buttonCount, 10);
                                         const lastBtn = i === a.length - 1;
@@ -3626,13 +3782,12 @@ const mapDispatchToProps = (dispatch) => (
 ");
             sb.Append(bindActionCreatorsCnt);
             sb.Append(@"
-  { setTitle: setTitle },
+    { setTitle: setTitle },
     { setSpinner: setSpinner },
   ), dispatch)
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
-
 ").Replace("[[---ScreenName---]]", screenName).Replace("[[---ScreenPrimaryKey---]]", screenPrimaryKey).Replace("[[---ScreenDetailKey---]]", screenDetailKey);
 
             return sb;
@@ -3666,26 +3821,27 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
 
             if ("I1".IndexOf(screenTypeName) >= 0)
             {
-                ExpandDtl = @"ExpandDtl(dtlList, copy) {
-                                return dtlList;
-                             }";
+                ExpandDtl = @"  ExpandDtl(dtlList, copy) {
+    return dtlList;
+  }";
             }
             else if ("I2".IndexOf(screenTypeName) >= 0)
             {
-                ExpandDtl = @"ExpandDtl(dtlList, copy) {
-                                if (!copy) return dtlList;
-                                else if (!this.allowTmpDtl) return []; 
-                                else { const now = Date.now();
-                                  return dtlList.map((v,i) => {
-                                  return {
-                                    ...v,
-                                    [[---screenPrimaryKey---]]: null,
-                                    [[---screenDetailKey---]]: null,
-                                    TmpKeyId: now + i,
-                                  }
-                                })
-                              };
-                            }    ";
+                ExpandDtl = @"  ExpandDtl(dtlList, copy) {
+    if (!copy) return dtlList;
+    else if (!this.allowTmpDtl) return [];
+    else {
+      const now = Date.now();
+      return dtlList.map((v, i) => {
+        return {
+          ...v,
+          [[---screenPrimaryKey---]]: null,
+          [[---screenDetailKey---]]: null,
+          TmpKeyId: now + i,
+        }
+      })
+    };
+  }";
             }
 
             foreach (DataRowView drv in dvItms)
@@ -3711,7 +3867,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
             {
                 if (drv["ReduxEventId"].ToString() == "1") //Redux custom function
                 {
-                    string ReduxCustomFunctionValue = drv["ReduxRuleProg"].ToString();
+                    string ReduxCustomFunctionValue = drv["ReduxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     ReduxCustomFunctionResults.Add(ReduxCustomFunctionValue);
                 }
             }
@@ -3730,7 +3886,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
 
                 if (displayMode == "TextBox")
                 {
-                    GetCriteriaTopValue = "{ columnName: '" + columnName + "', payloadDdlName: '', keyName:'', labelName:'', isCheckBox:false, isAutoComplete: false, apiServiceName: '', actionTypeName: 'GET_" + columnName + "' },";
+                    GetCriteriaTopValue = "{ columnName: '" + columnName + "', payloadDdlName: '', keyName: '', labelName: '', isCheckBox:false, isAutoComplete: false, apiServiceName: '', actionTypeName: 'GET_" + columnName + "' },";
                 }
                 else if (displayMode == "AutoComplete")
                 {
@@ -3738,7 +3894,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
                 }
                 else if (displayMode == "DropDownList")
                 {
-                    GetCriteriaTopValue = "{ columnName: '" + columnName + "', payloadDdlName: '" + columnName + "List', keyName:'" + DdlKeyColumnName + "', labelName:'" + DdlRefColumnName + "', isCheckBox:false, isAutoComplete: false, apiServiceName: 'GetScreenCri" + columnName + "List', actionTypeName: 'GET_DDL_CRI" + columnName + "' },";
+                    GetCriteriaTopValue = "{ columnName: '" + columnName + "', payloadDdlName: '" + columnName + "List', keyName: '" + DdlKeyColumnName + "', labelName: '" + DdlRefColumnName + "', isCheckBox:false, isAutoComplete: false, apiServiceName: 'GetScreenCri" + columnName + "List', actionTypeName: 'GET_DDL_CRI" + columnName + "' },";
                 }
 
                 GetCriteriaBotValue = "|| (state.ScreenCriteria." + columnName + " || {}).LastCriteria";
@@ -3754,20 +3910,20 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
                 string DisplayMode = drv["DisplayMode"].ToString();
                 string DdlFtrColumnName = drv["DdlFtrColumnName"].ToString();
                 string DdlFtrTableId = drv["DdlFtrTableId"].ToString();
-
+                string forMaster = drv["MasterTable"].ToString() == "Y" ? "true" : "false";
                 if (DisplayMode == "AutoComplete")
                 {
-                    string GetDdlListValue = "{ columnName: '" + columnId + "', payloadDdlName:'" + columnId + "List', keyName:'" + columnId + "',labelName:'" + columnId + "Text', forMst: true, isAutoComplete:true, apiServiceName: 'Get" + columnId + "List', " + (string.IsNullOrEmpty(DdlFtrColumnName) ? "" : ("filterByMaster:true, filterByColumnName:'" + DdlFtrColumnName + DdlFtrTableId + "',")) + "actionTypeName: 'GET_DDL_" + columnId + "' },";
+                    string GetDdlListValue = "{ columnName: '" + columnId + "', payloadDdlName: '" + columnId + "List', keyName: '" + columnId + "', labelName: '" + columnId + "Text', forMst: " + forMaster + ", isAutoComplete: true, apiServiceName: 'Get" + columnId + "List', " + (string.IsNullOrEmpty(DdlFtrColumnName) ? "" : ("filterByMaster: true, filterByColumnName: '" + DdlFtrColumnName + DdlFtrTableId + "', ")) + "actionTypeName: 'GET_DDL_" + columnId + "' },";
                     GetDdlListResults.Add(GetDdlListValue);
                 }
                 else if (DisplayMode == "DropDownList" || DisplayMode == "RadioButtonList" || DisplayMode == "ListBox" || DisplayMode == "WorkflowStatus" || DisplayMode == "AutoListBox" || DisplayMode == "DataGridLink")
                 {
-                    string GetDdlListValue = "{ columnName: '" + columnId + "', payloadDdlName:'" + columnId + "List', keyName:'" + columnId + "',labelName:'" + columnId + "Text', forMst: true, isAutoComplete:false, apiServiceName: 'Get" + columnId + "List', actionTypeName: 'GET_DDL_" + columnId + "' },";
+                    string GetDdlListValue = "{ columnName: '" + columnId + "', payloadDdlName: '" + columnId + "List', keyName: '" + columnId + "', labelName: '" + columnId + "Text', forMst: " + forMaster + ", isAutoComplete: false, apiServiceName: 'Get" + columnId + "List', actionTypeName: 'GET_DDL_" + columnId + "' },";
                     GetDdlListResults.Add(GetDdlListValue);
                 }
-                else if (DisplayMode == "ImageButton")
+                else if (DisplayMode == "ImageButton" && !string.IsNullOrEmpty(drv["TableId"].ToString()))
                 {
-                    string ScreenOnDemandDefValue = "{ columnName: '" + columnId + "', tableColumnName: '" + columnName + "', forMst: false, apiServiceName: 'GetColumnContent', actionTypeName: 'GET_COLUMN_" + columnId + "' },";
+                    string ScreenOnDemandDefValue = "{ columnName: '" + columnId + "', tableColumnName: '" + columnName + "', forMst: " + forMaster + ", apiServiceName: 'GetColumnContent', actionTypeName: 'GET_COLUMN_" + columnId + "' },";
                     ScreenOnDemandDefResults.Add(ScreenOnDemandDefValue);
                 }
 
@@ -3779,119 +3935,109 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
 
             }
 
-            string GetCriteriaTopCnt = string.Join(Environment.NewLine, GetCriteriaTopResults.Select(s => addIndent(s, 0)));
-            string GetDdlListCnt = string.Join(Environment.NewLine, GetDdlListResults.Select(s => addIndent(s, 0)));
-            string ScreenOnDemandDefCnt = string.Join(Environment.NewLine, ScreenOnDemandDefResults.Select(s => addIndent(s, 0)));
-            string GetDefaultDtlCnt = string.Join(Environment.NewLine, GetDefaultDtlResults.Select(s => addIndent(s, 0)));
-            string GetCriteriaBotCnt = string.Join(Environment.NewLine, GetCriteriaBotResults.Select(s => addIndent(s, 0)));
+            string GetCriteriaTopCnt = string.Join(Environment.NewLine, GetCriteriaTopResults.Select(s => addIndent(s, 6)));
+            string GetDdlListCnt = string.Join(Environment.NewLine, GetDdlListResults.Select(s => addIndent(s, 6)));
+            string ScreenOnDemandDefCnt = string.Join(Environment.NewLine, ScreenOnDemandDefResults.Select(s => addIndent(s, 6)));
+            string GetDefaultDtlCnt = string.Join(Environment.NewLine, GetDefaultDtlResults.Select(s => addIndent(s, 6)));
+            string GetCriteriaBotCnt = string.Join(Environment.NewLine, GetCriteriaBotResults.Select(s => addIndent(s, 4)));
             string ReduxCustomFunctionCnt = string.Join(Environment.NewLine, ReduxCustomFunctionResults.Select(s => addIndent(s, 0)));
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
 import { getAsyncTypes } from '../helpers/actionType'
 import * as [[---ScreenName---]]Service from '../services/[[---ScreenName---]]Service'
-import {RintagiScreenRedux,initialRintagiScreenReduxState} from './_ScreenReducer'
+import { RintagiScreenRedux, initialRintagiScreenReduxState } from './_ScreenReducer'
 const Label = {
   PostToAp: 'Post to AP',
 }
 class [[---ScreenName---]]Redux extends RintagiScreenRedux {
-    allowTmpDtl = false;
-    constructor() {
-      super();
-      this.ActionApiNameMapper = {
-        'GET_SEARCH_LIST' : 'Get[[---ScreenDef---]]List',
-        'GET_MST' : 'Get[[---ScreenDef---]]ById',
-        'GET_DTL_LIST' : 'Get[[---ScreenDef---]]DtlById',
-      }
-      this.ScreenDdlDef = [
+  allowTmpDtl = false;
+  constructor() {
+    super();
+    this.ActionApiNameMapper = {
+      'GET_SEARCH_LIST': 'Get[[---ScreenDef---]]List',
+      'GET_MST': 'Get[[---ScreenDef---]]ById',
+      'GET_DTL_LIST': 'Get[[---ScreenDef---]]DtlById',
+    }
+    this.ScreenDdlDef = [
 ");
             sb.Append(GetDdlListCnt);
             sb.Append(@"
-      ]
-      this.ScreenOnDemandDef = [
+    ]
+    this.ScreenOnDemandDef = [
 ");
             sb.Append(ScreenOnDemandDefCnt);
             sb.Append(@"
-//        { columnName: 'TrxDetImg65', tableColumnName: 'TrxDetImg', forMst: false, apiServiceName: 'GetColumnContent', actionTypeName: 'GET_COLUMN_TRXDETIMG65' },
-      ]
+    ]
 
-      this.ScreenCriDdlDef = [
+    this.ScreenCriDdlDef = [
 ");
             sb.Append(GetCriteriaTopCnt);
             sb.Append(@"
-      ]
-      this.SearchActions = {
-        ...[...this.ScreenDdlDef].reduce((a,v)=>{a['Search' + v.columnName] = this.MakeSearchAction(v); return a;},{}),
-        ...[...this.ScreenCriDdlDef].reduce((a,v)=>{a['SearchCri' + v.columnName] = this.MakeSearchAction(v); return a;},{}),
-        ...[...this.ScreenOnDemandDef].reduce((a,v)=>{a['Get' + v.columnName] = this.MakeGetColumnOnDemandAction(v); return a;},{}),
-      } 
-      this.ScreenDdlSelectors = this.ScreenDdlDef.reduce((a,v)=>{a[v.columnName] = this.MakeDdlSelectors(v); return a;},{})
-      this.ScreenCriDdlSelectors = this.ScreenCriDdlDef.reduce((a,v)=>{a[v.columnName] = this.MakeCriDdlSelectors(v); return a;},{})
-      this.actionReducers = this.MakeActionReducers();
+    ]
+    this.SearchActions = {
+      ...[...this.ScreenDdlDef].reduce((a, v) => { a['Search' + v.columnName] = this.MakeSearchAction(v); return a; }, {}),
+      ...[...this.ScreenCriDdlDef].reduce((a, v) => { a['SearchCri' + v.columnName] = this.MakeSearchAction(v); return a; }, {}),
+      ...[...this.ScreenOnDemandDef].reduce((a, v) => { a['Get' + v.columnName] = this.MakeGetColumnOnDemandAction(v); return a; }, {}),
     }
-    GetScreenName(){return '[[---ScreenName---]]'}
-    GetMstKeyColumnName(isUnderlining = false) {return isUnderlining ? '[[---screenPrimaryKeyName---]]' :  '[[---screenPrimaryKey---]]'}
-    GetDtlKeyColumnName(isUnderlining = false) {return isUnderlining ? '[[---screenDetailKeyName---]]'  :'[[---screenDetailKey---]]'}
-    GetPersistDtlName() {return this.GetScreenName() + '_Dtl'}
-    GetPersistMstName() {return this.GetScreenName() + '_Mst'}
-    GetWebService() {return [[---ScreenName---]]Service}
-    GetReducerActionTypePrefix(){return this.GetScreenName()};
-    GetActionType(actionTypeName){return getAsyncTypes(this.GetReducerActionTypePrefix(),actionTypeName)}
-    GetInitState(){
-      return {
-        ...initialRintagiScreenReduxState,
-        Label: {
-          ...initialRintagiScreenReduxState.Label,
-          ...Label, 
-        }
+    this.ScreenDdlSelectors = this.ScreenDdlDef.reduce((a, v) => { a[v.columnName] = this.MakeDdlSelectors(v); return a; }, {})
+    this.ScreenCriDdlSelectors = this.ScreenCriDdlDef.reduce((a, v) => { a[v.columnName] = this.MakeCriDdlSelectors(v); return a; }, {})
+    this.actionReducers = this.MakeActionReducers();
+  }
+  GetScreenName() { return '[[---ScreenName---]]' }
+  GetMstKeyColumnName(isUnderlining = false) { return isUnderlining ? '[[---screenPrimaryKeyName---]]' : '[[---screenPrimaryKey---]]'; }
+  GetDtlKeyColumnName(isUnderlining = false) { return isUnderlining ? '[[---screenDetailKeyName---]]' : '[[---screenDetailKey---]]'; }
+  GetPersistDtlName() { return this.GetScreenName() + '_Dtl'; }
+  GetPersistMstName() { return this.GetScreenName() + '_Mst'; }
+  GetWebService() { return [[---ScreenName---]]Service; }
+  GetReducerActionTypePrefix() { return this.GetScreenName(); };
+  GetActionType(actionTypeName) { return getAsyncTypes(this.GetReducerActionTypePrefix(), actionTypeName); }
+  GetInitState() {
+    return {
+      ...initialRintagiScreenReduxState,
+      Label: {
+        ...initialRintagiScreenReduxState.Label,
+        ...Label,
       }
-      };
-    
-    GetDefaultDtl(state) { 
-      return (state || {}).NewDtl || 
-      {
-       ");
+    }
+  };
+
+  GetDefaultDtl(state) {
+    return (state || {}).NewDtl ||
+    {
+");
             sb.Append(GetDefaultDtlCnt);
             sb.Append(@"
-      }
     }
-    ExpandMst(mst, state, copy) {
-      return {
-        ...mst,
-		 key: Date.now(),
-        [[---screenPrimaryKey---]]: copy ? null : mst.[[---screenPrimaryKey---]],
-		
-        // CurrencyId64Text: GetCurrencyId64Cd(mst.CurrencyId64, state),
-        // MemberId64Text: GetMemberId64Text(mst.MemberId64, state),
-        // /* specific app rule */
-        // Posted64: copy ? 'N' : mst.Posted64,
-        // TrxTotal64: copy ? '0' : mst.TrxTotal64,
-      }
+  }
+  ExpandMst(mst, state, copy) {
+    return {
+      ...mst,
+      key: Date.now(),
+      [[---screenPrimaryKey---]]: copy ? null : mst.[[---screenPrimaryKey---]],
     }
-
+  }
 ");
             sb.Append(ExpandDtl);
             sb.Append(@"
-    
-    SearchListToSelectList(state) {
-        const searchList = ((state || {}).SearchList || {}).data || [];
-        return searchList
-          .map((v, i) => {
-            return {
-              key: v.key || null,
-              value: v.labelL || v.label || ' ', 
-              label: v.labelL || v.label || ' ',
-              labelR: v.labelR || ' ',
-              // detailR: v.detailR ? GetCurrencyId64Cd(v.detailR, state) : '',
-			  detailR: v.detailR,
-              detail: v.detail || '',
-              idx: i,
-              // CurrencyId64: v.detailR,
-              isSelected: v.isSelected,
-            }
-          })
-    }
+
+  SearchListToSelectList(state) {
+    const searchList = ((state || {}).SearchList || {}).data || [];
+    return searchList
+      .map((v, i) => {
+        return {
+          key: v.key || null,
+          value: v.labelL || v.label || ' ',
+          label: v.labelL || v.label || ' ',
+          labelR: v.labelR || ' ',
+          detailR: v.detailR,
+          detail: v.detail || '',
+          idx: i,
+          isSelected: v.isSelected,
+        }
+      })
   }
+}
 
 /* ReactRule: Redux Custom Function */
 ");
@@ -3899,39 +4045,19 @@ class [[---ScreenName---]]Redux extends RintagiScreenRedux {
             sb.Append(@"
 /* ReactRule End: Redux Custom Function */
 
-  /* helper functions */
-  // export function GetCurrencyId64Cd(CurrencyId64, state) {
-    // try {
-      // const d = ((state.ddl.CurrencyId64 || {}) || []).reduce((r, v, i, a) => { r[v.CurrencyId64] = v.CurrencyName; return r; }, {});
-      // return (d || {})[CurrencyId64];
-    // } catch (e) {
-      // return '';
-    // }
-  // }
+/* helper functions */
 
-  // export function GetMemberId64Text(MemberId64, state) {
-    // try {
-      // const d = (state.ddl.MemberId64).reduce((r, v, i, a) => { r[v.key] = v.label; return r; }, {});
-      // return (d || {})[MemberId64];
-    // } catch (e) {
-      // return '';
-    // }
-  // }
-
-  export function ShowMstFilterApplied(state) {
-    return !state 
-      || !state.ScreenCriteria
-//      || (state.ScreenCriteria.MemberId10 || {}).LastCriteria
-//      || (state.ScreenCriteria.CustomerJobId20 || {}).LastCriteria
-//      || (state.ScreenCriteria.Posted30 ||{}).LastCriteria
+export function ShowMstFilterApplied(state) {
+  return !state
+    || !state.ScreenCriteria
 ");
             sb.Append(GetCriteriaBotCnt);
             sb.Append(@"
-      || state.ScreenCriteria.SearchStr;
-  }
+    || state.ScreenCriteria.SearchStr;
+}
 
-  export default new [[---ScreenName---]]Redux()
-            ")
+export default new [[---ScreenName---]]Redux()
+")
                   .Replace("[[---ScreenName---]]", screenName)
                   .Replace("[[---ScreenDef---]]", screenDef)
                   .Replace("[[---screenPrimaryKey---]]", screenPrimaryKey)
@@ -3951,17 +4077,18 @@ class [[---ScreenName---]]Redux extends RintagiScreenRedux {
             List<string> GetDdlListResults = new List<string>();
             List<string> ServiceCustomFunctionResults = new List<string>();
             Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
-
+            bool bHasDocument = false;
+            bool bHasImageButton = false;
             foreach (DataRowView drv in dvReactRule)
             {
                 if (drv["ServiceEventId"].ToString() == "1") //React service custom function
                 {
-                    string ServiceCustomFunctionValue = drv["ServiceRuleProg"].ToString();
+                    string ServiceCustomFunctionValue = drv["ServiceRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     ServiceCustomFunctionResults.Add(ServiceCustomFunctionValue);
                 }
             }
 
-            string ServiceCustomFunctionCnt = string.Join(Environment.NewLine, ServiceCustomFunctionResults.Select(s => addIndent(s, 24)));
+            string ServiceCustomFunctionCnt = string.Join(Environment.NewLine, ServiceCustomFunctionResults.Select(s => addIndent(s, 0)));
 
             //Screen Criteria
             DataTable dtScrCri = (new AdminAccess()).GetScrCriteria(screenId, dbConnectionString, dbPassword);
@@ -3969,22 +4096,24 @@ class [[---ScreenName---]]Redux extends RintagiScreenRedux {
             {
                 string screenCriId = dr["ScreenCriId"].ToString();
                 string columnName = dr["ColumnName"].ToString();
-                string GetCriteriaValue = "export function GetScreenCri" + columnName + "List(query, topN, filterBy, accessScope){" + Environment.NewLine
-                                            + "return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetScreenCriteriaDdlList'" + Environment.NewLine
-                                                + ",{" + Environment.NewLine
-                                                    + "requestOptions: {" + Environment.NewLine
-                                                        + "body: JSON.stringify({" + Environment.NewLine
-                                                            + "screenCriId: " + screenCriId + "," + Environment.NewLine
-                                                            + "query: query || ''," + Environment.NewLine
-                                                            + "topN: topN || 0," + Environment.NewLine
-                                                            + "filterBy: filterBy || null" + Environment.NewLine
-                                                        + "})," + Environment.NewLine
-                                                    + "}," + Environment.NewLine
-                                                + "...(getAccessControlInfo())," + Environment.NewLine
-                                                + "...(accessScope)" + Environment.NewLine
-                                                + "}" + Environment.NewLine
-                                            + ")" + Environment.NewLine
-                                          + "}";
+                string GetCriteriaValue = @"
+export function GetScreenCri" + columnName + @"List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetScreenCriteriaDdlList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    screenCriId: " + screenCriId + @",
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+";
                 GetCriteriaResults.Add(GetCriteriaValue);
             }
 
@@ -3993,25 +4122,100 @@ class [[---ScreenName---]]Redux extends RintagiScreenRedux {
             {
                 string columnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
                 string DisplayMode = drv["DisplayMode"].ToString();
-                if (DisplayMode == "AutoComplete" || DisplayMode == "DropDownList" || DisplayMode == "RadioButtonList" || DisplayMode == "ListBox" || DisplayMode == "WorkflowStatus" || DisplayMode == "AutoListBox" || DisplayMode == "DataGridLink")
+                if (DisplayMode == "AutoComplete" 
+                    || DisplayMode == "DropDownList" 
+                    || DisplayMode == "RadioButtonList" 
+                    || DisplayMode == "ListBox" 
+                    || DisplayMode == "WorkflowStatus" 
+                    || DisplayMode == "AutoListBox" 
+                    || DisplayMode == "DataGridLink")
                 {
-                    string GetDdlListValue = "export function Get" + columnId + "List(query, topN, filterBy,accessScope){" + Environment.NewLine
-                                                + "return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/Get" + columnId + "List'" + Environment.NewLine
-                                                + @"
-                                                    ,{
-                                                        requestOptions: {
-                                                            body: JSON.stringify({
-                                                                query: query || '',
-                                                                topN: topN || 0,
-                                                                filterBy: filterBy || null
-                                                            }),
-                                                        },
-                                                        ...(getAccessControlInfo()),
-                                                        ...(accessScope)
-                                                    }
-                                                )
-                                            }";
+                    string GetDdlListValue = @"
+export function Get" + columnId + @"List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Get" + columnId + @"List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+";
 
+                    GetDdlListResults.Add(GetDdlListValue);
+                }
+                else if (DisplayMode == "ImageButton")
+                {
+                    bHasImageButton = true;
+                }
+                else if (DisplayMode == "Document")
+                {
+                    bHasDocument = true;
+                    string GetDdlListValue = @"
+export function Save" + columnId + @"(mstId, dtlId, isMaster, docId, overwrite, screenColumnName, docJson, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mstId: mstId,
+        dtlId: dtlId,
+        isMaster: isMaster,
+        docId: docId,
+        overwrite: overwrite,
+        screenColumnName: '" + columnId + @"',
+        docJson: docJson,
+        options: options
+    });
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Save" + columnId + @"'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+export function Del" + columnId + @"(mstId, dtlId, isMaster, screenColumnName, docIdList, accessScope) {
+    const reqJson = JSON.stringify({
+        mstId: mstId,
+        dtlId: dtlId,
+        isMaster: isMaster || true,
+        screenColumnName: '" + columnId + @"',
+        docIdList: docIdList,
+    });
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Del" + columnId + @"'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+export function Get" + columnId + @"List(mstId, dtlId, isMaster, accessScope) {
+    const reqJson = JSON.stringify({
+        mstId: mstId || '',
+        dtlId: dtlId || '',
+        isMaster: isMaster || true,
+    });
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Get" + columnId + @"List'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+";
                     GetDdlListResults.Add(GetDdlListValue);
                 }
             }
@@ -4021,7 +4225,7 @@ class [[---ScreenName---]]Redux extends RintagiScreenRedux {
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
-import {fetchData,getAccessControlInfo, getAccessScope, baseUrl} from './webAPIBase';
+import { fetchData, getAccessControlInfo, getAccessScope, baseUrl } from './webAPIBase';
 
 let activeScope = {};
 
@@ -4032,9 +4236,9 @@ export function setAccessScope(scope) {
     }
 }
 
-export function GetAuthCol(accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetAuthCol'
-        ,{
+export function GetAuthCol(accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetAuthCol'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -4044,9 +4248,9 @@ export function GetAuthCol(accessScope){
         }
     )
 }
-export function GetAuthRow(accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetAuthRow'
-        ,{
+export function GetAuthRow(accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetAuthRow'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -4057,9 +4261,9 @@ export function GetAuthRow(accessScope){
     )
 
 }
-export function GetScreenLabel(accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetScreenLabel'
-        ,{
+export function GetScreenLabel(accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetScreenLabel'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -4071,12 +4275,12 @@ export function GetScreenLabel(accessScope){
 
 }
 
-export function GetLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetLabels'
-        ,{
+export function GetLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -4085,12 +4289,12 @@ export function GetLabels(labelCat,accessScope){
     )
 }
 
-export function GetSystemLabels(labelCat,accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetSystemLabels'
-        ,{
+export function GetSystemLabels(labelCat, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetSystemLabels'
+        , {
             requestOptions: {
                 body: JSON.stringify({
-                    labelCat:labelCat
+                    labelCat: labelCat
                 }),
             },
             ...(getAccessControlInfo()),
@@ -4099,9 +4303,9 @@ export function GetSystemLabels(labelCat,accessScope){
     )
 }
 
-export function GetScreenButtonHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetScreenButtonHlp'
-        ,{
+export function GetScreenButtonHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetScreenButtonHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -4111,9 +4315,9 @@ export function GetScreenButtonHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenHlp(labelCat,accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetScreenHlp'
-        ,{
+export function GetScreenHlp(labelCat, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetScreenHlp'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -4123,9 +4327,9 @@ export function GetScreenHlp(labelCat,accessScope){
         }
     )
 }
-export function GetScreenCriteria(accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetScreenCriteria'
-        ,{
+export function GetScreenCriteria(accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetScreenCriteria'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -4135,9 +4339,9 @@ export function GetScreenCriteria(accessScope){
         }
     )
 }
-export function GetNewMst(accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetNewMst'
-        ,{
+export function GetNewMst(accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetNewMst'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -4147,9 +4351,9 @@ export function GetNewMst(accessScope){
         }
     )
 }
-export function GetNewDtl(accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetNewDtl'
-        ,{
+export function GetNewDtl(accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetNewDtl'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -4159,9 +4363,9 @@ export function GetNewDtl(accessScope){
         }
     )
 }
-export function GetScreenFilter(accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetScreenFilter'
-        ,{
+export function GetScreenFilter(accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetScreenFilter'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                 }),
@@ -4171,9 +4375,123 @@ export function GetScreenFilter(accessScope){
         }
     )
 }
-export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/GetColumnContent'
-        ,{
+export function Get[[---ScreenDef---]]List(searchStr, topN, filterId, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Get[[---ScreenDef---]]List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    searchStr: searchStr || '',
+                    topN: topN || 0,
+                    filterId: ('' + (filterId || 0)),
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export const GetSearchList = Get[[---ScreenDef---]]List;
+export function Get[[---ScreenDef---]]ById(keyId, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Get[[---ScreenDef---]]ById'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    keyId: keyId || '',
+                    options: {
+                        CurrentScreenCriteria: JSON.stringify({}),
+                    },
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export const GetMstById = Get[[---ScreenDef---]]ById;
+export function Get[[---ScreenDef---]]DtlById(keyId, filterId, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Get[[---ScreenDef---]]DtlById'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    keyId: keyId || '',
+                    options: {
+                        CurrentScreenCriteria: JSON.stringify({}),
+                    },
+                    filterId: filterId || 0,
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export const GetDtlById = Get[[---ScreenDef---]]DtlById;
+export function LoadInitPage(options, accessScope) {
+    const reqJson = JSON.stringify({
+        options: options
+    });
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/LoadInitPage'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function SaveData(mst, dtl, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mst: mst || {},
+        dtl: dtl || [],
+        options: options || {}
+    });
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/SaveData'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function DelMst(mst, options, accessScope) {
+    const reqJson = JSON.stringify({
+        mst: mst,
+        options: options
+    });
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/DelMst'
+        , {
+            requestOptions: {
+                body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+export function SetScreenCriteria(criteriaValues, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/SetScreenCriteria'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    criteriaValues: criteriaValues
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+" 
++ 
+(!bHasImageButton 
+? ""
+: @"
+export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetColumnContent'
+        , {
             requestOptions: {
                 body: JSON.stringify({
                     mstId: mstId || '',
@@ -4188,77 +4506,17 @@ export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColum
         }
     )
 }
-export function Get[[---ScreenDef---]]List(searchStr, topN, filterId,accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/Get[[---ScreenDef---]]List'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    searchStr: searchStr || '',
-                    topN: topN || 0,
-                    filterId: ('' +  (filterId || 0)),
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function Get[[---ScreenDef---]]ById(keyId,accessScope){   
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/Get[[---ScreenDef---]]ById'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    keyId: keyId || '',
-                    options: {
-                        currentScreenCriteria : JSON.stringify({}),
-                    },
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function Get[[---ScreenDef---]]DtlById(keyId,filterId,accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/Get[[---ScreenDef---]]DtlById'
-        ,{
-            requestOptions: {
-                body: JSON.stringify({
-                    keyId: keyId || '',
-                    options: {
-                        currentScreenCriteria : JSON.stringify({}),
-                    },
-                    filterId: filterId || 0,
-                }),
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
 
-export function LoadInitPage(options,accessScope) {
+export function GetEmbeddedDoc(mstId, dtlId, isMaster, screenColumnName, accessScope) {
     const reqJson = JSON.stringify({
-        options: options
+        mstId: mstId || '',
+        dtlId: dtlId || '',
+        isMaster: isMaster,
+        columnName: screenColumnName || '',
+        screenColumnName: screenColumnName || '',
     });
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/LoadInitPage'
-        ,{
-            requestOptions: {
-                body: reqJson,
-            },
-            ...(getAccessControlInfo()),
-            ...(accessScope)
-        }
-    )
-}
-export function SaveData(mst,dtl,options,accessScope){
-    const reqJson = JSON.stringify({
-        mst: mst,
-        dtl: dtl,
-        options: options
-    });
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/SaveData'
-        ,{
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetColumnContent'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -4268,13 +4526,17 @@ export function SaveData(mst,dtl,options,accessScope){
     )
 }
 
-export function DelMst(mst,options,accessScope){
+export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJson, options, accessScope) {
     const reqJson = JSON.stringify({
-        mst: mst,
-        options: options
+        mstId: mstId || '',
+        dtlId: dtlId || '',
+        isMaster: isMaster,
+        screenColumnName: screenColumnName || '',
+        docJson: docJson || '',
+        options: options || {},
     });
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/DelMst'
-        ,{
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/AddDocColumnContent'
+        , {
             requestOptions: {
                 body: reqJson,
             },
@@ -4283,28 +4545,43 @@ export function DelMst(mst,options,accessScope){
         }
     )
 }
-
-export function SetScreenCriteria(criteriaValues, accessScope){
-    return fetchData(baseUrl+'/[[---ScreenName---]]Ws.asmx/SetScreenCriteria'
-        ,{
+") 
++
+(
+!bHasDocument 
+? ""
+: @"
+export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessScope) {
+    const reqJson = JSON.stringify({
+        mstId: mstId,
+        dtlId: dtlId,
+        isMaster: isMaster,
+        docId: docId,
+        screenColumnName: screenColumnName,
+    });
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetDoc'
+        , {
             requestOptions: {
-                body: JSON.stringify({
-                    criteriaValues: criteriaValues
-                }),
+                body: reqJson,
             },
             ...(getAccessControlInfo()),
             ...(accessScope)
         }
     )
-}
-
-/*screen criteria dll and screen dropdownlist/autocomplete*/           
-            ");
+}") 
++ @"
+/*screen criteria dll and screen dropdownlist/autocomplete*/
+");
             sb.Append(GetCriteriaCnt);
             sb.Append(GetDdlListCnt);
-            sb.Append("/* ReactRule: Service Custom Function */");
+            sb.Append(@"
+/* ReactRule: Service Custom Function */
+");
+            sb.Append(Environment.NewLine);
             sb.Append(ServiceCustomFunctionCnt);
-            sb.Append("/* ReactRule End: Service Custom Function */")
+            sb.Append(@"
+/* ReactRule End: Service Custom Function */
+")
               .Replace("[[---ScreenName---]]", screenName)
               .Replace("[[---ScreenDef---]]", screenDef);
 
@@ -4327,7 +4604,9 @@ export function SetScreenCriteria(criteriaValues, accessScope){
             string screenPrimaryKeyType = "";
             string screenPrimaryKeyDis = "";
             string screenPrimaryTableName = "";
-            string SystemId = "";
+            string screenPrimaryKeyColumIdentity = "";
+            string SystemId = DbId.ToString();
+            string multiDesignDb = "N";
             foreach (DataRowView drv in dvItms)
             {
                 if (drv["MasterTable"].ToString() == "Y" && !string.IsNullOrEmpty(drv["PrimaryKey"].ToString()))
@@ -4336,8 +4615,10 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                     screenPrimaryKeyName = drv["PrimaryKey"].ToString();
                     screenPrimaryKeyType = drv["DataTypeSByteOle"].ToString();
                     screenPrimaryKeyDis = drv["DisplayMode"].ToString();
+                    screenPrimaryKeyColumIdentity = drv["PKColumnIdentity"].ToString();
                     screenPrimaryTableName = drv["TableName"].ToString();
-                    SystemId = drv["SystemId"].ToString();
+                    //SystemId = drv["SystemId"].ToString();
+                    multiDesignDb = drv["MultiDesignDb"].ToString();
                     break;
                 }
             }
@@ -4350,7 +4631,7 @@ export function SetScreenCriteria(criteriaValues, accessScope){
             {
                 if (drv["AsmxEventId"].ToString() == "5") //Asmx custom function
                 {
-                    string AsmxCustomFunctionValue = drv["AsmxRuleProg"].ToString();
+                    string AsmxCustomFunctionValue = drv["AsmxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     AsmxCustomFunctionResults.Add(AsmxCustomFunctionValue);
                 }
             }
@@ -4370,59 +4651,61 @@ export function SetScreenCriteria(criteriaValues, accessScope){
 
             StringBuilder sb = new StringBuilder();
             sb.Append(("<%@ WebService Language=\"C#\" Class=\"" + Config.AppNameSpace + ".Web.[[---ScreenName---]]Ws\" %>") + Environment.NewLine);
-            sb.Append(("namespace " + Config.AppNameSpace + ".Web") + Environment.NewLine);
+            sb.Append(("namespace " + Config.AppNameSpace + ".Web"));
             sb.Append(@"
-                {
-                    using System;
-                    using System.Data;
-                    using System.Web;
-                    using System.Web.Services;
-                    using RO.Facade3;
-                    using RO.Common3;
-                    using RO.Common3.Data;
-                    using RO.Rule3;
-                    using RO.Web;
-                    using System.Xml;
-                    using System.Collections;
-                    using System.IO;
-                    using System.Text;
-                    using System.Web.Script.Services;
-                    using System.Text.RegularExpressions;
-                    using System.Collections.Generic;
-                    using System.Web.SessionState;
-                    using System.Linq;
+{
+    using System;
+    using System.Data;
+    using System.Web;
+    using System.Web.Services;
+    using RO.Facade3;
+    using RO.Common3;
+    using RO.Common3.Data;
+    using RO.Rule3;
+    using RO.Web;
+    using System.Xml;
+    using System.Collections;
+    using System.IO;
+    using System.Text;
+    using System.Web.Script.Services;
+    using System.Text.RegularExpressions;
+    using System.Collections.Generic;
+    using System.Web.SessionState;
+    using System.Linq;
             ");
             sb.Append(GetScreenDataSet(screenId, screenName, screenPrimaryKey, dvItms));
             sb.Append(@"
-            [ScriptService()]
-            [WebService(Namespace = ""http://Rintagi.com/"")]
-            [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-            public partial class [[---ScreenName---]]Ws : RO.Web.AsmxBase
-            {
-                const int screenId = [[---ScreenId---]];
-                const byte systemId = [[---systemId---]];
-                const string programName = ""[[---ScreenDef---]]"";
+    [ScriptService()]
+    [WebService(Namespace = ""http://Rintagi.com/"")]
+    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+    public partial class [[---ScreenName---]]Ws : RO.Web.AsmxBase
+    {
+        const int screenId = [[---ScreenId---]];
+        const byte systemId = [[---systemId---]];
+        const string programName = ""[[---ScreenDef---]]"";
 
-                protected override byte GetSystemId() { return systemId; }
-                protected override int GetScreenId() { return screenId; }
-                protected override string GetProgramName() { return programName; }
-                protected override string GetValidateMstIdSPName() { return ""GetLis[[---ScreenDef---]]""; }
-                protected override string GetMstTableName(bool underlying = true) { return ""[[---screenPrimaryTableName---]]""; }
-                protected override string GetDtlTableName(bool underlying = true) { return ""[[---screenDetailTableName---]]""; }
-                protected override string GetMstKeyColumnName(bool underlying = false) { return underlying ? ""[[---screenPrimaryKeyName---]]"" : ""[[---ScreenPrimaryKey---]]""; }
-                protected override string GetDtlKeyColumnName(bool underlying = false) { return underlying ? ""[[---screenDetailKeyName---]]"" : ""[[---screenDetailKey---]]""; }
+        protected override byte GetSystemId() { return systemId; }
+        protected override int GetScreenId() { return screenId; }
+        protected override string GetProgramName() { return programName; }
+        protected override string GetValidateMstIdSPName() { return ""GetLis[[---ScreenDef---]]""; }
+        protected override string GetMstTableName(bool underlying = true) { return ""[[---screenPrimaryTableName---]]""; }
+        protected override string GetDtlTableName(bool underlying = true) { return ""[[---screenDetailTableName---]]""; }
+        protected override string GetMstKeyColumnName(bool underlying = false) { return underlying ? ""[[---screenPrimaryKeyName---]]"" : ""[[---ScreenPrimaryKey---]]""; }
+        protected override string GetDtlKeyColumnName(bool underlying = false) { return underlying ? ""[[---screenDetailKeyName---]]"" : ""[[---screenDetailKey---]]""; }
             ");
-            sb.Append(GetScreenDdlDef(screenId, screenName, screenPrimaryKey, dvItms) + Environment.NewLine);
+            sb.Append(GetScreenDdlDef(screenId, screenName, screenPrimaryKey, multiDesignDb, dvItms) + Environment.NewLine);
             sb.Append(GetScreenDataMappingSet(screenId, screenName, screenPrimaryKey, screenPrimaryKeyType, screenPrimaryKeyDis, dvItms, dvAsmxRule) + Environment.NewLine);
-            sb.Append(GetScreenCRUD(screenId, screenName, screenPrimaryKey, screenPrimaryKeyType, screenPrimaryKeyDis, dvItms, dvAsmxRule) + Environment.NewLine);
-            sb.Append(GetScreenDdlFunctions(screenId, screenName, screenPrimaryKey, screenPrimaryKeyType, screenPrimaryKeyDis, dvItms) + Environment.NewLine);
-            sb.Append(("/* AsmxRule: Custom Function */") + Environment.NewLine);
+            sb.Append(GetScreenCRUD(screenId, screenName, screenPrimaryKey, screenPrimaryKeyType, screenPrimaryKeyColumIdentity, screenPrimaryKeyDis, multiDesignDb, dvItms, dvAsmxRule) + Environment.NewLine);
+            sb.Append(GetScreenDdlFunctions(screenId, screenName, screenPrimaryKey, screenPrimaryKeyType, screenPrimaryKeyDis, multiDesignDb, screenPrimaryTableName, screenPrimaryKeyName, screenDetailTableName, screenDetailKeyName, dvItms) + Environment.NewLine);
+            sb.Append((@"
+        /* AsmxRule: Custom Function */") + Environment.NewLine
+        );
             sb.Append(AsmxCustomFunctionCnt + Environment.NewLine);
             sb.Append(@"
-             /* AsmxRule End: Custom Function */
+        /* AsmxRule End: Custom Function */
            
-            }
-        }
+    }
+}
             ").Replace("[[---ScreenName---]]", screenName)
               .Replace("[[---ScreenPrimaryKey---]]", screenPrimaryKey)
               .Replace("[[---screenPrimaryKeyName---]]", screenPrimaryKeyName)
@@ -4468,51 +4751,52 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                 }
             }
 
-            string ScreenDataSetMasterCnt = string.Join(Environment.NewLine, ScreenDataSetMasterResults.Select(s => addIndent(s, 24)));
-            string ScreenDataSetDetailCnt = string.Join(Environment.NewLine, ScreenDataSetDetailResults.Select(s => addIndent(s, 24)));
+            string ScreenDataSetMasterCnt = string.Join(Environment.NewLine, ScreenDataSetMasterResults.Select(s => addIndent(s, 12)));
+            string ScreenDataSetDetailCnt = string.Join(Environment.NewLine, ScreenDataSetDetailResults.Select(s => addIndent(s, 12)));
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
-                public class [[---ScreenDef---]] : DataSet
-                {
-                    public [[---ScreenDef---]]()
-                    {
-                        this.Tables.Add(MakeColumns(new DataTable(""[[---ScreenName---]]"")));
-                        this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Def"")));
-                        this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Add"")));
-                        this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Upd"")));
-                        this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Del"")));
-                        this.DataSetName = ""[[---ScreenDef---]]"";
-                        this.Namespace = ""http://Rintagi.com/DataSet/[[---ScreenDef---]]"";
-                    }
+    public class [[---ScreenDef---]] : DataSet
+    {
+        public [[---ScreenDef---]]()
+        {
+            this.Tables.Add(MakeColumns(new DataTable(""[[---ScreenName---]]"")));
+            this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Def"")));
+            this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Add"")));
+            this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Upd"")));
+            this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Del"")));
+            this.DataSetName = ""[[---ScreenDef---]]"";
+            this.Namespace = ""http://Rintagi.com/DataSet/[[---ScreenDef---]]"";
+        }
 
-                    private DataTable MakeColumns(DataTable dt)
-                    {
-                        DataColumnCollection columns = dt.Columns;
+        private DataTable MakeColumns(DataTable dt)
+        {
+            DataColumnCollection columns = dt.Columns;
 ");
             sb.Append(ScreenDataSetMasterCnt);
             sb.Append(@"
-                        return dt;
-                    }
+            return dt;
+        }
 
-                    private DataTable MakeDtlColumns(DataTable dt)
-                    {
-                        DataColumnCollection columns = dt.Columns;
+        private DataTable MakeDtlColumns(DataTable dt)
+        {
+            DataColumnCollection columns = dt.Columns;
 ");
-            sb.Append("columns.Add(\"" + screenPrimaryKey + "\", typeof(string));" + Environment.NewLine);
+            sb.Append(addIndent("",12) +  "columns.Add(\"" + screenPrimaryKey + "\", typeof(string));" + Environment.NewLine);
             sb.Append(ScreenDataSetDetailCnt);
             sb.Append(@"
-                        return dt;
-                    }
-                }
+            return dt;
+        }
+    }
             ");
 
             return sb;
         }
 
-        private StringBuilder GetScreenDdlDef(string screenId, string screenName, string screenPrimaryKey, DataView dvItms)
+        private StringBuilder GetScreenDdlDef(string screenId, string screenName, string screenPrimaryKey, string multiDesignDb, DataView dvItms)
         {
             List<string> ScreenDdlDefResults = new List<string>();
+            Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
             foreach (DataRowView drv in dvItms)
             {
                 string ColumnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
@@ -4526,29 +4810,47 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                 string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
                 string AdditionalColumn = string.IsNullOrEmpty(DdlFtrColumnId) ? "" : "{\"refCol\",\"" + DdlAdnColumnName + "\"},{\"refColDataType\",\"" + DdlFtrDataType + "\"},{\"refColSrc\",\"" + RefColSrc + "\"},{\"refColSrcName\",\"" + DdlFtrColumnName + DdlFtrTableId + "\"}";
 
-                if (drv["DisplayMode"].ToString() == "AutoComplete" || drv["DisplayMode"].ToString() == "DropDownList" || drv["DisplayMode"].ToString() == "RadioButtonList" || drv["DisplayMode"].ToString() == "ListBox" || drv["DisplayMode"].ToString() == "WorkflowStatus" || drv["DisplayMode"].ToString() == "AutoListBox" || drv["DisplayMode"].ToString() == "DataGridLink")
+                if (drv["DisplayMode"].ToString() == "AutoComplete" 
+                    || drv["DisplayMode"].ToString() == "DropDownList" 
+                    || drv["DisplayMode"].ToString() == "RadioButtonList" 
+                    || drv["DisplayMode"].ToString() == "ListBox" 
+                    || drv["DisplayMode"].ToString() == "WorkflowStatus" 
+                    || drv["DisplayMode"].ToString() == "AutoListBox" 
+                    || drv["DisplayMode"].ToString() == "DataGridLink"
+                    )
                 {
                     if (drv["MasterTable"].ToString() == "Y")
                     {
-                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"N\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + ColumnId + "\"},{\"mVal\",\"" + ColumnId + "Text\"}, " + AdditionalColumn + "}},";
+                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N")  + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + ColumnId + "\"},{\"mVal\",\"" + ColumnId + "Text\"}, " + AdditionalColumn + "}},";
                         ScreenDdlDefResults.Add(ScreenDdlDefValue);
                     }
                     else
                     {
-                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"N\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + ColumnId + "\"},{\"mVal\",\"" + ColumnId + "Text\"}, " + AdditionalColumn + "}},";
+                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\""+ Robot.GetIsSys(multiDesignDb, "N")  + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + ColumnId + "\"},{\"mVal\",\"" + ColumnId + "Text\"}, " + AdditionalColumn + "}},";
+                        ScreenDdlDefResults.Add(ScreenDdlDefValue);
+                    }
+                }
+                else if (drv["DisplayMode"].ToString() == "Document") {
+                    if (drv["MasterTable"].ToString() == "Y")
+                    {
+                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + "DocId" + "\"},{\"mVal\",\"" + "FileName" + "\"}, " + "{ \"tableName\", \"" + ColumnName + "\" }" + "}},";
+                        ScreenDdlDefResults.Add(ScreenDdlDefValue);
+                    }
+                    else
+                    {
+                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + "DocId" + "\"},{\"mVal\",\"" + "FileName" + "\"}, " + "{ \"tableName\", \"" + ColumnName + "\" }" + "}},";
                         ScreenDdlDefResults.Add(ScreenDdlDefValue);
                     }
                 }
             }
-
-            string ScreenDdlDefCnt = string.Join(Environment.NewLine, ScreenDdlDefResults);
+            string ScreenDdlDefCnt = string.Join(Environment.NewLine, ScreenDdlDefResults.Select(s => addIndent(s, 12)));
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
-               Dictionary<string, SerializableDictionary<string, string>> ddlContext = new Dictionary<string, SerializableDictionary<string, string>>(){
-            ");
+        Dictionary<string, SerializableDictionary<string, string>> ddlContext = new Dictionary<string, SerializableDictionary<string, string>>() {
+");
             sb.Append(ScreenDdlDefCnt + Environment.NewLine);
-            sb.Append("};");
+            sb.Append(addIndent("",8) +  "};");
 
             return sb;
         }
@@ -4565,18 +4867,19 @@ export function SetScreenCriteria(criteriaValues, accessScope){
             List<string> PrepDataResults = new List<string>();
             List<string> InitMasterResults = new List<string>();
             List<string> InitDtlResults = new List<string>();
+            bool bHasDocument = false;
             int ii = 0;
 
             foreach (DataRowView drv in dvAsmxRule)
             {
                 if (drv["AsmxEventId"].ToString() == "1") //Init Master Table
                 {
-                    string InitMasterTableValue = drv["AsmxRuleProg"].ToString();
+                    string InitMasterTableValue = drv["AsmxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     InitMasterTableResults.Add(InitMasterTableValue);
                 }
                 else if (drv["AsmxEventId"].ToString() == "2") //Init Detail Table
                 {
-                    string InitDetailTableValue = drv["AsmxRuleProg"].ToString();
+                    string InitDetailTableValue = drv["AsmxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     InitDetailTableResults.Add(InitDetailTableValue);
                 }
             }
@@ -4601,7 +4904,7 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                         if (ColumnName == PrimaryKey)
                         {
                             string PrepDataValue = "if (bAdd) { dr[\"" + ColumnId + "\"] = string.Empty; } else { dr[\"" + ColumnId + "\"] = mst[\"" + ColumnId + "\"]; }" + Environment.NewLine
-                                                 + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                                 + addIndent("",12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                             PrepDataResults.Add(PrepDataValue);
                         }
                         else
@@ -4611,13 +4914,13 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                                 if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
                                 {
                                     string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
-                                                        + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                                        + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                                     PrepDataResults.Add(PrepDataValue);
                                 }
                                 else
                                 {
                                     string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
-                                                        + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                                        + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                                     PrepDataResults.Add(PrepDataValue);
                                 }
                             }
@@ -4626,13 +4929,13 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                                 if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
                                 {
                                     string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = Decimal.Parse((mst[\"" + ColumnId + "\"] ?? \"\").Trim(), System.Globalization.NumberStyles.Currency, new System.Globalization.CultureInfo(base.LUser.Culture)).ToString(); } catch { }" + Environment.NewLine
-                                                       + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                                       + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                                     PrepDataResults.Add(PrepDataValue);
                                 }
                                 else
                                 {
                                     string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = Decimal.Parse((mst[\"" + ColumnId + "\"] ?? \"\").Trim(), System.Globalization.NumberStyles.Currency, new System.Globalization.CultureInfo(base.LUser.Culture)).ToString(); } catch { }" + Environment.NewLine
-                                                       + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                                       + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                                     PrepDataResults.Add(PrepDataValue);
                                 }
                             }
@@ -4641,13 +4944,13 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                                 if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
                                 {
                                     string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
-                                                         + "drType[\"" + ColumnId + "\"] = \"Char\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                                         + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"Char\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                                     PrepDataResults.Add(PrepDataValue);
                                 }
                                 else
                                 {
                                     string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
-                                                         + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                                         + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                                     PrepDataResults.Add(PrepDataValue);
                                 }
 
@@ -4663,13 +4966,13 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                                 if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
                                 {
                                     string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = mst[\"" + ColumnId + "\"]; } catch { }" + Environment.NewLine
-                                                + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                                + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                                     PrepDataResults.Add(PrepDataValue);
                                 }
                                 else
                                 {
                                     string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = mst[\"" + ColumnId + "\"]; } catch { }" + Environment.NewLine
-                                                + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                                + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                                     PrepDataResults.Add(PrepDataValue);
                                 }
 
@@ -4704,7 +5007,7 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                                 }
                                 else
                                 {
-                                    if (DefaultValue.Contains("base."))
+                                    if (DefaultValue.Contains("base.") || (DefaultValue.Contains("LCurr.")) || (DefaultValue.Contains("LImpr.")) || (DefaultValue.Contains("LUser.")))
                                     {
                                         string InitMasterValue = "{\"" + ColumnId + "\"," + DefaultValue + "},";
                                         InitMasterResults.Add(InitMasterValue);
@@ -4724,6 +5027,10 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                             string InitMasterValue = "{\"" + ColumnId + "\",\"\"},";
                             InitMasterResults.Add(InitMasterValue);
                         }
+                    }
+                    if (DisplayMode == "Document")
+                    {
+                        bHasDocument = true;
                     }
                 }
                 else
@@ -4758,8 +5065,49 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                             MakeColRowResults.Add(MakeColRowValue);
                         }
 
-                        string InitDtlValue = "{\"" + ColumnId + "\",\"" + DefaultValue + "\"},";
-                        InitDtlResults.Add(InitDtlValue);
+                        if (!string.IsNullOrEmpty(DefaultValue))
+                        {
+                            if (DisplayMode == "ImageButton" || DisplayMode == "CheckBox") //---------ImageButton or CheckBox
+                            {
+                                string InitDtlValue = "{\"" + ColumnId + "\",\"" + DefaultValue.Replace('"', '\"') + "\"},";
+                                InitDtlResults.Add(InitDtlValue);
+                            }
+                            else if (DisplayMode.Contains("Date")) //---------Date (Any type)
+                            {
+                                string InitDtlValue = "{\"" + ColumnId + "\", convertDefaultValue(" + DefaultValue.Replace('"', '\"') + ")},";
+                                InitDtlResults.Add(InitDtlValue);
+                            }
+                            else if (DisplayMode == "Label" || DisplayMode == "Action Button" || DisplayMode == "ImageButton" ||
+                                     DisplayMode == "DataGridLink" || DisplayMode == "PlaceHolder") //---------Label / Action Button / ImageButton / DataGridLink / PlaceHolder
+                            {
+                                string InitDtlValue = "";
+                                InitDtlResults.Add(InitDtlValue);
+                            }
+                            else
+                            {
+                                if (DefaultValue.Contains("base.") || (DefaultValue.Contains("LCurr.")) || (DefaultValue.Contains("LImpr.")) || (DefaultValue.Contains("LUser.")))
+                                {
+                                    string InitDtlValue = "{\"" + ColumnId + "\"," + DefaultValue + "},";
+                                    InitDtlResults.Add(InitDtlValue);
+                                }
+                                else
+                                {
+                                    string InitDtlValue = "{\"" + ColumnId + "\",\"" + DefaultValue.Replace('"', '\"') + "\"},";
+                                    InitDtlResults.Add(InitDtlValue);
+                                }
+
+
+                            }
+                        }
+                        else
+                        {
+                            string InitDtlValue = "{\"" + ColumnId + "\",\"\"},";
+                            InitDtlResults.Add(InitDtlValue);
+                        }
+                    }
+                    if (DisplayMode == "Document")
+                    {
+                        bHasDocument = true;
                     }
 
                 }
@@ -4767,130 +5115,149 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                 ii++;
             }
 
-            string MakeTypRowCnt = string.Join(Environment.NewLine, MakeTypRowResults);
-            string MakeDisRowCnt = string.Join(Environment.NewLine, MakeDisRowResults);
-            string MakeColRowCnt = string.Join(Environment.NewLine, MakeColRowResults);
-            string PrepDataCnt = string.Join(Environment.NewLine, PrepDataResults);
-            string InitMasterCnt = string.Join(Environment.NewLine, InitMasterResults);
-            string InitDtlCnt = string.Join(Environment.NewLine, InitDtlResults);
+            string MakeTypRowCnt = string.Join(Environment.NewLine, MakeTypRowResults.Select(s => addIndent(s, 12)));
+            string MakeDisRowCnt = string.Join(Environment.NewLine, MakeDisRowResults.Select(s => addIndent(s, 12)));
+            string MakeColRowCnt = string.Join(Environment.NewLine, MakeColRowResults.Select(s => addIndent(s, 16)));
+            string PrepDataCnt = string.Join(Environment.NewLine, PrepDataResults.Select(s => addIndent(s, 12)));
+            string InitMasterCnt = string.Join(Environment.NewLine, InitMasterResults.Select(s => addIndent(s, 16)));
+            string InitDtlCnt = string.Join(Environment.NewLine, InitDtlResults.Select(s => addIndent(s, 16)));
 
             StringBuilder sb = new StringBuilder();
-            sb.Append("private DataRow MakeTypRow(DataRow dr){");
-            sb.Append("dr[\"" + screenPrimaryKey + "\"] = System.Data.OleDb.OleDbType." + screenPrimaryKeyType + ".ToString();");
+            sb.Append(@"
+        private DataRow MakeTypRow(DataRow dr)
+        {
+            dr[""" + screenPrimaryKey + @"""] = System.Data.OleDb.OleDbType." + screenPrimaryKeyType + ".ToString();" + Environment.NewLine
+            );
             sb.Append(MakeTypRowCnt + Environment.NewLine);
             sb.Append(@"
-                    return dr;
-                }
+            return dr;
+        }
 
-                private DataRow MakeDisRow(DataRow dr){
-            ");
-            sb.Append("dr[\"" + screenPrimaryKey + "\"] = \"" + screenPrimaryKeyDis + "\";");
+        private DataRow MakeDisRow(DataRow dr)
+        {
+            dr[""" + screenPrimaryKey + @"""] = """ + screenPrimaryKeyDis + "\";" + Environment.NewLine);
             sb.Append(MakeDisRowCnt + Environment.NewLine);
             sb.Append(@"
-                    return dr;
-                }
+            return dr;
+        }
 
-                private DataRow MakeColRow(DataRow dr, SerializableDictionary<string, string> drv, string keyId, bool bAdd){
-            ");
-            sb.Append("dr[\"" + screenPrimaryKey + "\"] = keyId;");
-            sb.Append(@"
-                    DataTable dtAuth = _GetAuthCol(screenId);
-                    if (dtAuth != null)
-                    {
-            ");
+        private DataRow MakeColRow(DataRow dr, SerializableDictionary<string, string> drv, string keyId, bool bAdd)
+        {
+            dr[""" + screenPrimaryKey + @"""] = keyId;
+            DataTable dtAuth = _GetAuthCol(screenId);
+            if (dtAuth != null)
+            {
+");
             sb.Append(MakeColRowCnt + Environment.NewLine);
             sb.Append(@"
-                    }
-                    return dr;
-                }
+            }
+            return dr;
+        }
 
-                private [[---ScreenDef---]] Prep[[---ScreenName---]]Data(SerializableDictionary<string, string> mst, List<SerializableDictionary<string, string>> dtl, bool bAdd)
-                {
-                    [[---ScreenDef---]] ds = new [[---ScreenDef---]]();
-                    DataRow dr = ds.Tables[""[[---ScreenName---]]""].NewRow();
-                    DataRow drType = ds.Tables[""[[---ScreenName---]]""].NewRow();
-                    DataRow drDisp = ds.Tables[""[[---ScreenName---]]""].NewRow();
-            ");
+        private [[---ScreenDef---]] Prep[[---ScreenName---]]Data(SerializableDictionary<string, string> mst, List<SerializableDictionary<string, string>> dtl, bool bAdd)
+        {
+            [[---ScreenDef---]] ds = new [[---ScreenDef---]]();
+            DataRow dr = ds.Tables[""[[---ScreenName---]]""].NewRow();
+            DataRow drType = ds.Tables[""[[---ScreenName---]]""].NewRow();
+            DataRow drDisp = ds.Tables[""[[---ScreenName---]]""].NewRow();
+
+");
             sb.Append(PrepDataCnt + Environment.NewLine);
             sb.Append(@"
-                    if (dtl != null)
-                    {
-                        ds.Tables[""[[---ScreenName---]]Def""].Rows.Add(MakeTypRow(ds.Tables[""[[---ScreenName---]]Def""].NewRow()));
-                        ds.Tables[""[[---ScreenName---]]Def""].Rows.Add(MakeDisRow(ds.Tables[""[[---ScreenName---]]Def""].NewRow()));
-                        if (bAdd)
-                        {
-                            foreach (var drv in dtl)
-                            {
-                                ds.Tables[""[[---ScreenName---]]Add""].Rows.Add(MakeColRow(ds.Tables[""[[---ScreenName---]]Add""].NewRow(), drv, mst[""[[---ScreenPrimaryKey---]]""], true));
-                            }
-                        }
-                        else
-                        {
-                            var dtlUpd = from r in dtl where !string.IsNullOrEmpty((r[""[[---screenDetailKey---]]""] ?? """").ToString()) && (r.ContainsKey(""_mode"") ? r[""_mode""] : """") != ""delete"" select r;
-                            foreach (var drv in dtlUpd)
-                            {
-                                ds.Tables[""[[---ScreenName---]]Upd""].Rows.Add(MakeColRow(ds.Tables[""[[---ScreenName---]]Upd""].NewRow(), drv, mst[""[[---ScreenPrimaryKey---]]""], false));
-                            }
-                            var dtlAdd = from r in dtl.AsEnumerable() where string.IsNullOrEmpty(r[""[[---screenDetailKey---]]""]) select r;
-                            foreach (var drv in dtlAdd)
-                            {
-                                ds.Tables[""[[---ScreenName---]]Add""].Rows.Add(MakeColRow(ds.Tables[""[[---ScreenName---]]Add""].NewRow(), drv, mst[""[[---ScreenPrimaryKey---]]""], true));
-                            }
-                            var dtlDel = from r in dtl.AsEnumerable() where !string.IsNullOrEmpty((r[""[[---screenDetailKey---]]""] ?? """").ToString()) && (r.ContainsKey(""_mode"") ? r[""_mode""] : """") == ""delete"" select r;
-                            foreach (var drv in dtlDel)
-                            {
-                                ds.Tables[""[[---ScreenName---]]Del""].Rows.Add(MakeColRow(ds.Tables[""[[---ScreenName---]]Del""].NewRow(), drv, mst[""[[---ScreenPrimaryKey---]]""], false));
-                            }
-                        }
-                    }
-                    ds.Tables[""[[---ScreenName---]]""].Rows.Add(dr); ds.Tables[""[[---ScreenName---]]""].Rows.Add(drType); ds.Tables[""[[---ScreenName---]]""].Rows.Add(drDisp);
-                    return ds;
-                }
-
-                protected override SerializableDictionary<string, string> InitMaster()
+            if (dtl != null)
+            {
+                ds.Tables[""[[---ScreenName---]]Def""].Rows.Add(MakeTypRow(ds.Tables[""[[---ScreenName---]]Def""].NewRow()));
+                ds.Tables[""[[---ScreenName---]]Def""].Rows.Add(MakeDisRow(ds.Tables[""[[---ScreenName---]]Def""].NewRow()));
+                if (bAdd)
                 {
-                    var mst = new SerializableDictionary<string, string>(){
-            ");
+                    foreach (var drv in dtl)
+                    {
+                        ds.Tables[""[[---ScreenName---]]Add""].Rows.Add(MakeColRow(ds.Tables[""[[---ScreenName---]]Add""].NewRow(), drv, mst[""[[---ScreenPrimaryKey---]]""], true));
+                    }
+                }
+                else
+                {
+                    var dtlUpd = from r in dtl where !string.IsNullOrEmpty((r[""[[---screenDetailKey---]]""] ?? """").ToString()) && (r.ContainsKey(""_mode"") ? r[""_mode""] : """") != ""delete"" select r;
+                    foreach (var drv in dtlUpd)
+                    {
+                        ds.Tables[""[[---ScreenName---]]Upd""].Rows.Add(MakeColRow(ds.Tables[""[[---ScreenName---]]Upd""].NewRow(), drv, mst[""[[---ScreenPrimaryKey---]]""], false));
+                    }
+                    var dtlAdd = from r in dtl.AsEnumerable() where string.IsNullOrEmpty(r[""[[---screenDetailKey---]]""]) select r;
+                    foreach (var drv in dtlAdd)
+                    {
+                        ds.Tables[""[[---ScreenName---]]Add""].Rows.Add(MakeColRow(ds.Tables[""[[---ScreenName---]]Add""].NewRow(), drv, mst[""[[---ScreenPrimaryKey---]]""], true));
+                    }
+                    var dtlDel = from r in dtl.AsEnumerable() where !string.IsNullOrEmpty((r[""[[---screenDetailKey---]]""] ?? """").ToString()) && (r.ContainsKey(""_mode"") ? r[""_mode""] : """") == ""delete"" select r;
+                    foreach (var drv in dtlDel)
+                    {
+                        ds.Tables[""[[---ScreenName---]]Del""].Rows.Add(MakeColRow(ds.Tables[""[[---ScreenName---]]Del""].NewRow(), drv, mst[""[[---ScreenPrimaryKey---]]""], false));
+                    }
+                }
+            }
+            ds.Tables[""[[---ScreenName---]]""].Rows.Add(dr); ds.Tables[""[[---ScreenName---]]""].Rows.Add(drType); ds.Tables[""[[---ScreenName---]]""].Rows.Add(drDisp);
+            return ds;
+        }
+
+        protected override SerializableDictionary<string, string> InitMaster()
+        {
+            var mst = new SerializableDictionary<string, string>()
+            {
+");
             sb.Append(InitMasterCnt + Environment.NewLine);
             sb.Append(@"
-                    };
-                    /* AsmxRule: Init Master Table */
-            ");
-            sb.Append(InitMasterTableCnt + Environment.NewLine);
-            sb.Append(@"
-                    /* AsmxRule End: Init Master Table */
+            };
+            /* AsmxRule: Init Master Table */
+                ");
+                sb.Append(InitMasterTableCnt + Environment.NewLine);
+                sb.Append(@"
+            /* AsmxRule End: Init Master Table */
 
-                    return mst;
-                }
+            return mst;
+        }
 
-                protected override SerializableDictionary<string, string> InitDtl()
-                {
-                    var mst = new SerializableDictionary<string, string>(){
-            ");
+        protected override SerializableDictionary<string, string> InitDtl()
+        {
+            var mst = new SerializableDictionary<string, string>()
+            {
+");
             sb.Append(InitDtlCnt + Environment.NewLine);
             sb.Append(@"
-                    };
-                    /* AsmxRule: Init Detail Table */
+            };
+            /* AsmxRule: Init Detail Table */
             ");
             sb.Append(InitDetailTableCnt + Environment.NewLine);
             sb.Append(@"
-                    /* AsmxRule End: Init Detail Table */
-                    return mst;
-                }
+            /* AsmxRule End: Init Detail Table */
+            return mst;
+        }"
+                + (!bHasDocument ? "" :
+@"
+        protected override DataTable _GetDocList(string mstId, string screenColumnName)
+        {
+            return (new AdminSystem()).GetDdl(GetScreenId(), GetDdlContext()[screenColumnName][""method""], false, true, 0, mstId, LcAppConnString, LcAppPw, string.Empty, LImpr, LCurr);
+        }
+        protected override string _GetDocTableName(string screenColumnName)
+        {
+            return GetDdlContext()[screenColumnName][""tableName""];
+        }   
+") + @"
             ");
             return sb;
         }
 
-        private StringBuilder GetScreenCRUD(string screenId, string screenName, string screenPrimaryKey, string screenPrimaryKeyType, string screenPrimaryKeyDis, DataView dvItms, DataView dvAsmxRule)
+        private StringBuilder GetScreenCRUD(string screenId, string screenName, string screenPrimaryKey, string screenPrimaryKeyType, string screenPrimaryKeyColumnIdentity, string screenPrimaryKeyDis, string multiDesignDb, DataView dvItms, DataView dvAsmxRule)
         {
             List<string> GetDtlByIdResults = new List<string>();
             List<string> CurrentDataResults = new List<string>();
             List<string> DtDtlResults = new List<string>();
             List<string> DtlImgUploadResults = new List<string>();
+            List<string> MstImgUploadResults = new List<string>();
             List<string> DtlResults = new List<string>();
             List<string> AsmxSaveDataBeforeResults = new List<string>();
             List<string> AsmxSaveDataAfterResults = new List<string>();
             Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
+            bool hasDtlImageUpload = false;
+            bool hasMstImageUpload = false;
 
             string screenTypeName = dvItms[0]["ScreenTypeName"].ToString();
 
@@ -4898,34 +5265,62 @@ export function SetScreenCriteria(criteriaValues, accessScope){
             {
                 if (drv["AsmxEventId"].ToString() == "3") //Save Data Before
                 {
-                    string AsmxSaveDataBeforeValue = drv["AsmxRuleProg"].ToString();
+                    string AsmxSaveDataBeforeValue = drv["AsmxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     AsmxSaveDataBeforeResults.Add(AsmxSaveDataBeforeValue);
                 }
                 else if (drv["AsmxEventId"].ToString() == "4") //Save Data After
                 {
-                    string AsmxSaveDataAfterValue = drv["AsmxRuleProg"].ToString();
+                    string AsmxSaveDataAfterValue = drv["AsmxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     AsmxSaveDataAfterResults.Add(AsmxSaveDataAfterValue);
                 }
             }
 
             if ("I1".IndexOf(screenTypeName) >= 0)  /*Tab Folder Only Screen*/
             {
-                string GetDtlByIdValue = "ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();" + Environment.NewLine
-                                       + "mr.data = new List<SerializableDictionary<string,string>>();";
+                string GetDtlByIdValue = @"
+                ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
+                mr.data = new List<SerializableDictionary<string,string>>();";
                 GetDtlByIdResults.Add(GetDtlByIdValue);
 
                 string CurrentDataValue = "DataTable dtDtl = null;";
                 CurrentDataResults.Add(CurrentDataValue);
 
+                foreach (DataRowView drv in dvItms)
+                {
+                    if (drv["DisplayMode"].ToString() == "ImageButton"
+                        && !string.IsNullOrEmpty(drv["ColumnId"].ToString())
+                        && drv["MasterTable"].ToString() == "Y"
+                        ) //---------ImageButton(master table)
+                    {
+                        hasMstImageUpload = true;
+                        string ColumnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
+                        string ColumnName = drv["ColumnName"].ToString();
+                        string MstImgUploadValue = @"
+                if (dtMst.Rows.Count > 0 && mst.ContainsKey(""" + ColumnId + @""") && !string.IsNullOrEmpty(mst[""" + ColumnId + @"""])) 
+                {
+                    AddDoc(mst[""" + ColumnId + @"""], dtMst.Rows[0][""" + screenPrimaryKey + @"""].ToString(), ""dbo.[[---screenPrimaryTableName---]]"", ""[[---screenPrimaryKeyName---]]"", """ + ColumnName + @""", options.ContainsKey(""resizeImage""));
+                }
+
+";
+                        MstImgUploadResults.Add(MstImgUploadValue);
+                    }
+                }
+
             }
             else if ("I2".IndexOf(screenTypeName) >= 0) /*Tab Folder with Grid Screen*/
             {
-                string GetDtlByIdValue = "ValidatedMstId(\"GetLis[[---ScreenDef---]]\", systemId, screenId, \"**\" + keyId, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));" + Environment.NewLine
-                                        + "DataTable dtColAuth = _GetAuthCol(GetScreenId());" + Environment.NewLine
-                                        + "Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr[\"ColName\"].ToString());" + Environment.NewLine
-                                        + "ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();" + Environment.NewLine
-                                        + "DataTable dt = (new RO.Access3.AdminAccess()).GetDtlById([[---ScreenId---]], \"Get[[---ScreenDef---]]DtlById\", keyId, LcAppConnString, LcAppPw, filterId, base.LImpr, base.LCurr);" + Environment.NewLine
-                                        + "mr.data = DataTableToListOfObject(dt, false, colAuth);";
+                string GetDtlByIdValue = @"
+                ValidatedMstId(""GetLis[[---ScreenDef---]]"", systemId, screenId, ""**"" + keyId, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));
+                string dtlBlobIconOption = !options.ContainsKey(""DtlBlob"") ? ""N"" : options[""DtlBlob""];
+                var dtlBlob = GetBlobOption(dtlBlobIconOption);;
+                DataTable dtColAuth = _GetAuthCol(GetScreenId());
+                DataTable dtColLabel = _GetScreenLabel(GetScreenId());
+                var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr[""DisplayMode""].ToString().Contains(""UTC"")).Select(dr => dr[""ColumnName""].ToString() + dr[""TableId""].ToString()).ToArray();
+                HashSet<string> utcColumns = new HashSet<string>(utcColumnList);;
+                Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr[""ColName""].ToString());
+                ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
+                DataTable dt = (new RO.Access3.AdminAccess()).GetDtlById([[---ScreenId---]], ""Get[[---ScreenDef---]]DtlById"", keyId, LcAppConnString, LcAppPw, filterId, base.LImpr, base.LCurr);
+                mr.data = DataTableToListOfObject(dt, dtlBlob, colAuth, utcColumns);";
                 GetDtlByIdResults.Add(GetDtlByIdValue);
 
                 string CurrentDataValue = "DataTable dtDtl = _GetDtlById(pid, 0);";
@@ -4936,27 +5331,55 @@ export function SetScreenCriteria(criteriaValues, accessScope){
 
                 foreach (DataRowView drv in dvItms)
                 {
-                    if (drv["DisplayMode"].ToString() == "ImageButton" && !string.IsNullOrEmpty(drv["ColumnId"].ToString())) //---------ImageButton
+                    if (drv["DisplayMode"].ToString() == "ImageButton" 
+                        && !string.IsNullOrEmpty(drv["ColumnId"].ToString())
+                        && drv["MasterTable"].ToString() == "N"
+                        ) //---------ImageButton(detail table)
                     {
+                        hasDtlImageUpload = true;
                         string ColumnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
                         string ColumnName = drv["ColumnName"].ToString();
-                        string DtlImgUploadValue = "if (!string.IsNullOrEmpty(x[\"" + ColumnId + "\"]))" + Environment.NewLine
-                            + "{" + Environment.NewLine
-                                + "foreach (DataRow dr in dtDtl.Rows)" + Environment.NewLine
-                                + "{" + Environment.NewLine
-                                    + "/* use primary key or heuristic that new dtl has larger max dtlId before save(which is bad but assuming there is only 1 detail add, it would be fine. should be done in the UpdData call during add/update FIXME */" + Environment.NewLine
-                                    + "if ((!string.IsNullOrEmpty(x[\"[[---screenDetailKey---]]\"]) && dr[\"[[---screenDetailKey---]]\"].ToString() == x[\"[[---screenDetailKey---]]\"])" + Environment.NewLine
-                                        + "||" + Environment.NewLine
-                                        + "(string.IsNullOrEmpty(x[\"[[---screenDetailKey---]]\"]) && int.Parse(dr[\"[[---screenDetailKey---]]\"].ToString()) > maxDtlId)" + Environment.NewLine
-                                        + ")" + Environment.NewLine
-                                    + "{AddDoc(x[\"" + ColumnId + "\"], dr[\"[[---screenDetailKey---]]\"].ToString(), \"dbo.[[---screenDetailTableName---]]\", \"[[---screenDetailKeyName---]]\", \"" + ColumnName + "\", options.ContainsKey(\"resizeImage\"));}" + Environment.NewLine
-                                + "}" + Environment.NewLine
-                            + "}";
-                        DtlImgUploadResults.Add(DtlImgUploadValue);
+                        string DtlImgUploadValue = @"
+                    if (!string.IsNullOrEmpty(x[""" + ColumnId + @"""]))
+                    {
+                        foreach (DataRow dr in dtDtl.Rows)
+                        {
+                            /* use primary key or heuristic that new dtl has larger max dtlId before save
+                               (which is bad but assuming there is only 1 detail add, it would be fine. should be done in the UpdData call during add/update 
+                            FIXME 
+                            */
+                            if ((!string.IsNullOrEmpty(x[""[[---screenDetailKey---]]""]) && dr[""[[---screenDetailKey---]]""].ToString() == x[""[[---screenDetailKey---]]""])
+                            ||
+                            (string.IsNullOrEmpty(x[""[[---screenDetailKey---]]""]) && int.Parse(dr[""[[---screenDetailKey---]]""].ToString()) > maxDtlId)
+                            )
+                            {
+                                AddDoc(x[""" + ColumnId + @"""], dr[""[[---screenDetailKey---]]""].ToString(), ""dbo.[[---screenDetailTableName---]]"", ""[[---screenDetailKeyName---]]"", """ + ColumnName + @""", options.ContainsKey(""resizeImage""));
+                            }
+                        }
                     }
+";
+                        DtlImgUploadResults.Add(DtlImgUploadValue);
+                    } 
+                    else if (drv["DisplayMode"].ToString() == "ImageButton"
+                        && !string.IsNullOrEmpty(drv["ColumnId"].ToString())
+                        && drv["MasterTable"].ToString() == "Y"
+                        ) //---------ImageButton(master table)
+                        {
+                            hasMstImageUpload = true;
+                            string ColumnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
+                            string ColumnName = drv["ColumnName"].ToString();
+                            string MstImgUploadValue = @"
+                if (dtMst.Rows.Count > 0 && mst.ContainsKey(""" + ColumnId + @""") && !string.IsNullOrEmpty(mst[""" + ColumnId + @"""])) 
+                {
+                    AddDoc(mst[""" + ColumnId + @"""], dtMst.Rows[0][""" + screenPrimaryKey + @"""].ToString(), ""dbo.[[---screenPrimaryTableName---]]"", ""[[---screenPrimaryKeyName---]]"", """ + ColumnName + @""", options.ContainsKey(""resizeImage""));
                 }
 
-                string DtlValue = "result.dtl = DataTableToListOfObject(dtDtl, false, colAuth);";
+";
+                            MstImgUploadResults.Add(MstImgUploadValue);
+                        }
+                }
+
+                string DtlValue = "result.dtl = DataTableToListOfObject(dtDtl, IncludeBLOB.None, colAuth, utcColumns);";
                 DtlResults.Add(DtlValue);
             }
             else
@@ -4964,259 +5387,319 @@ export function SetScreenCriteria(criteriaValues, accessScope){
 
             }
 
-            string GetDtlByIdCnt = string.Join(Environment.NewLine, GetDtlByIdResults.Select(s => addIndent(s, 24)));
-            string CurrentDataCnt = string.Join(Environment.NewLine, CurrentDataResults.Select(s => addIndent(s, 24)));
-            string DtDtlCnt = string.Join(Environment.NewLine, DtDtlResults.Select(s => addIndent(s, 24)));
-            string DtlImgUploadCnt = string.Join(Environment.NewLine, DtlImgUploadResults.Select(s => addIndent(s, 24)));
-            string DtlCnt = string.Join(Environment.NewLine, DtlResults.Select(s => addIndent(s, 24)));
-            string AsmxSaveDataBeforeCnt = string.Join(Environment.NewLine, AsmxSaveDataBeforeResults.Select(s => addIndent(s, 24)));
-            string AsmxSaveDataAfterCnt = string.Join(Environment.NewLine, AsmxSaveDataAfterResults.Select(s => addIndent(s, 24)));
+            string GetDtlByIdCnt = string.Join(Environment.NewLine, GetDtlByIdResults.Select(s => addIndent(s, 16)));
+            string CurrentDataCnt = string.Join(Environment.NewLine, CurrentDataResults.Select(s => addIndent(s, 16)));
+            string DtDtlCnt = string.Join(Environment.NewLine, DtDtlResults.Select(s => addIndent(s, 16)));
+            string DtlImgUploadCnt = string.Join(Environment.NewLine, DtlImgUploadResults.Select(s => addIndent(s, 0)));
+            string MstImgUploadCnt = string.Join(Environment.NewLine, MstImgUploadResults.Select(s => addIndent(s, 0)));
+            string DtlCnt = string.Join(Environment.NewLine, DtlResults.Select(s => addIndent(s, 16)));
+            string AsmxSaveDataBeforeCnt = string.Join(Environment.NewLine, AsmxSaveDataBeforeResults.Select(s => addIndent(s, 0)));
+            string AsmxSaveDataAfterCnt = string.Join(Environment.NewLine, AsmxSaveDataAfterResults.Select(s => addIndent(s, 0)));
 
             StringBuilder sb = new StringBuilder();
 
             sb.Append(@"
-            [WebMethod(EnableSession = false)]
-            public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Get[[---ScreenDef---]]List(string searchStr, int topN, string filterId)
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Get[[---ScreenDef---]]List(string searchStr, int topN, string filterId)
+        {
+            Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
-                Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-                {
-                    SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                    System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-                    Dictionary<string, string> context = new Dictionary<string, string>();
-                    context[""method""] = ""GetLis[[---ScreenDef---]]"";
-                    context[""mKey""] = ""[[---ScreenPrimaryKey---]]"";
-                    context[""mVal""] = ""[[---ScreenPrimaryKey---]]Text"";
-                    context[""mTip""] = ""[[---ScreenPrimaryKey---]]Text"";
-                    context[""mImg""] = ""[[---ScreenPrimaryKey---]]Text"";
-                    context[""ssd""] = ""1"";
-                    context[""scr""] = screenId.ToString();
-                    context[""csy""] = systemId.ToString();
-                    context[""filter""] = filterId;
-                    context[""isSys""] = ""N"";
-                    context[""conn""] = string.Empty;
-                    AutoCompleteResponse r = LisSuggests(searchStr, jss.Serialize(context), topN);
-                    ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                    mr.errorMsg = """";
-                    mr.data = r;
-                    mr.status = ""success"";
-                    return mr;
-                };
-                var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
-                return ret;
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                Dictionary<string, string> context = new Dictionary<string, string>();
+                context[""method""] = ""GetLis[[---ScreenDef---]]"";
+                context[""mKey""] = ""[[---ScreenPrimaryKey---]]"";
+                context[""mVal""] = ""[[---ScreenPrimaryKey---]]Text"";
+                context[""mTip""] = ""[[---ScreenPrimaryKey---]]Text"";
+                context[""mImg""] = ""[[---ScreenPrimaryKey---]]Text"";
+                context[""ssd""] = """";
+                context[""scr""] = screenId.ToString();
+                context[""csy""] = systemId.ToString();
+                context[""filter""] = filterId;
+                context[""isSys""] = """ + Robot.GetIsSys(multiDesignDb, "N") + @""";
+                context[""conn""] = string.Empty;
+                AutoCompleteResponse r = LisSuggests(searchStr, jss.Serialize(context), topN, _CurrentScreenCriteria);
+                ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+                mr.errorMsg = """";
+                mr.data = r;
+                mr.status = ""success"";
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
+            return ret;
+        }
+        [WebMethod(EnableSession = false)]
+        public override ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetSearchList(string searchStr, int topN, string filterId, SerializableDictionary<string, string> desiredScreenCriteria)
+        {
+            if (desiredScreenCriteria != null)
+            {
+                _SetEffectiveScrCriteria(desiredScreenCriteria);
             }
+            return Get[[---ScreenDef---]]List(searchStr, topN, filterId);
+        }
 
-            [WebMethod(EnableSession = false)]
-            public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> Get[[---ScreenDef---]]ById(string keyId, SerializableDictionary<string, string> options)
-            {
-                Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-                {
-                    SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                    string jsonCri = options.ContainsKey(""currentScreenCriteria"") ? options[""currentScreenCriteria""] : null;
-                    ValidatedMstId(""GetLis[[---ScreenDef---]]"", systemId, screenId, ""**"" + keyId, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));
-                    DataTable dt = _GetMstById(keyId);
-                    DataTable dtColAuth = _GetAuthCol(GetScreenId());
-                    Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr[""ColName""].ToString());
-                    ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
-                    mr.data = DataTableToListOfObject(dt, false, colAuth);
-                    mr.status = ""success"";
-                    mr.errorMsg = """";
-                    return mr;
-                };
-                var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
-                return ret;
-            }
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> Get[[---ScreenDef---]]ById(string keyId, SerializableDictionary<string, string> options)
+        {
+            bool refreshUsrImpr = options.ContainsKey(""ReAuth"") && options[""ReAuth""] == ""Y"" ;
 
-            [WebMethod(EnableSession = false)]
-            public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> Get[[---ScreenDef---]]DtlById(string keyId, SerializableDictionary<string, string> options, int filterId)
+
+            Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
-                Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-                {
-                    SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                    string jsonCri = options.ContainsKey(""currentScreenCriteria"") ? options[""currentScreenCriteria""] : null;            
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
+                string mstBlobIconOption = !options.ContainsKey(""MstBlob"") ? ""N"" : options[""MstBlob""];
+                string dtlBlobIconOption = !options.ContainsKey(""DtlBlob"") ? ""N"" : options[""DtlBlob""];
+                var mstBlob = GetBlobOption(mstBlobIconOption);
+                var dtlBlob = GetBlobOption(dtlBlobIconOption);
+                string jsonCri = options.ContainsKey(""CurrentScreenCriteria"") ? options[""CurrentScreenCriteria""] : null;
+                bool includeDtl = (!options.ContainsKey(""IncludeDtl"") || options[""IncludeDtl""] == ""Y"") && !String.IsNullOrEmpty(GetDtlTableName());
+                ValidatedMstId(""GetLis[[---ScreenDef---]]"", systemId, screenId, ""**"" + keyId, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));
+                DataTable dt = _GetMstById(keyId);
+                DataTable dtColAuth = _GetAuthCol(GetScreenId());
+                DataTable dtColLabel = _GetScreenLabel(GetScreenId());
+                Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr[""ColName""].ToString());
+                var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr[""DisplayMode""].ToString().Contains(""UTC"")).Select(dr => dr[""ColumnName""].ToString() + dr[""TableId""].ToString()).ToArray();
+                HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
+                ApiResponse <List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
+                SerializableDictionary<string, AutoCompleteResponse> supportingData = new SerializableDictionary<string,AutoCompleteResponse>();
+                mr.data = DataTableToListOfObject(dt, mstBlob, colAuth, utcColumns);
+                mr.supportingData = includeDtl ? new SerializableDictionary<string, AutoCompleteResponse>() { { ""dtl"", new AutoCompleteResponse() { data = DataTableToListOfObject(_GetDtlById(keyId, 0), dtlBlob, colAuth, utcColumns) } } } : supportingData;
+                mr.status = ""success"";
+                mr.errorMsg = """";
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
+            return ret;
+        }
+        [WebMethod(EnableSession = false)]
+        public override ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetMstById(string keyId, SerializableDictionary<string, string> options)
+        {
+            return Get[[---ScreenDef---]]ById(keyId, options);
+        }
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> Get[[---ScreenDef---]]DtlById(string keyId, SerializableDictionary<string, string> options, int filterId)
+        {
+            bool refreshUsrImpr = options.ContainsKey(""ReAuth"") && options[""ReAuth""] == ""Y"" ;
+
+            Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+            {
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
+                string jsonCri = options.ContainsKey(""CurrentScreenCriteria"") ? options[""CurrentScreenCriteria""] : null;            
 ");
             sb.Append(GetDtlByIdCnt);
             sb.Append(@"
-                    mr.status = ""success"";
-                    mr.errorMsg = """";
-                    return mr;
-                };
-                var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
-                return ret;
-            }
-
-            [WebMethod(EnableSession = false)]
-            public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetNewMst()
+                mr.status = ""success"";
+                mr.errorMsg = """";
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
+            return ret;
+        }
+        [WebMethod(EnableSession = false)]
+        public override ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetDtlById(string keyId, SerializableDictionary<string, string> options, int filterId)
+        {
+            return Get[[---ScreenDef---]]DtlById(keyId, options, filterId);
+        }
+        [WebMethod(EnableSession = false)]
+        public override ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetNewMst()
+        {
+            Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
-                Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-                {
-                    SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                    var mst = InitMaster();
-                    ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
-                    mr.data = new List<SerializableDictionary<string, string>>() { mst };
-                    mr.status = ""success"";
-                    mr.errorMsg = """";
-                    return mr;
-                };
-                var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
-                return ret;
-            }
-            [WebMethod(EnableSession = false)]
-            public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetNewDtl()
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+                var mst = InitMaster();
+                ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
+                mr.data = new List<SerializableDictionary<string, string>>() { mst };
+                mr.status = ""success"";
+                mr.errorMsg = """";
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
+            return ret;
+        }
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetNewDtl()
+        {
+            Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
-                Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-                {
-                    SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                    var dtl = InitDtl();
-                    ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
-                    mr.data = new List<SerializableDictionary<string, string>>() { dtl };
-                    mr.status = ""success"";
-                    mr.errorMsg = """";
-                    return mr;
-                };
-                var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
-                return ret;
-            }
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+                var dtl = InitDtl();
+                ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
+                mr.data = new List<SerializableDictionary<string, string>>() { dtl };
+                mr.status = ""success"";
+                mr.errorMsg = """";
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
+            return ret;
+        }
 
-            protected override DataTable _GetMstById(string mstId)
+        protected override DataTable _GetMstById(string mstId)
+        {
+            return (new RO.Access3.AdminAccess()).GetMstById(""Get[[---ScreenDef---]]ById"", string.IsNullOrEmpty(mstId) ? ""-1"" : mstId, LcAppConnString, LcAppPw);
+
+        }
+        protected override DataTable _GetDtlById(string mstId, int screenFilterId)
+        {
+            return (new RO.Access3.AdminAccess()).GetDtlById(screenId, ""Get[[---ScreenDef---]]DtlById"", string.IsNullOrEmpty(mstId) ? ""-1"" : mstId, LcAppConnString, LcAppPw, screenFilterId, LImpr, LCurr);
+
+        }
+        protected override Dictionary<string, SerializableDictionary<string, string>> GetDdlContext()
+        {
+            return ddlContext;
+        }
+
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> DelMst(SerializableDictionary<string, string> mst, SerializableDictionary<string, string> options)
+        {
+            bool refreshUsrImpr = options.ContainsKey(""ReAuth"") && options[""ReAuth""] == ""Y"" ;
+
+            Func<ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
-                return (new RO.Access3.AdminAccess()).GetMstById(""Get[[---ScreenDef---]]ById"", string.IsNullOrEmpty(mstId) ? ""-1"" : mstId, LcAppConnString, LcAppPw);
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
+                var pid = mst[""[[---ScreenPrimaryKey---]]""];
+                var ds = Prep[[---ScreenName---]]Data(mst, new List<SerializableDictionary<string, string>>(), string.IsNullOrEmpty(mst[""[[---ScreenPrimaryKey---]]""]));
+                (new RO.Access3.AdminAccess()).DelData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc);
 
-            }
-            protected override DataTable _GetDtlById(string mstId, int screenFilterId)
+                ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+                SaveDataResponse result = new SaveDataResponse();
+                string msg = _GetScreenHlp(screenId).Rows[0][""DelMsg""].ToString();
+                result.message = msg;
+                mr.status = ""success"";
+                mr.errorMsg = """";
+                mr.data = result;
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""D"", null));
+            return ret;
+
+        }
+
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> SaveData(SerializableDictionary<string, string> mst, List<SerializableDictionary<string, string>> dtl, SerializableDictionary<string, string> options)
+        {
+            bool isAdd = false;
+            bool refreshUsrImpr = options.ContainsKey(""ReAuth"") && options[""ReAuth""] == ""Y"" ;
+            Func<ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
-                return (new RO.Access3.AdminAccess()).GetDtlById(screenId, ""Get[[---ScreenDef---]]DtlById"", string.IsNullOrEmpty(mstId) ? ""-1"" : mstId, LcAppConnString, LcAppPw, screenFilterId, LImpr, LCurr);
-
-            }
-            protected override Dictionary<string, SerializableDictionary<string, string>> GetDdlContext()
-            {
-                return ddlContext;
-            }
-
-            [WebMethod(EnableSession = false)]
-            public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> DelMst(SerializableDictionary<string, string> mst, SerializableDictionary<string, string> options)
-            {
-                Func<ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-                {
-                    SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                    var pid = mst[""[[---ScreenPrimaryKey---]]""];
-                    var ds = Prep[[---ScreenName---]]Data(mst, new List<SerializableDictionary<string, string>>(), string.IsNullOrEmpty(mst[""[[---ScreenPrimaryKey---]]""]));
-                    (new RO.Access3.AdminAccess()).DelData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc);
-
-                    ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                    SaveDataResponse result = new SaveDataResponse();
-                    string msg = _GetScreenHlp(screenId).Rows[0][""DelMsg""].ToString();
-                    result.message = msg;
-                    mr.status = ""success"";
-                    mr.errorMsg = """";
-                    mr.data = result;
-                    return mr;
-                };
-                var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""D"", null));
-                return ret;
-
-            }
-
-            [WebMethod(EnableSession = false)]
-            public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> SaveData(SerializableDictionary<string, string> mst, List<SerializableDictionary<string, string>> dtl, SerializableDictionary<string, string> options)
-            {
-                Func<ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-                {
-                    //throw new Exception(""aaa"");
-                    SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                    System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
-                    SerializableDictionary<string, string> skipValidation = new SerializableDictionary<string, string>(){ { ""SkipAllMst"", ""SilentColReadOnly"" }, { ""SkipAllDtl"", ""SilentColReadOnly"" } };
-                    /* AsmxRule: Save Data Before */
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
+                System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+                SerializableDictionary<string, string> skipValidation = new SerializableDictionary<string, string>() { { ""SkipAllMst"", ""SilentColReadOnly"" }, { ""SkipAllDtl"", ""SilentColReadOnly"" } };
+                /* AsmxRule: Save Data Before */
 ");
             sb.Append(AsmxSaveDataBeforeCnt + Environment.NewLine);
             sb.Append(@"
-                    /* AsmxRule End: Save Data Before */
+                /* AsmxRule End: Save Data Before */
 
-                    var pid = mst[""[[---ScreenPrimaryKey---]]""];
-                    if (!string.IsNullOrEmpty(pid))
-                    {
-                        string jsonCri = options.ContainsKey(""currentScreenCriteria"") ? options[""currentScreenCriteria""] : null;
-                        ValidatedMstId(""GetLis[[---ScreenDef---]]"", systemId, screenId, ""**"" + pid, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));
-                    }
+                var pid = mst[""[[---ScreenPrimaryKey---]]""];"
+    + (screenPrimaryKeyColumnIdentity == "N" 
+    ? @"
+                isAdd = GetLis(""GetLis[[---ScreenDef---]]"", systemId, screenId, ""**"" + pid, new List<string>(), ""0"", """", ""N"", 1, false).Rows.Count == 0;" 
+    : @"
+                isAdd = string.IsNullOrEmpty(pid);" 
 
-                    /* current data */
-                    DataTable dtMst = _GetMstById(pid);
+        ) + @"
+                if (!isAdd)
+                {
+                    string jsonCri = options.ContainsKey(""CurrentScreenCriteria"") ? options[""CurrentScreenCriteria""] : null;
+                    ValidatedMstId(""GetLis[[---ScreenDef---]]"", systemId, screenId, ""**"" + pid, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));
+                }
+                else
+                {
+                    ValidateAction(screenId, ""A"");
+                }
+
+                /* current data */
+                DataTable dtMst = _GetMstById(pid);
 ");
             sb.Append(CurrentDataCnt);
             sb.Append(@" 
-                    int maxDtlId = dtDtl == null ? -1 : dtDtl.AsEnumerable().Select(dr => dr[""[[---screenDetailKey---]]""].ToString()).Where((s) => !string.IsNullOrEmpty(s)).Select(id => int.Parse(id)).DefaultIfEmpty(-1).Max();
-                    var validationResult = ValidateInput(ref mst, ref dtl, dtMst, dtDtl, ""[[---ScreenPrimaryKey---]]"", ""[[---screenDetailKey---]]"", skipValidation);
-                    if (validationResult.Item1.Count > 0 || validationResult.Item2.Count > 0)
+                int maxDtlId = dtDtl == null ? -1 : dtDtl.AsEnumerable().Select(dr => dr[""[[---screenDetailKey---]]""].ToString()).Where((s) => !string.IsNullOrEmpty(s)).Select(id => int.Parse(id)).DefaultIfEmpty(-1).Max();
+                var validationResult = ValidateInput(ref mst, ref dtl, dtMst, dtDtl, ""[[---ScreenPrimaryKey---]]"", ""[[---screenDetailKey---]]"", skipValidation);
+                if (validationResult.Item1.Count > 0 || validationResult.Item2.Count > 0)
+                {
+                    return new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>()
                     {
-                        return new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>()
-                        {
-                            status = ""failed"",
-                            errorMsg = ""content invalid "" + string.Join("" "", (validationResult.Item1.Count > 0 ? validationResult.Item1 : validationResult.Item2[0]).ToArray()),
-                            validationErrors = validationResult.Item1.Count > 0 ? validationResult.Item1 : validationResult.Item2[0],
-                        };
-                    }
-                    var ds = Prep[[---ScreenName---]]Data(mst, dtl, string.IsNullOrEmpty(mst[""[[---ScreenPrimaryKey---]]""]));
-                    string msg = string.Empty;
+                        status = ""failed"",
+                        errorMsg = ""content invalid "" + string.Join("" "", (validationResult.Item1.Count > 0 ? validationResult.Item1 : validationResult.Item2[0]).ToArray()),
+                        validationErrors = validationResult.Item1.Count > 0 ? validationResult.Item1 : validationResult.Item2[0],
+                    };
+                }
+                var ds = Prep[[---ScreenName---]]Data(mst, dtl, string.IsNullOrEmpty(mst[""[[---ScreenPrimaryKey---]]""]));
+                string msg = string.Empty;
 
-                    if (string.IsNullOrEmpty(mst[""[[---ScreenPrimaryKey---]]""]))
+                if (isAdd)
+                {
+                    pid = (new RO.Access3.AdminAccess()).AddData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc);
+
+                    if (!string.IsNullOrEmpty(pid))
                     {
-                        pid = (new RO.Access3.AdminAccess()).AddData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc);
-
-                        if (!string.IsNullOrEmpty(pid))
-                        {
-                            msg = _GetScreenHlp(screenId).Rows[0][""AddMsg""].ToString();
-                        }
+                        msg = _GetScreenHlp(screenId).Rows[0][""AddMsg""].ToString();
                     }
-                    else
+                }
+                else
+                {
+                    bool ok = (new RO.Access3.AdminAccess()).UpdData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc);
+
+                    if (ok)
                     {
-                        bool ok = (new RO.Access3.AdminAccess()).UpdData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc);
-
-                        if (ok)
-                        {
-                            msg = _GetScreenHlp(screenId).Rows[0][""UpdMsg""].ToString();
-                        }
+                        msg = _GetScreenHlp(screenId).Rows[0][""UpdMsg""].ToString();
                     }
+                }
 
-                    /* read updated records */
-                    dtMst = _GetMstById(pid);
+                /* read updated records */
+                dtMst = _GetMstById(pid);
 ");
             sb.Append(DtDtlCnt);
+            if (hasMstImageUpload)
+            {
+                sb.Append(MstImgUploadCnt);
+            }
+            if (hasDtlImageUpload)
+            {
+                sb.Append(@"
+                foreach (var x in dtl) 
+                {
+");
+                sb.Append(DtlImgUploadCnt);
+                sb.Append(@"
+                }
+");
+            }
             sb.Append(@"
-                     foreach (var x in dtl){
-                        ");
-            sb.Append(DtlImgUploadCnt);
-            sb.Append(@"
-                     }
-                     /* AsmxRule: Save Data After */
+                /* AsmxRule: Save Data After */
 ");
             sb.Append(AsmxSaveDataAfterCnt + Environment.NewLine);
             sb.Append(@"
-                    /* AsmxRule End: Save Data After */
+                /* AsmxRule End: Save Data After */
 
-                    ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                    SaveDataResponse result = new SaveDataResponse();
-                    DataTable dtColAuth = _GetAuthCol(GetScreenId());
-                    Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr[""ColName""].ToString());
+                ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+                SaveDataResponse result = new SaveDataResponse();
+                DataTable dtColAuth = _GetAuthCol(GetScreenId());
+                DataTable dtColLabel = _GetScreenLabel(GetScreenId());
+                Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr[""ColName""].ToString());
+                var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr[""DisplayMode""].ToString().Contains(""UTC"")).Select(dr => dr[""ColumnName""].ToString() + dr[""TableId""].ToString()).ToArray();
+                HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
 
-                    result.mst = DataTableToListOfObject(dtMst, false, colAuth)[0];
+                result.mst = DataTableToListOfObject(dtMst, IncludeBLOB.None, colAuth, utcColumns)[0];
 ");
             sb.Append(DtlCnt);
             sb.Append(@"
                     
-                    result.message = msg;
-                    mr.status = ""success"";
-                    mr.errorMsg = """";
-                    mr.data = result;
-                    return mr;
-                };
-                var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""S"", null));
-                return ret;
-            }
+                result.message = msg;
+                mr.status = ""success"";
+                mr.errorMsg = """";
+                mr.data = result;
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""S"", null));
+            return ret;
+        }
             ");
 
             return sb;
         }
 
-        private StringBuilder GetScreenDdlFunctions(string screenId, string screenName, string screenPrimaryKey, string screenPrimaryKeyType, string screenPrimaryKeyDis, DataView dvItms)
+        private StringBuilder GetScreenDdlFunctions(string screenId, string screenName, string screenPrimaryKey, string screenPrimaryKeyType, string screenPrimaryKeyDis, string multiDesignDb, string mstTableName, string mstPKeyColumnName, string dtlTableName, string dtlPKeyColumnName, DataView dvItms)
         {
             List<string> GetScreenDdlFunctionsResults = new List<string>();
             List<string> GetDdlListResults = new List<string>();
@@ -5230,111 +5713,148 @@ export function SetScreenCriteria(criteriaValues, accessScope){
                 string DdlFtrColumnName = drv["DdlFtrColumnName"].ToString();
                 string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
                 string DdlAdnColumnName = drv["DdlAdnColumnName"].ToString();
+                string TableName = drv["TableName"].ToString();
+
                 if (DisplayMode == "AutoComplete")
                 {
-                    string GetScreenDdlFunctionsValue = "[WebMethod(EnableSession = false)]"
-                                                      + "public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Get" + columnId + "List(string query, int topN, string filterBy)"
-                                                      + "{"
-                                                      + "Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>"
-                                                      + "{"
-                                                      + "SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);"
-                                                      + "System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();"
-                                                      + "context[\"method\"] = \"" + SPName + "\";"
-                                                      + "context[\"addnew\"] = \"Y\";"
-                                                      + "context[\"mKey\"] = \"" + columnId + "\";"
-                                                      + "context[\"mVal\"] = \"" + columnId + "Text\";"
-                                                      + "context[\"mTip\"] = \"" + columnId + "Text\";"
-                                                      + "context[\"mImg\"] = \"" + columnId + "Text\";"
-                                                      + "context[\"ssd\"] = \"\";"
-                                                      + "context[\"scr\"] = screenId.ToString();"
-                                                      + "context[\"csy\"] = systemId.ToString();"
-                                                      + "context[\"filter\"] = \"0\";"
-                                                      + "context[\"isSys\"] = \"N\";"
-                                                      + "context[\"conn\"] = string.Empty;"
-                                                      + (string.IsNullOrEmpty(DdlFtrColumnName)
-                                                        ? ""
-                                                        : ("context[\"refCol\"] = \"" + DdlAdnColumnName + "\";"
-                                                            + "context[\"refColDataType\"] = \"" + DdlFtrDataType + "\";"
-                                                            + "context[\"refColVal\"] = filterBy;")
-                                                        )
-                                                      + "ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>();"
-                                                      + "mr.status = \"success\";"
-                                                      + "mr.errorMsg = \"\";"
-                                                      + "mr.data = ddlSuggests(query, context, topN);"
-                                                      + "return mr;"
-                                                      + "};"
-                                                      + "var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, \"R\", \"" + columnId + "\", emptyAutoCompleteResponse));"
-                                                      + "return ret;"
-                                                      + "}";
+                    string GetScreenDdlFunctionsValue = @"
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Get" + columnId + @"List(string query, int topN, string filterBy)
+        {
+        Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+        {
+            SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+            System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+            context[""method""] = """ + SPName + @""";
+            context[""addnew""] = ""Y"";
+            context[""mKey""] = """ + columnId + @""";
+            context[""mVal""] = """ + columnId + @"Text"";
+            context[""mTip""] = """ + columnId + @"Text"";
+            context[""mImg""] = """ + columnId + @"Text"";
+            context[""ssd""] = """";
+            context[""scr""] = screenId.ToString();
+            context[""csy""] = systemId.ToString();
+            context[""filter""] = ""0"";
+            context[""isSys""] = """ + Robot.GetIsSys(multiDesignDb, "N") + @""";
+            context[""conn""] = string.Empty;"
++ (string.IsNullOrEmpty(DdlFtrColumnName)
+? @"" + Environment.NewLine
+: (@"            
+            context[""refCol""] = """ + DdlAdnColumnName + @""";
+            context[""refColDataType""] = """ + DdlFtrDataType + @""";
+            context[""refColVal""] = filterBy;"
+))
++ @"
+            ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+            mr.status = ""success"";
+            mr.errorMsg = """";
+            mr.data = ddlSuggests(query, context, topN);
+            return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", """ + columnId + @""", emptyAutoCompleteResponse));
+            return ret;
+        }";
 
                     GetScreenDdlFunctionsResults.Add(GetScreenDdlFunctionsValue);
 
-                    string GetDdlListValue = "var " + columnId + "LIst = Get" + columnId + "List(\"\", 0, \"\");";
+                    string GetDdlListValue = "var " + columnId + "List = Get" + columnId + "List(\"\", 0, \"\");";
                     GetDdlListResults.Add(GetDdlListValue);
                 }
-                else if (DisplayMode == "DropDownList" || drv["DisplayMode"].ToString() == "RadioButtonList" || drv["DisplayMode"].ToString() == "ListBox" || drv["DisplayMode"].ToString() == "WorkflowStatus" || drv["DisplayMode"].ToString() == "AutoListBox" || drv["DisplayMode"].ToString() == "DataGridLink")
+                else if (DisplayMode == "DropDownList" 
+                    || drv["DisplayMode"].ToString() == "RadioButtonList" 
+                    || drv["DisplayMode"].ToString() == "ListBox" 
+                    || drv["DisplayMode"].ToString() == "WorkflowStatus" 
+                    || drv["DisplayMode"].ToString() == "AutoListBox" 
+                    || drv["DisplayMode"].ToString() == "DataGridLink"
+                    )
                 {
-                    string GetScreenDdlFunctionsValue = "[WebMethod(EnableSession = false)]"
-                                                      + "public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Get" + columnId + "List(string query, int topN, string filterBy)"
-                                                      + "{"
-                                                      + "Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>"
-                                                      + "{"
-                                                      + "SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);"
-                                                      + "bool bAll = !query.StartsWith(\"**\");"
-                                                      + "bool bAddNew = !query.StartsWith(\"**\");"
-                                                      + "string keyId = query.Replace(\"**\", \"\");"
-                                                      + "DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, \"" + SPName + "\", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);"
-                                                      + "return DataTableToApiResponse(dt, \"\", 0);"
-                                                      + "};"
-                                                      + "var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, \"R\", \"" + columnId + "\", emptyAutoCompleteResponse));"
-                                                      + "return ret;"
-                                                      + "}";
+                    string GetScreenDdlFunctionsValue = @"
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Get" + columnId +@"List(string query, int topN, string filterBy)
+        {
+            Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+            {
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+                bool bAll = !query.StartsWith(""**"");
+                bool bAddNew = !query.StartsWith(""**"");
+                string keyId = query.Replace(""**"", """");
+                DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, """ + SPName + @""", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
+                return DataTableToApiResponse(dt, """", 0);
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", """ + columnId +@""", emptyAutoCompleteResponse));
+            return ret;
+        }";
 
                     GetScreenDdlFunctionsResults.Add(GetScreenDdlFunctionsValue);
 
-                    string GetDdlListValue = "var " + columnId + "LIst = Get" + columnId + "List(\"\", 0, \"\");";
+                    string GetDdlListValue = "var " + columnId + "List = Get" + columnId + "List(\"\", 0, \"\");";
                     GetDdlListResults.Add(GetDdlListValue);
+                }
+                else if (DisplayMode == "Document")
+                {
+                    string GetScreenDdlFunctionsValue = @"
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> Del" + columnId + @"(string mstId, string dtlId, bool isMaster, string[] docIdList, string screenColumnName)
+        {
+            return DelMultiDoc(mstId, dtlId, isMaster, docIdList, """ + columnId + @""", """ + ColumnName + @""", """ + mstTableName + @""", """ + ColumnName + @""", """ + mstPKeyColumnName + @""");
+        }
+
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> Save" + columnId + @"(string mstId, string dtlId, bool isMaster, string docId, bool overwrite, string screenColumnName, string docJson, SerializableDictionary<string, string> options)
+        {
+            return SaveMultiDoc(mstId, dtlId, isMaster, docId, overwrite, """ + columnId + @""", """ + ColumnName + @""", docJson, options);
+        }
+
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Get" + columnId + @"List(string mstId, string dtlId, bool isMaster)
+        {
+            return GetMultiDocList(mstId, dtlId, isMaster, """ + columnId + @""", """ + SPName + @""");
+        }
+";
+                    GetScreenDdlFunctionsResults.Add(GetScreenDdlFunctionsValue);
+                    //string GetDdlListValue = "var " + columnId + "List = Get" + columnId + "List(\"\", 0, \"\");";
+                    //GetDdlListResults.Add(GetDdlListValue);
+
                 }
             }
 
             string GetScreenDdlFunctionsCnt = string.Join(Environment.NewLine, GetScreenDdlFunctionsResults.Select(s => addIndent(s, 24)));
-            string GetDdlListCnt = string.Join(Environment.NewLine, GetDdlListResults.Select(s => addIndent(s, 24)));
+            string GetDdlListCnt = string.Join(Environment.NewLine, GetDdlListResults.Select(s => addIndent(s, 16)));
 
 
             StringBuilder sb = new StringBuilder();
 
             sb.Append(GetScreenDdlFunctionsCnt);
             sb.Append(@"
-            [WebMethod(EnableSession = false)]
-            public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> LoadInitPage(SerializableDictionary<string, string> options)
+        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
+        {
+            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
-                Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-                {
-                    SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                    var dtAuthCol = _GetAuthCol(screenId);
-                    var dtAuthRow = _GetAuthRow(screenId);
-                    var dtScreenLabel = _GetScreenLabel(screenId);
-                    var dtScreenCriteria = _GetScrCriteria(screenId);
-                    var dtScreenFilter = _GetScreenFilter(screenId);
-                    var dtScreenHlp = _GetScreenHlp(screenId);
-                    var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                    var dtLabel = _GetLabels(""[[---ScreenName---]]"");
-                    var SearchList = Get[[---ScreenDef---]]List("""", 0, """");
-            ");
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+                var dtAuthCol = _GetAuthCol(screenId);
+                var dtAuthRow = _GetAuthRow(screenId);
+                var dtScreenLabel = _GetScreenLabel(screenId);
+                var dtScreenCriteria = _GetScrCriteria(screenId);
+                var dtScreenFilter = _GetScreenFilter(screenId);
+                var dtScreenHlp = _GetScreenHlp(screenId);
+                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
+                var dtLabel = _GetLabels(""[[---ScreenName---]]"");
+                var SearchList = Get[[---ScreenDef---]]List("""", 0, """");
+");
             sb.Append(GetDdlListCnt);
             sb.Append(@"
 
-                    LoadScreenPageResponse result = new LoadScreenPageResponse();
+                LoadScreenPageResponse result = new LoadScreenPageResponse();
 
-                    ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                    mr.status = ""success"";
-                    mr.errorMsg = """";
-                    mr.data = result;
-                    return mr;
-                };
-                var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""S"", null));
-                return ret;
-            }           
+                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+                mr.status = ""success"";
+                mr.errorMsg = """";
+                mr.data = result;
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", null));
+            return ret;
+        }           
             ");
 
             return sb;

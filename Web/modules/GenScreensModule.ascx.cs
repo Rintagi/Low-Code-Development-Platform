@@ -126,6 +126,15 @@ namespace RO.Web
 			DataTable dt = (new LoginSystem()).GetSystemsList(base.CPrj.SrcDesConnectionString, base.CPrj.SrcDesPassword);
 			if (dt != null)
 			{
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (dr["Active"].ToString() == "N")
+                    {
+                        // remove disabled modules from list ?
+                        dr.Delete();
+                    }
+                }
+                dt.AcceptChanges();
 				Session[KEY_dtSystem] = dt;
 				cSystemId.DataSource = dt; cSystemId.DataBind();
 				if (cSystemId.Items.Count > 0)
@@ -284,10 +293,12 @@ namespace RO.Web
                         {
                             (new RO.WebRules.WebRule()).WrUpdScreenReactGen(drv["ScreenId"].ToString(), CSrc.SrcConnectionString, CSrc.SrcDbPassword);
                         }
+                        string projectRootPath = Config.RuleTierPath;
+                        //string projectRootPath = CPrj.SrcRuleProgramPath;
 
                         if (dts != null &&
                             (drv["GenerateSc"].ToString() == "Y" || drv["GenerateSr"].ToString() == "Y") && (drv["ScreenType"].ToString() != "I3") &&
-                            (new GenReactRules(base.LUser.CultureId, CSrc.SrcConnectionString, CSrc.SrcDbPassword, sAbbr, "C:/Rintagi/" + Config.AppNameSpace + "/React/" + sAbbr + "/", CSrc.SrcSystemId)).CreateProgram(drv["ScreenId"].ToString(), drv["ProgramName"].ToString())
+                            (new GenReactRules(base.LUser.CultureId, CSrc.SrcConnectionString, CSrc.SrcDbPassword, sAbbr, projectRootPath + "/React/" + sAbbr + "/", CSrc.SrcSystemId)).CreateProgram(drv["ScreenId"].ToString(), drv["ProgramName"].ToString())
                             )
                         { iGen = iGen + 1; }
                         else { iNot = iNot + 1; }

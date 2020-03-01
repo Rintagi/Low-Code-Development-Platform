@@ -1,0 +1,16 @@
+BKI~@~Background Image/Color~@~This is the background image or color of your choice.~@~Y~@~H~@~Y~@~Y
+BRC~@~Breadcrumb~@~This is the trace of the current display on the menu track which will be abbreviated on mobile.~@~N~@~I~@~Y~@~Y
+CDD~@~Current Long Date~@~This is the long date formated by the current culture. Hidden on mobile.~@~N~@~H~@~N~@~Y
+CDT~@~Current Date Time~@~This is the long date time formated by the current culture. Hidden on mobile.~@~N~@~H~@~N~@~Y
+CRS~@~Carousel~@~~@~Y~@~S~@~N~@~N
+CUL~@~Culture Choice~@~This is the auto-complete for culture selection with a reset button on the right. It will remain displayed on mobile.~@~N~@~S~@~N~@~Y
+HDR~@~Link Header~@~Define your main header links. An icon will be displayed on mobile.~@~Y~@~I~@~Y~@~N
+IMG~@~Image Only~@~This is one free-style image.~@~Y~@~S~@~N~@~Y
+LAB~@~Label Only~@~This is one free-style label.~@~Y~@~S~@~N~@~Y
+LGO~@~Logo Home~@~The default logo from Web.config will be replaced by the image from the Image URL.~@~Y~@~I~@~Y~@~Y
+LNK~@~Link General~@~This is a general link section which will remain displayed on mobile.~@~Y~@~S~@~N~@~N
+MNS~@~Menu Vertical Side~@~This is the side secondary menu and is optional which will remain displayed on mobile.~@~N~@~S~@~Y~@~Y
+MNT~@~Menu Horizontal Top~@~This is the top main menu. An icon will be displayed on mobile.~@~N~@~I~@~Y~@~Y
+PRF~@~User Profile~@~This is the user profile and account. An icon will be displayed on mobile.~@~N~@~I~@~Y~@~Y
+SSO~@~Link Social~@~Define your social links with your own image or hyperlink. An icon will be displayed on mobile~@~Y~@~I~@~Y~@~N
+VER~@~Version Text~@~©1999-2014 Robocoder Corporation. All rights reserved (V8.47.40606 by R8.47.40606). ~@~N~@~S~@~N~@~Y
