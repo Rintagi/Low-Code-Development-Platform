@@ -17,7 +17,6 @@ namespace RO.Rule3
 
     public class Deploy : Encryption
     {
-
         public new const string ROVersion = "20200228";
         private StringBuilder sbd;	// version control design meta data
         private StringBuilder sba;	// version control application meta data
