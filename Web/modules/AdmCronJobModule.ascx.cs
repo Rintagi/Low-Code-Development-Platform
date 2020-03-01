@@ -152,17 +152,16 @@ namespace RO.Web
                         // required to indicate success so no retry until next scheduled time
                         UpdCronStatus(LcSysConnString, LcAppPw);
                         // optional status message to indicate last success
-                        UpdCronStatus("success", LcAppConnString, LcAppPw);
+                        UpdCronStatus("success", LcSysConnString, LcAppPw);
                     }
                     catch (Exception ex)
                     {
                         // report error to the front end as cron invoked has no visual error reporting
-                        UpdCronStatus(ex.Message, LcAppConnString, LcAppPw);
+                        UpdCronStatus(ex.Message, LcSysConnString, LcAppPw);
                         // backend support
                         ErrorTrace(ex, "error");
                     }
                 }
-
 
 				// *** WebRule End *** //
 			}

@@ -7,11 +7,10 @@ import ScrollToTop from './app/ScrollToTop';
 import { getUserConfirmation } from './helpers/navigation'
 import { createBrowserHistory, useBasename } from "history";
 import {HashRouter, BrowserRouter} from "react-router-dom";
-import {setupRuntime} from './helpers/utils';
+
 /* Rintagi runtime configuration(rintagi.js under public/runtime) is loaded in index.html so must be accessed via document namespace
  * this is for post-deployment override
  */
-
 const useBrowserRouter = (document.Rintagi || {}).useBrowserRouter;
 const appBasename = useBrowserRouter ? (document.Rintagi || {}).appBasename : "/"; // muse use absolute root if using HashRouter to avoid unnecessary path after #
 const Router = useBrowserRouter ? BrowserRouter : HashRouter;

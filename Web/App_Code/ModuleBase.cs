@@ -158,7 +158,10 @@ namespace RO.Web
 		public ModuleBase()
 		{
             var Request = Context.Request;
-            IntPageUrlBase = (Request.IsSecureConnection ? "https://" : "http://") + Context.Request.Url.Host + (Context.Request.ApplicationPath + "/").Replace("//","/");
+            IntPageUrlBase = (Request.IsSecureConnection ? "https://" : "http://") 
+                                + Request.Url.Host 
+                                + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port.ToString())
+                                + (Request.ApplicationPath + "/").Replace("//","/");
             PageUrlBase = ResolveUrlCustom("~/", false, true);
             string xForwardedFor = Request.Headers["X-Forwarded-For"];
             string extBasePath = Config.ExtBasePath;
@@ -1569,7 +1572,12 @@ namespace RO.Web
              * use either localhost assuming default web site or must be configured
              */
             string intBaseUrl = string.IsNullOrEmpty(Config.IntBaseUrl) 
-                    ? "http://localhost/" + (Request.ApplicationPath + "/").Replace("//", "/") 
+                ? ((Request.IsSecureConnection ? "https://" : "http://")
+                    + myUri.Host
+                    + (myUri.IsDefaultPort ? "" : ":" + myUri.Port.ToString())
+                    + Request.ApplicationPath == "/" ? "" : Request.ApplicationPath
+                    )
+//                    ? "http://localhost/" + (Request.ApplicationPath + "/").Replace("//", "/") 
                     : Config.IntBaseUrl ;
 
             string newUrl =
@@ -2694,13 +2702,22 @@ namespace RO.Web
         protected string GetDomainUrl(bool isInternal = false)
         {
             var Request = Context.Request;
-            string intBaseUrl = (Request.IsSecureConnection ? "https://" : "http://") + Request.Url.Host;
-            if (isInternal || !IsProxy() || string.IsNullOrEmpty(Config.ExtBaseUrl)) return intBaseUrl;
-            else return Config.ExtBaseUrl.Replace(Config.ExtBasePath, "");
+            string intBaseUrl = ((Request.IsSecureConnection) ? "https://" : "http://")
+                        + HttpContext.Current.Request.Url.Host
+                        + (HttpContext.Current.Request.Url.IsDefaultPort ? "" : ":" + HttpContext.Current.Request.Url.Port.ToString());
+
+            if (isInternal || !IsProxy() || string.IsNullOrEmpty(Config.ExtBaseUrl)) 
+                return intBaseUrl;
+            else 
+                return Config.ExtBaseUrl.Replace(Config.ExtBasePath, "");
         }
         protected string GetBaseUrl(bool isInternal = false)
         {
-            string intBaseUrl = (Request.IsSecureConnection ? "https://" : "http://") + Request.Url.Host + ResolveUrl("~/");
+            string applicationPath = HttpRuntime.AppDomainAppVirtualPath;
+            string intBaseUrl = ((Request.IsSecureConnection) ? "https://" : "http://") 
+                        + HttpContext.Current.Request.Url.Host
+                        + (HttpContext.Current.Request.Url.IsDefaultPort ? "" : ":" + HttpContext.Current.Request.Url.Port.ToString())
+                        + (applicationPath == "/" ? "" : applicationPath);
             string baseUrl = ResolveUrlCustom(intBaseUrl, isInternal);
             return baseUrl.EndsWith("/") ? baseUrl.Left(baseUrl.Length - 1) : baseUrl;
         }

@@ -1356,10 +1356,10 @@
             RO.Common3.Encryption e = new RO.Common3.Encryption();
             return e.CheckValidLicense(moduleName, resourceName);
         }
-        public static string RenewLicense(string LicenseServerEndPoint = null)
+        public static string RenewLicense(string LicenseServerEndPoint = null, string InstallID = null, string AppId = null, string AppNameSpace = null)
         {
             RO.Common3.Encryption e = new RO.Common3.Encryption();
-            return e.RenewLicense(LicenseServerEndPoint);
+            return e.RenewLicense(LicenseServerEndPoint, InstallID, AppId, AppNameSpace);
         }
 
         public static List<DataStructure> AnalyseExcelData(DataTable dtImp, int rowsToExamine)
@@ -1437,7 +1437,7 @@
             return (from x in columns where !string.IsNullOrEmpty(x.ColumnName) select x).ToList();
         }
 
-        public static void DirectoryCleanup(string sourceDirName, string searchPattern, bool recursve = false)
+        public static void DirectoryCleanup(string sourceDirName, string searchPattern, bool recursive = false)
         {
             if (string.IsNullOrEmpty(searchPattern)) return;
 
@@ -1460,7 +1460,7 @@
                 { }
             }
 
-            if (recursve)
+            if (recursive)
             {
                 // Get the subdirectories for the specified directory.
                 try
@@ -1468,7 +1468,7 @@
                     DirectoryInfo[] dirs = dir.GetDirectories();
                     foreach (DirectoryInfo subdir in dirs)
                     {
-                        DirectoryCleanup(subdir.FullName, searchPattern, recursve);
+                        DirectoryCleanup(subdir.FullName, searchPattern, recursive);
                     }
                 }
                 catch { }

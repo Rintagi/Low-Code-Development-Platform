@@ -2439,4 +2439,21 @@ In default.master: replace section.css with the following:
 7. improved git integration to track remote branch
 8. client side error tracing of multi-doc upload issues(unhandled exception like server side error)
 9. only export design(*D) metadata for source control purpose when elected(via existence of RuleTier/SQL/Data/ directory)~@~~@~en-US~@~
-11560~@~  11. 122~@~11~@~122~@~~@~~@~~@~~@~~@~~@~
+11560~@~  11. 122.00221~@~11~@~122~@~2020-02-21 00:00:00.000~@~~@~~@~1. pretty formatted generated react code(identical to VS code formatting)
+2. better handling of non-specified ExtBaseUrl/IntBaseUrl
+3. generate image upload logic for master record in react
+4. optimization of caching of user impersonation info in web service layer~@~~@~en-US~@~
+11561~@~  11. 123.00222~@~11~@~123~@~2020-02-22 00:00:00.000~@~~@~~@~1. better error reporting of cronjob configure issue
+2. add SSPI support
+3. skip SSMS generated SP/Index in deployment~@~~@~en-US~@~
+11562~@~  11. 124.00224~@~11~@~124~@~2020-02-24 00:00:00.000~@~~@~~@~1. allow license management screen to create non-local license~@~~@~en-US~@~
+11563~@~  11. 125.00225~@~11~@~125~@~2020-02-25 00:00:00.000~@~~@~~@~1. revise screen filter treatment in web service side to conform to asp.net side expectation
+2. revise installer package for mis-configured missing License3.dll for new installation or old installation upgrade~@~~@~en-US~@~
+11564~@~  11. 126.00226~@~11~@~126~@~2020-02-26 00:00:00.000~@~~@~~@~1. revision on web service image upload validation and download default
+2. revision of file input control V1 for react~@~~@~en-US~@~
+11565~@~  11. 127.00227~@~11~@~127~@~2020-02-27 00:00:00.000~@~~@~~@~1. enhance generated screen SP to pass context to filter SQL block
+2. normalize generated SP with consistent line break(CRLF)
+3. preserve LImpr content order when removing duplicates~@~~@~en-US~@~
+11566~@~  11. 128.00228~@~11~@~128~@~2020-02-28 00:00:00.000~@~~@~~@~1. add listbox react component
+2. further enhance context based filtering support~@~~@~en-US~@~
+11567~@~  11. 129~@~11~@~129~@~~@~~@~~@~~@~~@~~@~

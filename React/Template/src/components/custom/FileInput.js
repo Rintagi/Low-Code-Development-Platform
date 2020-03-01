@@ -8,7 +8,9 @@ import { Row, Col, Spinner } from 'reactstrap';
 import { showNotification } from '../../redux/Notification';
 import Skeleton from 'react-skeleton-loader';
 import { formatBytes } from '../../helpers/formatter';
-import { previewContent,uuid } from '../../helpers/utils';
+import { previewContent, uuid } from '../../helpers/utils';
+import moment from 'moment';
+
 function calcSize(width, height, max_width, max_height, noSwap) {
 
   if (!max_height && !max_width) return { width, height };
@@ -135,7 +137,7 @@ function getFile(file, index, options, success, state, setState) {
           // Resizing image
           var canvas = document.createElement('canvas');
           var ctx = canvas.getContext("2d");
-          
+
           ctx.drawImage(img, 0, 0);
 
           // var options = _this.props.options || {};
@@ -363,22 +365,22 @@ class FileInputField extends Component {
       fileSig: previewSig,
     };
     /* window.open MUST BE DONE here in the click even function or it would be blocked by popup blocker */
-    sessionStorage.setItem("PreviewAttachment",JSON.stringify({...dataObj,fileSig:previewSig}));
-    const win = (!isIE || isImage) && !download && window.open(envPublicUrl + '/helper/showAttachment.html' + '?fileSig=' + previewSig,'_blank');
+    sessionStorage.setItem("PreviewAttachment", JSON.stringify({ ...dataObj, fileSig: previewSig }));
+    const win = (!isIE || isImage) && !download && window.open(envPublicUrl + '/helper/showAttachment.html' + '?fileSig=' + previewSig, '_blank');
     previewContent({
-        dataObj:dataObj
-        , download:false
-        , winObj:win
-        , dataPromise:undefined
-        , previewSig:previewSig
-        , containerUrl: envPublicUrl + '/helper/showAttachment.html'
-      });
+      dataObj: dataObj
+      , download: false
+      , winObj: win
+      , dataPromise: undefined
+      , previewSig: previewSig
+      , containerUrl: envPublicUrl + '/helper/showAttachment.html'
+    });
     return;
     const makeDoc = (body) => {
       return "<html><header>" + "<title>" + currentUrlTitle + ' ' + (selectedFile.fileName || '') + "</title>"
         + "<header><body>" + body + "</body></html>"
     }
-    const injectContent = function(file) {
+    const injectContent = function (file) {
       //debugger;
       const header = win.document.getElementById('header');
       const body = win.document.getElementsByTagName('body');
@@ -389,7 +391,7 @@ class FileInputField extends Component {
       const content = addPreviewUrl(selectedFile).contentUrl;
       //const content = 'https://www.youtube.com/embed/01ON04GCwKs'
       //const content = '<iframe width="560" height="315" src="https://www.youtube.com/embed/01ON04GCwKs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
-      win.postMessage(content,"*");
+      win.postMessage(content, "*");
       // if (body[0])
       //   body[0].innerHTML = makeDoc('<iframe src="' + addPreviewUrl(selectedFile).contentUrl + '" frameborder="0" style="position: absolute; border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
       // else
@@ -405,7 +407,7 @@ class FileInputField extends Component {
     };
 
     // win.onload = function(){
-      
+
     //   //debugger;
     //   injectContent(selectedFile);
     //   // const header = win.document.getElementById('header');
@@ -624,31 +626,35 @@ class FileInputField extends Component {
                 .map((obj, i) => {
                   return (
                     <div className="dropzone__holder" key={i}>
-                      <div className='dropzone__img pointer' style={{ backgroundImage: 'url(' + addPreviewUrl(obj).previewUrl + ')' }} onClick={this.previewSelectedFile(i)}>
-                        {!(obj || {}).base64 && <Skeleton height="100px" widthRandomness="0" />}
+                      <div className={`dropzone__img pointer ${this.props.disabled && 'rad-4 mb-20'}`} style={{ backgroundImage: 'url(' + addPreviewUrl(obj).previewUrl + ')' }} onClick={this.previewSelectedFile(i)}>
+                        {(!(obj || {}).base64 && !(obj || {}).icon) && <Skeleton height="100px" widthRandomness="0" />}
                         {obj && !(obj.mimeType || '').match(/image/) &&
                           <i className={`fa ${this.icon(i)} fs-38 color-green`}></i>
                         }
-                        <p className='dropzone__img-name truncate-inline'>{obj && ((!obj.base64 ? 'Loading...' : obj.fileName))}</p>
+                        {obj && obj.ts && <p className={`dropzone__img-name truncate-inline pb-17 ${this.props.disabled && 'bblr-4'}`}><u>{moment(obj.ts).format('MMM D, YYYY')}</u></p>}
+                        {obj && obj.InputOn && <p className={`dropzone__img-name truncate-inline pb-17 ${this.props.disabled && 'bblr-4'}`}><u>{moment(obj.InputOn, moment.ISO_8601).format('MMM D, YYYY')}</u></p>}
+                        <p className={`dropzone__img-name truncate-inline ${this.props.disabled && 'bblr-4'}`}>{obj && (((!obj.base64 && !obj.icon) ? 'Loading...' : obj.fileName))}</p>
                       </div>
-                      {!this.props.disabled 
-                        ? <button type='button' className='dropzone__img-delete-custom' onClick={this.removeSelectedFile(i)}>{'Remove'}</button>
-                        : <button type='button' className='dropzone__img-delete-custom' onClick={this.previewSelectedFile(i)}>{'Preview'}</button>
+                      {!this.props.disabled
+                        && <button type='button' className='dropzone__img-delete-custom' onClick={this.removeSelectedFile(i)}>{'Remove'}</button>
                       }
                     </div>
                   )
                 })
+            }
+            {(this.state.files || []).length < 1 && this.props.disabled &&
+              <div className="fw-600 m-auto pt-20">No documents in this section</div>
             }
             {!this.props.disabled && <div className={`dropzone__holder ${filesAmount >= maxAllowed && 'd-none'}`}>
               <label className="dropzone__input-custom" htmlFor={this.props.name || (this.props.field || {}).name}>
                 {!this.props.multiple && (this.state.files || []).length > 0 && <i className="fa fa-repeat"></i>}
                 {!this.props.multiple && (this.state.files || []).length === 0 && (!this.state.progress
                   ? <i className="fa fa-plus"></i>
-                  : <Spinner color="success" style={{ width: '2rem', height: '2rem', marginTop: '35%', marginLeft: '32.5%' }} />
+                  : <Spinner color="success" style={{ width: '2rem', height: '2rem', margin: 'auto' }} />
                 )}
                 {this.props.multiple && (!this.state.progress
                   ? <i className="fa fa-plus"></i>
-                  : <Spinner color="success" style={{ width: '2rem', height: '2rem', marginTop: '35%', marginLeft: '32.5%' }} />
+                  : <Spinner color="success" style={{ width: '2rem', height: '2rem', margin: 'auto' }} />
                 )}
               </label>
               <input

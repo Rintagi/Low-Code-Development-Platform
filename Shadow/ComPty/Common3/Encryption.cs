@@ -12,6 +12,7 @@ namespace RO.Common3
     public class Encryption: Key
     {
 		private string pExpiryDt = "9999.12.01";
+        	public const string ROVersion = "20200228";
 		// RCEncryption uses TripleDES algorithm to encrypt and/or decrypt an input string.
 		// By default a key is used to do the decryption, this key should be the same for decryption and encryption.
 		
@@ -202,7 +203,7 @@ namespace RO.Common3
         }
 
 
-        public string RenewLicense(string LicenseServerEndPoint)
+        public string RenewLicense(string LicenseServerEndPoint, string InstallID=null, string AppId = null, string AppNameSpace = null)
         {
             return null;
         }

@@ -232,36 +232,45 @@ namespace RO
                 string extBasePath = Config.ExtBasePath ?? "";
                 string appPath = Request.ApplicationPath;
                 string errorUrl = "Msg.aspx?typ=E";
-                if (
-                    !string.IsNullOrEmpty(extBasePath)
-                    && appPath.ToLower() != extBasePath.ToLower()
-                    && Request != null
-                    && Request.Headers["X-Forwarded-For"] != null
-                    )
+                if (Request.Url.PathAndQuery.Contains("Msg.aspx"))
                 {
-                    try
-                    {
-                        Dictionary<string, string> requestHeader = new Dictionary<string, string>();
-                        foreach (string x in Request.Headers.Keys)
-                        {
-                            requestHeader[x] = Request.Headers[x];
-                        }
-                        requestHeader["Host"] = Request.Url.Host;
-                        requestHeader["ApplicationPath"] = appPath;
-
-                        string url = Utils.transformProxyUrl(errorUrl, requestHeader);
-                        Response.Redirect(url);
-                    }
-                    catch {
-                        Response.Redirect(errorUrl);
-                    }
-
+                    byte[] err = System.Text.UTF8Encoding.UTF8.GetBytes(objErr.ToString());
+                    Response.OutputStream.Flush();
+                    Response.OutputStream.Write(err,0,err.Length);
                 }
                 else
                 {
-                    Response.Redirect(errorUrl);
-                }
+                    if (
+                        !string.IsNullOrEmpty(extBasePath)
+                        && appPath.ToLower() != extBasePath.ToLower()
+                        && Request != null
+                        && Request.Headers["X-Forwarded-For"] != null
+                        )
+                    {
+                        try
+                        {
+                            Dictionary<string, string> requestHeader = new Dictionary<string, string>();
+                            foreach (string x in Request.Headers.Keys)
+                            {
+                                requestHeader[x] = Request.Headers[x];
+                            }
+                            requestHeader["Host"] = Request.Url.Host;
+                            requestHeader["ApplicationPath"] = appPath;
 
+                            string url = Utils.transformProxyUrl(errorUrl, requestHeader);
+                            Response.Redirect(url);
+                        }
+                        catch
+                        {
+                            Response.Redirect(errorUrl);
+                        }
+
+                    }
+                    else
+                    {
+                        Response.Redirect(errorUrl);
+                    }
+                }
 
             }
             catch { }
@@ -353,9 +362,10 @@ namespace RO
                pulseStarted = true;
             }
             string appPath = HttpRuntime.AppDomainAppVirtualPath;
-            string http = ((Request.IsSecureConnection) ? "https" : "http") 
-                        + (HttpContext.Current.Request.Url.IsDefaultPort ? "://" : ":" + HttpContext.Current.Request.Url.Port.ToString() + "//")
-                        + HttpContext.Current.Request.Url.Host + (applicationPath == "/" ? "" : applicationPath);
+            string http = ((Request.IsSecureConnection) ? "https://" : "http://")
+                        + HttpContext.Current.Request.Url.Host
+                        + (HttpContext.Current.Request.Url.IsDefaultPort ? "" : ":" + HttpContext.Current.Request.Url.Port.ToString())
+                        + (appPath == "/" ? "" : appPath);
             string cronjobBaseUrl =
                     !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"])
                     ? System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"]

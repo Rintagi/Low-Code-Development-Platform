@@ -959,7 +959,7 @@ namespace RO.Web
                             {"label",drv[valF].ToString()}, // visible dropdown list as used in jquery's autocomplete
                             {"value",drv[valF].ToString()}, // visible value shown in jquery's autocomplete box
                             {"iconUrl",iconUrlF !="" ?  drv[iconUrlF].ToString() : null}, // optional icon url
-                            {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "": "data:application/base64;base64," + Convert.ToBase64String(drv[imgF] as byte[]))  : null}, // optional embedded image
+                            {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "":  RO.Common3.Utils.BlobPlaceHolder(drv[imgF] as byte[],true))  : null}, // optional embedded image
                             {"tooltips",tipF !="" ? drv[tipF].ToString() : ""},// optional alternative tooltips(say expanded description)
                             {"detail",dtlF !="" ? drv[dtlF].ToString() : null} // optional alternative tooltips(say expanded description)
                             /* more can be added in the future for say multi-column list */

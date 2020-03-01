@@ -2517,7 +2517,7 @@ document.Rintagi = {{
 182~@~1~@~GrabLicenseDetail~@~Rintagi Installation: GrabLicenseDetail~@~retrieve current saved license~@~1022~@~~@~~@~11~@~            var LicenseServer = !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]) ? System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]
                                 : "https://www.rintagi.com";
             ShowLicenseDetail(LicenseServer, null);~@~~@~~@~~@~~@~~@~~@~~@~
-183~@~4~@~AcquireLicense~@~Rintagi Installation: AcquireLicense~@~renew license from license server~@~1022~@~4254~@~~@~1~@~            var newLicense = RO.Common3.Utils.RenewLicense(cLicenseServerUrl.Text);
+183~@~4~@~AcquireLicense~@~Rintagi Installation: AcquireLicense~@~renew license from license server~@~1022~@~4254~@~~@~1~@~            var newLicense = RO.Common3.Utils.RenewLicense(cLicenseServerUrl.Text, cInstallID.Text, cAppID.Text, cAppNameSpace.Text);
             if (!string.IsNullOrEmpty(newLicense))
             {
                 ShowLicenseDetail(cLicenseServerUrl.Text, newLicense);
@@ -2594,17 +2594,16 @@ document.Rintagi = {{
                         // required to indicate success so no retry until next scheduled time
                         UpdCronStatus(LcSysConnString, LcAppPw);
                         // optional status message to indicate last success
-                        UpdCronStatus("success", LcAppConnString, LcAppPw);
+                        UpdCronStatus("success", LcSysConnString, LcAppPw);
                     }
                     catch (Exception ex)
                     {
                         // report error to the front end as cron invoked has no visual error reporting
-                        UpdCronStatus(ex.Message, LcAppConnString, LcAppPw);
+                        UpdCronStatus(ex.Message, LcSysConnString, LcAppPw);
                         // backend support
                         ErrorTrace(ex, "error");
                     }
                 }
-
 ~@~~@~~@~~@~~@~~@~~@~~@~
 188~@~2~@~modify button behavior~@~Rintagi Installation: modify button behavior~@~~@~1022~@~~@~~@~9~@~                cSaveButton.Visible = false;
                 if (cAcquireLicense.Attributes["OnClick"] == null || cAcquireLicense.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cAcquireLicense.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }

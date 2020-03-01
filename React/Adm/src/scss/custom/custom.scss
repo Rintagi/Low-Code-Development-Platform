@@ -531,6 +531,22 @@ mark {
   background: #f0f1f6;
 }
 
+.form__form-group-field.listboxArea{
+  background: #f0f1f6;
+  padding: 4px;
+  overflow-y: auto;
+  display: block;
+  height: 77px;
+}
+
+.form__form-group-field.listboxArea > .listboxSelection > .form__form-group{
+  margin-bottom: 5px;
+}
+
+.theme-light .checkbox-btn .checkbox-btn__checkbox-custom{
+  border: 1px solid #cdcdcd;
+}
+
 .filter-icon {
   background: #fff !important;
   border-left: 1px solid #e6e6e6 !important;

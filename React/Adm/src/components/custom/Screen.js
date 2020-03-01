@@ -412,6 +412,18 @@ export default class RintagiScreen extends Component {
     }
   }
 
+  ListBoxChange(setFieldValue, setFieldTouched, forName, formikCurValues, dependents = []) {
+    const _this = this;
+    return function (name, value) {
+      _this.FieldInFocus = name || forName;
+      const val = value && '(' + value + ')';
+      log.debug('List Box Change', val, name, forName)
+      setFieldTouched(name || forName, true);
+      setFieldValue(name || forName, val);
+      dependents.filter(f => typeof f === "function").reduce((formikCurValues, f) => f(val, name || forName, formikCurValues), formikCurValues);
+    }
+  }
+
   TextFocus(event) {
     // log.debug(event);
     // event.target.select();
@@ -482,6 +494,7 @@ export default class RintagiScreen extends Component {
         mimeType: value.mimeType,
         lastModified: value.lastModified,
         base64: value.base64.result,
+        ts:value.ts,
       } : null;
       _this.setState({ filename: (file || {}).fileName });
       setFieldValue(name, file);

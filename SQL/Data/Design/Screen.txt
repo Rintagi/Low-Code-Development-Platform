@@ -1,4 +1,4 @@
-1~@~AdmUsr~@~User Manager~@~5~@~1~@~~@~1305~@~7455~@~Y~@~7456~@~7453~@~7460~@~~@~7452~@~~@~AdmScreenObj.aspx?id=26&key=1&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=1&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~Y~@~N~@~N
+1~@~AdmUsr~@~User Manager~@~5~@~1~@~~@~1305~@~7455~@~Y~@~7456~@~7453~@~7460~@~~@~7452~@~~@~AdmScreenObj.aspx?id=26&key=1&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&key=37~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~Y~@~N~@~N
 2~@~AdmDbTable~@~Data Table and Columns~@~6~@~3~@~5~@~3~@~13~@~Y~@~~@~1190~@~~@~~@~~@~15~@~AdmScreenObj.aspx?id=26&key=11&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=2&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~N~@~Y~@~N~@~N~@~N~@~N
 5~@~AdmUsrGroup~@~User Group~@~6~@~7~@~58~@~7~@~47~@~Y~@~~@~~@~~@~~@~~@~15~@~AdmScreenObj.aspx?id=26&key=23&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=5&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~Y~@~N~@~N
 8~@~AdmCtCulture~@~Culture Translation~@~6~@~8~@~242~@~8~@~1154~@~Y~@~~@~51~@~~@~~@~~@~20~@~AdmScreenObj.aspx?id=26&key=31&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=8&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N

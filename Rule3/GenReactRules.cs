@@ -546,6 +546,7 @@ import { setTitle, setSpinner } from '../../redux/Global';
 import { getNaviBar } from './index';
 import MstRecord from './MstRecord';
 import DocumentTitle from 'react-document-title';
+import log from '../../helpers/logger';
 
 class MstList extends RintagiScreen {
   constructor(props) {
@@ -1286,7 +1287,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         bindActionCreatorsResults.Add(bindActionCreatorsValue);
 
                     }
-                    else if (drv["DisplayMode"].ToString() == "DropDownList" || drv["DisplayMode"].ToString() == "RadioButtonList" || drv["DisplayMode"].ToString() == "ListBox" || drv["DisplayMode"].ToString() == "WorkflowStatus" || drv["DisplayMode"].ToString() == "AutoListBox" || drv["DisplayMode"].ToString() == "DataGridLink") //---------DropdownList / RadioButtonList / ListBox / WorkflowStatus / AutoListBox / DataGridLink
+                    else if (drv["DisplayMode"].ToString() == "DropDownList" || drv["DisplayMode"].ToString() == "RadioButtonList" || drv["DisplayMode"].ToString() == "WorkflowStatus" || drv["DisplayMode"].ToString() == "AutoListBox" || drv["DisplayMode"].ToString() == "DataGridLink") //---------DropdownList / RadioButtonList / WorkflowStatus / AutoListBox / DataGridLink
                     {
                         //validator
                         if (drv["RequiredValid"].ToString() == "Y")
@@ -1338,8 +1339,64 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                               }
 ";
                         formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                    }
+
+                    else if (drv["DisplayMode"].ToString() == "ListBox" ) //--------- ListBox
+                    {
+                        //validator
+                        if (drv["RequiredValid"].ToString() == "Y")
+                        {
+                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                            validatorResults.Add(validatorValue);
+                        }
+
+                        //save button function call
+                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
+                        saveBtnResults.Add(saveBtnValue);
+
+                        //render label
+                        string renderLabelValue = @"
+    const " + columnId + @"List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + @"([[---ScreenName---]]State);
+    const " + columnId + " = currMst." + columnId + @";
+";
+                        renderLabelResults.Add(renderLabelValue.Trim(new char[] { '\r', '\n' }));
+
+                        //formik initial value
+                        string formikInitialValue = "c" + columnId + ": " + columnId + ",";
+                        formikInitialResults.Add(formikInitialValue);
+
+                        //formik control
+                        string listBoxStyle = !string.IsNullOrEmpty(drv["ColumnHeight"].ToString()) ? "style={{ height: '" + (int.Parse(drv["ColumnHeight"].ToString()) * 25 + 2) + "px' }}" : "";
+                        string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field listboxArea' " + listBoxStyle + @">
+                                        <ListBox
+                                          name='c" + columnId + @"'
+                                          onChange={this.ListBoxChange(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
+                                          value={values.c" + columnId + @"}
+                                          options={" + columnId + @"List}
+                                          placeholder=''
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
+                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
 
                     }
+
                     else if (drv["DisplayMode"].ToString().Contains("Date")) //---------Date (Any type)
                     {
                         //validator
@@ -1469,9 +1526,11 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                         else
                         {
                             //save button function call
-                            string saveBtnValue = columnId + ": values.c" + columnId + @" ?
+                            string saveBtnValue = columnId + ": values.c" + columnId + @" && values.c" + columnId + @".ts ?
             JSON.stringify({
               ...values.c" + columnId + @",
+              ts: undefined,
+              lastTS: values.c" + columnId + @".ts,
               base64: this.StripEmbeddedBase64Prefix(values.c" + columnId + @".base64)
             }) : null,";
                             saveBtnResults.Add(saveBtnValue);
@@ -1627,6 +1686,7 @@ import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
+import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
@@ -1640,6 +1700,7 @@ import { getNaviBar } from './index';
 import [[---ScreenName---]]ReduxObj, { ShowMstFilterApplied } from '../../redux/[[---ScreenName---]]';
 import Skeleton from 'react-skeleton-loader';
 import ControlledPopover from '../../components/custom/ControlledPopover';
+import log from '../../helpers/logger';
 
 class MstRecord extends RintagiScreen {
   constructor(props) {
@@ -2041,21 +2102,21 @@ class MstRecord extends RintagiScreen {
                           </Row>
                         </div>
                         <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
-                          {!isNaN(selectedMst) ?
+                          {(selectedMst || {}).key ?
                             <div className='form__form-group'>
                               <div className='form__form-group-narrow'>
                                 <div className='form__form-group-field'>
                                   <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
-                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || NoMasterMsg}</span>
-                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || NoMasterMsg}</span>
+                                    <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.label || ''}</span>
+                                    <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.labelR || ''}</span>
                                     </span>
                                   </span>
                                 </div>
                               </div>
                               <div className='form__form-group-field'>
                                 <span className='radio-btn radio-btn--button btn--button-header h-20 no-pointer'>
-                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || NoMasterMsg}</span>
-                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || NoMasterMsg}</span>
+                                  <span className='radio-btn__label color-blue fw-700 f-14'>{selectedMst.detail || ''}</span>
+                                  <span className='radio-btn__label__right color-blue fw-700 f-14'><span className='mr-5'>{selectedMst.detailR || ''}</span>
                                   </span>
                                 </span>
                               </div>
@@ -2197,6 +2258,7 @@ import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
 import DtlRecord from './DtlRecord';
+import log from '../../helpers/logger';
 import [[---ScreenName---]]ReduxObj from '../../redux/[[---ScreenName---]]';
 
 class DtlList extends RintagiScreen {
@@ -3125,9 +3187,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         else
                         {
                             //save button function call
-                            string saveBtnValue = columnId + ": values.c" + columnId + @" ?
+                            string saveBtnValue = columnId + ": values.c" + columnId + @" && values.c" + columnId + @".ts ?
             JSON.stringify({
               ...values.c" + columnId + @",
+              ts: undefined,
+              lastTS: values.c" + columnId + @".ts,
               base64: this.StripEmbeddedBase64Prefix(values.c" + columnId + @".base64)
             }) : null,";
                             saveBtnResults.Add(saveBtnValue);
@@ -3293,6 +3357,7 @@ import { getNaviBar } from './index';
 import [[---ScreenName---]]ReduxObj, { ShowMstFilterApplied } from '../../redux/[[---ScreenName---]]';
 import Skeleton from 'react-skeleton-loader';
 import ControlledPopover from '../../components/custom/ControlledPopover';
+import log from '../../helpers/logger';
 
 class DtlRecord extends RintagiScreen {
   constructor(props) {
@@ -5296,7 +5361,13 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                         string ColumnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
                         string ColumnName = drv["ColumnName"].ToString();
                         string MstImgUploadValue = @"
-                if (dtMst.Rows.Count > 0 && mst.ContainsKey(""" + ColumnId + @""") && !string.IsNullOrEmpty(mst[""" + ColumnId + @"""])) 
+                if (
+                    dtMst.Rows.Count > 0 
+                    && mst.ContainsKey(""" + ColumnId + @""") 
+                    && !string.IsNullOrEmpty(mst[""" + ColumnId + @"""]) 
+                    && (mst[""" + ColumnId + @"""]??"""").Contains(""base64"") 
+                    && !(mst[""" + ColumnId + @"""]??"""").Contains(""\""base64\"":null"")
+                    ) 
                 {
                     AddDoc(mst[""" + ColumnId + @"""], dtMst.Rows[0][""" + screenPrimaryKey + @"""].ToString(), ""dbo.[[---screenPrimaryTableName---]]"", ""[[---screenPrimaryKeyName---]]"", """ + ColumnName + @""", options.ContainsKey(""resizeImage""));
                 }
@@ -5311,7 +5382,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
             {
                 string GetDtlByIdValue = @"
                 ValidatedMstId(""GetLis[[---ScreenDef---]]"", systemId, screenId, ""**"" + keyId, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));
-                string dtlBlobIconOption = !options.ContainsKey(""DtlBlob"") ? ""N"" : options[""DtlBlob""];
+                string dtlBlobIconOption = !options.ContainsKey(""DtlBlob"") ? ""I"" : options[""DtlBlob""];
                 var dtlBlob = GetBlobOption(dtlBlobIconOption);;
                 DataTable dtColAuth = _GetAuthCol(GetScreenId());
                 DataTable dtColLabel = _GetScreenLabel(GetScreenId());
@@ -5319,11 +5390,11 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);;
                 Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr[""ColName""].ToString());
                 ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
-                DataTable dt = (new RO.Access3.AdminAccess()).GetDtlById([[---ScreenId---]], ""Get[[---ScreenDef---]]DtlById"", keyId, LcAppConnString, LcAppPw, filterId, base.LImpr, base.LCurr);
+                DataTable dt = (new RO.Access3.AdminAccess()).GetDtlById(screenId, ""Get[[---ScreenDef---]]DtlById"", keyId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(!string.IsNullOrEmpty(filterName) ? filterName : filterId.ToString(), false), base.LImpr, base.LCurr);
                 mr.data = DataTableToListOfObject(dt, dtlBlob, colAuth, utcColumns);";
                 GetDtlByIdResults.Add(GetDtlByIdValue);
 
-                string CurrentDataValue = "DataTable dtDtl = _GetDtlById(pid, 0);";
+                string CurrentDataValue = "DataTable dtDtl = _GetDtlById(pid, GetEffectiveScreenFilterId(\"0\", false));";
                 CurrentDataResults.Add(CurrentDataValue);
 
                 string DtDtlValue = "dtDtl = _GetDtlById(pid, 0);";
@@ -5340,7 +5411,10 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                         string ColumnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
                         string ColumnName = drv["ColumnName"].ToString();
                         string DtlImgUploadValue = @"
-                    if (!string.IsNullOrEmpty(x[""" + ColumnId + @"""]))
+                    if (!string.IsNullOrEmpty(x[""" + ColumnId + @"""])
+                        && (x[""" + ColumnId + @"""]??"""").Contains(""base64"") 
+                        && !(x[""" + ColumnId + @"""]??"""").Contains(""\""base64\"":null"") 
+                        )
                     {
                         foreach (DataRow dr in dtDtl.Rows)
                         {
@@ -5447,8 +5521,8 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
             Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
-                string mstBlobIconOption = !options.ContainsKey(""MstBlob"") ? ""N"" : options[""MstBlob""];
-                string dtlBlobIconOption = !options.ContainsKey(""DtlBlob"") ? ""N"" : options[""DtlBlob""];
+                string mstBlobIconOption = !options.ContainsKey(""MstBlob"") ? ""I"" : options[""MstBlob""];
+                string dtlBlobIconOption = !options.ContainsKey(""DtlBlob"") ? ""I"" : options[""DtlBlob""];
                 var mstBlob = GetBlobOption(mstBlobIconOption);
                 var dtlBlob = GetBlobOption(dtlBlobIconOption);
                 string jsonCri = options.ContainsKey(""CurrentScreenCriteria"") ? options[""CurrentScreenCriteria""] : null;
@@ -5480,6 +5554,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
         public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> Get[[---ScreenDef---]]DtlById(string keyId, SerializableDictionary<string, string> options, int filterId)
         {
             bool refreshUsrImpr = options.ContainsKey(""ReAuth"") && options[""ReAuth""] == ""Y"" ;
+            string filterName = options.ContainsKey(""FilterName"") ? options[""FilterName""] : """";
 
             Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
@@ -5540,7 +5615,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
         }
         protected override DataTable _GetDtlById(string mstId, int screenFilterId)
         {
-            return (new RO.Access3.AdminAccess()).GetDtlById(screenId, ""Get[[---ScreenDef---]]DtlById"", string.IsNullOrEmpty(mstId) ? ""-1"" : mstId, LcAppConnString, LcAppPw, screenFilterId, LImpr, LCurr);
+            return (new RO.Access3.AdminAccess()).GetDtlById(screenId, ""Get[[---ScreenDef---]]DtlById"", string.IsNullOrEmpty(mstId) ? ""-1"" : mstId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(screenFilterId.ToString(), false), LImpr, LCurr);
 
         }
         protected override Dictionary<string, SerializableDictionary<string, string>> GetDdlContext()

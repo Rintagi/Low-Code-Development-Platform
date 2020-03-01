@@ -85,9 +85,11 @@ namespace RO.Web
 					cMessage.Text = (new AdminSystem()).GetMsg(msg, base.LUser.CultureId, base.LUser.TechnicalUsr, base.SysConnectStr(sid), base.AppPwd(sid));
 					//}
 				}
-				if (!string.IsNullOrEmpty(Session["ErrStackTrace"] as string) && ((base.LUser == null && Config.DeployType!="PRD") || base.LUser.TechnicalUsr == "Y"))
+				if (!string.IsNullOrEmpty(Session["ErrStackTrace"] as string) 
+                    && ((base.LUser == null && Config.DeployType!="PRD") 
+                        || (base.LUser != null && base.LUser.TechnicalUsr == "Y")))
 				{
-					cStackTrace.Text = Session["ErrStackTrace"].ToString();
+					cStackTrace.Text = (Session["ErrStackTrace"] ?? "").ToString();
 					cStackTrace.Font.Name = "Verdana";
 					cStackTrace.Font.Size = new FontUnit("11px");
 					cTechPanel.Visible = true;

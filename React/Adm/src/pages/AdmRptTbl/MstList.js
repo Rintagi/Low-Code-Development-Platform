@@ -24,6 +24,7 @@ import { setTitle, setSpinner } from '../../redux/Global';
 import { getNaviBar } from './index';
 import MstRecord from './MstRecord';
 import DocumentTitle from 'react-document-title';
+import log from '../../helpers/logger';
 
 class MstList extends RintagiScreen {
   constructor(props) {

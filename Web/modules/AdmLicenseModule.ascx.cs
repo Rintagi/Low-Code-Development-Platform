@@ -39,6 +39,7 @@ namespace RO.Common3.Data
 			columns.Add("SystemAbbr1317", typeof(string));
 			columns.Add("InstallID", typeof(string));
 			columns.Add("AppID", typeof(string));
+			columns.Add("AppNameSpace", typeof(string));
 			columns.Add("RegisterInsall", typeof(string));
 			columns.Add("ExpiryDate", typeof(string));
 			columns.Add("ModuleIncluded", typeof(string));
@@ -1364,25 +1365,27 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cSystemAbbr1317, dtAuth.Rows[2], cSystemAbbr1317P1, cSystemAbbr1317Label, cSystemAbbr1317P2, null, dtLabel.Rows[2], cRFVSystemAbbr1317, null, null);
 				base.SetFoldBehavior(cInstallID, dtAuth.Rows[3], cInstallIDP1, cInstallIDLabel, cInstallIDP2, null, dtLabel.Rows[3], null, null, null);
 				base.SetFoldBehavior(cAppID, dtAuth.Rows[4], cAppIDP1, cAppIDLabel, cAppIDP2, null, dtLabel.Rows[4], null, null, null);
-				base.SetFoldBehavior(cRegisterInsall, dtAuth.Rows[5], cRegisterInsallP1, cRegisterInsallLabel, cRegisterInsallP2, null, dtLabel.Rows[5], null, null, null);
-				base.SetFoldBehavior(cExpiryDate, dtAuth.Rows[6], cExpiryDateP1, cExpiryDateLabel, cExpiryDateP2, null, dtLabel.Rows[6], null, null, null);
-				base.SetFoldBehavior(cModuleIncluded, dtAuth.Rows[7], cModuleIncludedP1, cModuleIncludedLabel, cModuleIncludedP2, null, dtLabel.Rows[7], null, null, null);
-				base.SetFoldBehavior(cFeatureIncluded, dtAuth.Rows[8], cFeatureIncludedP1, cFeatureIncludedLabel, cFeatureIncludedP2, null, dtLabel.Rows[8], null, null, null);
-				base.SetFoldBehavior(cFeatureExcluded, dtAuth.Rows[9], cFeatureExcludedP1, cFeatureExcludedLabel, cFeatureExcludedP2, null, dtLabel.Rows[9], null, null, null);
-				base.SetFoldBehavior(cCompanyCount, dtAuth.Rows[10], cCompanyCountP1, cCompanyCountLabel, cCompanyCountP2, null, dtLabel.Rows[10], null, null, null);
-				base.SetFoldBehavior(cProjectCount, dtAuth.Rows[11], cProjectCountP1, cProjectCountLabel, cProjectCountP2, null, dtLabel.Rows[11], null, null, null);
-				base.SetFoldBehavior(cUserCount, dtAuth.Rows[12], cUserCountP1, cUserCountLabel, cUserCountP2, null, dtLabel.Rows[12], null, null, null);
-				base.SetFoldBehavior(cLicenseServerUrl, dtAuth.Rows[13], cLicenseServerUrlP1, cLicenseServerUrlLabel, cLicenseServerUrlP2, null, dtLabel.Rows[13], null, null, null);
-				base.SetFoldBehavior(cAcquireLicense, dtAuth.Rows[14], null, null, null, dtLabel.Rows[14], null, null, null);
-				base.SetFoldBehavior(cLicenseString, dtAuth.Rows[15], cLicenseStringP1, cLicenseStringLabel, cLicenseStringP2, cLicenseStringE, null, dtLabel.Rows[15], null, null, null);
+				base.SetFoldBehavior(cAppNameSpace, dtAuth.Rows[5], cAppNameSpaceP1, cAppNameSpaceLabel, cAppNameSpaceP2, null, dtLabel.Rows[5], null, null, null);
+				base.SetFoldBehavior(cRegisterInsall, dtAuth.Rows[6], cRegisterInsallP1, cRegisterInsallLabel, cRegisterInsallP2, null, dtLabel.Rows[6], null, null, null);
+				base.SetFoldBehavior(cExpiryDate, dtAuth.Rows[7], cExpiryDateP1, cExpiryDateLabel, cExpiryDateP2, null, dtLabel.Rows[7], null, null, null);
+				base.SetFoldBehavior(cModuleIncluded, dtAuth.Rows[8], cModuleIncludedP1, cModuleIncludedLabel, cModuleIncludedP2, null, dtLabel.Rows[8], null, null, null);
+				base.SetFoldBehavior(cFeatureIncluded, dtAuth.Rows[9], cFeatureIncludedP1, cFeatureIncludedLabel, cFeatureIncludedP2, null, dtLabel.Rows[9], null, null, null);
+				base.SetFoldBehavior(cFeatureExcluded, dtAuth.Rows[10], cFeatureExcludedP1, cFeatureExcludedLabel, cFeatureExcludedP2, null, dtLabel.Rows[10], null, null, null);
+				base.SetFoldBehavior(cCompanyCount, dtAuth.Rows[11], cCompanyCountP1, cCompanyCountLabel, cCompanyCountP2, null, dtLabel.Rows[11], null, null, null);
+				base.SetFoldBehavior(cProjectCount, dtAuth.Rows[12], cProjectCountP1, cProjectCountLabel, cProjectCountP2, null, dtLabel.Rows[12], null, null, null);
+				base.SetFoldBehavior(cUserCount, dtAuth.Rows[13], cUserCountP1, cUserCountLabel, cUserCountP2, null, dtLabel.Rows[13], null, null, null);
+				base.SetFoldBehavior(cLicenseServerUrl, dtAuth.Rows[14], cLicenseServerUrlP1, cLicenseServerUrlLabel, cLicenseServerUrlP2, null, dtLabel.Rows[14], null, null, null);
+				base.SetFoldBehavior(cAcquireLicense, dtAuth.Rows[15], null, null, null, dtLabel.Rows[15], null, null, null);
+				base.SetFoldBehavior(cLicenseString, dtAuth.Rows[16], cLicenseStringP1, cLicenseStringLabel, cLicenseStringP2, cLicenseStringE, null, dtLabel.Rows[16], null, null, null);
 				cLicenseStringE.Attributes["label_id"] = cLicenseStringLabel.ClientID; cLicenseStringE.Attributes["target_id"] = cLicenseString.ClientID;
-				base.SetFoldBehavior(cRenewLicense, dtAuth.Rows[16], null, null, null, dtLabel.Rows[16], null, null, null);
+				base.SetFoldBehavior(cRenewLicense, dtAuth.Rows[17], null, null, null, dtLabel.Rows[17], null, null, null);
 			}
 			if ((cSystemId1317.Attributes["OnChange"] == null || cSystemId1317.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSystemId1317.Visible && !cSystemId1317.ReadOnly) {cSystemId1317.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cSystemName1317.Attributes["OnChange"] == null || cSystemName1317.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSystemName1317.Visible && !cSystemName1317.ReadOnly) {cSystemName1317.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cSystemAbbr1317.Attributes["OnChange"] == null || cSystemAbbr1317.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSystemAbbr1317.Visible && !cSystemAbbr1317.ReadOnly) {cSystemAbbr1317.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cInstallID.Attributes["OnChange"] == null || cInstallID.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cInstallID.Visible && !cInstallID.ReadOnly) {cInstallID.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cAppID.Attributes["OnChange"] == null || cAppID.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cAppID.Visible && !cAppID.ReadOnly) {cAppID.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cAppNameSpace.Attributes["OnChange"] == null || cAppNameSpace.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cAppNameSpace.Visible && !cAppNameSpace.ReadOnly) {cAppNameSpace.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cRegisterInsall.Attributes["OnChange"] == null || cRegisterInsall.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cRegisterInsall.Visible && cRegisterInsall.Enabled) {cRegisterInsall.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cExpiryDate.Attributes["OnChange"] == null || cExpiryDate.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cExpiryDate.Visible && !cExpiryDate.ReadOnly) {cExpiryDate.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cModuleIncluded.Attributes["OnChange"] == null || cModuleIncluded.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cModuleIncluded.Visible && !cModuleIncluded.ReadOnly) {cModuleIncluded.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -1453,16 +1456,17 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[2]["ColVisible"].ToString() == "Y" && dt.Rows[2]["ColReadOnly"].ToString() != "Y") {cSystemAbbr1317.Text = string.Empty;}
 			if (dt.Rows[3]["ColVisible"].ToString() == "Y" && dt.Rows[3]["ColReadOnly"].ToString() != "Y") {cInstallID.Text = string.Empty;}
 			if (dt.Rows[4]["ColVisible"].ToString() == "Y" && dt.Rows[4]["ColReadOnly"].ToString() != "Y") {cAppID.Text = string.Empty;}
-			if (dt.Rows[5]["ColVisible"].ToString() == "Y" && dt.Rows[5]["ColReadOnly"].ToString() != "Y") {cRegisterInsall.Text = "http://www.rintagi.com";}
-			if (dt.Rows[6]["ColVisible"].ToString() == "Y" && dt.Rows[6]["ColReadOnly"].ToString() != "Y") {cExpiryDate.Text = string.Empty;}
-			if (dt.Rows[7]["ColVisible"].ToString() == "Y" && dt.Rows[7]["ColReadOnly"].ToString() != "Y") {cModuleIncluded.Text = string.Empty;}
-			if (dt.Rows[8]["ColVisible"].ToString() == "Y" && dt.Rows[8]["ColReadOnly"].ToString() != "Y") {cFeatureIncluded.Text = string.Empty;}
-			if (dt.Rows[9]["ColVisible"].ToString() == "Y" && dt.Rows[9]["ColReadOnly"].ToString() != "Y") {cFeatureExcluded.Text = string.Empty;}
-			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {cCompanyCount.Text = string.Empty;}
-			if (dt.Rows[11]["ColVisible"].ToString() == "Y" && dt.Rows[11]["ColReadOnly"].ToString() != "Y") {cProjectCount.Text = string.Empty;}
-			if (dt.Rows[12]["ColVisible"].ToString() == "Y" && dt.Rows[12]["ColReadOnly"].ToString() != "Y") {cUserCount.Text = string.Empty;}
-			if (dt.Rows[13]["ColVisible"].ToString() == "Y" && dt.Rows[13]["ColReadOnly"].ToString() != "Y") {cLicenseServerUrl.Text = string.Empty;}
-			if (dt.Rows[15]["ColVisible"].ToString() == "Y" && dt.Rows[15]["ColReadOnly"].ToString() != "Y") {cLicenseString.Text = string.Empty;}
+			if (dt.Rows[5]["ColVisible"].ToString() == "Y" && dt.Rows[5]["ColReadOnly"].ToString() != "Y") {cAppNameSpace.Text = string.Empty;}
+			if (dt.Rows[6]["ColVisible"].ToString() == "Y" && dt.Rows[6]["ColReadOnly"].ToString() != "Y") {cRegisterInsall.Text = "http://www.rintagi.com";}
+			if (dt.Rows[7]["ColVisible"].ToString() == "Y" && dt.Rows[7]["ColReadOnly"].ToString() != "Y") {cExpiryDate.Text = string.Empty;}
+			if (dt.Rows[8]["ColVisible"].ToString() == "Y" && dt.Rows[8]["ColReadOnly"].ToString() != "Y") {cModuleIncluded.Text = string.Empty;}
+			if (dt.Rows[9]["ColVisible"].ToString() == "Y" && dt.Rows[9]["ColReadOnly"].ToString() != "Y") {cFeatureIncluded.Text = string.Empty;}
+			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {cFeatureExcluded.Text = string.Empty;}
+			if (dt.Rows[11]["ColVisible"].ToString() == "Y" && dt.Rows[11]["ColReadOnly"].ToString() != "Y") {cCompanyCount.Text = string.Empty;}
+			if (dt.Rows[12]["ColVisible"].ToString() == "Y" && dt.Rows[12]["ColReadOnly"].ToString() != "Y") {cProjectCount.Text = string.Empty;}
+			if (dt.Rows[13]["ColVisible"].ToString() == "Y" && dt.Rows[13]["ColReadOnly"].ToString() != "Y") {cUserCount.Text = string.Empty;}
+			if (dt.Rows[14]["ColVisible"].ToString() == "Y" && dt.Rows[14]["ColReadOnly"].ToString() != "Y") {cLicenseServerUrl.Text = string.Empty;}
+			if (dt.Rows[16]["ColVisible"].ToString() == "Y" && dt.Rows[16]["ColReadOnly"].ToString() != "Y") {cLicenseString.Text = string.Empty;}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -1473,6 +1477,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cSystemAbbr1317.Text = string.Empty;
 			cInstallID.Text = string.Empty;
 			cAppID.Text = string.Empty;
+			cAppNameSpace.Text = string.Empty;
 			cRegisterInsall.Text = "http://www.rintagi.com"; cRegisterInsall.Style.Value = "cursor:pointer;"; cRegisterInsall.Attributes.Add("OnClick","SearchLink('http://www.rintagi.com','','',''); return stopEvent(this,event);");
 			cExpiryDate.Text = string.Empty;
 			cModuleIncluded.Text = string.Empty;
@@ -1536,7 +1541,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		protected void cAcquireLicense_Click(object sender, System.EventArgs e)
 		{
 			//WebRule: AcquireLicense
-            var newLicense = RO.Common3.Utils.RenewLicense(cLicenseServerUrl.Text);
+            var newLicense = RO.Common3.Utils.RenewLicense(cLicenseServerUrl.Text, cInstallID.Text, cAppID.Text, cAppNameSpace.Text);
             if (!string.IsNullOrEmpty(newLicense))
             {
                 ShowLicenseDetail(cLicenseServerUrl.Text, newLicense);
@@ -1741,6 +1746,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["InstallID"] = string.Empty; drDisp["InstallID"] = "TextBox";
 			try {dr["AppID"] = cAppID.Text.Trim();} catch {}
 			drType["AppID"] = string.Empty; drDisp["AppID"] = "TextBox";
+			try {dr["AppNameSpace"] = cAppNameSpace.Text.Trim();} catch {}
+			drType["AppNameSpace"] = string.Empty; drDisp["AppNameSpace"] = "TextBox";
 			try {dr["RegisterInsall"] = cRegisterInsall.Text;} catch {}
 			drType["RegisterInsall"] = string.Empty; drDisp["RegisterInsall"] = "HyperPopUp";
 			try {dr["ExpiryDate"] = base.ToIntDateTime(cExpiryDate.Text,true,true);} catch {}

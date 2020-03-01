@@ -19,3 +19,5 @@
 32~@~1019~@~Year to date~@~AdmScrAudit 020 Year to date~@~datepart(yyyy,ChangedOn) = datepart(yyyy,getutcdate())~@~20~@~Y
 33~@~1019~@~Last year~@~AdmScrAudit 030 Last year~@~datepart(yyyy,ChangedOn) = datepart(yyyy,getutcdate())-1~@~30~@~Y
 34~@~1019~@~All dates~@~AdmScrAudit 040 All dates~@~1 = 1~@~40~@~Y
+35~@~1~@~Impersonated by me~@~AdmUsr 045 Impersonated by me~@~(UsrId in (@Usrs) AND '1' = '1')~@~45~@~Y
+37~@~1~@~Has impersonation~@~AdmUsr 046 Has impersonation~@~'@Usrs' LIKE '%,%'~@~46~@~Y
