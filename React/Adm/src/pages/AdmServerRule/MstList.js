@@ -16,7 +16,7 @@ import DropdownField from '../../components/custom/DropdownField';
 import NaviBar from '../../components/custom/NaviBar';
 import RintagiScreen from '../../components/custom/Screen'
 import ModalDialog from '../../components/custom/ModalDialog';
-import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath } from '../../helpers/utils'
+import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import AdmServerRuleReduxObj, { ShowMstFilterApplied } from '../../redux/AdmServerRule';
@@ -190,7 +190,6 @@ class MstList extends RintagiScreen {
     const { mstId } = { ...this.props.match.params };
     if (!(this.props.AdmServerRule || {}).AuthCol || true) {
       this.props.LoadPage('SearchList', { mstId: mstId || '_' });
-      this.props.LoadInitPage({ keyId: null });
     }
 
     this.mediaqueryresponse(this.mobileView);

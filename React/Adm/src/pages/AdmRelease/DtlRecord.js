@@ -18,7 +18,7 @@ import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils';
 import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
@@ -386,8 +386,8 @@ class DtlRecord extends RintagiScreen {
                     cRunOrder192: formatContent(currDtl.RunOrder192 || '', 'TextBox'),
                     cSrcObject192: formatContent(currDtl.SrcObject192 || '', 'TextBox'),
                     cSProcOnly192: SProcOnly192List.filter(obj => { return obj.key === currDtl.SProcOnly192 })[0],
-                    cObjectName192: formatContent(currDtl.ObjectName192 || '', 'MultiLine'),
-                    cObjectExempt192: formatContent(currDtl.ObjectExempt192 || '', 'MultiLine'),
+                    cObjectName192: formatContent(ObjectName192 || '', 'MultiLine'),
+                    cObjectExempt192: formatContent(ObjectExempt192 || '', 'MultiLine'),
                     cSrcClientTierId192: SrcClientTierId192List.filter(obj => { return obj.key === currDtl.SrcClientTierId192 })[0],
                     cSrcRuleTierId192: SrcRuleTierId192List.filter(obj => { return obj.key === currDtl.SrcRuleTierId192 })[0],
                     cSrcDataTierId192: SrcDataTierId192List.filter(obj => { return obj.key === currDtl.SrcDataTierId192 })[0],
@@ -565,7 +565,7 @@ class DtlRecord extends RintagiScreen {
                                 </Col>
                               }
                               {(authCol.ObjectName192 || {}).visible &&
-                                <Col lg={12} xl={12}>
+                                <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
                                       <label className='form__form-group-label'>{(columnLabel.ObjectName192 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.ObjectName192 || {}).ToolTip &&
@@ -576,7 +576,7 @@ class DtlRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cObjectName192'
                                           disabled={(authCol.ObjectName192 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -585,8 +585,8 @@ class DtlRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ObjectExempt192 || {}).visible &&
-                                <Col lg={12} xl={12}>
+                              {(authCol.ObjectExempt192 || {}).visible &&
+                                <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
                                       <label className='form__form-group-label'>{(columnLabel.ObjectExempt192 || {}).ColumnHeader} {(columnLabel.ObjectExempt192 || {}).ToolTip &&
@@ -597,7 +597,7 @@ class DtlRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cObjectExempt192'
                                           disabled={(authCol.ObjectExempt192 || {}).readonly ? 'disabled' : ''} />
                                       </div>

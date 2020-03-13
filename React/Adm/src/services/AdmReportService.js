@@ -258,6 +258,24 @@ export function SetScreenCriteria(criteriaValues, accessScope) {
         }
     )
 }
+export function GetRefColumnContent(mstId, dtlId, refKeyId, isMaster, refScreenColumnName, options, accessScope) {
+    return fetchData(baseUrl + '/AdmReportWs.asmx/GetRefColumnContent'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    mstId: mstId || null,
+                    dtlId: dtlId || null,
+                    refKeyId: refKeyId || null,
+                    refScreenColumnName: refScreenColumnName || null,
+                    isMaster: isMaster || false,
+                    options: options || {},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
 export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope) {
     return fetchData(baseUrl + '/AdmReportWs.asmx/GetColumnContent'
@@ -318,10 +336,10 @@ export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJ
 
 export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessScope) {
     const reqJson = JSON.stringify({
-        mstId: mstId,
-        dtlId: dtlId,
-        isMaster: isMaster,
-        docId: docId,
+        mstId: mstId || null,
+        dtlId: dtlId || null,
+        isMaster: isMaster || false,
+        docId: docId || null,
         screenColumnName: screenColumnName,
     });
     return fetchData(baseUrl + '/AdmReportWs.asmx/GetDoc'
@@ -406,14 +424,14 @@ export function GetModifiedBy22List(query, topN, filterBy, accessScope) {
 
 export function SaveRptTemplate22(mstId, dtlId, isMaster, docId, overwrite, screenColumnName, docJson, options, accessScope) {
     const reqJson = JSON.stringify({
-        mstId: mstId,
-        dtlId: dtlId,
-        isMaster: isMaster,
-        docId: docId,
-        overwrite: overwrite,
+        mstId: mstId || null,
+        dtlId: dtlId || null,
+        isMaster: isMaster || false,
+        docId: docId || null,
+        overwrite: overwrite || false,
         screenColumnName: 'RptTemplate22',
-        docJson: docJson,
-        options: options
+        docJson: docJson || null,
+        options: options || {}
     });
     return fetchData(baseUrl + '/AdmReportWs.asmx/SaveRptTemplate22'
         , {
@@ -428,11 +446,11 @@ export function SaveRptTemplate22(mstId, dtlId, isMaster, docId, overwrite, scre
 
 export function DelRptTemplate22(mstId, dtlId, isMaster, screenColumnName, docIdList, accessScope) {
     const reqJson = JSON.stringify({
-        mstId: mstId,
-        dtlId: dtlId,
-        isMaster: isMaster || true,
+        mstId: mstId || null,
+        dtlId: dtlId || null,
+        isMaster: isMaster || false,
         screenColumnName: 'RptTemplate22',
-        docIdList: docIdList,
+        docIdList: docIdList || [],
     });
     return fetchData(baseUrl + '/AdmReportWs.asmx/DelRptTemplate22'
         , {
@@ -449,7 +467,7 @@ export function GetRptTemplate22List(mstId, dtlId, isMaster, accessScope) {
     const reqJson = JSON.stringify({
         mstId: mstId || '',
         dtlId: dtlId || '',
-        isMaster: isMaster || true,
+        isMaster: isMaster || false,
     });
     return fetchData(baseUrl + '/AdmReportWs.asmx/GetRptTemplate22List'
         , {

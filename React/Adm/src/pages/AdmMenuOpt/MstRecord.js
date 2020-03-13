@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -357,6 +358,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -528,7 +542,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.MenuOptDesc248 || {}).visible &&
+                              {(authCol.MenuOptDesc248 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
@@ -540,7 +554,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cMenuOptDesc248'
                                           disabled={(authCol.MenuOptDesc248 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -615,7 +629,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.OvaRating248 || {}).visible &&
+                              {(authCol.OvaRating248 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
@@ -684,7 +698,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.TopMenuCss248 || {}).visible &&
+                              {(authCol.TopMenuCss248 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
@@ -696,7 +710,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cTopMenuCss248'
                                           disabled={(authCol.TopMenuCss248 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -705,7 +719,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.SidMenuCss248 || {}).visible &&
+                              {(authCol.SidMenuCss248 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
@@ -717,7 +731,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cSidMenuCss248'
                                           disabled={(authCol.SidMenuCss248 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -726,7 +740,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.TopMenuJs248 || {}).visible &&
+                              {(authCol.TopMenuJs248 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
@@ -738,7 +752,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cTopMenuJs248'
                                           disabled={(authCol.TopMenuJs248 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -747,7 +761,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.SidMenuJs248 || {}).visible &&
+                              {(authCol.SidMenuJs248 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
@@ -759,7 +773,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cSidMenuJs248'
                                           disabled={(authCol.SidMenuJs248 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -768,7 +782,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.TopMenuIvk248 || {}).visible &&
+                              {(authCol.TopMenuIvk248 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
@@ -780,7 +794,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cTopMenuIvk248'
                                           disabled={(authCol.TopMenuIvk248 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -789,7 +803,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.SidMenuIvk248 || {}).visible &&
+                              {(authCol.SidMenuIvk248 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='20px' />) ||
@@ -801,7 +815,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmMenuOptState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cSidMenuIvk248'
                                           disabled={(authCol.SidMenuIvk248 || {}).readonly ? 'disabled' : ''} />
                                       </div>

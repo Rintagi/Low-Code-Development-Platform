@@ -23,6 +23,77 @@ namespace RO.Rule3
         private string fileDirectory;
         private byte DbId;
 
+        public bool DirectSaveToDb(DataRow dr)
+        {
+            string DisplayMode = dr["DisplayMode"].ToString();
+            string DisplayName = dr["DisplayName"].ToString();
+            string DdlRefColumnId = dr["DdlRefColumnId"].ToString();
+
+            return   
+            (
+            (DisplayName == "TextBox" 
+            || DisplayName == "CheckBox" 
+            || DisplayName == "Calendar"
+            || DisplayName == "Editor"
+            || DisplayName == "Signature"
+            || DisplayName == "Label" // for some reason this is treated as 'input' even though the save SQL ignore this
+            ) 
+            && string.IsNullOrEmpty(DdlRefColumnId)
+            )
+            || DisplayName == "ComboBox"
+            || DisplayName == "DropDownList"
+            || DisplayName == "ListBox"
+            || DisplayName == "RadioButtonList"
+            ;
+        }
+
+        public bool IsRefColumn(DataRow dr)
+        {
+            string DdlRefColumnId = dr["DdlRefColumnId"].ToString();
+            string DisplayMode = dr["DisplayMode"].ToString();
+            string DisplayName = dr["DisplayName"].ToString();
+            return !string.IsNullOrEmpty(DdlRefColumnId)
+                        &&
+                        (
+                        (DisplayName == "TextBox" && DisplayMode != "Document")
+                        || DisplayName == "Label"
+                        || DisplayName == "Signature"
+                        || DisplayName == "Editor"
+                        );
+        }
+
+        public bool IsPullUpColumn(DataRow dr, DataView dvItms)
+        {
+            string DdlRefColumnId = dr["DdlRefColumnId"].ToString();
+            string DdlRefScreenObjId = dr["DdlRefScreenObjId"].ToString();
+            return dvItms.Table.AsEnumerable().Count(o =>
+                o["ScreenObjId"].ToString() == DdlRefScreenObjId
+                && (o["DisplayName"].ToString() == "ComboBox" || o["DisplayName"].ToString() == "TextBox")
+                ) > 0;
+        }
+
+        public bool HasDependents(DataRow dr, DataView dvItms)
+        {
+            string ScreenObjId = dr["ScreenObjId"].ToString();
+            return dvItms.Table.AsEnumerable().Count(o => o["DdlRefScreenObjId"].ToString() == ScreenObjId) > 0;
+        }
+        public bool IsIgnoredColumn(DataRow dr)
+        {
+            string DdlRefColumnId = dr["DdlRefColumnId"].ToString();
+            string DisplayMode = dr["DisplayMode"].ToString();
+            string DisplayName = dr["DisplayName"].ToString();
+            return
+                DisplayMode == "PlaceHolder"
+//                || DisplayMode == "DataGridLink"
+                || DisplayMode == "Upload"
+                || DisplayMode == "ImageLink"
+                || DisplayMode == "ImagePopUp"
+//                || DisplayMode == "TokenInput"
+//                || DisplayMode == "Signature"
+//                || DisplayMode == "EncryptedTextBox"
+                ;
+        }
+
         public GenReactRules(short _CultureId, string _dbConnectionString, string _dbPassword, string _system, string _fileDirectory, byte _DbId)
         {
             CultureId = _CultureId;
@@ -118,7 +189,7 @@ namespace RO.Rule3
         private StringBuilder MakeReactJsRoute(string screenId)
         {
             DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
-            string SystemId = DbId.ToString() ;
+            string SystemId = DbId.ToString();
             foreach (DataRowView drv in dvItms)
             {
                 if (drv["MasterTable"].ToString() == "Y" && !string.IsNullOrEmpty(drv["PrimaryKey"].ToString()))
@@ -486,9 +557,9 @@ export function getNaviBar(type, mst, dtl, label) {
                                       <div className='form__form-group-field filter-form-border'>
                                         <Field
                                           type='text'
-                                          name='c" + columnName + @"'
-                                          value={values.c" + columnName + @"}
-                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'c" + columnName + @"')}
+                                          name='cCri" + columnName + @"'
+                                          value={values.cCri" + columnName + @"}
+                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cCri" + columnName + @"')}
                                         />
                                       </div>
                                     </Col>
@@ -516,7 +587,7 @@ export function getNaviBar(type, mst, dtl, label) {
             string RefreshSearchListCnt = string.Join(Environment.NewLine, RefreshSearchListResults.Select(s => addIndent(s, 10)));
             string RenderInitialCriCnt = string.Join(Environment.NewLine, RenderInitialCriResults.Where(s => !string.IsNullOrWhiteSpace(s.Trim())).Select(s => addIndent(s, 4)));
             string FormikInitialCriCnt = string.Join(Environment.NewLine, FormikInitialCriResults.Select(s => addIndent(s, 24)));
-            string FormikControlCnt = string.Join(Environment.NewLine, FormikControlResults.Select(s => addIndent(s, 0).Trim(new char[]{'\r','\n'})));
+            string FormikControlCnt = string.Join(Environment.NewLine, FormikControlResults.Select(s => addIndent(s, 0).Trim(new char[] { '\r', '\n' })));
             string GetCriteriaBotCnt = string.Join(Environment.NewLine, GetCriteriaBotResults.Where(s => !string.IsNullOrWhiteSpace(s.Trim())).Select(s => addIndent(s, 4)));
 
             StringBuilder sb = new StringBuilder();
@@ -538,7 +609,7 @@ import DropdownField from '../../components/custom/DropdownField';
 import NaviBar from '../../components/custom/NaviBar';
 import RintagiScreen from '../../components/custom/Screen'
 import ModalDialog from '../../components/custom/ModalDialog';
-import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath } from '../../helpers/utils'
+import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import [[---ScreenName---]]ReduxObj, { ShowMstFilterApplied } from '../../redux/[[---ScreenName---]]';
@@ -713,7 +784,6 @@ class MstList extends RintagiScreen {
     const { mstId } = { ...this.props.match.params };
     if (!(this.props.[[---ScreenName---]] || {}).AuthCol || true) {
       this.props.LoadPage('SearchList', { mstId: mstId || '_' });
-      this.props.LoadInitPage({ keyId: null });
     }
 
     this.mediaqueryresponse(this.mobileView);
@@ -1094,17 +1164,21 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
         {
             DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
             string screenPrimaryKey = "";
+            string screenMstTableId = "";
             foreach (DataRowView drv in dvItms)
             {
                 if (drv["MasterTable"].ToString() == "Y" && !string.IsNullOrEmpty(drv["PrimaryKey"].ToString()))
                 {
                     screenPrimaryKey = drv["PrimaryKey"].ToString() + drv["TableId"].ToString();
+                    screenMstTableId = drv["TableId"].ToString();
                     break;
                 }
             }
             string screenDetailKeyName = "";
             string screenDetailKey = "";
             string screenDetailTableName = "";
+            string screenDetailTableId = "";
+
             List<string> MasterCustomFunctionResults = new List<string>();
             List<string> MasterSaveResults = new List<string>();
             List<string> MasterRenderResults = new List<string>();
@@ -1148,6 +1222,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                     screenDetailKeyName = drv["PrimaryKey"].ToString();
                     screenDetailKey = drv["PrimaryKey"].ToString() + drv["TableId"].ToString();
                     screenDetailTableName = drv["TableName"].ToString();
+                    screenDetailTableId = drv["TableId"].ToString();
                     break;
                 }
             }
@@ -1173,31 +1248,57 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                     string DdlFtrTableId = drv["DdlFtrTableId"].ToString();
                     string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
                     string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
-
-                    if (drv["DisplayMode"].ToString() == "TextBox" || drv["DisplayMode"].ToString() == "Password") //---------Textbox || Password
+                    string DdlKeyColumnId = drv["DdlKeyColumnId"].ToString();
+                    string DisplayMode = drv["DisplayMode"].ToString();
+                    string DisplayName = drv["DisplayName"].ToString();
+                    string DdlRefColumnId = drv["DdlRefColumnId"].ToString();
+                    string refColumnName = drv["DdlRefColumnName"].ToString() + screenMstTableId;
+                    bool isRefColumnControl = IsRefColumn(drv.Row);
+                    bool isPullUpColumnControl = IsPullUpColumn(drv.Row, dvItms);
+                    bool hasDependents = HasDependents(drv.Row, dvItms);
+                    bool directSaveToDB = DirectSaveToDb(drv.Row);
+                    bool isIgnoredColumn = IsIgnoredColumn(drv.Row);
+                    string refColumnBinding = "this.BindReferenceField(" + refColumnName + ", " + refColumnName + "List" + ", { valuefieldname: '" + columnId + "' })";
+                    string formikRefColumnBinding = "this.BindReferenceField((((values || {}).c" + refColumnName + " || {}).value), " + refColumnName + "List" + ", { valuefieldname: '" + columnId + "' })";
+                    if (isIgnoredColumn == false)
                     {
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
+                        if (DisplayMode == "TextBox" 
+                            || DisplayMode == "Password"
+                            /* these three are more or less textbox like but with content transformation */
+                            // || DisplayMode == "Signature"
+                            || DisplayMode == "TokenInput"
+                            || DisplayMode == "EncryptedTextBox"
+
+                            ) 
                         {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
-                        }
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //render label
-                        string renderLabelValue = "    const " + columnId + " = currMst." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                            //render label
+                            string renderLabelValue = "    const " + columnId
+                                                            +
+                                                            (!isRefColumnControl || isPullUpColumnControl
+                                                                ? " = currMst." + columnId + ";"
+                                                                : " = " + refColumnBinding + ";"
+                                                            )
+                                                            ;
+                            renderLabelResults.Add(renderLabelValue);
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + drv["DisplayMode"].ToString() + "'),";
-                        formikInitialResults.Add(formikInitialValue);
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + DisplayMode + "'),";
+                            formikInitialResults.Add(formikInitialValue);
 
-                        //formik control
-                        string textboxType = drv["DisplayMode"].ToString() == "Password" ? "password" : "text";
-                        string formikControlValue = @"
+                            //formik control
+                            string textboxType = DisplayMode == "Password" ? "password" : "text";
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -1210,9 +1311,11 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                     {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          type='" + textboxType + @"'
                                           name='c" + columnId + @"'
-                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}"
+                                                               + (isRefColumnControl && !isPullUpColumnControl ? @"
+                                          value={" + formikRefColumnBinding + "}" : "") + @" />
                                       </div>
                                     }
                                     {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
@@ -1220,38 +1323,109 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                 </Col>
                               }
 ";
-                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
-                    }
-                    else if (drv["DisplayMode"].ToString() == "AutoComplete") //---------Autocomplete
-                    {
-                        //autocomplete function
-                        string functionValue = columnId + "InputChange() { const _this = this; return function (name, v) { const filterBy = " + (string.IsNullOrEmpty(DdlFtrColumnName) ? "'';" : ("((_this.props.[[---ScreenName---]] || {})." + RefColSrc + " || {})." + DdlFtrColumnName + DdlFtrTableId + ";")) + " _this.props.Search" + columnId + "(v, filterBy); } }";
-                        functionResults.Add(functionValue);
-
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
-                        {
-                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
                         }
+                        else if (DisplayMode == "MultiLine") //---------Multiline Textbox
+                        {
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //render label
-                        string renderLabelValue = @"
+                            //render label
+                            string renderLabelValue = "    const " + columnId 
+                                                            +
+                                                            (!isRefColumnControl || isPullUpColumnControl 
+                                                                ? " = currMst." + columnId + ";"
+                                                                : " = " + refColumnBinding + ";"
+                                                            )
+                                                            ;
+                            renderLabelResults.Add(renderLabelValue);
+
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + DisplayMode + "'),";
+                            formikInitialResults.Add(formikInitialValue);
+
+                            //formik control
+                            string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          component='textarea'
+                                          name='c" + columnId + @"'
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}"
+                                                               + (isRefColumnControl && !isPullUpColumnControl ? @"
+                                          value={" + formikRefColumnBinding + "}" : "") + @" />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                        }
+                        else if (DisplayMode == "AutoComplete") //---------Autocomplete
+                        {
+                            //autocomplete function
+                            string functionValue = columnId + "InputChange() { const _this = this; return function (name, v) { const filterBy = " + (string.IsNullOrEmpty(DdlFtrColumnName) ? "'';" : ("((_this.props.[[---ScreenName---]] || {})." + RefColSrc + " || {})." + DdlFtrColumnName + DdlFtrTableId + ";")) + " _this.props.Search" + columnId + "(v, filterBy); } }";
+                            functionResults.Add(functionValue);
+                            if (hasDependents)
+                            {
+                                functionValue = columnId + @"Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.c" + screenPrimaryKey + @" || {}).key || values.c" + screenPrimaryKey + @";
+    (this || _this).props.GetRef" + columnId + @"(mstId, null, key, null)
+      .then(ret => {
+        ret.dependents.forEach(
+          (o => {
+            setFieldValue('c' + o.columnName, !ret.result ? null : o.isFileObject ? decodeEmbeddedFileObjectFromServer(ret.result[o.tableColumnName], true) : ret.result[o.tableColumnName]);
+          })
+        )
+      })
+  }
+";
+                                functionResults.Add(functionValue);
+                            }
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
+
+                            //save button function call
+                            string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
+                            saveBtnResults.Add(saveBtnValue);
+
+                            //render label
+                            string renderLabelValue = @"
     const " + columnId + @"List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + @"([[---ScreenName---]]State);
     const " + columnId + @" = currMst." + columnId + @";
 ";
-                        renderLabelResults.Add(renderLabelValue.Trim(new char[] { '\r', '\n' }));
+                            renderLabelResults.Add(renderLabelValue.Trim(new char[] { '\r', '\n' }));
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": " + columnId + "List.filter(obj => { return obj.key === " + columnId + " })[0],";
-                        formikInitialResults.Add(formikInitialValue);
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": " + columnId + "List.filter(obj => { return obj.key === " + columnId + " })[0],";
+                            formikInitialResults.Add(formikInitialValue);
 
-                        //formik control
-                        string formikControlValue = @"
+                            //formik control
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -1265,7 +1439,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='c" + columnId + @"'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', false" + ", values" + (!hasDependents ? "" : ", [this." + columnId + "Change]") + @")}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', true)}
                                           onInputChange={this." + columnId + @"InputChange()}
                                           value={values.c" + columnId + @"}
@@ -1280,39 +1454,59 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                 </Col>
                               }
 ";
-                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
 
-                        //mapDispatchToProps: bindActionCreatorsResults
-                        string bindActionCreatorsValue = "{ Search" + columnId + ": [[---ScreenName---]]ReduxObj.SearchActions.Search" + columnId + ".bind([[---ScreenName---]]ReduxObj) },";
-                        bindActionCreatorsResults.Add(bindActionCreatorsValue);
-
-                    }
-                    else if (drv["DisplayMode"].ToString() == "DropDownList" || drv["DisplayMode"].ToString() == "RadioButtonList" || drv["DisplayMode"].ToString() == "WorkflowStatus" || drv["DisplayMode"].ToString() == "AutoListBox" || drv["DisplayMode"].ToString() == "DataGridLink") //---------DropdownList / RadioButtonList / WorkflowStatus / AutoListBox / DataGridLink
-                    {
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
-                        {
-                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
+                            //mapDispatchToProps: bindActionCreatorsResults
+                            string bindActionCreatorsValue = "{ Search" + columnId + ": [[---ScreenName---]]ReduxObj.SearchActions.Search" + columnId + ".bind([[---ScreenName---]]ReduxObj) },";
+                            bindActionCreatorsResults.Add(bindActionCreatorsValue);
+                            if (hasDependents)
+                            {
+                                bindActionCreatorsValue = "{ GetRef" + columnId + ": [[---ScreenName---]]ReduxObj.SearchActions.GetRef" + columnId + ".bind([[---ScreenName---]]ReduxObj) },";
+                                bindActionCreatorsResults.Add(bindActionCreatorsValue);
+                            }
                         }
+                        else if (DisplayMode == "DropDownList" 
+                            || DisplayMode == "RadioButtonList" 
+                            || DisplayMode == "WorkflowStatus" 
+                            || DisplayMode == "AutoListBox" 
+                            || DisplayMode == "DataGridLink"
+                            ) //---------DropdownList / RadioButtonList / WorkflowStatus / AutoListBox / DataGridLink
+                        {
+                            if (hasDependents)
+                            {
+                                // should be local version without calling server again for dropdown etc.(FIXME)
+                                string functionValue = columnId + @"Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.c" + screenPrimaryKey + @" || {}).key || values.c" + screenPrimaryKey + @";
+    // dependent invocation goes to here
+  }
+";
+                                functionResults.Add(functionValue);
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                            }
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
+                            //save button function call
+                            string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //render label
-                        string renderLabelValue = @"
+                            //render label
+                            string renderLabelValue = @"
     const " + columnId + @"List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + @"([[---ScreenName---]]State);
     const " + columnId + " = currMst." + columnId + @";
 ";
-                        renderLabelResults.Add(renderLabelValue.Trim(new char[]{'\r','\n'}));
+                            renderLabelResults.Add(renderLabelValue.Trim(new char[] { '\r', '\n' }));
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": " + columnId + "List.filter(obj => { return obj.key === " + columnId + " })[0],";
-                        formikInitialResults.Add(formikInitialValue);
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": " + columnId + "List.filter(obj => { return obj.key === " + columnId + " })[0],";
+                            formikInitialResults.Add(formikInitialValue);
 
-                        //formik control
-                        string formikControlValue = @"
+                            //formik control
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -1338,36 +1532,56 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                 </Col>
                               }
 ";
-                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
-                    }
-
-                    else if (drv["DisplayMode"].ToString() == "ListBox" ) //--------- ListBox
-                    {
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
-                        {
-                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
                         }
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                        else if (DisplayMode == "ListBox") //--------- ListBox
+                        {
+                            if (hasDependents)
+                            {
+                                // should be local version without calling server again for dropdown etc.(FIXME)
+                                string functionValue = columnId + @"(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.c" + screenPrimaryKey + @"|| {}).key || values.c" + screenPrimaryKey + @";
+    (this || _this).props.GetRef" + columnId + @"(mstId, null, key, null, null)
+      .then(ret => {
+        ret.dependents.forEach(
+          (o => {
+            setFieldValue('c' + o.columnName, !ret.result ? null : o.isFileObject ? decodeEmbeddedFileObjectFromServer(ret.result[o.tableColumnName], true) : ret.result[o.tableColumnName]);
+          })
+        )
+      })
 
-                        //render label
-                        string renderLabelValue = @"
+";
+                                functionResults.Add(functionValue);
+
+                            }
+
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
+
+                            //save button function call
+                            string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
+
+                            //render label
+                            string renderLabelValue = @"
     const " + columnId + @"List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + @"([[---ScreenName---]]State);
     const " + columnId + " = currMst." + columnId + @";
 ";
-                        renderLabelResults.Add(renderLabelValue.Trim(new char[] { '\r', '\n' }));
+                            renderLabelResults.Add(renderLabelValue.Trim(new char[] { '\r', '\n' }));
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": " + columnId + ",";
-                        formikInitialResults.Add(formikInitialValue);
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": " + columnId + ",";
+                            formikInitialResults.Add(formikInitialValue);
 
-                        //formik control
-                        string listBoxStyle = !string.IsNullOrEmpty(drv["ColumnHeight"].ToString()) ? "style={{ height: '" + (int.Parse(drv["ColumnHeight"].ToString()) * 25 + 2) + "px' }}" : "";
-                        string formikControlValue = @"
+                            //formik control
+                            string listBoxStyle = !string.IsNullOrEmpty(drv["ColumnHeight"].ToString()) ? "style={{ height: '" + (int.Parse(drv["ColumnHeight"].ToString()) * 25 + 2) + "px' }}" : "";
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -1393,33 +1607,38 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                 </Col>
                               }
 ";
-                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
 
-                    }
-
-                    else if (drv["DisplayMode"].ToString().Contains("Date")) //---------Date (Any type)
-                    {
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
-                        {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
                         }
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                        else if (DisplayMode.Contains("Date")) //---------Date (Any type)
+                        {
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
 
-                        //render label
-                        string renderLabelValue = "    const " + columnId + " = currMst." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": " + columnId + " || new Date(),";
-                        formikInitialResults.Add(formikInitialValue);
+                            //render label
+                            string renderLabelValue = "    const " + columnId
+                                                            + (!isRefColumnControl || isPullUpColumnControl
+                                                                ? " = currMst." + columnId + ";"
+                                                                : " = " + refColumnBinding + ";"
+                                                            )
+                                                            ;
+                            renderLabelResults.Add(renderLabelValue);
 
-                        //formik control
-                        string formikControlValue = @"
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": " + columnId + " || new Date(),";
+                            formikInitialResults.Add(formikInitialValue);
+
+                            //formik control
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -1435,7 +1654,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                           name='c" + columnId + @"'
                                           onChange={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', false)}
                                           onBlur={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', true)}
-                                          value={values.c" + columnId + @"}
+                                          value={" + (isRefColumnControl && !isPullUpColumnControl ? formikRefColumnBinding : "values.c" + columnId) + @"}
                                           selected={values.c" + columnId + @"}
                                           disabled={(authCol." + columnId + @" || {}).readonly ? true : false} />
                                       </div>
@@ -1445,24 +1664,24 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                 </Col>
                               }
 ";
-                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
-                    }
-                    else if (drv["DisplayMode"].ToString() == "CheckBox") //---------Checkbox
-                    {
-                        //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + " ? 'Y' : 'N',";
-                        saveBtnResults.Add(saveBtnValue);
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                        }
+                        else if (DisplayMode == "CheckBox") //---------Checkbox
+                        {
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " ? 'Y' : 'N',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //render label
-                        string renderLabelValue = "    const " + columnId + " = currMst." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                            //render label
+                            string renderLabelValue = "    const " + columnId + " = currMst." + columnId + ";";
+                            renderLabelResults.Add(renderLabelValue);
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": " + columnId + " === 'Y',";
-                        formikInitialResults.Add(formikInitialValue);
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": " + columnId + " === 'Y',";
+                            formikInitialResults.Add(formikInitialValue);
 
-                        //formik control
-                        string formikControlValue = @"
+                            //formik control
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -1486,27 +1705,28 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                               }
 
 ";
-                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
-                    }
-                    else if (drv["DisplayMode"].ToString() == "ImageButton"
-                        ||
-                        drv["DisplayMode"].ToString().EndsWith("Button")
-                        ) //---------ImageButton
-                    {
-                        if (string.IsNullOrEmpty(drv["ColumnId"].ToString()))
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                        }
+                        else if (DisplayMode == "ImageButton" 
+                            || DisplayMode.EndsWith("Button")
+                            ) 
                         {
-                            //ImageButton function
-                            string functionValue = ColumnName + @"({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
+                            bool isRefColumn = !string.IsNullOrEmpty(drv["DdlRefColumnId"].ToString());
+
+                            if (string.IsNullOrEmpty(drv["ColumnId"].ToString()))
+                            {
+                                //Button(including imagebutton that is not DB backed) action
+                                string functionValue = ColumnName + @"({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
     return function (evt) {
       this.OnClickColumeName = '" + ColumnName + @"';
       //Enter Custom Code here, eg: submitForm();
       evt.preventDefault();
     }.bind(this);
   }";
-                            functionResults.Add(functionValue);
+                                functionResults.Add(functionValue);
 
-                            //formik control
-                            string formikControlValue = @"
+                                //formik control
+                                string formikControlValue = @"
                               <Col lg={6} xl={6}>
                                 <div className='form__form-group'>
                                   <div className='d-block'>
@@ -1521,23 +1741,24 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                               </Col>
 
 ";
-                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
-                        }
-                        else
-                        {
-                            //save button function call
-                            string saveBtnValue = columnId + ": values.c" + columnId + @" && values.c" + columnId + @".ts ?
+                                formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                            }
+                            else
+                            {
+                                //imagebutton upload
+                                //save button function call
+                                string saveBtnValue = columnId + ": values.c" + columnId + @" && values.c" + columnId + @".ts ?
             JSON.stringify({
               ...values.c" + columnId + @",
               ts: undefined,
               lastTS: values.c" + columnId + @".ts,
               base64: this.StripEmbeddedBase64Prefix(values.c" + columnId + @".base64)
             }) : null,";
-                            saveBtnResults.Add(saveBtnValue);
+                                saveBtnResults.Add(saveBtnValue);
 
-                            //render label
-                            string renderLabelValue = "    const " + columnId + " = currMst." + columnId + " ? (currMst." + columnId + ".startsWith('{') ? JSON.parse(currMst." + columnId + ") : { fileName: '', mimeType: 'image/jpeg', base64: currMst." + columnId + " }) : null;" + Environment.NewLine
-                                                    + "    const " + columnId + @"FileUploadOptions = {
+                                //render label
+                                string renderLabelValue = "    const " + columnId + " = currMst." + columnId + " ? decodeEmbeddedFileObjectFromServer(currMst." + columnId + ") : null;" + Environment.NewLine
+                                                        + "    const " + columnId + @"FileUploadOptions = {
       CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
       DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
       MaxImageSize: {
@@ -1549,14 +1770,14 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
         Height: (columnLabel." + columnId + @" || {}).ColumnHeight,
       },
     }";
-                            renderLabelResults.Add(renderLabelValue);
+                                renderLabelResults.Add(renderLabelValue);
 
-                            //formik initial value
-                            string formikInitialValue = "c" + columnId + ": " + columnId + ",";
-                            formikInitialResults.Add(formikInitialValue);
+                                //formik initial value
+                                string formikInitialValue = "c" + columnId + ": " + columnId + ",";
+                                formikInitialResults.Add(formikInitialValue);
 
-                            //formik control
-                            string formikControlValue = @"
+                                //formik control
+                                string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -1567,7 +1788,17 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                       </label>
                                     }
                                     {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      <div className='form__form-group-field'>" 
+                                         + (isRefColumn 
+                                            ? @"
+                                        <Field
+                                          component={FileInputField}
+                                          name='c" + columnId + @"'
+                                          options={{ ...fileFileUploadOptions, maxFileCount: 1 }}
+                                          files={(this.BindFileObject(" + columnId + @", values.c" + columnId + @") || []).filter(f => !f.isEmptyFileObject)}
+                                          label={(columnLabel." + columnId + @" || {}).ToolTip}
+                                          disabled={true}
+                                        />" : @"
                                         <FileInputFieldV1
                                           name='c" + columnId + @"'
                                           onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
@@ -1576,7 +1807,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                           value={values.c" + columnId + @" || " + columnId + @"}
                                           label={auxSystemLabels.PickFileBtnLabel}
                                           onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
-                                        />
+                                        />") + @"
                                       </div>
                                     }
                                     {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
@@ -1584,15 +1815,17 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                 </Col>
                               }
 ";
-                            formikControlResults.Add(formikControlValue);
+                                formikControlResults.Add(formikControlValue);
+                            }
                         }
-
-                    }
-                    else if (drv["DisplayMode"].ToString() == "Label" || drv["DisplayMode"].ToString() == "Action Button" ||
-                             drv["DisplayMode"].ToString() == "DataGridLink" || drv["DisplayMode"].ToString() == "PlaceHolder") //---------Label / Action Button / DataGridLink / PlaceHolder
-                    {
-                        //formik control
-                        string formikControlValue = @"
+                        else if (DisplayMode == "Label" 
+                                || DisplayMode == "Action Button" // never happen, dealth with above as button
+                                || DisplayMode == "DataGridLink" 
+                                || DisplayMode == "PlaceHolder"
+                            ) 
+                        {
+                            //formik control
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -1607,33 +1840,170 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                               }
 
 ";
-                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
-                    }
-                    else  //--------------------------------For the rest of the control, using textbox instead and hide it if it's not mandatory field
-                    {
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
-                        {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
                         }
+                        else if (DisplayMode == "Document")
+                        {
+                            functionResults.Add("Get" + columnId + @"(setFieldValue, setFieldTouched, formikName, { mstId, dtlId } = {}) {
+    return function (file) {
+      return this.props.Get" + columnId + @"({ mstId, docId: file.DocId });
+    }.bind(this);
+  }"
+                                );
+                            functionResults.Add("Add" + columnId + @"(setFieldValue, setFieldTouched, formikName, { mstId, dtlId } = {}) {
+    return function (file) {
+      return this.props.Add" + columnId + @"({ mstId, file });
+    }.bind(this);
+  }"
+                                );
+                            functionResults.Add("Del" + columnId + @"(setFieldValue, setFieldTouched, formikName, { mstId, dtlId } = {}) {
+    return function (file) {
+      return this.props.Del" + columnId + @"({ mstId, docId: file.DocId });
+    }.bind(this);
+  }"
+                                );
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                            string renderLabelValue = "    const " + columnId + " = currMst." + columnId + ";";
+                            renderLabelResults.Add(renderLabelValue);
 
-                        //render label
-                        string renderLabelValue = "    const " + columnId + " = currMst." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                            //mapDispatchToProps: bindActionCreatorsResults
+                            bindActionCreatorsResults.Add(
+                                "{ Get" + columnId + "List: [[---ScreenName---]]ReduxObj.SearchActions.Get" + columnId + ".bind([[---ScreenName---]]ReduxObj) },"
+                                );
+                            bindActionCreatorsResults.Add(
+                                "{ Get" + columnId + ": [[---ScreenName---]]ReduxObj.OnDemandActions.Get" + columnId + "Content.bind([[---ScreenName---]]ReduxObj) },"
+                                );
+                            bindActionCreatorsResults.Add(
+                                "{ Add" + columnId + ": [[---ScreenName---]]ReduxObj.OnDemandActions.Add" + columnId + "Content.bind([[---ScreenName---]]ReduxObj) },"
+                                );                            
+                            bindActionCreatorsResults.Add(
+                                "{ Del" + columnId + ": [[---ScreenName---]]ReduxObj.OnDemandActions.Del" + columnId + "Content.bind([[---ScreenName---]]ReduxObj) },"
+                                );
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + drv["DisplayMode"].ToString() + "'),";
-                        formikInitialResults.Add(formikInitialValue);
+                            string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} {(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          component={FileInputField}
+                                          name='c" + columnId + @"'
+                                          options={{ ...fileFileUploadOptions, maxFileCount: 100 }}
+                                          files={(this.BindMultiDocFileObject(" + columnId + @", values.c" + columnId + @") || []).filter(f => !f.isEmptyFileObject)}
+                                          label={(columnLabel." + columnId + @" || {}).ToolTip}
+                                          onClick={this.Get" + columnId + @"(setFieldValue, setFieldTouched, 'c" + columnId + @"', { mstId: (currMst || {})." + screenPrimaryKey + @" })}
+                                          onDelete={this.Del" + columnId + @"(setFieldValue, setFieldTouched, 'c" + columnId + @"', { mstId: (currMst || {})." + screenPrimaryKey + @" })}
+                                          onAdd={this.Add" + columnId + @"(setFieldValue, setFieldTouched, 'c" + columnId + @"', { mstId: (currMst || {})." + screenPrimaryKey + @" })}
+                                          onChange={this.FileUploadChange(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
+                                          onError={(e, fileName) => {
+                                            this.props.showNotification('E', { message: 'problem loading file ' + fileName })
+                                          }}
+                                          multiple
+                                        />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
 
-                        //formik control
-                        bool hide = drv["RequiredValid"].ToString() != "Y" && drv["DisplayMode"].ToString() != "Currency" && drv["DisplayMode"].ToString() != "Money";
+";
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                        }
+                        else if (DisplayMode == "Signature")
+                        {
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
 
-                        string formikControlValue = @"
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
+
+                            //render label
+                            string renderLabelValue = "    const " + columnId
+                                                            + (!isRefColumnControl || isPullUpColumnControl
+                                                                ? " = currMst." + columnId + ";"
+                                                                : " = " + refColumnBinding + ";"
+                                                            )
+                                                            ;
+                            renderLabelResults.Add(renderLabelValue);
+
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + DisplayMode + "'),";
+                            formikInitialResults.Add(formikInitialValue);
+
+                            //formik control
+                            string formikControlValue = @"
+                              {" + "" + @"(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        {values.c" + columnId + @" &&
+                                          <img alt='' src={values.c" + columnId + @"} />
+                                        }
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+
+";
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+
+                        }
+                        else
+                        {
+                            // unknown control
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
+
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
+
+                            //render label
+                            string renderLabelValue = "    const " + columnId
+                                                            + (!isRefColumnControl || isPullUpColumnControl
+                                                                ? " = currMst." + columnId + ";"
+                                                                : " = " + refColumnBinding + ";"
+                                                            )
+                                                            ;
+                            renderLabelResults.Add(renderLabelValue);
+
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + DisplayMode + "'),";
+                            formikInitialResults.Add(formikInitialValue);
+
+                            //formik control
+                            //for unknown control, using textbox instead and hide it if it's not mandatory field
+                            bool hide = drv["RequiredValid"].ToString() != "Y"
+                                            && DisplayMode != "Currency"
+                                            && DisplayMode != "Money"
+                                            && false; // don't hide
+
+                            string formikControlValue = @"
                               {" + (hide ? "false && " : "") + @"(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -1648,7 +2018,9 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                         <Field
                                           type='text'
                                           name='c" + columnId + @"'
-                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}"
+                                                               + (isRefColumnControl && !isPullUpColumnControl ? @"
+                                          value={" + formikRefColumnBinding + "}" : "") + @" />
                                       </div>
                                     }
                                     {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
@@ -1657,18 +2029,19 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                               }
 
 ";
-                        formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                        }
                     }
                 }
 
             }
-            string functionCnt = string.Join(Environment.NewLine, functionResults.Select(s => addIndent(s, 2)));
-            string validatorCnt = string.Join(Environment.NewLine, validatorResults.Select(s => addIndent(s, 4)));
-            string saveBtnCnt = string.Join(Environment.NewLine, saveBtnResults.Select(s => addIndent(s, 10)));
-            string renderLabelCnt = string.Join(Environment.NewLine, renderLabelResults.Select(s => addIndent(s, 0)));
-            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Select(s => addIndent(s, 20)));
-            string formikControlCnt = string.Join(Environment.NewLine, formikControlResults);
-            string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults.Select(s => addIndent(s, 4)));
+            string functionCnt = string.Join(Environment.NewLine, functionResults.Where(s => !string.IsNullOrEmpty((s??"").Trim())).Select(s => addIndent(s, 2)));
+            string validatorCnt = string.Join(Environment.NewLine, validatorResults.Where(s => !string.IsNullOrEmpty((s??"").Trim())).Select(s => addIndent(s, 4)));
+            string saveBtnCnt = string.Join(Environment.NewLine, saveBtnResults.Where(s => !string.IsNullOrEmpty((s ?? "").Trim())).Select(s => addIndent(s, 10)));
+            string renderLabelCnt = string.Join(Environment.NewLine, renderLabelResults.Where(s => !string.IsNullOrEmpty((s ?? "").Trim())).Select(s => addIndent(s, 0)));
+            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Where(s => !string.IsNullOrEmpty((s ?? "").Trim())).Select(s => addIndent(s, 20)));
+            string formikControlCnt = string.Join(Environment.NewLine, formikControlResults.Where(s => !string.IsNullOrEmpty((s ?? "").Trim())));
+            string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults.Where(s => !string.IsNullOrEmpty((s ?? "").Trim())).Select(s => addIndent(s, 4)));
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
@@ -1688,11 +2061,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -2014,6 +2388,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 ");
             sb.Append(@"
     /* ReactRule: Master Render */
@@ -2253,7 +2640,7 @@ import RintagiScreen from '../../components/custom/Screen'
 import ModalDialog from '../../components/custom/ModalDialog';
 import classNames from 'classnames';
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
-import { getSelectedFromList, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getListDisplayContent } from '../../helpers/utils'
+import { getSelectedFromList, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getListDisplayContent, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
@@ -2803,11 +3190,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
         {
             DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
             string screenPrimaryKey = "";
+            string screenMstTableId = "";
+            string screenDtlTableId = "";
+
             foreach (DataRowView drv in dvItms)
             {
                 if (drv["MasterTable"].ToString() == "Y" && !string.IsNullOrEmpty(drv["PrimaryKey"].ToString()))
                 {
                     screenPrimaryKey = drv["PrimaryKey"].ToString() + drv["TableId"].ToString();
+                    screenMstTableId = drv["TableId"].ToString();
                     break;
                 }
             }
@@ -2818,6 +3209,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                 if (drv["MasterTable"].ToString() == "N" && !string.IsNullOrEmpty(drv["PrimaryKey"].ToString()))
                 {
                     screenDetailKey = drv["PrimaryKey"].ToString() + drv["TableId"].ToString();
+                    screenDtlTableId = drv["TableId"].ToString();
                     break;
                 }
             }
@@ -2879,6 +3271,17 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                     string DdlFtrTableId = drv["DdlFtrTableId"].ToString();
                     string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
                     string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
+                    string DdlKeyColumnId = drv["DdlKeyColumnId"].ToString();
+                    string DisplayMode = drv["DisplayMode"].ToString();
+                    string DdlRefColumnId = drv["DdlRefColumnId"].ToString();
+                    bool isRefColumnControl = IsRefColumn(drv.Row);
+                    bool isPullUpColumnControl = IsPullUpColumn(drv.Row, dvItms);
+                    bool hasDependents = HasDependents(drv.Row, dvItms);
+                    bool directSaveToDB = DirectSaveToDb(drv.Row);
+                    bool isIgnoredColumn = IsIgnoredColumn(drv.Row);
+                    string refColumnName = drv["DdlRefColumnName"].ToString() + screenDtlTableId;
+                    string refColumnBinding = "this.BindReferenceField(" + refColumnName + ", " + refColumnName + "List" + ", { valuefieldname: '" + columnId + "' })";
+                    string formikRefColumnBinding = "this.BindReferenceField((((values || {}).c" + refColumnName + " || {}).value), " + refColumnName + "List" + ", { valuefieldname: '" + columnId + "' })";
 
                     if (columnId == screenDetailKey)
                     {
@@ -2888,31 +3291,45 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                         continue; // skip key column as it is produced else where
                     }
 
-                    if (drv["DisplayMode"].ToString() == "TextBox" || drv["DisplayMode"].ToString() == "Password") //---------Textbox || Password
+                    if (isIgnoredColumn == false)
                     {
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
+                        if (DisplayMode == "TextBox" 
+                            || DisplayMode == "Password"
+                            /* these three are more or less textbox like but with content transformation */
+                            || DisplayMode == "Signature"
+                            || DisplayMode == "TokenInput"
+                            || DisplayMode == "EncryptedTextBox"
+                            ) 
                         {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
-                        }
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //render label
-                        string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                            //render label
+                            string renderLabelValue = "    const " + columnId
+                                                            +
+                                                            (!isRefColumnControl || isPullUpColumnControl
+                                                                ? " = currDtl." + columnId + ";"
+                                                                : " = " + refColumnBinding + ";"
+                                                            )
+                                                            ;
+                            renderLabelResults.Add(renderLabelValue);
 
-                        //formik initial value
+                            //formik initial value
 
-                        string formikInitialValue = "c" + columnId + ": formatContent(currDtl." + columnId + " || '', '" + drv["DisplayMode"].ToString() + "'),";
-                        formikInitialResults.Add(formikInitialValue);
+                            string formikInitialValue = "c" + columnId + ": formatContent(currDtl." + columnId + " || '', '" + DisplayMode + "'),";
+                            formikInitialResults.Add(formikInitialValue);
 
-                        //formik control
-                        string textboxType = drv["DisplayMode"].ToString() == "Password" ? "password" : "text";
-                        string formikControlValue = @"
+                            //formik control
+                            string textboxType = DisplayMode == "Password" ? "password" : "text";
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -2925,9 +3342,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                     {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          type='" + textboxType + @"'
                                           name='c" + columnId + @"'
-                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}"
+                                                               + (isRefColumnControl && !isPullUpColumnControl ? @"
+                                          value={" + formikRefColumnBinding + "}" : "") + @" />
                                       </div>
                                     }
                                     {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
@@ -2935,42 +3354,115 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                 </Col>
                               }
 ";
-                        formikControlResults.Add(formikControlValue);
-                    }
-                    else if (drv["DisplayMode"].ToString() == "AutoComplete") //---------Autocomplete
-                    {
-                        //autocomplete function
-                        string functionValue = "  " + columnId + @"InputChange() {
+                            formikControlResults.Add(formikControlValue);
+                        }
+                        else if (DisplayMode == "MultiLine") //---------Multiline Textbox
+                        {
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
+
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
+
+                            //render label
+                            string renderLabelValue = "    const " + columnId
+                                                            +
+                                                            (!isRefColumnControl || isPullUpColumnControl
+                                                                ? " = currDtl." + columnId + ";"
+                                                                : " = " + refColumnBinding + ";"
+                                                            )
+                                                            ;
+                            renderLabelResults.Add(renderLabelValue);
+
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + DisplayMode + "'),";
+                            formikInitialResults.Add(formikInitialValue);
+
+                            //formik control
+                            string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          component='textarea'
+                                          name='c" + columnId + @"'
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}"
+                                                               + (isRefColumnControl && !isPullUpColumnControl ? @"
+                                          value={" + formikRefColumnBinding + "}" : "") + @" />
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                        }
+                        else if (DisplayMode == "AutoComplete") //---------Autocomplete
+                        {
+                            //autocomplete function
+                            string functionValue = "  " + columnId + @"InputChange() {
     const _this = this; 
     return function (name, v) { 
       const filterBy = " + (string.IsNullOrEmpty(DdlFtrColumnName) ? "'';" : ("((_this.props.[[---ScreenName---]] || {})." + RefColSrc + " || {})." + DdlFtrColumnName + DdlFtrTableId + ";")) + @" 
       _this.props.Search" + columnId + @"(v, filterBy);
     } 
   }";
-                        functionResults.Add(functionValue);
+                            functionResults.Add(functionValue);
+                            if (hasDependents)
+                            {
+                                functionValue = columnId + @"Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.c" + screenPrimaryKey + @" || {}).key || values.c" + screenPrimaryKey + @";
+    const dtlId = (values.c" + screenDetailKey + @" || {}).key || values.c" + screenDetailKey + @";
+    (this || _this).props.GetRef" + columnId + @"(mstId, dtlId, key, key)
+      .then(ret => {
+        ret.dependents.forEach(
+          (o => {
+            setFieldValue('c' + o.columnName, !ret.result ? null : o.isFileObject ? decodeEmbeddedFileObjectFromServer(ret.result[o.tableColumnName], true) : ret.result[o.tableColumnName]);
+          })
+        )
+      })
+  }
+";
+                                functionResults.Add(functionValue);
+                            }
 
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
-                        {
-                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
-                        }
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                            //save button function call
+                            string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //render label
-                        string renderLabelValue = "    const " + columnId + "List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + "([[---ScreenName---]]State);" + Environment.NewLine
-                                                + "    const " + columnId + " = currDtl." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                            //render label
+                            string renderLabelValue = "    const " + columnId + "List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + "([[---ScreenName---]]State);" + Environment.NewLine
+                                                    + "    const " + columnId + " = currDtl." + columnId + ";";
+                            renderLabelResults.Add(renderLabelValue);
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": " + columnId + "List.filter(obj => { return obj.key === currDtl." + columnId + " })[0],";
-                        formikInitialResults.Add(formikInitialValue);
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": " + columnId + "List.filter(obj => { return obj.key === currDtl." + columnId + " })[0],";
+                            formikInitialResults.Add(formikInitialValue);
 
-                        //formik control
-                        string formikControlValue = @"
+                            //formik control
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -2984,7 +3476,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='c" + columnId + @"'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', false" + (!hasDependents ? "" : ", [this." + columnId + "Change]") + @")}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', true)}
                                           onInputChange={this." + columnId + @"InputChange()}
                                           value={values.c" + columnId + @"}
@@ -3000,37 +3492,56 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                               }
 
 ";
-                        formikControlResults.Add(formikControlValue);
+                            formikControlResults.Add(formikControlValue);
 
-                        //mapDispatchToProps: bindActionCreatorsResults
-                        string bindActionCreatorsValue = "{ Search" + columnId + ": [[---ScreenName---]]ReduxObj.SearchActions.Search" + columnId + ".bind([[---ScreenName---]]ReduxObj) },";
-                        bindActionCreatorsResults.Add(bindActionCreatorsValue);
+                            //mapDispatchToProps: bindActionCreatorsResults
+                            string bindActionCreatorsValue = "{ Search" + columnId + ": [[---ScreenName---]]ReduxObj.SearchActions.Search" + columnId + ".bind([[---ScreenName---]]ReduxObj) },";
+                            bindActionCreatorsResults.Add(bindActionCreatorsValue);
 
-                    }
-                    else if (drv["DisplayMode"].ToString() == "DropDownList" || drv["DisplayMode"].ToString() == "RadioButtonList" || drv["DisplayMode"].ToString() == "ListBox" || drv["DisplayMode"].ToString() == "WorkflowStatus" || drv["DisplayMode"].ToString() == "AutoListBox" || drv["DisplayMode"].ToString() == "DataGridLink") //---------DropdownList / RadioButtonList / ListBox / WorkflowStatus / AutoListBox / DataGridLink
-                    {
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
-                        {
-                            string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
                         }
+                        else if (DisplayMode == "DropDownList" 
+                                || DisplayMode == "RadioButtonList" 
+                                || DisplayMode == "ListBox" 
+                                || DisplayMode == "WorkflowStatus" 
+                                || DisplayMode == "AutoListBox" 
+                                || DisplayMode == "DataGridLink") //---------DropdownList / RadioButtonList / ListBox / WorkflowStatus / AutoListBox / DataGridLink
+                        {
+                            if (hasDependents)
+                            {
+                                // should be local version without calling server again for dropdown etc.(FIXME)
+                                string functionValue = columnId + @"Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.c" + screenPrimaryKey + @" || {}).key || values.c" + screenPrimaryKey + @";
+    const dtlId = (values.c" + screenDetailKey + @" || {}).key || values.c" + screenDetailKey + @";
+    // dependent invocation goes to here
+  }
+";
+                                functionResults.Add(functionValue);
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                            }
 
-                        //render label
-                        string renderLabelValue = "    const " + columnId + "List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + "([[---ScreenName---]]State);" + Environment.NewLine
-                                                + "    const " + columnId + " = currDtl." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (isEmptyId((values.c" + columnId + " || {}).value)) { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": " + columnId + "List.filter(obj => { return obj.key === currDtl." + columnId + " })[0],";
-                        formikInitialResults.Add(formikInitialValue);
+                            //save button function call
+                            string saveBtnValue = columnId + ": (values.c" + columnId + " || {}).value || '',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //formik control
-                        string formikControlValue =@"
+                            //render label
+                            string renderLabelValue = "    const " + columnId + "List = [[---ScreenName---]]ReduxObj.ScreenDdlSelectors." + columnId + "([[---ScreenName---]]State);" + Environment.NewLine
+                                                    + "    const " + columnId + " = currDtl." + columnId + ";";
+                            renderLabelResults.Add(renderLabelValue);
+
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": " + columnId + "List.filter(obj => { return obj.key === currDtl." + columnId + " })[0],";
+                            formikInitialResults.Add(formikInitialValue);
+
+                            //formik control
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -3057,32 +3568,38 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                               }
 
 ";
-                        formikControlResults.Add(formikControlValue);
+                            formikControlResults.Add(formikControlValue);
 
-                    }
-                    else if (drv["DisplayMode"].ToString().Contains("Date")) //---------Date (Any type)
-                    {
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
-                        {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
                         }
+                        else if (DisplayMode.Contains("Date")) //---------Date (Any type)
+                        {
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //render label
-                        string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                            //render label
+                            string renderLabelValue = "    const " + columnId
+                                                            +
+                                                            (!isRefColumnControl || isPullUpColumnControl
+                                                                ? " = currDtl." + columnId + ";"
+                                                                : " = " + refColumnBinding + ";"
+                                                            )
+                                                            ;
+                            renderLabelResults.Add(renderLabelValue);
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": currDtl." + columnId + " || new Date(),";
-                        formikInitialResults.Add(formikInitialValue);
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": currDtl." + columnId + " || new Date(),";
+                            formikInitialResults.Add(formikInitialValue);
 
-                        //formik control
-                        string formikControlValue = @"
+                            //formik control
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -3098,7 +3615,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                           name='c" + columnId + @"'
                                           onChange={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', false)}
                                           onBlur={this.DateChange(setFieldValue, setFieldTouched, 'c" + columnId + @"', true)}
-                                          value={values.c" + columnId + @"}
+                                          value={" + (isRefColumnControl && !isPullUpColumnControl ? formikRefColumnBinding : "values.c" + columnId) + @"}
                                           selected={values.c" + columnId + @"}
                                           disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -3109,24 +3626,24 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                               }
 
 ";
-                        formikControlResults.Add(formikControlValue);
-                    }
-                    else if (drv["DisplayMode"].ToString() == "CheckBox") //---------Checkbox
-                    {
-                        //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + " ? 'Y' : 'N',";
-                        saveBtnResults.Add(saveBtnValue);
+                            formikControlResults.Add(formikControlValue);
+                        }
+                        else if (DisplayMode == "CheckBox") //---------Checkbox
+                        {
+                            //save button function call
+                            string saveBtnValue = isRefColumnControl ? "" : columnId + ": values.c" + columnId + " ? 'Y' : 'N',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //render label
-                        string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                            //render label
+                            string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + ";";
+                            renderLabelResults.Add(renderLabelValue);
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": currDtl." + columnId + " === 'Y',";
-                        formikInitialResults.Add(formikInitialValue);
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": currDtl." + columnId + " === 'Y',";
+                            formikInitialResults.Add(formikInitialValue);
 
-                        //formik control
-                        string formikControlValue = @"
+                            //formik control
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -3150,24 +3667,26 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                               }
 
 ";
-                        formikControlResults.Add(formikControlValue);
-                    }
-                    else if (drv["DisplayMode"].ToString() == "ImageButton") //---------ImageButton
-                    {
-                        if (string.IsNullOrEmpty(drv["ColumnId"].ToString()))
+                            formikControlResults.Add(formikControlValue);
+                        }
+                        else if (DisplayMode == "ImageButton") //---------ImageButton
                         {
-                            //ImageButton function
-                            string functionValue = " " + ColumnName + @"({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
+                            bool isRefColumn = !string.IsNullOrEmpty(drv["DdlRefColumnId"].ToString());
+
+                            if (string.IsNullOrEmpty(drv["ColumnId"].ToString()))
+                            {
+                                //ImageButton function
+                                string functionValue = " " + ColumnName + @"({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
     return function (evt) {
       this.OnClickColumeName = '" + ColumnName + @"'; 
       //Enter Custom Code here, eg: submitForm();
       evt.preventDefault();
     }.bind(this);
   }";
-                            functionResults.Add(functionValue);
+                                functionResults.Add(functionValue);
 
-                            //formik control
-                            string formikControlValue = @"
+                                //formik control
+                                string formikControlValue = @"
                               <Col lg={12} xl={12}>
                                 <div className='form__form-group'>
                                   <div className='d-block'>
@@ -3182,23 +3701,23 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                               </Col>
 
 ";
-                            formikControlResults.Add(formikControlValue);
-                        }
-                        else
-                        {
-                            //save button function call
-                            string saveBtnValue = columnId + ": values.c" + columnId + @" && values.c" + columnId + @".ts ?
+                                formikControlResults.Add(formikControlValue);
+                            }
+                            else
+                            {
+                                //save button function call
+                                string saveBtnValue = columnId + ": values.c" + columnId + @" && values.c" + columnId + @".ts ?
             JSON.stringify({
               ...values.c" + columnId + @",
               ts: undefined,
               lastTS: values.c" + columnId + @".ts,
               base64: this.StripEmbeddedBase64Prefix(values.c" + columnId + @".base64)
             }) : null,";
-                            saveBtnResults.Add(saveBtnValue);
+                                saveBtnResults.Add(saveBtnValue);
 
-                            //render label
-                            string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + " ? (currDtl." + columnId + ".startsWith('{') ? JSON.parse(currDtl." + columnId + ") : { fileName: '', mimeType: 'image/jpeg', base64: currDtl." + columnId + " }) : null;" + Environment.NewLine
-                                                      + "    const " + columnId + @"FileUploadOptions = {
+                                //render label
+                                string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + " ? decodeEmbeddedFileObjectFromServer(currDtl." + columnId + ") : null;" + Environment.NewLine
+                                                          + "    const " + columnId + @"FileUploadOptions = {
       CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
       DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
       MaxImageSize: {
@@ -3210,14 +3729,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
         Height: (columnLabel." + columnId + @" || {}).ColumnHeight,
       },
     }";
-                            renderLabelResults.Add(renderLabelValue);
+                                renderLabelResults.Add(renderLabelValue);
 
-                            //formik initial value
-                            string formikInitialValue = "c" + columnId + ": " + columnId + ",";
-                            formikInitialResults.Add(formikInitialValue);
+                                //formik initial value
+                                string formikInitialValue = "c" + columnId + ": " + columnId + ",";
+                                formikInitialResults.Add(formikInitialValue);
 
-                            //formik control
-                            string formikControlValue = @"
+                                //formik control
+                                string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -3228,7 +3747,17 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      <div className='form__form-group-field'>"
+                                         + (isRefColumn
+                                            ? @"
+                                        <Field
+                                          component={FileInputField}
+                                          name='c" + columnId + @"'
+                                          options={{ ...fileFileUploadOptions, maxFileCount: 1 }}
+                                          files={(this.BindFileObject(" + columnId + @", values.c" + columnId + @") || []).filter(f => !f.isEmptyFileObject)}
+                                          label={(columnLabel." + columnId + @" || {}).ToolTip}
+                                          disabled={true}
+                                        />" : @"
                                         <FileInputFieldV1
                                           name='c" + columnId + @"'
                                           onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
@@ -3237,7 +3766,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                           value={values.c" + columnId + @" || " + columnId + @"}
                                           label={auxSystemLabels.PickFileBtnLabel}
                                           onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
-                                        />
+                                        />") + @"
                                       </div>
                                     }
                                     {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
@@ -3245,13 +3774,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                 </Col>
                               }
 ";
-                            formikControlResults.Add(formikControlValue);
+                                formikControlResults.Add(formikControlValue);
+                            }
                         }
-                    }
-                    else if (drv["DisplayMode"].ToString() == "Label" || drv["DisplayMode"].ToString() == "Action Button" ||
-                             drv["DisplayMode"].ToString() == "DataGridLink" || drv["DisplayMode"].ToString() == "PlaceHolder") //---------Label / Action Button / DataGridLink / PlaceHolder
-                    {
-                        string formikControlValue =@"
+                        else if (DisplayMode == "Label" || DisplayMode == "Action Button" ||
+                                 DisplayMode == "DataGridLink" || DisplayMode == "PlaceHolder") //---------Label / Action Button / DataGridLink / PlaceHolder
+                        {
+                            string formikControlValue = @"
                               {(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -3266,33 +3795,96 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                               }
 
 ";
-                        formikControlResults.Add(formikControlValue);
-                    }
-                    else //Treat all the other control as textbox for now
-                    {
-                        //validator
-                        if (drv["RequiredValid"].ToString() == "Y")
+                            formikControlResults.Add(formikControlValue);
+                        }
+                        else if (DisplayMode == "Document")
                         {
-                            string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
-                            validatorResults.Add(validatorValue);
+                            // do nothing, FIXME
+                        }
+                        else if (DisplayMode == "Signature")
+                        {
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
+
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
+
+                            //render label
+                            string renderLabelValue = "    const " + columnId
+                                                            + (!isRefColumnControl || isPullUpColumnControl
+                                                                ? " = currDtl." + columnId + ";"
+                                                                : " = " + refColumnBinding + ";"
+                                                            )
+                                                            ;
+                            renderLabelResults.Add(renderLabelValue);
+
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + DisplayMode + "'),";
+                            formikInitialResults.Add(formikInitialValue);
+
+                            //formik control
+                            string formikControlValue = @"
+                              {" + "" + @"(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + "{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        {values.c" + columnId + @" &&
+                                          <img alt='' src={values.c" + columnId + @"} />
+                                        }
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+
+";
+                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+
                         }
 
-                        //save button function call
-                        string saveBtnValue = columnId + ": values.c" + columnId + " || '',";
-                        saveBtnResults.Add(saveBtnValue);
+                        else //Treat all the other control as textbox for now
+                        {
+                            // unknown control
+                            //validator
+                            if (drv["RequiredValid"].ToString() == "Y")
+                            {
+                                string validatorValue = "if (!values.c" + columnId + ") { errors.c" + columnId + " = (columnLabel." + columnId + " || {}).ErrMessage; }";
+                                validatorResults.Add(validatorValue);
+                            }
 
-                        //render label
-                        string renderLabelValue = "    const " + columnId + " = currDtl." + columnId + ";";
-                        renderLabelResults.Add(renderLabelValue);
+                            //save button function call
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            saveBtnResults.Add(saveBtnValue);
 
-                        //formik initial value
-                        string formikInitialValue = "c" + columnId + ": formatContent(currDtl." + columnId + " || '', '" + drv["DisplayMode"].ToString() + "'),";
-                        formikInitialResults.Add(formikInitialValue);
+                            //render label
+                            string renderLabelValue = "    const " + columnId
+                                                            + (!isRefColumnControl || isPullUpColumnControl
+                                                                ? " = currDtl." + columnId + ";"
+                                                                : " = " + refColumnBinding + ";"
+                                                            )
+                                                            ;
+                            renderLabelResults.Add(renderLabelValue);
 
-                        //formik control
-                        bool hide = drv["RequiredValid"].ToString() != "Y" && drv["DisplayMode"].ToString() != "Currency" && drv["DisplayMode"].ToString() != "Money";
+                            //formik initial value
+                            string formikInitialValue = "c" + columnId + ": formatContent(currDtl." + columnId + " || '', '" + DisplayMode + "'),";
+                            formikInitialResults.Add(formikInitialValue);
 
-                        string formikControlValue = @"
+                            //formik control
+                            bool hide = drv["RequiredValid"].ToString() != "Y" && DisplayMode != "Currency" && DisplayMode != "Money";
+
+                            string formikControlValue = @"
                               {" + (hide ? "false && " : "") + "(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -3307,7 +3899,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                         <Field
                                           type='text'
                                           name='c" + columnId + @"'
-                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''} />
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}"
+                                                               + (isRefColumnControl && !isPullUpColumnControl ? @"
+                                          value={" + formikRefColumnBinding + "}" : "") + @" />
                                       </div>
                                     }
                                     {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
@@ -3315,18 +3909,19 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                 </Col>
                               }
 ";
-                        formikControlResults.Add(formikControlValue);
+                            formikControlResults.Add(formikControlValue);
+                        }
                     }
                 }
 
             }
-            string functionCnt = string.Join(Environment.NewLine, functionResults);
-            string validatorCnt = string.Join(Environment.NewLine, validatorResults.Select(s => addIndent(s, 4)));
-            string saveBtnCnt = string.Join(Environment.NewLine, saveBtnResults.Select(s=>addIndent(s,10)));
-            string renderLabelCnt = string.Join(Environment.NewLine, renderLabelResults);
-            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Select(s => addIndent(s, 20)));
-            string formikControlCnt = string.Join(Environment.NewLine, formikControlResults.Select(s => s.Trim(new char[]{'\r','\n'})));
-            string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults.Select(s => addIndent(s, 4)));
+            string functionCnt = string.Join(Environment.NewLine, functionResults.Where(s => !string.IsNullOrWhiteSpace((s??"").Trim())));
+            string validatorCnt = string.Join(Environment.NewLine, validatorResults.Where(s => !string.IsNullOrWhiteSpace((s ?? "").Trim())).Select(s => addIndent(s, 4)));
+            string saveBtnCnt = string.Join(Environment.NewLine, saveBtnResults.Where(s => !string.IsNullOrWhiteSpace((s ?? "").Trim())).Select(s => addIndent(s, 10)));
+            string renderLabelCnt = string.Join(Environment.NewLine, renderLabelResults.Where(s => !string.IsNullOrWhiteSpace((s ?? "").Trim())));
+            string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Where(s => !string.IsNullOrWhiteSpace((s ?? "").Trim())).Select(s => addIndent(s, 20)));
+            string formikControlCnt = string.Join(Environment.NewLine, formikControlResults.Where(s => !string.IsNullOrWhiteSpace((s ?? "").Trim())).Select(s => s.Trim(new char[] { '\r', '\n' })));
+            string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults.Where(s => !string.IsNullOrWhiteSpace((s ?? "").Trim())).Select(s => addIndent(s, 4)));
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
@@ -3349,7 +3944,7 @@ import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils';
 import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
@@ -3923,6 +4518,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
             List<string> GetCriteriaTopResults = new List<string>();
             List<string> GetDdlListResults = new List<string>();
             List<string> ScreenOnDemandDefResults = new List<string>();
+            List<string> ScreenDocumentDefResults = new List<string>();
             List<string> GetDefaultDtlResults = new List<string>();
             List<string> GetCriteriaBotResults = new List<string>();
             List<string> ReduxCustomFunctionResults = new List<string>();
@@ -3973,9 +4569,21 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
                 string columnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
                 string columnName = drv["ColumnName"].ToString();
                 string DisplayMode = drv["DisplayMode"].ToString();
+                string DisplayName = drv["DisplayName"].ToString();
                 string DdlFtrColumnName = drv["DdlFtrColumnName"].ToString();
                 string DdlFtrTableId = drv["DdlFtrTableId"].ToString();
+                string DdlRefColumnName = drv["DdlRefColumnName"].ToString();
+                string DdlRefColumnId = drv["DdlRefColumnId"].ToString();
+                string DdlRefTableId = drv["DdlRefTableId"].ToString();
+                string DdlTableName = drv["DdlRefTableId"].ToString();
+                string DdlPrimaryKey = drv["PrimaryKey"].ToString();
+                string DdlBaseColumnName = drv["ColName"].ToString();
+                string DdlBaseTableId = drv["TableId"].ToString();
+                string DdlKeyColumnName = drv["DdlKeyColumnName"].ToString();
+                string DdlKeyTableId = drv["DdlKeyTableId"].ToString();
                 string forMaster = drv["MasterTable"].ToString() == "Y" ? "true" : "false";
+                bool isPullUpColumn = IsPullUpColumn(drv.Row, dvItms);
+
                 if (DisplayMode == "AutoComplete")
                 {
                     string GetDdlListValue = "{ columnName: '" + columnId + "', payloadDdlName: '" + columnId + "List', keyName: '" + columnId + "', labelName: '" + columnId + "Text', forMst: " + forMaster + ", isAutoComplete: true, apiServiceName: 'Get" + columnId + "List', " + (string.IsNullOrEmpty(DdlFtrColumnName) ? "" : ("filterByMaster: true, filterByColumnName: '" + DdlFtrColumnName + DdlFtrTableId + "', ")) + "actionTypeName: 'GET_DDL_" + columnId + "' },";
@@ -3988,10 +4596,44 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
                 }
                 else if (DisplayMode == "ImageButton" && !string.IsNullOrEmpty(drv["TableId"].ToString()))
                 {
-                    string ScreenOnDemandDefValue = "{ columnName: '" + columnId + "', tableColumnName: '" + columnName + "', forMst: " + forMaster + ", apiServiceName: 'GetColumnContent', actionTypeName: 'GET_COLUMN_" + columnId + "' },";
+
+                    bool isRefColumn = !string.IsNullOrEmpty(DdlRefColumnId);
+                    string ScreenOnDemandDefValue = isRefColumn
+                                                    ? "{ columnName: '" + columnId + "', isFileObject: true, tableColumnName: '" + (DdlBaseColumnName + DdlBaseTableId) + "', type: 'RefColumn', refColumnName: '" + (DdlRefColumnName + DdlRefTableId) + "', forMst: " + forMaster + ", apiServiceName: 'GetRefColumnContent', actionTypeName: 'GET_COLUMN_" + columnId + "' },"
+                                                    : "{ columnName: '" + columnId + "', isFileObject: true, tableColumnName: '" + columnName + "', forMst: " + forMaster + ", apiServiceName: 'GetColumnContent', actionTypeName: 'GET_COLUMN_" + columnId + "' },";
                     ScreenOnDemandDefResults.Add(ScreenOnDemandDefValue);
                 }
-
+                else if (DisplayMode == "Document" && !string.IsNullOrEmpty(drv["TableId"].ToString()))
+                {
+                    ScreenOnDemandDefResults.Add(
+                        "{ columnName: '" + columnId + "', tableColumnName: '" + columnName + "', type: 'DocList', forMst: " + forMaster + ", apiServiceName: 'Get" + columnId + "List', actionTypeName: 'GET_COLUMN_" + columnId + "' },"
+                      );
+                    ScreenDocumentDefResults.Add(
+                        "{ columnName: '" + columnId + "', tableColumnName: '" + columnName + "', type: 'Get', forMst: " + forMaster + ", apiServiceName: 'GetDoc', actionTypeName: 'GET_COLUMN_CONTENT_" + columnId + "' },"
+                      );
+                    ScreenDocumentDefResults.Add(
+                        "{ columnName: '" + columnId + "', tableColumnName: '" + columnName + "', type: 'Add', forMst: " + forMaster + ", apiServiceName: 'Save" + columnId + "', actionTypeName: 'ADD_COLUMN_CONTENT_" + columnId + "' },"
+                      );
+                    ScreenDocumentDefResults.Add(
+                        "{ columnName: '" + columnId + "', tableColumnName: '" + columnName + "', type: 'Del', forMst: " + forMaster + ", apiServiceName: 'Del" + columnId + "', actionTypeName: 'DEL_COLUMN_CONTENT_" + columnId + "' },"
+                      );
+                }
+                else if (!string.IsNullOrEmpty(DdlRefColumnId)
+                    && isPullUpColumn
+                    &&
+                    (DisplayName == "TextBox"
+                    || DisplayName == "Label"
+                    || DisplayName == "HyperLink"
+                    || DisplayName == "Signature"
+                    ))
+                {
+                    bool isRefColumn = !string.IsNullOrEmpty(DdlRefColumnId);
+                    string isFileObject = DisplayName == "Signature" ? "true" : "false";
+                    string ScreenOnDemandDefValue = isRefColumn
+                                                    ? "{ columnName: '" + columnId + "', isFileObject: " + isFileObject + ", tableColumnName: '" + (DdlBaseColumnName + DdlBaseTableId) + "', type: 'RefColumn', refColumnName: '" + (DdlRefColumnName + DdlRefTableId) + "', forMst: " + forMaster + ", apiServiceName: 'GetRefColumnContent', actionTypeName: 'GET_COLUMN_" + columnId + "' },"
+                                                    : "{ columnName: '" + columnId + "', isFileObject: " + isFileObject + ", tableColumnName: '" + columnName + "', forMst: " + forMaster + ", apiServiceName: 'GetColumnContent', actionTypeName: 'GET_COLUMN_" + columnId + "' },";
+                    ScreenOnDemandDefResults.Add(ScreenOnDemandDefValue);
+                }
                 if (drv["MasterTable"].ToString() == "N")
                 {
                     string GetDefaultDtlValue = columnId + ": null,";
@@ -4003,6 +4645,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
             string GetCriteriaTopCnt = string.Join(Environment.NewLine, GetCriteriaTopResults.Select(s => addIndent(s, 6)));
             string GetDdlListCnt = string.Join(Environment.NewLine, GetDdlListResults.Select(s => addIndent(s, 6)));
             string ScreenOnDemandDefCnt = string.Join(Environment.NewLine, ScreenOnDemandDefResults.Select(s => addIndent(s, 6)));
+            string ScreenDocumentDefCnt = string.Join(Environment.NewLine, ScreenDocumentDefResults.Select(s => addIndent(s, 6)));
             string GetDefaultDtlCnt = string.Join(Environment.NewLine, GetDefaultDtlResults.Select(s => addIndent(s, 6)));
             string GetCriteriaBotCnt = string.Join(Environment.NewLine, GetCriteriaBotResults.Select(s => addIndent(s, 4)));
             string ReduxCustomFunctionCnt = string.Join(Environment.NewLine, ReduxCustomFunctionResults.Select(s => addIndent(s, 0)));
@@ -4034,7 +4677,11 @@ class [[---ScreenName---]]Redux extends RintagiScreenRedux {
             sb.Append(ScreenOnDemandDefCnt);
             sb.Append(@"
     ]
-
+    this.ScreenDocumentDef = [
+");
+            sb.Append(ScreenDocumentDefCnt);
+            sb.Append(@"
+    ]
     this.ScreenCriDdlDef = [
 ");
             sb.Append(GetCriteriaTopCnt);
@@ -4043,7 +4690,15 @@ class [[---ScreenName---]]Redux extends RintagiScreenRedux {
     this.SearchActions = {
       ...[...this.ScreenDdlDef].reduce((a, v) => { a['Search' + v.columnName] = this.MakeSearchAction(v); return a; }, {}),
       ...[...this.ScreenCriDdlDef].reduce((a, v) => { a['SearchCri' + v.columnName] = this.MakeSearchAction(v); return a; }, {}),
-      ...[...this.ScreenOnDemandDef].reduce((a, v) => { a['Get' + v.columnName] = this.MakeGetColumnOnDemandAction(v); return a; }, {}),
+      ...[...this.ScreenOnDemandDef].filter(f => f.type !== 'DocList' && f.type !== 'RefColumn').reduce((a, v) => { a['Get' + v.columnName] = this.MakeGetColumnOnDemandAction(v); return a; }, {}),
+      ...[...this.ScreenOnDemandDef].filter(f => f.type === 'RefColumn').reduce((a, v) => { a['Get' + v.columnName] = this.MakeGetRefColumnOnDemandAction(v); return a; }, {}),
+      ...this.MakePullUpOnDemandAction([...this.ScreenOnDemandDef].filter(f => f.type === 'RefColumn').reduce((a, v) => { a['GetRef' + v.refColumnName] = { dependents: [...((a['GetRef' + v.refColumnName] || {}).dependents || []), v] }; return a; }, {})),
+      ...[...this.ScreenOnDemandDef].filter(f => f.type === 'DocList').reduce((a, v) => { a['Get' + v.columnName] = this.MakeGetDocumentListAction(v); return a; }, {}),
+    }
+    this.OnDemandActions = {
+      ...[...this.ScreenDocumentDef].filter(f => f.type === 'Get').reduce((a, v) => { a['Get' + v.columnName + 'Content'] = this.MakeGetDocumentContentAction(v); return a; }, {}),
+      ...[...this.ScreenDocumentDef].filter(f => f.type === 'Add').reduce((a, v) => { a['Add' + v.columnName + 'Content'] = this.MakeAddDocumentContentAction(v); return a; }, {}),
+      ...[...this.ScreenDocumentDef].filter(f => f.type === 'Del').reduce((a, v) => { a['Del' + v.columnName + 'Content'] = this.MakeDelDocumentContentAction(v); return a; }, {}),
     }
     this.ScreenDdlSelectors = this.ScreenDdlDef.reduce((a, v) => { a[v.columnName] = this.MakeDdlSelectors(v); return a; }, {})
     this.ScreenCriDdlSelectors = this.ScreenCriDdlDef.reduce((a, v) => { a[v.columnName] = this.MakeCriDdlSelectors(v); return a; }, {})
@@ -4187,12 +4842,12 @@ export function GetScreenCri" + columnName + @"List(query, topN, filterBy, acces
             {
                 string columnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
                 string DisplayMode = drv["DisplayMode"].ToString();
-                if (DisplayMode == "AutoComplete" 
-                    || DisplayMode == "DropDownList" 
-                    || DisplayMode == "RadioButtonList" 
-                    || DisplayMode == "ListBox" 
-                    || DisplayMode == "WorkflowStatus" 
-                    || DisplayMode == "AutoListBox" 
+                if (DisplayMode == "AutoComplete"
+                    || DisplayMode == "DropDownList"
+                    || DisplayMode == "RadioButtonList"
+                    || DisplayMode == "ListBox"
+                    || DisplayMode == "WorkflowStatus"
+                    || DisplayMode == "AutoListBox"
                     || DisplayMode == "DataGridLink")
                 {
                     string GetDdlListValue = @"
@@ -4225,14 +4880,14 @@ export function Get" + columnId + @"List(query, topN, filterBy, accessScope) {
                     string GetDdlListValue = @"
 export function Save" + columnId + @"(mstId, dtlId, isMaster, docId, overwrite, screenColumnName, docJson, options, accessScope) {
     const reqJson = JSON.stringify({
-        mstId: mstId,
-        dtlId: dtlId,
-        isMaster: isMaster,
-        docId: docId,
-        overwrite: overwrite,
+        mstId: mstId || null,
+        dtlId: dtlId || null,
+        isMaster: isMaster || false,
+        docId: docId || null,
+        overwrite: overwrite || false,
         screenColumnName: '" + columnId + @"',
-        docJson: docJson,
-        options: options
+        docJson: docJson || null,
+        options: options || {}
     });
     return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Save" + columnId + @"'
         , {
@@ -4247,11 +4902,11 @@ export function Save" + columnId + @"(mstId, dtlId, isMaster, docId, overwrite, 
 
 export function Del" + columnId + @"(mstId, dtlId, isMaster, screenColumnName, docIdList, accessScope) {
     const reqJson = JSON.stringify({
-        mstId: mstId,
-        dtlId: dtlId,
-        isMaster: isMaster || true,
+        mstId: mstId || null,
+        dtlId: dtlId || null,
+        isMaster: isMaster || false,
         screenColumnName: '" + columnId + @"',
-        docIdList: docIdList,
+        docIdList: docIdList || [],
     });
     return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Del" + columnId + @"'
         , {
@@ -4268,7 +4923,7 @@ export function Get" + columnId + @"List(mstId, dtlId, isMaster, accessScope) {
     const reqJson = JSON.stringify({
         mstId: mstId || '',
         dtlId: dtlId || '',
-        isMaster: isMaster || true,
+        isMaster: isMaster || false,
     });
     return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Get" + columnId + @"List'
         , {
@@ -4549,9 +5204,27 @@ export function SetScreenCriteria(criteriaValues, accessScope) {
         }
     )
 }
-" 
-+ 
-(!bHasImageButton 
+export function GetRefColumnContent(mstId, dtlId, refKeyId, isMaster, refScreenColumnName, options, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetRefColumnContent'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    mstId: mstId || null,
+                    dtlId: dtlId || null,
+                    refKeyId: refKeyId || null,
+                    refScreenColumnName: refScreenColumnName || null,
+                    isMaster: isMaster || false,
+                    options: options || {},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+"
++
+(!bHasImageButton
 ? ""
 : @"
 export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope) {
@@ -4610,18 +5283,18 @@ export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJ
         }
     )
 }
-") 
+")
 +
 (
-!bHasDocument 
+!bHasDocument
 ? ""
 : @"
 export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessScope) {
     const reqJson = JSON.stringify({
-        mstId: mstId,
-        dtlId: dtlId,
-        isMaster: isMaster,
-        docId: docId,
+        mstId: mstId || null,
+        dtlId: dtlId || null,
+        isMaster: isMaster || false,
+        docId: docId || null,
         screenColumnName: screenColumnName,
     });
     return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetDoc'
@@ -4633,7 +5306,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
             ...(accessScope)
         }
     )
-}") 
+}")
 + @"
 /*screen criteria dll and screen dropdownlist/autocomplete*/
 ");
@@ -4701,7 +5374,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                 }
             }
 
-            string AsmxCustomFunctionCnt = string.Join(Environment.NewLine, AsmxCustomFunctionResults.Select(s => addIndent(s, 24)));
+            string AsmxCustomFunctionCnt = string.Join(Environment.NewLine, AsmxCustomFunctionResults.Select(s => addIndent(s, 0)));
 
             foreach (DataRowView drv in dvItms)
             {
@@ -4793,25 +5466,25 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
             foreach (DataRowView drv in dvItms)
             {
                 string columnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
-                string ColumnName = drv["ColumnName"].ToString();
+                bool directSaveToDB = DirectSaveToDb(drv.Row);
 
-                if (drv["DefAlways"].ToString() == "N" || (drv["DefAlways"].ToString() == "Y" && string.IsNullOrEmpty(drv["SystemValue"].ToString())))
+                if (
+                    directSaveToDB &&
+                    (
+                    drv["DefAlways"].ToString() == "N" 
+                    || (drv["DefAlways"].ToString() == "Y" && string.IsNullOrEmpty(drv["SystemValue"].ToString()))
+                    )
+                    )
                 {
-                    if (drv["DisplayMode"].ToString() != "DataGridLink")
+                    if (drv["MasterTable"].ToString() == "Y")
                     {
-                        if (drv["MasterTable"].ToString() == "Y")
-                        {
-                            if (drv["DisplayMode"].ToString() != "ImageButton")
-                            {
-                                string ScreenDataSetValue = "columns.Add(\"" + columnId + "\", typeof(string));";
-                                ScreenDataSetMasterResults.Add(ScreenDataSetValue);
-                            }
-                        }
-                        else
-                        {
-                            string ScreenDataSetValue = "columns.Add(\"" + columnId + "\", typeof(string));";
-                            ScreenDataSetDetailResults.Add(ScreenDataSetValue);
-                        }
+                        string ScreenDataSetValue = "columns.Add(\"" + columnId + "\", typeof(string));";
+                        ScreenDataSetMasterResults.Add(ScreenDataSetValue);
+                    }
+                    else
+                    {
+                        string ScreenDataSetValue = "columns.Add(\"" + columnId + "\", typeof(string));";
+                        ScreenDataSetDetailResults.Add(ScreenDataSetValue);
                     }
                 }
             }
@@ -4847,7 +5520,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
         {
             DataColumnCollection columns = dt.Columns;
 ");
-            sb.Append(addIndent("",12) +  "columns.Add(\"" + screenPrimaryKey + "\", typeof(string));" + Environment.NewLine);
+            sb.Append(addIndent("", 12) + "columns.Add(\"" + screenPrimaryKey + "\", typeof(string));" + Environment.NewLine);
             sb.Append(ScreenDataSetDetailCnt);
             sb.Append(@"
             return dt;
@@ -4866,36 +5539,47 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
             {
                 string ColumnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
                 string ColumnName = drv["ColumnName"].ToString();
-                string SPName = "GetDdl" + ColumnName + DbId + "S" + drv["ScreenObjId"].ToString();
                 string DdlFtrColumnId = drv["DdlFtrColumnId"].ToString();
                 string DdlFtrColumnName = drv["DdlFtrColumnName"].ToString();
                 string DdlAdnColumnName = drv["DdlAdnColumnName"].ToString();
                 string DdlFtrTableId = drv["DdlFtrTableId"].ToString();
                 string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
+                string DdlRefColumnName = drv["DdlRefColumnName"].ToString();
+                string DdlRefColumnId = drv["DdlRefColumnId"].ToString();
+                string DdlRefTableId = drv["DdlRefTableId"].ToString();
+                string DdlTableName = drv["DdlRefTableId"].ToString();
+                string DdlPrimaryKey = drv["PrimaryKey"].ToString();
+                string DdlBaseColumnName = drv["ColName"].ToString();
+                string DdlBaseTableId = drv["TableId"].ToString();
+                string DdlKeyColumnName = drv["DdlKeyColumnName"].ToString();
+                string DdlKeyTableId = drv["DdlKeyTableId"].ToString();
                 string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
                 string AdditionalColumn = string.IsNullOrEmpty(DdlFtrColumnId) ? "" : "{\"refCol\",\"" + DdlAdnColumnName + "\"},{\"refColDataType\",\"" + DdlFtrDataType + "\"},{\"refColSrc\",\"" + RefColSrc + "\"},{\"refColSrcName\",\"" + DdlFtrColumnName + DdlFtrTableId + "\"}";
+                string SPName = "GetDdl" + ColumnName + DbId + "S" + drv["ScreenObjId"].ToString();
+                string RefSPName = "GetDdl" + DdlRefColumnName + DbId + "S" + drv["DdlRefScreenObjId"].ToString();
 
-                if (drv["DisplayMode"].ToString() == "AutoComplete" 
-                    || drv["DisplayMode"].ToString() == "DropDownList" 
-                    || drv["DisplayMode"].ToString() == "RadioButtonList" 
-                    || drv["DisplayMode"].ToString() == "ListBox" 
-                    || drv["DisplayMode"].ToString() == "WorkflowStatus" 
-                    || drv["DisplayMode"].ToString() == "AutoListBox" 
+                if (drv["DisplayMode"].ToString() == "AutoComplete"
+                    || drv["DisplayMode"].ToString() == "DropDownList"
+                    || drv["DisplayMode"].ToString() == "RadioButtonList"
+                    || drv["DisplayMode"].ToString() == "ListBox"
+                    || drv["DisplayMode"].ToString() == "WorkflowStatus"
+                    || drv["DisplayMode"].ToString() == "AutoListBox"
                     || drv["DisplayMode"].ToString() == "DataGridLink"
                     )
                 {
                     if (drv["MasterTable"].ToString() == "Y")
                     {
-                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N")  + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + ColumnId + "\"},{\"mVal\",\"" + ColumnId + "Text\"}, " + AdditionalColumn + "}},";
+                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + ColumnId + "\"},{\"mVal\",\"" + ColumnId + "Text\"}, " + AdditionalColumn + "}},";
                         ScreenDdlDefResults.Add(ScreenDdlDefValue);
                     }
                     else
                     {
-                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\""+ Robot.GetIsSys(multiDesignDb, "N")  + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + ColumnId + "\"},{\"mVal\",\"" + ColumnId + "Text\"}, " + AdditionalColumn + "}},";
+                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + ColumnId + "\"},{\"mVal\",\"" + ColumnId + "Text\"}, " + AdditionalColumn + "}},";
                         ScreenDdlDefResults.Add(ScreenDdlDefValue);
                     }
                 }
-                else if (drv["DisplayMode"].ToString() == "Document") {
+                else if (drv["DisplayMode"].ToString() == "Document")
+                {
                     if (drv["MasterTable"].ToString() == "Y")
                     {
                         string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + "DocId" + "\"},{\"mVal\",\"" + "FileName" + "\"}, " + "{ \"tableName\", \"" + ColumnName + "\" }" + "}},";
@@ -4906,6 +5590,11 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                         string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + "DocId" + "\"},{\"mVal\",\"" + "FileName" + "\"}, " + "{ \"tableName\", \"" + ColumnName + "\" }" + "}},";
                         ScreenDdlDefResults.Add(ScreenDdlDefValue);
                     }
+                }
+                else if (!string.IsNullOrEmpty(DdlRefColumnId))
+                {
+                    string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + RefSPName + "\"},{\"mKey\",\"" + (DdlRefColumnName + DdlRefTableId) + "\"},{\"mVal\",\"" + (DdlBaseColumnName + DdlBaseTableId) + "\"}, " + AdditionalColumn + "}},";
+                    ScreenDdlDefResults.Add(ScreenDdlDefValue);
                 }
             }
             string ScreenDdlDefCnt = string.Join(Environment.NewLine, ScreenDdlDefResults.Select(s => addIndent(s, 12)));
@@ -4915,7 +5604,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
         Dictionary<string, SerializableDictionary<string, string>> ddlContext = new Dictionary<string, SerializableDictionary<string, string>>() {
 ");
             sb.Append(ScreenDdlDefCnt + Environment.NewLine);
-            sb.Append(addIndent("",8) +  "};");
+            sb.Append(addIndent("", 8) + "};");
 
             return sb;
         }
@@ -4959,138 +5648,157 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                 string PrimaryKey = drv["PrimaryKey"].ToString();
                 string DataType = drv["DataTypeDByteOle"].ToString();
                 string DisplayMode = drv["DisplayMode"].ToString();
+                string DisplayName = drv["DisplayName"].ToString();
                 string DefaultValue = drv["DefaultValue"].ToString();
                 string ColumnLength = (DataType.Contains("Char") && !string.IsNullOrEmpty(drv["TableId"].ToString())) ? drv["ColumnLength"].ToString() : "9999999";
+                string DdlKeyColumnId = drv["DdlKeyColumnId"].ToString();
+                string DdlRefColumnId = drv["DdlRefColumnId"].ToString();
+                bool directSaveToDB = DirectSaveToDb(drv.Row);
+                bool isRefColumnControl = IsRefColumn(drv.Row);
 
                 if (drv["MasterTable"].ToString() == "Y")
                 {
-                    if (drv["DefAlways"].ToString() == "N" || (drv["DefAlways"].ToString() == "Y" && string.IsNullOrEmpty(drv["SystemValue"].ToString())))
+                    if (drv["DefAlways"].ToString() == "N" 
+                        || (drv["DefAlways"].ToString() == "Y" && string.IsNullOrEmpty(drv["SystemValue"].ToString()))
+                        )
                     {
                         if (ColumnName == PrimaryKey)
                         {
                             string PrepDataValue = "if (bAdd) { dr[\"" + ColumnId + "\"] = string.Empty; } else { dr[\"" + ColumnId + "\"] = mst[\"" + ColumnId + "\"]; }" + Environment.NewLine
-                                                 + addIndent("",12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                                 + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                             PrepDataResults.Add(PrepDataValue);
                         }
                         else
                         {
-                            if (DisplayMode == "TextBox") //---------Textbox
+                            if (directSaveToDB)
                             {
-                                if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
+                                if (DisplayMode == "TextBox") //---------Textbox
                                 {
-                                    string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
-                                                        + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
-                                    PrepDataResults.Add(PrepDataValue);
-                                }
-                                else
-                                {
-                                    string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
-                                                        + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
-                                    PrepDataResults.Add(PrepDataValue);
-                                }
-                            }
-                            else if (DisplayMode == "Currency") //---------Currency
-                            {
-                                if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
-                                {
-                                    string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = Decimal.Parse((mst[\"" + ColumnId + "\"] ?? \"\").Trim(), System.Globalization.NumberStyles.Currency, new System.Globalization.CultureInfo(base.LUser.Culture)).ToString(); } catch { }" + Environment.NewLine
-                                                       + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
-                                    PrepDataResults.Add(PrepDataValue);
-                                }
-                                else
-                                {
-                                    string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = Decimal.Parse((mst[\"" + ColumnId + "\"] ?? \"\").Trim(), System.Globalization.NumberStyles.Currency, new System.Globalization.CultureInfo(base.LUser.Culture)).ToString(); } catch { }" + Environment.NewLine
-                                                       + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
-                                    PrepDataResults.Add(PrepDataValue);
-                                }
-                            }
-                            else if (DisplayMode == "CheckBox") //---------CheckBox
-                            {
-                                if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
-                                {
-                                    string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
-                                                         + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"Char\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
-                                    PrepDataResults.Add(PrepDataValue);
-                                }
-                                else
-                                {
-                                    string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
-                                                         + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
-                                    PrepDataResults.Add(PrepDataValue);
-                                }
-
-                            }
-                            else if (DisplayMode == "Action Button" || DisplayMode == "ImageButton" ||
-                                     DisplayMode == "DataGridLink" || DisplayMode == "PlaceHolder") //---------Action Button / ImageButton / DataGridLink / PlaceHolder
-                            {
-                                string PrepDataValue = "";
-                                PrepDataResults.Add(PrepDataValue);
-                            }
-                            else
-                            {
-                                if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
-                                {
-                                    string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = mst[\"" + ColumnId + "\"]; } catch { }" + Environment.NewLine
-                                                + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
-                                    PrepDataResults.Add(PrepDataValue);
-                                }
-                                else
-                                {
-                                    string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = mst[\"" + ColumnId + "\"]; } catch { }" + Environment.NewLine
-                                                + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
-                                    PrepDataResults.Add(PrepDataValue);
-                                }
-
-                            }
-
-                        }
-
-                        if (!string.IsNullOrEmpty(DefaultValue))
-                        {
-                            if (DefaultValue.Contains("RoboCoder.WebControls"))
-                            {
-                                string InitMasterValue = "{\"" + ColumnId + "\",\"\"},";
-                                InitMasterResults.Add(InitMasterValue);
-                            }
-                            else
-                            {
-                                if (DisplayMode == "ImageButton" || DisplayMode == "CheckBox") //---------ImageButton or CheckBox
-                                {
-                                    string InitMasterValue = "{\"" + ColumnId + "\",\"" + DefaultValue.Replace('"', '\"') + "\"},";
-                                    InitMasterResults.Add(InitMasterValue);
-                                }
-                                else if (DisplayMode.Contains("Date")) //---------Date (Any type)
-                                {
-                                    string InitMasterValue = "{\"" + ColumnId + "\", convertDefaultValue(" + DefaultValue.Replace('"', '\"') + ")},";
-                                    InitMasterResults.Add(InitMasterValue);
-                                }
-                                else if (DisplayMode == "Label" || DisplayMode == "Action Button" || DisplayMode == "ImageButton" ||
-                                         DisplayMode == "DataGridLink" || DisplayMode == "PlaceHolder") //---------Label / Action Button / ImageButton / DataGridLink / PlaceHolder
-                                {
-                                    string InitMasterValue = "";
-                                    InitMasterResults.Add(InitMasterValue);
-                                }
-                                else
-                                {
-                                    if (DefaultValue.Contains("base.") || (DefaultValue.Contains("LCurr.")) || (DefaultValue.Contains("LImpr.")) || (DefaultValue.Contains("LUser.")))
+                                    if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
                                     {
-                                        string InitMasterValue = "{\"" + ColumnId + "\"," + DefaultValue + "},";
-                                        InitMasterResults.Add(InitMasterValue);
+                                        string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
+                                                            + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                        PrepDataResults.Add(PrepDataValue);
                                     }
                                     else
+                                    {
+                                        string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
+                                                            + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                        PrepDataResults.Add(PrepDataValue);
+                                    }
+                                }
+                                else if (DisplayMode == "Currency") //---------Currency
+                                {
+                                    if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
+                                    {
+                                        string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = Decimal.Parse((mst[\"" + ColumnId + "\"] ?? \"\").Trim(), System.Globalization.NumberStyles.Currency, new System.Globalization.CultureInfo(base.LUser.Culture)).ToString(); } catch { }" + Environment.NewLine
+                                                           + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                        PrepDataResults.Add(PrepDataValue);
+                                    }
+                                    else
+                                    {
+                                        string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = Decimal.Parse((mst[\"" + ColumnId + "\"] ?? \"\").Trim(), System.Globalization.NumberStyles.Currency, new System.Globalization.CultureInfo(base.LUser.Culture)).ToString(); } catch { }" + Environment.NewLine
+                                                           + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                        PrepDataResults.Add(PrepDataValue);
+                                    }
+                                }
+                                else if (DisplayMode == "CheckBox") //---------CheckBox
+                                {
+                                    if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
+                                    {
+                                        string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
+                                                             + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"Char\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                        PrepDataResults.Add(PrepDataValue);
+                                    }
+                                    else
+                                    {
+                                        string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = (mst[\"" + ColumnId + "\"] ?? \"\").Trim().Left(" + ColumnLength + "); } catch { }" + Environment.NewLine
+                                                             + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                        PrepDataResults.Add(PrepDataValue);
+                                    }
+                                }
+                                else if (DisplayMode == "Action Button" || DisplayMode == "ImageButton" ||
+                                         DisplayMode == "DataGridLink" || DisplayMode == "PlaceHolder") //---------Action Button / ImageButton / DataGridLink / PlaceHolder
+                                {
+                                    string PrepDataValue = "";
+                                    PrepDataResults.Add(PrepDataValue);
+                                }
+                                else
+                                {
+                                    if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
+                                    {
+                                        string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = mst[\"" + ColumnId + "\"]; } catch { }" + Environment.NewLine
+                                                    + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = \"" + DataType + "\"; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                        PrepDataResults.Add(PrepDataValue);
+                                    }
+                                    else
+                                    {
+                                        string PrepDataValue = "try { dr[\"" + ColumnId + "\"] = mst[\"" + ColumnId + "\"]; } catch { }" + Environment.NewLine
+                                                    + addIndent("", 12) + "drType[\"" + ColumnId + "\"] = string.Empty; drDisp[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                                        PrepDataResults.Add(PrepDataValue);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!isRefColumnControl
+                            )
+                        {
+                            if (!string.IsNullOrEmpty(DefaultValue))
+                            {
+                                if (DefaultValue.Contains("RoboCoder.WebControls"))
+                                {
+                                    string InitMasterValue = "{\"" + ColumnId + "\",\"\"},";
+                                    InitMasterResults.Add(InitMasterValue);
+                                }
+                                else
+                                {
+                                    if (DisplayMode == "ImageButton" 
+                                        || DisplayMode == "CheckBox") //---------ImageButton or CheckBox
                                     {
                                         string InitMasterValue = "{\"" + ColumnId + "\",\"" + DefaultValue.Replace('"', '\"') + "\"},";
                                         InitMasterResults.Add(InitMasterValue);
                                     }
+                                    else if (DisplayMode.Contains("Date")) //---------Date (Any type)
+                                    {
+                                        string InitMasterValue = "{\"" + ColumnId + "\", convertDefaultValue(" + DefaultValue.Replace('"', '\"') + ")},";
+                                        InitMasterResults.Add(InitMasterValue);
+                                    }
+                                    else if (DisplayMode == "Label" 
+                                            || DisplayMode == "Action Button" 
+                                            || DisplayMode == "ImageButton" 
+                                            || DisplayMode == "DataGridLink" 
+                                            || DisplayMode == "PlaceHolder") //---------Label / Action Button / ImageButton / DataGridLink / PlaceHolder
+                                    {
+                                        string InitMasterValue = "";
+                                        InitMasterResults.Add(InitMasterValue);
+                                    }
+                                    else
+                                    {
+                                        if (DefaultValue.Contains("base.")
+                                            || (DefaultValue.Contains("this."))
+                                            || (DefaultValue.Contains("LCurr.")) 
+                                            || (DefaultValue.Contains("LImpr.")) 
+                                            || (DefaultValue.Contains("LUser.")))
+                                        {
+                                            string InitMasterValue = "{\"" + ColumnId + "\"," + DefaultValue + "},";
+                                            InitMasterResults.Add(InitMasterValue);
+                                        }
+                                        else
+                                        {
+                                            string InitMasterValue = "{\"" + ColumnId + "\",\"" + DefaultValue.Replace('"', '\"') + "\"},";
+                                            InitMasterResults.Add(InitMasterValue);
+                                        }
 
 
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            string InitMasterValue = "{\"" + ColumnId + "\",\"\"},";
-                            InitMasterResults.Add(InitMasterValue);
+                            else if (DisplayMode != "Document")
+                            {
+                                string InitMasterValue = "{\"" + ColumnId + "\",\"\"},";
+                                InitMasterResults.Add(InitMasterValue);
+                            }
                         }
                     }
                     if (DisplayMode == "Document")
@@ -5100,81 +5808,98 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                 }
                 else
                 {
-                    if (drv["DefAlways"].ToString() == "N" || (drv["DefAlways"].ToString() == "Y" && string.IsNullOrEmpty(drv["SystemValue"].ToString())))
+                    if (drv["DefAlways"].ToString() == "N" 
+                        || (drv["DefAlways"].ToString() == "Y" && string.IsNullOrEmpty(drv["SystemValue"].ToString()))
+                        )
                     {
-                        string MakeTypRowValue = "dr[\"" + ColumnId + "\"] = System.Data.OleDb.OleDbType." + DataType + ".ToString();";
-                        MakeTypRowResults.Add(MakeTypRowValue);
+                        if (directSaveToDB)
+                        {
+                            string MakeTypRowValue = "dr[\"" + ColumnId + "\"] = System.Data.OleDb.OleDbType." + DataType + ".ToString();";
+                            MakeTypRowResults.Add(MakeTypRowValue);
 
-                        string MakeDisRowValue = "dr[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
-                        MakeDisRowResults.Add(MakeDisRowValue);
+                            string MakeDisRowValue = "dr[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
+                            MakeDisRowResults.Add(MakeDisRowValue);
 
-                        if (DisplayMode == "TextBox") //---------Textbox
-                        {
-                            string MakeColRowValue = "dr[\"" + ColumnId + "\"] = (drv[\"" + ColumnId + "\"] ?? \"\").ToString().Trim().Left(" + ColumnLength + ");";
-                            MakeColRowResults.Add(MakeColRowValue);
-                        }
-                        else if (DisplayMode == "ImageButton") //---------ImageButton
-                        {
-                            string MakeColRowValue = "dr[\"" + ColumnId + "\"] = drv[\"" + ColumnId + "\"]; if (bAdd && dtAuth.Rows[" + ii + "][\"ColReadOnly\"].ToString() == \"Y\" && dr[\"" + ColumnId + "\"].ToString() == string.Empty) { dr[\"" + ColumnId + "\"] = System.DBNull.Value; }";
-                            MakeColRowResults.Add(MakeColRowValue);
-                        }
-                        else if (DisplayMode == "Action Button" || DisplayMode == "ImageButton" ||
-                                  DisplayMode == "DataGridLink" || DisplayMode == "PlaceHolder") //---------Action Button / ImageButton / DataGridLink / PlaceHolder
-                        {
-                            string MakeColRowValue = "";
-                            MakeColRowResults.Add(MakeColRowValue);
-                        }
-                        else
-                        {
-                            string MakeColRowValue = "dr[\"" + ColumnId + "\"] = drv[\"" + ColumnId + "\"];";
-                            MakeColRowResults.Add(MakeColRowValue);
-                        }
-
-                        if (!string.IsNullOrEmpty(DefaultValue))
-                        {
-                            if (DisplayMode == "ImageButton" || DisplayMode == "CheckBox") //---------ImageButton or CheckBox
+                            if (DisplayMode == "TextBox") //---------Textbox
                             {
-                                string InitDtlValue = "{\"" + ColumnId + "\",\"" + DefaultValue.Replace('"', '\"') + "\"},";
-                                InitDtlResults.Add(InitDtlValue);
+                                string MakeColRowValue = "dr[\"" + ColumnId + "\"] = (drv[\"" + ColumnId + "\"] ?? \"\").ToString().Trim().Left(" + ColumnLength + ");";
+                                MakeColRowResults.Add(MakeColRowValue);
                             }
-                            else if (DisplayMode.Contains("Date")) //---------Date (Any type)
+                            else if (DisplayMode == "ImageButton") //---------ImageButton
                             {
-                                string InitDtlValue = "{\"" + ColumnId + "\", convertDefaultValue(" + DefaultValue.Replace('"', '\"') + ")},";
-                                InitDtlResults.Add(InitDtlValue);
+                                //string MakeColRowValue = "dr[\"" + ColumnId + "\"] = drv[\"" + ColumnId + "\"]; if (bAdd && dtAuth.Rows[" + ii + "][\"ColReadOnly\"].ToString() == \"Y\" && dr[\"" + ColumnId + "\"].ToString() == string.Empty) { dr[\"" + ColumnId + "\"] = System.DBNull.Value; }";
+                                string MakeColRowValue = "";
+                                MakeColRowResults.Add(MakeColRowValue);
                             }
-                            else if (DisplayMode == "Label" || DisplayMode == "Action Button" || DisplayMode == "ImageButton" ||
-                                     DisplayMode == "DataGridLink" || DisplayMode == "PlaceHolder") //---------Label / Action Button / ImageButton / DataGridLink / PlaceHolder
+                            else if (DisplayMode == "Action Button" || DisplayMode == "ImageButton" ||
+                                      DisplayMode == "DataGridLink" || DisplayMode == "PlaceHolder") //---------Action Button / ImageButton / DataGridLink / PlaceHolder
                             {
-                                string InitDtlValue = "";
-                                InitDtlResults.Add(InitDtlValue);
+                                string MakeColRowValue = "";
+                                MakeColRowResults.Add(MakeColRowValue);
                             }
                             else
                             {
-                                if (DefaultValue.Contains("base.") || (DefaultValue.Contains("LCurr.")) || (DefaultValue.Contains("LImpr.")) || (DefaultValue.Contains("LUser.")))
-                                {
-                                    string InitDtlValue = "{\"" + ColumnId + "\"," + DefaultValue + "},";
-                                    InitDtlResults.Add(InitDtlValue);
-                                }
-                                else
+                                string MakeColRowValue = "dr[\"" + ColumnId + "\"] = drv[\"" + ColumnId + "\"];";
+                                MakeColRowResults.Add(MakeColRowValue);
+                            }
+                        }
+
+                        if (!isRefColumnControl)
+                        {
+                            if (!string.IsNullOrEmpty(DefaultValue))
+                            {
+                                if (DisplayMode == "ImageButton" 
+                                    || DisplayMode == "CheckBox") //---------ImageButton or CheckBox
                                 {
                                     string InitDtlValue = "{\"" + ColumnId + "\",\"" + DefaultValue.Replace('"', '\"') + "\"},";
                                     InitDtlResults.Add(InitDtlValue);
                                 }
+                                else if (DisplayMode.Contains("Date")) //---------Date (Any type)
+                                {
+                                    string InitDtlValue = "{\"" + ColumnId + "\", convertDefaultValue(" + DefaultValue.Replace('"', '\"') + ")},";
+                                    InitDtlResults.Add(InitDtlValue);
+                                }
+                                else if (DisplayMode == "Label" 
+                                        || DisplayMode == "Action Button" 
+                                        || DisplayMode == "ImageButton" 
+                                        || DisplayMode == "DataGridLink" 
+                                        || DisplayMode == "PlaceHolder") //---------Label / Action Button / ImageButton / DataGridLink / PlaceHolder
+                                {
+                                    string InitDtlValue = "";
+                                    InitDtlResults.Add(InitDtlValue);
+                                }
+                                else
+                                {
+                                    if (DefaultValue.Contains("base.")
+                                        || (DefaultValue.Contains("this."))
+                                        || (DefaultValue.Contains("LCurr.")) 
+                                        || (DefaultValue.Contains("LImpr.")) 
+                                        || (DefaultValue.Contains("LUser.")))
+                                    {
+                                        string InitDtlValue = "{\"" + ColumnId + "\"," + DefaultValue + "},";
+                                        InitDtlResults.Add(InitDtlValue);
+                                    }
+                                    else
+                                    {
+                                        string InitDtlValue = "{\"" + ColumnId + "\",\"" + DefaultValue.Replace('"', '\"') + "\"},";
+                                        InitDtlResults.Add(InitDtlValue);
+                                    }
 
 
+                                }
+                            }
+                            else
+                            {
+                                string InitDtlValue = "{\"" + ColumnId + "\",\"\"},";
+                                InitDtlResults.Add(InitDtlValue);
                             }
                         }
-                        else
+                        
+                        if (DisplayMode == "Document")
                         {
-                            string InitDtlValue = "{\"" + ColumnId + "\",\"\"},";
-                            InitDtlResults.Add(InitDtlValue);
+                            bHasDocument = true;
                         }
                     }
-                    if (DisplayMode == "Document")
-                    {
-                        bHasDocument = true;
-                    }
-
                 }
 
                 ii++;
@@ -5273,8 +5998,8 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
             };
             /* AsmxRule: Init Master Table */
                 ");
-                sb.Append(InitMasterTableCnt + Environment.NewLine);
-                sb.Append(@"
+            sb.Append(InitMasterTableCnt + Environment.NewLine);
+            sb.Append(@"
             /* AsmxRule End: Init Master Table */
 
             return mst;
@@ -5402,7 +6127,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
 
                 foreach (DataRowView drv in dvItms)
                 {
-                    if (drv["DisplayMode"].ToString() == "ImageButton" 
+                    if (drv["DisplayMode"].ToString() == "ImageButton"
                         && !string.IsNullOrEmpty(drv["ColumnId"].ToString())
                         && drv["MasterTable"].ToString() == "N"
                         ) //---------ImageButton(detail table)
@@ -5433,24 +6158,24 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                     }
 ";
                         DtlImgUploadResults.Add(DtlImgUploadValue);
-                    } 
+                    }
                     else if (drv["DisplayMode"].ToString() == "ImageButton"
                         && !string.IsNullOrEmpty(drv["ColumnId"].ToString())
                         && drv["MasterTable"].ToString() == "Y"
                         ) //---------ImageButton(master table)
-                        {
-                            hasMstImageUpload = true;
-                            string ColumnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
-                            string ColumnName = drv["ColumnName"].ToString();
-                            string MstImgUploadValue = @"
+                    {
+                        hasMstImageUpload = true;
+                        string ColumnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
+                        string ColumnName = drv["ColumnName"].ToString();
+                        string MstImgUploadValue = @"
                 if (dtMst.Rows.Count > 0 && mst.ContainsKey(""" + ColumnId + @""") && !string.IsNullOrEmpty(mst[""" + ColumnId + @"""])) 
                 {
                     AddDoc(mst[""" + ColumnId + @"""], dtMst.Rows[0][""" + screenPrimaryKey + @"""].ToString(), ""dbo.[[---screenPrimaryTableName---]]"", ""[[---screenPrimaryKeyName---]]"", """ + ColumnName + @""", options.ContainsKey(""resizeImage""));
                 }
 
 ";
-                            MstImgUploadResults.Add(MstImgUploadValue);
-                        }
+                        MstImgUploadResults.Add(MstImgUploadValue);
+                    }
                 }
 
                 string DtlValue = "result.dtl = DataTableToListOfObject(dtDtl, IncludeBLOB.None, colAuth, utcColumns);";
@@ -5666,11 +6391,11 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                 /* AsmxRule End: Save Data Before */
 
                 var pid = mst[""[[---ScreenPrimaryKey---]]""];"
-    + (screenPrimaryKeyColumnIdentity == "N" 
+    + (screenPrimaryKeyColumnIdentity == "N"
     ? @"
-                isAdd = GetLis(""GetLis[[---ScreenDef---]]"", systemId, screenId, ""**"" + pid, new List<string>(), ""0"", """", ""N"", 1, false).Rows.Count == 0;" 
+                isAdd = GetLis(""GetLis[[---ScreenDef---]]"", systemId, screenId, ""**"" + pid, new List<string>(), ""0"", """", ""N"", 1, false).Rows.Count == 0;"
     : @"
-                isAdd = string.IsNullOrEmpty(pid);" 
+                isAdd = string.IsNullOrEmpty(pid);"
 
         ) + @"
                 if (!isAdd)
@@ -5835,17 +6560,17 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                     string GetDdlListValue = "var " + columnId + "List = Get" + columnId + "List(\"\", 0, \"\");";
                     GetDdlListResults.Add(GetDdlListValue);
                 }
-                else if (DisplayMode == "DropDownList" 
-                    || drv["DisplayMode"].ToString() == "RadioButtonList" 
-                    || drv["DisplayMode"].ToString() == "ListBox" 
-                    || drv["DisplayMode"].ToString() == "WorkflowStatus" 
-                    || drv["DisplayMode"].ToString() == "AutoListBox" 
+                else if (DisplayMode == "DropDownList"
+                    || drv["DisplayMode"].ToString() == "RadioButtonList"
+                    || drv["DisplayMode"].ToString() == "ListBox"
+                    || drv["DisplayMode"].ToString() == "WorkflowStatus"
+                    || drv["DisplayMode"].ToString() == "AutoListBox"
                     || drv["DisplayMode"].ToString() == "DataGridLink"
                     )
                 {
                     string GetScreenDdlFunctionsValue = @"
         [WebMethod(EnableSession = false)]
-        public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Get" + columnId +@"List(string query, int topN, string filterBy)
+        public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Get" + columnId + @"List(string query, int topN, string filterBy)
         {
             Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
@@ -5856,7 +6581,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                 DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, """ + SPName + @""", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
                 return DataTableToApiResponse(dt, """", 0);
             };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", """ + columnId +@""", emptyAutoCompleteResponse));
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, ""R"", """ + columnId + @""", emptyAutoCompleteResponse));
             return ret;
         }";
 

@@ -258,6 +258,24 @@ export function SetScreenCriteria(criteriaValues, accessScope) {
         }
     )
 }
+export function GetRefColumnContent(mstId, dtlId, refKeyId, isMaster, refScreenColumnName, options, accessScope) {
+    return fetchData(baseUrl + '/AdmDbTableWs.asmx/GetRefColumnContent'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    mstId: mstId || null,
+                    dtlId: dtlId || null,
+                    refKeyId: refKeyId || null,
+                    refScreenColumnName: refScreenColumnName || null,
+                    isMaster: isMaster || false,
+                    options: options || {},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
 export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColumnName, accessScope) {
     return fetchData(baseUrl + '/AdmDbTableWs.asmx/GetColumnContent'

@@ -323,10 +323,10 @@ FROM dbo.Usr u INNER JOIN dbo.CtPermKey p on p.CtPermKeyId = 12
 1302~@~3~@~CtCudAction~@~Adm - Audit action type~@~N~@~N~@~~@~This is a code table indicating 'A' for "ADD", 'U' for "UPD", 'D' for "DEL"~@~~@~55~@~2016-12-06 14:17:38.237~@~2016-12-06 06:17:56.367
 1303~@~3~@~LastEmail~@~Adm - Last emails sent info~@~N~@~N~@~~@~This is a one row table capturing last email sent information.~@~~@~55~@~2017-02-04 06:12:33.600~@~2017-02-03 22:12:47.417
 1304~@~8~@~Barcode~@~Test - Barcode~@~N~@~N~@~~@~~@~~@~55~@~2017-04-25 15:47:30.847~@~2017-04-25 08:46:43.000
-1305~@~3~@~SrUsr~@~adm - User view for search~@~N~@~Y~@~CREATE VIEW dbo.SrUsr AS
+1305~@~3~@~SrUsr~@~Adm - User view for search~@~N~@~Y~@~CREATE VIEW dbo.SrUsr AS
 SELECT UsrId, UsrTitle = LoginName + ISNULL(' [' + UsrName + ']','') + CASE WHEN Active='N' THEN ' (Inactive)' ELSE '' END
 , UsrDetail = ISNULL(UsrEmail,'') + ISNULL(' ' + UsrMobile,''), PicMed, ExtPassword, CultureId, UsrGroupLs, CompanyLs, ProjectLs, InvestorId, CustomerId, VendorId, AgentId, BrokerId, MemberId, Active
-FROM dbo.Usr~@~~@~~@~55~@~2018-10-24 00:17:49.073~@~2017-05-09 11:05:51.000
+FROM dbo.Usr~@~~@~~@~2~@~2020-03-04 17:54:11.960~@~2017-05-09 11:05:51.000
 1306~@~3~@~CtButtonStyle~@~Adm - Button Style~@~N~@~N~@~~@~This is a code table for button style stating 'L' for List, 'B' for Button and 'N' for Not-visible.~@~~@~55~@~2018-09-21 15:17:52.570~@~2018-09-21 08:18:00.607
 1307~@~5~@~Lender~@~Cmn - Lender Particulars~@~N~@~N~@~~@~~@~~@~55~@~2018-10-23 23:03:11.513~@~2013-06-14 10:32:51.000
 1308~@~5~@~Borrower~@~Cmn - Borrower Particulars~@~N~@~N~@~~@~~@~~@~55~@~2018-10-23 23:04:07.593~@~2013-06-14 10:32:51.000

@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -376,6 +377,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -540,7 +554,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cScreenId104'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId104', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId104', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId104', true)}
                                           onInputChange={this.ScreenId104InputChange()}
                                           value={values.cScreenId104}
@@ -609,7 +623,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cColumnId104'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cColumnId104', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cColumnId104', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cColumnId104', true)}
                                           onInputChange={this.ColumnId104InputChange()}
                                           value={values.cColumnId104}
@@ -792,7 +806,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cDdlKeyColumnId104'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlKeyColumnId104', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlKeyColumnId104', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlKeyColumnId104', true)}
                                           onInputChange={this.DdlKeyColumnId104InputChange()}
                                           value={values.cDdlKeyColumnId104}
@@ -819,7 +833,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cDdlRefColumnId104'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlRefColumnId104', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlRefColumnId104', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlRefColumnId104', true)}
                                           onInputChange={this.DdlRefColumnId104InputChange()}
                                           value={values.cDdlRefColumnId104}
@@ -846,7 +860,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cDdlSrtColumnId104'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlSrtColumnId104', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlSrtColumnId104', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlSrtColumnId104', true)}
                                           onInputChange={this.DdlSrtColumnId104InputChange()}
                                           value={values.cDdlSrtColumnId104}
@@ -873,7 +887,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cDdlFtrColumnId104'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlFtrColumnId104', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlFtrColumnId104', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cDdlFtrColumnId104', true)}
                                           onInputChange={this.DdlFtrColumnId104InputChange()}
                                           value={values.cDdlFtrColumnId104}

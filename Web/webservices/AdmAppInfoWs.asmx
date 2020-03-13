@@ -43,7 +43,6 @@ namespace RO.Web
             columns.Add("LunarDt", typeof(string));
             columns.Add("CultureTypeName135", typeof(string));
             columns.Add("VersionValue135", typeof(string));
-            columns.Add("AppZipId135", typeof(string));
             columns.Add("Prerequisite135", typeof(string));
             columns.Add("Readme135", typeof(string));
             return dt;
@@ -131,9 +130,6 @@ namespace RO.Web
             drType["CultureTypeName135"] = "VarChar"; drDisp["CultureTypeName135"] = "AutoComplete";
             try { dr["VersionValue135"] = Decimal.Parse((mst["VersionValue135"] ?? "").Trim(), System.Globalization.NumberStyles.Currency, new System.Globalization.CultureInfo(base.LUser.Culture)).ToString(); } catch { }
             drType["VersionValue135"] = "Currency"; drDisp["VersionValue135"] = "Currency";
-            try { dr["AppZipId135"] = mst["AppZipId135"]; } catch { }
-            drType["AppZipId135"] = "Numeric"; drDisp["AppZipId135"] = "Document";
-            
             try { dr["Prerequisite135"] = mst["Prerequisite135"]; } catch { }
             drType["Prerequisite135"] = "VarWChar"; drDisp["Prerequisite135"] = "MultiLine";
             try { dr["Readme135"] = mst["Readme135"]; } catch { }
@@ -184,7 +180,6 @@ namespace RO.Web
                 {"LunarDt",""},
                 {"CultureTypeName135",LUser.Culture},
                 {"VersionValue135",""},
-                {"AppZipId135",""},
                 {"AppItemLink135",""},
                 {"Prerequisite135",""},
                 {"Readme135",""},

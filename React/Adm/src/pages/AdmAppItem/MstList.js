@@ -16,7 +16,7 @@ import DropdownField from '../../components/custom/DropdownField';
 import NaviBar from '../../components/custom/NaviBar';
 import RintagiScreen from '../../components/custom/Screen'
 import ModalDialog from '../../components/custom/ModalDialog';
-import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath } from '../../helpers/utils'
+import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import AdmAppItemReduxObj, { ShowMstFilterApplied } from '../../redux/AdmAppItem';
@@ -186,7 +186,6 @@ class MstList extends RintagiScreen {
     const { mstId } = { ...this.props.match.params };
     if (!(this.props.AdmAppItem || {}).AuthCol || true) {
       this.props.LoadPage('SearchList', { mstId: mstId || '_' });
-      this.props.LoadInitPage({ keyId: null });
     }
 
     this.mediaqueryresponse(this.mobileView);
@@ -381,9 +380,9 @@ class MstList extends RintagiScreen {
                                       <div className='form__form-group-field filter-form-border'>
                                         <Field
                                           type='text'
-                                          name='cAppItemCode10'
-                                          value={values.cAppItemCode10}
-                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cAppItemCode10')}
+                                          name='cCriAppItemCode10'
+                                          value={values.cCriAppItemCode10}
+                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cCriAppItemCode10')}
                                         />
                                       </div>
                                     </Col>

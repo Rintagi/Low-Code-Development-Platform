@@ -58,7 +58,6 @@ namespace RO.Web
             columns.Add("ColumnId14", typeof(string));
             columns.Add("ColumnName14", typeof(string));
             columns.Add("DisplayModeId14", typeof(string));
-            columns.Add("DisplayDesc18", typeof(string));
             columns.Add("DdlKeyColumnId14", typeof(string));
             columns.Add("DdlRefColumnId14", typeof(string));
             columns.Add("DdlSrtColumnId14", typeof(string));
@@ -119,6 +118,7 @@ namespace RO.Web
             {"GroupColId14", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlGroupColId3S1204"},{"mKey","GroupColId14"},{"mVal","GroupColId14Text"}, }},
             {"ColumnId14", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlColumnId3S74"},{"mKey","ColumnId14"},{"mVal","ColumnId14Text"}, }},
             {"DisplayModeId14", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlDisplayModeId3S81"},{"mKey","DisplayModeId14"},{"mVal","DisplayModeId14Text"}, }},
+            {"DisplayDesc18", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlDisplayModeId3S81"},{"mKey","DisplayModeId14"},{"mVal","DisplayDesc18"}, }},
             {"DdlKeyColumnId14", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlDdlKeyColumnId3S82"},{"mKey","DdlKeyColumnId14"},{"mVal","DdlKeyColumnId14Text"}, }},
             {"DdlRefColumnId14", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlDdlRefColumnId3S83"},{"mKey","DdlRefColumnId14"},{"mVal","DdlRefColumnId14Text"}, }},
             {"DdlSrtColumnId14", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlDdlSrtColumnId3S1269"},{"mKey","DdlSrtColumnId14"},{"mVal","DdlSrtColumnId14Text"}, }},
@@ -208,8 +208,6 @@ namespace RO.Web
             drType["ColumnName14"] = "VarChar"; drDisp["ColumnName14"] = "TextBox";
             try { dr["DisplayModeId14"] = mst["DisplayModeId14"]; } catch { }
             drType["DisplayModeId14"] = "Numeric"; drDisp["DisplayModeId14"] = "DropDownList";
-            try { dr["DisplayDesc18"] = mst["DisplayDesc18"]; } catch { }
-            drType["DisplayDesc18"] = "VarWChar"; drDisp["DisplayDesc18"] = "MultiLine";
             try { dr["DdlKeyColumnId14"] = mst["DdlKeyColumnId14"]; } catch { }
             drType["DdlKeyColumnId14"] = "Numeric"; drDisp["DdlKeyColumnId14"] = "AutoComplete";
             try { dr["DdlRefColumnId14"] = mst["DdlRefColumnId14"]; } catch { }
@@ -315,7 +313,6 @@ namespace RO.Web
                 {"ColumnId14",""},
                 {"ColumnName14",""},
                 {"DisplayModeId14",""},
-                {"DisplayDesc18",""},
                 {"DdlKeyColumnId14",""},
                 {"DdlRefColumnId14",""},
                 {"DdlSrtColumnId14",""},

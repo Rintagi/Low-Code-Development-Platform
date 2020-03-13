@@ -38,7 +38,6 @@ namespace RO.Web
             DataColumnCollection columns = dt.Columns;
             columns.Add("ClientRuleId127", typeof(string));
             columns.Add("RuleMethodId127", typeof(string));
-            columns.Add("RuleMethodDesc1295", typeof(string));
             columns.Add("RuleName127", typeof(string));
             columns.Add("RuleDescription127", typeof(string));
             columns.Add("RuleTypeId127", typeof(string));
@@ -49,10 +48,8 @@ namespace RO.Web
             columns.Add("ScreenCriHlpId127", typeof(string));
             columns.Add("ReportCriHlpId127", typeof(string));
             columns.Add("RuleCntTypeId127", typeof(string));
-            columns.Add("RuleCntTypeDesc1294", typeof(string));
             columns.Add("ClientRuleProg127", typeof(string));
             columns.Add("ClientScript127", typeof(string));
-            columns.Add("ClientScriptHelp126", typeof(string));
             columns.Add("UserScriptEvent127", typeof(string));
             columns.Add("UserScriptName127", typeof(string));
             columns.Add("ScriptParam127", typeof(string));
@@ -88,6 +85,7 @@ namespace RO.Web
             
         Dictionary<string, SerializableDictionary<string, string>> ddlContext = new Dictionary<string, SerializableDictionary<string, string>>() {
             {"RuleMethodId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleMethodId3S4073"},{"mKey","RuleMethodId127"},{"mVal","RuleMethodId127Text"}, }},
+            {"RuleMethodDesc1295", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleMethodId3S4073"},{"mKey","RuleMethodId127"},{"mVal","RuleMethodDesc1295"}, }},
             {"RuleTypeId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleTypeId3S1293"},{"mKey","RuleTypeId127"},{"mVal","RuleTypeId127Text"}, }},
             {"ScreenId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlScreenId3S1258"},{"mKey","ScreenId127"},{"mVal","ScreenId127Text"}, }},
             {"ReportId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlReportId3S1265"},{"mKey","ReportId127"},{"mVal","ReportId127Text"}, }},
@@ -96,7 +94,9 @@ namespace RO.Web
             {"ScreenCriHlpId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlScreenCriHlpId3S1266"},{"mKey","ScreenCriHlpId127"},{"mVal","ScreenCriHlpId127Text"}, {"refCol","ScreenId"},{"refColDataType","Int"},{"refColSrc","Mst"},{"refColSrcName","ScreenId127"}}},
             {"ReportCriHlpId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlReportCriHlpId3S1267"},{"mKey","ReportCriHlpId127"},{"mVal","ReportCriHlpId127Text"}, {"refCol","ReportId"},{"refColDataType","Int"},{"refColSrc","Mst"},{"refColSrcName","ReportId127"}}},
             {"RuleCntTypeId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleCntTypeId3S4075"},{"mKey","RuleCntTypeId127"},{"mVal","RuleCntTypeId127Text"}, }},
+            {"RuleCntTypeDesc1294", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleCntTypeId3S4075"},{"mKey","RuleCntTypeId127"},{"mVal","RuleCntTypeDesc1294"}, }},
             {"ClientScript127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlClientScript3S1261"},{"mKey","ClientScript127"},{"mVal","ClientScript127Text"}, }},
+            {"ClientScriptHelp126", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlClientScript3S1261"},{"mKey","ClientScript127"},{"mVal","ClientScriptHelp126"}, }},
         };
 
         private DataRow MakeTypRow(DataRow dr)
@@ -138,8 +138,6 @@ namespace RO.Web
             drType["ClientRuleId127"] = "Numeric"; drDisp["ClientRuleId127"] = "TextBox";
             try { dr["RuleMethodId127"] = mst["RuleMethodId127"]; } catch { }
             drType["RuleMethodId127"] = "Numeric"; drDisp["RuleMethodId127"] = "DropDownList";
-            try { dr["RuleMethodDesc1295"] = mst["RuleMethodDesc1295"]; } catch { }
-            drType["RuleMethodDesc1295"] = "VarWChar"; drDisp["RuleMethodDesc1295"] = "MultiLine";
             try { dr["RuleName127"] = (mst["RuleName127"] ?? "").Trim().Left(100); } catch { }
             drType["RuleName127"] = "VarWChar"; drDisp["RuleName127"] = "TextBox";
             try { dr["RuleDescription127"] = mst["RuleDescription127"]; } catch { }
@@ -160,14 +158,10 @@ namespace RO.Web
             drType["ReportCriHlpId127"] = "Numeric"; drDisp["ReportCriHlpId127"] = "AutoComplete";
             try { dr["RuleCntTypeId127"] = mst["RuleCntTypeId127"]; } catch { }
             drType["RuleCntTypeId127"] = "Numeric"; drDisp["RuleCntTypeId127"] = "DropDownList";
-            try { dr["RuleCntTypeDesc1294"] = (mst["RuleCntTypeDesc1294"] ?? "").Trim().Left(1000); } catch { }
-            drType["RuleCntTypeDesc1294"] = "VarWChar"; drDisp["RuleCntTypeDesc1294"] = "TextBox";
             try { dr["ClientRuleProg127"] = mst["ClientRuleProg127"]; } catch { }
             drType["ClientRuleProg127"] = "VarWChar"; drDisp["ClientRuleProg127"] = "MultiLine";
             try { dr["ClientScript127"] = mst["ClientScript127"]; } catch { }
             drType["ClientScript127"] = "Numeric"; drDisp["ClientScript127"] = "DropDownList";
-            try { dr["ClientScriptHelp126"] = mst["ClientScriptHelp126"]; } catch { }
-            drType["ClientScriptHelp126"] = "VarWChar"; drDisp["ClientScriptHelp126"] = "MultiLine";
             try { dr["UserScriptEvent127"] = (mst["UserScriptEvent127"] ?? "").Trim().Left(50); } catch { }
             drType["UserScriptEvent127"] = "VarChar"; drDisp["UserScriptEvent127"] = "TextBox";
             try { dr["UserScriptName127"] = mst["UserScriptName127"]; } catch { }
@@ -215,7 +209,6 @@ namespace RO.Web
             {
                 {"ClientRuleId127",""},
                 {"RuleMethodId127",""},
-                {"RuleMethodDesc1295",""},
                 {"RuleName127",""},
                 {"RuleDescription127",""},
                 {"RuleTypeId127",""},
@@ -226,10 +219,8 @@ namespace RO.Web
                 {"ScreenCriHlpId127",""},
                 {"ReportCriHlpId127",""},
                 {"RuleCntTypeId127",""},
-                {"RuleCntTypeDesc1294",""},
                 {"ClientRuleProg127",""},
                 {"ClientScript127",""},
-                {"ClientScriptHelp126",""},
                 {"UserScriptEvent127",""},
                 {"UserScriptName127",""},
                 {"ScriptParam127",""},

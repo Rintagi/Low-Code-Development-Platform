@@ -16,7 +16,7 @@ import DropdownField from '../../components/custom/DropdownField';
 import NaviBar from '../../components/custom/NaviBar';
 import RintagiScreen from '../../components/custom/Screen'
 import ModalDialog from '../../components/custom/ModalDialog';
-import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath } from '../../helpers/utils'
+import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import AdmLabelReduxObj, { ShowMstFilterApplied } from '../../redux/AdmLabel';
@@ -196,7 +196,6 @@ class MstList extends RintagiScreen {
     const { mstId } = { ...this.props.match.params };
     if (!(this.props.AdmLabel || {}).AuthCol || true) {
       this.props.LoadPage('SearchList', { mstId: mstId || '_' });
-      this.props.LoadInitPage({ keyId: null });
     }
 
     this.mediaqueryresponse(this.mobileView);
@@ -408,9 +407,9 @@ class MstList extends RintagiScreen {
                                       <div className='form__form-group-field filter-form-border'>
                                         <Field
                                           type='text'
-                                          name='cLabelCat20'
-                                          value={values.cLabelCat20}
-                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cLabelCat20')}
+                                          name='cCriLabelCat20'
+                                          value={values.cCriLabelCat20}
+                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cCriLabelCat20')}
                                         />
                                       </div>
                                     </Col>
@@ -419,9 +418,9 @@ class MstList extends RintagiScreen {
                                       <div className='form__form-group-field filter-form-border'>
                                         <Field
                                           type='text'
-                                          name='cLabelKey30'
-                                          value={values.cLabelKey30}
-                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cLabelKey30')}
+                                          name='cCriLabelKey30'
+                                          value={values.cCriLabelKey30}
+                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cCriLabelKey30')}
                                         />
                                       </div>
                                     </Col>
@@ -430,9 +429,9 @@ class MstList extends RintagiScreen {
                                       <div className='form__form-group-field filter-form-border'>
                                         <Field
                                           type='text'
-                                          name='cLabelText40'
-                                          value={values.cLabelText40}
-                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cLabelText40')}
+                                          name='cCriLabelText40'
+                                          value={values.cCriLabelText40}
+                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cCriLabelText40')}
                                         />
                                       </div>
                                     </Col>

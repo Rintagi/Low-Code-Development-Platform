@@ -1,6 +1,7 @@
 namespace RO.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
     using System.Web;
@@ -23,6 +24,11 @@ namespace RO.Web
         {
             if (!IsPostBack)
             {
+                bool isFullyLicensed = RO.Common3.Utils.IsFullyLicense("Design", "Deploy");
+                Tuple<string,bool,string> licenseDetail = RO.Common3.Utils.DecodeLicense(null);
+                Dictionary<string, Dictionary<string, string>> moduleList = RO.Common3.Utils.DecodeLicenseDetail(licenseDetail.Item1);
+                Dictionary<string, string> admLicenseDetail = moduleList.ContainsKey("Design") ? moduleList["Design"] : null;
+
                 if (Session[KEY_FooterGenerated] == null) try
                 {
                     if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Footer", 0, 0, 0, string.Empty, string.Empty))
@@ -36,7 +42,16 @@ namespace RO.Web
                 {
                     try {
                         byte sid = byte.Parse(((DropDownList)Page.Master.FindControl("ModuleHeader").FindControl("ModuleProfile").FindControl("SystemsList")).SelectedValue);
-                        cVersionTxt.Text = "&#169;1999-" + DateTime.Now.Year.ToString() + " Robocoder Corporation. All rights reserved (V" + (new LoginSystem()).GetAppVersion(base.SysConnectStr(sid), base.AppPwd(sid)) + " by R" + (new LoginSystem()).GetRbtVersion() + "). Protected by U.S. Patent 6,876,314.";
+                        cVersionTxt.Text = "&#169;1999-" + DateTime.Now.Year.ToString() 
+                                    + " Robocoder Corporation. All rights reserved (V" + (new LoginSystem()).GetAppVersion(base.SysConnectStr(sid), base.AppPwd(sid)) 
+                                    + " by R" + (new LoginSystem()).GetRbtVersion() + "). Protected by U.S. Patent 6,876,314."
+                                    + (
+                                        isFullyLicensed && !licenseDetail.Item2
+                                        ? " Perpetual license"
+                                        : !licenseDetail.Item2 || admLicenseDetail == null ? " Trial license"
+                                        : string.Format(" Licensed till {0}", admLicenseDetail["Expiry"])
+                                        )
+                                    ;
                     } catch { cVersionTxt.Text = "&#169;1999-" + DateTime.Now.Year.ToString() + " Robocoder Corporation. All rights reserved."; }
                 }
             }

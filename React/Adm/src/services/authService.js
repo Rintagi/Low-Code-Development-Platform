@@ -1,7 +1,7 @@
-import {fetchService} from './fetchService';
+import { fetchService } from './fetchService';
 import log from '../helpers/logger';
-import {delay} from '../helpers/utils';
-import {setupRuntime} from '../helpers/utils';
+import { delay } from '../helpers/utils';
+import { setupRuntime } from '../helpers/utils';
 
 var sjcl = require('sjcl');
 var Fingerprint2 = require('fingerprintjs2');
@@ -10,7 +10,7 @@ var currentAccessScope = {};
 
 export const authService = {
     login, logout, renewAccessToken, getToken, getAccessToken, getAccessControlInfo
-    , isAuthenticated,getUsr, getMenu, getRefreshToken,setAccessScope,getAccessScope, resetPwdEmail, resetPassword
+    , isAuthenticated, getUsr, getMenu, getRefreshToken, setAccessScope, getAccessScope, resetPwdEmail, resetPassword
 };
 
 let myMachine = null;
@@ -19,42 +19,42 @@ function getFingerPrint() {
         setTimeout(() => {
             Fingerprint2.get(function (components) {
                 components.sort();
-                log.debug(components);
+                //log.debug(components);
                 const a = JSON.stringify(components);
                 const sha256 = new sjcl.hash.sha256();
                 sha256.update(a);
                 const h = btoa(sha256.finalize());
                 myMachine = h;
                 resolve(h);
-              })  
+            })
         }, 500);
     });
 };
 
 const getMyMachine = getFingerPrint();
 
-function setCookie(name,value,days, path) {
+function setCookie(name, value, days, path) {
     var expires = "";
     if (days) {
         var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
-    }  
+    }
     const href = window.location.href;
-    document.cookie = name + "=" + (value || "")  + expires + "; path=" + (path || "/") +";secure";
+    document.cookie = name + "=" + (value || "") + expires + "; path=" + (path || "/") + ";secure";
 }
 function getCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
+    for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
 }
-function eraseCookie(name) {   
-    document.cookie = name+'=; Max-Age=-99999999;path=/;';  
+function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999;path=/;';
 }
 
 function parsedUrl(url) {
@@ -102,12 +102,12 @@ const baseUrl = apiBasename + "/webservices";
 const fetchAPIResult = fetchService.fetchAPIResult;
 const getAPIResult = fetchService.getAPIResult;
 
-function getSystemId(){
+function getSystemId() {
     return (document.Rintagi || {}).systemId;
 }
 
 function makeNameFromNS(name) {
-    return ((appNS.toUpperCase().replace(/^\//,'') + '_') || '') + name;
+    return ((appNS.toUpperCase().replace(/^\//, '') + '_') || '') + name;
 }
 
 function wordToByteArray(word, length) {
@@ -153,25 +153,24 @@ function arrayBufferToBase64(buffer) {
 
 function rememberUserHandle(userIdentity) {
     const h = sjcl.hash.sha256.hash(userIdentity);
-    const handle = arrayBufferToBase64(wordArrayToByteArray(h,h.length)).replace(/=/g,'_');
-    localStorage.setItem(makeNameFromNS("user_handle"), handle); 
-    setCookie(makeNameFromNS("tokenInCookieJS"),handle,null,appNS);
+    const handle = arrayBufferToBase64(wordArrayToByteArray(h, h.length)).replace(/=/g, '_');
+    localStorage.setItem(makeNameFromNS("user_handle"), handle);
+    setCookie(makeNameFromNS("tokenInCookieJS"), handle, null, appNS);
 }
 function getTokenName(name) {
-    const x = btoa(sjcl.hash.sha256.hash((appDomainUrl || "").toLowerCase() + name + (getUserHandle() || "")+(myMachine||"")));
+    const x = btoa(sjcl.hash.sha256.hash((appDomainUrl || "").toLowerCase() + name + (getUserHandle() || "") + (myMachine || "")));
     return x;
 }
 function eraseUserHandle() {
     localStorage.removeItem(makeNameFromNS("user_handle"));
     eraseCookie(makeNameFromNS("tokenInCookieJS"));
 }
-function getUserHandle(){
+function getUserHandle() {
     const x = localStorage[makeNameFromNS("user_handle")] || getCookie(makeNameFromNS("tokenInCookieJS"));
     return x;
 }
 
-function getLoginFromCookie()
-{
+function getLoginFromCookie() {
     try {
         var user_handle = getCookie(makeNameFromNS("tokenInCookieJS"));
         var token = getCookie(makeNameFromNS("tokenJS"));
@@ -182,74 +181,76 @@ function getLoginFromCookie()
             eraseCookie(makeNameFromNS("tokenInCookieJS"));
             eraseCookie(makeNameFromNS("tokenJS"));
         }
-    } catch (e) {/**/}
+    } catch (e) {/**/ }
 
 }
 
-function getAccessToken(){ 
+function getAccessToken() {
     return getMyMachine
-        .then(()=>{
-        try { 
-            getLoginFromCookie();
-            if (!getUserHandle()) return {};
-            return JSON.parse(
-                sessionStorage[getTokenName("access_token")] || 
-                localStorage[getTokenName("access_token")] || 
-                ((atob((getCookie(getTokenName("access_token")) || "").replace("_",'='))) && false))
-            } 
-        catch(e) { 
-            return {}
-        }
-    })
+        .then(() => {
+            try {
+                getLoginFromCookie();
+                if (!getUserHandle()) return {};
+                return JSON.parse(
+                    sessionStorage[getTokenName("access_token")] ||
+                    localStorage[getTokenName("access_token")] ||
+                    ((atob((getCookie(getTokenName("access_token")) || "").replace("_", '='))) && false))
+            }
+            catch (e) {
+                return {}
+            }
+        })
 };
-function getRefreshToken(){ 
-    try { 
+function getRefreshToken() {
+    try {
         var x = JSON.parse(
-            sessionStorage[getTokenName("refresh_token")] || 
-            localStorage[getTokenName("refresh_token")] || 
-            ((atob((getCookie(getTokenName("refresh_token")) || "").replace("_",'='))) && false)
-            );
+            sessionStorage[getTokenName("refresh_token")] ||
+            localStorage[getTokenName("refresh_token")] ||
+            ((atob((getCookie(getTokenName("refresh_token")) || "").replace("_", '='))) && false)
+        );
 
         return x;
-        } 
-    catch(e) { 
+    }
+    catch (e) {
         const tokenInCookie = getCookie(makeNameFromNS("tokenJS"));
         if (tokenInCookie) {
             return {
-                refresh_token:tokenInCookie,
+                refresh_token: tokenInCookie,
             }
         }
         else
             return {}
     }
 };
-function setAccessScope(accessScope, replace) { 
-    currentAccessScope = { 
-    ...(replace ? {} : currentAccessScope), 
-    ...accessScope }; 
-    return currentAccessScope; };
-function getAccessScope() {return currentAccessScope;};
-const storeAccessToken = (access_token, resources, scope, expires_in)=> {
+function setAccessScope(accessScope, replace) {
+    currentAccessScope = {
+        ...(replace ? {} : currentAccessScope),
+        ...accessScope
+    };
+    return currentAccessScope;
+};
+function getAccessScope() { return currentAccessScope; };
+const storeAccessToken = (access_token, resources, scope, expires_in) => {
     if (access_token) {
-        const tokenString = JSON.stringify({access_token:access_token,  expires_in:expires_in});
-        const tokenStringForCookie = btoa(tokenString).replace(/=/g,'_');
+        const tokenString = JSON.stringify({ access_token: access_token, expires_in: expires_in });
+        const tokenStringForCookie = btoa(tokenString).replace(/=/g, '_');
         //setCookie(getTokenName("access_token"),tokenStringForCookie);
-        sessionStorage.setItem(getTokenName("access_token"),  tokenString);
-        localStorage.setItem(getTokenName("access_token"),  tokenString);
+        sessionStorage.setItem(getTokenName("access_token"), tokenString);
+        localStorage.setItem(getTokenName("access_token"), tokenString);
     }
     else {
         //eraseCookie(getTokenName("access_token"));
-        sessionStorage.removeItem(getTokenName("access_token")); 
-        localStorage.removeItem(getTokenName("access_token")); 
+        sessionStorage.removeItem(getTokenName("access_token"));
+        localStorage.removeItem(getTokenName("access_token"));
     }
 }
-const storeRefreshToken = (refresh_token,resources)=> {
+const storeRefreshToken = (refresh_token, resources) => {
     if (refresh_token) {
-        const tokenString = JSON.stringify({refresh_token:refresh_token});
-        const tokenStringForCookie = btoa(tokenString).replace(/=/g,'_');
+        const tokenString = JSON.stringify({ refresh_token: refresh_token });
+        const tokenStringForCookie = btoa(tokenString).replace(/=/g, '_');
         //setCookie(getTokenName("refresh_token"),tokenStringForCookie);
-        sessionStorage.setItem(getTokenName("refresh_token"),tokenString );
-        localStorage.setItem(getTokenName("refresh_token"),tokenString );
+        sessionStorage.setItem(getTokenName("refresh_token"), tokenString);
+        localStorage.setItem(getTokenName("refresh_token"), tokenString);
     }
     else {
         //eraseCookie(getTokenName("refresh_token"));
@@ -258,166 +259,166 @@ const storeRefreshToken = (refresh_token,resources)=> {
     }
 }
 
-const eraseRefreshToken = ()=>{
+const eraseRefreshToken = () => {
     //eraseCookie(getTokenName("refresh_token"));
     eraseCookie(makeNameFromNS("tokenInCookieJS"));
     eraseCookie(makeNameFromNS("tokenJS"));
     sessionStorage.removeItem(getTokenName("refresh_token"));
-    localStorage.removeItem(getTokenName("refresh_token"));    
+    localStorage.removeItem(getTokenName("refresh_token"));
 }
 
-function getAccessControlInfo() { 
-//    const access_token = getAccessToken().access_token;
-    return { 
-//        access_token: access_token, 
+function getAccessControlInfo() {
+    //    const access_token = getAccessToken().access_token;
+    return {
+        //        access_token: access_token, 
         getAccessToken: getAccessToken,
         renewAccessToken: renewAccessToken,
     }
 };
 
-function isAuthenticated() {return false && (getUserHandle() || false);};
+function isAuthenticated() { return false && (getUserHandle() || false); };
 
 function login(username, password, options = {}) {
-    const {nonce, code_challenge_method, code_challenge, url, client_id, challenge_answered}= options;
-    return fetchAPIResult(url || baseUrl+"/authWs.asmx/Login"
-    ,{
-        requestOptions : {
-            body:JSON.stringify({
-                client_id:client_id || null,
-                usrName:username || null,
-                password:password || null,
-                nonce:nonce || null,
-                code_challenge_method:code_challenge_method || "plain",
-                code_challenge:code_challenge || null     
+    const { nonce, code_challenge_method, code_challenge, url, client_id, challenge_answered } = options;
+    return fetchAPIResult(url || baseUrl + "/authWs.asmx/Login"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    client_id: client_id || null,
+                    usrName: username || null,
+                    password: password || null,
+                    nonce: nonce || null,
+                    code_challenge_method: code_challenge_method || "plain",
+                    code_challenge: code_challenge || null
                 })
-        },   
-    })
-    .then(result=>{    
-        const apiResult = fetchService.getAPIResult(result);
-        if (apiResult.accessCode || (apiResult.accessToken || {}).refresh_token) {
-            rememberUserHandle(username);
-            if ((apiResult.accessToken || {}).refresh_token) {
-                return renewAccessToken((apiResult.accessToken || {}).refresh_token)
-                    .then(
-                        accessToken=>{
-                            return {
-                                accessCode : apiResult.accessCode,
-                                refresh_token: accessToken.refresh_token,
-                                status: "success",
+            },
+        })
+        .then(result => {
+            const apiResult = fetchService.getAPIResult(result);
+            if (apiResult.accessCode || (apiResult.accessToken || {}).refresh_token) {
+                rememberUserHandle(username);
+                if ((apiResult.accessToken || {}).refresh_token) {
+                    return renewAccessToken((apiResult.accessToken || {}).refresh_token)
+                        .then(
+                            accessToken => {
+                                return {
+                                    accessCode: apiResult.accessCode,
+                                    refresh_token: accessToken.refresh_token,
+                                    status: "success",
+                                }
+                            },
+                            error => {
+                                eraseUserHandle();
+                                return Promise.reject(error);
                             }
-                        },
-                        error=>{
-                            eraseUserHandle();
-                            return Promise.reject(error);
-                        }
-                    )
-            }
-            else
-                return getToken(apiResult.accessCode)
-                    .then(
-                    accessToken=>{
-                        return {
-                            accessCode : apiResult.accessCode,
-                            status: "success",
-                        }
-                    },
-                    error=>{
-                        eraseUserHandle();
-                        return Promise.reject(error);
-                    }
-                    )
-        }
-        else {
-            if (apiResult.error === "access_denied" && (apiResult.message === "Your email or password is incorrect" || apiResult.message === "bot detected") && !challenge_answered) {
-                let derivedKey = pbkdf2.pbkdf2Sync(apiResult.serverChallenge, apiResult.serverChallenge, apiResult.challengeCount, 32, 'sha1');
-                let challengeResult = btoa(String.fromCharCode.apply(null, new Uint8Array(derivedKey)));
-                return login(username,password,{
-                    ...options,
-                    client_id: challengeResult,
-                    challenge_answered: true,
-                });
+                        )
+                }
+                else
+                    return getToken(apiResult.accessCode)
+                        .then(
+                            accessToken => {
+                                return {
+                                    accessCode: apiResult.accessCode,
+                                    status: "success",
+                                }
+                            },
+                            error => {
+                                eraseUserHandle();
+                                return Promise.reject(error);
+                            }
+                        )
             }
             else {
-                return Promise.reject( {
-                    status : "failed",
-                    errType: result.status === "success" ? result.data.value.d.error : result.errType,
-                    errMsg : result.status === "success" ? result.data.value.d.message : result.errType
-                })
+                if (apiResult.error === "access_denied" && (apiResult.message === "Your email or password is incorrect" || apiResult.message === "bot detected") && !challenge_answered) {
+                    let derivedKey = pbkdf2.pbkdf2Sync(apiResult.serverChallenge, apiResult.serverChallenge, apiResult.challengeCount, 32, 'sha1');
+                    let challengeResult = btoa(String.fromCharCode.apply(null, new Uint8Array(derivedKey)));
+                    return login(username, password, {
+                        ...options,
+                        client_id: challengeResult,
+                        challenge_answered: true,
+                    });
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? result.data.value.d.error : result.errType,
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
             }
-        }
-    },
-    (error=>{
-        return Promise.reject(error);
-    })
-    )
+        },
+            (error => {
+                return Promise.reject(error);
+            })
+        )
 }
 
 let tokenRefreshPromise = null;
 
-async function getToken (code,options={}) {
-    const {client_id,scope,code_verifier,redirect_url,client_secret,grant_type, re_auth} = options;
+async function getToken(code, options = {}) {
+    const { client_id, scope, code_verifier, redirect_url, client_secret, grant_type, re_auth } = options;
     if (!code) {
-        return Promise.reject( {
-        status : "failed",
-        errType: "authentication error",
-        errSubType: "login required",
-        // errMsg : "login session expired or invalid"
-        errMsg : ""
+        return Promise.reject({
+            status: "failed",
+            errType: "authentication error",
+            errSubType: "login required",
+            // errMsg : "login session expired or invalid"
+            errMsg: ""
         });
     }
     if (tokenRefreshPromise) {
         return tokenRefreshPromise;
     }
 
-    const requestPromise = tokenRefreshPromise = fetchAPIResult(baseUrl+"/authWs.asmx/GetToken"
-    ,{
-        requestOptions : {
-            body:JSON.stringify({
-                client_id:client_id || "",
-                scope:scope || "",
-                grant_type:grant_type || "authorization_code",
-                code:code || "",
-                code_verifier:code_verifier || "",
-                redirect_url:redirect_url || "",
-                client_secret:client_secret || "", 
-                re_auth:re_auth ? "Y" : "N",
+    const requestPromise = tokenRefreshPromise = fetchAPIResult(baseUrl + "/authWs.asmx/GetToken"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    client_id: client_id || "",
+                    scope: scope || "",
+                    grant_type: grant_type || "authorization_code",
+                    code: code || "",
+                    code_verifier: code_verifier || "",
+                    redirect_url: redirect_url || "",
+                    client_secret: client_secret || "",
+                    re_auth: re_auth ? "Y" : "N",
                 })
-        }
-    })
-    .then(result=>{
-        if (result.status === "success" && result.data.value.d && result.data.value.d.access_token) {
-            storeAccessToken(result.data.value.d.access_token,result.data.value.d.resources,result.data.value.d.scope, result.data.value.d.expires_in);
-            storeRefreshToken(result.data.value.d.refresh_token,result.data.value.d.resources);
-            return {
-                access_token : result.data.value.d.access_token,
-                refresh_token : result.data.value.d.refresh_token,
-                token_type: result.data.value.d.token_type,
-                expires_in: result.data.value.d.expires_in,
-                status: "success"
             }
-        }
-        else {
-            return Promise.reject( {
-                status : "failed",
-                errType: result.status === "success" ? result.data.value.d.error : result.errType,
-                errMsg : result.status === "success" ? result.data.value.d.message : result.errType
+        })
+        .then(result => {
+            if (result.status === "success" && result.data.value.d && result.data.value.d.access_token) {
+                storeAccessToken(result.data.value.d.access_token, result.data.value.d.resources, result.data.value.d.scope, result.data.value.d.expires_in);
+                storeRefreshToken(result.data.value.d.refresh_token, result.data.value.d.resources);
+                return {
+                    access_token: result.data.value.d.access_token,
+                    refresh_token: result.data.value.d.refresh_token,
+                    token_type: result.data.value.d.token_type,
+                    expires_in: result.data.value.d.expires_in,
+                    status: "success"
+                }
+            }
+            else {
+                return Promise.reject({
+                    status: "failed",
+                    errType: result.status === "success" ? result.data.value.d.error : result.errType,
+                    errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                })
+            }
+        },
+            (error => {
+                return Promise.reject(error);
             })
-    }
-    },
-    (error=>{
-        return Promise.reject(error);
-    })
-    )
-    .finally(()=>{
-        tokenRefreshPromise = null;
-    });
+        )
+        .finally(() => {
+            tokenRefreshPromise = null;
+        });
     return requestPromise;
 }
 
 async function logout(keepToken = false, currentSessionOnly = false) {
     return getAccessToken().then(
-        token=>{
-            var refresh_token = (getRefreshToken() || {}).refresh_token; 
+        token => {
+            var refresh_token = (getRefreshToken() || {}).refresh_token;
             if (!keepToken) {
                 storeAccessToken(null);
             }
@@ -426,171 +427,205 @@ async function logout(keepToken = false, currentSessionOnly = false) {
                 eraseUserHandle();
             }
             if (!currentSessionOnly) {
-                return fetchAPIResult(baseUrl+"/authWs.asmx/Logout"
-                ,{
-                    requestOptions: {
-                        body:JSON.stringify({
-                            access_token:token.access_token || "",
-                            refresh_token:refresh_token || "",
-                        })
-                    },
-                }).then(result=>result).catch(error=>Promise.reject(error));      
+                return fetchAPIResult(baseUrl + "/authWs.asmx/Logout"
+                    , {
+                        requestOptions: {
+                            body: JSON.stringify({
+                                access_token: token.access_token || "",
+                                refresh_token: refresh_token || "",
+                            })
+                        },
+                    }).then(result => result).catch(error => Promise.reject(error));
             }
             return true;
         }
     )
 
 }
-async function renewAccessToken (refresh_token, re_auth) {
-    return getToken(refresh_token || (getRefreshToken() || {}).refresh_token,{grant_type:"refresh_token", re_auth})
+async function renewAccessToken(refresh_token, re_auth) {
+    return getToken(refresh_token || (getRefreshToken() || {}).refresh_token, { grant_type: "refresh_token", re_auth })
 
-           .catch(error=>{
-               if (!refresh_token) {
-                   storeRefreshToken(null);
-                   storeAccessToken(null);
-                }
-               return Promise.reject(error);
-           }
-            );
+        .catch(error => {
+            if (!refresh_token) {
+                storeRefreshToken(null);
+                storeAccessToken(null);
+            }
+            return Promise.reject(error);
+        }
+        );
 }
 
 async function getUsr(scope) {
-    return fetchAPIResult(baseUrl+"/authWs.asmx/GetCurrentUsrInfo"
-    ,{
-        requestOptions: {
-            body:JSON.stringify({
-                scope:scope || "",
-            })
-        },
-        ...(getAccessControlInfo())
-    })
-    .then(
-    async result=>{
-        if (result.status === "success" && result.data.value.d && result.data.value.d.status==="success") {
-            return {
-                data: getAPIResult(result).data,
-                supportingData: getAPIResult(result).supportingData || {}
+    return fetchAPIResult(baseUrl + "/authWs.asmx/GetCurrentUsrInfo"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    scope: scope || "",
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                        supportingData: getAPIResult(result).supportingData || {}
+                    }
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
             }
-        }
-        else {
-            return Promise.reject( {
-                status : "failed",
-                errType: result.status === "success" ? "api call error" : result.errType,
-                errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
-                errMsg : result.status === "success" ? result.data.value.d.message : result.errType
-            })
-        }
-    },
-    error=>{
-        return Promise.reject(error);
-    }
-    )
+        )
 
 }
 
 async function resetPwdEmail(emailAddress, reCaptchaRequest, refCode) {
-    return fetchAPIResult(baseUrl+"/AuthWs.asmx/ResetPwdEmail"
-    ,{
-        requestOptions: {
-            body:JSON.stringify({
-                emailAddress:emailAddress || "",
-                reCaptchaRequest: reCaptchaRequest || "",
-                refCode:refCode || "",
-            })
-        }
-    })
-    .then(
-    async result=>{
-        if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
-            return {
-                data: getAPIResult(result).data,
+    return fetchAPIResult(baseUrl + "/AuthWs.asmx/ResetPwdEmail"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    emailAddress: emailAddress || "",
+                    reCaptchaRequest: reCaptchaRequest || "",
+                    refCode: refCode || "",
+                })
             }
-        }
-        else {
-            console.log(result);
-            return Promise.reject( {
-                status : "failed",
-                errType: result.status === "success" ? "api call error" : result.errType,
-                errSubType: result.errSubType || result.data.value.d.error,
-                errMsg : result.status === "success" ? result.data.value.d.message || result.data.value.d.errorMsg : result.errType
-            })
-        }
-    },
-    error=>{
-        return Promise.reject(error);
-    }
-    )
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                    }
+                }
+                else {
+                    console.log(result);
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || result.data.value.d.error,
+                        errMsg: result.status === "success" ? result.data.value.d.message || result.data.value.d.errorMsg : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        )
 
 }
 
 
 function resetPassword(emailAddress, password, nounce, ticketLeft, ticketRight) {
-    return fetchAPIResult(baseUrl+"/AuthWs.asmx/ResetPassword"
-    ,{
-        requestOptions: {
-            body:JSON.stringify({
-                emailAddress:emailAddress || "",
-                password: password || "",
-                nounce: nounce || "",
-                ticketLeft:ticketLeft || "",
-                ticketRight: ticketRight || "",
-            })
-        }
-    })
-    .then(
-    async result=>{
-        if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
-            return {
-                data: getAPIResult(result).data,
+    return fetchAPIResult(baseUrl + "/AuthWs.asmx/ResetPassword"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    emailAddress: emailAddress || "",
+                    password: password || "",
+                    nounce: nounce || "",
+                    ticketLeft: ticketLeft || "",
+                    ticketRight: ticketRight || "",
+                })
             }
-        }
-        else {
-            console.log(result);
-            return Promise.reject( {
-                status : "failed",
-                errType: result.status === "success" ? "api call error" : result.errType,
-                errSubType: result.errSubType || result.data.value.d.error,
-                errMsg : result.status === "success" ? result.data.value.d.message : result.errType
-            })
-        }
-    },
-    error=>{
-        return Promise.reject(error);
-    }
-    )
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                    }
+                }
+                else {
+                    console.log(result);
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || result.data.value.d.error,
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        )
 }
 
 async function getMenu(scope) {
-    return fetchAPIResult(baseUrl+"/authWs.asmx/GetMenu"
-    ,{
-        requestOptions: {
-            body:JSON.stringify({
-                scope:scope || "",
-                systemId: getSystemId() || 5,
-                
-            })
-        },
-        ...(getAccessControlInfo())
-    })
-    .then(
-    async result=>{
-        if (result.status === "success" && result.data.value.d && result.data.value.d.status==="success") {
-            return {
-                data: getAPIResult(result).data,
-                supportingData: getAPIResult(result).supportingData || {}
+    return fetchAPIResult(baseUrl + "/authWs.asmx/GetMenu"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    scope: scope || "",
+                    systemId: getSystemId() || 5,
+
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                        supportingData: getAPIResult(result).supportingData || {}
+                    }
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
             }
-        }
-        else {
-            return Promise.reject( {
-                status : "failed",
-                errType: result.status === "success" ? "api call error" : result.errType,
-                errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
-                errMsg : result.status === "success" ? result.data.value.d.message : result.errType
-            })
-        }
-    },
-    error=>{
-        return Promise.reject(error);
-    }
-    )
+        )
+}
+
+async function getSystems(ignoreCache, scope) {
+    return fetchAPIResult(baseUrl + "/authWs.asmx/GetSystems"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    scope: scope || "",
+                    ignoreCache: ignoreCache || false,
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                        supportingData: getAPIResult(result).supportingData || {}
+                    }
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        )
 }

@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -132,7 +133,6 @@ class MstRecord extends RintagiScreen {
           MasterPgFile259: values.cMasterPgFile259 || '',
           StaticCsId259: (values.cStaticCsId259 || {}).value || '',
           StaticJsId259: (values.cStaticJsId259 || {}).value || '',
-          StaticPgUrl259: values.cStaticPgUrl259 || '',
           StaticMeta259: values.cStaticMeta259 || '',
           StaticPgHtm259: values.cStaticPgHtm259 || '',
           StaticPgCss259: values.cStaticPgCss259 || '',
@@ -351,6 +351,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -608,7 +621,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.StaticPgUrl259 || {}).visible &&
+                              {(authCol.StaticPgUrl259 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmStaticPgState)) && <Skeleton height='20px' />) ||
@@ -629,7 +642,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.StaticMeta259 || {}).visible &&
+                              {(authCol.StaticMeta259 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmStaticPgState)) && <Skeleton height='20px' />) ||
@@ -641,7 +654,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmStaticPgState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cStaticMeta259'
                                           disabled={(authCol.StaticMeta259 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -671,7 +684,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.StaticPgCss259 || {}).visible &&
+                              {(authCol.StaticPgCss259 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmStaticPgState)) && <Skeleton height='20px' />) ||
@@ -683,7 +696,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmStaticPgState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cStaticPgCss259'
                                           disabled={(authCol.StaticPgCss259 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -692,7 +705,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.StaticPgJs259 || {}).visible &&
+                              {(authCol.StaticPgJs259 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmStaticPgState)) && <Skeleton height='20px' />) ||
@@ -704,24 +717,12 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmStaticPgState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cStaticPgJs259'
                                           disabled={(authCol.StaticPgJs259 || {}).readonly ? 'disabled' : ''} />
                                       </div>
                                     }
                                     {errors.cStaticPgJs259 && touched.cStaticPgJs259 && <span className='form__form-group-error'>{errors.cStaticPgJs259}</span>}
-                                  </div>
-                                </Col>
-                              }
-                              {(authCol.StaticPHolder || {}).visible &&
-                                <Col lg={6} xl={6}>
-                                  <div className='form__form-group'>
-                                    {((true && this.constructor.ShowSpinner(AdmStaticPgState)) && <Skeleton height='20px' />) ||
-                                      <label className='form__form-group-label'>{(columnLabel.StaticPHolder || {}).ColumnHeader} {(columnLabel.StaticPHolder || {}).ToolTip &&
-                                        (<ControlledPopover id={(columnLabel.StaticPHolder || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.StaticPHolder || {}).ToolTip} />
-                                        )}
-                                      </label>
-                                    }
                                   </div>
                                 </Col>
                               }

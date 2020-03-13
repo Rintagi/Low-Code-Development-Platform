@@ -1034,7 +1034,7 @@ namespace RO.Web
                             {"label",drv[valF].ToString()},
                             {"value",drv[keyF].ToString()},
                             {"iconUrl",iconUrlF !="" ? drv[iconUrlF].ToString() : ""}, // optional icon url
-                            {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "": "data:application/base64;base64," + Convert.ToBase64String(drv[imgF] as byte[]))  : ""}, // optional embedded image
+                            {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "": RO.Common3.Utils.BlobPlaceHolder(drv[imgF] as byte[],true))  : ""}, // optional embedded image
                             {"tooltips",tipF !="" ? drv[tipF].ToString() : ""}, // optional alternative tooltips(say expanded description)
                             {"detail",tipF !="" ? drv[dtlF].ToString() : ""} // optional alternative tooltips(say expanded description)
                             });

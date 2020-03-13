@@ -2880,6 +2880,23 @@ DECLARE	 @sClause		nvarchar(max)
 SELECT @fClause = 'FROM dbo.ColOvrd b241' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey)x1971 ON b241.PermKeyId = x1971.PermKeyId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyRowId,PermIdText,PermKeyId FROM RODesign.dbo.VwPermKeyRow)x7414 ON b241.PermKeyRowId = x7414.PermKeyRowId AND x1971.PermKeyId = x7414.PermKeyId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT ColOvrdId241=b241.ColOvrdId'
 + ', ColVisible241=b241.ColVisible'
 + ', ColReadOnly241=b241.ColReadOnly'
@@ -3043,6 +3060,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 SELECT @fClause = 'FROM dbo.ScreenObjHlp b21' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture)x163 ON b21.CultureId = x163.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT ScreenObjHlpId21=b21.ScreenObjHlpId'
 + ', CultureId21=x163.CultureId'
 + ', CultureId21Text=x163.CultureTypeDesc'
@@ -3072,7 +3106,7 @@ BEGIN
     SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
     SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
     SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
- SELECT @wClause=@wClause + ' AND ' + @filterClause
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
 END
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b21.','Y','N',null,'N','ScreenObjHlpId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b21.','Y','N',null,'N','ScreenObjHlpId',@wClause OUTPUT,@Usrs
@@ -3203,6 +3237,23 @@ DECLARE	 @sClause		nvarchar(max)
 SELECT @fClause = 'FROM dbo.RptwizCatDtl b182' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnName FROM dbo.DbColumn)x1579 ON b182.ColumnId = x1579.ColumnId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc FROM RODesign.dbo.CtDisplayType)x1865 ON b182.DisplayModeId = x1865.TypeId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT RptwizCatDtlId182=b182.RptwizCatDtlId'
 + ', ColumnId182=x1579.ColumnId'
 + ', ColumnId182Text=x1579.ColumnName'
@@ -3363,6 +3414,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.DbColumn b5' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT DataTypeId,DataTypeName FROM RODesign.dbo.CtDataType)x36 ON b5.DataType = x36.DataTypeId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT ColumnId5=b5.ColumnId'
 + ', ColumnIndex5=b5.ColumnIndex'
 + ', ExternalTable5=b5.ExternalTable'
@@ -3576,6 +3644,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 SELECT @fClause = 'FROM dbo.MenuHlp b40' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture)x1304 ON b40.CultureId = x1304.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT MenuHlpId40=b40.MenuHlpId'
 + ', CultureId40=x1304.CultureId'
 + ', CultureId40Text=x1304.CultureTypeDesc'
@@ -3588,7 +3673,7 @@ BEGIN
     SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
     SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
     SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
-    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+  SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
     SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
     SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
     SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
@@ -3695,6 +3780,23 @@ SELECT @fClause = 'FROM dbo.MenuPrm b231'
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT EveryoneCd,EveryoneName FROM RODesign.dbo.CtEveryone)x1892 ON b231.GrantDeny = x1892.EveryoneCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey)x1887 ON b231.PermKeyId = x1887.PermKeyId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermId,PermIdText,PermKeyId FROM RODesign.dbo.VwPermKeyRow)x1888 ON b231.PermId = x1888.PermId AND x1887.PermKeyId = x1888.PermKeyId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT MenuPrmId231=b231.MenuPrmId'
 + ', GrantDeny231=x1892.EveryoneCd'
 + ', GrantDeny231Text=x1892.EveryoneName'
@@ -3816,6 +3918,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 SELECT @fClause = 'FROM dbo.MsgCenter b147' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture)x1312 ON b147.CultureId = x1312.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT MsgCenterId147=b147.MsgCenterId'
 + ', CultureId147=x1312.CultureId'
 + ', CultureId147Text=x1312.CultureTypeDesc'
@@ -4199,6 +4318,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 SELECT @fClause = 'FROM dbo.ReportHlp b96' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture)x899 ON b96.CultureId = x899.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT ReportHlpId96=b96.ReportHlpId'
 + ', CultureId96=x899.CultureId'
 + ', CultureId96Text=x899.CultureTypeDesc'
@@ -4341,6 +4477,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 SELECT @fClause = 'FROM dbo.ReportCriHlp b98' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture)x923 ON b98.CultureId = x923.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT ReportCriHlpId98=b98.ReportCriHlpId'
 + ', CultureId98=x923.CultureId'
 + ', CultureId98Text=x923.CultureTypeDesc'
@@ -4518,6 +4671,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 SELECT @fClause = 'FROM dbo.ReportObjHlp b99' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture)x930 ON b99.CultureId = x930.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT ReportObjHlpId99=b99.ReportObjHlpId'
 + ', CultureId99=x930.CultureId'
 + ', CultureId99Text=x930.CultureTypeDesc'
@@ -4646,6 +4816,23 @@ SELECT @fClause = 'FROM dbo.RowOvrdPrm b239'
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT AndOrCd,AndOrName FROM RODesign.dbo.CtAndOr)x2099 ON b239.AndCondition = x2099.AndOrCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey)x1950 ON b239.PermKeyId = x1950.PermKeyId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT SelectTypeCd,SelectTypeName FROM RODesign.dbo.CtSelectType)x1951 ON b239.SelLevel = x1951.SelectTypeCd'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT RowOvrdPrmId239=b239.RowOvrdPrmId'
 + ', AndCondition239=x2099.AndOrCd'
 + ', AndCondition239Text=x2099.AndOrName'
@@ -4910,6 +5097,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.RptCel b164' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RptTblId,RptTblDesc FROM dbo.RptTbl)x1477 ON b164.CelNum = x1477.RptTblId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT RptCelId164=b164.RptCelId'
 + ', RowNum164=b164.RowNum'
 + ', RowHeight164=b164.RowHeight'
@@ -5160,6 +5364,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 SELECT @fClause = 'FROM dbo.ScreenHlp b16' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture)x136 ON b16.CultureId = x136.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT ScreenHlpId16=b16.ScreenHlpId'
 + ', CultureId16=x136.CultureId'
 + ', CultureId16Text=x136.CultureTypeDesc'
@@ -5314,6 +5535,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 SELECT @fClause = 'FROM dbo.ScreenCriHlp b105' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture)x990 ON b105.CultureId = x990.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT ScreenCriHlpId105=b105.ScreenCriHlpId'
 + ', CultureId105=x990.CultureId'
 + ', CultureId105Text=x990.CultureTypeDesc'
@@ -5438,6 +5676,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 SELECT @fClause = 'FROM dbo.ScreenFilterHlp b87' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture)x730 ON b87.CultureId = x730.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT ScreenFilterHlpId87=b87.ScreenFilterHlpId'
 + ', CultureId87=x730.CultureId'
 + ', CultureId87Text=x730.CultureTypeDesc'
@@ -5626,6 +5881,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 SELECT @fClause = 'FROM dbo.ScreenTabHlp b80' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture)x621 ON b80.CultureId = x621.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT ScreenTabHlpId80=b80.ScreenTabHlpId'
 + ', CultureId80=x621.CultureId'
 + ', CultureId80Text=x621.CultureTypeDesc'
@@ -5967,6 +6239,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.WizardObj b72' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn)x551 ON b72.ColumnId = x551.ColumnId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause = 'SELECT WizardObjId72=b72.WizardObjId'
 + ', ColumnId72=x551.ColumnId'
 + ', ColumnId72Text=x551.ColumnDesc'
@@ -6893,6 +7182,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AggregateCd14=a121.AggregateCd, AggregateCd14Text=a121.AggregateName, a121.AggregateSort'
 SELECT @fClause = 'FROM RODesign.dbo.CtAggregate a121'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a121.AggregateSort'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a121.AggregateName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a121.AggregateCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7100,6 +7406,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AllowSel238=a124.SelectTypeCd, AllowSel238Text=a124.SelectTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtSelectType a124'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a124.SelectTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a124.SelectTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a124.SelectTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7155,6 +7478,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AndCondition239=a256.AndOrCd, AndCondition239Text=a256.AndOrName'
 SELECT @fClause = 'FROM RODesign.dbo.CtAndOr a256'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a256.AndOrName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a256.AndOrName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a256.AndOrCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7210,6 +7550,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppInfoId136=a135.AppInfoId, AppInfoId136Text=a135.AppInfoDesc, a135.AppInfoDesc'
 SELECT @fClause = 'FROM dbo.AppInfo a135'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a135.AppInfoDesc desc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a135.AppInfoDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a135.AppInfoId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7265,6 +7622,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppItemLink135=a136.AppItemLink, AppItemLink135Text=a136.AppItemDesc, a136.AppInfoId'
 SELECT @fClause = 'FROM dbo.AppItem a136'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a136.AppItemDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a136.AppItemDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a136.AppItemLink = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7318,8 +7692,25 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT a253.DocId, DocLink=''~/DnLoad.aspx?tbl=RODesign.dbo.AppZipId&key='' + convert(varchar,a253.DocId), a253.DocName, DocSize=convert(varchar,a253.DocSize/1024) + ''KB'', a253.InputOn, LoginName=b.UsrName, AppInfoId=a253.MasterId'
+SELECT @sClause = 'SELECT a253.DocId, DocLink=''~/DnLoad.aspx?tbl=RODesign.dbo.AppZipId&key='' + convert(varchar,a253.DocId), a253.DocName, DocSize=convert(varchar,a253.DocSize/1024) + ''KB'', a253.InputOn, LoginName=b.UsrName, MimeType = a253.MimeType, AppInfoId=a253.MasterId'
 SELECT @fClause = 'FROM RODesign.dbo.AppZipId a253 INNER JOIN RODesign.dbo.Usr b ON a253.InputBy = b.UsrId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a253.InputOn desc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a253.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a253.MasterId LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + '(a253.MasterId is null OR a253.MasterId = ' + convert(varchar,@keyId) + '))' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7376,6 +7767,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AsmxEventId128=a1310.RuleAsmxTypeId, AsmxEventId128Text=a1310.RuleAsmxTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleAsmxType a1310'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1310.RuleAsmxTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1310.RuleAsmxTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1310.RuleAsmxTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7431,6 +7839,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BeforeCRUD24=a1289.CrudTypeCd, BeforeCRUD24Text=a1289.CrudTypeName, a1289.CrudTypeSort, CrudTypeDesc1289=a1289.CrudTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtCrudType a1289'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1289.CrudTypeSort'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1289.CrudTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1289.CrudTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7486,6 +7911,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BgGradType167=a170.BgGradTypeId, BgGradType167Text=a170.BgGradTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtBgGradType a170'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a170.BgGradTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a170.BgGradTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a170.BgGradTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7541,6 +7983,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BorderStyleB167=a168.BorderStyleId, BorderStyleB167Text=a168.BorderStyleName'
 SELECT @fClause = 'FROM RODesign.dbo.CtBorderStyle a168'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a168.BorderStyleName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a168.BorderStyleName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a168.BorderStyleId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7596,6 +8055,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BorderStyleD167=a168.BorderStyleId, BorderStyleD167Text=a168.BorderStyleName'
 SELECT @fClause = 'FROM RODesign.dbo.CtBorderStyle a168'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a168.BorderStyleName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a168.BorderStyleName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a168.BorderStyleId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7651,6 +8127,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BorderStyleL167=a168.BorderStyleId, BorderStyleL167Text=a168.BorderStyleName'
 SELECT @fClause = 'FROM RODesign.dbo.CtBorderStyle a168'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a168.BorderStyleName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a168.BorderStyleName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a168.BorderStyleId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7706,6 +8199,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BorderStyleR167=a168.BorderStyleId, BorderStyleR167Text=a168.BorderStyleName'
 SELECT @fClause = 'FROM RODesign.dbo.CtBorderStyle a168'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a168.BorderStyleName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a168.BorderStyleName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a168.BorderStyleId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7761,6 +8271,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BorderStyleT167=a168.BorderStyleId, BorderStyleT167Text=a168.BorderStyleName'
 SELECT @fClause = 'FROM RODesign.dbo.CtBorderStyle a168'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a168.BorderStyleName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a168.BorderStyleName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a168.BorderStyleId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7816,6 +8343,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BotVisible116=a1306.ButtonStyleCd, BotVisible116Text=a1306.ButtonStyleDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtButtonStyle a1306'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1306.ButtonStyleDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1306.ButtonStyleDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1306.ButtonStyleCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7871,6 +8415,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ButtonTypeId116=a115.ButtonTypeId, ButtonTypeId116Text=a115.ButtonTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtButtonType a115'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a115.ButtonTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a115.ButtonTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a115.ButtonTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7926,6 +8487,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ButtonTypeId128=a130.ButtonTypeId, ButtonTypeId128Text=a130.ButtonTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwScrButton a130'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a130.ButtonTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a130.ButtonTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a130.ButtonTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -7981,6 +8559,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CategoryGrp206=a23.ReportObjId, CategoryGrp206Text=a23.ColumnDesc, a23.ReportId'
 SELECT @fClause = 'FROM dbo.ReportObj a23'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a23.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a23.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a23.ReportObjId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8036,6 +8631,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CelNum164=a162.RptTblId, CelNum164Text=a162.RptTblDesc'
 SELECT @fClause = 'FROM dbo.RptTbl a162'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a162.RptTblDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a162.RptTblDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a162.RptTblId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8091,6 +8703,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ChangedBy1300=a270.UsrId, ChangedBy1300Text=a270.UsrName, a270.Active'
 SELECT @fClause = 'FROM RODesign.dbo.VwUsr a270'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a270.UsrName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a270.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a270.UsrName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a270.UsrId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8147,6 +8776,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ClientScript127=a126.ClientScriptId, ClientScript127Text=a126.ClientScriptDesc, ClientScriptHelp126=a126.ClientScriptHelp'
 SELECT @fClause = 'FROM RODesign.dbo.CtClientScript a126'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a126.ClientScriptDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a126.ClientScriptDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a126.ClientScriptId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8202,6 +8848,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ColumnId104=a5.ColumnId, ColumnId104Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8361,6 +9024,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ColumnId182=a5.ColumnId, ColumnId182Text=a5.ColumnName, a5.TableId'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8416,6 +9096,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ColumnId20=a5.ColumnId, ColumnId20Text=a5.ColumnDesc, a5.TableId'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8471,6 +9168,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ColumnId72=a5.ColumnId, ColumnId72Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8526,6 +9240,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ColumnId14=a5.ColumnId, ColumnId14Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8581,6 +9312,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ColumnJustify14=a152.JustifyCd, ColumnJustify14Text=a152.JustifyName'
 SELECT @fClause = 'FROM RODesign.dbo.CtJustify a152'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a152.JustifyName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a152.JustifyName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a152.JustifyCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8636,6 +9384,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ColumnJustify104=a152.JustifyCd, ColumnJustify104Text=a152.JustifyName'
 SELECT @fClause = 'FROM RODesign.dbo.CtJustify a152'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a152.JustifyName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a152.JustifyName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a152.JustifyCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8691,6 +9456,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='ROCmon')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CompanyId215=a132.CompanyId, CompanyId215Text=a132.CompanyDesc, a132.Active'
 SELECT @fClause = 'FROM ROCmon.dbo.Company a132'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a132.CompanyDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a132.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a132.CompanyDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a132.CompanyId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8748,6 +9530,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CopyReportId22=a22.ReportId, CopyReportId22Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8858,6 +9657,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CtrGrouping161=a23.ReportObjId, CtrGrouping161Text=a23.ColumnDesc, a23.ReportId'
 SELECT @fClause = 'FROM dbo.ReportObj a23'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a23.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a23.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a23.ReportObjId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8913,6 +9729,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CtrToggle161=a161.RptCtrId, CtrToggle161Text=a161.RptCtrDesc, a161.ReportId'
 SELECT @fClause = 'FROM dbo.RptCtr a161'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a161.RptCtrDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a161.RptCtrDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a161.RptCtrId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -8968,6 +9801,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CtrVisibility161=a125.CheckBoxCd, CtrVisibility161Text=a125.CheckBoxName'
 SELECT @fClause = 'FROM RODesign.dbo.CtCheckBox a125'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a125.CheckBoxName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a125.CheckBoxName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a125.CheckBoxCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9023,6 +9873,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CudAction1300=a1302.CudAction, CudAction1300Text=a1302.CudActionDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtCudAction a1302'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1302.CudActionDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1302.CudActionDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1302.CudAction = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9078,6 +9945,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId96=a245.CultureId, CultureId96Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9137,6 +10021,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId98=a245.CultureId, CultureId98Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9195,6 +10096,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId105=a245.CultureId, CultureId105Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9253,6 +10171,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId116=a245.CultureId, CultureId116Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9311,6 +10246,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId127=a245.CultureId, CultureId127Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9422,6 +10374,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId99=a245.CultureId, CultureId99Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9480,6 +10449,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId147=a245.CultureId, CultureId147Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9538,6 +10524,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId215=a8.CultureTypeId, CultureId215Text=a8.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtCulture a8'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a8.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a8.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a8.CultureTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9593,6 +10596,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId21=a245.CultureId, CultureId21Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9650,6 +10670,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId40=a245.CultureId, CultureId40Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9707,6 +10744,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId16=a245.CultureId, CultureId16Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9765,6 +10819,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId80=a245.CultureId, CultureId80Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9822,6 +10893,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureId87=a245.CultureId, CultureId87Text=a245.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwCulture a245'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a245.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a245.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a245.CultureId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -9932,6 +11020,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CultureTypeName135=a8.CultureTypeName, CultureTypeName135Text=a8.CultureTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtCulture a8'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a8.CultureTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a8.CultureTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a8.CultureTypeName = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10092,6 +11197,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DataType5=a6.DataTypeId, DataType5Text=a6.DataTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtDataType a6'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a6.DataTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a6.DataTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a6.DataTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10147,6 +11269,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DataTypeId97=a6.DataTypeId, DataTypeId97Text=a6.DataTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtDataType a6'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a6.DataTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a6.DataTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a6.DataTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10202,6 +11341,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DataTypeId23=a6.DataTypeId, DataTypeId23Text=a6.DataTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtDataType a6'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a6.DataTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a6.DataTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a6.DataTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10257,6 +11413,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DbProviderCd136=a138.DbProviderCd, DbProviderCd136Text=a138.DbProviderName'
 SELECT @fClause = 'FROM RODesign.dbo.CtDbProvider a138'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a138.DbProviderName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a138.DbProviderName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a138.DbProviderCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10364,6 +11537,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DdlAdnColumnId14=a5.ColumnId, DdlAdnColumnId14Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10419,6 +11609,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DdlFtrColumnId14=a5.ColumnId, DdlFtrColumnId14Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10474,6 +11681,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DdlFtrColumnId104=a104.ScreenCriId, DdlFtrColumnId104Text=a104.ScreenCriDesc, a104.ScreenId'
 SELECT @fClause = 'FROM dbo.ScreenCri a104'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a104.ScreenCriDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a104.ScreenCriDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a104.ScreenCriId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10529,6 +11753,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DdlFtrColumnId97=a97.ReportCriId, DdlFtrColumnId97Text=a97.ReportCriDesc, a97.ReportId'
 SELECT @fClause = 'FROM dbo.ReportCri a97'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a97.ReportCriDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a97.ReportCriDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a97.ReportCriId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10584,6 +11825,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DdlKeyColumnId104=a5.ColumnId, DdlKeyColumnId104Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10639,6 +11897,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DdlKeyColumnId14=a5.ColumnId, DdlKeyColumnId14Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10694,6 +11969,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DdlRefColumnId104=a5.ColumnId, DdlRefColumnId104Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10749,6 +12041,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DdlRefColumnId14=a5.ColumnId, DdlRefColumnId14Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10804,6 +12113,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DdlSrtColumnId14=a5.ColumnId, DdlSrtColumnId14Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10859,6 +12185,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DdlSrtColumnId104=a5.ColumnId, DdlSrtColumnId104Text=a5.ColumnDesc'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10914,6 +12257,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DefaultCd167=a178.DefaultCd, DefaultCd167Text=a178.DefaultName'
 SELECT @fClause = 'FROM RODesign.dbo.CtRptStyDef a178'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a178.DefaultName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a178.DefaultName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a178.DefaultCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -10969,6 +12329,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DetailTableId15=a3.TableId, DetailTableId15Text=a3.TableDesc'
 SELECT @fClause = 'FROM dbo.DbTable a3'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a3.TableDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a3.TableDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a3.TableId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11025,6 +12402,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' Direction167=a176.DirectionCd, Direction167Text=a176.DirectionDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtDirection a176'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a176.DirectionDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a176.DirectionDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a176.DirectionCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11080,6 +12474,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DisplayModeId97=a258.TypeId, DisplayModeId97Text=a258.TypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwDisplayType a258'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a258.TypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a258.TypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a258.TypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11135,6 +12546,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DisplayModeId104=a258.TypeId, DisplayModeId104Text=a258.TypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwDisplayType a258'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a258.TypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a258.TypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a258.TypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11190,6 +12618,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DisplayModeId182=a18.TypeId, DisplayModeId182Text=a18.TypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtDisplayType a18'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a18.TypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a18.TypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a18.TypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11245,6 +12690,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DisplayModeId14=a18.TypeId, DisplayModeId14Text=a18.TypeDesc, DisplayDesc18=a18.DisplayDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtDisplayType a18'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a18.TypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a18.TypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a18.TypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11300,6 +12762,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DtlLstPosId14=a1314.DtlLstPosId, DtlLstPosId14Text=a1314.DtlLstPosNm'
 SELECT @fClause = 'FROM RODesign.dbo.CtDtlLstPos a1314'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1314.DtlLstPosNm'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1314.DtlLstPosNm LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1314.DtlLstPosId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11355,6 +12834,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' EventId128=a129.EventId, EventId128Text=a129.EventDesc, a129.EventCode'
 SELECT @fClause = 'FROM RODesign.dbo.CtEvent a129'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a129.EventDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a129.EventDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a129.EventId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11449,6 +12945,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' FontStyle167=a171.FontStyleCd, FontStyle167Text=a171.FontStyleName'
 SELECT @fClause = 'FROM RODesign.dbo.CtFontStyle a171'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a171.FontStyleName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a171.FontStyleName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a171.FontStyleCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11504,6 +13017,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' FontWeight167=a172.FontWeightCd, FontWeight167Text=a172.FontWeightDesc, a172.FontWeightName'
 SELECT @fClause = 'FROM RODesign.dbo.CtFontWeight a172'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a172.FontWeightName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a172.FontWeightDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a172.FontWeightCd = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11559,6 +13089,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' FrameworkCd136=a140.FrameworkCd, FrameworkCd136Text=a140.FrameworkName'
 SELECT @fClause = 'FROM RODesign.dbo.CtFramework a140'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a140.FrameworkName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a140.FrameworkName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a140.FrameworkCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11755,6 +13302,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GrantDeny231=a229.EveryoneCd, GrantDeny231Text=a229.EveryoneName, a229.EveryoneSort'
 SELECT @fClause = 'FROM RODesign.dbo.CtEveryone a229'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a229.EveryoneSort'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a229.EveryoneName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a229.EveryoneCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11810,6 +13374,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GridGrpCd14=a263.GridGrpCd, GridGrpCd14Text=a263.GridGrpName'
 SELECT @fClause = 'FROM RODesign.dbo.CtGridGrp a263'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a263.GridGrpName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a263.GridGrpName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a263.GridGrpCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11865,6 +13446,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GroupColId14=a106.GroupColId, GroupColId14Text=a106.GroupColName'
 SELECT @fClause = 'FROM RODesign.dbo.GroupCol a106'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a106.GroupColName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a106.GroupColName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a106.GroupColId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11920,6 +13518,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GroupColId14=a106.GroupColId, GroupColId14Text=a106.GroupColName'
 SELECT @fClause = 'FROM RODesign.dbo.GroupCol a106'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a106.GroupColName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a106.GroupColName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a106.GroupColId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11975,6 +13590,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GroupRowId14=a1281.GroupRowId, GroupRowId14Text=a1281.GroupRowName'
 SELECT @fClause = 'FROM RODesign.dbo.GroupRow a1281'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1281.GroupRowName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1281.GroupRowName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1281.GroupRowId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12030,6 +13662,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GroupRowId14=a1281.GroupRowId, GroupRowId14Text=a1281.GroupRowName'
 SELECT @fClause = 'FROM RODesign.dbo.GroupRow a1281'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1281.GroupRowName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1281.GroupRowName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1281.GroupRowId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12240,6 +13889,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' LanguageCd136=a139.LanguageCd, LanguageCd136Text=a139.LanguageName'
 SELECT @fClause = 'FROM RODesign.dbo.CtLanguage a139'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a139.LanguageName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a139.LanguageName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a139.LanguageCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12443,6 +14109,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MasterTableId15=a3.TableId, MasterTableId15Text=a3.TableDesc'
 SELECT @fClause = 'FROM dbo.DbTable a3'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a3.TableDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a3.TableDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a3.TableId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12499,6 +14182,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MasterTableId71=a3.TableId, MasterTableId71Text=a3.TableDesc'
 SELECT @fClause = 'FROM dbo.DbTable a3'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a3.TableDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a3.TableDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a3.TableId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12555,6 +14255,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MatchCd14=a227.MatchCd, MatchCd14Text=a227.MatchName, a227.MatchSort'
 SELECT @fClause = 'FROM RODesign.dbo.CtMatch a227'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a227.MatchSort'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a227.MatchName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a227.MatchCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12714,6 +14431,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ModifiedBy24=a1.UsrId, ModifiedBy24Text=a1.UsrName, a1.Active'
 SELECT @fClause = 'FROM RODesign.dbo.Usr a1'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1.UsrName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1.UsrName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1.UsrId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12785,6 +14519,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ModifiedBy3=a1.UsrId, ModifiedBy3Text=a1.UsrName, a1.Active'
 SELECT @fClause = 'FROM RODesign.dbo.Usr a1'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1.UsrName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1.UsrName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1.UsrId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12856,6 +14607,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ModifiedBy22=a1.UsrId, ModifiedBy22Text=a1.UsrName, a1.Active'
 SELECT @fClause = 'FROM RODesign.dbo.Usr a1'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1.UsrName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1.UsrName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1.UsrId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12930,6 +14698,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MsgTypeCd146=a141.MsgTypeCd, MsgTypeCd146Text=a141.MsgTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtMsgType a141'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a141.MsgTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a141.MsgTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a141.MsgTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12985,6 +14770,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ObjectTypeCd136=a137.ObjectTypeCd, ObjectTypeCd136Text=a137.ObjectTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtObjectType a137'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a137.ObjectTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a137.ObjectTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a137.ObjectTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -13114,6 +14916,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' OperatorId23=a100.OperatorId, OperatorId23Text=a100.OperatorName'
 SELECT @fClause = 'FROM RODesign.dbo.CtOperator a100'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a100.OperatorName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a100.OperatorName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a100.OperatorId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -13221,6 +15040,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' OperatorId104=a100.OperatorId, OperatorId104Text=a100.OperatorDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtOperator a100'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a100.OperatorDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a100.OperatorDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a100.OperatorId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -13363,6 +15199,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' OrientationCd22=a187.OrientationCd, OrientationCd22Text=a187.OrientationName'
 SELECT @fClause = 'FROM RODesign.dbo.CtOrientation a187'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a187.OrientationName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a187.OrientationName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a187.OrientationCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -13522,6 +15375,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ParentGrpId94=a94.ReportGrpId, ParentGrpId94Text=a94.ReportGrpName'
 SELECT @fClause = 'FROM dbo.ReportGrp a94'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a94.ReportGrpName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a94.ReportGrpName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a94.ReportGrpId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -13577,6 +15447,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ParentId162=a162.RptTblId, ParentId162Text=a162.RptTblDesc'
 SELECT @fClause = 'FROM dbo.RptTbl a162'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a162.RptTblDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a162.RptTblDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a162.RptTblId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -13632,6 +15519,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PermId231=a1299.PermId, PermId231Text=a1299.PermIdText, a1299.Active, a1299.PermKeyId'
 SELECT @fClause = 'FROM RODesign.dbo.VwPermKeyRow a1299'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1299.PermIdText'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1299.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1299.PermIdText LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1299.PermId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -13772,6 +15676,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PermKeyId241=a230.PermKeyId, PermKeyId241Text=a230.PermKeyDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwPermKey a230'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a230.PermKeyDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a230.PermKeyDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a230.PermKeyId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -13827,6 +15748,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PermKeyId239=a230.PermKeyId, PermKeyId239Text=a230.PermKeyDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwPermKey a230'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a230.PermKeyDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a230.PermKeyDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a230.PermKeyId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -13882,6 +15820,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PermKeyId231=a230.PermKeyId, PermKeyId231Text=a230.PermKeyDesc'
 SELECT @fClause = 'FROM RODesign.dbo.VwPermKey a230'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a230.PermKeyDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a230.PermKeyDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a230.PermKeyId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -13937,6 +15892,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PermKeyRowId241=a1299.PermKeyRowId, PermKeyRowId241Text=a1299.PermIdText, a1299.Active, a1299.PermKeyId'
 SELECT @fClause = 'FROM RODesign.dbo.VwPermKeyRow a1299'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1299.PermIdText'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1299.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1299.PermIdText LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1299.PermKeyRowId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -14044,6 +16016,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PRptCtrId161=a161.RptCtrId, PRptCtrId161Text=a161.RptCtrDesc'
 SELECT @fClause = 'FROM dbo.RptCtr a161'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a161.RptCtrDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a161.RptCtrDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a161.RptCtrId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -14099,6 +16088,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReactEventId128=a1311.RuleReactTypeId, ReactEventId128Text=a1311.RuleReactTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleReactType a1311'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1311.RuleReactTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1311.RuleReactTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1311.RuleReactTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -14154,6 +16160,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReduxEventId128=a1316.RuleReduxTypeId, ReduxEventId128Text=a1316.RuleReduxTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleReduxType a1316'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1316.RuleReduxTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1316.RuleReduxTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1316.RuleReduxTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -14209,6 +16232,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RefColumnId20=a5.ColumnId, RefColumnId20Text=a5.ColumnDesc, a5.TableId'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -14264,6 +16304,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RefTableId20=a3.TableId, RefTableId20Text=a3.TableName'
 SELECT @fClause = 'FROM dbo.DbTable a3'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a3.TableName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a3.TableName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a3.TableId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -14320,6 +16377,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportCriHlpId127=a1298.ReportCriHlpId, ReportCriHlpId127Text=a1298.ReportCriHlpDesc, a1298.ReportId'
 SELECT @fClause = 'FROM dbo.VwReportCriHlp a1298'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1298.ReportCriHlpDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1298.ReportCriHlpDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1298.ReportCriHlpId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -14376,6 +16450,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportCriId23=a97.ReportCriId, ReportCriId23Text=a97.ColumnName, a97.ReportId'
 SELECT @fClause = 'FROM dbo.ReportCri a97'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a97.ColumnName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a97.ColumnName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a97.ReportCriId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -14431,6 +16522,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportGrpId97=a94.ReportGrpId, ReportGrpId97Text=a94.ReportGrpName'
 SELECT @fClause = 'FROM dbo.ReportGrp a94'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a94.ReportGrpName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a94.ReportGrpName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a94.ReportGrpId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -14642,6 +16750,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -14700,6 +16825,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -14758,6 +16900,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -14816,6 +16975,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -14874,6 +17050,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -14932,6 +17125,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -15043,6 +17253,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -15101,6 +17328,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a22.ReportId, a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -15159,6 +17403,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId97=a22.ReportId, ReportId97Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15217,6 +17478,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId23=a22.ReportId, ReportId23Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15275,6 +17553,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId116=a22.ReportId, ReportId116Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15333,6 +17628,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId127=a22.ReportId, ReportId127Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15391,6 +17703,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId136=a22.ReportId, ReportId136Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15449,6 +17778,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId161=a22.ReportId, ReportId161Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15507,6 +17853,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId160=a22.ReportId, ReportId160Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15631,6 +17994,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId162=a22.ReportId, ReportId162Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15689,6 +18069,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId206=a22.ReportId, ReportId206Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15747,6 +18144,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId238=a22.ReportId, ReportId238Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15841,6 +18255,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId39=a22.ReportId, ReportId39Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -15899,6 +18330,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId94=a22.ReportId, ReportId94Text=a22.ReportDesc'
 SELECT @fClause = 'FROM dbo.Report a22'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a22.ReportDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a22.ReportDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a22.ReportId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16005,6 +18453,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportTypeCd22=a203.ReportTypeCd, ReportTypeCd22Text=a203.ReportTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtReportType a203'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a203.ReportTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a203.ReportTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a203.ReportTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16060,6 +18525,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RowAuthId238=a240.RowAuthId, RowAuthId238Text=a240.RowAuthName, a240.OvrideId, ov.PromptAlways, ov.PromptModal'
 SELECT @fClause = 'FROM RODesign.dbo.VwRowAuth a240 LEFT OUTER JOIN RODesign.dbo.Ovride ov ON a240.OvrideId = ov.OvrideId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a240.RowAuthName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a240.RowAuthName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a240.RowAuthId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16115,6 +18597,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RowVisible116=a1306.ButtonStyleCd, RowVisible116Text=a1306.ButtonStyleDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtButtonStyle a1306'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1306.ButtonStyleDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1306.ButtonStyleDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1306.ButtonStyleCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16170,6 +18669,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptCelId161=a164.RptCelId, RptCelId161Text=a164.RptCelDesc'
 SELECT @fClause = 'FROM dbo.RptCel a164'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a164.RptCelDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a164.RptCelDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a164.RptCelId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16247,6 +18763,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptChaTypeCd206=a205.RptChaTypeCd, RptChaTypeCd206Text=a205.RptChaTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtRptChaType a205'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a205.RptChaTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a205.RptChaTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a205.RptChaTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16354,6 +18887,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a161.RptCtrId, a161.RptCtrDesc'
 SELECT @fClause = 'FROM dbo.RptCtr a161'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a161.RptCtrDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a161.RptCtrDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -16409,6 +18959,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptCtrId162=a161.RptCtrId, RptCtrId162Text=a161.RptCtrDesc'
 SELECT @fClause = 'FROM dbo.RptCtr a161'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a161.RptCtrDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a161.RptCtrDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a161.RptCtrId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16464,6 +19031,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptCtrId206=a161.RptCtrId, RptCtrId206Text=a161.RptCtrDesc'
 SELECT @fClause = 'FROM dbo.RptCtr a161'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a161.RptCtrDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a161.RptCtrDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a161.RptCtrId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16519,6 +19103,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptCtrTypeCd161=a157.RptCtrTypeCd, RptCtrTypeCd161Text=a157.RptCtrTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtRptCtrType a157'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a157.RptCtrTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a157.RptCtrTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a157.RptCtrTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16574,6 +19175,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptElmId161=a160.RptElmId, RptElmId161Text=a160.RptElmDesc'
 SELECT @fClause = 'FROM dbo.RptElm a160'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a160.RptElmDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a160.RptElmDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a160.RptElmId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16629,6 +19247,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptElmTypeCd160=a158.RptElmTypeCd, RptElmTypeCd160Text=a158.RptElmTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtRptElmType a158'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a158.RptElmTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a158.RptElmTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a158.RptElmTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16792,6 +19427,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptObjTypeCd23=a156.RptObjTypeCd, RptObjTypeCd23Text=a156.RptObjTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtRptObjType a156'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a156.RptObjTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a156.RptObjTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a156.RptObjTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16847,6 +19499,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptStyleId161=a167.RptStyleId, RptStyleId161Text=a167.RptStyleDesc'
 SELECT @fClause = 'FROM dbo.RptStyle a167'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a167.RptStyleDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a167.RptStyleDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a167.RptStyleId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16902,6 +19571,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptStyleId160=a167.RptStyleId, RptStyleId160Text=a167.RptStyleDesc'
 SELECT @fClause = 'FROM dbo.RptStyle a167'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a167.RptStyleDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a167.RptStyleDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a167.RptStyleId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -16957,6 +19643,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptTblTypeCd162=a159.RptTblTypeCd, RptTblTypeCd162Text=a159.RptTblTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtRptTblType a159'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a159.RptTblTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a159.RptTblTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a159.RptTblTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -17010,8 +19713,25 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT a204.DocId, DocLink=''~/DnLoad.aspx?tbl=dbo.RptTemplate&key='' + convert(varchar,a204.DocId), a204.DocName, DocSize=convert(varchar,a204.DocSize/1024) + ''KB'', a204.InputOn, LoginName=b.UsrName, ReportId=a204.MasterId'
+SELECT @sClause = 'SELECT a204.DocId, DocLink=''~/DnLoad.aspx?tbl=dbo.RptTemplate&key='' + convert(varchar,a204.DocId), a204.DocName, DocSize=convert(varchar,a204.DocSize/1024) + ''KB'', a204.InputOn, LoginName=b.UsrName, MimeType = a204.MimeType, ReportId=a204.MasterId'
 SELECT @fClause = 'FROM dbo.RptTemplate a204 INNER JOIN RODesign.dbo.Usr b ON a204.InputBy = b.UsrId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a204.InputOn desc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a204.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a204.DocName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + '(a204.MasterId is null OR a204.MasterId = ' + convert(varchar,@keyId) + '))' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -17164,6 +19884,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptwizTypId181=a185.RptwizTypId, RptwizTypId181Text=a185.RptwizTypName'
 SELECT @fClause = 'FROM dbo.RptwizTyp a185'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a185.RptwizTypName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a185.RptwizTypName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a185.RptwizTypId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -17274,6 +20011,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleCntTypeId127=a1294.RuleCntTypeId, RuleCntTypeId127Text=a1294.RuleCntTypeName, RuleCntTypeDesc1294=a1294.RuleCntTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleCntType a1294'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1294.RuleCntTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1294.RuleCntTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1294.RuleCntTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -17381,6 +20135,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleMethodId127=a1295.RuleMethodId, RuleMethodId127Text=a1295.RuleMethodName, a1295.RuleMethodId, RuleMethodDesc1295=a1295.RuleMethodDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleMethod a1295'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1295.RuleMethodId'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1295.RuleMethodName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1295.RuleMethodId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -17491,6 +20262,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleTypeId128=a25.RuleTypeId, RuleTypeId128Text=a25.RuleTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleType a25'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a25.RuleTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a25.RuleTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a25.RuleTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -17546,6 +20334,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleTypeId127=a25.RuleTypeId, RuleTypeId127Text=a25.RuleTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleType a25'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a25.RuleTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a25.RuleTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a25.RuleTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -17601,6 +20406,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleTypeId24=a25.RuleTypeId, RuleTypeId24Text=a25.RuleTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleType a25'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a25.RuleTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a25.RuleTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a25.RuleTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -17656,6 +20478,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleTypeId73=a25.RuleTypeId, RuleTypeId73Text=a25.RuleTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleType a25'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a25.RuleTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a25.RuleTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a25.RuleTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -17711,6 +20550,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenCriHlpId127=a1297.ScreenCriHlpId, ScreenCriHlpId127Text=a1297.ScreenCriHlpDesc, a1297.ScreenId'
 SELECT @fClause = 'FROM dbo.VwScreenCriHlp a1297'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1297.ScreenCriHlpDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1297.ScreenCriHlpDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1297.ScreenCriHlpId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -18420,6 +21276,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -18475,6 +21348,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -18530,6 +21420,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -18685,6 +21592,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -18740,6 +21664,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -18795,6 +21736,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -18850,6 +21808,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -19005,6 +21980,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -19060,6 +22052,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ProgramName'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ProgramName'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ProgramName LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -19115,6 +22124,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -19376,6 +22402,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId104=a15.ScreenId, ScreenId104Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -19483,6 +22526,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId116=a15.ScreenId, ScreenId116Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -19538,6 +22598,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId127=a15.ScreenId, ScreenId127Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -19593,6 +22670,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId14=a15.ScreenId, ScreenId14Text=a15.ScreenDesc, a15.ScreenTypeId'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -19648,6 +22742,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId128=a15.ScreenId, ScreenId128Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -19703,6 +22814,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId136=a15.ScreenId, ScreenId136Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -19758,6 +22886,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId24=a15.ScreenId, ScreenId24Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -19865,6 +23010,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId238=a15.ScreenId, ScreenId238Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -19972,6 +23134,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId254=a15.ScreenId, ScreenId254Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20027,6 +23206,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId19=a15.ScreenId, ScreenId19Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20082,6 +23278,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId14=a15.ScreenId, ScreenId14Text=a15.ProgramName'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ProgramName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ProgramName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20137,6 +23350,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId1300=a15.ScreenId, ScreenId1300Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20302,6 +23532,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId39=a15.ScreenId, ScreenId39Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20357,6 +23604,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId86=a15.ScreenId, ScreenId86Text=a15.ScreenDesc'
 SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20412,6 +23676,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjHlpId127=a1296.ScreenObjHlpId, ScreenObjHlpId127Text=a1296.ScreenObjHlpDesc, a1296.ScreenId'
 SELECT @fClause = 'FROM dbo.VwScreenObjHlp a1296'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1296.ScreenObjHlpDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1296.ScreenObjHlpDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1296.ScreenObjHlpId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20468,6 +23749,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId128=a14.ScreenObjId, ScreenObjId128Text=a14.ColumnDesc, a14.ScreenId'
 SELECT @fClause = 'FROM dbo.ScreenObj a14'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a14.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a14.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a14.ScreenObjId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20630,6 +23928,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenTypeId15=a17.ScreenTypeId, ScreenTypeId15Text=a17.ScreenTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtScreenType a17'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a17.ScreenTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a17.ScreenTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a17.ScreenTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20685,6 +24000,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SearchDtlId15=a5.ColumnId, SearchDtlId15Text=a5.ColumnDesc, a5.TableId'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20740,6 +24072,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SearchDtlIdR15=a5.ColumnId, SearchDtlIdR15Text=a5.ColumnDesc, a5.TableId'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20795,6 +24144,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SearchId15=a5.ColumnId, SearchId15Text=a5.ColumnDesc, a5.TableId'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20850,6 +24216,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SearchIdR15=a5.ColumnId, SearchIdR15Text=a5.ColumnDesc, a5.TableId'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20905,6 +24288,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SearchImgId15=a5.ColumnId, SearchImgId15Text=a5.ColumnDesc, a5.TableId'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -20960,6 +24360,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SearchTableId15=a3.TableId, SearchTableId15Text=a3.TableDesc'
 SELECT @fClause = 'FROM dbo.DbTable a3'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a3.TableDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a3.TableDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a3.TableId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -21016,6 +24433,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SearchUrlId15=a5.ColumnId, SearchUrlId15Text=a5.ColumnDesc, a5.TableId'
 SELECT @fClause = 'FROM dbo.DbColumn a5'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a5.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a5.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a5.ColumnId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -21775,6 +25209,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SelLevel239=a124.SelectTypeCd, SelLevel239Text=a124.SelectTypeName'
 SELECT @fClause = 'FROM RODesign.dbo.CtSelectType a124'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a124.SelectTypeName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a124.SelectTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a124.SelectTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22220,6 +25671,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SeriesGrp206=a23.ReportObjId, SeriesGrp206Text=a23.ColumnDesc, a23.ReportId'
 SELECT @fClause = 'FROM dbo.ReportObj a23'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a23.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a23.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a23.ReportObjId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22275,6 +25743,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ServiceEventId128=a1315.RuleServiceTypeId, ServiceEventId128Text=a1315.RuleServiceTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleServiceType a1315'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1315.RuleServiceTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1315.RuleServiceTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1315.RuleServiceTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22330,6 +25815,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticCsId259=a260.StaticCsId, StaticCsId259Text=a260.StaticCsNm'
 SELECT @fClause = 'FROM dbo.StaticCs a260'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a260.StaticCsNm'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a260.StaticCsNm LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a260.StaticCsId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22385,6 +25887,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticJsId259=a261.StaticJsId, StaticJsId259Text=a261.StaticJsNm'
 SELECT @fClause = 'FROM dbo.StaticJs a261'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a261.StaticJsNm'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a261.StaticJsNm LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a261.StaticJsId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22440,6 +25959,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticPgId39=a259.StaticPgId, StaticPgId39Text=a259.StaticPgDesc'
 SELECT @fClause = 'FROM dbo.StaticPg a259'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a259.StaticPgDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a259.StaticPgDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a259.StaticPgId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22495,6 +26031,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SystemId3=a45.SystemId, SystemId3Text=a45.SystemName, a45.Active'
 SELECT @fClause = 'FROM RODesign.dbo.Systems a45'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a45.SystemName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a45.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a45.SystemName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a45.SystemId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22650,6 +26203,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TabFolderId14=a19.ScreenTabId, TabFolderId14Text=a19.TabFolderName'
 SELECT @fClause = 'FROM dbo.ScreenTab a19'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a19.TabFolderName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a19.TabFolderName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a19.ScreenTabId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22757,6 +26327,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TableId97=a3.TableId, TableId97Text=a3.TableName'
 SELECT @fClause = 'FROM dbo.DbTable a3'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a3.TableName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a3.TableName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a3.TableId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22813,6 +26400,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TableId20=a3.TableId, TableId20Text=a3.TableName'
 SELECT @fClause = 'FROM dbo.DbTable a3'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a3.TableName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a3.TableName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a3.TableId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22869,6 +26473,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TableId181=a3.TableId, TableId181Text=a3.TableDesc'
 SELECT @fClause = 'FROM dbo.DbTable a3'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a3.TableDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a3.TableDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a3.TableId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -22925,6 +26546,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TableId1300=a3.TableId, TableId1300Text=a3.TableDesc'
 SELECT @fClause = 'FROM dbo.DbTable a3'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a3.TableDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a3.TableDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a3.TableId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -23049,6 +26687,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TblGrouping162=a23.ReportObjId, TblGrouping162Text=a23.ColumnDesc, a23.ReportId'
 SELECT @fClause = 'FROM dbo.ReportObj a23'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a23.ColumnDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a23.ColumnDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a23.ReportObjId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -23104,6 +26759,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TblToggle162=a161.RptCtrId, TblToggle162Text=a161.RptCtrDesc, a161.ReportId'
 SELECT @fClause = 'FROM dbo.RptCtr a161'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a161.RptCtrDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a161.RptCtrDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a161.RptCtrId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -23159,6 +26831,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TblVisibility162=a125.CheckBoxCd, TblVisibility162Text=a125.CheckBoxName'
 SELECT @fClause = 'FROM RODesign.dbo.CtCheckBox a125'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a125.CheckBoxName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a125.CheckBoxName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a125.CheckBoxCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -23214,6 +26903,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TextAlign167=a174.TextAlignCd, TextAlign167Text=a174.TextAlignName'
 SELECT @fClause = 'FROM RODesign.dbo.CtTextAlign a174'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a174.TextAlignName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a174.TextAlignName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a174.TextAlignCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -23269,6 +26975,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TextDecor167=a173.TextDecorCd, TextDecor167Text=a173.TextDecorDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtTextDecor a173'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a173.TextDecorDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a173.TextDecorDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a173.TextDecorCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -23324,6 +27047,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TopVisible116=a1306.ButtonStyleCd, TopVisible116Text=a1306.ButtonStyleDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtButtonStyle a1306'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1306.ButtonStyleDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1306.ButtonStyleDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1306.ButtonStyleCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -23379,6 +27119,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UnitCd22=a154.UnitCd, UnitCd22Text=a154.UnitDesc, a154.UnitOrder'
 SELECT @fClause = 'FROM RODesign.dbo.CtUnit a154'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a154.UnitOrder'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a154.UnitDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a154.UnitCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -23766,6 +27523,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' VerticalAlign167=a175.VerticalAlignCd, VerticalAlign167Text=a175.VerticalAlignName'
 SELECT @fClause = 'FROM RODesign.dbo.CtVerticalAlign a175'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a175.VerticalAlignName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a175.VerticalAlignName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a175.VerticalAlignCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -23821,6 +27595,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ViewOnly15=a1293.ViewTypeCd, ViewOnly15Text=a1293.ViewTypeName, a1293.ViewTypeSort'
 SELECT @fClause = 'FROM RODesign.dbo.CtViewType a1293'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a1293.ViewTypeSort'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1293.ViewTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a1293.ViewTypeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -23926,6 +27717,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct a71.WizardId, a71.WizardTitle'
 SELECT @fClause = 'FROM dbo.Wizard a71'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a71.WizardTitle'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a71.WizardTitle LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
@@ -23981,6 +27789,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardId116=a71.WizardId, WizardId116Text=a71.WizardTitle'
 SELECT @fClause = 'FROM dbo.Wizard a71'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a71.WizardTitle'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a71.WizardTitle LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a71.WizardId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -24036,6 +27861,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardId136=a71.WizardId, WizardId136Text=a71.ProgramName'
 SELECT @fClause = 'FROM dbo.Wizard a71'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a71.ProgramName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a71.ProgramName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a71.WizardId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -24091,6 +27933,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardId73=a71.WizardId, WizardId73Text=a71.WizardTitle'
 SELECT @fClause = 'FROM dbo.Wizard a71'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a71.WizardTitle'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a71.WizardTitle LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a71.WizardId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -24146,6 +28005,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardId39=a71.WizardId, WizardId39Text=a71.WizardTitle'
 SELECT @fClause = 'FROM dbo.Wizard a71'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a71.WizardTitle'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a71.WizardTitle LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a71.WizardId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -24201,6 +28077,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardTypeId71=a70.WizardTypeId, WizardTypeId71Text=a70.WizardTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtWizardType a70'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a70.WizardTypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a70.WizardTypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a70.WizardTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -24256,6 +28149,23 @@ IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WritingMode167=a177.WritingModeCd, WritingMode167Text=a177.WritingModeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtWritingMode a177'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @oClause = 'ORDER BY a177.WritingModeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a177.WritingModeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a177.WritingModeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -24399,6 +28309,23 @@ DECLARE	 @sClause		nvarchar(max)
 SELECT @fClause='FROM dbo.AppInfo b135 (NOLOCK)' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureTypeName,CultureTypeDesc FROM RODesign.dbo.CtCulture (NOLOCK))x3191 ON b135.CultureTypeName = x3191.CultureTypeName' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT DocId,MasterId FROM RODesign.dbo.AppZipId (NOLOCK))x1697 ON b135.AppZipId = x1697.DocId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppInfoId135Text=b135.AppInfoId'
 + ', AppInfoId135=b135.AppInfoId'
 + ', VersionMa135=b135.VersionMa'
@@ -24440,6 +28367,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@VersionDt53', REPLACE(ISNULL(@VersionDt53,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -24536,6 +28464,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT DbProviderCd,DbP
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen (NOLOCK))x1234 ON b136.ScreenId = x1234.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportId,ReportDesc FROM dbo.Report (NOLOCK))x1235 ON b136.ReportId = x1235.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT WizardId,ProgramName FROM dbo.Wizard (NOLOCK))x1236 ON b136.WizardId = x1236.WizardId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppItemId136Text=b136.AppItemId'
 + ', AppItemId136=b136.AppItemId'
 + ', AppInfoId136=x1222.AppInfoId'
@@ -24590,6 +28535,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@AppItemCode44', REPLACE(ISNULL(@AppItemCode44,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -24680,6 +28626,23 @@ SELECT @fClause='FROM dbo.ScreenObj b14 (NOLOCK)'
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.ColOvrd b241 (NOLOCK) ON b14.ScreenObjId = b241.ScreenObjId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey (NOLOCK))x1971 ON b241.PermKeyId = x1971.PermKeyId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyRowId,PermIdText,PermKeyId FROM RODesign.dbo.VwPermKeyRow (NOLOCK))x7414 ON b241.PermKeyRowId = x7414.PermKeyRowId AND x1971.PermKeyId = x7414.PermKeyId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14Text=b14.ScreenObjId'
 + ', ScreenObjId14=b14.ScreenObjId'
 + ', ColOvrdId241=' + case when charindex('b241 ',@fClause) > 0 then 'b241.ColOvrdId' else 'null' end
@@ -24822,6 +28785,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenCriHlpId,S
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportCriHlpId,ReportCriHlpDesc,ReportId FROM dbo.VwReportCriHlp (NOLOCK))x1114 ON b127.ReportCriHlpId = x1114.ReportCriHlpId AND x1112.ReportId = x1114.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleCntTypeId,RuleCntTypeName,RuleCntTypeDesc FROM RODesign.dbo.CtRuleCntType (NOLOCK))x7377 ON b127.RuleCntTypeId = x7377.RuleCntTypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ClientScriptId,ClientScriptDesc,ClientScriptHelp FROM RODesign.dbo.CtClientScript (NOLOCK))x1106 ON b127.ClientScript = x1106.ClientScriptId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ClientRuleId127Text=b127.ClientRuleId'
 + ', ClientRuleId127=b127.ClientRuleId'
 + ', RuleMethodId127=x7378.RuleMethodId'
@@ -24882,6 +28862,9 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId9', REPLACE(ISNULL(@ScreenId9,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId11', REPLACE(ISNULL(@ReportId11,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@CultureId10', REPLACE(ISNULL(@CultureId10,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -24975,6 +28958,23 @@ DECLARE	 @sClause		nvarchar(max)
 SELECT @fClause='FROM dbo.ScreenObj b14 (NOLOCK)' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.ScreenObjHlp b21 (NOLOCK) ON b14.ScreenObjId = b21.ScreenObjId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x163 ON b21.CultureId = x163.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14Text=b14.ScreenObjId'
 + ', ScreenObjId14=b14.ScreenObjId'
 + ', ScreenObjHlpId21=' + case when charindex('b21 ',@fClause) > 0 then 'b21.ScreenObjHlpId' else 'null' end
@@ -25100,6 +29100,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.CronJob b264 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CronJobId264Text=b264.CronJobId'
 + ', CronJobId264=b264.CronJobId'
 + ', CronJobName264=b264.CronJobName'
@@ -25230,6 +29247,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableDes
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.RptwizCatDtl b182 (NOLOCK) ON b181.RptwizCatId = b182.RptwizCatId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnName FROM dbo.DbColumn (NOLOCK))x1579 ON b182.ColumnId = x1579.ColumnId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc FROM RODesign.dbo.CtDisplayType (NOLOCK))x1865 ON b182.DisplayModeId = x1865.TypeId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptwizCatId181Text=b181.RptwizCatId'
 + ', RptwizCatId181=b181.RptwizCatId'
 + ', RptwizTypId181=x1604.RptwizTypId'
@@ -25368,6 +29402,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableNam
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc,TableId FROM dbo.DbColumn (NOLOCK))x157 ON b20.ColumnId = x157.ColumnId AND x156.TableId = x157.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableName FROM dbo.DbTable (NOLOCK))x158 ON b20.RefTableId = x158.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc,TableId FROM dbo.DbColumn (NOLOCK))x159 ON b20.RefColumnId = x159.ColumnId AND x158.TableId = x159.TableId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' KeyId20Text=b20.KeyId'
 + ', KeyId20=b20.KeyId'
 + ', KeyName20=b20.KeyName'
@@ -25400,7 +29451,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
-		   SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
@@ -25497,6 +29548,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT SystemId,SystemN
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT UsrId,UsrName FROM RODesign.dbo.Usr (NOLOCK))x1373 ON b3.ModifiedBy = x1373.UsrId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.DbColumn b5 (NOLOCK) ON b3.TableId = b5.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT DataTypeId,DataTypeName FROM RODesign.dbo.CtDataType (NOLOCK))x36 ON b5.DataType = x36.DataTypeId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TableId3Text=b3.TableId'
 + ', TableId3=b3.TableId'
 + ', SystemId3=x321.SystemId'
@@ -25555,6 +29623,8 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@TableName25', REPLACE(ISNULL(@TableName25,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@TableDesc42', REPLACE(ISNULL(@TableDesc42,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -25654,6 +29724,23 @@ DECLARE	 @sClause		nvarchar(max)
 SELECT @fClause='FROM dbo.Label b215 (NOLOCK)' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureTypeId,CultureTypeDesc FROM RODesign.dbo.CtCulture (NOLOCK))x1796 ON b215.CultureId = x1796.CultureTypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CompanyId,CompanyDesc FROM ROCmon.dbo.Company (NOLOCK))x1797 ON b215.CompanyId = x1797.CompanyId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' LabelId215Text=b215.LabelId'
 + ', LabelId215=b215.LabelId'
 + ', CultureId215=x1796.CultureTypeId'
@@ -25693,6 +29780,10 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@CultureId48', REPLACE(ISNULL(@CultureId48,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@LabelCat49', REPLACE(ISNULL(@LabelCat49,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@LabelKey51', REPLACE(ISNULL(@LabelKey51,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@LabelText50', REPLACE(ISNULL(@LabelText50,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -25791,6 +29882,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenD
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportId,ReportDesc FROM dbo.Report (NOLOCK))x327 ON b39.ReportId = x327.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT WizardId,WizardTitle FROM dbo.Wizard (NOLOCK))x538 ON b39.WizardId = x538.WizardId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT StaticPgId,StaticPgDesc FROM dbo.StaticPg (NOLOCK))x2129 ON b39.StaticPgId = x2129.StaticPgId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39Text=b39.MenuId'
 + ', MenuId39=b39.MenuId'
 + ', Popup39=b39.Popup'
@@ -25918,6 +30026,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39Text=b39.MenuId'
 + ', MenuId39=b39.MenuId'
 + ', ParentId39=b39.ParentId'
@@ -26037,6 +30162,23 @@ DECLARE	 @sClause		nvarchar(max)
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.MenuHlp b40 (NOLOCK) ON b39.MenuId = b40.MenuId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x1304 ON b40.CultureId = x1304.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39Text=b39.MenuId'
 + ', MenuId39=b39.MenuId'
 + ', MenuHlpId40=' + case when charindex('b40 ',@fClause) > 0 then 'b40.MenuHlpId' else 'null' end
@@ -26163,6 +30305,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.MenuPrm b231 (NOLOCK) ON b39.
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT EveryoneCd,EveryoneName FROM RODesign.dbo.CtEveryone (NOLOCK))x1892 ON b231.GrantDeny = x1892.EveryoneCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey (NOLOCK))x1887 ON b231.PermKeyId = x1887.PermKeyId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermId,PermIdText,PermKeyId FROM RODesign.dbo.VwPermKeyRow (NOLOCK))x1888 ON b231.PermId = x1888.PermId AND x1887.PermKeyId = x1888.PermKeyId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39Text=b39.MenuId'
 + ', MenuId39=b39.MenuId'
 + ', MenuPrmId231=' + case when charindex('b231 ',@fClause) > 0 then 'b231.MenuPrmId' else 'null' end
@@ -26293,6 +30452,23 @@ SELECT @fClause='FROM dbo.Msg b146 (NOLOCK)'
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT MsgTypeCd,MsgTypeDesc FROM RODesign.dbo.CtMsgType (NOLOCK))x1311 ON b146.MsgTypeCd = x1311.MsgTypeCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.MsgCenter b147 (NOLOCK) ON b146.MsgId = b147.MsgId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x1312 ON b147.CultureId = x1312.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MsgId146Text=b146.MsgId'
 + ', MsgId146=b146.MsgId'
 + ', MsgTypeCd146=x1311.MsgTypeCd'
@@ -26331,6 +30507,9 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@MsgId28', REPLACE(ISNULL(@MsgId28,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@MsgSource27', REPLACE(ISNULL(@MsgSource27,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@MsgName70', REPLACE(ISNULL(@MsgName70,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -26535,6 +30714,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT DocId,DocName FR
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT UnitCd,UnitDesc FROM RODesign.dbo.CtUnit (NOLOCK))x1487 ON b22.UnitCd = x1487.UnitCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.ReportHlp b96 (NOLOCK) ON b22.ReportId = b96.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x899 ON b96.CultureId = x899.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId22Text=b22.ReportId'
 + ', ReportId22=b22.ReportId'
 + ', ProgramName22=b22.ProgramName'
@@ -26706,6 +30902,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportCriId,ReportCriDesc,ReportId FROM dbo.ReportCri (NOLOCK))x5360 ON b97.DdlFtrColumnId = x5360.ReportCriId AND x902.ReportId = x5360.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.ReportCriHlp b98 (NOLOCK) ON b97.ReportCriId = b98.ReportCriId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x923 ON b98.CultureId = x923.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportCriId97Text=b97.ReportCriId'
 + ', ReportCriId97=b97.ReportCriId'
 + ', ReportId97=x902.ReportId'
@@ -26768,6 +30981,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId4', REPLACE(ISNULL(@ReportId4,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -26869,6 +31083,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT OperatorId,Opera
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportCriId,ColumnName,ReportId FROM dbo.ReportCri (NOLOCK))x926 ON b23.ReportCriId = x926.ReportCriId AND x870.ReportId = x926.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.ReportObjHlp b99 (NOLOCK) ON b23.ReportObjId = b99.ReportObjId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x930 ON b99.CultureId = x930.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportObjId23Text=b23.ReportObjId'
 + ', ReportObjId23=b23.ReportObjId'
 + ', ReportId23=x870.ReportId'
@@ -26920,6 +31151,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId13', REPLACE(ISNULL(@ReportId13,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -27022,6 +31254,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.RowOvrdPrm b239 (NOLOCK) ON b
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT AndOrCd,AndOrName FROM RODesign.dbo.CtAndOr (NOLOCK))x2099 ON b239.AndCondition = x2099.AndOrCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey (NOLOCK))x1950 ON b239.PermKeyId = x1950.PermKeyId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT SelectTypeCd,SelectTypeName FROM RODesign.dbo.CtSelectType (NOLOCK))x1951 ON b239.SelLevel = x1951.SelectTypeCd'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RowOvrdId238Text=b238.RowOvrdId'
 + ', RowOvrdId238=b238.RowOvrdId'
 + ', ScreenId238=x1940.ScreenId'
@@ -27071,6 +31320,8 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId38', REPLACE(ISNULL(@ScreenId38,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId39', REPLACE(ISNULL(@ReportId39,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -27166,6 +31417,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportId,ReportD
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RptChaTypeCd,RptChaTypeName FROM RODesign.dbo.CtRptChaType (NOLOCK))x1725 ON b206.RptChaTypeCd = x1725.RptChaTypeCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportObjId,ColumnDesc,ReportId FROM dbo.ReportObj (NOLOCK))x1727 ON b206.CategoryGrp = x1727.ReportObjId AND x1724.ReportId = x1727.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportObjId,ColumnDesc,ReportId FROM dbo.ReportObj (NOLOCK))x1729 ON b206.SeriesGrp = x1729.ReportObjId AND x1724.ReportId = x1729.ReportId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptChaId206Text=b206.RptChaId'
 + ', RptChaId206=b206.RptChaId'
 + ', RptCtrId206=x1723.RptCtrId'
@@ -27303,6 +31571,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RptCtrTypeCd,Rpt
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CheckBoxCd,CheckBoxName FROM RODesign.dbo.CtCheckBox (NOLOCK))x1453 ON b161.CtrVisibility = x1453.CheckBoxCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RptCtrId,RptCtrDesc,ReportId FROM dbo.RptCtr (NOLOCK))x1623 ON b161.CtrToggle = x1623.RptCtrId AND x1467.ReportId = x1623.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportObjId,ColumnDesc,ReportId FROM dbo.ReportObj (NOLOCK))x1463 ON b161.CtrGrouping = x1463.ReportObjId AND x1467.ReportId = x1463.ReportId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptCtrId161Text=b161.RptCtrId'
 + ', RptCtrId161=b161.RptCtrId'
 + ', ReportId161=x1467.ReportId'
@@ -27366,6 +31651,8 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId29', REPLACE(ISNULL(@ReportId29,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@CtrValue67', REPLACE(ISNULL(@CtrValue67,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -27469,6 +31756,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT FontWeightCd,Fon
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TextDecorCd,TextDecorDesc FROM RODesign.dbo.CtTextDecor (NOLOCK))x1530 ON b167.TextDecor = x1530.TextDecorCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TextAlignCd,TextAlignName FROM RODesign.dbo.CtTextAlign (NOLOCK))x1531 ON b167.TextAlign = x1531.TextAlignCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT VerticalAlignCd,VerticalAlignName FROM RODesign.dbo.CtVerticalAlign (NOLOCK))x1532 ON b167.VerticalAlign = x1532.VerticalAlignCd'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptStyleId167Text=b167.RptStyleId'
 + ', RptStyleId167=b167.RptStyleId'
 + ', DefaultCd167=x1556.DefaultCd'
@@ -27551,6 +31855,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@DefaultCd32', REPLACE(ISNULL(@DefaultCd32,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -27649,6 +31954,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RptTblTypeCd,Rpt
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CheckBoxCd,CheckBoxName FROM RODesign.dbo.CtCheckBox (NOLOCK))x1440 ON b162.TblVisibility = x1440.CheckBoxCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.RptCel b164 (NOLOCK) ON b162.RptTblId = b164.RptTblId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RptTblId,RptTblDesc FROM dbo.RptTbl (NOLOCK))x1477 ON b164.CelNum = x1477.RptTblId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptTblId162Text=b162.RptTblId'
 + ', RptTblId162=b162.RptTblId'
 + ', RptCtrId162=x1436.RptCtrId'
@@ -27700,10 +32022,12 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
-		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		   SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId34', REPLACE(ISNULL(@ReportId34,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RptCtrId31', REPLACE(ISNULL(@RptCtrId31,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -27947,6 +32271,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnD
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableDesc FROM dbo.DbTable (NOLOCK))x147 ON b15.DetailTableId = x147.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.ScreenHlp b16 (NOLOCK) ON b15.ScreenId = b16.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x136 ON b16.CultureId = x136.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId15Text=b15.ScreenId'
 + ', ScreenId15=b15.ScreenId'
 + ', ProgramName15=b15.ProgramName'
@@ -28036,6 +32377,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId60', REPLACE(ISNULL(@ScreenId60,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -28141,6 +32483,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnD
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenCriId,ScreenCriDesc,ScreenId FROM dbo.ScreenCri (NOLOCK))x5361 ON b104.DdlFtrColumnId = x5361.ScreenCriId AND x971.ScreenId = x5361.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.ScreenCriHlp b105 (NOLOCK) ON b104.ScreenCriId = b105.ScreenCriId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x990 ON b105.CultureId = x990.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenCriId104Text=b104.ScreenCriId'
 + ', ScreenCriId104=b104.ScreenCriId'
 + ', ScreenId104=x971.ScreenId'
@@ -28200,6 +32559,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId3', REPLACE(ISNULL(@ScreenId3,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -28297,6 +32657,23 @@ SELECT @fClause='FROM dbo.ScreenFilter b86 (NOLOCK)'
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen (NOLOCK))x723 ON b86.ScreenId = x723.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.ScreenFilterHlp b87 (NOLOCK) ON b86.ScreenFilterId = b87.ScreenFilterId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x730 ON b87.CultureId = x730.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenFilterId86Text=b86.ScreenFilterId'
 + ', ScreenFilterId86=b86.ScreenFilterId'
 + ', ScreenId86=x723.ScreenId'
@@ -28338,6 +32715,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId1072', REPLACE(ISNULL(@ScreenId1072,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -28445,6 +32823,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnD
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT DtlLstPosId,DtlLstPosNm FROM RODesign.dbo.CtDtlLstPos (NOLOCK))x7542 ON b14.DtlLstPosId = x7542.DtlLstPosId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT AggregateCd,AggregateName FROM RODesign.dbo.CtAggregate (NOLOCK))x1082 ON b14.AggregateCd = x1082.AggregateCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT MatchCd,MatchName FROM RODesign.dbo.CtMatch (NOLOCK))x1849 ON b14.MatchCd = x1849.MatchCd'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14Text=b14.ScreenObjId'
 + ', ScreenObjId14=b14.ScreenObjId'
 + ', MasterTable14=b14.MasterTable'
@@ -28622,6 +33017,23 @@ SELECT @fClause='FROM dbo.ScreenTab b19 (NOLOCK)'
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen (NOLOCK))x5338 ON b19.ScreenId = x5338.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.ScreenTabHlp b80 (NOLOCK) ON b19.ScreenTabId = b80.ScreenTabId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x621 ON b80.CultureId = x621.CultureId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenTabId19Text=b19.ScreenTabId'
 + ', ScreenTabId19=b19.ScreenTabId'
 + ', ScreenId19=x5338.ScreenId'
@@ -28753,6 +33165,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleTypeId,RuleT
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen (NOLOCK))x1140 ON b24.ScreenId = x1140.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CrudTypeCd,CrudTypeName,CrudTypeDesc FROM RODesign.dbo.CtCrudType (NOLOCK))x200 ON b24.BeforeCRUD = x200.CrudTypeCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT UsrId,UsrName FROM RODesign.dbo.Usr (NOLOCK))x1264 ON b24.ModifiedBy = x1264.UsrId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ServerRuleId24Text=b24.ServerRuleId'
 + ', ServerRuleId24=b24.ServerRuleId'
 + ', RuleName24=b24.RuleName'
@@ -28807,6 +33236,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId16', REPLACE(ISNULL(@ScreenId16,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -28895,6 +33325,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticCs b260 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticCsId260Text=b260.StaticCsId'
 + ', StaticCsId260=b260.StaticCsId'
 + ', StaticCsNm260=b260.StaticCsNm'
@@ -29011,6 +33458,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticJs b261 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticJsId261Text=b261.StaticJsId'
 + ', StaticJsId261=b261.StaticJsId'
 + ', StaticJsNm261=b261.StaticJsNm'
@@ -29131,6 +33595,23 @@ DECLARE	 @sClause		nvarchar(max)
 SELECT @fClause='FROM dbo.StaticPg b259 (NOLOCK)' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT StaticCsId,StaticCsNm FROM dbo.StaticCs (NOLOCK))x2140 ON b259.StaticCsId = x2140.StaticCsId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT StaticJsId,StaticJsNm FROM dbo.StaticJs (NOLOCK))x2141 ON b259.StaticJsId = x2141.StaticJsId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticPgId259Text=b259.StaticPgId'
 + ', StaticPgId259=b259.StaticPgId'
 + ', StaticPgNm259=b259.StaticPgNm'
@@ -29174,6 +33655,8 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@StaticPgId1070', REPLACE(ISNULL(@StaticPgId1070,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@StaticMeta55', REPLACE(ISNULL(@StaticMeta55,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -29264,6 +33747,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.TbdRule b254 (NOLOCK)' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen (NOLOCK))x2082 ON b254.ScreenId = x2082.ScreenId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TbdRuleId254Text=b254.TbdRuleId'
 + ', TbdRuleId254=b254.TbdRuleId'
 + ', ScreenId254=x2082.ScreenId'
@@ -29299,6 +33799,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId52', REPLACE(ISNULL(@ScreenId52,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -29396,6 +33897,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleReactTypeId,
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleReduxTypeId,RuleReduxTypeDesc FROM RODesign.dbo.CtRuleReduxType (NOLOCK))x7550 ON b128.ReduxEventId = x7550.RuleReduxTypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleServiceTypeId,RuleServiceTypeDesc FROM RODesign.dbo.CtRuleServiceType (NOLOCK))x7548 ON b128.ServiceEventId = x7548.RuleServiceTypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleAsmxTypeId,RuleAsmxTypeDesc FROM RODesign.dbo.CtRuleAsmxType (NOLOCK))x7546 ON b128.AsmxEventId = x7546.RuleAsmxTypeId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WebRuleId128Text=b128.WebRuleId'
 + ', WebRuleId128=b128.WebRuleId'
 + ', RuleName128=b128.RuleName'
@@ -29452,6 +33970,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId15', REPLACE(ISNULL(@ScreenId15,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -29543,6 +34062,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT WizardTypeId,Wiz
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableDesc FROM dbo.DbTable (NOLOCK))x544 ON b71.MasterTableId = x544.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.WizardObj b72 (NOLOCK) ON b71.WizardId = b72.WizardId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x551 ON b72.ColumnId = x551.ColumnId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardId71Text=b71.WizardId'
 + ', WizardId71=b71.WizardId'
 + ', WizardTypeId71=x543.WizardTypeId'
@@ -29677,6 +34213,23 @@ DECLARE	 @sClause		nvarchar(max)
 SELECT @fClause='FROM dbo.WizardRule b73 (NOLOCK)' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleTypeId,RuleTypeDesc FROM RODesign.dbo.CtRuleType (NOLOCK))x556 ON b73.RuleTypeId = x556.RuleTypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT WizardId,WizardTitle FROM dbo.Wizard (NOLOCK))x1141 ON b73.WizardId = x1141.WizardId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardRuleId73Text=b73.WizardRuleId'
 + ', WizardRuleId73=b73.WizardRuleId'
 + ', RuleName73=b73.RuleName'
@@ -29717,6 +34270,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@WizardId17', REPLACE(ISNULL(@WizardId17,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -30032,6 +34586,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.AppInfo b135 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppInfoId135=b135.AppInfoId, AppInfoId135Text=b135.AppInfoDesc, AppInfoId135Dtl=b135.Readme, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b135.AppInfoDesc DESC'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -30062,6 +34633,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@VersionDt53', REPLACE(ISNULL(@VersionDt53,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -30153,6 +34725,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.AppItem b136 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppItemId136=b136.AppItemId, AppItemId136Text=b136.AppItemDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b136.AppItemDesc DESC'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -30183,6 +34772,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@AppItemCode44', REPLACE(ISNULL(@AppItemCode44,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -30273,6 +34863,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenObj b14 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14=b14.ScreenObjId, ScreenObjId14Text=b14.ColumnDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b14.ColumnDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -30399,6 +35006,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT WizardId,WizardT
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ButtonStyleCd,ButtonStyleDesc FROM RODesign.dbo.CtButtonStyle)x7473 ON b116.TopVisible = x7473.ButtonStyleCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ButtonStyleCd,ButtonStyleDesc FROM RODesign.dbo.CtButtonStyle)x7475 ON b116.RowVisible = x7475.ButtonStyleCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ButtonStyleCd,ButtonStyleDesc FROM RODesign.dbo.CtButtonStyle)x7474 ON b116.BotVisible = x7474.ButtonStyleCd'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ButtonHlpId116=b116.ButtonHlpId'
 + ', CultureId116=x1022.CultureId'
 + ', CultureId116Text=x1022.CultureTypeDesc'
@@ -30449,6 +35073,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@CultureId19', REPLACE(ISNULL(@CultureId19,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -30543,6 +35168,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
 SELECT @fClause='FROM dbo.ClientRule b127 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ClientRuleId127=b127.ClientRuleId, ClientRuleId127Text=b127.RuleDesc, ClientRuleId127Dtl=b127.RuleDescription, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b127.RuleDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -30573,6 +35215,9 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId9', REPLACE(ISNULL(@ScreenId9,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId11', REPLACE(ISNULL(@ReportId11,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@CultureId10', REPLACE(ISNULL(@CultureId10,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -30671,6 +35316,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,Program
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT GroupRowId,GroupRowName FROM RODesign.dbo.GroupRow)x5279 ON b14.GroupRowId = x5279.GroupRowId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT GroupColId,GroupColName FROM RODesign.dbo.GroupCol)x1016 ON b14.GroupColId = x1016.GroupColId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenTabId,TabFolderName FROM dbo.ScreenTab)x119 ON b14.TabFolderId = x119.ScreenTabId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14=b14.ScreenObjId'
 + ', ScreenId14=x934.ScreenId'
 + ', ScreenId14Text=x934.ProgramName'
@@ -30712,6 +35374,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId1074', REPLACE(ISNULL(@ScreenId1074,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -30799,6 +35462,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenObj b14 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14=b14.ScreenObjId, ScreenObjId14Text=b14.ColumnDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b14.ColumnDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -30915,6 +35595,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.CronJob b264 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CronJobId264=b264.CronJobId, CronJobId264Text=b264.CronJobName, CronJobId264Dtl=b264.LastStatus, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b264.CronJobName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -31031,6 +35728,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptwizCat b181 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptwizCatId181=b181.RptwizCatId, RptwizCatId181Text=b181.RptwizCatDesc, RptwizCatId181Dtl=b181.CatDescription, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b181.RptwizCatDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -31147,6 +35861,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.DbKey b20 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' KeyId20=b20.KeyId, KeyId20Text=b20.KeyName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b20.KeyName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -31265,6 +35996,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.DbTable b3 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TableId3=b3.TableId, TableId3Text=b3.TableDesc, TableId3Dtl=b3.TblObjective, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b3.TableDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -31295,6 +36043,8 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@TableName25', REPLACE(ISNULL(@TableName25,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@TableDesc42', REPLACE(ISNULL(@TableDesc42,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -31393,6 +36143,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@CultureId		SmallInt
 	,@CompanyId		Int
 SELECT @fClause='FROM dbo.Label b215 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' LabelId215=b215.LabelId, LabelId215Text=b215.LabelDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b215.LabelDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -31423,6 +36190,10 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@CultureId48', REPLACE(ISNULL(@CultureId48,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@LabelCat49', REPLACE(ISNULL(@LabelCat49,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@LabelKey51', REPLACE(ISNULL(@LabelKey51,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@LabelText50', REPLACE(ISNULL(@LabelText50,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -31523,6 +36294,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@RowAuthorityId	smallint
 	,@CultureId		SmallInt
 SELECT @fClause='FROM dbo.VwLabel b265'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' LabelId265=b265.LabelId'
 + ', LabelLink265=b265.LabelLink'
 + ', LabelLink265URL=b265.LabelLink'
@@ -31560,6 +36348,8 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@CultureId56', REPLACE(ISNULL(@CultureId56,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@LabelCat59', REPLACE(ISNULL(@LabelCat59,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -31649,6 +36439,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b39.MenuId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -31765,6 +36572,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b39.MenuId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -31881,6 +36705,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b39.MenuId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -31997,6 +36838,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Menu b39 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MenuId39=b39.MenuId, MenuId39Text=b39.MenuId, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b39.MenuId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -32116,6 +36974,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Msg b146 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MsgId146=b146.MsgId, MsgId146Text=b146.MsgName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b146.MsgName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -32146,6 +37021,9 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@MsgId28', REPLACE(ISNULL(@MsgId28,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@MsgSource27', REPLACE(ISNULL(@MsgSource27,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@MsgName70', REPLACE(ISNULL(@MsgName70,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -32329,6 +37207,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@RowAuthorityId	smallint
 	,@CompanyId		VarChar
 SELECT @fClause='FROM dbo.Report b22 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportId22=b22.ReportId, ReportId22Text=b22.ReportDesc, ReportId22Dtl=b22.ProgramName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b22.ReportDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -32449,6 +37344,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ReportCri b97 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportCriId97=b97.ReportCriId, ReportCriId97Text=b97.ReportCriDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b97.ReportCriDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -32479,6 +37391,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId4', REPLACE(ISNULL(@ReportId4,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -32572,6 +37485,23 @@ DECLARE	 @sClause		nvarchar(max)
 SELECT @fClause='FROM dbo.ReportGrp b94' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportId,ReportDesc FROM dbo.Report)x882 ON b94.ReportId = x882.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportGrpId,ReportGrpName FROM dbo.ReportGrp)x885 ON b94.ParentGrpId = x885.ReportGrpId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportGrpId94=b94.ReportGrpId'
 + ', ReportId94=x882.ReportId'
 + ', ReportId94Text=x882.ReportDesc'
@@ -32612,6 +37542,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId2', REPLACE(ISNULL(@ReportId2,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -32700,6 +37631,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ReportObj b23 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ReportObjId23=b23.ReportObjId, ReportObjId23Text=b23.ColumnDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b23.ColumnDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -32730,6 +37678,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId13', REPLACE(ISNULL(@ReportId13,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -32822,6 +37771,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RowOvrd b238 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RowOvrdId238=b238.RowOvrdId, RowOvrdId238Text=b238.RowOvrdDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b238.RowOvrdDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -32852,6 +37818,8 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId38', REPLACE(ISNULL(@ScreenId38,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId39', REPLACE(ISNULL(@ReportId39,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -32943,6 +37911,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptCha b206 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptChaId206=b206.RptChaId, RptChaId206Text=b206.RptChaDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b206.RptChaDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -33061,6 +38046,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptCtr b161 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptCtrId161=b161.RptCtrId, RptCtrId161Text=b161.RptCtrDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b161.RptCtrDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -33091,6 +38093,8 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId29', REPLACE(ISNULL(@ReportId29,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@CtrValue67', REPLACE(ISNULL(@CtrValue67,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -33186,6 +38190,23 @@ SELECT @fClause='FROM dbo.RptElm b160'
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportId,ReportDesc FROM dbo.Report)x1420 ON b160.ReportId = x1420.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RptElmTypeCd,RptElmTypeName FROM RODesign.dbo.CtRptElmType)x1421 ON b160.RptElmTypeCd = x1421.RptElmTypeCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RptStyleId,RptStyleDesc FROM dbo.RptStyle)x1422 ON b160.RptStyleId = x1422.RptStyleId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptElmId160=b160.RptElmId'
 + ', ReportId160=x1420.ReportId'
 + ', ReportId160Text=x1420.ReportDesc'
@@ -33227,6 +38248,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId30', REPLACE(ISNULL(@ReportId30,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -33315,6 +38337,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptStyle b167 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptStyleId167=b167.RptStyleId, RptStyleId167Text=b167.RptStyleDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b167.RptStyleDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -33345,6 +38384,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@DefaultCd32', REPLACE(ISNULL(@DefaultCd32,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -33437,6 +38477,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptTbl b162 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptTblId162=b162.RptTblId, RptTblId162Text=b162.RptTblDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b162.RptTblDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -33467,6 +38524,8 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ReportId34', REPLACE(ISNULL(@ReportId34,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RptCtrId31', REPLACE(ISNULL(@RptCtrId31,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -33649,6 +38708,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.RptwizTyp b185'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptwizTypId185=b185.RptwizTypId'
 + ', RptwizTypName185=b185.RptwizTypName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
@@ -33768,6 +38844,23 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CudAction,CudAct
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen)x7425 ON b1300.ScreenId = x7425.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableDesc FROM dbo.DbTable)x7426 ON b1300.TableId = x7426.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT UsrId,UsrName FROM RODesign.dbo.VwUsr)x7418 ON b1300.ChangedBy = x7418.UsrId'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScrAuditId1300=b1300.ScrAuditId'
 + ', CudAction1300=x7420.CudAction'
 + ', CudAction1300Text=x7420.CudActionDesc'
@@ -33810,6 +38903,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId1075', REPLACE(ISNULL(@ScreenId1075,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -33898,6 +38992,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScrAuditDtl b1301'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScrAuditDtlId1301=b1301.ScrAuditDtlId'
 + ', ScrAuditId1301=b1301.ScrAuditId'
 + ', ScreenObjId1301=b1301.ScreenObjId'
@@ -33935,6 +39046,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScrAuditId1076', REPLACE(ISNULL(@ScrAuditId1076,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -34023,6 +39135,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Screen b15 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId15=b15.ScreenId, ScreenId15Text=b15.ScreenDesc, ScreenId15Dtl=b15.ProgramName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b15.ScreenDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -34053,6 +39182,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId60', REPLACE(ISNULL(@ScreenId60,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -34144,6 +39274,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenCri b104 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenCriId104=b104.ScreenCriId, ScreenCriId104Text=b104.ScreenCriDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b104.ScreenCriDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -34174,6 +39321,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId3', REPLACE(ISNULL(@ScreenId3,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -34265,6 +39413,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenFilter b86 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenFilterId86=b86.ScreenFilterId, ScreenFilterId86Text=b86.ScreenFilterDesc, ScreenFilterId86Dtl=b86.FilterClause, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b86.ScreenFilterDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -34295,6 +39460,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId1072', REPLACE(ISNULL(@ScreenId1072,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -34385,6 +39551,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenObj b14 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenObjId14=b14.ScreenObjId, ScreenObjId14Text=b14.ColumnDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b14.ColumnDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -34501,6 +39684,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ScreenTab b19 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenTabId19=b19.ScreenTabId, ScreenTabId19Text=b19.ScreenTabDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b19.ScreenTabDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -34618,6 +39818,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.ServerRule b24 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ServerRuleId24=b24.ServerRuleId, ServerRuleId24Text=b24.RuleDesc, ServerRuleId24Dtl=b24.RuleDescription, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b24.RuleDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -34648,6 +39865,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId16', REPLACE(ISNULL(@ScreenId16,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -34739,6 +39957,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticCs b260 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticCsId260=b260.StaticCsId, StaticCsId260Text=b260.StaticCsNm, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b260.StaticCsNm'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -34855,6 +40090,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticFi b262'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticFiId262=b262.StaticFiId'
 + ', StaticFiUrl262=b262.StaticFiUrl, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause=''
@@ -34969,6 +40221,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticJs b261 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticJsId261=b261.StaticJsId, StaticJsId261Text=b261.StaticJsNm, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b261.StaticJsNm'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -35087,6 +40356,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.StaticPg b259 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' StaticPgId259=b259.StaticPgId, StaticPgId259Text=b259.StaticPgDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b259.StaticPgDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -35117,6 +40403,8 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@StaticPgId1070', REPLACE(ISNULL(@StaticPgId1070,''),'''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@StaticMeta55', REPLACE(ISNULL(@StaticMeta55,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -35209,6 +40497,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.TbdRule b254 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TbdRuleId254=b254.TbdRuleId, TbdRuleId254Text=b254.TbdRuleName, TbdRuleId254Dtl=b254.TbdRuleDesc, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b254.TbdRuleName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -35239,6 +40544,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId52', REPLACE(ISNULL(@ScreenId52,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -35329,6 +40635,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Template b79'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TemplateId79=b79.TemplateId'
 + ', TemplateName79=b79.TemplateName'
 + ', TmplPrefix79=b79.TmplPrefix'
@@ -35347,7 +40670,7 @@ BEGIN
 		BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
-		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		 SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
@@ -35446,6 +40769,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.WebRule b128 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WebRuleId128=b128.WebRuleId, WebRuleId128Text=b128.RuleDesc, WebRuleId128Dtl=b128.RuleDescription, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b128.RuleDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -35476,6 +40816,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@ScreenId15', REPLACE(ISNULL(@ScreenId15,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -35566,6 +40907,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.Wizard b71 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardId71=b71.WizardId, WizardId71Text=b71.WizardTitle, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b71.WizardTitle'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -35683,6 +41041,23 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM dbo.WizardRule b73 (NOLOCK)'
+SELECT @fClause=REPLACE(@fClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
+SELECT @fClause=REPLACE(@fClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' WizardRuleId73=b73.WizardRuleId, WizardRuleId73Text=b73.RuleDesc, WizardRuleId73Dtl=b73.RuleDescription, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b73.RuleDesc'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -35713,6 +41088,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId',REPLACE(@currCompanyId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId',REPLACE(@currProjectId,'''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@WizardId17', REPLACE(ISNULL(@WizardId17,''),'''',''''''))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -38306,6 +43682,23 @@ SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13) + CHAR(1
 -- @sClause comes after @fClause for GetExp to work properly:
 -- Use DISTINCT to avoid duplicate arising from impersonation:
 SELECT @procedureSql1 = @procedureSql1 + 'SELECT @fClause=''''FROM ' + @fromClause + '''''' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Usrs'''', REPLACE(REPLACE(@Usrs,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@RowAuthoritys'''', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Customers'''', REPLACE(REPLACE(@Customers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Vendors'''', REPLACE(REPLACE(@Vendors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Members'''', REPLACE(REPLACE(@Members,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Investors'''', REPLACE(REPLACE(@Investors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Agents'''', REPLACE(REPLACE(@Agents,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Brokers'''', REPLACE(REPLACE(@Brokers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@UsrGroups'''', REPLACE(REPLACE(@UsrGroups,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Companys'''', REPLACE(REPLACE(@Companys,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Projects'''', REPLACE(REPLACE(@Projects,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Borrowers'''', REPLACE(REPLACE(@Borrowers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Lenders'''', REPLACE(REPLACE(@Lenders,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Guarantors'''', REPLACE(REPLACE(@Guarantors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@currCompanyId'''',REPLACE(@currCompanyId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@currProjectId'''',REPLACE(@currProjectId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@currUsrId'''', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))' + CHAR(13) + CHAR(10)
 + 'SELECT @sClause=''''SELECT DISTINCT '''' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '''''''' ELSE '''' TOP '''' + CONVERT(varchar(10),@topN) END + '''' '  + @select1Clause + '''''' + CHAR(13) + CHAR(10)
 IF @orderClause <> ''
 	SELECT @procedureSql1 = @procedureSql1 + 'SELECT @oClause=''''ORDER BY ' + @orderClause + '''''' + CHAR(13) + CHAR(10)
@@ -38341,6 +43734,7 @@ SELECT @procedureSql2 = 'SELECT @pp = @Usrs' + CHAR(13) + CHAR(10)
 + CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@currCompanyId'''',REPLACE(@currCompanyId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
 + CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@currProjectId'''',REPLACE(@currProjectId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
 + CHAR(9) + CHAR(9) + '    SELECT @filterClause=replace(@filterClause,''''@currUsrId'''', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))' + CHAR(13) + CHAR(10)
++ ISNULL(REPLACE(RODesign.dbo.fScreenCriContext(@paramCriSql, CHAR(9) + CHAR(9)),'''','''') + CHAR(13) + CHAR(10),'')
 + CHAR(9) + CHAR(9) + '    SELECT @wClause=@wClause + '''' AND '''' + @filterClause' + CHAR(13) + CHAR(10)
 + CHAR(9) + CHAR(9) + 'END' + CHAR(13) + CHAR(10)
 + CHAR(9) + CHAR(9) + 'IF @useGlobalFilter=''''Y''''' + CHAR(13) + CHAR(10)
@@ -38363,6 +43757,7 @@ SELECT @procedureSql2 = 'SELECT @pp = @Usrs' + CHAR(13) + CHAR(10)
 SELECT @procedureSql3 = @selfClause + @criClause
 + 'EXEC (@sClause + '''' '''' + @fClause + '''' '''' + @wClause + '''' '''' + @oClause)' + CHAR(13) + CHAR(10)
 + 'RETURN 0' + CHAR(13) + CHAR(10)
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -38472,6 +43867,23 @@ SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13) + CHAR(1
 + CHAR(9) + ',@SelProject' + CHAR(9) + CHAR(9) + 'char(1)' + CHAR(13) + CHAR(10)
 + CHAR(9) + ',@RowAuthorityId' + CHAR(9) + 'smallint' + CHAR(13) + CHAR(10) + @declareSql
 + 'SELECT @fClause = ''''FROM ' + @fromClause + '''''' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Usrs'''', REPLACE(REPLACE(@Usrs,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@RowAuthoritys'''', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Customers'''', REPLACE(REPLACE(@Customers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Vendors'''', REPLACE(REPLACE(@Vendors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Members'''', REPLACE(REPLACE(@Members,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Investors'''', REPLACE(REPLACE(@Investors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Agents'''', REPLACE(REPLACE(@Agents,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Brokers'''', REPLACE(REPLACE(@Brokers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@UsrGroups'''', REPLACE(REPLACE(@UsrGroups,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Companys'''', REPLACE(REPLACE(@Companys,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Projects'''', REPLACE(REPLACE(@Projects,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Borrowers'''', REPLACE(REPLACE(@Borrowers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Lenders'''', REPLACE(REPLACE(@Lenders,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Guarantors'''', REPLACE(REPLACE(@Guarantors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@currCompanyId'''',REPLACE(@currCompanyId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@currProjectId'''',REPLACE(@currProjectId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@currUsrId'''', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))' + CHAR(13) + CHAR(10)
 + 'SELECT @sClause = ''''SELECT ' + @selectClause + '''''' + CHAR(13) + CHAR(10)
 IF @orderClause <> ''
 	SELECT @procedureSql1 = @procedureSql1 + 'SELECT @oClause = ''''ORDER BY ' + @orderClause + '''''' + CHAR(13) + CHAR(10)
@@ -40265,7 +45677,7 @@ BEGIN
 		END
 		ELSE IF @displayMode = 'Document'
 		BEGIN
-			SELECT @select1Clause = @ddlKeyTableAbbr + '.DocId, DocLink=''''''''~/DnLoad.aspx?tbl=' + @ddlRefTableName +'&key='''''''' + convert(varchar,' +@ddlKeyTableAbbr +'.DocId), ' + @ddlKeyTableAbbr + '.DocName, DocSize=convert(varchar,' + @ddlKeyTableAbbr + '.DocSize/1024) + ''''''''KB'''''''', ' + @ddlKeyTableAbbr + '.InputOn, LoginName=b.UsrName, ' + @pKey + '=' + @ddlKeyTableAbbr + '.MasterId'
+			SELECT @select1Clause = @ddlKeyTableAbbr + '.DocId, DocLink=''''''''~/DnLoad.aspx?tbl=' + @ddlRefTableName +'&key='''''''' + convert(varchar,' +@ddlKeyTableAbbr +'.DocId), ' + @ddlKeyTableAbbr + '.DocName, DocSize=convert(varchar,' + @ddlKeyTableAbbr + '.DocSize/1024) + ''''''''KB'''''''', ' + @ddlKeyTableAbbr + '.InputOn, LoginName=b.UsrName, MimeType = ' + @ddlKeyTableAbbr + '.MimeType, ' + @pKey + '=' + @ddlKeyTableAbbr + '.MasterId'
 				, @select2Clause = 'DocId=null, DocLink=null, DocName=null, DocSize=null, InputOn=null, LoginName=null, ' + @pKey + '=null'
 				, @orderClause = @ddlKeyTableAbbr + '.InputOn desc'
 				, @fromClause = @ddlKeyTableName + ' ' + @ddlKeyTableAbbr + ' INNER JOIN ' + @desDatabase + '.dbo.Usr b ON ' + @ddlKeyTableAbbr + '.InputBy = b.UsrId'
@@ -40421,6 +45833,23 @@ SELECT @procedureSql1 = 'CREATE PROCEDURE ' + @procedureName + CHAR(13) + CHAR(1
 SELECT @procedureSql1 = @procedureSql1 + 'IF ' + @ifClause + CHAR(13) + CHAR(10) + 'BEGIN' + CHAR(13) + CHAR(10)
 + 'SELECT @sClause = ''''SELECT ' + @select1Clause + '''''' + CHAR(13) + CHAR(10)
 + 'SELECT @fClause = ''''FROM ' + @fromClause + '''''' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Usrs'''', REPLACE(REPLACE(@Usrs,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@RowAuthoritys'''', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Customers'''', REPLACE(REPLACE(@Customers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Vendors'''', REPLACE(REPLACE(@Vendors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Members'''', REPLACE(REPLACE(@Members,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Investors'''', REPLACE(REPLACE(@Investors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Agents'''', REPLACE(REPLACE(@Agents,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Brokers'''', REPLACE(REPLACE(@Brokers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@UsrGroups'''', REPLACE(REPLACE(@UsrGroups,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Companys'''', REPLACE(REPLACE(@Companys,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Projects'''', REPLACE(REPLACE(@Projects,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Borrowers'''', REPLACE(REPLACE(@Borrowers,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Lenders'''', REPLACE(REPLACE(@Lenders,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@Guarantors'''', REPLACE(REPLACE(@Guarantors,CHAR(191),'''',''''), '''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@currCompanyId'''',REPLACE(@currCompanyId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@currProjectId'''',REPLACE(@currProjectId,'''''''''''''''',''''''''''''''''''''''''))' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause=REPLACE(@fClause,''''@currUsrId'''', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))' + CHAR(13) + CHAR(10)
 + 'SELECT @oClause = ''''ORDER BY ' + @orderClause + '''''' + CHAR(13) + CHAR(10)
 SELECT @procedureSql2 = @whereClause + @allClause
 SELECT @procedureSql3 = @selfClause
@@ -47804,17 +53233,22 @@ DECLARE	 @DefCultureId	smallint
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 SELECT a.ScreenTabId, ah.TabFolderName, a.TabFolderOrder, c.GridGrpCd, c.ColumnHeight , c.ScreenObjId, c.MasterTable, c.NewGroupRow, t.ScreenTypeName
 	, c.ColumnName, c.TabIndex, c.RequiredValid, c.DefaultValue, c.ColumnId, c.DefAlways, c.SystemValue
+	, ColName = ISNULL(d.ColumnName, c.ColumnName) -- either underlying base table column name or just column name(not bind to table)
 	, gc.ColCssClass, gr.RowCssClass
 	, ColumnHeader=ISNULL(b.ColumnHeader,'('+c.ColumnName+')')
 	, s.ProgramName
 	, DisplayMode = dt.TypeDesc
+	, DisplayName = dt.TypeName
 	,e.TableId
 	,e.TableName
 	,PrimaryKey = f.ColumnName
 	,PKColumnIdentity = f.ColumnIdentity
 	,DdlAdnColumnName=x1.ColumnName
 	,DdlFtrColumnName=x2.ColumnName
-	,c.DdlFtrColumnId,DdlFtrTableId=x2.TableId
+	,DdlRefColumnName=x3.ColumnName
+	,c.DdlKeyColumnId, DdlKeyTableId=k.TableId, DdlKeyColumnName=k.ColumnName
+	,c.DdlRefColumnId, DdlRefTableId=x3.TableId, DdlRefScreenObjId = r.ScreenObjId
+	,c.DdlFtrColumnId, DdlFtrTableId=x2.TableId
 	,DdlAdnDataType = ISNULL(d1.DataTypeSqlName,'VarChar')
 	,DdlFtrDataType = ISNULL(d2.DataTypeSqlName,'VarChar')
 	,DataTypeSByteOle = ISNULL(d3.DataTypeSByteOle,'VarChar')
@@ -47822,7 +53256,6 @@ SELECT a.ScreenTabId, ah.TabFolderName, a.TabFolderOrder, c.GridGrpCd, c.ColumnH
 	,d.ColumnLength
 	,e.SystemId
 	,MultiDesignDb=ISNULL(e.MultiDesignDb,'N')
-
 FROM dbo.ScreenTab a
 INNER JOIN dbo.ScreenTabHlp ah ON a.ScreenTabId = ah.ScreenTabId 
 AND (ah.CultureId = @CultureId
@@ -47833,6 +53266,20 @@ INNER JOIN RODesign.dbo.CtScreenType t ON s.ScreenTypeId = t.ScreenTypeId
 LEFT OUTER JOIN dbo.ScreenObj c ON a.ScreenTabId = c.TabFolderId
 LEFT OUTER JOIN dbo.DbColumn d ON c.ColumnId = d.ColumnId
 LEFT OUTER JOIN dbo.DbTable e ON d.TableId = e.TableId
+OUTER APPLY 
+(
+SELECT TOP 1 r.ScreenObjId
+FROM
+dbo.ScreenObj r 
+INNER JOIN RODesign.dbo.CtDisplayType d on r.DisplayModeId = d.TypeId
+WHERE 
+r.ScreenId = c.ScreenId 
+AND c.DdlRefColumnId IS NOT NULL 
+AND c.DdlRefColumnId  = r.ColumnId 
+AND c.ColumnId <> r.ColumnId
+AND d.TypeName IN ('DropDownList','RadioButtonList','DataGrid','ComboBox','ListBox')
+) r
+LEFT OUTER JOIN dbo.DbColumn k ON c.DdlKeyColumnId = k.ColumnId
 LEFT OUTER JOIN (
 	SELECT TableId, ColumnName, c.ColumnIdentity  
 	FROM DbColumn c
@@ -47847,6 +53294,7 @@ LEFT OUTER JOIN RODesign.dbo.GroupRow gr ON c.GroupRowId = gr.GroupRowId
 LEFT OUTER JOIN RODesign.dbo.CtDisplayType dt ON c.DisplayModeId = dt.TypeId
 LEFT OUTER JOIN dbo.DbColumn x1 ON c.DdlAdnColumnId = x1.ColumnId
 LEFT OUTER JOIN dbo.DbColumn x2 ON c.DdlFtrColumnId = x2.ColumnId
+LEFT OUTER JOIN dbo.DbColumn x3 ON c.DdlRefColumnId = x3.ColumnId
 LEFT OUTER JOIN RODesign.dbo.CtDataType d1 ON x1.DataType = d1.DataTypeId
 LEFT OUTER JOIN RODesign.dbo.CtDataType d2 ON x2.DataType = d2.DataTypeId
 LEFT OUTER JOIN RODesign.dbo.CtDataType d3 ON d.DataType = d3.DataTypeId

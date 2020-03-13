@@ -1705,7 +1705,11 @@
             securePassword.MakeReadOnly();
             return securePassword;
         }
-
+        public static int ToUnixTime(DateTime time)
+        {
+            var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            return (int)DateTime.SpecifyKind(time, DateTimeKind.Utc).Subtract(utc0).TotalSeconds;
+        }
         public static void NeverThrow(Exception ex)
         {
             if (ex == null && ex != null) throw ex;

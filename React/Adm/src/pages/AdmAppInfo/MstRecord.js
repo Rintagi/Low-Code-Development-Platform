@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -90,6 +91,21 @@ class MstRecord extends RintagiScreen {
   }
 
   CultureTypeName135InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchCultureTypeName135(v, filterBy); } }
+  GetAppZipId135(setFieldValue, setFieldTouched, formikName, { mstId, dtlId } = {}) {
+    return function (file) {
+      return this.props.GetAppZipId135({ mstId, docId: file.DocId });
+    }.bind(this);
+  }
+  AddAppZipId135(setFieldValue, setFieldTouched, formikName, { mstId, dtlId } = {}) {
+    return function (file) {
+      return this.props.AddAppZipId135({ mstId, file });
+    }.bind(this);
+  }
+  DelAppZipId135(setFieldValue, setFieldTouched, formikName, { mstId, dtlId } = {}) {
+    return function (file) {
+      return this.props.DelAppZipId135({ mstId, docId: file.DocId });
+    }.bind(this);
+  }
   /* ReactRule: Master Record Custom Function */
 
   /* ReactRule End: Master Record Custom Function */
@@ -132,7 +148,6 @@ class MstRecord extends RintagiScreen {
           VersionDt135: values.cVersionDt135 || '',
           CultureTypeName135: (values.cCultureTypeName135 || {}).value || '',
           VersionValue135: values.cVersionValue135 || '',
-          AppZipId135: values.cAppZipId135 || '',
           AppItemLink135: (values.cAppItemLink135 || {}).value || '',
           Prerequisite135: values.cPrerequisite135 || '',
           Readme135: values.cReadme135 || '',
@@ -349,6 +364,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -376,7 +404,6 @@ class MstRecord extends RintagiScreen {
                     cVersionDt135: VersionDt135 || new Date(),
                     cCultureTypeName135: CultureTypeName135List.filter(obj => { return obj.key === CultureTypeName135 })[0],
                     cVersionValue135: formatContent(VersionValue135 || '', 'Currency'),
-                    cAppZipId135: formatContent(AppZipId135 || '', 'Document'),
                     cAppItemLink135: AppItemLink135List.filter(obj => { return obj.key === AppItemLink135 })[0],
                     cPrerequisite135: formatContent(Prerequisite135 || '', 'MultiLine'),
                     cReadme135: formatContent(Readme135 || '', 'MultiLine'),
@@ -585,7 +612,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cCultureTypeName135'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureTypeName135', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureTypeName135', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureTypeName135', true)}
                                           onInputChange={this.CultureTypeName135InputChange()}
                                           value={values.cCultureTypeName135}
@@ -620,7 +647,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.AppZipId135 || {}).visible &&
+                              {(authCol.AppZipId135 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmAppInfoState)) && <Skeleton height='20px' />) ||
@@ -632,9 +659,20 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmAppInfoState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component={FileInputField}
                                           name='cAppZipId135'
-                                          disabled={(authCol.AppZipId135 || {}).readonly ? 'disabled' : ''} />
+                                          options={{ ...fileFileUploadOptions, maxFileCount: 100 }}
+                                          files={(this.BindMultiDocFileObject(AppZipId135, values.cAppZipId135) || []).filter(f => !f.isEmptyFileObject)}
+                                          label={(columnLabel.AppZipId135 || {}).ToolTip}
+                                          onClick={this.GetAppZipId135(setFieldValue, setFieldTouched, 'cAppZipId135', { mstId: (currMst || {}).AppInfoId135 })}
+                                          onDelete={this.DelAppZipId135(setFieldValue, setFieldTouched, 'cAppZipId135', { mstId: (currMst || {}).AppInfoId135 })}
+                                          onAdd={this.AddAppZipId135(setFieldValue, setFieldTouched, 'cAppZipId135', { mstId: (currMst || {}).AppInfoId135 })}
+                                          onChange={this.FileUploadChange(setFieldValue, setFieldTouched, 'cAppZipId135')}
+                                          onError={(e, fileName) => {
+                                            this.props.showNotification('E', { message: 'problem loading file ' + fileName })
+                                          }}
+                                          multiple
+                                        />
                                       </div>
                                     }
                                     {errors.cAppZipId135 && touched.cAppZipId135 && <span className='form__form-group-error'>{errors.cAppZipId135}</span>}
@@ -665,7 +703,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.Prerequisite135 || {}).visible &&
+                              {(authCol.Prerequisite135 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmAppInfoState)) && <Skeleton height='20px' />) ||
@@ -677,7 +715,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmAppInfoState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cPrerequisite135'
                                           disabled={(authCol.Prerequisite135 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -686,7 +724,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.Readme135 || {}).visible &&
+                              {(authCol.Readme135 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmAppInfoState)) && <Skeleton height='20px' />) ||
@@ -698,7 +736,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmAppInfoState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cReadme135'
                                           disabled={(authCol.Readme135 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -767,6 +805,10 @@ const mapDispatchToProps = (dispatch) => (
     { DelMst: AdmAppInfoReduxObj.DelMst.bind(AdmAppInfoReduxObj) },
     { AddMst: AdmAppInfoReduxObj.AddMst.bind(AdmAppInfoReduxObj) },
     { SearchCultureTypeName135: AdmAppInfoReduxObj.SearchActions.SearchCultureTypeName135.bind(AdmAppInfoReduxObj) },
+    { GetAppZipId135List: AdmAppInfoReduxObj.SearchActions.GetAppZipId135.bind(AdmAppInfoReduxObj) },
+    { GetAppZipId135: AdmAppInfoReduxObj.OnDemandActions.GetAppZipId135Content.bind(AdmAppInfoReduxObj) },
+    { AddAppZipId135: AdmAppInfoReduxObj.OnDemandActions.AddAppZipId135Content.bind(AdmAppInfoReduxObj) },
+    { DelAppZipId135: AdmAppInfoReduxObj.OnDemandActions.DelAppZipId135Content.bind(AdmAppInfoReduxObj) },
     { showNotification: showNotification },
     { setTitle: setTitle },
     { setSpinner: setSpinner },

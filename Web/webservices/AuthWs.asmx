@@ -276,18 +276,33 @@ public partial class AuthWs : AsmxBase
                 syncCookie = true;
             }
         }
-        var auth = GetAuthObject();
-        var token = auth.GetToken(client_id, scope, grant_type, code, code_verifier, redirect_url, client_secret, appPath, domain, getStoredToken, validateScope, re_auth == "Y");
-        if (syncCookie && token != null)
+        try
         {
-            SetJWTCookie(token["refresh_token"]);
-        }
-        if (re_auth == "Y")
-        {
-            LoadUsrImpr(LUser.UsrId, LCurr.DbId, LCurr.CompanyId, LCurr.ProjectId, true);
-        }
+            var auth = GetAuthObject();
+            var token = auth.GetToken(client_id, scope, grant_type, code, code_verifier, redirect_url, client_secret, appPath, domain, getStoredToken, validateScope, re_auth == "Y");
+            if (syncCookie && token != null)
+            {
+                SetJWTCookie(token["refresh_token"]);
+            }
+            if (re_auth == "Y")
+            {
+                LoadUsrImpr(LUser.UsrId, LCurr.DbId, LCurr.CompanyId, LCurr.ProjectId, true);
+            }
 
-        return token;
+            if (token == null || !token.ContainsKey("access_token"))
+            {
+                ErrorTracing(new Exception(string.Format("Problem refresh token to {0}", LUser != null ? LUser.UsrId.ToString() : "unknown user")));
+            }
+            return token;
+        }
+        catch (Exception ex)
+        {
+            ErrorTracing(new Exception(string.Format("Problem refresh token to {0}", LUser != null ? LUser.UsrId.ToString() : "unknown user"), ex));
+            return new SerializableDictionary<string, string>() {
+                { "error", "invalid_token"},
+                { "message", "cannot issue token"},
+            };
+        }
         
         //System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
         //Dictionary<string, object> scopeContext = jss.Deserialize<Dictionary<string, object>>(scope);

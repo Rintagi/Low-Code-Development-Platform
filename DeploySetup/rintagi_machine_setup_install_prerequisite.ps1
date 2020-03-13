@@ -73,32 +73,61 @@ If(!(test-path $path))
 #cmd /c mklink /j C:\SQLData D:\SQLData
 #cmd /c mklink /j C:\Backup D:\Backup
 
-Write-Output "Installing software"
+Write-Output "Installing prerequisite software"
 
-# missing
-Write-Output "choco install access2016runtime -y"
-choco install access2016runtime -y
+#MS oledb sql
+# source url
+# https://www.microsoft.com/en-us/download/details.aspx?id=56730
 
 Write-Output "choco install msoledbsql -y"
 choco install msoledbsql -y
 
-# microsoft access database engine 2016 with custom package
-#choco install made2016runtime -s="C:\ChocoPackages\made2016runtime" -y
-Write-Output "choco install made2010 -y"
-choco install made2010 -y
+# microsoft access database engine runtime(needs 2010+)
+# source url (2016)
+# https://www.microsoft.com/en-us/download/details.aspx?id=54920
+# or (2010)
+# https://www.microsoft.com/en-ca/download/details.aspx?id=13255
+
+Write-Output "choco install access2016runtime -y"
+choco install access2016runtime -y
+
+Write-Output "choco install made2010 --ignore-checksums -y "
+choco install made2010 --ignore-checksums -y
+
+# SQL 2012 CLR types
+# source url 
+# https://www.microsoft.com/en-us/download/details.aspx?id=35580
+
 Write-Output "choco install SQL2012.ClrTypes --ignore-checksums -y"
 choco install SQL2012.ClrTypes --ignore-checksums -y
+
+#MS SQL Report Viewer
+# source url(2015)
+# https://www.microsoft.com/en-us/download/details.aspx?id=45496
+# or
+# 2012
+# https://www.microsoft.com/en-ca/download/details.aspx?id=35747
+
 Write-Output "choco install reportviewer2012 -y"
 choco install reportviewer2012 -y
+
+# crystal report viewer runtime
+# source url
+# https://wiki.scn.sap.com/wiki/display/BOBJ/Crystal+Reports%2C+Developer+for+Visual+Studio+Downloads
 Write-Output "choco install crystalreports2010runtime -y"
 choco install crystalreports2010runtime -y --install-arguments="'UPGRADE=1'"
 
+# IIS urlrewrite module
+# source url
+# https://www.microsoft.com/en-ca/download/details.aspx?id=47337
+
 Write-Output "choco install urlrewrite -y"
 choco install urlrewrite -y
+
+# IIS Application Request Routing(proxying) 3.0
+# source url
+# https://www.microsoft.com/en-us/download/details.aspx?id=47333
 Write-Output "choco install iis-arr -y"
 choco install iis-arr -y
-
-Write-Output "choco install sql-server-management-studio --version=14.0.17285.0 -y"
-choco install sql-server-management-studio --version=14.0.17285.0
 
 

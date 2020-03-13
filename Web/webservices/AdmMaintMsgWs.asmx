@@ -41,7 +41,6 @@ namespace RO.Web
             columns.Add("MaintMessage233", typeof(string));
             columns.Add("ShowOnLogin233", typeof(string));
             columns.Add("LastEmailDt233", typeof(string));
-            columns.Add("EmailUsers", typeof(string));
             return dt;
         }
 
@@ -121,7 +120,6 @@ namespace RO.Web
             drType["ShowOnLogin233"] = "Char"; drDisp["ShowOnLogin233"] = "CheckBox";
             try { dr["LastEmailDt233"] = mst["LastEmailDt233"]; } catch { }
             drType["LastEmailDt233"] = "DBTimeStamp"; drDisp["LastEmailDt233"] = "LongDateTime";
-            
 
             if (dtl != null)
             {

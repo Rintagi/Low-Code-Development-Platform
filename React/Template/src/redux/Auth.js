@@ -14,6 +14,7 @@ export const LOGOUT = getAsyncTypes(SCREEN_PREFIX, 'AUTH_LOGOUT');
 export const GET_TOKEN = getAsyncTypes(SCREEN_PREFIX, 'AUTH_GET_TOKEN');
 export const GET_USER = getAsyncTypes(SCREEN_PREFIX, 'AUTH_GET_USER');
 export const GET_MENU = getAsyncTypes(SCREEN_PREFIX,'AUTH_GET_MENU');
+export const GET_SYSTEMLIST = getAsyncTypes(SCREEN_PREFIX,'AUTH_GET_SYSTEMLIST');
 export const SESSION_TIMEOUT = getAsyncTypes(SCREEN_PREFIX, 'AUTH_LOGIN');
 export const UPD_PROFILE = getAsyncTypes(SCREEN_PREFIX, 'AUTH_UPDATE_PROFILE');
 export const CHANGE_PASSWORD = getAsyncTypes(SCREEN_PREFIX, 'AUTH_CHANGE_PASSWORD');
@@ -28,6 +29,7 @@ const initState = {
     desktopView: false,
   },
   menu: null,
+  system: null,
   Label: {
     Login: "Login",
     Logout: "Logout",
@@ -301,7 +303,35 @@ export function authReducer(state = initState, action) {
                 // ...(action.payload),
                 loading: false,
             }
-        }      
+        }
+    case GET_SYSTEMLIST.STARTED:
+        return {
+            //          ...(state), // flush stored info, as if it is not authenticated
+            ...state,
+            system: {
+                systemList: state.system.systemList,
+                loading: true,
+                loadingTime: new Date()
+            }
+        }
+    case GET_SYSTEMLIST.SUCCEEDED:
+        return {
+            ...(state),
+            system: {
+                ...state.system,
+                systemList:[...action.payload],
+                loading: false,
+                key: Date.now()
+            },
+        }
+    case GET_SYSTEMLIST.FAILED:
+        return {
+            ...(state),
+            system: {
+                systemList:[],
+                loading: false,
+            }
+        }          
     default:
       return state;
   }
@@ -356,6 +386,17 @@ export function login(username, password) {
                     ).catch(error => {
                     console.log(error);
                     })
+
+                    authService.getSystems().then(
+                      data => {
+                          dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.SUCCEEDED, payload: data.data });                            
+                      },
+                      error => {
+                          dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.FAILED, payload: error });
+                      }
+                      ).catch(error => {
+                      console.log(error);
+                      })
                   return Promise.resolve([data.data]);
                 },
                 error => {
@@ -464,6 +505,15 @@ export function getCurrentUser(silent = false) {
                 },
                 error => {
                     dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
+                });
+
+              authService.getSystems().then(
+                 data => {
+                    dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.SUCCEEDED, payload: data.data });
+                    
+                },
+                error => {
+                    dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.FAILED, payload: error });
                 });
             }
             return Promise.resolve(data.data);

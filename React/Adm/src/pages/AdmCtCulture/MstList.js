@@ -16,7 +16,7 @@ import DropdownField from '../../components/custom/DropdownField';
 import NaviBar from '../../components/custom/NaviBar';
 import RintagiScreen from '../../components/custom/Screen'
 import ModalDialog from '../../components/custom/ModalDialog';
-import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath } from '../../helpers/utils'
+import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import AdmCtCultureReduxObj, { ShowMstFilterApplied } from '../../redux/AdmCtCulture';
@@ -188,7 +188,6 @@ class MstList extends RintagiScreen {
     const { mstId } = { ...this.props.match.params };
     if (!(this.props.AdmCtCulture || {}).AuthCol || true) {
       this.props.LoadPage('SearchList', { mstId: mstId || '_' });
-      this.props.LoadInitPage({ keyId: null });
     }
 
     this.mediaqueryresponse(this.mobileView);
@@ -385,9 +384,9 @@ class MstList extends RintagiScreen {
                                       <div className='form__form-group-field filter-form-border'>
                                         <Field
                                           type='text'
-                                          name='cToTranslate10'
-                                          value={values.cToTranslate10}
-                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cToTranslate10')}
+                                          name='cCriToTranslate10'
+                                          value={values.cCriToTranslate10}
+                                          onBlur={this.SearchFilterTextValueChange(handleSubmit, setFieldValue, 'text', 'cCriToTranslate10')}
                                         />
                                       </div>
                                     </Col>

@@ -72,7 +72,7 @@ namespace RO.Web
                 {
                     fileName = Request.Files[0].FileName,
                     mimeType = Request.Files[0].ContentType,
-                    lastModified = 0,
+                    lastModified = RO.Common3.Utils.ToUnixTime(DateTime.UtcNow),
                     base64 = Convert.ToBase64String(dc),
                 };
 
@@ -318,10 +318,24 @@ namespace RO.Web
                     /* store as 256 byte UTF8 json header + actual binary file content 
                      * if header info > 256 bytes use compact header(256 bytes) + actual header + actual binary file content
                      */
-                    string contentHeader = jss.Serialize(new FileInStreamObj() { fileName = fileObj.fileName, lastModified = fileObj.lastModified, mimeType = fileObj.mimeType, ver = "0100", extensionSize = 0 });
+                    string fileName = System.IO.Path.GetFileName(fileObj.fileName);
+                    string contentHeader = jss.Serialize(new FileInStreamObj() {
+                            fileName = fileName, 
+                            lastModified = fileObj.lastModified, 
+                            mimeType = fileObj.mimeType, ver = "0100", 
+                            extensionSize = 0 ,
+                            contentIsJSON = true,
+                            });
                     byte[] streamHeader = Enumerable.Repeat((byte)0x20, 256).ToArray();
                     int headerLength = System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader).Length;
-                    string compactHeader = jss.Serialize(new FileInStreamObj() { fileName = "", lastModified = fileObj.lastModified, mimeType = fileObj.mimeType, ver = "0100", extensionSize = headerLength });
+                    string compactHeader = jss.Serialize(new FileInStreamObj() { 
+                            fileName = "", 
+                            lastModified = fileObj.lastModified, 
+                            mimeType = fileObj.mimeType, 
+                            ver = "0100", 
+                            extensionSize = headerLength,
+                            contentIsJSON = true,
+                    });
                     int compactHeaderLength = System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader).Length;
                     if (headerLength <= 256)
                         Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader), streamHeader, headerLength);
@@ -335,19 +349,36 @@ namespace RO.Web
                     {
                         storedContent = null;
                     }
-                    else if (fileObj.mimeType.StartsWith("image/") && false)
-                    {
-                        // backward compatability with asp.net side, only store image and not fileinfo
-                        storedContent = content;
-                    }
+                    //no longer needed 2020.3.3 gary
+                    //else if (fileObj.mimeType.StartsWith("image/") && false)
+                    //{
+                    //    // backward compatability with asp.net side, only store image and not fileinfo
+                    //    storedContent = content;
+                    //}
                     else
                     {
+                        System.Collections.Generic.List<_ReactFileUploadObj> fo = new System.Collections.Generic.List<_ReactFileUploadObj>();
+                        fo.Add(new _ReactFileUploadObj()
+                        {
+                            fileName = fileName,
+                            base64 = Convert.ToBase64String(content),
+                            mimeType = fileObj.mimeType,
+                            height = maxHeght,
+                            lastModified = fileObj.lastModified,
+                            previewUrl = null,
+                            size = 0,
+                            width = 0
+                        }
+                        );
+                        string foJSON = jss.Serialize(fo);
+                        content = System.Text.UTF8Encoding.UTF8.GetBytes(foJSON);
                         storedContent = new byte[content.Length + streamHeader.Length];
                         Array.Copy(streamHeader, storedContent, streamHeader.Length);
                         Array.Copy(content, 0, storedContent, streamHeader.Length, content.Length);
                     }
                     byte[] savedContent = content.Length == 0 || dummyImage ? null : storedContent;
                     new AdminSystem().UpdDbImg(docId, tableName, keyColumnName, columnName, savedContent, dbConnectionString, dbPwd);
+                    
                     return savedContent;
                 }
                 else

@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -89,6 +90,11 @@ class MstRecord extends RintagiScreen {
     }
   }
 
+  EntityId191Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.cReleaseId191 || {}).key || values.cReleaseId191;
+    // dependent invocation goes to here
+  }
 
   /* ReactRule: Master Record Custom Function */
 
@@ -134,7 +140,6 @@ class MstRecord extends RintagiScreen {
           ReleaseOs191: (values.cReleaseOs191 || {}).value || '',
           EntityId191: (values.cEntityId191 || {}).value || '',
           ReleaseTypeId191: (values.cReleaseTypeId191 || {}).value || '',
-          DeployPath199: values.cDeployPath199 || '',
           TarScriptAft191: values.cTarScriptAft191 || '',
           ReadMe191: values.cReadMe191 || '',
         },
@@ -342,7 +347,7 @@ class MstRecord extends RintagiScreen {
     const EntityId191 = currMst.EntityId191;
     const ReleaseTypeId191List = AdmReleaseReduxObj.ScreenDdlSelectors.ReleaseTypeId191(AdmReleaseState);
     const ReleaseTypeId191 = currMst.ReleaseTypeId191;
-    const DeployPath199 = currMst.DeployPath199;
+    const DeployPath199 = this.BindReferenceField(EntityId191, EntityId191List, { valuefieldname: 'DeployPath199' });
     const TarScriptAft191 = currMst.TarScriptAft191;
     const ReadMe191 = currMst.ReadMe191;
 
@@ -351,6 +356,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -648,14 +666,15 @@ class MstRecord extends RintagiScreen {
                                         <Field
                                           type='text'
                                           name='cDeployPath199'
-                                          disabled={(authCol.DeployPath199 || {}).readonly ? 'disabled' : ''} />
+                                          disabled={(authCol.DeployPath199 || {}).readonly ? 'disabled' : ''}
+                                          value={this.BindReferenceField((((values || {}).cEntityId191 || {}).value), EntityId191List, { valuefieldname: 'DeployPath199' })} />
                                       </div>
                                     }
                                     {errors.cDeployPath199 && touched.cDeployPath199 && <span className='form__form-group-error'>{errors.cDeployPath199}</span>}
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.TarScriptAft191 || {}).visible &&
+                              {(authCol.TarScriptAft191 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
@@ -667,7 +686,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cTarScriptAft191'
                                           disabled={(authCol.TarScriptAft191 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -676,7 +695,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ReadMe191 || {}).visible &&
+                              {(authCol.ReadMe191 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='20px' />) ||
@@ -688,7 +707,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReleaseState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cReadMe191'
                                           disabled={(authCol.ReadMe191 || {}).readonly ? 'disabled' : ''} />
                                       </div>

@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -161,8 +162,6 @@ class MstRecord extends RintagiScreen {
           Active1: values.cActive1 ? 'Y' : 'N',
           InternalUsr1: values.cInternalUsr1 ? 'Y' : 'N',
           TechnicalUsr1: values.cTechnicalUsr1 ? 'Y' : 'N',
-          EmailLink1: values.cEmailLink1 || '',
-          MobileLink1: values.cMobileLink1 || '',
           FailedAttempt1: values.cFailedAttempt1 || '',
           LastSuccessDt1: values.cLastSuccessDt1 || '',
           LastFailedDt1: values.cLastFailedDt1 || '',
@@ -392,7 +391,7 @@ class MstRecord extends RintagiScreen {
     const UsrGroupLs1 = currMst.UsrGroupLs1;
     const UsrImprLink1List = AdmUsrReduxObj.ScreenDdlSelectors.UsrImprLink1(AdmUsrState);
     const UsrImprLink1 = currMst.UsrImprLink1;
-    const PicMed1 = currMst.PicMed1 ? (currMst.PicMed1.startsWith('{') ? JSON.parse(currMst.PicMed1) : { fileName: '', mimeType: 'image/jpeg', base64: currMst.PicMed1 }) : null;
+    const PicMed1 = currMst.PicMed1 ? decodeEmbeddedFileObjectFromServer(currMst.PicMed1) : null;
     const PicMed1FileUploadOptions = {
       CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
       DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
@@ -449,6 +448,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -677,7 +689,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cCultureId1'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureId1', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureId1', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureId1', true)}
                                           onInputChange={this.CultureId1InputChange()}
                                           value={values.cCultureId1}
@@ -1028,7 +1040,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.EmailLink1 || {}).visible &&
+                              {(authCol.EmailLink1 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='20px' />) ||
@@ -1049,7 +1061,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.MobileLink1 || {}).visible &&
+                              {(authCol.MobileLink1 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='20px' />) ||
@@ -1070,7 +1082,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.FailedAttempt1 || {}).visible &&
+                              {(authCol.FailedAttempt1 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='20px' />) ||
@@ -1269,7 +1281,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cInvestorId1'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cInvestorId1', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cInvestorId1', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cInvestorId1', true)}
                                           onInputChange={this.InvestorId1InputChange()}
                                           value={values.cInvestorId1}
@@ -1296,7 +1308,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cCustomerId1'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCustomerId1', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCustomerId1', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cCustomerId1', true)}
                                           onInputChange={this.CustomerId1InputChange()}
                                           value={values.cCustomerId1}
@@ -1323,7 +1335,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cVendorId1'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cVendorId1', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cVendorId1', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cVendorId1', true)}
                                           onInputChange={this.VendorId1InputChange()}
                                           value={values.cVendorId1}
@@ -1350,7 +1362,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cAgentId1'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cAgentId1', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cAgentId1', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cAgentId1', true)}
                                           onInputChange={this.AgentId1InputChange()}
                                           value={values.cAgentId1}
@@ -1377,7 +1389,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cBrokerId1'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cBrokerId1', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cBrokerId1', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cBrokerId1', true)}
                                           onInputChange={this.BrokerId1InputChange()}
                                           value={values.cBrokerId1}
@@ -1404,7 +1416,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cMemberId1'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cMemberId1', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cMemberId1', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cMemberId1', true)}
                                           onInputChange={this.MemberId1InputChange()}
                                           value={values.cMemberId1}
@@ -1431,7 +1443,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cLenderId1'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cLenderId1', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cLenderId1', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cLenderId1', true)}
                                           onInputChange={this.LenderId1InputChange()}
                                           value={values.cLenderId1}
@@ -1458,7 +1470,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cBorrowerId1'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cBorrowerId1', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cBorrowerId1', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cBorrowerId1', true)}
                                           onInputChange={this.BorrowerId1InputChange()}
                                           value={values.cBorrowerId1}
@@ -1485,7 +1497,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cGuarantorId1'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cGuarantorId1', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cGuarantorId1', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cGuarantorId1', true)}
                                           onInputChange={this.GuarantorId1InputChange()}
                                           value={values.cGuarantorId1}

@@ -97,12 +97,12 @@ function getFile(file, index, options, success, state, setState) {
   var progress = false;
 
   // debugger;
-  log.debug(reader);
+  // log.debug(reader);
 
   reader.fileName = file.name;
 
   reader.onloadstart = () => {
-    log.debug('IM PROGRESSING!!!!');
+    // log.debug('IM PROGRESSING!!!!');
     // success(index, {
     //   fileName: reader.fileName,
     //   width: '',
@@ -176,7 +176,7 @@ function getFile(file, index, options, success, state, setState) {
           });
 
           setState({ progress: false });
-          log.debug('IM FINISHED');
+          //log.debug('IM FINISHED');
         }
       })
     };
@@ -194,7 +194,7 @@ function getFile(file, index, options, success, state, setState) {
       });
 
       setState({ progress: false });
-      log.debug('IM FINISHED');
+      // log.debug('IM FINISHED');
       // _this.setState({ progress: false });
       // this.props.onChange({ name: file.name, mimeType: file.type, size: file.size, lastModified: file.lastModified, base64: reader });
       // this.props.onChange({ name: files[0].name, base64: reader });
@@ -235,7 +235,7 @@ class FileInputField extends Component {
     if (!prevState.files || !prevState.files.length) return { files: nextProps.files };
     const revisedFiles = (nextProps.files || []).reduce((a, o) => { a[o.DocId || o.fileName] = o; return a; }, {});
 
-    log.debug(prevState);
+    // log.debug(prevState);
 
     const x = [
       ...prevState.files.map(o => ({
@@ -278,7 +278,7 @@ class FileInputField extends Component {
     value.preventDefault();
     // convert files to an array
     const files = [...value.target.files];
-    log.debug(files);
+    // log.debug(files);
 
     const _this = this;
 
@@ -313,7 +313,7 @@ class FileInputField extends Component {
         // return;
       }
       else {
-        log.debug(x, existingCount, file);
+        // log.debug(x, existingCount, file);
         const newFile = { ...file, ts: actionTimeStamp + 1 };
         fileList[existingCount + i] = newFile;
         newFiles.push(newFile);
@@ -322,7 +322,7 @@ class FileInputField extends Component {
       }
       if (fileCount === x && typeof _this.props.onChange === "function") {
         // newFiles = newFile.filter(f => f);
-        log.debug(_this.state.files);
+        // log.debug(_this.state.files);
         _this.setState({ files: _this.state.files.filter(f => f && f.base64) });
         _this.props.onChange(fileList.filter(f => f), _this.props.name || (_this.props.field || {}).name, { fieldname: this.props.fieldname, listidx: _this.props.listidx, fieldpath: _this.props.fieldpath });
         if (typeof this.props.onAdd === "function" && this.props.multiple) {
@@ -349,6 +349,22 @@ class FileInputField extends Component {
     });
   };
 
+  downloadFile = i => () => {
+    const _this = this;
+    const currentUrlTitle = document.getElementsByTagName("title")[0].innerHTML;
+    const selectedFile = this.props.multiple ? this.state.files.sort((a, b) => a.DocId - b.DocId)[i] : this.state.files.sort((a, b) => a.DocId - b.DocId)[0];
+    const envPublicUrl = process.env.PUBLIC_URL;
+    const isIE = window.navigator && window.navigator.msSaveOrOpenBlob && false;
+    const isImage = (/image/i).test((selectedFile || {}).mimeType);
+
+    if (typeof this.props.onClick === "function" && !selectedFile.base64) {
+      this.props.onClick(selectedFile);
+    }
+    else {
+      log.debug('no content file selected document', selectedFile);
+    };
+
+  }
   previewSelectedFile = i => () => {
     // must open window during the click event and not in the promise, browser security prevent that from happening
     const _this = this;
@@ -457,11 +473,11 @@ class FileInputField extends Component {
   // }
 
   removeSelectedFile = i => (event) => {
-    log.debug(event.target.value);
-    log.debug(i);
+    // log.debug(event.target.value);
+    // log.debug(i);
     // const sortedFiles = this.state.files.sort((a, b) => a.DocId - b.DocId);
     const file = this.state.files.sort((a, b) => a.DocId - b.DocId)[i];
-    log.debug(this.state.files)
+    // log.debug(this.state.files)
 
     this.state.files.splice(i, 1);
     this.setState({
@@ -474,7 +490,7 @@ class FileInputField extends Component {
       this.props.onDelete(file)
         .then(
           (result) => {
-            log.debug('remove file result', result)
+            //log.debug('remove file result', result)
           }
         )
         .catch(error => {
@@ -483,7 +499,7 @@ class FileInputField extends Component {
     }
 
     const fileInput = document.getElementsByName(this.props.name || (this.props.field || {}).name)[0];
-    log.debug(fileInput);
+    // log.debug(fileInput);
     fileInput.value = '';
     // log.debug(fileInput);
 
@@ -539,7 +555,7 @@ class FileInputField extends Component {
     // })
 
     // const fileInfo = this.props.value || {};
-    const mimeType = (this.state.files[0] || {}).mimeType;
+    const mimeType = ((this.state.files || [])[0] || {}).mimeType;
     const options = this.props.options || {};
     // const inPlaceImg = ((this.state.files[0] || {}).mimeType || '').startsWith('image/') || true;
     // const fileContent = ((this.state.files[0] || {}).base64 || '').startsWith('data:') ? '' : 'data:' + mimeType + ';base64,' + ((this.state.files[0] || {}).base64 || '');
@@ -563,14 +579,14 @@ class FileInputField extends Component {
       const abc = {
         ...o, previewUrl: o.previewUrl || ("data:" + o.mimeType + ";base64," + o.base64),
       }
-      log.debug(abc);
+      // log.debug(abc);
       return abc;
     }
 
     const maxAllowed = (this.props.options || {}).maxFileCount;
     const filesAmount = (this.state.files || {}).length;
 
-    log.debug(maxAllowed, filesAmount);
+    // log.debug(maxAllowed, filesAmount);
 
     return (
       <div className="wth-100">
@@ -626,7 +642,9 @@ class FileInputField extends Component {
                 .map((obj, i) => {
                   return (
                     <div className="dropzone__holder" key={i}>
-                      <div className={`dropzone__img pointer ${this.props.disabled && 'rad-4 mb-20'}`} style={{ backgroundImage: 'url(' + addPreviewUrl(obj).previewUrl + ')' }} onClick={this.previewSelectedFile(i)}>
+                      <div className={`dropzone__img pointer ${this.props.disabled && 'rad-4 mb-20'}`}
+                        style={{ minWidth: "40px", minHeight: "40px", backgroundImage: 'url(' + addPreviewUrl(obj).previewUrl + ')' }}
+                        onClick={(obj || {}).base64 || (obj || {}).icon ? this.previewSelectedFile(i) : this.downloadFile(i)} >
                         {(!(obj || {}).base64 && !(obj || {}).icon) && <Skeleton height="100px" widthRandomness="0" />}
                         {obj && !(obj.mimeType || '').match(/image/) &&
                           <i className={`fa ${this.icon(i)} fs-38 color-green`}></i>

@@ -18,7 +18,7 @@ import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils';
 import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
@@ -370,10 +370,10 @@ class DtlRecord extends RintagiScreen {
                   initialValues={{
                     cScreenObjHlpId21: currDtl.ScreenObjHlpId21 || '',
                     cCultureId21: CultureId21List.filter(obj => { return obj.key === currDtl.CultureId21 })[0],
-                    cColumnHeader21: formatContent(currDtl.ColumnHeader21 || '', 'MultiLine'),
+                    cColumnHeader21: formatContent(ColumnHeader21 || '', 'MultiLine'),
                     cToolTip21: formatContent(currDtl.ToolTip21 || '', 'TextBox'),
                     cErrMessage21: formatContent(currDtl.ErrMessage21 || '', 'TextBox'),
-                    cTbHint21: formatContent(currDtl.TbHint21 || '', 'MultiLine'),
+                    cTbHint21: formatContent(TbHint21 || '', 'MultiLine'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -482,8 +482,8 @@ class DtlRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ColumnHeader21 || {}).visible &&
-                                <Col lg={12} xl={12}>
+                              {(authCol.ColumnHeader21 || {}).visible &&
+                                <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' />) ||
                                       <label className='form__form-group-label'>{(columnLabel.ColumnHeader21 || {}).ColumnHeader} {(columnLabel.ColumnHeader21 || {}).ToolTip &&
@@ -494,7 +494,7 @@ class DtlRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cColumnHeader21'
                                           disabled={(authCol.ColumnHeader21 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -545,8 +545,8 @@ class DtlRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.TbHint21 || {}).visible &&
-                                <Col lg={12} xl={12}>
+                              {(authCol.TbHint21 || {}).visible &&
+                                <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='20px' />) ||
                                       <label className='form__form-group-label'>{(columnLabel.TbHint21 || {}).ColumnHeader} {(columnLabel.TbHint21 || {}).ToolTip &&
@@ -557,7 +557,7 @@ class DtlRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmColHlpState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cTbHint21'
                                           disabled={(authCol.TbHint21 || {}).readonly ? 'disabled' : ''} />
                                       </div>

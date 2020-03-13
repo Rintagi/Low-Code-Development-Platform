@@ -390,6 +390,30 @@ export function reviseEmbeddedFileObjectFromServer(list, o) {
   return list || (file && [file])
 }
 
+export function decodeEmbeddedFileObjectFromServer(o, asList)
+{
+  if (!o) return null;
+  let file = o;
+  try {
+    file = JSON.parse(o)
+  } catch (e) {
+
+    file = typeof o === "string" 
+      ? {
+        base64: o,
+        fileName: 'image',
+        mimeType: 'image/jpeg',
+        }
+      : Array.isArray(o) && o.length > 0 ? o : undefined
+  }
+  return file 
+    ? (Array.isArray(file) 
+        ? (asList ? file : file[0]) 
+        : (asList ? [file] : file)
+        ) 
+    : null;
+}
+
 export function cleanupReactFileObject(f, columDef, objName) {
   const placeHolder = !f || (objName && ((columDef || {})[objName] || {}).keyId) ? "" : btoa(JSON.stringify({ ts: f.ts }));
   const _x = (f) => (
@@ -516,14 +540,21 @@ export function uploadMultiDoc(uploadService, mstId, dtlId, isMaster, screenColu
   })
 }
 
-export function removeMultiDoc(removeService, mstId, dtlId, isMaster, screenColumnName, docIdList, { dispatch, actionTypeSuccess, actionTypeFailed }) {
+export function removeMultiDoc(removeService, mstId, dtlId, isMaster, screenColumnName, docIdList, { reduxColumnName, dispatch, actionTypeSuccess, actionTypeFailed }) {
   const docId = null, overwrite = true, options = {};
   return {
     screenColumnName: screenColumnName,
     isMaster,
     docList: docIdList,
     actionTypeSuccess,
-    uploadRequest: !docIdList || docIdList.length === 0 ? Promise.resolve({ screenColumnName, result: docIdList }) : removeService(mstId, dtlId, isMaster, screenColumnName, docIdList, options)
+    reduxColumnName: reduxColumnName || screenColumnName,
+    uploadRequest:(!docIdList || docIdList.length === 0 
+        ? Promise.resolve({ screenColumnName, result: docIdList }) 
+        : removeService(mstId, dtlId, isMaster, screenColumnName, docIdList, options)
+    ).catch (error => {
+      log.debug("remove multi doc error", mstId, dtlId, isMaster, docIdList, screenColumnName);
+      return Promise.reject(error);
+    })
   }
 }
 
@@ -585,9 +616,9 @@ export function processMultiDoc(existingDocList, newDocList)
     lastTS: o.ts || undefined,
   }));
   return {
-    newDocs:newDocs,
-    removedDocs:removedDocs,
-    mergedLatestDocs:mergedLatestDocs,
+    newDocs:newDocs || [],
+    removedDocs:removedDocs || [],
+    mergedLatestDocs:mergedLatestDocs || [],
   }
 }
 
@@ -605,6 +636,7 @@ export function makeMultiDocFileObjectFromServer(o, MstKeyName) {
     InputOn: o.InputOn + 'Z',
     DocSize: o.DocSize,
     InputBy: o.LoginName,
+    mimeType: o.MimeType,
   }
 }
 
@@ -914,13 +946,15 @@ export function setupRuntime() {
       }
       else return a;
   },undefined);
-  const apiBasename = origin + appBase;
-  const appDomainUrl = origin + appBase;
+  const apiBasename = origin + (appBase || '');
+  const appDomainUrl = origin + (appBase || '');
   rintagi.apiBasename = rintagi.apiBasename || apiBasename;
   rintagi.appDomainUrl = rintagi.appDomainUrl || appDomainUrl;
   rintagi.appNS = rintagi.appNS || appDomainUrl.replace(origin,'') || '/';
   if (location.pathname === "/" && location.protocol === "http:" && location.port >= 3000 && location.port <= 3100) {
       rintagi.apiBasename = (rintagi.localDev || {}).apiBasename || rintagi.apiBasename;
+      rintagi.appNS = (rintagi.localDev || {}).appNS || rintagi.appNS;
+      rintagi.appDomainUrl = (rintagi.localDev || {}).appDomainUrl || rintagi.appDomainUrl;
   }
   document.Rintagi = rintagi;
 };

@@ -1,10 +1,15 @@
 import { getAsyncTypes } from '../helpers/actionType'
 import { dispatchWithNotification } from '../redux/Notification'
-import { objectListToDict, mergeArray } from '../helpers/utils'
+import {
+  objectListToDict, mergeArray
+  , makeMultiDocFileObjectFromServer
+  , reviseMultiDocFileObjectFromServer
+  , reviseDocList, removeDocList
+} from '../helpers/utils'
 import { RememberCurrent, GetCurrent } from './Persist'
 import ButtonDef from './_ScreenButtonDef'
 import log from '../helpers/logger'
-import {} from '../helpers/actionType'
+import { } from '../helpers/actionType'
 
 export const initialRintagiScreenReduxState = {
 
@@ -39,8 +44,8 @@ export const initialRintagiScreenReduxState = {
     AddMstMessage: "Click here to start a new master",
     NewMstLabel: "New master",
     CancelFileButton: "Cancel",
-    DeleteFileButton: "Delete", 
-    FileLabel: "File",      
+    DeleteFileButton: "Delete",
+    FileLabel: "File",
   },
   Buttons: {
     ...ButtonDef,
@@ -106,104 +111,104 @@ export function GetDropdownAction(state) {
 
 /* internal helper functions */
 function ReviseButton(button, buttonDef, label) {
-    if (button) {
-      const buttonType = buttonDef.ButtonTypeName
-      if ((button.RowButtons || {})[buttonType + "Button"]) {
-        button.RowButtons[buttonType + "Button"].visible =  buttonDef.ButtonVisible === "Y" && (buttonDef.RowVisible === "L" || buttonDef.RowVisible === "B");
-        button.RowButtons[buttonType + "Button"].expose =  buttonDef.RowVisible === "B";
-        if (buttonDef.ButtonName) button.RowButtons[buttonType + "Button"].label = buttonDef.ButtonName;
-        if (buttonDef.ButtonLongNm) button.RowButtons[buttonType + "Button"].labelLong = buttonDef.ButtonLongNm;
-        if (label) button.RowButtons[buttonType + "Button"].label = label;
-        button.RowButtons[buttonType + "Button"].tid = buttonDef.ButtonTypeId;
-      }
-      if ((button.DropdownMenuButtons || {})[buttonType + "Button"]) {
-        button.DropdownMenuButtons[buttonType + "Button"].visible = buttonDef.ButtonVisible === "Y" && (buttonDef.TopVisible === "L" || buttonDef.TopVisible === "B");
-        button.DropdownMenuButtons[buttonType + "Button"].expose = buttonDef.TopVisible === "B";
-        if (buttonDef.ButtonName) button.DropdownMenuButtons[buttonType + "Button"].label = buttonDef.ButtonName;
-        if (buttonDef.ButtonLongNm) button.DropdownMenuButtons[buttonType + "Button"].labelLong = buttonDef.ButtonLongNm;
-        if (label) button.DropdownMenuButtons[buttonType + "Button"].label = label;
-        button.DropdownMenuButtons[buttonType + "Button"].tid = buttonDef.ButtonTypeId;
-      }
-      if ((button.BottomButtons || {})[buttonType + "Button"]) {
-        button.BottomButtons[buttonType + "Button"].visible = buttonDef.ButtonVisible === "Y" && (buttonDef.BotVisible === "L" || buttonDef.BotVisible === "B");
-        button.BottomButtons[buttonType + "Button"].expose = buttonDef.BotVisible === "B";
-        if (buttonDef.ButtonName) button.BottomButtons[buttonType + "Button"].label = buttonDef.ButtonName;
-        if (buttonDef.ButtonLongNm) button.BottomButtons[buttonType + "Button"].labelLong = buttonDef.ButtonLongNm;
-        if (label) button.BottomButtons[buttonType + "Button"].label = label;
-        button.BottomButtons[buttonType + "Button"].tid = buttonDef.ButtonTypeId;
-      }
+  if (button) {
+    const buttonType = buttonDef.ButtonTypeName
+    if ((button.RowButtons || {})[buttonType + "Button"]) {
+      button.RowButtons[buttonType + "Button"].visible = buttonDef.ButtonVisible === "Y" && (buttonDef.RowVisible === "L" || buttonDef.RowVisible === "B");
+      button.RowButtons[buttonType + "Button"].expose = buttonDef.RowVisible === "B";
+      if (buttonDef.ButtonName) button.RowButtons[buttonType + "Button"].label = buttonDef.ButtonName;
+      if (buttonDef.ButtonLongNm) button.RowButtons[buttonType + "Button"].labelLong = buttonDef.ButtonLongNm;
+      if (label) button.RowButtons[buttonType + "Button"].label = label;
+      button.RowButtons[buttonType + "Button"].tid = buttonDef.ButtonTypeId;
+    }
+    if ((button.DropdownMenuButtons || {})[buttonType + "Button"]) {
+      button.DropdownMenuButtons[buttonType + "Button"].visible = buttonDef.ButtonVisible === "Y" && (buttonDef.TopVisible === "L" || buttonDef.TopVisible === "B");
+      button.DropdownMenuButtons[buttonType + "Button"].expose = buttonDef.TopVisible === "B";
+      if (buttonDef.ButtonName) button.DropdownMenuButtons[buttonType + "Button"].label = buttonDef.ButtonName;
+      if (buttonDef.ButtonLongNm) button.DropdownMenuButtons[buttonType + "Button"].labelLong = buttonDef.ButtonLongNm;
+      if (label) button.DropdownMenuButtons[buttonType + "Button"].label = label;
+      button.DropdownMenuButtons[buttonType + "Button"].tid = buttonDef.ButtonTypeId;
+    }
+    if ((button.BottomButtons || {})[buttonType + "Button"]) {
+      button.BottomButtons[buttonType + "Button"].visible = buttonDef.ButtonVisible === "Y" && (buttonDef.BotVisible === "L" || buttonDef.BotVisible === "B");
+      button.BottomButtons[buttonType + "Button"].expose = buttonDef.BotVisible === "B";
+      if (buttonDef.ButtonName) button.BottomButtons[buttonType + "Button"].label = buttonDef.ButtonName;
+      if (buttonDef.ButtonLongNm) button.BottomButtons[buttonType + "Button"].labelLong = buttonDef.ButtonLongNm;
+      if (label) button.BottomButtons[buttonType + "Button"].label = label;
+      button.BottomButtons[buttonType + "Button"].tid = buttonDef.ButtonTypeId;
     }
   }
+}
 
-  function MakeAutocompleteSearchValue(v) {
-    return v ? "**" + v : "";
-  } 
-  
-  function ReviseScreenButtons(Buttons, ScreenButtons, Label) {
-    const revisedLabels = Label || {};
-    return (ScreenButtons || []).reduce(
-      (b,v,i,_a)=>{
-        const buttonType = v.ButtonTypeName;
-        const ml = b.MstList;
-        const m = b.Mst;
-        const dl = b.DtlList;
-        const d = b.Dtl;
-        ReviseButton(b.MstList,v,revisedLabels[buttonType + "Button"]);
-        ReviseButton(b.Mst,v,revisedLabels[buttonType + "Button"]);
-        ReviseButton(b.DtlList,v,revisedLabels[buttonType + "Button"]);
-        ReviseButton(b.Dtl,v,revisedLabels[buttonType + "Button"]);
-        return b;
-      },
-      JSON.parse(JSON.stringify(Buttons))
-    )
-  }
-  
-  function RefreshMst(mst, refresh) { return refresh ? { ...mst, key: Date.now() } : mst }
-  function RefreshEditDtl(dtl, refresh) { return refresh ? { ...dtl, key: Date.now() } : dtl }
-  function ReviseSearchListSelection(SearchList, payload, masterKeyColumnName) {
-    return SearchList
-      .filter(v => v.key || v[masterKeyColumnName])
-      .map(
-        (v, i) => {
-          return {
-            ...v,
-            isSelected: (payload.SelectedKeyId && payload.SelectedKeyId === (v[masterKeyColumnName] || v.key))
-          }
+function MakeAutocompleteSearchValue(v) {
+  return v ? "**" + v : "";
+}
+
+function ReviseScreenButtons(Buttons, ScreenButtons, Label) {
+  const revisedLabels = Label || {};
+  return (ScreenButtons || []).reduce(
+    (b, v, i, _a) => {
+      const buttonType = v.ButtonTypeName;
+      const ml = b.MstList;
+      const m = b.Mst;
+      const dl = b.DtlList;
+      const d = b.Dtl;
+      ReviseButton(b.MstList, v, revisedLabels[buttonType + "Button"]);
+      ReviseButton(b.Mst, v, revisedLabels[buttonType + "Button"]);
+      ReviseButton(b.DtlList, v, revisedLabels[buttonType + "Button"]);
+      ReviseButton(b.Dtl, v, revisedLabels[buttonType + "Button"]);
+      return b;
+    },
+    JSON.parse(JSON.stringify(Buttons))
+  )
+}
+
+function RefreshMst(mst, refresh) { return refresh ? { ...mst, key: Date.now() } : mst }
+function RefreshEditDtl(dtl, refresh) { return refresh ? { ...dtl, key: Date.now() } : dtl }
+function ReviseSearchListSelection(SearchList, payload, masterKeyColumnName) {
+  return SearchList
+    .filter(v => v.key || v[masterKeyColumnName])
+    .map(
+      (v, i) => {
+        return {
+          ...v,
+          isSelected: (payload.SelectedKeyId && payload.SelectedKeyId === (v[masterKeyColumnName] || v.key))
         }
-      )
-  }
-  
+      }
+    )
+}
 
-  function ExpandDtlFilter(authCol, columnLabel) {
-    const cols = authCol
-      .filter((v) => v.MasterTable === "N" && v.ColVisible !== "N" && !v.DisplayName.match(/Button/g))
-      .map((v) => ({ ColName: v.ColName, ColumnHeader: (columnLabel[v.ColName] || {}).ColumnHeader || v.ColName }));
-    return cols;
-  }
 
-  function AutoCompleteSearch({dispatch, v, topN, filterOn, searchApi, SucceededActionType, FailedActionType, ColumnName, forDtl, forMst}) {
+function ExpandDtlFilter(authCol, columnLabel) {
+  const cols = authCol
+    .filter((v) => v.MasterTable === "N" && v.ColVisible !== "N" && !v.DisplayName.match(/Button/g))
+    .map((v) => ({ ColName: v.ColName, ColumnHeader: (columnLabel[v.ColName] || {}).ColumnHeader || v.ColName }));
+  return cols;
+}
 
-    const keyLookup = (v || '').startsWith("**")
-        ? searchApi(v, topN, filterOn)
-        : new Promise((resolve) => resolve({ data: { data: [] } }));
-    const promises = [
-        keyLookup,
-        searchApi((v || '').startsWith("**") ? null : v, topN, filterOn),
-    ];
-    return Promise.all(promises)
-      .then(([keyLookup, ret]) => {
-        dispatchWithNotification(dispatch, {
-          type: SucceededActionType, 
-          payload: {
-            ColumnName: ColumnName,
-            forDtl: forDtl,
-            forMst: forMst,
-            data: mergeArray(keyLookup.data.data, ret.data.data, (o) => o.key),
-            backfill: (v || '').startsWith("**"),
+function AutoCompleteSearch({ dispatch, v, topN, filterOn, searchApi, SucceededActionType, FailedActionType, ColumnName, forDtl, forMst }) {
+
+  const keyLookup = (v || '').startsWith("**")
+    ? searchApi(v, topN, filterOn)
+    : new Promise((resolve) => resolve({ data: { data: [] } }));
+  const promises = [
+    keyLookup,
+    searchApi((v || '').startsWith("**") ? null : v, topN, filterOn),
+  ];
+  return Promise.all(promises)
+    .then(([keyLookup, ret]) => {
+      dispatchWithNotification(dispatch, {
+        type: SucceededActionType,
+        payload: {
+          ColumnName: ColumnName,
+          forDtl: forDtl,
+          forMst: forMst,
+          data: mergeArray(keyLookup.data.data, ret.data.data, (o) => o.key),
+          backfill: (v || '').startsWith("**"),
         }
       });
     }
-      ,(err) => {
+      , (err) => {
         log.trace(err);
       })
     .catch(err => {
@@ -212,22 +217,22 @@ function ReviseButton(button, buttonDef, label) {
 }
 
 export class RintagiScreenRedux {
-  GetScreenName() {throw new TypeError(this + " Must implement GetScreenName function");}
-  GetMstKeyColumnName() {throw new TypeError(this + " Must implement GetMstKeyColumnName function");}
-  GetDtlKeyColumnName() {throw new TypeError(this + " Must implement GetDtlKeyColumnName function");}
-  GetPersistDtlName() {throw new TypeError(this + " Must implement GetPersistDtlName function");}
-  GetPersistMstName() {throw new TypeError(this + " Must implement GetPersistMstName function");}
-  GetWebService() {throw new TypeError(this + " Must implement GetWebSerice function");}
-  GetReducerActionTypePrefix(){throw new TypeError(this + " Must implement GetReducerActionTypePrefix function");};
-  GetActionType(actionTypeName) {throw new TypeError(this + " Must implement GetActionType function");}
-  GetInitState(){throw new TypeError(this + " Must implement GetInitState function");};
-  GetDefaultDtl(state) {throw new TypeError(this + " Must implement GetDefaultDtl function");}
-  ExpandMst(mst, state, copy){throw new TypeError(this + " Must implement ExpandMst function");};
-  ExpandDtl(dtlList, copy){throw new TypeError(this + " Must implement ExpandDtl function");};
-  SearchListToSelectList(state) {throw new TypeError(this + " Must implement SearchListToSelectList function");}
+  GetScreenName() { throw new TypeError(this + " Must implement GetScreenName function"); }
+  GetMstKeyColumnName() { throw new TypeError(this + " Must implement GetMstKeyColumnName function"); }
+  GetDtlKeyColumnName() { throw new TypeError(this + " Must implement GetDtlKeyColumnName function"); }
+  GetPersistDtlName() { throw new TypeError(this + " Must implement GetPersistDtlName function"); }
+  GetPersistMstName() { throw new TypeError(this + " Must implement GetPersistMstName function"); }
+  GetWebService() { throw new TypeError(this + " Must implement GetWebSerice function"); }
+  GetReducerActionTypePrefix() { throw new TypeError(this + " Must implement GetReducerActionTypePrefix function"); };
+  GetActionType(actionTypeName) { throw new TypeError(this + " Must implement GetActionType function"); }
+  GetInitState() { throw new TypeError(this + " Must implement GetInitState function"); };
+  GetDefaultDtl(state) { throw new TypeError(this + " Must implement GetDefaultDtl function"); }
+  ExpandMst(mst, state, copy) { throw new TypeError(this + " Must implement ExpandMst function"); };
+  ExpandDtl(dtlList, copy) { throw new TypeError(this + " Must implement ExpandDtl function"); };
+  SearchListToSelectList(state) { throw new TypeError(this + " Must implement SearchListToSelectList function"); }
 
   /* reducer */
-  ExpandDtlReducer(dtlList,copy) {
+  ExpandDtlReducer(dtlList, copy) {
     if (!copy) return dtlList;
     else return dtlList.map(v => {
       return {
@@ -237,7 +242,7 @@ export class RintagiScreenRedux {
       }
     });
   }
-  ViewMoreDetailReducer(state,action) { 
+  ViewMoreDetailReducer(state, action) {
     return {
       ...state,
       DtlFilter: {
@@ -246,7 +251,7 @@ export class RintagiScreenRedux {
       },
     };
   }
-  ToggleMstListFilterReducer(state,action) { 
+  ToggleMstListFilterReducer(state, action) {
     return {
       ...state,
       ScreenCriteria: {
@@ -255,7 +260,7 @@ export class RintagiScreenRedux {
       }
     }
   }
-  ToggleDtlListFilterReducer(state,action) { 
+  ToggleDtlListFilterReducer(state, action) {
     return {
       ...state,
       DtlFilter: {
@@ -264,8 +269,8 @@ export class RintagiScreenRedux {
       }
     }
   }
-  ChangeDtlListFilterReducer(state,action) {
-    const payload = action.payload;     
+  ChangeDtlListFilterReducer(state, action) {
+    const payload = action.payload;
     return {
       ...state,
       DtlFilter: {
@@ -276,14 +281,14 @@ export class RintagiScreenRedux {
     }
   };
 
-  LoadPageReducer(state,action){
+  LoadPageReducer(state, action) {
     const actionTypeString = action.type;
 
     if (actionTypeString.endsWith(".STARTED")) {
-      return {...state, page_loading: true};
+      return { ...state, page_loading: true };
 
     } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
-      return {...state, page_loading: false, access_denied: (action.payload.error || {}).errType === "access denied error" };
+      return { ...state, page_loading: false, access_denied: (action.payload.error || {}).errType === "access denied error" };
     } else if (actionTypeString.endsWith(".SUCCEEDED")) {
 
       const payload = action.payload;
@@ -314,7 +319,7 @@ export class RintagiScreenRedux {
           ...state.Label,
           ...payload.Label,
         },
-        SystemLabel:{
+        SystemLabel: {
           ...state.SystemLabel,
           ...payload.SystemLabel,
         },
@@ -330,22 +335,22 @@ export class RintagiScreenRedux {
         page_loading: false,
         initialized: true,
         access_denied: false,
-        Buttons : {
+        Buttons: {
           ...ReviseScreenButtons(state.Buttons, payload.ScreenButtonHlp, payload.Label),
-          key:Date.now(),
+          key: Date.now(),
         },
         key: (payload.ScopeKey || {}).key,
       };
       return (revisedState);
     }
   };
-  GetSearchListReducer(state,action){
+  GetSearchListReducer(state, action) {
     const actionTypeString = action.type;
     if (actionTypeString.endsWith(".STARTED")) {
-      return {...state, searchlist_loading: true};
+      return { ...state, searchlist_loading: true };
 
     } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
-      return {...state, searchlist_loading: false };
+      return { ...state, searchlist_loading: false };
     }
     else if (actionTypeString.endsWith(".SUCCEEDED")) {
       const payload = action.payload;
@@ -360,59 +365,60 @@ export class RintagiScreenRedux {
           SearchStr: payload.SearchStr,
           TopN: payload.TopN,
           Total: payload.Total,
-          MatchCount:payload.MatchCount,
-          FilterId: payload.FilterId
+          MatchCount: payload.MatchCount,
+          FilterId: payload.FilterId,
+          key: Date.now(),
         },
         searchlist_loading: false,
         searchListVersion: Date.now(),
       };
     }
   };
-  SelectMstReducer(state,action){
-    const payload = action.payload;      
+  SelectMstReducer(state, action) {
+    const payload = action.payload;
     return {
-        ...state,
-        Mst: {
-          ...state.Mst,
-        },
-        SearchList: {
-          key: Date.now(),
-          data: ReviseSearchListSelection((state.SearchList || {}).data, payload,this.GetMstKeyColumnName()),
-        },
-        searchListVersion: Date.now(),
-        mstVersion: Date.now(),
-      };
+      ...state,
+      Mst: {
+        ...state.Mst,
+      },
+      SearchList: {
+        key: Date.now(),
+        data: ReviseSearchListSelection((state.SearchList || {}).data, payload, this.GetMstKeyColumnName()),
+      },
+      searchListVersion: Date.now(),
+      mstVersion: Date.now(),
+    };
   };
-  GetMstReducer(state,action){
+  GetMstReducer(state, action) {
     const actionTypeString = action.type;
     if (actionTypeString.endsWith(".STARTED")) {
-      return {...state, page_loading: true};
+      return { ...state, page_loading: true };
 
     } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
-      return {...state, page_loading: false };
+      return { ...state, page_loading: false };
     }
     else if (actionTypeString.endsWith(".SUCCEEDED")) {
-      const payload = action.payload;      
+      const payload = action.payload;
       const mstKeyColumnName = this.GetMstKeyColumnName();
       return {
-          ...state
-          , Mst: this.ExpandMst(payload.Mst, state, payload.copy)
-          , SearchList: {
-            key: Date.now(),
-            data: ReviseSearchListSelection((state.SearchList || {}).data, { ...payload, SelectedKeyId: payload.Mst[mstKeyColumnName]},mstKeyColumnName)
-          }
-          , EditDtl: {
-            ...this.GetDefaultDtl(state),
-            key: Date.now()
-          }
-          , page_loading: false
-          , searchListVersion: Date.now()
-          , mstVersion: Date.now()
-        };
+        ...state
+        , Mst: this.ExpandMst(payload.Mst, state, payload.copy)
+        , SearchList: {
+          key: Date.now(),
+          data: ReviseSearchListSelection((state.SearchList || {}).data, { ...payload, SelectedKeyId: payload.Mst[mstKeyColumnName] }, mstKeyColumnName)
+        }
+        , EditDtl: {
+          ...this.GetDefaultDtl(state),
+          key: Date.now()
+        }
+        , page_loading: false
+        , searchListVersion: Date.now()
+        , mstVersion: Date.now()
+      };
     }
   };
-  GetDtlListReducer(state,action){
-    const payload = action.payload;      
+  GetDtlListReducer(state, action) {
+    const payload = action.payload;
     return {
       ...state
       , DtlList: {
@@ -422,60 +428,184 @@ export class RintagiScreenRedux {
     };
   };
 
-  GetDdlReducer(state,action) {
+  GetDdlReducer(state, action) {
     const actionTypeString = action.type;
     if (actionTypeString.endsWith(".STARTED")) {
       return state;
     } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
       return state;
     } else if (actionTypeString.endsWith(".SUCCEEDED")) {
-      const payload = action.payload;            
+      const payload = action.payload;
       return {
-          ...state,
-          ddl:
-          {
-            ...state.ddl,
-            [payload.ColumnName]: payload.data || state.ddl[payload.ColumnName]
-          },
-          EditDtl: RefreshEditDtl(state.EditDtl,payload.forDtl && payload.backfill),
-          Mst: RefreshMst(state.Mst,payload.forMst && payload.backfill),
-        };
+        ...state,
+        ddl:
+        {
+          ...state.ddl,
+          [payload.ColumnName]: payload.data || state.ddl[payload.ColumnName]
+        },
+        EditDtl: RefreshEditDtl(state.EditDtl, payload.forDtl && payload.backfill),
+        Mst: RefreshMst(state.Mst, payload.forMst && payload.backfill),
+      };
     }
   }
 
-  GetColumnOnDemandReducer(state,action) {
+  GetColumnOnDemandReducer(state, action) {
     const actionTypeString = action.type;
     if (actionTypeString.endsWith(".STARTED")) {
       return state;
     } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
       return state;
     } else if (actionTypeString.endsWith(".SUCCEEDED")) {
-      const payload = action.payload;   
+      const payload = action.payload;
       if (payload.forMst) {
         return {
           ...state,
           Mst: {
             ...state.Mst,
-            [payload.ColumnName]:payload.data,
+            [payload.ColumnName]: payload.data,
             key: Date.now()
           }
         };
 
-      } 
+      }
       else {
         return {
           ...state,
           EditDtl: {
             ...state.EditDtl,
-            [payload.ColumnName]:payload.data,
+            [payload.ColumnName]: payload.data,
             key: Date.now()
           }
         };
-      }        
+      }
     }
-  }  
-  EditDtlReducer(state,action){
-    const payload = action.payload;      
+  }
+  GetDocumentListReducer(state, action) {
+    const actionTypeString = action.type;
+    if (actionTypeString.endsWith(".STARTED")) {
+      return state;
+    } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
+      return state;
+    } else if (actionTypeString.endsWith(".SUCCEEDED")) {
+      const payload = action.payload;
+      if (payload.forMst) {
+        return {
+          ...state,
+          Mst: {
+            ...state.Mst,
+            [(payload.reduxColumnName || payload.ColumnName)]: ((payload || {}).docList || []).map((o) => ({ ...makeMultiDocFileObjectFromServer(o), MasterId: payload.MasterId })),
+            key: Date.now()
+          }
+        };
+
+      }
+      else {
+        return {
+          ...state,
+          EditDtl: {
+            ...state.EditDtl,
+            [(payload.reduxColumnName || payload.ColumnName)]: ((payload || {}).docList || []).map((o) => ({ ...makeMultiDocFileObjectFromServer(o), MasterId: payload.MasterId })),
+            key: Date.now()
+          }
+        };
+      }
+    }
+  }
+  GetDocumentContentReducer(state, action) {
+    const actionTypeString = action.type;
+    if (actionTypeString.endsWith(".STARTED")) {
+      return state;
+    } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
+      return state;
+    } else if (actionTypeString.endsWith(".SUCCEEDED")) {
+      const payload = action.payload;
+      if (payload.forMst) {
+        return {
+          ...state,
+          Mst: {
+            ...state.Mst,
+            [(payload.reduxColumnName || payload.ColumnName)]: reviseMultiDocFileObjectFromServer((state.Mst || {})[(payload.reduxColumnName || payload.ColumnName)], payload.result),
+            key: Date.now()
+          }
+        };
+
+      }
+      else {
+        return {
+          ...state,
+          EditDtl: {
+            ...state.EditDtl,
+            [(payload.reduxColumnName || payload.ColumnName)]: reviseMultiDocFileObjectFromServer((state.EditDtl || {})[(payload.reduxColumnName || payload.ColumnName)], payload.result),
+            key: Date.now()
+          }
+        };
+      }
+    }
+  }
+  AddDocumentContentReducer(state, action) {
+    const actionTypeString = action.type;
+    if (actionTypeString.endsWith(".STARTED")) {
+      return state;
+    } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
+      return state;
+    } else if (actionTypeString.endsWith(".SUCCEEDED")) {
+      const payload = action.payload;
+      if (payload.forMst) {
+        return {
+          ...state,
+          Mst: {
+            ...state.Mst,
+            [(payload.reduxColumnName || payload.ColumnName)]: reviseDocList((state.Mst || {})[(payload.reduxColumnName || payload.ColumnName)], { ...payload.src, ...payload.result }),
+            key: Date.now()
+          }
+        };
+
+      }
+      else {
+        return {
+          ...state,
+          EditDtl: {
+            ...state.EditDtl,
+            [(payload.reduxColumnName || payload.ColumnName)]: reviseDocList((state.EditDtl || {})[(payload.reduxColumnName || payload.ColumnName)], { ...payload.src, ...payload.result }),
+            key: Date.now()
+          }
+        };
+      }
+    }
+  }
+  DelDocumentContentReducer(state, action) {
+    const actionTypeString = action.type;
+    if (actionTypeString.endsWith(".STARTED")) {
+      return state;
+    } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
+      return state;
+    } else if (actionTypeString.endsWith(".SUCCEEDED")) {
+      const payload = action.payload;
+      if (payload.forMst) {
+        return {
+          ...state,
+          Mst: {
+            ...state.Mst,
+            [(payload.reduxColumnName || payload.ColumnName)]: removeDocList((state.Mst || {})[(payload.reduxColumnName || payload.ColumnName)], payload.result.docIdList),
+            key: Date.now()
+          }
+        };
+
+      }
+      else {
+        return {
+          ...state,
+          EditDtl: {
+            ...state.EditDtl,
+            [(payload.reduxColumnName || payload.ColumnName)]: removeDocList((state.EditDtl || {})[(payload.reduxColumnName || payload.ColumnName)], payload.result.docIdList),
+            key: Date.now()
+          }
+        };
+      }
+    }
+  }
+  EditDtlReducer(state, action) {
+    const payload = action.payload;
     return {
       ...state
       ,
@@ -487,11 +617,11 @@ export class RintagiScreenRedux {
       }
     };
   };
-  SaveMstReducer(state,action){
+  SaveMstReducer(state, action) {
     const actionTypeString = action.type;
-    const payload = action.payload;      
+    const payload = action.payload;
     if (actionTypeString.endsWith(".STARTED")) {
-      return {...state , page_saving: true, submittedOn:Date.now()};
+      return { ...state, page_saving: true, submittedOn: Date.now() };
     } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
       return { ...state, page_saving: false, };
     } else if (actionTypeString.endsWith(".SUCCEEDED")) {
@@ -509,10 +639,10 @@ export class RintagiScreenRedux {
     }
 
   };
-  SaveCriReducer(state,action){
+  SaveCriReducer(state, action) {
     const actionTypeString = action.type;
     if (actionTypeString.endsWith(".STARTED")) {
-      return {...state , page_saving: true};
+      return { ...state, page_saving: true };
 
     } else if (actionTypeString.endsWith(".FAILED") || actionTypeString.endsWith(".ENDED")) {
       return { ...state, page_saving: false };
@@ -524,7 +654,7 @@ export class RintagiScreenRedux {
           ...state.Mst,
           key: Date.now()
         },
-        ScreenCriteria: this.ReviseScreenCri(state,action), 
+        ScreenCriteria: this.ReviseScreenCri(state, action),
         page_saving: false
       };
   };
@@ -540,10 +670,10 @@ export class RintagiScreenRedux {
     const LOAD_PAGE = this.GetActionType("LOAD_PAGE");
     const isInitialized = current.initialized;
     const scopeKey = current.key;
-    const scope = (({ CompanyId, ProjectId, SystemId, CultureId, key }) => ({ CompanyId, ProjectId, SystemId, CultureId,key }))(user || {});
+    const scope = (({ CompanyId, ProjectId, SystemId, CultureId, key }) => ({ CompanyId, ProjectId, SystemId, CultureId, key }))(user || {});
     const screenName = this.GetScreenName();
     const _this = this;
-    if (isInitialized && scopeKey && scopeKey < user.key ) {
+    if (isInitialized && scopeKey && scopeKey < user.key) {
       return new Promise(function (resolve, reject) {
         resolve({
           SystemLabel: current.SystemLabel,
@@ -581,10 +711,10 @@ export class RintagiScreenRedux {
 
       return Promise.all(promises)
         .then(
-          ([SystemLabels,AuthCol, AuthRow, ColumnLabel, ScreenHlp, ScreenFilter, ScreenCriteria, ScreenButtonHlp, Labels, NewMst, NewDtl, ...Rest
+          ([SystemLabels, AuthCol, AuthRow, ColumnLabel, ScreenHlp, ScreenFilter, ScreenCriteria, ScreenButtonHlp, Labels, NewMst, NewDtl, ...Rest
           ]) => {
             const payload = {
-              SystemLabel: objectListToDict(SystemLabels.data.data,"LabelKey", (v) => (v.LabelText)),
+              SystemLabel: objectListToDict(SystemLabels.data.data, "LabelKey", (v) => (v.LabelText)),
               AuthCol: AuthCol.data.data,
               AuthRow: AuthRow.data.data,
               ColumnLabel: ColumnLabel.data.data,
@@ -609,15 +739,17 @@ export class RintagiScreenRedux {
           (error) => {
             log.debug(error);
             dispatchWithNotification(dispatch, { type: LOAD_PAGE.FAILED, payload: { error: error } })
+            return Promise.reject(error);
           }
         )
         .catch(error => {
           log.debug(error);
+          return Promise.reject(error);
         });
     }
   }
-  
-  
+
+
   /* exposed action creators via 'this' */
   LoadPage(src, options) {
     const screenName = this.GetScreenName();
@@ -636,12 +768,16 @@ export class RintagiScreenRedux {
       return this.LoadPageStaticData(dispatch, apiService, user, current)
         .then(
           (payload) => {
-            this.LoadSearchList(src, mstId, options, searchStr, topN, filterId)(dispatch, getState, { webApi });
+            return this.LoadSearchList(src, mstId, options, searchStr, topN, filterId)(dispatch, getState, { webApi });
           }
           ,
           (error) => {
             log.debug(error);
-          });
+            return Promise.reject(error);
+          })
+        .catch(error => {
+          return Promise.reject(error);
+        });
     }).bind(this);
   }
 
@@ -666,17 +802,15 @@ export class RintagiScreenRedux {
               FilterId: '',
               SearchList: ret.data.SearchList || [],
               SelectedKeyId: '',
-              MatchCount: (ret.data.SearchList || []).length,
-            } 
+              MatchCount: (ret.data.SearchList || []).length + 5,
+            }
           });
           return ret;
-        },
+        })
+        .catch(
           (error => {
             dispatchWithNotification(dispatch, { type: GET_SEARCH_LIST.FAILED, payload: { error: error } })
-          })
-        ).catch(
-          (error => {
-            dispatchWithNotification(dispatch, { type: GET_SEARCH_LIST.FAILED, payload: { error: error } })
+            return Promise.reject(error);
           })
         )
     }).bind(this);
@@ -701,8 +835,8 @@ export class RintagiScreenRedux {
           ? (current.Mst || {})[mstKeyColumeName] || rememberedMstId
           : undefined);
       dispatchWithNotification(dispatch, { type: GET_SEARCH_LIST.STARTED, payload: {} });
-  
-      apiService[searchListApiName](searchStr, topN, filterId)
+
+      return apiService[searchListApiName](searchStr, topN, filterId)
         .then(
           (SearchList => {
             return dispatchWithNotification(dispatch, {
@@ -714,21 +848,25 @@ export class RintagiScreenRedux {
                 FilterId: filterId,
                 SearchList: SearchList.data.data,
                 SelectedKeyId: currKeyId,
-                MatchCount:SearchList.data.matchCount,
+                MatchCount: SearchList.data.matchCount,
               }
             }).then(
               () => {
                 //this.LoadMst(currKeyId || mstId, src, options)(dispatch, getState, { webApi });
                 const _currKeyId = mstId === '!' ? ((((SearchList || {}).data || {}).data || [])[0] || {}).key : currKeyId;
                 this.LoadMst((mstId === '!' && !_currKeyId) ? 0 : (_currKeyId || mstId), src, options)(dispatch, getState, { webApi });
+                return Promise.resolve(SearchList);
               }
             )
           })
           , (error => {
             log.debug(error);
-            dispatchWithNotification(dispatch, { type: GET_SEARCH_LIST.FAILED, payload: { error: error } })
+            dispatchWithNotification(dispatch, { type: GET_SEARCH_LIST.FAILED, payload: { error: error } });
+            return Promise.reject(error);
           })
-        )
+        ).catch(error => {
+          return Promise.reject(error);
+        })
     }).bind(this);
   }
   LoadMst(mstId, src, options = {}) {
@@ -754,16 +892,16 @@ export class RintagiScreenRedux {
       const currMst = current.Mst;
       const keyId = mstId !== '_' ? (mstId || ({}).key) : mstId && (rememberedMst || {})[mstKeyColumeName];
       const { dtlId, copy, refreshCri } = options;
-      const currentDtlList = (current.DtlList || {}).data || [] ;
-      
+      const currentDtlList = (current.DtlList || {}).data || [];
+
       if (keyId
         //&& src !== "Dtl" && src !== "DtlList" 
         &&
-        ((currMst[mstKeyColumeName] !== keyId) || true )
+        ((currMst[mstKeyColumeName] !== keyId) || true)
       ) {
-        dispatch({ type: GET_MST.STARTED, payload: { SelectedKeyId: keyId} })
+        dispatch({ type: GET_MST.STARTED, payload: { SelectedKeyId: keyId } })
 
-        Promise.all([
+        return Promise.all([
           apiService[getMstApiName](keyId),
           apiService[getDtlListApiName](keyId),
         ])
@@ -772,34 +910,38 @@ export class RintagiScreenRedux {
               const revisedMst = this.ExpandMst({
                 ...mst.data[0],
                 [mstKeyColumeName]: copy ? null : mst.data[0][mstKeyColumeName]
-              },current,copy);
+              }, current, copy);
               RememberCurrent(persistMstName, revisedMst);
               // setTimeout(() => {
-                dispatchWithNotification(dispatch, { type: GET_MST.SUCCEEDED, payload: { Mst: revisedMst, message: copy ? "This is a new copy of the master" : "", copy, Src: src } })
-                dispatchWithNotification(dispatch, { type: GET_DTL_LIST.SUCCEEDED, payload: { Dtl: dtl.data, copy, Src: src } });
+              dispatchWithNotification(dispatch, { type: GET_MST.SUCCEEDED, payload: { Mst: revisedMst, message: copy ? "This is a new copy of the master" : "", copy, Src: src } })
+              dispatchWithNotification(dispatch, { type: GET_DTL_LIST.SUCCEEDED, payload: { Dtl: dtl.data, copy, Src: src } });
               // }, 2000);
-              this.BackFillMstAsyncColumns(revisedMst,dispatch,getState,{webApi});
+              this.BackFillMstAsyncColumns(revisedMst, dispatch, getState, { webApi });
               if (dtlId) {
                 this.SelectDtl(mstId, dtlId, -1)(dispatch, getState, { webApi });
               }
               else {
-                this.BackFillDtlAsyncColumns(revisedMst, newDtl, dispatch,getState,{webApi});
+                this.BackFillDtlAsyncColumns(revisedMst, newDtl, dispatch, getState, { webApi });
               }
-            } 
+              return revisedMst;
+            }
             else {
-                RememberCurrent(persistMstName,null);
-                dispatchWithNotification(dispatch, { type: GET_MST.FAILED, payload: {message: "failed to load required record " + keyId} });
+              RememberCurrent(persistMstName, null);
+              dispatchWithNotification(dispatch, { type: GET_MST.FAILED, payload: { message: "failed to load required record " + keyId } });
+              return Promise.resolve({})
             }
           },
             (err) => {
               dispatchWithNotification(dispatch, { type: GET_MST.FAILED, payload: {} })
               dispatchWithNotification(dispatch, { type: GET_DTL_LIST.FAILED, payload: {} })
+              return Promise.reject(err);
             }
           )
           .catch(error => {
             log.debug(error);
             dispatchWithNotification(dispatch, { type: GET_MST.FAILED, payload: {} })
             dispatchWithNotification(dispatch, { type: GET_DTL_LIST.FAILED, payload: {} })
+            return Promise.reject(error);
           })
       }
       else {
@@ -807,24 +949,26 @@ export class RintagiScreenRedux {
         const revisedMst = keyId ? currMst : (useCopy || refreshCri ? (rememberedMst || newMst) : newMst);
         dispatchWithNotification(dispatch, { type: GET_MST.SUCCEEDED, payload: { Mst: revisedMst, Src: src } })
         dispatchWithNotification(dispatch, { type: GET_DTL_LIST.SUCCEEDED, payload: { Dtl: keyId ? currentDtlList : useCopy || refreshCri ? currentDtlList : [], Src: src } })
-        this.BackFillMstAsyncColumns(keyId ? currMst : useCopy || refreshCri ? rememberedMst : newMst,dispatch,getState,{webApi});
+        this.BackFillMstAsyncColumns(keyId ? currMst : useCopy || refreshCri ? rememberedMst : newMst, dispatch, getState, { webApi });
         if (dtlId) {
           const dtl = this.GetDtl(currentDtlList, dtlId, -1, revisedMst);
           dispatchWithNotification(dispatch, { type: EDIT_DTL.SUCCEEDED, payload: { dtl: dtl || (dtlId === '_' && (mstId === rememberedMstId) ? rememberedDtl : {}) } });
+          return Promise.reslove(dtl);
         }
         else {
-          this.BackFillDtlAsyncColumns(revisedMst, newDtl, dispatch,getState,{webApi});        
+          this.BackFillDtlAsyncColumns(revisedMst, newDtl, dispatch, getState, { webApi });
+          return Promise.resolve({});
         }
       }
-  
-    }).bind(this);    
+
+    }).bind(this);
   }
-  
+
   AddMst(mstId, src, idx) {
     return ((dispatch, getState, { webApi }) => {
       const persistMstName = this.GetPersistMstName();
-      RememberCurrent(persistMstName,null);
-      this.LoadMst(mstId, src, { copy: mstId && true })(dispatch, getState, { webApi });
+      RememberCurrent(persistMstName, null);
+      return this.LoadMst(mstId, src, { copy: mstId && true })(dispatch, getState, { webApi });
     }).bind(this);
   }
 
@@ -838,14 +982,15 @@ export class RintagiScreenRedux {
       const current = getState()[screenName] || {};
       const mst = current.Mst;
       const currentDtlList = (current.DtlList || {}).data;
-      const dtl = this.GetDtl(currentDtlList, dtlId, idx,mst);
+      const dtl = this.GetDtl(currentDtlList, dtlId, idx, mst);
       const newDtl = { ...(dtl || current.NewDtl), [dtlKeyColumnName]: null };
-      RememberCurrent(persistDtlName, {mstId: mst[mstKeyColumeName], dtl:newDtl});
+      RememberCurrent(persistDtlName, { mstId: mst[mstKeyColumeName], dtl: newDtl });
       log.debug("add detail", newDtl, GetCurrent(persistDtlName));
       dispatchWithNotification(dispatch, { type: EDIT_DTL.SUCCEEDED, payload: { dtl: newDtl || {}, message: dtlId ? "New copy of the detail" : "" } });
+      return Promise.reslove(newDtl);
     }).bind(this);
   }
-  
+
   SelectMst(keyId, altKeyId, idx) {
     const SELECT_MST = this.GetActionType("SELECT_MST");
     const screenName = this.GetScreenName();
@@ -855,10 +1000,11 @@ export class RintagiScreenRedux {
       const currentMstId = currentList.length > 0 ? currentList[idx].keyId || currentList[idx].key : null;
       if (currentList.length > 0) {
         dispatchWithNotification(dispatch, { type: SELECT_MST.SUCCEEDED, payload: { SelectedKeyId: currentMstId } });
-        this.LoadMst(currentMstId, "MstList")(dispatch, getState, { webApi });
+        return this.LoadMst(currentMstId, "MstList")(dispatch, getState, { webApi });
       }
       else {
-        dispatchWithNotification(dispatch, { type: SELECT_MST.FAILED, payload: { error: "empty selection list" } })
+        dispatchWithNotification(dispatch, { type: SELECT_MST.FAILED, payload: { error: "empty selection list" } });
+        return Promise.resolve({});
       }
     }).bind(this);
   }
@@ -883,17 +1029,19 @@ export class RintagiScreenRedux {
           const dtl = this.GetDtl(currentDtlList, dtlId, idx, mst);
           if (dtl) RememberCurrent(persistDtlName, {
             mstId: mst[mstKeyColumeName],
-            dtl:dtl
+            dtl: dtl
           });
-          this.BackFillDtlAsyncColumns(mst,dtl,dispatch,getState,{webApi});
+          this.BackFillDtlAsyncColumns(mst, dtl, dispatch, getState, { webApi });
           dispatch({ type: EDIT_DTL.SUCCEEDED, payload: { dtl: dtl || (dtlId === '_' && (rememberedMstId === mst[mstKeyColumeName]) ? rememberedDtl : {}) } });
+          return Promise.resolve(dtl);
         }
         else {
           dispatch({ type: EDIT_DTL.SUCCEEDED, payload: { dtl: {} } });
+          return (Promise.reslove({}));
         }
       }
       else {
-        this.LoadMst(mstId, { dtlId: dtlId })(dispatch, getState, { webApi });
+        return this.LoadMst(mstId, { dtlId: dtlId })(dispatch, getState, { webApi });
       }
     }).bind(this);
   }
@@ -901,7 +1049,7 @@ export class RintagiScreenRedux {
     const persistDtlName = this.GetPersistDtlName();
     const mstKeyColumeName = this.GetMstKeyColumnName();
     const dtlKeyColumnName = this.GetDtlKeyColumnName();
-    const {mstId,dtl} = GetCurrent(persistDtlName) || {};
+    const { mstId, dtl } = GetCurrent(persistDtlName) || {};
     const rememberedDtl = dtl;
     return dtlList.reduce((a, v, i) =>
       (
@@ -915,10 +1063,10 @@ export class RintagiScreenRedux {
           )
         )
         ||
-        ((!dtlId || dtlId === "_") && i === idx &&  ((mstId === mst[mstKeyColumeName] && mst[mstKeyColumeName]) || !v[dtlKeyColumnName]))
+        ((!dtlId || dtlId === "_") && i === idx && ((mstId === mst[mstKeyColumeName] && mst[mstKeyColumeName]) || !v[dtlKeyColumnName]))
       ) ? v : a, null);
   }
-  
+
   GetMst(mstList, mstId, idx) {
     const persistMstName = this.GetPersistMstName();
     const mstKeyColumeName = this.GetMstKeyColumnName();
@@ -958,25 +1106,28 @@ export class RintagiScreenRedux {
       const _dtl = [
         ...dtl
       ];
-  
+
       const _options = {
         ...rest
       }
-  
-      apiService.SaveData(_mst, _dtl, { ...rest })
+
+      return apiService.SaveData(_mst, _dtl, { ...rest })
         .then(
           (ret => {
-            dispatchWithNotification(dispatch, { type: SAVE_MST.SUCCEEDED, payload: { Mst: ret.data.mst, keepDtl: keepDtl, message: ret.data.message, deferredRelease:true, } });
+            dispatchWithNotification(dispatch, { type: SAVE_MST.SUCCEEDED, payload: { Mst: ret.data.mst, keepDtl: keepDtl, message: ret.data.message, deferredRelease: true, } });
             if (!keepDtl) RememberCurrent(persistDtlName, null);
-            this.LoadSearchList("SaveData", ret.data.mst[mstKeyColumeName], { dtlId: keepDtl && (currentState.EditDtl || {})[dtlKeyColumnName]},currentCriteria.SearchStr,currentCriteria.TopN || 0,currentCriteria.FilterId )(dispatch, getState, { webApi });
+            return this.LoadSearchList("SaveData", ret.data.mst[mstKeyColumeName], { dtlId: keepDtl && (currentState.EditDtl || {})[dtlKeyColumnName] }, currentCriteria.SearchStr, currentCriteria.TopN || 0, currentCriteria.FilterId)(dispatch, getState, { webApi });
           })
           ,
           (err => {
             log.debug(err);
-  
             dispatchWithNotification(dispatch, { type: SAVE_MST.FAILED, payload: { error: err, message: err.errMsg, validationErrors: err.validationErrors } })
+            return Promise.reject(err);
           })
         )
+        .catch(err => {
+          return Promise.reject(err);
+        })
       // .finally(x => {
       //   dispatchWithNotification(dispatch, { type: SAVE_MST.ENDED, payload: {} });
       // })
@@ -996,22 +1147,25 @@ export class RintagiScreenRedux {
       const _options = {
         ...rest
       }
-  
-      apiService.DelMst(_mst, { ...rest })
+
+      return apiService.DelMst(_mst, { ...rest })
         .then(
           (ret => {
             const persistMstName = this.GetPersistMstName();
-            RememberCurrent(persistMstName,null);
+            RememberCurrent(persistMstName, null);
             dispatchWithNotification(dispatch, { type: DEL_MST.SUCCEEDED, payload: { message: ret.data.message } })
-            this.LoadPage("MstList", {})(dispatch, getState, { webApi });
+            return this.LoadPage("MstList", {})(dispatch, getState, { webApi });
           })
           ,
           (err => {
             log.debug(err);
-  
             dispatchWithNotification(dispatch, { type: DEL_MST.FAILED, payload: { error: err, message: err.errMsg } })
+            return Promise.reject(err);
           })
         )
+        .catch(err => {
+          return Promise.reject(err);
+        })
       // .finally(x => {
       //   dispatchWithNotification(dispatch, { type: SAVE_MST.ENDED, payload: {} });
       // })
@@ -1028,27 +1182,29 @@ export class RintagiScreenRedux {
       const topN = current.ScreenCriteria.TopN;
       dispatchWithNotification(dispatch, { type: SAVE_CRI.STARTED, payload: {} });
 
-      apiService.SetScreenCriteria(criteria)
+      return apiService.SetScreenCriteria(criteria)
         .then(
           (ret => {
             dispatchWithNotification(dispatch, { type: SAVE_CRI.SUCCEEDED, payload: { Cri: ret.data, message: ret.data.message } })
               .then((ret) => {
-                this.LoadSearchList(null, null, {refreshCri:true}, searchStr, topN, filterId)(dispatch, getState, { webApi });
+                return this.LoadSearchList(null, null, { refreshCri: true }, searchStr, topN, filterId)(dispatch, getState, { webApi });
               },
                 (err) => {
-
+                  return Promise.reject(err);
                 });
           })
           ,
           (err => {
             dispatchWithNotification(dispatch, { type: SAVE_CRI.FAILED, payload: { error: err, message: err.errMsg } })
           })
-        )
+        ).catch(err => {
+          return Promise.reject(err);
+        })
       // .finally(x => {
       //   dispatchWithNotification(dispatch, { type: SAVE_MST.ENDED, payload: {} });
       // })
     }).bind(this);
-  } 
+  }
 
   ViewMoreDtl() {
     const VIEW_MORE_DTL = this.GetActionType("VIEW_MORE_DTL");
@@ -1056,14 +1212,14 @@ export class RintagiScreenRedux {
       type: VIEW_MORE_DTL.SUCCEEDED, payload: {}
     };
   }
-  
+
   ChangeMstListFilterVisibility(show) {
     const CHANGE_MSTLIST_FILTER_VISIBILITY = this.GetActionType("CHANGE_MSTLIST_FILTER_VISIBILITY");
     return {
       type: CHANGE_MSTLIST_FILTER_VISIBILITY.SUCCEEDED, payload: { show: show || true }
     };
   }
-  
+
   ChangeDtlListFilterVisibility(show) {
     const CHANGE_DTLLIST_FILTER_VISIBILITY = this.GetActionType("CHANGE_DTLLIST_FILTER_VISIBILITY");
     return {
@@ -1075,17 +1231,18 @@ export class RintagiScreenRedux {
     return {
       type: CHANGE_DTLLIST_FILTER.SUCCEEDED, payload: { FilteredColumn, FilteredValue }
     };
-  }  
+  }
 
   ReviseScreenCri(state, action) {
     const payload = action.payload;
     return {
       ...state.ScreenCriteria,
-      ...this.ScreenCriDdlDef.reduce((a,v)=>{
-        a[v.columnName] = { ...state.ScreenCriteria[v.columnName], LastCriteria: payload.Cri[v.columnName]};return a; },{}
+      ...this.ScreenCriDdlDef.reduce((a, v) => {
+        a[v.columnName] = { ...state.ScreenCriteria[v.columnName], LastCriteria: payload.Cri[v.columnName] }; return a;
+      }, {}
       ),
       key: Date.now()
-    } 
+    }
   }
 
   /* exposed helper functions via 'this' */
@@ -1096,9 +1253,9 @@ export class RintagiScreenRedux {
     const DtlFilter = state.DtlFilter;
     const DtlList = (state.DtlList || {}).data || [];
     const FilteredColumn = DtlFilter.FilteredColumn;
-  
+
     if (!Array.isArray(state.AuthCol)) return DtlList;
-  
+
     const columnsToCheck = state.AuthCol
       .filter((v) => v.MasterTable === "N" && v.ColVisible !== "N" && !v.DisplayName.match(/Button/g) && (FilteredColumn === "_" || v.ColName === FilteredColumn))
       .reduce((a, v) => { a[v.ColName + (isDdlType[v.DisplayName] ? "Text" : "")] = true; return a; }, {});
@@ -1122,15 +1279,15 @@ export class RintagiScreenRedux {
       })
   }
 
-  ScreenCriDdl(state,{payload}) {
-    return this.ScreenCriDdlDef.filter(c=>c.payloadDdlName).reduce(
-        (a,v)=>{ a[v.columnName] = (payload.ScreenCriDdl || {})[v.payloadDdlName]; return a },{}
+  ScreenCriDdl(state, { payload }) {
+    return this.ScreenCriDdlDef.filter(c => c.payloadDdlName).reduce(
+      (a, v) => { a[v.columnName] = (payload.ScreenCriDdl || {})[v.payloadDdlName]; return a }, {}
     )
   }
-  ScreenDdl(state, {payload}) {
+  ScreenDdl(state, { payload }) {
     return this.ScreenDdlDef.reduce(
-      (a,v)=>{ a[v.columnName] = payload[v.payloadDdlName] || state.ddl[v.columnName]; return a },{}
-  )
+      (a, v) => { a[v.columnName] = payload[v.payloadDdlName] || state.ddl[v.columnName]; return a }, {}
+    )
   }
 
   GetActionHandler() {
@@ -1140,88 +1297,120 @@ export class RintagiScreenRedux {
     return this.ActionApiNameMapper[actionTypeName];
   }
   GetScreenButtons(state) {
-    return ((state || {}).ScreenButtonHlp || []).reduce((a,v)=>{a[v.ButtonTypeName] = { label: v.ButtonName, labelLong: v.ButtonLongNm, tid:v.ButtonTypeId, ButtonTypeName:v.ButtonTypeName};return a;},{})
+    return ((state || {}).ScreenButtonHlp || []).reduce((a, v) => { a[v.ButtonTypeName] = { label: v.ButtonName, labelLong: v.ButtonLongNm, tid: v.ButtonTypeId, ButtonTypeName: v.ButtonTypeName }; return a; }, {})
   }
 
   ResolveDdlPromise(results) {
     if (Array.isArray(results)) {
       let screenDdlCount = 0;
-      const screenDdl = this.ScreenDdlDef.reduce((a,v,i)=>{a[v.payloadDdlName] = results[i].data.data; screenDdlCount++; return a;},{})  
-      const screenCriDdl = this.ScreenCriDdlDef.filter(c=>c.payloadDdlName).reduce((a,v,i)=>{a[v.payloadDdlName] = results[i+screenDdlCount].data.data;return a;},{})  
+      const screenDdl = this.ScreenDdlDef.reduce((a, v, i) => { a[v.payloadDdlName] = results[i].data.data; screenDdlCount++; return a; }, {})
+      const screenCriDdl = this.ScreenCriDdlDef.filter(c => c.payloadDdlName).reduce((a, v, i) => { a[v.payloadDdlName] = results[i + screenDdlCount].data.data; return a; }, {})
       const x = {
         ...screenDdl,
-        ScreenCriDdl:screenCriDdl,
+        ScreenCriDdl: screenCriDdl,
       }
       return x;
     }
     else {
-      return this.ScreenDdldef.reduce((a,v,i)=>{a[v.columeName] = results[v.columeName];return a; },{})  
+      return this.ScreenDdldef.reduce((a, v, i) => { a[v.columeName] = results[v.columeName]; return a; }, {})
     }
   }
-  GetScreenDdlApiPromise(apiService, scope) { return this.ScreenDdlDef.map(v=>apiService[v.apiServiceName]("",32767,"",scope))}
-  GetCriDdlApiPromise(apiService,scope) {return this.ScreenCriDdlDef.filter(c=>c.payloadDdlName).map(v=>apiService[v.apiServiceName]("",32767,"",scope))}
-  BackFillDtlAsyncColumns(mst, dtl, dispatch, getState,{webApi}) {
-      this.ScreenDdlDef
-      .filter(v=>!v.forMst && v.isAutoComplete)
-      .forEach(v=>{
+  GetScreenDdlApiPromise(apiService, scope) { return this.ScreenDdlDef.map(v => apiService[v.apiServiceName]("", 32767, "", scope)) }
+  GetCriDdlApiPromise(apiService, scope) { return this.ScreenCriDdlDef.filter(c => c.payloadDdlName).map(v => apiService[v.apiServiceName]("", 32767, "", scope)) }
+  BackFillDtlAsyncColumns(mst, dtl, dispatch, getState, { webApi }) {
+    this.ScreenDdlDef
+      .filter(v => !v.forMst && v.isAutoComplete)
+      .forEach(v => {
         const name = "Search" + v.columnName;
-      this.SearchActions[name](MakeAutocompleteSearchValue((dtl || {})[v.columnName]),v.filterByColumnName ? (v.filterByMaster ? (mst || {})[v.filterByColumnName] : (dtl || {})[v.filterByColumnName]) : null)(dispatch,getState,{webApi})
-      })
-      this.ScreenOnDemandDef
-      .filter(v=>!v.forMst)
-      .forEach(v=>{
+        this.SearchActions[name](MakeAutocompleteSearchValue((dtl || {})[v.columnName]), v.filterByColumnName ? (v.filterByMaster ? (mst || {})[v.filterByColumnName] : (dtl || {})[v.filterByColumnName]) : null)(dispatch, getState, { webApi })
+      });
+    this.ScreenOnDemandDef
+      .filter(v => !v.forMst && v.type !== "RefColumn")
+      .forEach(v => {
         const name = "Get" + v.columnName;
-        this.SearchActions[name]((mst || {})[this.GetMstKeyColumnName()],(dtl || {})[this.GetDtlKeyColumnName()])(dispatch,getState,{webApi})
+        this.SearchActions[name](
+          (mst || {})[this.GetMstKeyColumnName()]
+          , (dtl || {})[this.GetDtlKeyColumnName()]
+          , (mst || {})[v.refColumnName], (dtl || {})[v.refColumnName]
+        )(dispatch, getState, { webApi })
+      });
+    const refColumns = this.ScreenOnDemandDef
+      .filter(v => !v.forMst && v.type === "RefColumn")
+      .reduce((a, v) => { a[v.refColumnName] = [...(a[v.refColumnName] || []), v]; return a; }, {})
+    Object.keys(refColumns)
+      .forEach(v => {
+        const refColumnName = v;
+        const name = 'GetRef' + refColumnName;
+        this.SearchActions[name](
+          (mst || {})[this.GetMstKeyColumnName()]
+          , (dtl || {})[this.GetDtlKeyColumnName()]
+          , (mst || {})[refColumnName], (dtl || {})[v.refColumnName], true)(dispatch, getState, { webApi })
+      });
+
+  }
+  BackFillMstAsyncColumns(mst, dispatch, getState, { webApi }) {
+    const _this = this;
+    this.ScreenDdlDef
+      .filter(v => v.forMst && v.isAutoComplete)
+      .forEach(v => {
+        const name = "Search" + v.columnName;
+        this.SearchActions[("Search" + v.columnName)](MakeAutocompleteSearchValue((mst || {})[v.columnName]), v.filterByColumnName ? (mst || {})[v.filterByColumnName] : null)(dispatch, getState, { webApi })
+      }
+      );
+    this.ScreenOnDemandDef
+      .filter(v => v.forMst && v.type !== "RefColumn")
+      .forEach(v => {
+        const name = "Get" + v.columnName;
+        this.SearchActions[name](
+          (mst || {})[this.GetMstKeyColumnName()]
+          , null
+          , (mst || {})[v.refColumnName], null)(dispatch, getState, { webApi })
+      });
+    const refColumns = this.ScreenOnDemandDef
+      .filter(v => v.forMst && v.type === "RefColumn")
+      .reduce((a, v) => { a[v.refColumnName] = [...(a[v.refColumnName] || []), v]; return a; }, {})
+    Object.keys(refColumns)
+      .forEach(v => {
+        const refColumnName = v;
+        const name = 'GetRef' + refColumnName;
+        this.SearchActions[name](
+          (mst || {})[this.GetMstKeyColumnName()]
+          , null, (mst || {})[refColumnName], null, true)(dispatch, getState, { webApi })
       })
   }
-  BackFillMstAsyncColumns(mst,  dispatch, getState,{webApi}) {
-      this.ScreenDdlDef
-      .filter(v=>v.forMst && v.isAutoComplete)
-      .forEach(v=>
-        {
-          const name = "Search" + v.columnName;
-          this.SearchActions[("Search" + v.columnName)](MakeAutocompleteSearchValue((mst || {})[v.columnName]),v.filterByColumnName ? (mst || {})[v.filterByColumnName] : null)(dispatch,getState,{webApi})}
-        )
-      this.ScreenOnDemandDef
-      .filter(v=>v.forMst)
-      .forEach(v=>{
-        const name = "Get" + v.columnName;
-        this.SearchActions[name]((mst || {})[this.GetMstKeyColumnName()],(mst || {})[this.GetMstKeyColumnName()])(dispatch,getState,{webApi})
-      })        
-  }
-  BackFillCriAsyncColumns(screenCriteria, dispatch, getState,{webApi}) {
+  BackFillCriAsyncColumns(screenCriteria, dispatch, getState, { webApi }) {
     this.ScreenCriDdlDef
-    .filter(v => v.isAutoComplete)
-    .forEach(v=>
-      {
+      .filter(v => v.isAutoComplete)
+      .forEach(v => {
         const name = "Search" + v.columnName;
-        this.SearchActions[("Search" + v.columnName)](MakeAutocompleteSearchValue(((screenCriteria || {})[v.columnName] || {}).LastCriteria),v.filterByColumnName ? ((screenCriteria || {})[v.columnName] || {}).LastCriteria : null)(dispatch,getState,{webApi})}
+        this.SearchActions[("Search" + v.columnName)](MakeAutocompleteSearchValue(((screenCriteria || {})[v.columnName] || {}).LastCriteria), v.filterByColumnName ? ((screenCriteria || {})[v.columnName] || {}).LastCriteria : null)(dispatch, getState, { webApi })
+      }
       )
   }
 
   MakeSearchAction(ddlColumnDef) {
-      const _this = this;
-      const screenName = this.GetScreenName();
-      const webServiceName = screenName + "Service";
-      return ((v,filterByVal)=>{
-          return ((dispatch, getState, { webApi }) => {
-              const apiService = webApi[webServiceName] || _this.GetWebService();
-              const actionType = _this.GetActionType(ddlColumnDef.actionTypeName);
-              return AutoCompleteSearch(
-                  {
-                    dispatch,
-                    v,
-                    topN:50,
-                    filterOn:filterByVal || "",
-                    forMst:ddlColumnDef.forMst,
-                    forDtl:!ddlColumnDef.forMst,
-                    searchApi:apiService[ddlColumnDef.apiServiceName],
-                    SucceededActionType:actionType.SUCCEEDED,
-                    FailedActionType:actionType.FAILED,
-                    ColumnName:ddlColumnDef.columnName
-                  })
-                  }).bind(this);        
+    const _this = this;
+    const screenName = this.GetScreenName();
+    const webServiceName = screenName + "Service";
+    return ((v, filterByVal) => {
+      return ((dispatch, getState, { webApi }) => {
+        const apiService = webApi[webServiceName] || _this.GetWebService();
+        const actionType = _this.GetActionType(ddlColumnDef.actionTypeName);
+        return AutoCompleteSearch(
+          {
+            dispatch,
+            v,
+            topN: 50,
+            filterOn: filterByVal || "",
+            forMst: ddlColumnDef.forMst,
+            forDtl: !ddlColumnDef.forMst,
+            searchApi: apiService[ddlColumnDef.apiServiceName],
+            SucceededActionType: actionType.SUCCEEDED,
+            FailedActionType: actionType.FAILED,
+            ColumnName: ddlColumnDef.columnName
+          })
       }).bind(this);
+    }).bind(this);
   }
 
   MakeGetColumnOnDemandAction(columnDef) {
@@ -1232,53 +1421,282 @@ export class RintagiScreenRedux {
     const columnName = columnDef.columnName;
     const tableColumnName = columnDef.tableColumnName;
     const actionType = _this.GetActionType(columnDef.actionTypeName);
-    return ((mstId,dtlId)=>{
-        return ((dispatch, getState, { webApi }) => {
+    return ((mstId, dtlId, mst = {}, dtl = {}) => {
+      return ((dispatch, getState, { webApi }) => {
+        const apiService = webApi[webServiceName] || _this.GetWebService();
+        const api = apiService[columnDef.apiServiceName];
+        return apiService[columnDef.apiServiceName](mstId, dtlId, tableColumnName, forMst, columnName)
+          .then(
+            ret => {
+              dispatch({ type: actionType.SUCCEEDED, payload: { data: ret.data && ret.data.length > 0 ? (ret.data[0] || {})[tableColumnName] : null, ColumnName: columnName, forMst: forMst, forDtl: !forMst } });
+            }
+            , err => {
+              log.trace("dynamic column error", err);
+              //                  dispatch({ type: actionType.FAILED, payload: { data:null, ColumnName:columeName, forMst:forMst, forDtl:!forMstr });
+            }
+          )
+          .catch(err => {
+            log.trace("dynamic column exception", err);
+          })
+      }
+      ).bind(this);
+    }).bind(this);
+  }
+
+  MakeGetRefColumnOnDemandAction(columnDef) {
+    const _this = this;
+    const screenName = this.GetScreenName();
+    const webServiceName = screenName + "Service";
+    const forMst = columnDef.forMst;
+    const refColumnName = columnDef.type === "RefColumn" ? columnDef.refColumnName : columnDef.columnName;
+    const columnName = columnDef.columnName;
+    const tableColumnName = columnDef.tableColumnName;
+    const actionType = _this.GetActionType(columnDef.actionTypeName);
+    return ((mstId, dtlId, refMstKeyId, refDtlKeyId, backfill) => {
+      return ((dispatch, getState, { webApi }) => {
+        const apiService = webApi[webServiceName] || _this.GetWebService();
+        const api = apiService[columnDef.apiServiceName];
+        const refKeyId = (forMst ? refMstKeyId : refDtlKeyId);
+        return apiService[columnDef.apiServiceName](mstId, dtlId, refKeyId, forMst, refColumnName)
+          .then(
+            ret => {
+              dispatch({ type: actionType.SUCCEEDED, payload: { data: ret.data && ret.data.length > 0 ? (ret.data[0] || {})[tableColumnName] : null, ColumnName: columnName, backfill, forMst: forMst, forDtl: !forMst } });
+            }
+            , err => {
+              log.trace("dynamic column error", err);
+              //                  dispatch({ type: actionType.FAILED, payload: { data:null, ColumnName:columeName, forMst:forMst, forDtl:!forMstr });
+            }
+          )
+          .catch(err => {
+            log.trace("dynamic column exception", err);
+          })
+      }
+      ).bind(this);
+    }).bind(this);
+  }
+
+  MakePullUpOnDemandAction(refObjs) {
+    return Object.keys(refObjs).reduce(
+      (a, k) => {
+        const dependents = refObjs[k].dependents;
+        const columnDef = dependents[0];
+        const _this = this;
+        const screenName = this.GetScreenName();
+        const webServiceName = screenName + "Service";
+        const forMst = columnDef.forMst;
+        const refColumnName = columnDef.type === "RefColumn" ? columnDef.refColumnName : columnDef.columnName;
+        a[k] = ((mstId, dtlId, refMstKeyId, refDtlKeyId, backfill) => {
+          return ((dispatch, getState, { webApi }) => {
             const apiService = webApi[webServiceName] || _this.GetWebService();
-            const api =  apiService[columnDef.apiServiceName];
-            apiService[columnDef.apiServiceName](mstId, dtlId, tableColumnName,forMst, columnName)
+            const api = apiService[columnDef.apiServiceName];
+            const refKeyId = (forMst ? refMstKeyId : refDtlKeyId);
+            return apiService[columnDef.apiServiceName](mstId, dtlId, refKeyId, forMst, refColumnName)
               .then(
-                ret=>{
-                  dispatch({ type: actionType.SUCCEEDED, payload: { data: ret.data && ret.data.length > 0 ? (ret.data[0] || {})[tableColumnName]  : null, ColumnName:columnName, forMst:forMst, forDtl:!forMst}});
+                ret => {
+                  (backfill) && dependents.forEach(dependent => {
+                    // only dispatch on backfill(i.e. pull up for existing record), as this is also used for front end search which cannot update redux
+                    const columnName = dependent.columnName;
+                    const tableColumnName = dependent.tableColumnName;
+                    const actionType = _this.GetActionType(dependent.actionTypeName);
+                    dispatch({ type: actionType.SUCCEEDED, payload: { data: ret.data && ret.data.length > 0 ? (ret.data[0] || {})[tableColumnName] : null, ColumnName: columnName, backfill, forMst: forMst, forDtl: !forMst } });
+                  });
+                  return {
+                    dependents: dependents,
+                    result: ret.data && ret.data.length > 0 ? ret.data[0] : null
+                  };
                 }
-                ,err=>{
-                  log.trace("dynamic column error",err);
-//                  dispatch({ type: actionType.FAILED, payload: { data:null, ColumnName:columeName, forMst:forMst, forDtl:!forMstr });
+                , err => {
+                  log.trace("dynamic column error", err);
+                  //                  dispatch({ type: actionType.FAILED, payload: { data:null, ColumnName:columeName, forMst:forMst, forDtl:!forMstr });
                 }
               )
-              .catch(err=>{
-                  log.trace("dynamic column exception",err);
-                })
-              }
-              ).bind(this);
+              .catch(err => {
+                log.trace("dynamic column exception", err);
+              })
+          }
+          ).bind(this);
+        }).bind(this);
+        return a;
+      },
+      {}
+    )
+  }
+
+  MakeGetDocumentListAction(columnDef) {
+    const _this = this;
+    const screenName = this.GetScreenName();
+    const webServiceName = screenName + "Service";
+    const forMst = columnDef.forMst;
+    const columnName = columnDef.columnName;
+    const tableColumnName = columnDef.tableColumnName;
+    const actionType = _this.GetActionType(columnDef.actionTypeName);
+    return ((mstId, dtlId) => {
+      return ((dispatch, getState, { webApi }) => {
+        const apiService = webApi[webServiceName] || _this.GetWebService();
+        const api = apiService[columnDef.apiServiceName];
+        return apiService[columnDef.apiServiceName](mstId, dtlId, forMst)
+          .then(
+            ret => {
+              const resultDocList = (((ret || {}).data || {}).data || []);
+              dispatch({
+                type: actionType.SUCCEEDED
+                , payload: { reduxColumnName: columnName, MasterId: mstId, forMst: forMst, forDtl: !forMst, docList: resultDocList }
+              });
+              return { mstId, dtlId, resultDocList };
+            }
+            , err => {
+              log.trace("get document list column error", err);
+              //                  dispatch({ type: actionType.FAILED, payload: { data:null, ColumnName:columeName, forMst:forMst, forDtl:!forMstr });
+              return Promise.reject(err);
+            }
+          )
+          .catch(err => {
+            log.trace("get document list column exception", err);
+            return Promise.reject(err);
+          })
+      }
+      ).bind(this);
+    }).bind(this);
+  }
+
+  MakeGetDocumentContentAction(columnDef) {
+    const _this = this;
+    const screenName = this.GetScreenName();
+    const webServiceName = screenName + "Service";
+    const forMst = columnDef.forMst;
+    const columnName = columnDef.columnName;
+    const tableColumnName = columnDef.tableColumnName;
+    const actionType = _this.GetActionType(columnDef.actionTypeName);
+    return (({ mstId, dtlId, docId }) => {
+      return ((dispatch, getState, { webApi }) => {
+        const apiService = webApi[webServiceName] || _this.GetWebService();
+        const api = apiService[columnDef.apiServiceName];
+        return apiService[columnDef.apiServiceName](mstId, dtlId, forMst, docId, columnName)
+          .then(
+            ret => {
+              dispatch({
+                type: actionType.SUCCEEDED
+                , payload: { result: { ...((ret || {}).data || [])[0], DocId: docId }, reduxColumnName: columnName, ColumnName: columnName, forMst: forMst, forDtl: !forMst }
+              })
+              return ret;
+            }
+            , err => {
+              log.trace("get document content error", err);
+              //                  dispatch({ type: actionType.FAILED, payload: { data:null, ColumnName:columeName, forMst:forMst, forDtl:!forMstr });
+              return Promise.reject(err);
+            }
+          )
+          .catch(err => {
+            log.trace("get document content exception", err);
+            return Promise.reject(err);
+          })
+      }
+      ).bind(this);
+    }).bind(this);
+  }
+
+  MakeAddDocumentContentAction(columnDef) {
+    const _this = this;
+    const screenName = this.GetScreenName();
+    const webServiceName = screenName + "Service";
+    const forMst = columnDef.forMst;
+    const columnName = columnDef.columnName;
+    const tableColumnName = columnDef.tableColumnName;
+    const actionType = _this.GetActionType(columnDef.actionTypeName);
+    const overwrite = true;
+    return (({ mstId, dtlId, file }) => {
+      return ((dispatch, getState, { webApi }) => {
+        const apiService = webApi[webServiceName] || _this.GetWebService();
+        const api = apiService[columnDef.apiServiceName];
+        const docId = (file || {}).DocId;
+        const docJson = JSON.stringify(file);
+        return apiService[columnDef.apiServiceName](mstId, dtlId, forMst, docId, overwrite, columnName, docJson)
+          .then(
+            ret => {
+              dispatch({
+                type: actionType.SUCCEEDED
+                , payload: { keyId: mstId, reduxColumnName: columnName, forMst: forMst, forDtl: !forMst, result: ret.data[forMst ? 'mst' : 'dtl'] || {}, src: file }
+              })
+              return ret;
+            }
+            , err => {
+              log.trace("add document content error", err);
+              //                  dispatch({ type: actionType.FAILED, payload: { data:null, ColumnName:columeName, forMst:forMst, forDtl:!forMstr });
+              return Promise.reject(err);
+            }
+          )
+          .catch(err => {
+            log.trace("add document content exception ", err);
+            return Promise.reject(err);
+          })
+      }
+      ).bind(this);
+    }).bind(this);
+  }
+
+  MakeDelDocumentContentAction(columnDef) {
+    const _this = this;
+    const screenName = this.GetScreenName();
+    const webServiceName = screenName + "Service";
+    const forMst = columnDef.forMst;
+    const columnName = columnDef.columnName;
+    const tableColumnName = columnDef.tableColumnName;
+    const actionType = _this.GetActionType(columnDef.actionTypeName);
+    return (({ mstId, dtlId, docId } = {}) => {
+      return ((dispatch, getState, { webApi }) => {
+        const apiService = webApi[webServiceName] || _this.GetWebService();
+        const api = apiService[columnDef.apiServiceName];
+        return apiService[columnDef.apiServiceName](mstId, dtlId, forMst, columnName, [docId + ""])
+          .then(
+            ret => {
+              dispatch({
+                type: actionType.SUCCEEDED,
+                payload: { keyId: mstId, forMst: forMst, forDtl: !forMst, reduxColumnName: columnName, result: ret.data[forMst ? 'mst' : 'dtl'] || {}, src: { DocId: docId } }
+              })
+              return ret;
+            }
+            , err => {
+              log.trace("delete document error", err);
+              return Promise.reject(err);
+              //                  dispatch({ type: actionType.FAILED, payload: { data:null, ColumnName:columeName, forMst:forMst, forDtl:!forMstr });
+            }
+          )
+          .catch(err => {
+            log.trace("delete document exception", err);
+            return Promise.reject(err);
+          })
+      }
+      ).bind(this);
     }).bind(this);
   }
 
   MakeDdlSelectors(ddlColumnDef) {
-      const _this = this;
-      return (state)=>{
-          return ((((state || {}).ddl || {})[ddlColumnDef.columnName]) || []).map((v, i) => {
-              return {
-                key: (ddlColumnDef.isAutoComplete ? v.key : v[ddlColumnDef.keyName]) || null,
-                label: (ddlColumnDef.isAutoComplete ? v.label : v[ddlColumnDef.labelName])  || " ",
-                value: (ddlColumnDef.isAutoComplete ? v.key : v[ddlColumnDef.keyName]) || "",
-                idx: i
-              }
-            })
-      }
+    const _this = this;
+    return (state) => {
+      return ((((state || {}).ddl || {})[ddlColumnDef.columnName]) || []).map((v, i) => {
+        return {
+          key: (ddlColumnDef.isAutoComplete ? v.key : v[ddlColumnDef.keyName]) || null,
+          label: (ddlColumnDef.isAutoComplete ? v.label : v[ddlColumnDef.labelName]) || " ",
+          value: (ddlColumnDef.isAutoComplete ? v.key : v[ddlColumnDef.keyName]) || "",
+          obj: v,
+          idx: i
+        }
+      })
+    }
   }
-  
+
   MakeCriDdlSelectors(ddlColumnDef) {
     const _this = this;
-    return (state)=>{
-        return ((((state || {}).ScreenCriDdl || {})[ddlColumnDef.columnName]) || []).map((v, i) => {
-            return {
-              key: (ddlColumnDef.isAutoComplete ? v.key : v[ddlColumnDef.keyName]) || null,
-              label: (ddlColumnDef.isAutoComplete ? v.label : v[ddlColumnDef.labelName])  || " ",
-              value: (ddlColumnDef.isAutoComplete ? v.key : v[ddlColumnDef.keyName]) || "",
-              idx: i
-            }
-          })
+    return (state) => {
+      return ((((state || {}).ScreenCriDdl || {})[ddlColumnDef.columnName]) || []).map((v, i) => {
+        return {
+          key: (ddlColumnDef.isAutoComplete ? v.key : v[ddlColumnDef.keyName]) || null,
+          label: (ddlColumnDef.isAutoComplete ? v.label : v[ddlColumnDef.labelName]) || " ",
+          value: (ddlColumnDef.isAutoComplete ? v.key : v[ddlColumnDef.keyName]) || "",
+          obj: v,
+          idx: i
+        }
+      })
     }
   }
 
@@ -1288,66 +1706,70 @@ export class RintagiScreenRedux {
         key: v.ScreenFilterId,
         label: v.FilterName || " ",
         value: v.ScreenFilterId,
+        obj: v,
         idx: i
       }
     })
   }
 
-  MakeActionReducers()
-  {
-      const defaultReducer = (state,action)=>(state);
-      const LOAD_PAGE = getAsyncTypes(this.GetReducerActionTypePrefix(),  'LOAD_PAGE');
-      const SAVE_CRI = getAsyncTypes(this.GetReducerActionTypePrefix(),  'SAVE_CRI');
-      const GET_SEARCH_LIST = getAsyncTypes(this.GetReducerActionTypePrefix(),  'GET_SEARCH_LIST');
-      const GET_MST = getAsyncTypes(this.GetReducerActionTypePrefix(),  'GET_MST');
-      const SELECT_MST = getAsyncTypes(this.GetReducerActionTypePrefix(),  'SELECT_MST');
-      const GET_DTL_LIST = getAsyncTypes(this.GetReducerActionTypePrefix(),  'GET_DTL_LIST');
-      const SAVE_MST = getAsyncTypes(this.GetReducerActionTypePrefix(),  'SAVE_MST');
-      const ADD_MST = getAsyncTypes(this.GetReducerActionTypePrefix(),  'ADD_MST');
-      const DEL_MST = getAsyncTypes(this.GetReducerActionTypePrefix(),  'DEL_MST');
-      const ADD_DTL = getAsyncTypes(this.GetReducerActionTypePrefix(),  'ADD_DTL');
-      const EDIT_DTL = getAsyncTypes(this.GetReducerActionTypePrefix(),  'EDIT_DTL');
-      const DEL_DTL = getAsyncTypes(this.GetReducerActionTypePrefix(),  'ADD_DTL');
-      const DEL_ALLDTL = getAsyncTypes(this.GetReducerActionTypePrefix(),  'ADD_ALLDTL');
-      const SAVE_DTL = getAsyncTypes(this.GetReducerActionTypePrefix(),  'SAVE_DTL');
-      const VIEW_MORE_DTL = getAsyncTypes(this.GetReducerActionTypePrefix(),  'VIEW_MORE_DTL'); 
-      const CHANGE_MSTLIST_FILTER_VISIBILITY = getAsyncTypes(this.GetReducerActionTypePrefix(),  'CHANGE_MSTLIST_FILTER_VISIBILITY');
-      const CHANGE_DTLLIST_FILTER_VISIBILITY = getAsyncTypes(this.GetReducerActionTypePrefix(),  'CHANGE_DTLLIST_FILTER_VISIBILITY');
-      const CHANGE_DTLLIST_FILTER = getAsyncTypes(this.GetReducerActionTypePrefix(),  'CHANGE_DTLLIST_FILTER');
+  MakeActionReducers() {
+    const defaultReducer = (state, action) => (state);
+    const LOAD_PAGE = getAsyncTypes(this.GetReducerActionTypePrefix(), 'LOAD_PAGE');
+    const SAVE_CRI = getAsyncTypes(this.GetReducerActionTypePrefix(), 'SAVE_CRI');
+    const GET_SEARCH_LIST = getAsyncTypes(this.GetReducerActionTypePrefix(), 'GET_SEARCH_LIST');
+    const GET_MST = getAsyncTypes(this.GetReducerActionTypePrefix(), 'GET_MST');
+    const SELECT_MST = getAsyncTypes(this.GetReducerActionTypePrefix(), 'SELECT_MST');
+    const GET_DTL_LIST = getAsyncTypes(this.GetReducerActionTypePrefix(), 'GET_DTL_LIST');
+    const SAVE_MST = getAsyncTypes(this.GetReducerActionTypePrefix(), 'SAVE_MST');
+    const ADD_MST = getAsyncTypes(this.GetReducerActionTypePrefix(), 'ADD_MST');
+    const DEL_MST = getAsyncTypes(this.GetReducerActionTypePrefix(), 'DEL_MST');
+    const ADD_DTL = getAsyncTypes(this.GetReducerActionTypePrefix(), 'ADD_DTL');
+    const EDIT_DTL = getAsyncTypes(this.GetReducerActionTypePrefix(), 'EDIT_DTL');
+    const DEL_DTL = getAsyncTypes(this.GetReducerActionTypePrefix(), 'ADD_DTL');
+    const DEL_ALLDTL = getAsyncTypes(this.GetReducerActionTypePrefix(), 'ADD_ALLDTL');
+    const SAVE_DTL = getAsyncTypes(this.GetReducerActionTypePrefix(), 'SAVE_DTL');
+    const VIEW_MORE_DTL = getAsyncTypes(this.GetReducerActionTypePrefix(), 'VIEW_MORE_DTL');
+    const CHANGE_MSTLIST_FILTER_VISIBILITY = getAsyncTypes(this.GetReducerActionTypePrefix(), 'CHANGE_MSTLIST_FILTER_VISIBILITY');
+    const CHANGE_DTLLIST_FILTER_VISIBILITY = getAsyncTypes(this.GetReducerActionTypePrefix(), 'CHANGE_DTLLIST_FILTER_VISIBILITY');
+    const CHANGE_DTLLIST_FILTER = getAsyncTypes(this.GetReducerActionTypePrefix(), 'CHANGE_DTLLIST_FILTER');
 
-      return {
-          ...(LOAD_PAGE.bindActionReducer(this.LoadPageReducer.bind(this),true)),
-          ...(SAVE_CRI.bindActionReducer(this.SaveCriReducer.bind(this),true)),
-          ...(GET_SEARCH_LIST.bindActionReducer(this.GetSearchListReducer.bind(this),true)),
-          ...(GET_MST.bindActionReducer(this.GetMstReducer.bind(this),true)),
-          ...(SELECT_MST.bindActionReducer(this.SelectMstReducer.bind(this),true)),
-          ...(GET_DTL_LIST.bindActionReducer(this.GetDtlListReducer.bind(this),true)),
-          ...(SAVE_MST.bindActionReducer(this.SaveMstReducer.bind(this),true)),
-          ...(ADD_MST.bindActionReducer(defaultReducer)),
-          ...(DEL_MST.bindActionReducer(defaultReducer)),
-          ...(ADD_DTL.bindActionReducer(defaultReducer)),
-          ...(EDIT_DTL.bindActionReducer(this.EditDtlReducer.bind(this),true)),
-          ...(DEL_DTL.bindActionReducer(defaultReducer)),
-          ...(DEL_ALLDTL.bindActionReducer(defaultReducer)),
-          ...(SAVE_DTL.bindActionReducer(defaultReducer)),
-          ...(VIEW_MORE_DTL.bindActionReducer(this.ViewMoreDetailReducer.bind(this),true)),
-          ...(CHANGE_MSTLIST_FILTER_VISIBILITY.bindActionReducer(this.ToggleMstListFilterReducer.bind(this),true)),
-          ...(CHANGE_DTLLIST_FILTER_VISIBILITY.bindActionReducer(this.ToggleDtlListFilterReducer.bind(this),true)),
-          ...(CHANGE_DTLLIST_FILTER.bindActionReducer(this.ChangeDtlListFilterReducer.bind(this),true)),    
-          ...(this.ScreenDdlDef.reduce((a,v)=>({...a,...getAsyncTypes(this.GetReducerActionTypePrefix(),v.actionTypeName).bindActionReducer(this.GetDdlReducer.bind(this),true)}),{})),    
-          ...(this.ScreenOnDemandDef.reduce((a,v)=>({...a,...getAsyncTypes(this.GetReducerActionTypePrefix(),v.actionTypeName).bindActionReducer(this.GetColumnOnDemandReducer.bind(this),true)}),{})),    
-      }
+    return {
+      ...(LOAD_PAGE.bindActionReducer(this.LoadPageReducer.bind(this), true)),
+      ...(SAVE_CRI.bindActionReducer(this.SaveCriReducer.bind(this), true)),
+      ...(GET_SEARCH_LIST.bindActionReducer(this.GetSearchListReducer.bind(this), true)),
+      ...(GET_MST.bindActionReducer(this.GetMstReducer.bind(this), true)),
+      ...(SELECT_MST.bindActionReducer(this.SelectMstReducer.bind(this), true)),
+      ...(GET_DTL_LIST.bindActionReducer(this.GetDtlListReducer.bind(this), true)),
+      ...(SAVE_MST.bindActionReducer(this.SaveMstReducer.bind(this), true)),
+      ...(ADD_MST.bindActionReducer(defaultReducer)),
+      ...(DEL_MST.bindActionReducer(defaultReducer)),
+      ...(ADD_DTL.bindActionReducer(defaultReducer)),
+      ...(EDIT_DTL.bindActionReducer(this.EditDtlReducer.bind(this), true)),
+      ...(DEL_DTL.bindActionReducer(defaultReducer)),
+      ...(DEL_ALLDTL.bindActionReducer(defaultReducer)),
+      ...(SAVE_DTL.bindActionReducer(defaultReducer)),
+      ...(VIEW_MORE_DTL.bindActionReducer(this.ViewMoreDetailReducer.bind(this), true)),
+      ...(CHANGE_MSTLIST_FILTER_VISIBILITY.bindActionReducer(this.ToggleMstListFilterReducer.bind(this), true)),
+      ...(CHANGE_DTLLIST_FILTER_VISIBILITY.bindActionReducer(this.ToggleDtlListFilterReducer.bind(this), true)),
+      ...(CHANGE_DTLLIST_FILTER.bindActionReducer(this.ChangeDtlListFilterReducer.bind(this), true)),
+      ...(this.ScreenDdlDef.reduce((a, v) => ({ ...a, ...getAsyncTypes(this.GetReducerActionTypePrefix(), v.actionTypeName).bindActionReducer(this.GetDdlReducer.bind(this), true) }), {})),
+      ...((this.ScreenOnDemandDef || []).filter(f => f.type !== "DocList").reduce((a, v) => ({ ...a, ...getAsyncTypes(this.GetReducerActionTypePrefix(), v.actionTypeName).bindActionReducer(this.GetColumnOnDemandReducer.bind(this), true) }), {})),
+      ...((this.ScreenOnDemandDef || []).filter(f => f.type === "DocList").reduce((a, v) => ({ ...a, ...getAsyncTypes(this.GetReducerActionTypePrefix(), v.actionTypeName).bindActionReducer(this.GetDocumentListReducer.bind(this), true) }), {})),
+      ...((this.ScreenDocumentDef || []).filter(f => f.type === "Get").reduce((a, v) => ({ ...a, ...getAsyncTypes(this.GetReducerActionTypePrefix(), v.actionTypeName).bindActionReducer(this.GetDocumentContentReducer.bind(this), true) }), {})),
+      ...((this.ScreenDocumentDef || []).filter(f => f.type === "Add").reduce((a, v) => ({ ...a, ...getAsyncTypes(this.GetReducerActionTypePrefix(), v.actionTypeName).bindActionReducer(this.AddDocumentContentReducer.bind(this), true) }), {})),
+      ...((this.ScreenDocumentDef || []).filter(f => f.type === "Del").reduce((a, v) => ({ ...a, ...getAsyncTypes(this.GetReducerActionTypePrefix(), v.actionTypeName).bindActionReducer(this.DelDocumentContentReducer.bind(this), true) }), {})),
+    }
   }
   ReduxReducer() {
-    const initState=this.GetInitState();
+    const initState = this.GetInitState();
     const reducerPrefix = this.GetReducerActionTypePrefix();
     const reduxActionHandler = this.GetActionHandler();
 
-    return (function(state = initState, action) {
+    return (function (state = initState, action) {
       const actionType = action.type || "";
       if (reducerPrefix && actionType.startsWith(reducerPrefix)) {
         const handler = reduxActionHandler[action.type];
-        if (typeof handler === "function") return handler(state,action);
+        if (typeof handler === "function") return handler(state, action);
         else return state;
       }
       else return state;
