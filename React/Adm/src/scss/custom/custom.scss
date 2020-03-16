@@ -380,6 +380,10 @@
   font-size: 14px;
 }
 
+.form__form-group-label:empty{
+  height: 32px;
+}
+
 .custom-dropdown {
   width: 100%;
   border-color: #eee;

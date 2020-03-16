@@ -43,7 +43,6 @@ export default class ControlledPopover extends Component {
   // }
 
   render() {
-    log.debug(this.state.popoverOpen);
     return (
       <span>
         <i

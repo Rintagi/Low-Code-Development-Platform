@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -351,7 +352,7 @@ class MstRecord extends RintagiScreen {
     const StaticPgId39List = AdmMenuReduxObj.ScreenDdlSelectors.StaticPgId39(AdmMenuState);
     const StaticPgId39 = currMst.StaticPgId39;
     const Miscellaneous39 = currMst.Miscellaneous39;
-    const IconUrl39 = currMst.IconUrl39 ? (currMst.IconUrl39.startsWith('{') ? JSON.parse(currMst.IconUrl39) : { fileName: '', mimeType: 'image/jpeg', base64: currMst.IconUrl39 }) : null;
+    const IconUrl39 = currMst.IconUrl39 ? decodeEmbeddedFileObjectFromServer(currMst.IconUrl39) : null;
     const IconUrl39FileUploadOptions = {
       CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
       DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
@@ -370,6 +371,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -591,7 +605,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cScreenId39'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId39', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId39', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId39', true)}
                                           onInputChange={this.ScreenId39InputChange()}
                                           value={values.cScreenId39}
@@ -618,7 +632,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cReportId39'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cReportId39', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cReportId39', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cReportId39', true)}
                                           onInputChange={this.ReportId39InputChange()}
                                           value={values.cReportId39}
@@ -645,7 +659,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cWizardId39'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cWizardId39', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cWizardId39', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cWizardId39', true)}
                                           onInputChange={this.WizardId39InputChange()}
                                           value={values.cWizardId39}
@@ -672,7 +686,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cStaticPgId39'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cStaticPgId39', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cStaticPgId39', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cStaticPgId39', true)}
                                           onInputChange={this.StaticPgId39InputChange()}
                                           value={values.cStaticPgId39}

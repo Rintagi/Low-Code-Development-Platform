@@ -1572,7 +1572,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						if (drv["UserId274"].ToString() == ((RoboCoder.WebControls.ComboBox)sender).SelectedValue)
 						{
-						    try { if (drv["PicMed275"].Equals(System.DBNull.Value)) { c2.ImageUrl = "~/images/DefaultImg.png"; } else { c2.ImageUrl = "data:application/base64;base64," + Convert.ToBase64String(drv["PicMed275"] as byte[]); }} catch { c2.ImageUrl = string.Empty; }
+						    try { if (drv["PicMed275"].Equals(System.DBNull.Value)) { c2.ImageUrl = "~/images/DefaultImg.png"; } else { c2.ImageUrl = RO.Common3.Utils.BlobPlaceHolder(drv["PicMed275"] as byte[], true); }} catch { c2.ImageUrl = string.Empty; }
 							break;
 						}
 					}

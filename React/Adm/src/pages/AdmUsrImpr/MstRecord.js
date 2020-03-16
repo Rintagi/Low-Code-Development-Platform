@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -90,8 +91,47 @@ class MstRecord extends RintagiScreen {
   }
 
   UsrId95InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchUsrId95(v, filterBy); } }
+  UsrId95Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.cUsrImprId95 || {}).key || values.cUsrImprId95;
+    (this || _this).props.GetRefUsrId95(mstId, null, key, null)
+      .then(ret => {
+        ret.dependents.forEach(
+          (o => {
+            setFieldValue('c' + o.columnName, !ret.result ? null : o.isFileObject ? decodeEmbeddedFileObjectFromServer(ret.result[o.tableColumnName], true) : ret.result[o.tableColumnName]);
+          })
+        )
+      })
+  }
+
   ImprUsrId95InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchImprUsrId95(v, filterBy); } }
+  ImprUsrId95Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.cUsrImprId95 || {}).key || values.cUsrImprId95;
+    (this || _this).props.GetRefImprUsrId95(mstId, null, key, null)
+      .then(ret => {
+        ret.dependents.forEach(
+          (o => {
+            setFieldValue('c' + o.columnName, !ret.result ? null : o.isFileObject ? decodeEmbeddedFileObjectFromServer(ret.result[o.tableColumnName], true) : ret.result[o.tableColumnName]);
+          })
+        )
+      })
+  }
+
   TestCulture95InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchTestCulture95(v, filterBy); } }
+  TestCulture95Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.cUsrImprId95 || {}).key || values.cUsrImprId95;
+    (this || _this).props.GetRefTestCulture95(mstId, null, key, null)
+      .then(ret => {
+        ret.dependents.forEach(
+          (o => {
+            setFieldValue('c' + o.columnName, !ret.result ? null : o.isFileObject ? decodeEmbeddedFileObjectFromServer(ret.result[o.tableColumnName], true) : ret.result[o.tableColumnName]);
+          })
+        )
+      })
+  }
+
   /* ReactRule: Master Record Custom Function */
 
   /* ReactRule End: Master Record Custom Function */
@@ -144,13 +184,11 @@ class MstRecord extends RintagiScreen {
               lastTS: values.cIPicMed1.ts,
               base64: this.StripEmbeddedBase64Prefix(values.cIPicMed1.base64)
             }) : null,
-          FailedAttempt1: values.cFailedAttempt1 || '',
           InputBy95: (values.cInputBy95 || {}).value || '',
           InputOn95: values.cInputOn95 || '',
           ModifiedBy95: (values.cModifiedBy95 || {}).value || '',
           ModifiedOn95: values.cModifiedOn95 || '',
           TestCulture95: (values.cTestCulture95 || {}).value || '',
-          TestCurrency95: values.cTestCurrency95 || '',
           SignOff95: values.cSignOff95 || '',
         },
         [],
@@ -350,7 +388,7 @@ class MstRecord extends RintagiScreen {
     const UsrImprId95 = currMst.UsrImprId95;
     const UsrId95List = AdmUsrImprReduxObj.ScreenDdlSelectors.UsrId95(AdmUsrImprState);
     const UsrId95 = currMst.UsrId95;
-    const UPicMed1 = currMst.UPicMed1 ? (currMst.UPicMed1.startsWith('{') ? JSON.parse(currMst.UPicMed1) : { fileName: '', mimeType: 'image/jpeg', base64: currMst.UPicMed1 }) : null;
+    const UPicMed1 = currMst.UPicMed1 ? decodeEmbeddedFileObjectFromServer(currMst.UPicMed1) : null;
     const UPicMed1FileUploadOptions = {
       CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
       DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
@@ -365,7 +403,7 @@ class MstRecord extends RintagiScreen {
     }
     const ImprUsrId95List = AdmUsrImprReduxObj.ScreenDdlSelectors.ImprUsrId95(AdmUsrImprState);
     const ImprUsrId95 = currMst.ImprUsrId95;
-    const IPicMed1 = currMst.IPicMed1 ? (currMst.IPicMed1.startsWith('{') ? JSON.parse(currMst.IPicMed1) : { fileName: '', mimeType: 'image/jpeg', base64: currMst.IPicMed1 }) : null;
+    const IPicMed1 = currMst.IPicMed1 ? decodeEmbeddedFileObjectFromServer(currMst.IPicMed1) : null;
     const IPicMed1FileUploadOptions = {
       CancelFileButton: auxSystemLabels.CancelFileBtnLabel,
       DeleteFileButton: auxSystemLabels.DeleteFileBtnLabel,
@@ -395,6 +433,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -556,7 +607,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cUsrId95'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cUsrId95', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cUsrId95', false, values, [this.UsrId95Change])}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cUsrId95', true)}
                                           onInputChange={this.UsrId95InputChange()}
                                           value={values.cUsrId95}
@@ -582,14 +633,13 @@ class MstRecord extends RintagiScreen {
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
-                                        <FileInputFieldV1
+                                        <Field
+                                          component={FileInputField}
                                           name='cUPicMed1'
-                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'cUPicMed1')}
-                                          fileInfo={{ filename: this.state.filename }}
-                                          options={UPicMed1FileUploadOptions}
-                                          value={values.cUPicMed1 || UPicMed1}
-                                          label={auxSystemLabels.PickFileBtnLabel}
-                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                          options={{ ...fileFileUploadOptions, maxFileCount: 1 }}
+                                          files={(this.BindFileObject(UPicMed1, values.cUPicMed1) || []).filter(f => !f.isEmptyFileObject)}
+                                          label={(columnLabel.UPicMed1 || {}).ToolTip}
+                                          disabled={true}
                                         />
                                       </div>
                                     }
@@ -611,7 +661,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cImprUsrId95'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cImprUsrId95', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cImprUsrId95', false, values, [this.ImprUsrId95Change])}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cImprUsrId95', true)}
                                           onInputChange={this.ImprUsrId95InputChange()}
                                           value={values.cImprUsrId95}
@@ -637,14 +687,13 @@ class MstRecord extends RintagiScreen {
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
-                                        <FileInputFieldV1
+                                        <Field
+                                          component={FileInputField}
                                           name='cIPicMed1'
-                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'cIPicMed1')}
-                                          fileInfo={{ filename: this.state.filename }}
-                                          options={IPicMed1FileUploadOptions}
-                                          value={values.cIPicMed1 || IPicMed1}
-                                          label={auxSystemLabels.PickFileBtnLabel}
-                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                          options={{ ...fileFileUploadOptions, maxFileCount: 1 }}
+                                          files={(this.BindFileObject(IPicMed1, values.cIPicMed1) || []).filter(f => !f.isEmptyFileObject)}
+                                          label={(columnLabel.IPicMed1 || {}).ToolTip}
+                                          disabled={true}
                                         />
                                       </div>
                                     }
@@ -653,7 +702,7 @@ class MstRecord extends RintagiScreen {
                                 </Col>
                               }
 
-                              {false && (authCol.FailedAttempt1 || {}).visible &&
+                              {(authCol.FailedAttempt1 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
@@ -783,7 +832,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cTestCulture95'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cTestCulture95', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cTestCulture95', false, values, [this.TestCulture95Change])}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cTestCulture95', true)}
                                           onInputChange={this.TestCulture95InputChange()}
                                           value={values.cTestCulture95}
@@ -818,7 +867,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.SignOff95 || {}).visible &&
+                              {(authCol.SignOff95 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='20px' />) ||
@@ -827,12 +876,11 @@ class MstRecord extends RintagiScreen {
                                         )}
                                       </label>
                                     }
-                                    {((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
+                                    {((this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cSignOff95'
-                                          disabled={(authCol.SignOff95 || {}).readonly ? 'disabled' : ''} />
+                                        {values.cSignOff95 &&
+                                          <img alt='' src={values.cSignOff95} />
+                                        }
                                       </div>
                                     }
                                     {errors.cSignOff95 && touched.cSignOff95 && <span className='form__form-group-error'>{errors.cSignOff95}</span>}
@@ -899,8 +947,11 @@ const mapDispatchToProps = (dispatch) => (
     { DelMst: AdmUsrImprReduxObj.DelMst.bind(AdmUsrImprReduxObj) },
     { AddMst: AdmUsrImprReduxObj.AddMst.bind(AdmUsrImprReduxObj) },
     { SearchUsrId95: AdmUsrImprReduxObj.SearchActions.SearchUsrId95.bind(AdmUsrImprReduxObj) },
+    { GetRefUsrId95: AdmUsrImprReduxObj.SearchActions.GetRefUsrId95.bind(AdmUsrImprReduxObj) },
     { SearchImprUsrId95: AdmUsrImprReduxObj.SearchActions.SearchImprUsrId95.bind(AdmUsrImprReduxObj) },
+    { GetRefImprUsrId95: AdmUsrImprReduxObj.SearchActions.GetRefImprUsrId95.bind(AdmUsrImprReduxObj) },
     { SearchTestCulture95: AdmUsrImprReduxObj.SearchActions.SearchTestCulture95.bind(AdmUsrImprReduxObj) },
+    { GetRefTestCulture95: AdmUsrImprReduxObj.SearchActions.GetRefTestCulture95.bind(AdmUsrImprReduxObj) },
     { showNotification: showNotification },
     { setTitle: setTitle },
     { setSpinner: setSpinner },

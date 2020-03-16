@@ -43,7 +43,6 @@ namespace RO.Web
             columns.Add("LabelText215", typeof(string));
             columns.Add("CompanyId215", typeof(string));
             columns.Add("SortOrder215", typeof(string));
-            columns.Add("RemoveBtn", typeof(string));
             return dt;
         }
 
@@ -128,7 +127,6 @@ namespace RO.Web
             drType["CompanyId215"] = "Numeric"; drDisp["CompanyId215"] = "DropDownList";
             try { dr["SortOrder215"] = (mst["SortOrder215"] ?? "").Trim().Left(9999999); } catch { }
             drType["SortOrder215"] = "Numeric"; drDisp["SortOrder215"] = "TextBox";
-            
 
             if (dtl != null)
             {

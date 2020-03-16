@@ -73,16 +73,21 @@ async function fetchAPIResult(url, options={headers:{},requestOptions:{}}) {
 //                JSON.parse('abc{');
                 let ret = response.text();
                 return ret.then(bodyText=>{
-                    let parsedRet = tryParseJSON(bodyText);
-                    if (response.ok && parsedRet.status !== "access_denied") {
+                    let parsedRet = tryParseJSON(bodyText); 
+                    
+                    if (response.ok && (((parsedRet || {}).value || {}).d || {}).status !== "access_denied") {
                         return {
                             data: parsedRet,
                             status: "success",
                             errMsg: null,
                             errType: null
                         }
-                    } else {
-                        if ((response.status === 401 || response.status === 403 || parsedRet.status === "access_denied") && renewAccessToken && !tokenRenewed) {
+                    } 
+                    else {
+                        if ((response.status === 401 || response.status === 403 || (((parsedRet || {}).value || {}).d || {}).status === "access_denied") 
+                            && renewAccessToken 
+                            && !tokenRenewed) {
+                            log.debug('refresh token');
                             return renewAccessToken()
                                 .then(
                                     newToken=>{
@@ -101,12 +106,13 @@ async function fetchAPIResult(url, options={headers:{},requestOptions:{}}) {
                                 }) 
                         }
                         else {
+                            log.debug('refresh token failed');
                             return ({
                                 data: parsedRet,
                                 status: "failed",
                                 statusCode: response.status,
                                 errMsg: response.statusText,
-                                errType: (response.status === 401 || response.status === 403 || parsedRet.status === "access_denied") ? "access denied error" : "server error",
+                                errType: (response.status === 401 || response.status === 403 || (((parsedRet || {}).value || {}).d || {}).status === "access_denied") ? "access denied error" : "server error",
                             });
                         }
                     }

@@ -258,13 +258,31 @@ export function SetScreenCriteria(criteriaValues, accessScope) {
         }
     )
 }
+export function GetRefColumnContent(mstId, dtlId, refKeyId, isMaster, refScreenColumnName, options, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetRefColumnContent'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    mstId: mstId || null,
+                    dtlId: dtlId || null,
+                    refKeyId: refKeyId || null,
+                    refScreenColumnName: refScreenColumnName || null,
+                    isMaster: isMaster || false,
+                    options: options || {},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 
 export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessScope) {
     const reqJson = JSON.stringify({
-        mstId: mstId,
-        dtlId: dtlId,
-        isMaster: isMaster,
-        docId: docId,
+        mstId: mstId || null,
+        dtlId: dtlId || null,
+        isMaster: isMaster || false,
+        docId: docId || null,
         screenColumnName: screenColumnName,
     });
     return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetDoc'
@@ -315,14 +333,14 @@ export function GetCultureTypeName135List(query, topN, filterBy, accessScope) {
 
 export function SaveAppZipId135(mstId, dtlId, isMaster, docId, overwrite, screenColumnName, docJson, options, accessScope) {
     const reqJson = JSON.stringify({
-        mstId: mstId,
-        dtlId: dtlId,
-        isMaster: isMaster,
-        docId: docId,
-        overwrite: overwrite,
+        mstId: mstId || null,
+        dtlId: dtlId || null,
+        isMaster: isMaster || false,
+        docId: docId || null,
+        overwrite: overwrite || false,
         screenColumnName: 'AppZipId135',
-        docJson: docJson,
-        options: options
+        docJson: docJson || null,
+        options: options || {}
     });
     return fetchData(baseUrl + '/AdmAppInfoWs.asmx/SaveAppZipId135'
         , {
@@ -337,11 +355,11 @@ export function SaveAppZipId135(mstId, dtlId, isMaster, docId, overwrite, screen
 
 export function DelAppZipId135(mstId, dtlId, isMaster, screenColumnName, docIdList, accessScope) {
     const reqJson = JSON.stringify({
-        mstId: mstId,
-        dtlId: dtlId,
-        isMaster: isMaster || true,
+        mstId: mstId || null,
+        dtlId: dtlId || null,
+        isMaster: isMaster || false,
         screenColumnName: 'AppZipId135',
-        docIdList: docIdList,
+        docIdList: docIdList || [],
     });
     return fetchData(baseUrl + '/AdmAppInfoWs.asmx/DelAppZipId135'
         , {
@@ -358,7 +376,7 @@ export function GetAppZipId135List(mstId, dtlId, isMaster, accessScope) {
     const reqJson = JSON.stringify({
         mstId: mstId || '',
         dtlId: dtlId || '',
-        isMaster: isMaster || true,
+        isMaster: isMaster || false,
     });
     return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAppZipId135List'
         , {

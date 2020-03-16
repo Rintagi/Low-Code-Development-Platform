@@ -155,7 +155,6 @@ namespace RO.Web
             drType["CatDescription181"] = "VarWChar"; drDisp["CatDescription181"] = "MultiLine";
             try { dr["TableId181"] = mst["TableId181"]; } catch { }
             drType["TableId181"] = "Numeric"; drDisp["TableId181"] = "AutoComplete";
-            
 
             if (dtl != null)
             {

@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -90,6 +91,12 @@ class MstRecord extends RintagiScreen {
   }
 
   ScreenId24InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchScreenId24(v, filterBy); } }
+  BeforeCRUD24Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.cServerRuleId24 || {}).key || values.cServerRuleId24;
+    // dependent invocation goes to here
+  }
+
   SyncByDb({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
     return function (evt) {
       this.OnClickColumeName = 'SyncByDb';
@@ -385,6 +392,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -560,7 +580,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.RuleDescription24 || {}).visible &&
+                              {(authCol.RuleDescription24 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmServerRuleState)) && <Skeleton height='20px' />) ||
@@ -572,7 +592,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmServerRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cRuleDescription24'
                                           disabled={(authCol.RuleDescription24 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -618,7 +638,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cScreenId24'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId24', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId24', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId24', true)}
                                           onInputChange={this.ScreenId24InputChange()}
                                           value={values.cScreenId24}
@@ -857,7 +877,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.RuleCode24 || {}).visible &&
+                              {(authCol.RuleCode24 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmServerRuleState)) && <Skeleton height='20px' />) ||
@@ -869,7 +889,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmServerRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cRuleCode24'
                                           disabled={(authCol.RuleCode24 || {}).readonly ? 'disabled' : ''} />
                                       </div>

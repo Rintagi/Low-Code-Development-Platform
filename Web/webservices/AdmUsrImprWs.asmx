@@ -39,12 +39,10 @@ namespace RO.Web
             columns.Add("UsrImprId95", typeof(string));
             columns.Add("UsrId95", typeof(string));
             columns.Add("ImprUsrId95", typeof(string));
-            columns.Add("FailedAttempt1", typeof(string));
             columns.Add("InputBy95", typeof(string));
             columns.Add("InputOn95", typeof(string));
             columns.Add("ModifiedBy95", typeof(string));
             columns.Add("TestCulture95", typeof(string));
-            columns.Add("TestCurrency95", typeof(string));
             columns.Add("SignOff95", typeof(string));
             return dt;
         }
@@ -78,10 +76,14 @@ namespace RO.Web
             
         Dictionary<string, SerializableDictionary<string, string>> ddlContext = new Dictionary<string, SerializableDictionary<string, string>>() {
             {"UsrId95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlUsrId3S986"},{"mKey","UsrId95"},{"mVal","UsrId95Text"}, }},
+            {"UPicMed1", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlUsrId3S986"},{"mKey","UsrId95"},{"mVal","PicMed1"}, }},
             {"ImprUsrId95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlImprUsrId3S1002"},{"mKey","ImprUsrId95"},{"mVal","ImprUsrId95Text"}, }},
+            {"IPicMed1", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlImprUsrId3S1002"},{"mKey","ImprUsrId95"},{"mVal","PicMed1"}, }},
+            {"FailedAttempt1", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlImprUsrId3S1002"},{"mKey","ImprUsrId95"},{"mVal","FailedAttempt1"}, }},
             {"InputBy95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlInputBy3S3360"},{"mKey","InputBy95"},{"mVal","InputBy95Text"}, }},
             {"ModifiedBy95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlModifiedBy3S3362"},{"mKey","ModifiedBy95"},{"mVal","ModifiedBy95Text"}, }},
             {"TestCulture95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlTestCulture3S3076"},{"mKey","TestCulture95"},{"mVal","TestCulture95Text"}, }},
+            {"TestCurrency95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlTestCulture3S3076"},{"mKey","TestCulture95"},{"mVal","TestCurrency95"}, }},
         };
 
         private DataRow MakeTypRow(DataRow dr)
@@ -123,12 +125,8 @@ namespace RO.Web
             drType["UsrImprId95"] = "Numeric"; drDisp["UsrImprId95"] = "TextBox";
             try { dr["UsrId95"] = mst["UsrId95"]; } catch { }
             drType["UsrId95"] = "Numeric"; drDisp["UsrId95"] = "AutoComplete";
-            
             try { dr["ImprUsrId95"] = mst["ImprUsrId95"]; } catch { }
             drType["ImprUsrId95"] = "Numeric"; drDisp["ImprUsrId95"] = "AutoComplete";
-            
-            try { dr["FailedAttempt1"] = mst["FailedAttempt1"]; } catch { }
-            drType["FailedAttempt1"] = "Numeric"; drDisp["FailedAttempt1"] = "StarRating";
             try { dr["InputBy95"] = mst["InputBy95"]; } catch { }
             drType["InputBy95"] = "Numeric"; drDisp["InputBy95"] = "DropDownList";
             try { dr["InputOn95"] = mst["InputOn95"]; } catch { }
@@ -137,8 +135,6 @@ namespace RO.Web
             drType["ModifiedBy95"] = "Numeric"; drDisp["ModifiedBy95"] = "DropDownList";
             try { dr["TestCulture95"] = mst["TestCulture95"]; } catch { }
             drType["TestCulture95"] = "VarChar"; drDisp["TestCulture95"] = "AutoComplete";
-            try { dr["TestCurrency95"] = Decimal.Parse((mst["TestCurrency95"] ?? "").Trim(), System.Globalization.NumberStyles.Currency, new System.Globalization.CultureInfo(base.LUser.Culture)).ToString(); } catch { }
-            drType["TestCurrency95"] = "Currency"; drDisp["TestCurrency95"] = "Currency";
             try { dr["SignOff95"] = mst["SignOff95"]; } catch { }
             drType["SignOff95"] = "VarBinary"; drDisp["SignOff95"] = "Signature";
 
@@ -185,12 +181,10 @@ namespace RO.Web
                 {"UPicMed1",""},
                 {"ImprUsrId95",""},
                 {"IPicMed1",""},
-                {"FailedAttempt1",""},
                 {"InputBy95",base.LUser.UsrId.ToString()},
                 {"InputOn95",""},
                 {"ModifiedBy95",base.LUser.UsrId.ToString()},
                 {"TestCulture95",""},
-                {"TestCurrency95",""},
                 {"SignOff95",""},
 
             };

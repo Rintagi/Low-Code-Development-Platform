@@ -2456,4 +2456,21 @@ In default.master: replace section.css with the following:
 3. preserve LImpr content order when removing duplicates~@~~@~en-US~@~
 11566~@~  11. 128.00228~@~11~@~128~@~2020-02-28 00:00:00.000~@~~@~~@~1. add listbox react component
 2. further enhance context based filtering support~@~~@~en-US~@~
-11567~@~  11. 129~@~11~@~129~@~~@~~@~~@~~@~~@~~@~
+11567~@~  11. 129.00302~@~11~@~129~@~2020-03-02 00:00:00.000~@~~@~~@~1. prerequisite setup script (nodejs versioning) improvement~@~~@~en-US~@~
+11568~@~  11. 130.00305~@~11~@~130~@~2020-03-05 00:00:00.000~@~~@~~@~1. generate react component for multiline text
+2. generate react component for reference columns
+3. support criteria passing to screen filter logic
+4. improved bcp path detection in installer
+5. align image button content handling with React side image upload
+6. suppress GetLastCriteria SP error from end user on React side
+7. improved multi-doc delete from web service/react side
+8. handle field validation of web service for column length == 0(unlimited) case
+~@~~@~en-US~@~
+11569~@~  11. 131.00309~@~11~@~131~@~2020-03-09 00:00:00.000~@~~@~~@~1. generate multi-doc control for React
+2. replace asmx 401 return code with in-message status(prevent browser challenge in safari)
+~@~~@~en-US~@~
+11570~@~  11. 132.00313~@~11~@~132~@~2020-03-13 00:00:00.000~@~~@~~@~1. generate pull up control for react 
+2. generate signature control for react
+3. lay ground work for context sensitive GetLis and GetDdl SP calls
+4. lay ground work for cross module navigation for react~@~~@~en-US~@~
+11571~@~  11. 133~@~11~@~133~@~~@~~@~~@~~@~~@~~@~

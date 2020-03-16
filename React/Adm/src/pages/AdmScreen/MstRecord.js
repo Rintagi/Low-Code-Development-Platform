@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -158,9 +159,6 @@ class MstRecord extends RintagiScreen {
           DeferError15: values.cDeferError15 ? 'Y' : 'N',
           AuthRequired15: values.cAuthRequired15 ? 'Y' : 'N',
           GenAudit15: values.cGenAudit15 ? 'Y' : 'N',
-          ScreenObj15: values.cScreenObj15 || '',
-          ScreenFilter: values.cScreenFilter || '',
-          MoreInfo: values.cMoreInfo || '',
         },
         [],
         {
@@ -391,7 +389,6 @@ class MstRecord extends RintagiScreen {
     const AuthRequired15 = currMst.AuthRequired15;
     const GenAudit15 = currMst.GenAudit15;
     const ScreenObj15 = currMst.ScreenObj15;
-    const ScreenFilter = currMst.ScreenFilter;
     const MoreInfo = currMst.MoreInfo;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -399,6 +396,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -444,7 +454,6 @@ class MstRecord extends RintagiScreen {
                     cAuthRequired15: AuthRequired15 === 'Y',
                     cGenAudit15: GenAudit15 === 'Y',
                     cScreenObj15: formatContent(ScreenObj15 || '', 'HyperPopUp'),
-                    cScreenFilter: formatContent(ScreenFilter || '', 'ImagePopUp'),
                     cMoreInfo: formatContent(MoreInfo || '', 'HyperPopUp'),
                   }}
                   validate={this.ValidatePage}
@@ -663,7 +672,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cMasterTableId15'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cMasterTableId15', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cMasterTableId15', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cMasterTableId15', true)}
                                           onInputChange={this.MasterTableId15InputChange()}
                                           value={values.cMasterTableId15}
@@ -690,7 +699,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cSearchTableId15'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchTableId15', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchTableId15', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchTableId15', true)}
                                           onInputChange={this.SearchTableId15InputChange()}
                                           value={values.cSearchTableId15}
@@ -717,7 +726,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cSearchId15'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchId15', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchId15', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchId15', true)}
                                           onInputChange={this.SearchId15InputChange()}
                                           value={values.cSearchId15}
@@ -744,7 +753,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cSearchIdR15'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchIdR15', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchIdR15', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchIdR15', true)}
                                           onInputChange={this.SearchIdR15InputChange()}
                                           value={values.cSearchIdR15}
@@ -771,7 +780,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cSearchDtlId15'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchDtlId15', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchDtlId15', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchDtlId15', true)}
                                           onInputChange={this.SearchDtlId15InputChange()}
                                           value={values.cSearchDtlId15}
@@ -798,7 +807,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cSearchDtlIdR15'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchDtlIdR15', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchDtlIdR15', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchDtlIdR15', true)}
                                           onInputChange={this.SearchDtlIdR15InputChange()}
                                           value={values.cSearchDtlIdR15}
@@ -825,7 +834,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cSearchUrlId15'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchUrlId15', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchUrlId15', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchUrlId15', true)}
                                           onInputChange={this.SearchUrlId15InputChange()}
                                           value={values.cSearchUrlId15}
@@ -852,7 +861,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cSearchImgId15'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchImgId15', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchImgId15', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cSearchImgId15', true)}
                                           onInputChange={this.SearchImgId15InputChange()}
                                           value={values.cSearchImgId15}
@@ -879,7 +888,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cDetailTableId15'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cDetailTableId15', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cDetailTableId15', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cDetailTableId15', true)}
                                           onInputChange={this.DetailTableId15InputChange()}
                                           value={values.cDetailTableId15}
@@ -1082,7 +1091,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ScreenObj15 || {}).visible &&
+                              {(authCol.ScreenObj15 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
@@ -1103,28 +1112,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ScreenFilter || {}).visible &&
-                                <Col lg={6} xl={6}>
-                                  <div className='form__form-group'>
-                                    {((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
-                                      <label className='form__form-group-label'>{(columnLabel.ScreenFilter || {}).ColumnHeader} {(columnLabel.ScreenFilter || {}).ToolTip &&
-                                        (<ControlledPopover id={(columnLabel.ScreenFilter || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ScreenFilter || {}).ToolTip} />
-                                        )}
-                                      </label>
-                                    }
-                                    {((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cScreenFilter'
-                                          disabled={(authCol.ScreenFilter || {}).readonly ? 'disabled' : ''} />
-                                      </div>
-                                    }
-                                    {errors.cScreenFilter && touched.cScreenFilter && <span className='form__form-group-error'>{errors.cScreenFilter}</span>}
-                                  </div>
-                                </Col>
-                              }
-                              {false && (authCol.MoreInfo || {}).visible &&
+                              {(authCol.MoreInfo || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||

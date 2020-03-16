@@ -18,7 +18,7 @@ import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils';
 import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
@@ -108,8 +108,6 @@ class DtlRecord extends RintagiScreen {
           PageLnkId1278: values.cPageLnkId1278 || null,
           PageLnkTxt1278: values.cPageLnkTxt1278 || '',
           PageLnkRef1278: values.cPageLnkRef1278 || '',
-          PageLnkImg1278: values.cPageLnkImg1278 || '',
-          PageLnkAlt1278: values.cPageLnkAlt1278 || '',
           PageLnkOrd1278: values.cPageLnkOrd1278 || '',
           Popup1278: values.cPopup1278 ? 'Y' : 'N',
           PageLnkCss1278: values.cPageLnkCss1278 || '',
@@ -341,8 +339,6 @@ class DtlRecord extends RintagiScreen {
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
     const PageLnkTxt1278 = currDtl.PageLnkTxt1278;
     const PageLnkRef1278 = currDtl.PageLnkRef1278;
-    const PageLnkImg1278 = currDtl.PageLnkImg1278;
-    const PageLnkAlt1278 = currDtl.PageLnkAlt1278;
     const PageLnkOrd1278 = currDtl.PageLnkOrd1278;
     const Popup1278 = currDtl.Popup1278;
     const PageLnkCss1278 = currDtl.PageLnkCss1278;
@@ -368,11 +364,9 @@ class DtlRecord extends RintagiScreen {
                     cPageLnkId1278: currDtl.PageLnkId1278 || '',
                     cPageLnkTxt1278: formatContent(currDtl.PageLnkTxt1278 || '', 'TextBox'),
                     cPageLnkRef1278: formatContent(currDtl.PageLnkRef1278 || '', 'TextBox'),
-                    cPageLnkImg1278: formatContent(currDtl.PageLnkImg1278 || '', 'Upload'),
-                    cPageLnkAlt1278: formatContent(currDtl.PageLnkAlt1278 || '', 'Upload'),
                     cPageLnkOrd1278: formatContent(currDtl.PageLnkOrd1278 || '', 'TextBox'),
                     cPopup1278: currDtl.Popup1278 === 'Y',
-                    cPageLnkCss1278: formatContent(currDtl.PageLnkCss1278 || '', 'MultiLine'),
+                    cPageLnkCss1278: formatContent(PageLnkCss1278 || '', 'MultiLine'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -496,48 +490,6 @@ class DtlRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.PageLnkImg1278 || {}).visible &&
-                                <Col lg={12} xl={12}>
-                                  <div className='form__form-group'>
-                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
-                                      <label className='form__form-group-label'>{(columnLabel.PageLnkImg1278 || {}).ColumnHeader} {(columnLabel.PageLnkImg1278 || {}).ToolTip &&
-                                        (<ControlledPopover id={(columnLabel.PageLnkImg1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PageLnkImg1278 || {}).ToolTip} />
-                                        )}
-                                      </label>
-                                    }
-                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cPageLnkImg1278'
-                                          disabled={(authCol.PageLnkImg1278 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
-                                    }
-                                    {errors.cPageLnkImg1278 && touched.cPageLnkImg1278 && <span className='form__form-group-error'>{errors.cPageLnkImg1278}</span>}
-                                  </div>
-                                </Col>
-                              }
-                              {false && (authCol.PageLnkAlt1278 || {}).visible &&
-                                <Col lg={12} xl={12}>
-                                  <div className='form__form-group'>
-                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
-                                      <label className='form__form-group-label'>{(columnLabel.PageLnkAlt1278 || {}).ColumnHeader} {(columnLabel.PageLnkAlt1278 || {}).ToolTip &&
-                                        (<ControlledPopover id={(columnLabel.PageLnkAlt1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PageLnkAlt1278 || {}).ToolTip} />
-                                        )}
-                                      </label>
-                                    }
-                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cPageLnkAlt1278'
-                                          disabled={(authCol.PageLnkAlt1278 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
-                                    }
-                                    {errors.cPageLnkAlt1278 && touched.cPageLnkAlt1278 && <span className='form__form-group-error'>{errors.cPageLnkAlt1278}</span>}
-                                  </div>
-                                </Col>
-                              }
                               {(authCol.PageLnkOrd1278 || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -580,8 +532,8 @@ class DtlRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.PageLnkCss1278 || {}).visible &&
-                                <Col lg={12} xl={12}>
+                              {(authCol.PageLnkCss1278 || {}).visible &&
+                                <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
                                       <label className='form__form-group-label'>{(columnLabel.PageLnkCss1278 || {}).ColumnHeader} {(columnLabel.PageLnkCss1278 || {}).ToolTip &&
@@ -592,7 +544,7 @@ class DtlRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cPageLnkCss1278'
                                           disabled={(authCol.PageLnkCss1278 || {}).readonly ? 'disabled' : ''} />
                                       </div>

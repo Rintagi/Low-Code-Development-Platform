@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -162,8 +163,6 @@ class MstRecord extends RintagiScreen {
           GroupColId1277: (values.cGroupColId1277 || {}).value || '',
           LinkTypeCd1277: (values.cLinkTypeCd1277 || {}).value || '',
           PageObjOrd1277: values.cPageObjOrd1277 || '',
-          SctGrpRow1277: values.cSctGrpRow1277 || '',
-          SctGrpCol1277: values.cSctGrpCol1277 || '',
           PageObjCss1277: values.cPageObjCss1277 || '',
           PageObjSrp1277: values.cPageObjSrp1277 || '',
         },
@@ -371,8 +370,6 @@ class MstRecord extends RintagiScreen {
     const LinkTypeCd1277List = AdmPageObjReduxObj.ScreenDdlSelectors.LinkTypeCd1277(AdmPageObjState);
     const LinkTypeCd1277 = currMst.LinkTypeCd1277;
     const PageObjOrd1277 = currMst.PageObjOrd1277;
-    const SctGrpRow1277 = currMst.SctGrpRow1277;
-    const SctGrpCol1277 = currMst.SctGrpCol1277;
     const PageObjCss1277 = currMst.PageObjCss1277;
     const PageObjSrp1277 = currMst.PageObjSrp1277;
 
@@ -381,6 +378,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -408,8 +418,6 @@ class MstRecord extends RintagiScreen {
                     cGroupColId1277: GroupColId1277List.filter(obj => { return obj.key === GroupColId1277 })[0],
                     cLinkTypeCd1277: LinkTypeCd1277List.filter(obj => { return obj.key === LinkTypeCd1277 })[0],
                     cPageObjOrd1277: formatContent(PageObjOrd1277 || '', 'TextBox'),
-                    cSctGrpRow1277: formatContent(SctGrpRow1277 || '', 'ImagePopUp'),
-                    cSctGrpCol1277: formatContent(SctGrpCol1277 || '', 'ImagePopUp'),
                     cPageObjCss1277: formatContent(PageObjCss1277 || '', 'MultiLine'),
                     cPageObjSrp1277: formatContent(PageObjSrp1277 || '', 'MultiLine'),
                   }}
@@ -563,7 +571,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cGroupRowId1277'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cGroupRowId1277', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cGroupRowId1277', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cGroupRowId1277', true)}
                                           onInputChange={this.GroupRowId1277InputChange()}
                                           value={values.cGroupRowId1277}
@@ -590,7 +598,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cGroupColId1277'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cGroupColId1277', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cGroupColId1277', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cGroupColId1277', true)}
                                           onInputChange={this.GroupColId1277InputChange()}
                                           value={values.cGroupColId1277}
@@ -617,7 +625,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cLinkTypeCd1277'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cLinkTypeCd1277', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cLinkTypeCd1277', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cLinkTypeCd1277', true)}
                                           onInputChange={this.LinkTypeCd1277InputChange()}
                                           value={values.cLinkTypeCd1277}
@@ -652,49 +660,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.SctGrpRow1277 || {}).visible &&
-                                <Col lg={6} xl={6}>
-                                  <div className='form__form-group'>
-                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
-                                      <label className='form__form-group-label'>{(columnLabel.SctGrpRow1277 || {}).ColumnHeader} {(columnLabel.SctGrpRow1277 || {}).ToolTip &&
-                                        (<ControlledPopover id={(columnLabel.SctGrpRow1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SctGrpRow1277 || {}).ToolTip} />
-                                        )}
-                                      </label>
-                                    }
-                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cSctGrpRow1277'
-                                          disabled={(authCol.SctGrpRow1277 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
-                                    }
-                                    {errors.cSctGrpRow1277 && touched.cSctGrpRow1277 && <span className='form__form-group-error'>{errors.cSctGrpRow1277}</span>}
-                                  </div>
-                                </Col>
-                              }
-                              {false && (authCol.SctGrpCol1277 || {}).visible &&
-                                <Col lg={6} xl={6}>
-                                  <div className='form__form-group'>
-                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
-                                      <label className='form__form-group-label'>{(columnLabel.SctGrpCol1277 || {}).ColumnHeader} {(columnLabel.SctGrpCol1277 || {}).ToolTip &&
-                                        (<ControlledPopover id={(columnLabel.SctGrpCol1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SctGrpCol1277 || {}).ToolTip} />
-                                        )}
-                                      </label>
-                                    }
-                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cSctGrpCol1277'
-                                          disabled={(authCol.SctGrpCol1277 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
-                                    }
-                                    {errors.cSctGrpCol1277 && touched.cSctGrpCol1277 && <span className='form__form-group-error'>{errors.cSctGrpCol1277}</span>}
-                                  </div>
-                                </Col>
-                              }
-                              {false && (authCol.PageObjCss1277 || {}).visible &&
+                              {(authCol.PageObjCss1277 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
@@ -706,7 +672,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cPageObjCss1277'
                                           disabled={(authCol.PageObjCss1277 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -715,7 +681,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.PageObjSrp1277 || {}).visible &&
+                              {(authCol.PageObjSrp1277 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
@@ -727,7 +693,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cPageObjSrp1277'
                                           disabled={(authCol.PageObjSrp1277 || {}).readonly ? 'disabled' : ''} />
                                       </div>

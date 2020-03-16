@@ -32,14 +32,14 @@ class Login extends Component {
 
     this.props.getCurrentUser()
       .then((data) => {
-        log.debug('get current user return', this.props.user);
+        //log.debug('get current user return', this.props.user);
         if (!this.props.user || !this.props.user.UsrId) {
           const _this = this;
           this.props.setSpinner(false, 'login end');
           // this.setState({ showBox: true });
           setTimeout(() => { _this.props.setSpinner(false, '#####Login2Then'); }, 500);
         }
-        log.debug(data);
+        //log.debug(data);
         // do nothing if info retrieved
       })
       .catch(error => {
@@ -52,7 +52,7 @@ class Login extends Component {
       .finally(() => {
         const _this = this;
         this.props.setSpinner(false, 'login end');
-        log.debug('get current user done');
+       // log.debug('get current user done');
         /* must reset this */
         setTimeout(() => { _this.props.setSpinner(false, '#####Login2Final'); }, 500);
       });

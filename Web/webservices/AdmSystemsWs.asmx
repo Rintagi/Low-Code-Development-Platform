@@ -60,10 +60,6 @@ namespace RO.Web
             columns.Add("CustServPhone45", typeof(string));
             columns.Add("CustServFax45", typeof(string));
             columns.Add("WebAddress45", typeof(string));
-            columns.Add("ResetFromGitRepo", typeof(string));
-            columns.Add("CreateReactBase", typeof(string));
-            columns.Add("RemoveReactBase", typeof(string));
-            columns.Add("PublishReactToSite", typeof(string));
             columns.Add("FromSystemId", typeof(string));
             columns.Add("UpdBaseSystemId", typeof(string));
             columns.Add("UpdRefSystemId", typeof(string));
@@ -148,7 +144,6 @@ namespace RO.Web
             drType["SysProgram45"] = "Char"; drDisp["SysProgram45"] = "CheckBox";
             try { dr["Active45"] = (mst["Active45"] ?? "").Trim().Left(1); } catch { }
             drType["Active45"] = "Char"; drDisp["Active45"] = "CheckBox";
-            
             try { dr["dbAppProvider45"] = (mst["dbAppProvider45"] ?? "").Trim().Left(50); } catch { }
             drType["dbAppProvider45"] = "VarChar"; drDisp["dbAppProvider45"] = "TextBox";
             try { dr["dbAppServer45"] = (mst["dbAppServer45"] ?? "").Trim().Left(50); } catch { }
@@ -185,10 +180,6 @@ namespace RO.Web
             drType["CustServFax45"] = "VarChar"; drDisp["CustServFax45"] = "TextBox";
             try { dr["WebAddress45"] = (mst["WebAddress45"] ?? "").Trim().Left(50); } catch { }
             drType["WebAddress45"] = "VarChar"; drDisp["WebAddress45"] = "TextBox";
-            
-            
-            
-            
             try { dr["FromSystemId"] = (mst["FromSystemId"] ?? "").Trim().Left(9999999); } catch { }
             drType["FromSystemId"] = string.Empty; drDisp["FromSystemId"] = "TextBox";
             try { dr["UpdBaseSystemId"] = (mst["UpdBaseSystemId"] ?? "").Trim().Left(9999999); } catch { }

@@ -21,16 +21,26 @@ class AdmMenuRedux extends RintagiScreenRedux {
       { columnName: 'StaticPgId39', payloadDdlName: 'StaticPgId39List', keyName: 'StaticPgId39', labelName: 'StaticPgId39Text', forMst: true, isAutoComplete: true, apiServiceName: 'GetStaticPgId39List', actionTypeName: 'GET_DDL_StaticPgId39' },
     ]
     this.ScreenOnDemandDef = [
-      { columnName: 'IconUrl39', tableColumnName: 'IconUrl', forMst: true, apiServiceName: 'GetColumnContent', actionTypeName: 'GET_COLUMN_IconUrl39' },
+      { columnName: 'IconUrl39', isFileObject: true, tableColumnName: 'IconUrl', forMst: true, apiServiceName: 'GetColumnContent', actionTypeName: 'GET_COLUMN_IconUrl39' },
     ]
+    this.ScreenDocumentDef = [
 
+    ]
     this.ScreenCriDdlDef = [
 
     ]
     this.SearchActions = {
       ...[...this.ScreenDdlDef].reduce((a, v) => { a['Search' + v.columnName] = this.MakeSearchAction(v); return a; }, {}),
       ...[...this.ScreenCriDdlDef].reduce((a, v) => { a['SearchCri' + v.columnName] = this.MakeSearchAction(v); return a; }, {}),
-      ...[...this.ScreenOnDemandDef].reduce((a, v) => { a['Get' + v.columnName] = this.MakeGetColumnOnDemandAction(v); return a; }, {}),
+      ...[...this.ScreenOnDemandDef].filter(f => f.type !== 'DocList' && f.type !== 'RefColumn').reduce((a, v) => { a['Get' + v.columnName] = this.MakeGetColumnOnDemandAction(v); return a; }, {}),
+      ...[...this.ScreenOnDemandDef].filter(f => f.type === 'RefColumn').reduce((a, v) => { a['Get' + v.columnName] = this.MakeGetRefColumnOnDemandAction(v); return a; }, {}),
+      ...this.MakePullUpOnDemandAction([...this.ScreenOnDemandDef].filter(f => f.type === 'RefColumn').reduce((a, v) => { a['GetRef' + v.refColumnName] = { dependents: [...((a['GetRef' + v.refColumnName] || {}).dependents || []), v] }; return a; }, {})),
+      ...[...this.ScreenOnDemandDef].filter(f => f.type === 'DocList').reduce((a, v) => { a['Get' + v.columnName] = this.MakeGetDocumentListAction(v); return a; }, {}),
+    }
+    this.OnDemandActions = {
+      ...[...this.ScreenDocumentDef].filter(f => f.type === 'Get').reduce((a, v) => { a['Get' + v.columnName + 'Content'] = this.MakeGetDocumentContentAction(v); return a; }, {}),
+      ...[...this.ScreenDocumentDef].filter(f => f.type === 'Add').reduce((a, v) => { a['Add' + v.columnName + 'Content'] = this.MakeAddDocumentContentAction(v); return a; }, {}),
+      ...[...this.ScreenDocumentDef].filter(f => f.type === 'Del').reduce((a, v) => { a['Del' + v.columnName + 'Content'] = this.MakeDelDocumentContentAction(v); return a; }, {}),
     }
     this.ScreenDdlSelectors = this.ScreenDdlDef.reduce((a, v) => { a[v.columnName] = this.MakeDdlSelectors(v); return a; }, {})
     this.ScreenCriDdlSelectors = this.ScreenCriDdlDef.reduce((a, v) => { a[v.columnName] = this.MakeCriDdlSelectors(v); return a; }, {})

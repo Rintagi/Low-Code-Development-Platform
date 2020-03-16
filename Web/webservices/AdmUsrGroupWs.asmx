@@ -51,8 +51,6 @@ namespace RO.Web
             columns.Add("CompanyId58", typeof(string));
             columns.Add("ProjectId58", typeof(string));
             columns.Add("Filler", typeof(string));
-            columns.Add("FillerBtn", typeof(string));
-            columns.Add("MoreInfo", typeof(string));
             columns.Add("SystemId58", typeof(string));
             columns.Add("SysRowAuthorityId58", typeof(string));
             return dt;
@@ -93,8 +91,6 @@ namespace RO.Web
             dr["CompanyId58"] = System.Data.OleDb.OleDbType.Numeric.ToString();
             dr["ProjectId58"] = System.Data.OleDb.OleDbType.Numeric.ToString();
             dr["Filler"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
-            dr["FillerBtn"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
-            dr["MoreInfo"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
             dr["SystemId58"] = System.Data.OleDb.OleDbType.Numeric.ToString();
             dr["SysRowAuthorityId58"] = System.Data.OleDb.OleDbType.Numeric.ToString();
 
@@ -108,8 +104,6 @@ namespace RO.Web
             dr["CompanyId58"] = "DropDownList";
             dr["ProjectId58"] = "DropDownList";
             dr["Filler"] = "TextBox";
-            dr["FillerBtn"] = "Action Button";
-            dr["MoreInfo"] = "HyperPopUp";
             dr["SystemId58"] = "DropDownList";
             dr["SysRowAuthorityId58"] = "DropDownList";
 
@@ -126,8 +120,6 @@ namespace RO.Web
                 dr["CompanyId58"] = drv["CompanyId58"];
                 dr["ProjectId58"] = drv["ProjectId58"];
                 dr["Filler"] = (drv["Filler"] ?? "").ToString().Trim().Left(9999999);
-                
-                dr["MoreInfo"] = drv["MoreInfo"];
                 dr["SystemId58"] = drv["SystemId58"];
                 dr["SysRowAuthorityId58"] = drv["SysRowAuthorityId58"];
 

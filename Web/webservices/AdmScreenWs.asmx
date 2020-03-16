@@ -59,9 +59,6 @@ namespace RO.Web
             columns.Add("DeferError15", typeof(string));
             columns.Add("AuthRequired15", typeof(string));
             columns.Add("GenAudit15", typeof(string));
-            columns.Add("ScreenObj15", typeof(string));
-            columns.Add("ScreenFilter", typeof(string));
-            columns.Add("MoreInfo", typeof(string));
             return dt;
         }
 
@@ -276,12 +273,6 @@ namespace RO.Web
             drType["AuthRequired15"] = "Char"; drDisp["AuthRequired15"] = "CheckBox";
             try { dr["GenAudit15"] = (mst["GenAudit15"] ?? "").Trim().Left(1); } catch { }
             drType["GenAudit15"] = "Char"; drDisp["GenAudit15"] = "CheckBox";
-            try { dr["ScreenObj15"] = mst["ScreenObj15"]; } catch { }
-            drType["ScreenObj15"] = "VarChar"; drDisp["ScreenObj15"] = "HyperPopUp";
-            try { dr["ScreenFilter"] = mst["ScreenFilter"]; } catch { }
-            drType["ScreenFilter"] = string.Empty; drDisp["ScreenFilter"] = "ImagePopUp";
-            try { dr["MoreInfo"] = mst["MoreInfo"]; } catch { }
-            drType["MoreInfo"] = string.Empty; drDisp["MoreInfo"] = "HyperPopUp";
 
             if (dtl != null)
             {

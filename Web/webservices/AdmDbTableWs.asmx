@@ -46,7 +46,6 @@ namespace RO.Web
             columns.Add("UploadSheet", typeof(string));
             columns.Add("SheetNameList", typeof(string));
             columns.Add("RowsToExamine", typeof(string));
-            columns.Add("BtnScan", typeof(string));
             columns.Add("ModifiedBy3", typeof(string));
             columns.Add("LastSyncDt3", typeof(string));
             columns.Add("VirtualSql3", typeof(string));
@@ -188,17 +187,12 @@ namespace RO.Web
             drType["VirtualTbl3"] = "Char"; drDisp["VirtualTbl3"] = "CheckBox";
             try { dr["MultiDesignDb3"] = (mst["MultiDesignDb3"] ?? "").Trim().Left(1); } catch { }
             drType["MultiDesignDb3"] = "Char"; drDisp["MultiDesignDb3"] = "CheckBox";
-            
-            
-            
-            
             try { dr["UploadSheet"] = mst["UploadSheet"]; } catch { }
             drType["UploadSheet"] = string.Empty; drDisp["UploadSheet"] = "Upload";
             try { dr["SheetNameList"] = mst["SheetNameList"]; } catch { }
             drType["SheetNameList"] = string.Empty; drDisp["SheetNameList"] = "DropDownList";
             try { dr["RowsToExamine"] = (mst["RowsToExamine"] ?? "").Trim().Left(9999999); } catch { }
             drType["RowsToExamine"] = string.Empty; drDisp["RowsToExamine"] = "TextBox";
-            
             try { dr["ModifiedBy3"] = mst["ModifiedBy3"]; } catch { }
             drType["ModifiedBy3"] = "Numeric"; drDisp["ModifiedBy3"] = "DropDownList";
             try { dr["LastSyncDt3"] = (mst["LastSyncDt3"] ?? "").Trim().Left(9999999); } catch { }

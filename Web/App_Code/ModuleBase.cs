@@ -2511,7 +2511,8 @@ namespace RO.Web
         protected void SetSecureCookie(string name, Dictionary<string, string> content, int duration)
         {
             string xForwardedFor = Request.Headers["X-Forwarded-For"];
-            string sessionCookieName = "ASP.NET_" + Config.AppNameSpace + "SessionId";
+            System.Web.Configuration.SessionStateSection SessionSettings = ConfigurationManager.GetSection("system.web/sessionState") as System.Web.Configuration.SessionStateSection;
+            string sessionCookieName = SessionSettings != null ? SessionSettings.CookieName : null;
             string cookieName = name + "_" + sessionCookieName;
             HttpCookie sessionCookie = Request.Cookies[sessionCookieName];
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -2522,9 +2523,10 @@ namespace RO.Web
             cookie.HttpOnly = true;
             cookie.Secure = IsSecureConnection() 
                             ||
-                            (!string.IsNullOrEmpty(xForwardedFor) && (Config.EnableSsl) && !Request.IsLocal);
-            cookie.Domain = sessionCookie.Domain;
-            cookie.Path = sessionCookie.Path;
+                            (!string.IsNullOrEmpty(xForwardedFor) 
+                            && ((Config.EnableSsl) || Config.ExtBaseUrl.StartsWith("https://"))
+                            && !Request.IsLocal);
+            cookie.Path = "/";
 
             if (duration > 0) cookie.Expires = DateTime.UtcNow.AddSeconds(duration);
             else cookie.Expires = new DateTime(0);

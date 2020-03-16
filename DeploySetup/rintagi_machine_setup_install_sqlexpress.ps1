@@ -1,4 +1,5 @@
 
+#Microsoft SQL Server Express edition
 Write-Output "choco install sql-server-express -y"
 choco install sql-server-express
 

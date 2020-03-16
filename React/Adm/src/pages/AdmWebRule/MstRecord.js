@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -400,6 +401,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -573,7 +587,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.RuleDescription128 || {}).visible &&
+                              {(authCol.RuleDescription128 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
@@ -585,7 +599,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cRuleDescription128'
                                           disabled={(authCol.RuleDescription128 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -631,7 +645,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cScreenId128'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId128', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId128', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId128', true)}
                                           onInputChange={this.ScreenId128InputChange()}
                                           value={values.cScreenId128}
@@ -658,7 +672,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cScreenObjId128'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenObjId128', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenObjId128', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenObjId128', true)}
                                           onInputChange={this.ScreenObjId128InputChange()}
                                           value={values.cScreenObjId128}
@@ -720,7 +734,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.WebRuleProg128 || {}).visible &&
+                              {(authCol.WebRuleProg128 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
@@ -732,7 +746,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cWebRuleProg128'
                                           disabled={(authCol.WebRuleProg128 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -813,7 +827,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ReactRuleProg128 || {}).visible &&
+                              {(authCol.ReactRuleProg128 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
@@ -825,7 +839,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cReactRuleProg128'
                                           disabled={(authCol.ReactRuleProg128 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -858,7 +872,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ReduxRuleProg128 || {}).visible &&
+                              {(authCol.ReduxRuleProg128 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
@@ -870,7 +884,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cReduxRuleProg128'
                                           disabled={(authCol.ReduxRuleProg128 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -903,7 +917,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ServiceRuleProg128 || {}).visible &&
+                              {(authCol.ServiceRuleProg128 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
@@ -915,7 +929,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cServiceRuleProg128'
                                           disabled={(authCol.ServiceRuleProg128 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -948,7 +962,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.AsmxRuleProg128 || {}).visible &&
+                              {(authCol.AsmxRuleProg128 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
@@ -960,7 +974,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cAsmxRuleProg128'
                                           disabled={(authCol.AsmxRuleProg128 || {}).readonly ? 'disabled' : ''} />
                                       </div>

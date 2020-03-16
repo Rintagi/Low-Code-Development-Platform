@@ -51,7 +51,6 @@ namespace RO.Web
             columns.Add("OnUpd24", typeof(string));
             columns.Add("OnDel24", typeof(string));
             columns.Add("BeforeCRUD24", typeof(string));
-            columns.Add("CrudTypeDesc1289", typeof(string));
             columns.Add("RuleCode24", typeof(string));
             columns.Add("ModifiedBy24", typeof(string));
             columns.Add("LastGenDt24", typeof(string));
@@ -89,6 +88,7 @@ namespace RO.Web
             {"RuleTypeId24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleTypeId3S151"},{"mKey","RuleTypeId24"},{"mVal","RuleTypeId24Text"}, }},
             {"ScreenId24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlScreenId3S139"},{"mKey","ScreenId24"},{"mVal","ScreenId24Text"}, }},
             {"BeforeCRUD24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlBeforeCRUD3S163"},{"mKey","BeforeCRUD24"},{"mVal","BeforeCRUD24Text"}, }},
+            {"CrudTypeDesc1289", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlBeforeCRUD3S163"},{"mKey","BeforeCRUD24"},{"mVal","CrudTypeDesc1289"}, }},
             {"ModifiedBy24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlModifiedBy3S1397"},{"mKey","ModifiedBy24"},{"mVal","ModifiedBy24Text"}, }},
         };
 
@@ -157,12 +157,8 @@ namespace RO.Web
             drType["OnDel24"] = "Char"; drDisp["OnDel24"] = "CheckBox";
             try { dr["BeforeCRUD24"] = mst["BeforeCRUD24"]; } catch { }
             drType["BeforeCRUD24"] = "Char"; drDisp["BeforeCRUD24"] = "DropDownList";
-            try { dr["CrudTypeDesc1289"] = mst["CrudTypeDesc1289"]; } catch { }
-            drType["CrudTypeDesc1289"] = "VarWChar"; drDisp["CrudTypeDesc1289"] = "Label";
             try { dr["RuleCode24"] = mst["RuleCode24"]; } catch { }
             drType["RuleCode24"] = "VarWChar"; drDisp["RuleCode24"] = "MultiLine";
-            
-            
             try { dr["ModifiedBy24"] = mst["ModifiedBy24"]; } catch { }
             drType["ModifiedBy24"] = "Numeric"; drDisp["ModifiedBy24"] = "DropDownList";
             try { dr["LastGenDt24"] = (mst["LastGenDt24"] ?? "").Trim().Left(9999999); } catch { }
@@ -221,7 +217,6 @@ namespace RO.Web
                 {"OnUpd24",""},
                 {"OnDel24",""},
                 {"BeforeCRUD24",""},
-                {"CrudTypeDesc1289",""},
                 {"RuleCode24",""},
                 {"SyncByDb","~/images/custom/adm/SyncByDb.gif"},
                 {"SyncToDb","~/images/custom/adm/SyncToDb.gif"},

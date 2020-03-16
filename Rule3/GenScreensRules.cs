@@ -3033,6 +3033,8 @@ namespace RO.Rule3
                     }
                     else  // imagebutton with varbinary column:
                     {
+                        // NO LONGER IN USE, this block is within document or upload, no way imagebutton is going to happen here
+
                         sb.Append("			if (" + DocTs + " && " + DocFi + ".HasFile && " + DocFi + ".PostedFile.FileName != string.Empty && \"image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png\".IndexOf(" + DocFi + ".PostedFile.ContentType) >= 0)" + Environment.NewLine);
                         sb.Append("			{" + Environment.NewLine);
                         sb.Append("				byte[] dc;" + Environment.NewLine);
@@ -5901,7 +5903,7 @@ namespace RO.Rule3
                                                 {
                                                     sb.Append("\"~/images/DefaultImg.png\"; }");
                                                 }
-                                                sb.Append(" else { c" + drvs["ColumnName"].ToString() + drvs["TableId"].ToString() + ".ImageUrl = \"data:application/base64;base64,\" + Convert.ToBase64String(dr[\"" + drvs["ColName"].ToString() + drvs["TableId"].ToString() + "\"] as byte[]);}} catch { c" + drvs["ColumnName"].ToString() + drvs["TableId"].ToString() + ".ImageUrl = string.Empty; }" + Environment.NewLine);
+                                                sb.Append(" else { c" + drvs["ColumnName"].ToString() + drvs["TableId"].ToString() + ".ImageUrl = RO.Common3.Utils.BlobPlaceHolder(dr[\"" + drvs["ColName"].ToString() + drvs["TableId"].ToString() + "\"] as byte[], true);}} catch { c" + drvs["ColumnName"].ToString() + drvs["TableId"].ToString() + ".ImageUrl = string.Empty; }" + Environment.NewLine);
                                             }
                                             else
                                             {
@@ -6166,7 +6168,7 @@ namespace RO.Rule3
                                                 {
                                                     sb.Append("\"~/images/DefaultImg.png\"; }");
                                                 }
-                                                sb.Append(" else { c" + ii.ToString() + ".ImageUrl = \"data:application/base64;base64,\" + Convert.ToBase64String(drv[\"" + drvs["ColName"].ToString() + drvs["TableId"].ToString() + "\"] as byte[]); }} catch { c" + ii.ToString() + ".ImageUrl = string.Empty; }" + Environment.NewLine);
+                                                sb.Append(" else { c" + ii.ToString() + ".ImageUrl = RO.Common3.Utils.BlobPlaceHolder(drv[\"" + drvs["ColName"].ToString() + drvs["TableId"].ToString() + "\"] as byte[], true); }} catch { c" + ii.ToString() + ".ImageUrl = string.Empty; }" + Environment.NewLine);
                                             }
                                             else
                                             {

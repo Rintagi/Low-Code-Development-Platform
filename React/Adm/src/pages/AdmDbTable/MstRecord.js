@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -167,7 +168,6 @@ class MstRecord extends RintagiScreen {
           TblObjective3: values.cTblObjective3 || '',
           VirtualTbl3: values.cVirtualTbl3 ? 'Y' : 'N',
           MultiDesignDb3: values.cMultiDesignDb3 ? 'Y' : 'N',
-          UploadSheet: values.cUploadSheet || '',
           SheetNameList: (values.cSheetNameList || {}).value || '',
           RowsToExamine: values.cRowsToExamine || '',
           ModifiedBy3: (values.cModifiedBy3 || {}).value || '',
@@ -377,7 +377,6 @@ class MstRecord extends RintagiScreen {
     const TblObjective3 = currMst.TblObjective3;
     const VirtualTbl3 = currMst.VirtualTbl3;
     const MultiDesignDb3 = currMst.MultiDesignDb3;
-    const UploadSheet = currMst.UploadSheet;
     const SheetNameListList = AdmDbTableReduxObj.ScreenDdlSelectors.SheetNameList(AdmDbTableState);
     const SheetNameList = currMst.SheetNameList;
     const RowsToExamine = currMst.RowsToExamine;
@@ -392,6 +391,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -420,7 +432,6 @@ class MstRecord extends RintagiScreen {
                     cTblObjective3: formatContent(TblObjective3 || '', 'MultiLine'),
                     cVirtualTbl3: VirtualTbl3 === 'Y',
                     cMultiDesignDb3: MultiDesignDb3 === 'Y',
-                    cUploadSheet: formatContent(UploadSheet || '', 'Upload'),
                     cSheetNameList: SheetNameListList.filter(obj => { return obj.key === SheetNameList })[0],
                     cRowsToExamine: formatContent(RowsToExamine || '', 'TextBox'),
                     cModifiedBy3: ModifiedBy3List.filter(obj => { return obj.key === ModifiedBy3 })[0],
@@ -607,7 +618,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.TblObjective3 || {}).visible &&
+                              {(authCol.TblObjective3 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
@@ -619,7 +630,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cTblObjective3'
                                           disabled={(authCol.TblObjective3 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -718,27 +729,6 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </div>
                               </Col>
-                              {false && (authCol.UploadSheet || {}).visible &&
-                                <Col lg={6} xl={6}>
-                                  <div className='form__form-group'>
-                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-                                      <label className='form__form-group-label'>{(columnLabel.UploadSheet || {}).ColumnHeader} {(columnLabel.UploadSheet || {}).ToolTip &&
-                                        (<ControlledPopover id={(columnLabel.UploadSheet || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.UploadSheet || {}).ToolTip} />
-                                        )}
-                                      </label>
-                                    }
-                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cUploadSheet'
-                                          disabled={(authCol.UploadSheet || {}).readonly ? 'disabled' : ''} />
-                                      </div>
-                                    }
-                                    {errors.cUploadSheet && touched.cUploadSheet && <span className='form__form-group-error'>{errors.cUploadSheet}</span>}
-                                  </div>
-                                </Col>
-                              }
                               {(authCol.SheetNameList || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -865,7 +855,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.VirtualSql3 || {}).visible &&
+                              {(authCol.VirtualSql3 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
@@ -877,7 +867,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cVirtualSql3'
                                           disabled={(authCol.VirtualSql3 || {}).readonly ? 'disabled' : ''} />
                                       </div>

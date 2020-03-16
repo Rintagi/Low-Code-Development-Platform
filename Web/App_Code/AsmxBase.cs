@@ -258,6 +258,7 @@ namespace RO.Web
             public List<SerializableDictionary<string, string>> Label;
             public SerializableDictionary<string, List<SerializableDictionary<string, string>>> Ddl;
             public List<SerializableDictionary<string, string>> SearchList;
+            public SerializableDictionary<string, string> SearchListParam;
             public SerializableDictionary<string, string> Mst;
             public List<SerializableDictionary<string, string>> Dtl;
         }
@@ -294,11 +295,11 @@ namespace RO.Web
         {
             return true;
         }
-        protected virtual bool PreDelMultiDoc(string mstId, string dtlId, bool isMaster, string docId, bool overwrite, string screenColumnName, string tableName, string docJson, SerializableDictionary<string, string> options)
+        protected virtual bool PreDelMultiDoc(string mstId, string dtlId, bool isMaster, string docId, bool overwrite, string screenColumnName, string tableName, string docTableName, SerializableDictionary<string, string> options)
         {
             return true;
         }
-        protected virtual bool PostDelMultiDoc(string mstId, string dtlId, bool isMaster, string docId, bool overwrite, string screenColumnName, string tableName, string docJson, SerializableDictionary<string, string> options)
+        protected virtual bool PostDelMultiDoc(string mstId, string dtlId, bool isMaster, string docId, bool overwrite, string screenColumnName, string tableName, string docTableName, SerializableDictionary<string, string> options)
         {
             return true;
         }
@@ -1069,7 +1070,10 @@ namespace RO.Web
                 if (!allowAnonymous && (LUser == null || LUser.UsrId == 1)) // not login or anonymous
                 {
                     ApiResponse<T, S> mr = new ApiResponse<T, S>();
+                    /* bypass browser prompt(like safari)
                     Context.Response.StatusCode = 401;
+                     */
+                    Context.Response.StatusCode = 200;
                     Context.Response.TrySkipIisCustomErrors = true;
                     mr.status = "access_denied";
                     mr.errorMsg = "requires login";
@@ -1083,7 +1087,10 @@ namespace RO.Web
             }
             catch (Exception e) {
                 ApiResponse<T, S> mr = new ApiResponse<T, S>();
+                /* bypass browser prompt(like safari)
                 Context.Response.StatusCode = 401;
+                 */
+                Context.Response.StatusCode = 200;
                 Context.Response.TrySkipIisCustomErrors = true;
                 mr.status = "access_denied";
                 mr.errorMsg = e.Message;
@@ -1100,7 +1107,10 @@ namespace RO.Web
                 if (!allowAnonymous && (LUser == null || LUser.UsrId == 1)) // not login or anonymous
                 {
                     ApiResponse<T, S> mr = new ApiResponse<T, S>();
+                    /* bypass browser prompt(like safari)
                     Context.Response.StatusCode = 401;
+                     */
+                    Context.Response.StatusCode = 200;
                     Context.Response.TrySkipIisCustomErrors = true;
                     mr.status = "access_denied";
                     mr.errorMsg = "requires login";
@@ -1115,7 +1125,10 @@ namespace RO.Web
             catch (Exception e)
             {
                 ApiResponse<T, S> mr = new ApiResponse<T, S>();
+                /* bypass browser prompt(like safari)
                 Context.Response.StatusCode = 401;
+                 */
+                Context.Response.StatusCode = 200;
                 Context.Response.TrySkipIisCustomErrors = true;
                 mr.status = "access_denied";
                 mr.errorMsg = e.Message;
@@ -1336,7 +1349,10 @@ namespace RO.Web
                     if (OnErrorResponse != null) return OnErrorResponse();
 
                     ApiResponse<T, S> mr = new ApiResponse<T, S>();
+                    /* bypass browser prompt(like safari)
                     Context.Response.StatusCode = 401;
+                     */
+                    Context.Response.StatusCode = 200;
                     Context.Response.TrySkipIisCustomErrors = true;
                     mr.status = "access_denied";
                     mr.errorMsg = "access denied";
@@ -1399,7 +1415,10 @@ namespace RO.Web
                     if (OnErrorResponse != null) return await OnErrorResponse();
 
                     ApiResponse<T, S> mr = new ApiResponse<T, S>();
+                    /* bypass browser prompt(like safari)
                     Context.Response.StatusCode = 401;
+                     */
+                    Context.Response.StatusCode = 200;
                     Context.Response.TrySkipIisCustomErrors = true;
                     mr.status = "access_denied";
                     mr.errorMsg = "access denied";
@@ -1728,10 +1747,27 @@ namespace RO.Web
             Tuple<string, DataTable> dtCacheX = cache[cacheKey] as Tuple<string, DataTable>;
             if (dtCacheX == null || dtCacheX.Item1 != loginHandle || refresh)
             {
-                DataTable dtLastCriteria = (new AdminSystem()).GetLastCriteria(rowExpected, screenId, 0, LUser.UsrId, LcSysConnString, LcAppPw);
+                DataTable dtLastCriteria = null;
+                bool isCacheable = false;
+                try
+                {
+                    dtLastCriteria = (new AdminSystem()).GetLastCriteria(rowExpected, screenId, 0, LUser.UsrId, LcSysConnString, LcAppPw);
+                    isCacheable = true;
+                }
+                catch (Exception ex)
+                {
+                    ErrorTracing(new Exception(string.Format("GetLastScriteria error, SystemId:{0} ScreenId:{1}", GetSystemId(), screenId), ex));
+                    // treated as no prior saved value, this is not a critcal error and should not be shown to end user, the GetLastCriteria SP 
+                    // needs to be reviewed and explain why it throw an error
+                    dtLastCriteria = new DataTable();
+                    dtLastCriteria.Columns.Add(new DataColumn("LastCriteria", typeof(string)));
+                }
                 dtCacheX = new Tuple<string, DataTable>(loginHandle, dtLastCriteria);
-                cache.Insert(cacheKey, dtCacheX, new System.Web.Caching.CacheDependency(new string[] { }, loginHandle == null ? new string[] { } : new string[] { loginHandle })
-                    , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
+                if (isCacheable)
+                {
+                    cache.Insert(cacheKey, dtCacheX, new System.Web.Caching.CacheDependency(new string[] { }, loginHandle == null ? new string[] { } : new string[] { loginHandle })
+                        , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
+                }
             }
             return dtCacheX.Item2;
         }
@@ -2921,7 +2957,8 @@ namespace RO.Web
                 return null;
             }
         }
-        protected List<SerializableDictionary<string, string>> DataTableToListOfObject(DataTable dt,IncludeBLOB includeBLOB=IncludeBLOB.Icon, Dictionary<string,DataRow> colAuth = null, HashSet<string> utcColumns = null)
+
+        protected List<SerializableDictionary<string, string>> DataTableToListOfObject(DataTable dt, IncludeBLOB includeBLOB = IncludeBLOB.Icon, Dictionary<string, DataRow> colAuth = null, HashSet<string> utcColumns = null, List<string> colList = null)
         {
 
             //var x = dt.AsEnumerable().Select(
@@ -2932,13 +2969,47 @@ namespace RO.Web
             //    );
             List<SerializableDictionary<string, string>> ret = new List<SerializableDictionary<string, string>>();
             if (dt == null) return ret;
+            Func<string, DataRow, string> convertByteArrayToString = (columnName, dr) =>
+            {
+                // technically wrong as there should be associating of colAuth with direct DB retrieval on content type, FIXME
+                string displayMode = colAuth == null || !colAuth.ContainsKey(columnName) 
+                                        ? "ImageButton" 
+                                        : colAuth[columnName]["DisplayMode"].ToString();
+                if (displayMode == "Signature")
+                {
+                    switch (includeBLOB)
+                    {
+                        case IncludeBLOB.None:
+                            return "data:image/png;base64," + Convert.ToBase64String(dr[columnName] as byte[]);
+                            //return null;
+                        case IncludeBLOB.Icon:
+                            return "data:image/png;base64," + Convert.ToBase64String(dr[columnName] as byte[]);
+                            //return RO.Common3.Utils.BlobPlaceHolder(dr[columnName] as byte[]);
+                        case IncludeBLOB.Content: 
+                            return "data:image/png;base64," + Convert.ToBase64String(dr[columnName] as byte[]);
+                    }
+                    return  includeBLOB == IncludeBLOB.None 
+                                            ? null 
+                                            : "data:image/png;base64," + Convert.ToBase64String(dr[columnName] as byte[]);
+                }
+                else
+                {
+                    // assume to be ImageButton;
+                    return  (includeBLOB == IncludeBLOB.Content || ((byte[])(dr[columnName])).Length < 256) 
+                                            ? DecodeFileStream((byte[])(dr[columnName]),true) 
+                                            : includeBLOB == IncludeBLOB.None ? null : BlobPlaceHolder((byte[])(dr[columnName]));
+                }
+            }
+            ;
             foreach (DataRow dr in dt.Rows)
             {
                 SerializableDictionary<string, string> rec = new SerializableDictionary<string, string>();
                 foreach (DataColumn col in dt.Columns)
-                {
+                {                
                     var columnName = col.ColumnName;
                     var colType = dr[columnName].GetType();
+
+                    if (colList != null && !colList.Contains(columnName)) continue;
                     if (colAuth == null
                         || columnName == GetMstKeyColumnName()
                         || columnName == GetDtlKeyColumnName()
@@ -2948,11 +3019,8 @@ namespace RO.Web
                         rec[columnName] =
                             colType == typeof(DateTime) ? (((DateTime)dr[columnName]).ToString("o") + (utcColumns == null || !utcColumns.Contains(columnName) ? "" : "Z")) :
                             colType == typeof(byte[]) ? 
-                                (dr[columnName] != null 
-                                    ? (
-                                        (includeBLOB == IncludeBLOB.Content || ((byte[])(dr[columnName])).Length < 256) 
-                                            ? DecodeFileStream((byte[])(dr[columnName]),true) 
-                                            : includeBLOB == IncludeBLOB.None ? null : BlobPlaceHolder((byte[])(dr[columnName]))) 
+                                (dr[columnName] != null
+                                    ? convertByteArrayToString(columnName, dr) 
                                     : null) 
                             : dr[columnName].ToString()
                             ;
@@ -3218,7 +3286,7 @@ namespace RO.Web
                     bool hasDoc = (from x in dtDocList.AsEnumerable() where !string.IsNullOrEmpty(docId) && x["DocId"].ToString() == docId select x).Count() > 0;
                     bool canDeleteMultiDoc = PreDelMultiDoc(mstId, dtlId, isMaster, docId, true, screenColumnName, mstTableName, null, null);
                     (new AdminSystem()).DelDoc(isMaster ? mstId : dtlId, docId, LUser.UsrId.ToString(), ddlKeyTableName, mstTableName, columnName, mstKeyColumnName, LcAppConnString, LcAppPw);
-                    PostDelMultiDoc(mstId, dtlId, isMaster, docId, true, screenColumnName, mstTableName, null, null);
+                    PostDelMultiDoc(mstId, dtlId, isMaster, docId, true, screenColumnName, mstTableName, ddlKeyTableName, null);
                     deletedDocId.Add(docId);
                 }
 
@@ -3426,7 +3494,8 @@ namespace RO.Web
             // not sure when this will disappear FIXME
             string colLength = drLabel.Table.Columns.Contains("ColumnLength") ? drLabel["ColumnLength"].ToString() : "999999";
             string dataType = drLabel.Table.Columns.Contains("DataType") ? drLabel["DataType"].ToString() : "";
-            
+            bool colVisible = drAuth["ColVisible"].ToString() == "Y";
+
             // these must not be replaced by db value as they may not be complete from ref record
             if (displayMode == "Document") return;
 
@@ -3439,13 +3508,36 @@ namespace RO.Web
             string skippedValidation = skipValidation != null ? skipValidation[colName] ??  "" : "";
             string skipAllValidation = skipValidation != null ? skipValidation[(isMasterTable ? "SkipAllMst" : "SkipAllDtl")] ?? "" : "";
             if (
-                ((drAuth["ColReadOnly"].ToString() == "Y" && !skippedValidation.Contains("ColReadOnly") && !skipAllValidation.Contains("ColReadOnly")) || (drAuth["ColVisible"].ToString() == "N") && !skippedValidation.Contains("ColVisible") && !skipAllValidation.Contains("ColVisible"))
-                && (oldVal != val)
+                ((drAuth["ColReadOnly"].ToString() == "Y" 
+                && !skippedValidation.Contains("ColReadOnly") 
+                && !skipAllValidation.Contains("ColReadOnly")) 
+                || (
+                    drAuth["ColVisible"].ToString() == "N") 
+                    && !skippedValidation.Contains("ColVisible") 
+                    && !skipAllValidation.Contains("ColVisible"))
+                && (
+                    oldVal != val
+                    )
                 )
             {
                 /* this should either bounce or use refRecord value FIXME */
-                val = oldVal;
-                errors.Add(new KeyValuePair<string, string>(colName, "readonly value cannot be changed" + " " + drLabel["ColumnHeader"].ToString()));
+                var revertedVal = !string.IsNullOrEmpty(oldVal) ? oldVal : defaultValue ;
+                if (colVisible
+                    ||
+                    (!colVisible 
+                        && !string.IsNullOrEmpty(val) 
+                        && (!string.IsNullOrEmpty(oldVal) || (val != defaultValue))
+                        ))
+                {
+                    // if visible or not visible but forced with some value that doesn't match existing one
+                    errors.Add(new KeyValuePair<string, string>(colName, "readonly value cannot be changed" + " " + drLabel["ColumnHeader"].ToString()));
+                }
+                else
+                {
+                    // forced into the record for subsequent checking
+                    revisedRecord[colName] = revertedVal;
+                }
+                val = revertedVal;
             }
             if (displayMode == "ImageButton")
             {
@@ -3486,8 +3578,8 @@ namespace RO.Web
                 }
                 else
                 {
-                    // trim then silent cut off 
-                    val = string.IsNullOrEmpty(val) ? val : (hasColumnLength ? val.Trim().Left(columnLength) : val.Trim());
+                    // trim then silent cut off, columnLength == 0 means unlimited 
+                    val = string.IsNullOrEmpty(val) ? val : (hasColumnLength ? val.Trim().Left(columnLength > 0 ? columnLength : 999999) : val.Trim());
                 }
             }
             if (drLabel["RequiredValid"].ToString() == "Y" && string.IsNullOrEmpty(val) && !skippedValidation.Contains("RequiredValid") && !skipAllValidation.Contains("RequiredValid"))
@@ -3973,6 +4065,27 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), 0, "R", null));
             return ret;
         }
+
+
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetSystems(bool ignoreCache = false)
+        {
+            Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+            {
+                //SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+                SerializableDictionary<string, string> result = new SerializableDictionary<string, string>();
+                DataTable dt = LoadSystemsList(true);
+
+                ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
+                mr.data = DataTableToListOfObject(dt, IncludeBLOB.None, null, null, new List<string>() { "SystemAbbr", "Active" });
+                mr.status = "success";
+                mr.errorMsg = "";
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), 0, "R", null));
+            return ret;
+        }
+
         [WebMethod(EnableSession = false)]
         public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Labels(string labelCat)
         {
@@ -4138,6 +4251,7 @@ namespace RO.Web
                 ValidatedMstId(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "**" + mstId, MatchScreenCriteria(new DataView(_GetScrCriteria(GetScreenId())), null));
                 DataTable dtAut = _GetAuthCol(GetScreenId());
                 DataTable dtLabel = _GetScreenLabel(GetScreenId());
+
                 string keyColumName = isMaster ? GetMstKeyColumnName(true) : GetDtlKeyColumnName(true);
                 string tableName = isMaster ? GetMstTableName(true) : GetDtlTableName(true);
                 int ii = 0;
@@ -4163,12 +4277,16 @@ namespace RO.Web
                          * should add that info in one of them. we are just assuming the same imagebutton field would not appear more than once in a screen
                          * and use drLabel's version
                          */
+                        //Dictionary<string, DataRow> colAuth = dtAut.AsEnumerable().ToDictionary(dr => dr["ColName"].ToString());
+                        //var utcColumnList = dtLabel.AsEnumerable().Where(dr => dr["DisplayMode"].ToString().Contains("UTC")).Select(dr => dr["ColumnName"].ToString() + dr["TableId"].ToString()).ToArray();
+                        //HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
                         string colName = drAuth["ColName"].ToString();
                         string tableColumnName = drLabel["ColumnName"].ToString();
                         dt = (new AdminSystem()).GetDbImg(isMaster ? mstId : dtlId, tableName, keyColumName, tableColumnName, LcAppConnString, LcAppPw);
                         try
                         {
-                            mr.data = DataTableToListOfObject(dt, IncludeBLOB.Content);
+                            // can't pass in the colauth or it would be filtered out DB column name vs Screen column name, FIXEM
+                            mr.data = DataTableToListOfObject(dt, IncludeBLOB.Content, null, null);
                             mr.status = "success";
                             mr.errorMsg = "";
                             return mr;
@@ -4186,6 +4304,102 @@ namespace RO.Web
                 return mr;
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), GetScreenId(), "R", screenColumnName, emptyListResponse), AllowAnonymous());
+            return ret;
+        }
+
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetRefColumnContent(string mstId, string dtlId, string refKeyId, bool isMaster, string refScreenColumnName, SerializableDictionary<string, string> options)
+        {
+
+            Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+            {
+                SwitchContext(GetSystemId(), LCurr.CompanyId, LCurr.ProjectId);
+                //ValidatedMstId(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "**" + mstId, MatchScreenCriteria(new DataView(_GetScrCriteria(GetScreenId())), null));
+                string blobIconOption = !options.ContainsKey("Blob") ? "I" : options["Blob"];
+                var blob = GetBlobOption(blobIconOption);
+                DataTable dtAut = _GetAuthCol(GetScreenId());
+                DataTable dtLabel = _GetScreenLabel(GetScreenId());
+
+                string keyColumName = isMaster ? GetMstKeyColumnName(true) : GetDtlKeyColumnName(true);
+                string tableName = isMaster ? GetMstTableName(true) : GetDtlTableName(true);
+                int ii = 0;
+                DataTable dt = null;
+                ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
+                //if (string.IsNullOrEmpty(mstId) || (string.IsNullOrEmpty(dtlId) && !isMaster))
+                //{
+                //    mr.data = null;
+                //    mr.status = "failed";
+                //    mr.errorMsg = "invalid key";
+                //    return mr;
+                //}
+
+                foreach (DataRow drLabel in dtLabel.Rows)
+                {
+                    DataRow drAuth = dtAut.Rows[ii];
+                    if (
+                        !string.IsNullOrEmpty(drLabel["TableId"].ToString())
+                        && drAuth["MasterTable"].ToString() == (isMaster ? "Y" : "N")
+                        && (drLabel["ColumnName"].ToString() + drLabel["TableId"].ToString()) == refScreenColumnName)
+                    {
+                        /* both are technically wrong as there is no info for the underlying tablecolumnname in GetScreenLabel or GetAuthCol 
+                         * should add that info in one of them. we are just assuming the same imagebutton field would not appear more than once in a screen
+                         * and use drLabel's version
+                         */
+                        string colName = drAuth["ColName"].ToString();
+                        string tableColumnName = drLabel["ColumnName"].ToString();
+                        var ddlContext = GetDdlContext();
+                        string ddlSP = ddlContext[refScreenColumnName]["method"];
+                        Dictionary<string, Dictionary<string, string>> ddlDependents = ddlContext
+                                                                            .GroupBy((e) => e.Value["method"])
+                                                                            .Select((g) =>
+                                                                            {
+                                                                                return new {
+                                                                                Key = g.Key,
+                                                                                Value = g.Select(v=>new Tuple<string,string>(v.Key, v.Value["mVal"]))
+                                                                                        .ToDictionary(v=>v.Item1, v=>v.Item2)
+                                                                                };
+                                                                            }
+                                                                            ).ToDictionary(v=>v.Key, v=>v.Value);
+
+                        Dictionary<string, DataRow> colAuth = dtAut.AsEnumerable()
+                                                                .ToDictionary(dr => {
+                                                                    var x = ddlDependents[ddlSP];
+                                                                    var screenColumName = dr["ColName"].ToString();
+                                                                    return x.ContainsKey(screenColumName) ? x[screenColumName] : screenColumName;
+                                                                });
+                        var utcColumnList = dtLabel
+                                            .AsEnumerable()
+                                            .Where(dr => dr["DisplayMode"].ToString().Contains("UTC"))
+                                            .Select(dr => {
+                                                var x = ddlDependents[ddlSP];
+                                                var screenColumName = dr["ColumnName"].ToString() + dr["TableId"].ToString();
+                                                return x.ContainsKey(screenColumName) ? x[screenColumName] : screenColumName;
+                                            }
+                                                )
+                                            .ToArray();
+                        HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
+                        dt = GetDdl(ddlSP, false, GetSystemId(), GetScreenId(), "**" + refKeyId, "", "N", "", "N", 1);
+                        try
+                        {
+                            // can't pass in the colauth or it would be filtered out DB column name vs Screen column name, FIXEM
+                            mr.data = DataTableToListOfObject(dt, blob, colAuth, utcColumns);
+                            mr.status = "success";
+                            mr.errorMsg = "";
+                            return mr;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception(string.Format("GetRefColumnContent Error for {0}", refScreenColumnName), ex);
+                        }
+                    }
+                    ii = ii + 1;
+                }
+                mr.data = null;
+                mr.status = "failed";
+                mr.errorMsg = "access denied";
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), GetScreenId(), "R", refScreenColumnName, emptyListResponse), AllowAnonymous());
             return ret;
         }
 
@@ -4220,9 +4434,9 @@ namespace RO.Web
                         ValidateField(drAuth, drLabel, currentMst, InitMaster(), ref revisedMst, null, ref errors, null);
                         if (errors.Count == 0)
                         {
-                            bool canUpdateEmbeddedDoc = PreSaveEmbeddedDoc(docJson, 
-                                isMaster ? mstId : dtlId,  
-                                isMaster ? GetMstTableName(true) : GetDtlTableName(true), 
+                            bool canUpdateEmbeddedDoc = PreSaveEmbeddedDoc(docJson,
+                                isMaster ? mstId : dtlId,
+                                isMaster ? GetMstTableName(true) : GetDtlTableName(true),
                                 isMaster ? GetMstKeyColumnName(true) : GetDtlKeyColumnName(true),
                                 tableColumnName);
                             List<_ReactFileUploadObj> savedObj = AddDoc(docJson, isMaster ? mstId : dtlId, isMaster ? GetMstTableName(true) : GetDtlTableName(true), isMaster ? GetMstKeyColumnName(true) : GetDtlKeyColumnName(true), tableColumnName, options.ContainsKey("resizeImage"));
@@ -4262,6 +4476,132 @@ namespace RO.Web
 
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), GetScreenId(), "S", screenColumnName));
+            return ret;
+        }
+
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> DecryptedColumnContent(string mstId, string dtlId, bool isMaster, string screenColumnName, string content, string key)
+        {
+
+            Func<ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+            {
+                SwitchContext(GetSystemId(), LCurr.CompanyId, LCurr.ProjectId);
+                ValidatedMstId(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "**" + mstId, MatchScreenCriteria(new DataView(_GetScrCriteria(GetScreenId())), null));
+                DataTable dtAut = _GetAuthCol(GetScreenId());
+                DataTable dtLabel = _GetScreenLabel(GetScreenId());
+                List<KeyValuePair<string, string>> errors = new List<KeyValuePair<string, string>>();
+                int ii = 0;
+                foreach (DataRow drLabel in dtLabel.Rows)
+                {
+                    DataRow drAuth = dtAut.Rows[ii];
+                    if ("EncryptedTextBox".IndexOf(drLabel["DisplayMode"].ToString()) >= 0
+                        && !string.IsNullOrEmpty(drLabel["TableId"].ToString())
+                        && drAuth["MasterTable"].ToString() == (isMaster ? "Y" : "N")
+                        && drAuth["ColVisible"].ToString() == "Y"
+                        && (drLabel["ColumnName"].ToString() + drLabel["TableId"].ToString()) == screenColumnName)
+                    {
+                        ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+                        string text = content;
+                        string actualValue = content;
+                        try
+                        {
+                            int visiblePart = text.IndexOf('-');
+                            string encryptedValue = visiblePart > 0 ? text.Substring(0, visiblePart) : text;
+                            actualValue = RO.Common3.Utils.RODecryptString(encryptedValue, string.IsNullOrEmpty(key) ? Config.SecuredColumnKey : key);
+                        }
+                        catch
+                        {
+                        }
+
+                        SaveDataResponse result = new SaveDataResponse()
+                        {
+                            mst = isMaster ? new SerializableDictionary<string, string>() { { "actualValue", actualValue } } : null
+                            ,
+                            dtl = !isMaster ? new List<SerializableDictionary<string, string>>() {
+                                    new SerializableDictionary<string, string>() {{"actualValue", actualValue }}
+                                } : null
+                        };
+
+                        string msg = "";
+                        result.message = msg;
+                        mr.status = "success";
+                        mr.errorMsg = "";
+                        mr.data = result;
+                        return mr;
+                    }
+                    ii = ii + 1;
+                }
+
+                return new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>()
+                {
+                    status = "failed",
+                    errorMsg = "access_denied",
+                };
+
+
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), GetScreenId(), "R", screenColumnName));
+            return ret;
+        }
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> EncryptedColumnContent(string mstId, string dtlId, bool isMaster, string screenColumnName, string content, string key)
+        {
+
+            Func<ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+            {
+                SwitchContext(GetSystemId(), LCurr.CompanyId, LCurr.ProjectId);
+                ValidatedMstId(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "**" + mstId, MatchScreenCriteria(new DataView(_GetScrCriteria(GetScreenId())), null));
+                DataTable dtAut = _GetAuthCol(GetScreenId());
+                DataTable dtLabel = _GetScreenLabel(GetScreenId());
+                List<KeyValuePair<string, string>> errors = new List<KeyValuePair<string, string>>();
+                int ii = 0;
+                foreach (DataRow drLabel in dtLabel.Rows)
+                {
+                    DataRow drAuth = dtAut.Rows[ii];
+                    if ("EncryptedTextBox".IndexOf(drLabel["DisplayMode"].ToString()) >= 0
+                        && !string.IsNullOrEmpty(drLabel["TableId"].ToString())
+                        && drAuth["MasterTable"].ToString() == (isMaster ? "Y" : "N")
+                        && drAuth["ColVisible"].ToString() == "Y"
+                        && (drLabel["ColumnName"].ToString() + drLabel["TableId"].ToString()) == screenColumnName)
+                    {
+                        ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+                        string encryptedValue = content;
+                        try
+                        {
+                            encryptedValue = RO.Common3.Utils.ROEncryptString(content, string.IsNullOrEmpty(key) ? Config.SecuredColumnKey : key);
+                        }
+                        catch
+                        {
+                        }
+
+                        SaveDataResponse result = new SaveDataResponse()
+                        {
+                            mst = isMaster ? new SerializableDictionary<string, string>() { { "encryptedValue", encryptedValue } } : null
+                            ,
+                            dtl = !isMaster ? new List<SerializableDictionary<string, string>>() {
+                                    new SerializableDictionary<string, string>() {{"encryptedValue", encryptedValue }}
+                                } : null
+                        };
+
+                        string msg = "";
+                        result.message = msg;
+                        mr.status = "success";
+                        mr.errorMsg = "";
+                        mr.data = result;
+                        return mr;
+                    }
+                    ii = ii + 1;
+                }
+
+                return new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>()
+                {
+                    status = "failed",
+                    errorMsg = "access_denied",
+                };
+
+
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), GetScreenId(), "R", screenColumnName));
             return ret;
         }
 
@@ -4356,7 +4696,7 @@ namespace RO.Web
             return ret;
         }
 
-        protected Tuple<List<SerializableDictionary<string, string>>, SerializableDictionary<string, string>, List<SerializableDictionary<string, string>>> LoadFirstOrDefault(DataTable dtScreenCriteria, bool loadFirst, string filterId, string keyId, SerializableDictionary<string, string> desiredScreenCriteria)
+        protected Tuple<List<SerializableDictionary<string, string>>, SerializableDictionary<string, string>, SerializableDictionary<string, string>, List<SerializableDictionary<string, string>>> LoadFirstOrDefault(DataTable dtScreenCriteria, bool loadFirst, string filterId, string keyId, string topN, SerializableDictionary<string, string> desiredScreenCriteria)
         {
             var NewMst = GetNewMst();
             var LastScreenCriteria = GetScreenCriteriaEX(true);
@@ -4392,14 +4732,43 @@ namespace RO.Web
                 var filteringOptions = new SerializableDictionary<string, string>() { { "CurrentScreenCriteria", new JavaScriptSerializer().Serialize(currentScrCriteria.Item2) } };
                 var Mst = GetMstById(firstMstId, filteringOptions);
                 var Dtl = GetDtlById(firstMstId, filteringOptions, effectiveDtlFilterId).data;
-                return new Tuple<List<SerializableDictionary<string, string>>, SerializableDictionary<string, string>, List<SerializableDictionary<string, string>>>(SearchList.data.data, Mst.data.Count > 0 ? Mst.data[0] : NewMst.data[0], Dtl);
+                return new Tuple<
+                        List<SerializableDictionary<string, string>>
+                        , SerializableDictionary<string, string>
+                        , SerializableDictionary<string, string>
+                        , List<SerializableDictionary<string, string>>>(
+                            SearchList.data.data
+                            ,new SerializableDictionary<string, string>(){
+                                {"query",SearchList.data.query}
+                                ,{"topN",SearchList.data.topN.ToString()}
+                                ,{"skipped",SearchList.data.skipped.ToString()}
+                                ,{"matchCount",SearchList.data.matchCount.ToString()}
+                                ,{"total",SearchList.data.total.ToString()}
+                            }
+                            , Mst.data.Count > 0 ? Mst.data[0] : NewMst.data[0]
+                            , Dtl);
             }
             else
             {
-                var SearchList = GetSearchList("", 1000, "", null);
+                int topX = 50; int.TryParse(topN, out topX);
+                var SearchList = GetSearchList("", topX, effectiveFilterId.ToString(), desiredScreenCriteria);
                 var Mst = NewMst;
                 var Dtl = new List<SerializableDictionary<string, string>>();
-                return new Tuple<List<SerializableDictionary<string, string>>, SerializableDictionary<string, string>, List<SerializableDictionary<string, string>>>(SearchList.data.data, Mst.data[0], Dtl);
+                return new Tuple<
+                        List<SerializableDictionary<string, string>>
+                        , SerializableDictionary<string, string>
+                        , SerializableDictionary<string, string>
+                        , List<SerializableDictionary<string, string>>>(
+                        SearchList.data.data
+                        , new SerializableDictionary<string, string>(){
+                            {"query",SearchList.data.query}
+                            ,{"topN",SearchList.data.topN.ToString()}
+                            ,{"skipped",SearchList.data.skipped.ToString()}
+                            ,{"matchCount",SearchList.data.matchCount.ToString()}
+                            ,{"total",SearchList.data.total.ToString()}
+                        }
+                        , Mst.data[0]
+                        , Dtl);
             }
         }
 
@@ -4413,7 +4782,7 @@ namespace RO.Web
             string filterId = options.ContainsKey("FilterId") ? options["FilterId"] : "";
             string filterName = options.ContainsKey("FilterName") ? options["FilterName"] : "";
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y";
-
+            string topN = options.ContainsKey("TopN") ? options["TopN"] : "50";
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
             SerializableDictionary<string, string> currentScreenCriteria = options.ContainsKey("CurrentScreenCriteria") ? jss.Deserialize<SerializableDictionary<string, string>>(options["CurrentScreenCriteria"]) : null;
 
@@ -4422,10 +4791,11 @@ namespace RO.Web
                 SwitchContext(GetSystemId(), LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
                 LoadScreenPageResponse result = skipMetaData ? new LoadScreenPageResponse() : _GetScreenMetaData(!AllowAnonymous());
                 var dtScreenCriteria = _GetScrCriteria(GetScreenId());
-                var FirstOrDefault = LoadFirstOrDefault(dtScreenCriteria, loadFirst, filterId, mstId, currentScreenCriteria);
+                var FirstOrDefault = LoadFirstOrDefault(dtScreenCriteria, loadFirst, filterId, mstId, topN, currentScreenCriteria);
                 result.SearchList = FirstOrDefault.Item1;
-                result.Mst = FirstOrDefault.Item2;
-                result.Dtl = FirstOrDefault.Item3;
+                result.SearchListParam = FirstOrDefault.Item2;
+                result.Mst = FirstOrDefault.Item3;
+                result.Dtl = FirstOrDefault.Item4;
                 result.Ddl = skipSupportingData ? null : _GetScreeDdls(!AllowAnonymous());
                 ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
                 mr.status = "success";

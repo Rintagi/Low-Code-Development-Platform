@@ -18,7 +18,7 @@ import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import RintagiScreen from '../../components/custom/Screen';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath } from '../../helpers/utils';
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getDefaultPath, getNaviPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils';
 import { toMoney, toInputLocalAmountFormat, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist';
@@ -382,8 +382,8 @@ class DtlRecord extends RintagiScreen {
                     cRowSize182: formatContent(currDtl.RowSize182 || '', 'TextBox'),
                     cDdlKeyColNm182: formatContent(currDtl.DdlKeyColNm182 || '', 'TextBox'),
                     cDdlRefColNm182: formatContent(currDtl.DdlRefColNm182 || '', 'TextBox'),
-                    cRegClause182: formatContent(currDtl.RegClause182 || '', 'MultiLine'),
-                    cStoredProc182: formatContent(currDtl.StoredProc182 || '', 'MultiLine'),
+                    cRegClause182: formatContent(RegClause182 || '', 'MultiLine'),
+                    cStoredProc182: formatContent(StoredProc182 || '', 'MultiLine'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -600,8 +600,8 @@ class DtlRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.RegClause182 || {}).visible &&
-                                <Col lg={12} xl={12}>
+                              {(authCol.RegClause182 || {}).visible &&
+                                <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
                                       <label className='form__form-group-label'>{(columnLabel.RegClause182 || {}).ColumnHeader} {(columnLabel.RegClause182 || {}).ToolTip &&
@@ -612,7 +612,7 @@ class DtlRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cRegClause182'
                                           disabled={(authCol.RegClause182 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -621,8 +621,8 @@ class DtlRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.StoredProc182 || {}).visible &&
-                                <Col lg={12} xl={12}>
+                              {(authCol.StoredProc182 || {}).visible &&
+                                <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='20px' />) ||
                                       <label className='form__form-group-label'>{(columnLabel.StoredProc182 || {}).ColumnHeader} {(columnLabel.StoredProc182 || {}).ToolTip &&
@@ -633,7 +633,7 @@ class DtlRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmDataCatState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cStoredProc182'
                                           disabled={(authCol.StoredProc182 || {}).readonly ? 'disabled' : ''} />
                                       </div>

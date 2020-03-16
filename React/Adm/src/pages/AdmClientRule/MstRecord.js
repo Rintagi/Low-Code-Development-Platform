@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -89,12 +90,30 @@ class MstRecord extends RintagiScreen {
     }
   }
 
+  RuleMethodId127Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.cClientRuleId127 || {}).key || values.cClientRuleId127;
+    // dependent invocation goes to here
+  }
+
   ScreenId127InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchScreenId127(v, filterBy); } }
   ReportId127InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchReportId127(v, filterBy); } }
   CultureId127InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchCultureId127(v, filterBy); } }
   ScreenObjHlpId127InputChange() { const _this = this; return function (name, v) { const filterBy = ((_this.props.AdmClientRule || {}).Mst || {}).ScreenId127; _this.props.SearchScreenObjHlpId127(v, filterBy); } }
   ScreenCriHlpId127InputChange() { const _this = this; return function (name, v) { const filterBy = ((_this.props.AdmClientRule || {}).Mst || {}).ScreenId127; _this.props.SearchScreenCriHlpId127(v, filterBy); } }
   ReportCriHlpId127InputChange() { const _this = this; return function (name, v) { const filterBy = ((_this.props.AdmClientRule || {}).Mst || {}).ReportId127; _this.props.SearchReportCriHlpId127(v, filterBy); } }
+  RuleCntTypeId127Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.cClientRuleId127 || {}).key || values.cClientRuleId127;
+    // dependent invocation goes to here
+  }
+
+  ClientScript127Change(v, name, values, { setFieldValue, setFieldTouched, forName, _this, blur } = {}) {
+    const key = (v || {}).key || v;
+    const mstId = (values.cClientRuleId127 || {}).key || values.cClientRuleId127;
+    // dependent invocation goes to here
+  }
+
   /* ReactRule: Master Record Custom Function */
 
   /* ReactRule End: Master Record Custom Function */
@@ -133,7 +152,6 @@ class MstRecord extends RintagiScreen {
         {
           ClientRuleId127: values.cClientRuleId127 || '',
           RuleMethodId127: (values.cRuleMethodId127 || {}).value || '',
-          RuleMethodDesc1295: values.cRuleMethodDesc1295 || '',
           RuleName127: values.cRuleName127 || '',
           RuleDescription127: values.cRuleDescription127 || '',
           RuleTypeId127: (values.cRuleTypeId127 || {}).value || '',
@@ -144,10 +162,8 @@ class MstRecord extends RintagiScreen {
           ScreenCriHlpId127: (values.cScreenCriHlpId127 || {}).value || '',
           ReportCriHlpId127: (values.cReportCriHlpId127 || {}).value || '',
           RuleCntTypeId127: (values.cRuleCntTypeId127 || {}).value || '',
-          RuleCntTypeDesc1294: values.cRuleCntTypeDesc1294 || '',
           ClientRuleProg127: values.cClientRuleProg127 || '',
           ClientScript127: (values.cClientScript127 || {}).value || '',
-          ClientScriptHelp126: values.cClientScriptHelp126 || '',
           UserScriptEvent127: values.cUserScriptEvent127 || '',
           UserScriptName127: values.cUserScriptName127 || '',
           ScriptParam127: values.cScriptParam127 || '',
@@ -349,7 +365,7 @@ class MstRecord extends RintagiScreen {
     const ClientRuleId127 = currMst.ClientRuleId127;
     const RuleMethodId127List = AdmClientRuleReduxObj.ScreenDdlSelectors.RuleMethodId127(AdmClientRuleState);
     const RuleMethodId127 = currMst.RuleMethodId127;
-    const RuleMethodDesc1295 = currMst.RuleMethodDesc1295;
+    const RuleMethodDesc1295 = this.BindReferenceField(RuleMethodId127, RuleMethodId127List, { valuefieldname: 'RuleMethodDesc1295' });
     const RuleName127 = currMst.RuleName127;
     const RuleDescription127 = currMst.RuleDescription127;
     const RuleTypeId127List = AdmClientRuleReduxObj.ScreenDdlSelectors.RuleTypeId127(AdmClientRuleState);
@@ -368,11 +384,11 @@ class MstRecord extends RintagiScreen {
     const ReportCriHlpId127 = currMst.ReportCriHlpId127;
     const RuleCntTypeId127List = AdmClientRuleReduxObj.ScreenDdlSelectors.RuleCntTypeId127(AdmClientRuleState);
     const RuleCntTypeId127 = currMst.RuleCntTypeId127;
-    const RuleCntTypeDesc1294 = currMst.RuleCntTypeDesc1294;
+    const RuleCntTypeDesc1294 = this.BindReferenceField(RuleCntTypeId127, RuleCntTypeId127List, { valuefieldname: 'RuleCntTypeDesc1294' });
     const ClientRuleProg127 = currMst.ClientRuleProg127;
     const ClientScript127List = AdmClientRuleReduxObj.ScreenDdlSelectors.ClientScript127(AdmClientRuleState);
     const ClientScript127 = currMst.ClientScript127;
-    const ClientScriptHelp126 = currMst.ClientScriptHelp126;
+    const ClientScriptHelp126 = this.BindReferenceField(ClientScript127, ClientScript127List, { valuefieldname: 'ClientScriptHelp126' });
     const UserScriptEvent127 = currMst.UserScriptEvent127;
     const UserScriptName127 = currMst.UserScriptName127;
     const ScriptParam127 = currMst.ScriptParam127;
@@ -382,6 +398,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -561,7 +590,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.RuleMethodDesc1295 || {}).visible &&
+                              {(authCol.RuleMethodDesc1295 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmClientRuleState)) && <Skeleton height='20px' />) ||
@@ -573,9 +602,10 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmClientRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cRuleMethodDesc1295'
-                                          disabled={(authCol.RuleMethodDesc1295 || {}).readonly ? 'disabled' : ''} />
+                                          disabled={(authCol.RuleMethodDesc1295 || {}).readonly ? 'disabled' : ''}
+                                          value={this.BindReferenceField((((values || {}).cRuleMethodId127 || {}).value), RuleMethodId127List, { valuefieldname: 'RuleMethodDesc1295' })} />
                                       </div>
                                     }
                                     {errors.cRuleMethodDesc1295 && touched.cRuleMethodDesc1295 && <span className='form__form-group-error'>{errors.cRuleMethodDesc1295}</span>}
@@ -603,7 +633,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.RuleDescription127 || {}).visible &&
+                              {(authCol.RuleDescription127 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmClientRuleState)) && <Skeleton height='20px' />) ||
@@ -615,7 +645,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmClientRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cRuleDescription127'
                                           disabled={(authCol.RuleDescription127 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -661,7 +691,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cScreenId127'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId127', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId127', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId127', true)}
                                           onInputChange={this.ScreenId127InputChange()}
                                           value={values.cScreenId127}
@@ -688,7 +718,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cReportId127'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cReportId127', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cReportId127', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cReportId127', true)}
                                           onInputChange={this.ReportId127InputChange()}
                                           value={values.cReportId127}
@@ -715,7 +745,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cCultureId127'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureId127', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureId127', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cCultureId127', true)}
                                           onInputChange={this.CultureId127InputChange()}
                                           value={values.cCultureId127}
@@ -742,7 +772,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cScreenObjHlpId127'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenObjHlpId127', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenObjHlpId127', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenObjHlpId127', true)}
                                           onInputChange={this.ScreenObjHlpId127InputChange()}
                                           value={values.cScreenObjHlpId127}
@@ -769,7 +799,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cScreenCriHlpId127'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenCriHlpId127', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenCriHlpId127', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenCriHlpId127', true)}
                                           onInputChange={this.ScreenCriHlpId127InputChange()}
                                           value={values.cScreenCriHlpId127}
@@ -796,7 +826,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cReportCriHlpId127'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cReportCriHlpId127', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cReportCriHlpId127', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cReportCriHlpId127', true)}
                                           onInputChange={this.ReportCriHlpId127InputChange()}
                                           value={values.cReportCriHlpId127}
@@ -848,14 +878,15 @@ class MstRecord extends RintagiScreen {
                                         <Field
                                           type='text'
                                           name='cRuleCntTypeDesc1294'
-                                          disabled={(authCol.RuleCntTypeDesc1294 || {}).readonly ? 'disabled' : ''} />
+                                          disabled={(authCol.RuleCntTypeDesc1294 || {}).readonly ? 'disabled' : ''}
+                                          value={this.BindReferenceField((((values || {}).cRuleCntTypeId127 || {}).value), RuleCntTypeId127List, { valuefieldname: 'RuleCntTypeDesc1294' })} />
                                       </div>
                                     }
                                     {errors.cRuleCntTypeDesc1294 && touched.cRuleCntTypeDesc1294 && <span className='form__form-group-error'>{errors.cRuleCntTypeDesc1294}</span>}
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ClientRuleProg127 || {}).visible &&
+                              {(authCol.ClientRuleProg127 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmClientRuleState)) && <Skeleton height='20px' />) ||
@@ -867,7 +898,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmClientRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cClientRuleProg127'
                                           disabled={(authCol.ClientRuleProg127 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -900,7 +931,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ClientScriptHelp126 || {}).visible &&
+                              {(authCol.ClientScriptHelp126 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmClientRuleState)) && <Skeleton height='20px' />) ||
@@ -912,9 +943,10 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmClientRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cClientScriptHelp126'
-                                          disabled={(authCol.ClientScriptHelp126 || {}).readonly ? 'disabled' : ''} />
+                                          disabled={(authCol.ClientScriptHelp126 || {}).readonly ? 'disabled' : ''}
+                                          value={this.BindReferenceField((((values || {}).cClientScript127 || {}).value), ClientScript127List, { valuefieldname: 'ClientScriptHelp126' })} />
                                       </div>
                                     }
                                     {errors.cClientScriptHelp126 && touched.cClientScriptHelp126 && <span className='form__form-group-error'>{errors.cClientScriptHelp126}</span>}
@@ -942,7 +974,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.UserScriptName127 || {}).visible &&
+                              {(authCol.UserScriptName127 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmClientRuleState)) && <Skeleton height='20px' />) ||
@@ -954,7 +986,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmClientRuleState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cUserScriptName127'
                                           disabled={(authCol.UserScriptName127 || {}).readonly ? 'disabled' : ''} />
                                       </div>

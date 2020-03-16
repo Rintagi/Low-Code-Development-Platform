@@ -45,10 +45,8 @@ namespace RO.Web
             columns.Add("TaxAmt", typeof(string));
             columns.Add("PayTo", typeof(string));
             columns.Add("PayFrom", typeof(string));
-            columns.Add("PaypalPayoutBtn", typeof(string));
             columns.Add("CCNbr", typeof(string));
             columns.Add("CCExpiryMonth", typeof(string));
-            columns.Add("PaypalCCBtn", typeof(string));
             columns.Add("CCType", typeof(string));
             columns.Add("CCExpiryYear", typeof(string));
             columns.Add("CCCVV", typeof(string));
@@ -139,13 +137,10 @@ namespace RO.Web
             drType["PayTo"] = string.Empty; drDisp["PayTo"] = "TextBox";
             try { dr["PayFrom"] = (mst["PayFrom"] ?? "").Trim().Left(9999999); } catch { }
             drType["PayFrom"] = string.Empty; drDisp["PayFrom"] = "TextBox";
-            
-            
             try { dr["CCNbr"] = (mst["CCNbr"] ?? "").Trim().Left(9999999); } catch { }
             drType["CCNbr"] = string.Empty; drDisp["CCNbr"] = "TextBox";
             try { dr["CCExpiryMonth"] = (mst["CCExpiryMonth"] ?? "").Trim().Left(9999999); } catch { }
             drType["CCExpiryMonth"] = string.Empty; drDisp["CCExpiryMonth"] = "TextBox";
-            
             try { dr["CCType"] = (mst["CCType"] ?? "").Trim().Left(9999999); } catch { }
             drType["CCType"] = string.Empty; drDisp["CCType"] = "TextBox";
             try { dr["CCExpiryYear"] = (mst["CCExpiryYear"] ?? "").Trim().Left(9999999); } catch { }

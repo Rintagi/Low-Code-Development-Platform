@@ -43,7 +43,6 @@ namespace RO.Web
             columns.Add("ReleaseOs191", typeof(string));
             columns.Add("EntityId191", typeof(string));
             columns.Add("ReleaseTypeId191", typeof(string));
-            columns.Add("DeployPath199", typeof(string));
             columns.Add("TarScriptAft191", typeof(string));
             columns.Add("ReadMe191", typeof(string));
             return dt;
@@ -91,6 +90,7 @@ namespace RO.Web
             {"ReleaseOs191", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlReleaseOs3S1703"},{"mKey","ReleaseOs191"},{"mVal","ReleaseOs191Text"}, }},
             {"EntityId191", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlEntityId3S1704"},{"mKey","EntityId191"},{"mVal","EntityId191Text"}, }},
             {"ReleaseTypeId191", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlReleaseTypeId3S1705"},{"mKey","ReleaseTypeId191"},{"mVal","ReleaseTypeId191Text"}, }},
+            {"DeployPath199", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlEntityId3S1704"},{"mKey","EntityId191"},{"mVal","DeployPath199"}, }},
             {"ObjectType192", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlObjectType3S1715"},{"mKey","ObjectType192"},{"mVal","ObjectType192Text"}, }},
             {"SProcOnly192", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlSProcOnly3S1722"},{"mKey","SProcOnly192"},{"mVal","SProcOnly192Text"}, }},
             {"SrcClientTierId192", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlSrcClientTierId3S1716"},{"mKey","SrcClientTierId192"},{"mVal","SrcClientTierId192Text"}, }},
@@ -181,8 +181,6 @@ namespace RO.Web
             drType["EntityId191"] = "Numeric"; drDisp["EntityId191"] = "DropDownList";
             try { dr["ReleaseTypeId191"] = mst["ReleaseTypeId191"]; } catch { }
             drType["ReleaseTypeId191"] = "Numeric"; drDisp["ReleaseTypeId191"] = "DropDownList";
-            try { dr["DeployPath199"] = (mst["DeployPath199"] ?? "").Trim().Left(100); } catch { }
-            drType["DeployPath199"] = "VarChar"; drDisp["DeployPath199"] = "TextBox";
             try { dr["TarScriptAft191"] = mst["TarScriptAft191"]; } catch { }
             drType["TarScriptAft191"] = "VarChar"; drDisp["TarScriptAft191"] = "MultiLine";
             try { dr["ReadMe191"] = mst["ReadMe191"]; } catch { }
@@ -233,7 +231,6 @@ namespace RO.Web
                 {"ReleaseOs191",""},
                 {"EntityId191",""},
                 {"ReleaseTypeId191",""},
-                {"DeployPath199",""},
                 {"TarScriptAft191",""},
                 {"ReadMe191",""},
 

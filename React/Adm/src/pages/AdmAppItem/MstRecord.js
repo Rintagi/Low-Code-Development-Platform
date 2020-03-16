@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -370,6 +371,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -534,7 +548,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cAppInfoId136'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cAppInfoId136', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cAppInfoId136', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cAppInfoId136', true)}
                                           onInputChange={this.AppInfoId136InputChange()}
                                           value={values.cAppInfoId136}
@@ -749,7 +763,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.AppItemCode136 || {}).visible &&
+                              {(authCol.AppItemCode136 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='20px' />) ||
@@ -761,7 +775,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmAppItemState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cAppItemCode136'
                                           disabled={(authCol.AppItemCode136 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -783,7 +797,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cScreenId136'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId136', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId136', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cScreenId136', true)}
                                           onInputChange={this.ScreenId136InputChange()}
                                           value={values.cScreenId136}
@@ -810,7 +824,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cReportId136'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cReportId136', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cReportId136', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cReportId136', true)}
                                           onInputChange={this.ReportId136InputChange()}
                                           value={values.cReportId136}
@@ -837,7 +851,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cWizardId136'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cWizardId136', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cWizardId136', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cWizardId136', true)}
                                           onInputChange={this.WizardId136InputChange()}
                                           value={values.cWizardId136}

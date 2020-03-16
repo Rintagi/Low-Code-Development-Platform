@@ -162,19 +162,19 @@ export default class RintagiScreen extends Component {
         setFieldValue(name, value);
       }
       setTimeout(() => {
-        handleSubmit();        
-      }, 0); 
+        handleSubmit();
+      }, 0);
     }.bind(this);
   }
 
   SearchFilterTextValueChange(handleSubmit, setFieldValue, type, controlName) {
     return function (evt) {
-       const value = evt.target.value;
-        setFieldValue(controlName, value);
-        setTimeout(() => {
-          handleSubmit();        
-        }, 0); 
-      }.bind(this);
+      const value = evt.target.value;
+      setFieldValue(controlName, value);
+      setTimeout(() => {
+        handleSubmit();
+      }, 0);
+    }.bind(this);
   }
 
   SetCurrentRecordState(isDirty) {
@@ -270,9 +270,19 @@ export default class RintagiScreen extends Component {
       else {
         _this.FieldInFocus = name || forName;
         const choice = ((value || [])[0] || {});
+        // only the 'value'(or key) not the object
         const val = choice.value;
         setFieldValue(name || forName, val);
-        dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name || forName, values), values);
+        dependents.filter(f => typeof f === "function")
+          .reduce((values, f) => {
+            const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, blur, _this });
+            if (typeof ret == "object" && ret.then === "function") {
+              return values; // can't handle promise, just pass formik values down the pipe
+            }
+            else
+              return ret;
+          }
+            , values);
       }
     }
   }
@@ -284,15 +294,27 @@ export default class RintagiScreen extends Component {
       if (blur) setFieldTouched(name || forName, true);
       else {
         _this.FieldInFocus = name || forName;
+        // object itself(different from above AutocompleteChange)
         const val = value[0];
         setFieldValue(name || forName, val);
-        dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name || forName, values), values);
+        dependents
+          .filter(f => typeof f === "function")
+          .reduce((values, f) => {
+            const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, blur, _this });
+            if (typeof ret == "object" && ret.then === "function") {
+              return values; // can't handle promise, just pass formik values down the pipe
+            }
+            else
+              return ret;
+          }
+            , values);
       }
     }
   }
 
   PhoneChange(setFieldValue, setFieldTouched, name, blur, values, dependents = []) {
     const _this = this;
+    const forName = name;
     return function (value) {
       log.debug('phone change', value, name);
       if (blur) setFieldTouched(name, true);
@@ -300,7 +322,18 @@ export default class RintagiScreen extends Component {
         _this.FieldInFocus = name;
         // const formattedPhone = value.replace(/[- )(]/g,'');
         // log.debug(value, formattedPhone);
+        const val = value;
         setFieldValue(name, value);
+        dependents.filter(f => typeof f === "function")
+          .reduce((values, f) => {
+            const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, blur, _this });
+            if (typeof ret == "object" && ret.then === "function") {
+              return values; // can't handle promise, just pass formik values down the pipe
+            }
+            else
+              return ret;
+          }
+            , values);
       }
     }
   }
@@ -308,6 +341,7 @@ export default class RintagiScreen extends Component {
 
   DateChange(setFieldValue, setFieldTouched, name, blur, values, dependents = []) {
     const _this = this;
+    const forName = name;
     return function (value) {
       log.debug('date change', value, name)
       if (blur) setFieldTouched(name, true);
@@ -316,15 +350,26 @@ export default class RintagiScreen extends Component {
         const date = (value || {})._d;
         const isDate = typeof date === "object" && date.constructor === Date;
         const _date = isDate ? date : new Date(date);
-        const localSortableDateString = new Date(_date - _date.getTimezoneOffset()*60*1000).toISOString().replace(/Z/,'');
+        const localSortableDateString = new Date(_date - _date.getTimezoneOffset() * 60 * 1000).toISOString().replace(/Z/, '');
+        const val = localSortableDateString;
         setFieldValue(name, localSortableDateString);
-        dependents.filter(f => typeof f === "function").reduce((values, f) => f(localSortableDateString, name, values), values);
+        dependents.filter(f => typeof f === "function")
+          .reduce((values, f) => {
+            const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, blur, _this });
+            if (typeof ret == "object" && ret.then === "function") {
+              return values; // can't handle promise, just pass formik values down the pipe
+            }
+            else
+              return ret;
+          }
+            , values);
       }
     }
   }
 
   DateChangeUTC(setFieldValue, setFieldTouched, name, blur, values, dependents = []) {
     const _this = this;
+    const forName = name;
     return function (value) {
       log.debug('date change', value, name)
       if (blur) setFieldTouched(name, true);
@@ -333,8 +378,18 @@ export default class RintagiScreen extends Component {
         const date = (value || {})._d;
         const isDate = typeof date === "object" && date.constructor === Date;
         const date8601 = isDate ? date.toISOString() : date;
+        const val = date8601;
         setFieldValue(name, date8601);
-        dependents.filter(f => typeof f === "function").reduce((values, f) => f(date8601, name, values), values);
+        dependents.filter(f => typeof f === "function")
+          .reduce((values, f) => {
+            const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, blur, _this });
+            if (typeof ret == "object" && ret.then === "function") {
+              return values; // can't handle promise, just pass formik values down the pipe
+            }
+            else
+              return ret;
+          }
+            , values);
       }
     }
   }
@@ -347,7 +402,16 @@ export default class RintagiScreen extends Component {
       log.debug('drop down change', val, name, forName)
       setFieldTouched(name || forName, true);
       setFieldValue(name || forName, val);
-      dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name || forName, values), values);
+      dependents.filter(f => typeof f === "function")
+        .reduce((values, f) => {
+          const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, _this });
+          if (typeof ret == "object" && ret.then === "function") {
+            return values; // can't handle promise, just pass formik values down the pipe
+          }
+          else
+            return ret;
+        }
+          , values);
     }
   }
 
@@ -359,12 +423,22 @@ export default class RintagiScreen extends Component {
       log.debug('drop down change', val, name, forName)
       setFieldTouched(name || forName, true);
       setFieldValue(name || forName, val);
-      dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name || forName, values), values);
+      dependents.filter(f => typeof f === "function")
+        .reduce((values, f) => {
+          const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, _this });
+          if (typeof ret == "object" && ret.then === "function") {
+            return values; // can't handle promise, just pass formik values down the pipe
+          }
+          else
+            return ret;
+        }
+          , values);
     }
   }
 
   RadioChange(setFieldValue, setFieldTouched, name, list, values, dependents = []) {
     const _this = this;
+    const forName = name;
     return function (evt) {
       const idx = evt.currentTarget.getAttribute('listidx');
       const val = list[idx].value;
@@ -372,12 +446,22 @@ export default class RintagiScreen extends Component {
       _this.FieldInFocus = name;
       setFieldTouched(name, true);
       setFieldValue(name, val);
-      dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name, values), values);
+      dependents.filter(f => typeof f === "function")
+        .reduce((values, f) => {
+          const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, _this });
+          if (typeof ret == "object" && ret.then === "function") {
+            return values; // can't handle promise, just pass formik values down the pipe
+          }
+          else
+            return ret;
+        }
+          , values);
     }
   }
-  
+
   CheckboxChange(setFieldValue, setFieldTouched, name, list, values, dependents = []) {
     const _this = this;
+    const forName = name;
     return function (evt) {
       const idx = evt.currentTarget.getAttribute('listidx');
       const val = list[idx].value;
@@ -385,30 +469,49 @@ export default class RintagiScreen extends Component {
       _this.FieldInFocus = name;
       setFieldTouched(name, true);
       setFieldValue(name, val);
-      dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name, values), values);
+      dependents.filter(f => typeof f === "function")
+        .reduce((values, f) => {
+          const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, _this });
+          if (typeof ret == "object" && ret.then === "function") {
+            return values; // can't handle promise, just pass formik values down the pipe
+          }
+          else
+            return ret;
+        }
+          , values);
     }
   }
 
   CheckListChange(setFieldValue, setFieldTouched, name, value, values, dependents = []) {
     const _this = this;
+    const forName = name;
     return function (evt) {
       const idx = evt.currentTarget.getAttribute('listidx');
       const selected = values[name] || '';
       const selectedList = selected ? selected.replace('(', '').replace(')', '').split(',') : [];
-      const check = selectedList.filter(o=>(value == o)).length > 0;
+      const check = selectedList.filter(o => (value == o)).length > 0;
       var val = '';
 
-      if(check){
-          val = selectedList.filter(o=>(value != o)).join(",");
-         
-      }else{      
-          val = selected + "," + value;
+      if (check) {
+        val = selectedList.filter(o => (value != o)).join(",");
+
+      } else {
+        val = selected + "," + value;
       }
-    
+
       _this.FieldInFocus = name;
       setFieldTouched(name, true);
       setFieldValue(name, val);
-      dependents.filter(f => typeof f === "function").reduce((values, f) => f(val, name, values), values);
+      dependents.filter(f => typeof f === "function")
+        .reduce((values, f) => {
+          const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, _this });
+          if (typeof ret == "object" && ret.then === "function") {
+            return values; // can't handle promise, just pass formik values down the pipe
+          }
+          else
+            return ret;
+        }
+          , values);
     }
   }
 
@@ -420,7 +523,16 @@ export default class RintagiScreen extends Component {
       log.debug('List Box Change', val, name, forName)
       setFieldTouched(name || forName, true);
       setFieldValue(name || forName, val);
-      dependents.filter(f => typeof f === "function").reduce((formikCurValues, f) => f(val, name || forName, formikCurValues), formikCurValues);
+      dependents.filter(f => typeof f === "function")
+        .reduce((values, f) => {
+          const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, _this });
+          if (typeof ret == "object" && ret.then === "function") {
+            return values; // can't handle promise, just pass formik values down the pipe
+          }
+          else
+            return ret;
+        }
+          , formikCurValues);
     }
   }
 
@@ -440,18 +552,29 @@ export default class RintagiScreen extends Component {
 
   TextChange(setFieldValue, setFieldTouched, name, values, dependents = [], debObj) {
     const _this = this;
+    const forName = name;
     return function (evt) {
       const value = evt.target.value;
+      const val = value;
       _this.FieldInFocus = name;
       setFieldTouched(name, true);
       setFieldValue(name, value);
 
       const deb = () => {
         log.debug(dependents, values);
-        dependents.filter(f => typeof f === "function").reduce((values, f) => f(value, name, values), values);
+        dependents.filter(f => typeof f === "function")
+          .reduce((values, f) => {
+            const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, _this });
+            if (typeof ret == "object" && ret.then === "function") {
+              return values; // can't handle promise, just pass formik values down the pipe
+            }
+            else
+              return ret;
+          }
+            , values);
       }
 
-      if(!(debObj || {}).waitTime) deb();
+      if (!(debObj || {}).waitTime) deb();
       else debounce(deb, debObj)();
     }
   }
@@ -477,27 +600,47 @@ export default class RintagiScreen extends Component {
 
   FileUploadChange(setFieldValue, setFieldTouched, name, values, dependents = []) {
     const _this = this;
-    
+    const forName = name;
     return function (fileList) {
       const revisedList = !fileList || fileList.length === 0 ? [{ fileName: '', mimeType: '', lastModified: '', base64: '', isEmptyFileObject: true }] : [...fileList];
       setFieldValue(name, revisedList);
       (setFieldTouched || (_this.FormikBag || {}).setFieldTouched || (v => v))(name, true, false);
-      dependents.filter(f => typeof f === "function").reduce((values, f) => f(revisedList, name, values), values);
+      dependents.filter(f => typeof f === "function")
+        .reduce((values, f) => {
+          const ret = f(revisedList, name, values, { setFieldValue, setFieldTouched, forName, _this });
+          if (typeof ret == "object" && ret.then === "function") {
+            return values; // can't handle promise, just pass formik values down the pipe
+          }
+          else
+            return ret;
+        }
+          , values);
     }
   }
 
-  FileUploadChangeV1(setFieldValue, setFieldTouched, name) {
+  FileUploadChangeV1(setFieldValue, setFieldTouched, name, values, dependents = []) {
     const _this = this;
+    const forName = name;
     return function (value) {
       const file = value.base64.result ? {
         fileName: value.name,
         mimeType: value.mimeType,
         lastModified: value.lastModified,
         base64: value.base64.result,
-        ts:value.ts,
+        ts: value.ts,
       } : null;
       _this.setState({ filename: (file || {}).fileName });
       setFieldValue(name, file);
+      dependents.filter(f => typeof f === "function")
+        .reduce((values, f) => {
+          const ret = f(file, name, values, { setFieldValue, setFieldTouched, forName, _this });
+          if (typeof ret == "object" && ret.then === "function") {
+            return values; // can't handle promise, just pass formik values down the pipe
+          }
+          else
+            return ret;
+        }
+          , values);
     }
   }
 
@@ -507,6 +650,16 @@ export default class RintagiScreen extends Component {
     const revisedList = !fileList || fileList.length === 0 ? [{ fileName: '', mimeType: '', lastModified: '', base64: '', isEmptyFileObject: true }] : [...fileList];
     this.FieldInFocus = name;
     formikBag.setFieldValue(name, revisedList);
+    (dependents || []).filter(f => typeof f === "function")
+      .reduce((values, f) => {
+        const ret = f(revisedList, name, values);
+        if (typeof ret == "object" && ret.then === "function") {
+          return values; // can't handle promise, just pass formik values down the pipe
+        }
+        else
+          return ret;
+      }
+        , values);
     // if (listidx !== undefined && listidx !== null && (values[fieldpath] || []).length > listidx ) {
     //   const revisedList = values[fieldpath].map((o,i)=>( i===(+listidx) ? {...o, [fieldname]: revisedList} : o));
     //   log.debug('revised list', revisedList)
@@ -898,10 +1051,11 @@ export default class RintagiScreen extends Component {
   }
   BindCheckListField = (value, selected, { keyfieldname, valuefieldname } = {}) => {
     const selectedList = selected ? selected.replace('(', '').replace(')', '').split(',') : [];
-    return selectedList.filter(o=>(value == o)).length > 0;
+    return selectedList.filter(o => (value == o)).length > 0;
   }
   BindMultiDocFileObject = (serverList, currentList) => {
-    if (!currentList) return serverList;
+    /* the initial server list can be # of attachments ! */
+    if (!currentList) return (typeof serverList !== "object") ? [] : serverList;
     if (!serverList || (Array.isArray(serverList) && serverList.length === 0)) return currentList;
     const lookup = (serverList || []).reduce((a, o) => { a[o.DocId] = o; return a }, {});
 
@@ -919,16 +1073,28 @@ export default class RintagiScreen extends Component {
     return revisedList;
   }
   BindFileObject = (serverList, currentList) => {
-    if (!currentList) return serverList;
-    if (!serverList || (Array.isArray(serverList) && serverList.length === 0)) return currentList;
+    if (!currentList) return serverList || [];
+    if (!serverList || (Array.isArray(serverList) && serverList.length === 0)) {
+      return currentList || [];
+    }
     serverList = Array.isArray(serverList) ? serverList : [serverList];
     currentList = Array.isArray(currentList) ? currentList : [currentList];
     const revisedList =
       currentList.map(
         (o, i) => o.base64 || o.isEmptyFileObject ? o : (serverList[i].base64 ? serverList[i] : o)
       )
-    return revisedList;
+    return revisedList || [];
   }
+
+  BindReferenceField = (value, choices, { keyfieldname, valuefieldname, selectedObject } = {}) => {
+    const x = (choices || []).filter(o =>
+      o === value
+      || o[keyfieldname || 'value' || 'key'] === value
+      || o[keyfieldname || 'value' || 'key'] === (value || {})[keyfieldname || 'value' || 'key']
+    )[0];
+    return selectedObject || typeof x !== "object" ? (x || {}).obj : ((x || {}).obj || {})[valuefieldname];
+  }
+
   /* end binding function */
   DelMst({ mstId }) {
     throw new TypeError(this + " Must implement DelMst");
@@ -973,19 +1139,19 @@ export default class RintagiScreen extends Component {
   Print() {
     throw new TypeError("Must implement Print");
   }
-  FormatSearchTitleL(v){
+  FormatSearchTitleL(v) {
     return v;
   }
 
-  FormatSearchTitleR(v){
+  FormatSearchTitleR(v) {
     return v;
   }
 
-  FormatSearchSubTitleL(v){
+  FormatSearchSubTitleL(v) {
     return v;
   }
 
-  FormatSearchSubTitleR(v){
+  FormatSearchSubTitleR(v) {
     return v;
-  }  
+  }
 };

@@ -52,14 +52,10 @@ namespace RO.Web
             columns.Add("ConfirmationToken", typeof(string));
             columns.Add("Token", typeof(string));
             columns.Add("DummyWhiteSpace9", typeof(string));
-            columns.Add("ResnedToken", typeof(string));
             columns.Add("DummyWhiteSpace4", typeof(string));
             columns.Add("DummyWhiteSpace5", typeof(string));
-            columns.Add("Submit", typeof(string));
-            columns.Add("SignUpBtn", typeof(string));
             columns.Add("DummyWhiteSpace6", typeof(string));
             columns.Add("DummyWhiteSpace10", typeof(string));
-            columns.Add("SignUpMsg", typeof(string));
             columns.Add("DummyWhiteSpace11", typeof(string));
             return dt;
         }
@@ -162,18 +158,14 @@ namespace RO.Web
             drType["Token"] = string.Empty; drDisp["Token"] = "TextBox";
             try { dr["DummyWhiteSpace9"] = mst["DummyWhiteSpace9"]; } catch { }
             drType["DummyWhiteSpace9"] = string.Empty; drDisp["DummyWhiteSpace9"] = "Label";
-            
             try { dr["DummyWhiteSpace4"] = mst["DummyWhiteSpace4"]; } catch { }
             drType["DummyWhiteSpace4"] = string.Empty; drDisp["DummyWhiteSpace4"] = "Label";
             try { dr["DummyWhiteSpace5"] = mst["DummyWhiteSpace5"]; } catch { }
             drType["DummyWhiteSpace5"] = string.Empty; drDisp["DummyWhiteSpace5"] = "Label";
-            
-            
             try { dr["DummyWhiteSpace6"] = mst["DummyWhiteSpace6"]; } catch { }
             drType["DummyWhiteSpace6"] = string.Empty; drDisp["DummyWhiteSpace6"] = "Label";
             try { dr["DummyWhiteSpace10"] = mst["DummyWhiteSpace10"]; } catch { }
             drType["DummyWhiteSpace10"] = string.Empty; drDisp["DummyWhiteSpace10"] = "Label";
-            
             try { dr["DummyWhiteSpace11"] = mst["DummyWhiteSpace11"]; } catch { }
             drType["DummyWhiteSpace11"] = string.Empty; drDisp["DummyWhiteSpace11"] = "Label";
 

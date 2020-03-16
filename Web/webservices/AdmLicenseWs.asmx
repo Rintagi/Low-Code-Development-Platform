@@ -42,7 +42,6 @@ namespace RO.Web
             columns.Add("InstallID", typeof(string));
             columns.Add("AppID", typeof(string));
             columns.Add("AppNameSpace", typeof(string));
-            columns.Add("RegisterInsall", typeof(string));
             columns.Add("ExpiryDate", typeof(string));
             columns.Add("ModuleIncluded", typeof(string));
             columns.Add("FeatureIncluded", typeof(string));
@@ -51,9 +50,7 @@ namespace RO.Web
             columns.Add("ProjectCount", typeof(string));
             columns.Add("UserCount", typeof(string));
             columns.Add("LicenseServerUrl", typeof(string));
-            columns.Add("AcquireLicense", typeof(string));
             columns.Add("LicenseString", typeof(string));
-            columns.Add("RenewLicense", typeof(string));
             return dt;
         }
 
@@ -135,8 +132,6 @@ namespace RO.Web
             drType["AppID"] = string.Empty; drDisp["AppID"] = "TextBox";
             try { dr["AppNameSpace"] = (mst["AppNameSpace"] ?? "").Trim().Left(9999999); } catch { }
             drType["AppNameSpace"] = string.Empty; drDisp["AppNameSpace"] = "TextBox";
-            try { dr["RegisterInsall"] = mst["RegisterInsall"]; } catch { }
-            drType["RegisterInsall"] = string.Empty; drDisp["RegisterInsall"] = "HyperPopUp";
             try { dr["ExpiryDate"] = mst["ExpiryDate"]; } catch { }
             drType["ExpiryDate"] = string.Empty; drDisp["ExpiryDate"] = "DateTimeUTC";
             try { dr["ModuleIncluded"] = (mst["ModuleIncluded"] ?? "").Trim().Left(9999999); } catch { }
@@ -153,10 +148,8 @@ namespace RO.Web
             drType["UserCount"] = string.Empty; drDisp["UserCount"] = "TextBox";
             try { dr["LicenseServerUrl"] = (mst["LicenseServerUrl"] ?? "").Trim().Left(9999999); } catch { }
             drType["LicenseServerUrl"] = string.Empty; drDisp["LicenseServerUrl"] = "TextBox";
-            
             try { dr["LicenseString"] = mst["LicenseString"]; } catch { }
             drType["LicenseString"] = string.Empty; drDisp["LicenseString"] = "MultiLine";
-            
 
             if (dtl != null)
             {

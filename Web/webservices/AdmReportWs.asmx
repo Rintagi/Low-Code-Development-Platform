@@ -43,7 +43,6 @@ namespace RO.Web
             columns.Add("CopyReportId22", typeof(string));
             columns.Add("ModifiedBy22", typeof(string));
             columns.Add("TemplateName22", typeof(string));
-            columns.Add("RptTemplate22", typeof(string));
             columns.Add("UnitCd22", typeof(string));
             columns.Add("TopMargin22", typeof(string));
             columns.Add("BottomMargin22", typeof(string));
@@ -165,8 +164,6 @@ namespace RO.Web
             drType["ModifiedBy22"] = "Numeric"; drDisp["ModifiedBy22"] = "DropDownList";
             try { dr["TemplateName22"] = (mst["TemplateName22"] ?? "").Trim().Left(50); } catch { }
             drType["TemplateName22"] = "VarChar"; drDisp["TemplateName22"] = "TextBox";
-            try { dr["RptTemplate22"] = mst["RptTemplate22"]; } catch { }
-            drType["RptTemplate22"] = "Numeric"; drDisp["RptTemplate22"] = "Document";
             try { dr["UnitCd22"] = mst["UnitCd22"]; } catch { }
             drType["UnitCd22"] = "Char"; drDisp["UnitCd22"] = "DropDownList";
             try { dr["TopMargin22"] = (mst["TopMargin22"] ?? "").Trim().Left(9999999); } catch { }
@@ -181,8 +178,6 @@ namespace RO.Web
             drType["PageWidth22"] = "Decimal"; drDisp["PageWidth22"] = "TextBox";
             try { dr["PageHeight22"] = (mst["PageHeight22"] ?? "").Trim().Left(9999999); } catch { }
             drType["PageHeight22"] = "Decimal"; drDisp["PageHeight22"] = "TextBox";
-            
-            
             try { dr["AllowSelect22"] = (mst["AllowSelect22"] ?? "").Trim().Left(1); } catch { }
             drType["AllowSelect22"] = "Char"; drDisp["AllowSelect22"] = "CheckBox";
             try { dr["GenerateRp22"] = (mst["GenerateRp22"] ?? "").Trim().Left(1); } catch { }
@@ -255,7 +250,6 @@ namespace RO.Web
                 {"CopyReportId22",""},
                 {"ModifiedBy22",base.LUser.UsrId.ToString()},
                 {"TemplateName22",""},
-                {"RptTemplate22",""},
                 {"UnitCd22",""},
                 {"TopMargin22",""},
                 {"BottomMargin22",""},

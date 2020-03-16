@@ -167,7 +167,6 @@ namespace RO.Web
             drType["SysListVisible93"] = "Char"; drDisp["SysListVisible93"] = "DropDownList";
             try { dr["PrefDefault93"] = (mst["PrefDefault93"] ?? "").Trim().Left(1); } catch { }
             drType["PrefDefault93"] = "Char"; drDisp["PrefDefault93"] = "CheckBox";
-            
             try { dr["UsrStyleSheet93"] = mst["UsrStyleSheet93"]; } catch { }
             drType["UsrStyleSheet93"] = "VarChar"; drDisp["UsrStyleSheet93"] = "MultiLine";
             try { dr["UsrId93"] = mst["UsrId93"]; } catch { }

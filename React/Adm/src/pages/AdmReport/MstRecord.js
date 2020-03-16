@@ -15,11 +15,12 @@ import DropdownField from '../../components/custom/DropdownField';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation'
-import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath } from '../../helpers/utils'
+import { isEmptyId, getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPath, getDefaultPath, decodeEmbeddedFileObjectFromServer } from '../../helpers/utils'
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat, formatContent } from '../../helpers/formatter';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
@@ -90,6 +91,21 @@ class MstRecord extends RintagiScreen {
   }
 
   CopyReportId22InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchCopyReportId22(v, filterBy); } }
+  GetRptTemplate22(setFieldValue, setFieldTouched, formikName, { mstId, dtlId } = {}) {
+    return function (file) {
+      return this.props.GetRptTemplate22({ mstId, docId: file.DocId });
+    }.bind(this);
+  }
+  AddRptTemplate22(setFieldValue, setFieldTouched, formikName, { mstId, dtlId } = {}) {
+    return function (file) {
+      return this.props.AddRptTemplate22({ mstId, file });
+    }.bind(this);
+  }
+  DelRptTemplate22(setFieldValue, setFieldTouched, formikName, { mstId, dtlId } = {}) {
+    return function (file) {
+      return this.props.DelRptTemplate22({ mstId, docId: file.DocId });
+    }.bind(this);
+  }
   SyncByDb({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
     return function (evt) {
       this.OnClickColumeName = 'SyncByDb';
@@ -155,7 +171,6 @@ class MstRecord extends RintagiScreen {
           ModifiedBy22: (values.cModifiedBy22 || {}).value || '',
           ModifiedOn22: values.cModifiedOn22 || '',
           TemplateName22: values.cTemplateName22 || '',
-          RptTemplate22: values.cRptTemplate22 || '',
           UnitCd22: (values.cUnitCd22 || {}).value || '',
           TopMargin22: values.cTopMargin22 || '',
           BottomMargin22: values.cBottomMargin22 || '',
@@ -411,6 +426,19 @@ class MstRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 
     /* ReactRule: Master Render */
 
@@ -440,7 +468,6 @@ class MstRecord extends RintagiScreen {
                     cModifiedBy22: ModifiedBy22List.filter(obj => { return obj.key === ModifiedBy22 })[0],
                     cModifiedOn22: ModifiedOn22 || new Date(),
                     cTemplateName22: formatContent(TemplateName22 || '', 'TextBox'),
-                    cRptTemplate22: formatContent(RptTemplate22 || '', 'Document'),
                     cUnitCd22: UnitCd22List.filter(obj => { return obj.key === UnitCd22 })[0],
                     cTopMargin22: formatContent(TopMargin22 || '', 'TextBox'),
                     cBottomMargin22: formatContent(BottomMargin22 || '', 'TextBox'),
@@ -657,7 +684,7 @@ class MstRecord extends RintagiScreen {
                                       <div className='form__form-group-field'>
                                         <AutoCompleteField
                                           name='cCopyReportId22'
-                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCopyReportId22', false)}
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCopyReportId22', false, values)}
                                           onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cCopyReportId22', true)}
                                           onInputChange={this.CopyReportId22InputChange()}
                                           value={values.cCopyReportId22}
@@ -740,7 +767,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.RptTemplate22 || {}).visible &&
+                              {(authCol.RptTemplate22 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
@@ -752,9 +779,20 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component={FileInputField}
                                           name='cRptTemplate22'
-                                          disabled={(authCol.RptTemplate22 || {}).readonly ? 'disabled' : ''} />
+                                          options={{ ...fileFileUploadOptions, maxFileCount: 100 }}
+                                          files={(this.BindMultiDocFileObject(RptTemplate22, values.cRptTemplate22) || []).filter(f => !f.isEmptyFileObject)}
+                                          label={(columnLabel.RptTemplate22 || {}).ToolTip}
+                                          onClick={this.GetRptTemplate22(setFieldValue, setFieldTouched, 'cRptTemplate22', { mstId: (currMst || {}).ReportId22 })}
+                                          onDelete={this.DelRptTemplate22(setFieldValue, setFieldTouched, 'cRptTemplate22', { mstId: (currMst || {}).ReportId22 })}
+                                          onAdd={this.AddRptTemplate22(setFieldValue, setFieldTouched, 'cRptTemplate22', { mstId: (currMst || {}).ReportId22 })}
+                                          onChange={this.FileUploadChange(setFieldValue, setFieldTouched, 'cRptTemplate22')}
+                                          onError={(e, fileName) => {
+                                            this.props.showNotification('E', { message: 'problem loading file ' + fileName })
+                                          }}
+                                          multiple
+                                        />
                                       </div>
                                     }
                                     {errors.cRptTemplate22 && touched.cRptTemplate22 && <span className='form__form-group-error'>{errors.cRptTemplate22}</span>}
@@ -1019,7 +1057,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.WhereClause22 || {}).visible &&
+                              {(authCol.WhereClause22 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
@@ -1031,7 +1069,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cWhereClause22'
                                           disabled={(authCol.WhereClause22 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -1040,7 +1078,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.RegClause22 || {}).visible &&
+                              {(authCol.RegClause22 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
@@ -1052,7 +1090,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cRegClause22'
                                           disabled={(authCol.RegClause22 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -1061,7 +1099,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.RegCode22 || {}).visible &&
+                              {(authCol.RegCode22 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
@@ -1073,7 +1111,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cRegCode22'
                                           disabled={(authCol.RegCode22 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -1082,7 +1120,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ValClause22 || {}).visible &&
+                              {(authCol.ValClause22 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
@@ -1094,7 +1132,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cValClause22'
                                           disabled={(authCol.ValClause22 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -1103,7 +1141,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.ValCode22 || {}).visible &&
+                              {(authCol.ValCode22 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
@@ -1115,7 +1153,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cValCode22'
                                           disabled={(authCol.ValCode22 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -1124,7 +1162,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.UpdClause22 || {}).visible &&
+                              {(authCol.UpdClause22 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
@@ -1136,7 +1174,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cUpdClause22'
                                           disabled={(authCol.UpdClause22 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -1145,7 +1183,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.UpdCode22 || {}).visible &&
+                              {(authCol.UpdCode22 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
@@ -1157,7 +1195,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cUpdCode22'
                                           disabled={(authCol.UpdCode22 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -1166,7 +1204,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.XlsClause22 || {}).visible &&
+                              {(authCol.XlsClause22 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
@@ -1178,7 +1216,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cXlsClause22'
                                           disabled={(authCol.XlsClause22 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -1187,7 +1225,7 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.XlsCode22 || {}).visible &&
+                              {(authCol.XlsCode22 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
@@ -1199,7 +1237,7 @@ class MstRecord extends RintagiScreen {
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         <Field
-                                          type='text'
+                                          component='textarea'
                                           name='cXlsCode22'
                                           disabled={(authCol.XlsCode22 || {}).readonly ? 'disabled' : ''} />
                                       </div>
@@ -1268,6 +1306,10 @@ const mapDispatchToProps = (dispatch) => (
     { DelMst: AdmReportReduxObj.DelMst.bind(AdmReportReduxObj) },
     { AddMst: AdmReportReduxObj.AddMst.bind(AdmReportReduxObj) },
     { SearchCopyReportId22: AdmReportReduxObj.SearchActions.SearchCopyReportId22.bind(AdmReportReduxObj) },
+    { GetRptTemplate22List: AdmReportReduxObj.SearchActions.GetRptTemplate22.bind(AdmReportReduxObj) },
+    { GetRptTemplate22: AdmReportReduxObj.OnDemandActions.GetRptTemplate22Content.bind(AdmReportReduxObj) },
+    { AddRptTemplate22: AdmReportReduxObj.OnDemandActions.AddRptTemplate22Content.bind(AdmReportReduxObj) },
+    { DelRptTemplate22: AdmReportReduxObj.OnDemandActions.DelRptTemplate22Content.bind(AdmReportReduxObj) },
     { showNotification: showNotification },
     { setTitle: setTitle },
     { setSpinner: setSpinner },

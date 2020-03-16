@@ -1819,7 +1819,7 @@ cSignOff95.HintMessage = ColumnWatermark(12);
 			{
 				DataView dv = (DataView) cUsrId95.DataSource; dv.RowFilter = string.Empty;
 				DataRowView dr = cUsrId95.DataSetIndex >= 0 && cUsrId95.DataSetIndex < dv.Count ? dv[cUsrId95.DataSetIndex] : dv[0];
-				try { if (dr["PicMed1"].Equals(System.DBNull.Value)) { cUPicMed1.ImageUrl = "~/images/DefaultImg.png"; } else { cUPicMed1.ImageUrl = "data:application/base64;base64," + Convert.ToBase64String(dr["PicMed1"] as byte[]);}} catch { cUPicMed1.ImageUrl = string.Empty; }
+				try { if (dr["PicMed1"].Equals(System.DBNull.Value)) { cUPicMed1.ImageUrl = "~/images/DefaultImg.png"; } else { cUPicMed1.ImageUrl = RO.Common3.Utils.BlobPlaceHolder(dr["PicMed1"] as byte[], true);}} catch { cUPicMed1.ImageUrl = string.Empty; }
 				cUsrId95Search_Script();
 			if (pwd != null) {ScriptManager.GetCurrent(Parent.Page).SetFocus(pwd.ClientID);} else {ScriptManager.GetCurrent(Parent.Page).SetFocus(SenderFocusId(sender));}
 			}
@@ -1850,7 +1850,7 @@ cSignOff95.HintMessage = ColumnWatermark(12);
 			{
 				DataView dv = (DataView) cImprUsrId95.DataSource; dv.RowFilter = string.Empty;
 				DataRowView dr = cImprUsrId95.DataSetIndex >= 0 && cImprUsrId95.DataSetIndex < dv.Count ? dv[cImprUsrId95.DataSetIndex] : dv[0];
-				try { if (dr["PicMed1"].Equals(System.DBNull.Value)) { cIPicMed1.ImageUrl = "~/images/DefaultImg.png"; } else { cIPicMed1.ImageUrl = "data:application/base64;base64," + Convert.ToBase64String(dr["PicMed1"] as byte[]);}} catch { cIPicMed1.ImageUrl = string.Empty; }
+				try { if (dr["PicMed1"].Equals(System.DBNull.Value)) { cIPicMed1.ImageUrl = "~/images/DefaultImg.png"; } else { cIPicMed1.ImageUrl = RO.Common3.Utils.BlobPlaceHolder(dr["PicMed1"] as byte[], true);}} catch { cIPicMed1.ImageUrl = string.Empty; }
 				cFailedAttempt1.Text = RO.Common3.Utils.fmNumeric("0",dr["FailedAttempt1"].ToString(),base.LUser.Culture);
 				cImprUsrId95Search_Script();
 			if (pwd != null) {ScriptManager.GetCurrent(Parent.Page).SetFocus(pwd.ClientID);} else {ScriptManager.GetCurrent(Parent.Page).SetFocus(SenderFocusId(sender));}

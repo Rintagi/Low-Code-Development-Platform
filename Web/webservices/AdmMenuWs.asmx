@@ -135,7 +135,6 @@ namespace RO.Web
             drType["StaticPgId39"] = "Numeric"; drDisp["StaticPgId39"] = "AutoComplete";
             try { dr["Miscellaneous39"] = (mst["Miscellaneous39"] ?? "").Trim().Left(1000); } catch { }
             drType["Miscellaneous39"] = "VarChar"; drDisp["Miscellaneous39"] = "TextBox";
-            
 
             if (dtl != null)
             {

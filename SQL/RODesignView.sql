@@ -3,7 +3,11 @@ EXEC('CREATE VIEW dbo.SrUsr AS SELECT DUMMY=1')
 GO
 ALTER VIEW [dbo].[SrUsr] AS
 SELECT UsrId, UsrTitle = LoginName + ISNULL(' [' + UsrName + ']','') + CASE WHEN Active='N' THEN ' (Inactive)' ELSE '' END
-, UsrDetail = ISNULL(UsrEmail,'') + ISNULL(' ' + UsrMobile,''), PicMed, ExtPassword, CultureId, UsrGroupLs, CompanyLs, ProjectLs, InvestorId, CustomerId, VendorId, AgentId, BrokerId, MemberId, LenderId, BorrowerId, GuarantorId, Active
+, UsrDetail = ISNULL(UsrEmail,'') + ISNULL(' ' + UsrMobile,'')
+, UsrName
+, UsrEmail
+, PicMed, ExtPassword
+, CultureId, UsrGroupLs, CompanyLs, ProjectLs, InvestorId, CustomerId, VendorId, AgentId, BrokerId, MemberId, LenderId, BorrowerId, GuarantorId, Active
 FROM dbo.Usr
 GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwAppItem') and OBJECTPROPERTY(id, N'IsView') = 1)

@@ -148,10 +148,6 @@ namespace RO.Web
             drType["EventId128"] = "Numeric"; drDisp["EventId128"] = "DropDownList";
             try { dr["WebRuleProg128"] = mst["WebRuleProg128"]; } catch { }
             drType["WebRuleProg128"] = "VarWChar"; drDisp["WebRuleProg128"] = "MultiLine";
-            
-            
-            
-            
             try { dr["ReactEventId128"] = mst["ReactEventId128"]; } catch { }
             drType["ReactEventId128"] = "Numeric"; drDisp["ReactEventId128"] = "DropDownList";
             try { dr["ReactRuleProg128"] = mst["ReactRuleProg128"]; } catch { }

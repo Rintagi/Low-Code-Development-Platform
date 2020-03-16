@@ -1336,22 +1336,22 @@
 7449~@~15~@~130~@~~@~SearchUrlId~@~Screen - SearchUrlId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the image URL column for searching of a unique record in the master table.~@~
 7450~@~15~@~110~@~~@~SearchDtlId~@~Screen - SearchDtlId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the subtitle column to be used for searching of a record in the search table.~@~
 7451~@~15~@~70~@~~@~SearchTableId~@~Screen - SearchTableId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the master table or view table for search purpose.~@~
-7452~@~1305~@~40~@~~@~PicMed~@~SrUsr - PicMed~@~9~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7453~@~1305~@~30~@~~@~UsrDetail~@~SrUsr - UsrDetail~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7452~@~1305~@~50~@~~@~PicMed~@~SrUsr - PicMed~@~9~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7453~@~1305~@~40~@~~@~UsrDetail~@~SrUsr - UsrDetail~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7454~@~1305~@~10~@~~@~UsrId~@~SrUsr - UsrId~@~3~@~4~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
 7455~@~1305~@~20~@~~@~UsrTitle~@~SrUsr - UsrTitle~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
-7456~@~1305~@~190~@~~@~Active~@~SrUsr - Active~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
-7457~@~1305~@~50~@~~@~ExtPassword~@~SrUsr - ExtPassword~@~9~@~255~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7458~@~1305~@~90~@~~@~ProjectLs~@~SrUsr - ProjectLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7459~@~1305~@~80~@~~@~CompanyLs~@~SrUsr - CompanyLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7460~@~1305~@~70~@~~@~UsrGroupLs~@~SrUsr - UsrGroupLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7461~@~1305~@~60~@~~@~CultureId~@~SrUsr - CultureId~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7462~@~1305~@~150~@~~@~MemberId~@~SrUsr - MemberId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7463~@~1305~@~140~@~~@~BrokerId~@~SrUsr - BrokerId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7464~@~1305~@~130~@~~@~AgentId~@~SrUsr - AgentId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7465~@~1305~@~120~@~~@~VendorId~@~SrUsr - VendorId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7466~@~1305~@~110~@~~@~CustomerId~@~SrUsr - CustomerId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7467~@~1305~@~100~@~~@~InvestorId~@~SrUsr - InvestorId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7456~@~1305~@~200~@~~@~Active~@~SrUsr - Active~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7457~@~1305~@~60~@~~@~ExtPassword~@~SrUsr - ExtPassword~@~9~@~255~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7458~@~1305~@~100~@~~@~ProjectLs~@~SrUsr - ProjectLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7459~@~1305~@~90~@~~@~CompanyLs~@~SrUsr - CompanyLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7460~@~1305~@~80~@~~@~UsrGroupLs~@~SrUsr - UsrGroupLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7461~@~1305~@~70~@~~@~CultureId~@~SrUsr - CultureId~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7462~@~1305~@~160~@~~@~MemberId~@~SrUsr - MemberId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7463~@~1305~@~150~@~~@~BrokerId~@~SrUsr - BrokerId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7464~@~1305~@~140~@~~@~AgentId~@~SrUsr - AgentId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7465~@~1305~@~130~@~~@~VendorId~@~SrUsr - VendorId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7466~@~1305~@~120~@~~@~CustomerId~@~SrUsr - CustomerId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7467~@~1305~@~110~@~~@~InvestorId~@~SrUsr - InvestorId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
 7468~@~115~@~100~@~~@~BotVisible~@~CtButtonType - BotVisible~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~This is bottom level menu: 'L' for List, 'B' for Button, and 'N' for Not-visible.~@~
 7469~@~115~@~90~@~~@~RowVisible~@~CtButtonType - RowVisible~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~This is row level menu: 'L' for List, 'B' for Button, and 'N' for Not-visible.~@~
 7470~@~115~@~80~@~~@~TopVisible~@~CtButtonType - TopVisible~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~This is top level menu: 'L' for List, 'B' for Button, and 'N' for Not-visible.~@~
@@ -1402,9 +1402,9 @@
 7515~@~1299~@~190~@~~@~LenderId~@~VwPermKeyRow - LenderId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
 7516~@~1299~@~200~@~~@~BorrowerId~@~VwPermKeyRow - BorrowerId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
 7517~@~1299~@~210~@~~@~GuarantorId~@~VwPermKeyRow - GuarantorId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7518~@~1305~@~160~@~~@~LenderId~@~SrUsr - LenderId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7519~@~1305~@~170~@~~@~BorrowerId~@~SrUsr - BorrowerId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-7520~@~1305~@~180~@~~@~GuarantorId~@~SrUsr - GuarantorId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7518~@~1305~@~170~@~~@~LenderId~@~SrUsr - LenderId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7519~@~1305~@~180~@~~@~BorrowerId~@~SrUsr - BorrowerId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7520~@~1305~@~190~@~~@~GuarantorId~@~SrUsr - GuarantorId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
 7521~@~15~@~200~@~~@~ReactGenerated~@~Screen - ReactGenerated~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~~@~
 7522~@~1310~@~20~@~~@~RuleAsmxTypeDesc~@~CtRuleAsmxType - RuleAsmxTypeDesc~@~11~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7523~@~1310~@~10~@~~@~RuleAsmxTypeId~@~CtRuleAsmxType - RuleAsmxTypeId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
@@ -1465,3 +1465,5 @@
 7578~@~1317~@~10~@~~@~SystemId~@~VwRintagi - SystemId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
 7579~@~1317~@~20~@~~@~SystemName~@~VwRintagi - SystemName~@~11~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7580~@~1317~@~230~@~~@~WebAddress~@~VwRintagi - WebAddress~@~15~@~50~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7581~@~1305~@~210~@~~@~UsrEmail~@~SrUsr - UsrEmail~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7582~@~1305~@~30~@~~@~UsrName~@~SrUsr - UsrName~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
