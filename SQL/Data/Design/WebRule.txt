@@ -2393,6 +2393,7 @@ document.Rintagi = {{
                         {
                             var aa = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("add {0} {1}", string.Format("package.json"), string.Format("src/app/Version.js")), true, reactModuleDir);
                             var bb = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("commit -m \"{0}\"", string.Format("advance UI to version {0}", newVer)), true, reactModuleDir);
+                            var cc = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("push"), true, reactModuleDir);
                         }
                         catch (Exception ex)
                         {
@@ -2514,6 +2515,7 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
+
 ~@~~@~~@~~@~~@~~@~~@~~@~
 182~@~1~@~GrabLicenseDetail~@~Rintagi Installation: GrabLicenseDetail~@~retrieve current saved license~@~1022~@~~@~~@~11~@~            var LicenseServer = !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]) ? System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]
                                 : "https://www.rintagi.com";

@@ -2254,12 +2254,19 @@ namespace RO.Web
             string extBaseUrl = Config.ExtBaseUrl;
             string xForwardedFor = Request.Headers["X-Forwarded-For"];
             string xOriginalUrl = Request.Headers["X-Orginal-URL"];
+            string isaHttps = Request.Headers["Front-End-Https"];
             string host = Request.Url.Host;
             string appPath = Request.ApplicationPath;
+            string behindProxy = System.Configuration.ConfigurationManager.AppSettings["BehindProxy"];
 
-            return !string.IsNullOrEmpty(extBasePath)
-                && !string.IsNullOrEmpty(xForwardedFor)
-                && appPath.ToLower() != extBasePath.ToLower();
+            return
+                behindProxy == "Y"
+                ||
+                (
+                !string.IsNullOrEmpty(extBasePath)
+                && (!string.IsNullOrEmpty(xForwardedFor) || !string.IsNullOrEmpty(isaHttps)))
+                //                && appPath.ToLower() != extBasePath.ToLower();
+                ;
 
         }
 
