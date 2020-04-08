@@ -8,8 +8,8 @@ import { bindActionCreators } from 'redux';
 
 import Notification from '../components/custom/Notification';
 // Pages import
-import Login from '../pages/login/Login';
-import ForgetPassword from '../pages/login/ForgetPassword';
+import Login from '../pages/Login/Login';
+import ForgetPassword from '../pages/Login/ForgetPassword';
 import Error from '../pages/error/Error';
 import appRoutes from './route';
 
@@ -77,7 +77,7 @@ const ProtectedRoute = ({ component: Component, isPublic, user, ...rest }) => {
 
 class Router extends Component {
 
-  getFullList(){
+  getFullList() {
     const menuList = (this.props.menu || {}).menuList;
     const myScreen = pagesRoutes.filter((v) => (v.inMenu)).reduce((a, o) => { a[o.screenId] = o; return a }, {});
     const myMenu = (menuList || []).filter((m) => (myScreen[m.ScreenId])).map((m) => ({ ...m, reactPath: (myScreen[m.ScreenId] || {}).path }));
@@ -88,7 +88,7 @@ class Router extends Component {
       a[o.ParentQId.split(".")[o.ParentQId.split(".").length - 3]] = o;
       return a
     }, {});
-    
+
     return (menuList || []).filter(m => myParents[m.QId]).map((m) => ({ ...m, reactPath: (myScreen[m.ScreenId] || {}).path }));
   }
 
@@ -99,7 +99,7 @@ class Router extends Component {
       <MainWrapper>
         <main>
           <div id='container__wrap'>
-            <Layout/>
+            <Layout />
             <Notification />
             <div className={'container__wrap ' + (myFullList.length > 0 ? "" : "no_sidebar")}>
               {/* Aaron Changes add container div below*/}
@@ -126,6 +126,21 @@ class Router extends Component {
                     )}
                 </Switch>
               </div>
+              {this.props.global.pageSpinner &&
+                <div className='load'>
+                  <div className='load__icon-wrap'>
+                    <div className="cssload-loader">
+                      <div className="cssload-side"></div>
+                      <div className="cssload-side"></div>
+                      <div className="cssload-side"></div>
+                      <div className="cssload-side"></div>
+                      <div className="cssload-side"></div>
+                      <div className="cssload-side"></div>
+                      <div className="cssload-side"></div>
+                      <div className="cssload-side"></div>
+                    </div>
+                  </div>
+                </div>}
             </div>
           </div>
         </main>

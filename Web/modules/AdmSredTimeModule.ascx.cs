@@ -2560,7 +2560,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				dr["EnteredOn272"] = drv["EnteredOn272"];
 				if (bAdd && dtAuth.Rows[5]["ColReadOnly"].ToString() == "Y" && dr["EnteredOn272"].ToString() == string.Empty) {dr["EnteredOn272"] = System.DBNull.Value;}
 				dr["ModifiedBy272"] = drv["ModifiedBy272"];
-				dr["ModifiedBy272"] = (drv["ModifiedBy272"].ToString() == string.Empty && bAdd)  || true  ? (object) base.LUser.UsrId.ToString()	: (object) drv["ModifiedBy272"];
+				dr["ModifiedBy272"] = (drv["ModifiedBy272"].ToString() == string.Empty && bAdd)  || dtAuth != null  ? (object) base.LUser.UsrId.ToString()	: (object) drv["ModifiedBy272"];
 				dr["Accomplished272"] = drv["Accomplished272"].ToString().Trim();
 			}
 			return dr;

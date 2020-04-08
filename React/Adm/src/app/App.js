@@ -30,13 +30,10 @@ class App extends Component {
   render() {
     return (
       <div>
-        {
-          this.props.global.pageSpinner &&
+        {/* {
+          !this.props.global.pageSpinner &&
           <div className='load'>
             <div className='load__icon-wrap'>
-              {/* <svg className='load__icon'>
-                <path fill='#21A79B' d='M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z' />
-              </svg> */}
               <div className="cssload-loader">
                 <div className="cssload-side"></div>
                 <div className="cssload-side"></div>
@@ -49,7 +46,7 @@ class App extends Component {
               </div>
             </div>
           </div>
-        }
+        } */}
         <div>
           <Router />
         </div>

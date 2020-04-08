@@ -2252,7 +2252,7 @@ document.Rintagi = {{
                     }
                     catch (Exception ex)
                     {
-                        throw;
+                        throw ex;
                     }
                 }
 
@@ -2329,6 +2329,7 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
+
 ~@~~@~~@~~@~~@~~@~~@~~@~
 181~@~4~@~Publish React to Site~@~Systems Maintenance: Publish React to Site~@~Ready React code for production~@~87~@~4219~@~~@~1~@~            try
             {

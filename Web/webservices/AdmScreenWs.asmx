@@ -360,7 +360,7 @@ namespace RO.Web
                 {"AddMsg16",""},
                 {"UpdMsg16",""},
                 {"DelMsg16",""},
-                {"IncrementMsg16","View {10} more"},
+                {"IncrementMsg16","View {0} more"},
                 {"NoMasterMsg16","No master record selected"},
                 {"NoDetailMsg16","No detail record selected"},
                 {"AddMasterMsg16","Click here to enter a new master record"},

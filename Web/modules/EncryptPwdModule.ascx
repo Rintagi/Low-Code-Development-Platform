@@ -45,6 +45,11 @@
                 </div>
             </div>
         </div>
+        <div>
+            <asp:TextBox ID="cMsg" runat="server" TextMode="MultiLine" Visible="false" Width="500" Height="200">
+
+            </asp:TextBox>
+        </div>
     </div>
 </div>
 </div>

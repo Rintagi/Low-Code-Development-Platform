@@ -47,7 +47,7 @@ export function ToReactDropdownList(objectList, keyName, labelName, noCapitalFor
 
 export function objectListToDict(objectList, keyColumnName, fn) {
   return objectList.length === 0 ? {} : objectList.reduce((r, v, i, a) => {
-    r[v[keyColumnName]] = (typeof fn === "function") ? fn(v) : v;
+    r[typeof keyColumnName === "function" ? keyColumnName(v) : v[keyColumnName]] = (typeof fn === "function") ? fn(v) : v;
     return r
   }, {});
 }
@@ -603,6 +603,13 @@ export function downloadMultiDocContent({dispatch, reduxColumnName,  keyId, scre
 
 export function processMultiDoc(existingDocList, newDocList)
 {
+  if (newDocList === undefined) {
+    return {
+      newDocs: [],
+      removedDocs: [],
+      mergedLatestDocs:existingDocList || [],
+    }
+  }
   const latestDocs = (newDocList || []).filter(o => !o.isEmptyFileObject);
   const currentDocsLookup = (existingDocList || []).filter(o => o.DocId).reduce((a, o) => { a[o.DocId] = o; return a; }, {})
   const revisedDocsLookup = latestDocs.filter(o => o.DocId).reduce((a, o) => { a[o.DocId] = o; return a; }, {});
@@ -677,83 +684,6 @@ export function htmlToBase64(htmlContent) {
     // };
     // a.readAsDataURL(blob);
   });
-}
-
-export function previewContent({ dataObj, winObj, containerUrl, download, isImage, features, replace, dataPromise, previewSig } = {}) {
-  const isIE = window.navigator && window.navigator.msSaveOrOpenBlob;
-  const containerPage = containerUrl || process.env.PUBLIC_URL + '/helper/showAttachment.html' + (previewSig ? '?fileSig=' + previewSig : '');
-  const win = !download && ((typeof dataPromise === "function" || typeof dataObj === "object") && (!isIE || isImage || (/image/i).test((dataObj || {}).mimeType)) && (winObj || window.open(containerPage, '_blank', features || "", replace)));
-  const dataAvailable = dataObj && dataObj.base64;
-
-  const deliverContent = function (dataObj) {
-    if (previewSig) {
-      sessionStorage.setItem("PreviewAttachment", JSON.stringify({ ...dataObj, fileSig: previewSig }));
-      const x = JSON.parse(sessionStorage["PreviewAttachment"]);
-    }
-
-    if ((!isIE || (/image/i).test((dataObj || {}).mimeType)) && !download) {
-      win.postMessage({ ...dataObj, fileSig: previewSig, download }, "*");
-    }
-    else {
-      const fileObjWithBlob = makeBlob(dataObj);
-      const blob = (fileObjWithBlob || {}).blob;
-      const fileName = (fileObjWithBlob || {}).fileName;
-      if (isIE) {
-        window.navigator.msSaveOrOpenBlob(blob, fileName);
-      }
-      else {
-        const a = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        a.href = url;
-        a.download = (fileObjWithBlob || {}).fileName;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function () {
-          document.body.removeChild(a);
-          window.close();
-        }, 500);
-      }
-    }
-  }
-  let injected = false;
-  const injectContent = function () {
-    if (injected) return;
-    injected = true;
-    if (dataObj && dataObj.base64) {
-      deliverContent(dataObj);
-    }
-    else if (typeof dataPromise === "function" || typeof dataPromise === "object") {
-      if (typeof dataPromise.then === "function") {
-        dataPromise.then(dataJSON => {
-          deliverContent({ ...(dataObj || {}), ...dataJSON, download });
-        }
-        )
-          .catch(error => {
-            if (win) win.close();
-          })
-      }
-      else {
-        const dataJSON = dataPromise();
-        deliverContent({ ...(dataObj || {}), ...dataJSON, download });
-      }
-    }
-    else {
-      if (win) win.close();
-      // no data, no data callback do nothing ?
-    }
-  }
-
-  setTimeout(() => {
-    injectContent();
-  }, 1000);
-
-  if (win) {
-    win.onload = function () {
-      injectContent();
-    }
-  }
-
-  return win;
 }
 
 export function uuid() {
@@ -896,67 +826,3 @@ export function GetCardType(number) {
 
   return "";
 }
-
-export function parsedUrl(url) {
-  var parser = document.createElement("a");
-  parser.href = url;
-  var o = {};
-  // IE 8 and 9 dont load the attributes "protocol" and "host" in case the source URL
-  // is just a pathname, that is, "/example" and not "http://domain.com/example".
-  parser.href = parser.href;
-
-  // IE 7 and 6 wont load "protocol" and "host" even with the above workaround,
-  // so we take the protocol/host from window.location and place them manually
-  if (parser.host === "") {
-      var newProtocolAndHost = window.location.protocol + "//" + window.location.host;
-      if (url.charAt(1) === "/") {
-          parser.href = newProtocolAndHost + url;
-      } else {
-          // the regex gets everything up to the last "/"
-          // /path/takesEverythingUpToAndIncludingTheLastForwardSlash/thisIsIgnored
-          // "/" is inserted before because IE takes it of from pathname
-          var currentFolder = ("/" + parser.pathname).match(/.*\//)[0];
-          parser.href = newProtocolAndHost + currentFolder + url;
-      }
-  }
-
-  // copies all the properties to this object
-  var properties = ['host', 'hostname', 'hash', 'href', 'port', 'protocol', 'search'];
-  for (var i = 0, n = properties.length; i < n; i++) {
-      o[properties[i]] = parser[properties[i]];
-  }
-
-  // pathname is special because IE takes the "/" of the starting of pathname
-  o.pathname = (parser.pathname.charAt(0) !== "/" ? "/" : "") + parser.pathname;
-  return o;
-}
-
-export function setupRuntime() {
-  const rintagi = document.Rintagi || {};
-  const location = window.location;
-  const href = location.href;
-  const pathName = location.pathname;
-  const origin = location.origin;
-  const reactBase = document.appRelBase || ['React','ReactProxy','ReactPort'];
-  const appBase = reactBase.reduce((a,b)=>{
-      const regex = new RegExp('.*((/)?' + b + '((/|#)|$))','i');
-      const m = pathName.match(regex);
-      if (!a && m && m.length > 0) {
-        return m[0].replace(m[1],'').replace(/\/$/,'');
-      }
-      else return a;
-  },undefined);
-  const apiBasename = origin + (appBase || '');
-  const appDomainUrl = origin + (appBase || '');
-  rintagi.apiBasename = rintagi.apiBasename || apiBasename;
-  rintagi.appDomainUrl = rintagi.appDomainUrl || appDomainUrl;
-  rintagi.appNS = rintagi.appNS || appDomainUrl.replace(origin,'') || '/';
-  if (location.pathname === "/" && location.protocol === "http:" && location.port >= 3000 && location.port <= 3100) {
-      rintagi.apiBasename = (rintagi.localDev || {}).apiBasename || rintagi.apiBasename;
-      rintagi.appNS = (rintagi.localDev || {}).appNS || rintagi.appNS;
-      rintagi.appDomainUrl = (rintagi.localDev || {}).appDomainUrl || rintagi.appDomainUrl;
-  }
-  document.Rintagi = rintagi;
-};
-
-setupRuntime();

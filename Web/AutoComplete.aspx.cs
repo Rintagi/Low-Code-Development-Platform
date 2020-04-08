@@ -16,6 +16,8 @@ using RO.Common3.Data;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RO.Web
 {
@@ -321,6 +323,71 @@ namespace RO.Web
                 dvCri,ui,uc,ds);
             return dt;
         }
+
+        public static string SResolveUrl(string originalUrl)
+        {
+            if (originalUrl == null)
+                return null;
+
+            // *** Absolute path - just return
+            if (originalUrl.IndexOf("://") != -1)
+                return originalUrl;
+
+            // *** Fix up image path for ~ root app dir directory
+            if (originalUrl.StartsWith("~"))
+            {
+                string newUrl = "";
+                if (HttpContext.Current != null)
+                    newUrl = HttpContext.Current.Request.ApplicationPath +
+                          originalUrl.Substring(1).Replace("//", "/");
+                else
+                    // *** Not context: assume current directory is the base directory
+                    throw new ArgumentException("Invalid URL: Relative URL not allowed.");
+
+                // *** Just to be sure fix up any double slashes
+                return newUrl;
+            }
+
+            return originalUrl;
+        }
+ 
+        /* must be sync with ModuleBase.cs */
+        public static string GetQSHash(string qs)
+        {
+            var Session = System.Web.HttpContext.Current.Session;
+
+            /* calculate the HMAC hash of a string based on unique SessionID and LUser Login Name */
+            //byte[] code = System.Web.Security.MachineKey.Protect(System.Text.Encoding.UTF8.GetBytes(Session.SessionID + LUser.UsrId.ToString()), "QueryString");
+            byte[] sessionSecret = Session["QSSecret"] as byte[];
+            if (sessionSecret == null)
+            {
+                RandomNumberGenerator rng = new RNGCryptoServiceProvider();
+                byte[] tokenData = new byte[32];
+                rng.GetBytes(tokenData);
+                sessionSecret = tokenData;
+                Session["QSSecret"] = tokenData;
+            }
+            //byte[] code = System.Text.Encoding.ASCII.GetBytes(sessionSecret + LUser.UsrId.ToString());
+            byte[] code = sessionSecret;
+            System.Security.Cryptography.HMACSHA256 hmac = new System.Security.Cryptography.HMACSHA256(code);
+            byte[] hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(Convert.ToBase64String(code) + qs.ToString()));
+            string hashString = BitConverter.ToString(hash);
+            return hashString.Replace("-", "");
+        }
+
+        public static string GetUrlWithQSHash(string url)
+        {
+            int questionMarkPos = url.IndexOf('?');
+            string path = questionMarkPos >= 0 ? url.Substring(0, questionMarkPos) : url;
+            string qs = questionMarkPos >= 0 ? url.Substring(questionMarkPos).Substring(1) : "";
+
+            if (string.IsNullOrEmpty(qs)) return url;
+            if (!(path.ToLower().StartsWith("~/dnload.aspx") || path.ToLower().StartsWith("dnload.aspx") || path.ToLower().StartsWith("~/upload.aspx") || path.ToLower().StartsWith("upload.aspx"))) return url;
+
+            /* url with hash to prevent tampering of manual construction, only for dnload.aspx */
+            return path + "?" + qs + "&hash=" + GetQSHash(string.Join("&", qs.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries).OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim());
+        }
+
         public AutoComplete()
         {
             
@@ -958,7 +1025,7 @@ namespace RO.Web
                             {"key",drv[keyF].ToString()}, // internal key 
                             {"label",drv[valF].ToString()}, // visible dropdown list as used in jquery's autocomplete
                             {"value",drv[valF].ToString()}, // visible value shown in jquery's autocomplete box
-                            {"iconUrl",iconUrlF !="" ?  drv[iconUrlF].ToString() : null}, // optional icon url
+                            {"iconUrl",iconUrlF !="" ? drv[iconUrlF].ToString() == "" ? "" : SResolveUrl(GetUrlWithQSHash(drv[iconUrlF].ToString())) : null}, // optional icon url
                             {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "":  RO.Common3.Utils.BlobPlaceHolder(drv[imgF] as byte[],true))  : null}, // optional embedded image
                             {"tooltips",tipF !="" ? drv[tipF].ToString() : ""},// optional alternative tooltips(say expanded description)
                             {"detail",dtlF !="" ? drv[dtlF].ToString() : null} // optional alternative tooltips(say expanded description)

@@ -204,6 +204,10 @@
     			<asp:ImageButton id="cIconUrl39" OnClientClick='NoConfirm()' OnClick="cIconUrl39_Click" runat="server" />
     		<asp:ImageButton id="cIconUrl39Tgo" OnClientClick='NoConfirm()' onclick="cIconUrl39Tgo_Click" runat="server" ImageUrl="~/Images/UpLoad.png" CausesValidation="true" /></div>
     	</div>
+    	<div class="r-tr">
+    		<div id="cReactQuickMenu39P1" class="r-td r-labelR" runat="server"><asp:Label id="cReactQuickMenu39Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cReactQuickMenu39P2" class="r-td r-content" runat="server"><asp:CheckBox id="cReactQuickMenu39" CssClass="inp-chk" runat="server" /></div>
+    	</div>
     </div></div></div>
     </div></div>
 </asp:Panel>

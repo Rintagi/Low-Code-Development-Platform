@@ -5,7 +5,7 @@ import * as systemService from '../services/systemService'
 import { showNotification, dispatchWithNotification } from '../redux/Notification'
 import { switchLanguage, getCurrentLanguage } from '../helpers/formatter'
 import log from '../helpers/logger';
-import {setupRuntime} from '../helpers/utils';
+import { setupRuntime, getRintagiConfig } from '../helpers/config';
 
 // action type
 const SCREEN_PREFIX = 'Login';
@@ -13,16 +13,19 @@ export const LOGIN = getAsyncTypes(SCREEN_PREFIX, 'AUTH_LOGIN');
 export const LOGOUT = getAsyncTypes(SCREEN_PREFIX, 'AUTH_LOGOUT');
 export const GET_TOKEN = getAsyncTypes(SCREEN_PREFIX, 'AUTH_GET_TOKEN');
 export const GET_USER = getAsyncTypes(SCREEN_PREFIX, 'AUTH_GET_USER');
-export const GET_MENU = getAsyncTypes(SCREEN_PREFIX,'AUTH_GET_MENU');
-export const GET_SYSTEMLIST = getAsyncTypes(SCREEN_PREFIX,'AUTH_GET_SYSTEMLIST');
+export const GET_MENU = getAsyncTypes(SCREEN_PREFIX, 'AUTH_GET_MENU');
+export const GET_SYSTEMLIST = getAsyncTypes(SCREEN_PREFIX, 'AUTH_GET_SYSTEMLIST');
+export const GET_SERVERIDENTITY = getAsyncTypes(SCREEN_PREFIX, 'AUTH_GET_SERVERIDENTITY');
 export const SESSION_TIMEOUT = getAsyncTypes(SCREEN_PREFIX, 'AUTH_LOGIN');
 export const UPD_PROFILE = getAsyncTypes(SCREEN_PREFIX, 'AUTH_UPDATE_PROFILE');
 export const CHANGE_PASSWORD = getAsyncTypes(SCREEN_PREFIX, 'AUTH_CHANGE_PASSWORD');
 export const RESET_PASSWORD_EMAIL = getAsyncTypes(SCREEN_PREFIX, 'AUTH_RESET_PASSWORD_EMAIL');
 export const SWITCH_CURRENT = getAsyncTypes(SCREEN_PREFIX, 'AUTH_SWITCH_CURRENT');
 
-const runtimeConfig = (document.Rintagi || {});
+
+const runtimeConfig = getRintagiConfig() || {};
 const systemId = runtimeConfig.systemId || 3;
+
 // reducer
 const initState = {
   user: {
@@ -30,6 +33,7 @@ const initState = {
   },
   menu: null,
   system: null,
+  serverInfo: null,
   Label: {
     Login: "Login",
     Logout: "Logout",
@@ -126,13 +130,13 @@ export function authReducer(state = initState, action) {
         }
       }
     case GET_USER.ENDED:
-        return {
-          ...initState,
-          user: {
-            ...(state.user || {}),
-            loading: false,
-          }
-        }  
+      return {
+        ...initState,
+        user: {
+          ...(state.user || {}),
+          loading: false,
+        }
+      }
     case LOGIN.STARTED:
       return {
         ...state,
@@ -178,13 +182,13 @@ export function authReducer(state = initState, action) {
       }
     case LOGOUT.SUCCEEDED:
     case LOGOUT.FAILED:
-        return {
-          ...state,
-          user: {
-            desktopView: state.user.desktopView,
-            loading: false
-          },
-        }
+      return {
+        ...state,
+        user: {
+          desktopView: state.user.desktopView,
+          loading: false
+        },
+      }
     case LOGOUT.ENDED:
       return {
         ...state,
@@ -275,63 +279,91 @@ export function authReducer(state = initState, action) {
         page_saving: false
       }
     case GET_MENU.STARTED:
-        return {
-            //          ...(state), // flush stored info, as if it is not authenticated
-            ...state,
-            menu: {
-                menuList: state.menu.menuList,
-                loading: true,
-                loadingTime: new Date()
-            }
+      return {
+        //          ...(state), // flush stored info, as if it is not authenticated
+        ...state,
+        menu: {
+          menuList: state.menu.menuList,
+          loading: true,
+          loadingTime: new Date()
         }
+      }
     case GET_MENU.SUCCEEDED:
-        return {
-            ...(state),
-            menu: {
-                ...state.menu,
-                menuList:[...action.payload],
-                loading: false,
-                key: Date.now()
-            },
-        }
+      return {
+        ...(state),
+        menu: {
+          ...state.menu,
+          menuList: [...action.payload],
+          loading: false,
+          key: Date.now()
+        },
+      }
     case GET_MENU.FAILED:
-        return {
-            ...(state),
-            menu: {
-                menuList:[],
-                // desktopView:state.menu.desktopView,
-                // ...(action.payload),
-                loading: false,
-            }
+      return {
+        ...(state),
+        menu: {
+          menuList: [],
+          // desktopView:state.menu.desktopView,
+          // ...(action.payload),
+          loading: false,
         }
+      }
     case GET_SYSTEMLIST.STARTED:
-        return {
-            //          ...(state), // flush stored info, as if it is not authenticated
-            ...state,
-            system: {
-                systemList: state.system.systemList,
-                loading: true,
-                loadingTime: new Date()
-            }
+      return {
+        //          ...(state), // flush stored info, as if it is not authenticated
+        ...state,
+        system: {
+          systemList: state.system.systemList,
+          loading: true,
+          loadingTime: new Date()
         }
+      }
     case GET_SYSTEMLIST.SUCCEEDED:
-        return {
-            ...(state),
-            system: {
-                ...state.system,
-                systemList:[...action.payload],
-                loading: false,
-                key: Date.now()
-            },
-        }
+      return {
+        ...(state),
+        system: {
+          ...state.system,
+          systemList: [...action.payload],
+          loading: false,
+          key: Date.now()
+        },
+      }
     case GET_SYSTEMLIST.FAILED:
-        return {
-            ...(state),
-            system: {
-                systemList:[],
-                loading: false,
-            }
-        }          
+      return {
+        ...(state),
+        system: {
+          systemList: [],
+          loading: false,
+        }
+      }
+    case GET_SERVERIDENTITY.STARTED:
+      return {
+        //          ...(state), // flush stored info, as if it is not authenticated
+        ...state,
+        serverInfo: {
+          ...(action.payload),
+          loading: true,
+          loadingTime: new Date()
+        }
+      }
+    case GET_SERVERIDENTITY.SUCCEEDED:
+      return {
+        ...(state),
+        serverInfo: {
+          ...state.serverInfo,
+          ...(action.payload),
+          loading: false,
+          key: Date.now()
+        },
+      }
+    case GET_SERVERIDENTITY.FAILED:
+      return {
+        ...(state),
+        serverInfo: {
+          ...(action.payload),
+          loading: false,
+        }
+      }
     default:
       return state;
   }
@@ -368,8 +400,8 @@ export function login(username, password) {
         if (data.status === "success") {
           //dispatchWithNotification(dispatch, { type: LOGIN.SUCCEEDED, payload: data.accessCode});
           //dispatchWithNotification(dispatch, { type: GET_TOKEN.STARTED, payload: data.accessCode});
-          const {accessCode,refresh_token} = data;
-          return authService.getToken(refresh_token || accessCode, {grant_type:refresh_token && 'refresh_token' }).then(
+          const { accessCode, refresh_token } = data;
+          return authService.getToken(refresh_token || accessCode, { grant_type: refresh_token && 'refresh_token' }).then(
             data => {
               //dispatchWithNotification(dispatch, { type: GET_TOKEN.SUCCEEDED, payload: data.data});
               //dispatchWithNotification(dispatch, { type: GET_USER.STARTED, payload: data.data});
@@ -378,25 +410,37 @@ export function login(username, password) {
                   dispatchWithNotification(dispatch, { type: GET_USER.SUCCEEDED, payload: data.data });
                   authService.getMenu(systemId).then(
                     data => {
-                        dispatchWithNotification(dispatch, { type: GET_MENU.SUCCEEDED, payload: data.data });                            
+                      dispatchWithNotification(dispatch, { type: GET_MENU.SUCCEEDED, payload: data.data });
                     },
                     error => {
-                        dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
+                      dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
                     }
-                    ).catch(error => {
+                  ).catch(error => {
                     console.log(error);
-                    })
+                  })
 
-                    authService.getSystems().then(
-                      data => {
-                          dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.SUCCEEDED, payload: data.data });                            
-                      },
-                      error => {
-                          dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.FAILED, payload: error });
-                      }
-                      ).catch(error => {
-                      console.log(error);
-                      })
+                  authService.getSystems().then(
+                    data => {
+                      dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.SUCCEEDED, payload: data.data });
+                    },
+                    error => {
+                      dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.FAILED, payload: error });
+                    }                   
+                  ).catch(error => {
+                    console.log(error);
+                  })
+
+                  authService.getServerIdentity().then(
+                    data => {
+                      dispatchWithNotification(dispatch, { type: GET_SERVERIDENTITY.SUCCEEDED, payload: data.data });
+                    },
+                    error => {
+                      dispatchWithNotification(dispatch, { type: GET_SERVERIDENTITY.FAILED, payload: error });
+                    }
+                  ).catch(error => {
+                    console.log(error);
+                  })
+
                   return Promise.resolve([data.data]);
                 },
                 error => {
@@ -423,47 +467,47 @@ export function login(username, password) {
       },
       (error) => {
         console.log(error);
-        dispatchWithNotification(dispatch, { type: LOGIN.FAILED, payload: {...error, errMsg:error.errMsg === "bot challenge" ? "login failed" : error.errMsg } });
+        dispatchWithNotification(dispatch, { type: LOGIN.FAILED, payload: { ...error, errMsg: error.errMsg === "bot challenge" ? "login failed" : error.errMsg } });
         return Promise.reject(error);
       }
     );
   };
 }
 
-export function logout(keepToken,currentSessionOnly) {
+export function logout(keepToken, currentSessionOnly) {
   return (dispatch) => {
     dispatchWithNotification(dispatch, { type: LOGOUT.STARTED, payload: {} });
 
-    return authService.logout(keepToken,currentSessionOnly).then(
+    return authService.logout(keepToken, currentSessionOnly).then(
       (result) => {
         dispatchWithNotification(dispatch, { type: LOGOUT.SUCCEEDED, payload: result });
         authService.getMenu(systemId).then(
-            data => {
-                dispatchWithNotification(dispatch, { type: GET_MENU.SUCCEEDED, payload: data.data });
-                
-            },
-            error => {
-                dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
-            }
+          data => {
+            dispatchWithNotification(dispatch, { type: GET_MENU.SUCCEEDED, payload: data.data });
+
+          },
+          error => {
+            dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
+          }
         ).catch(error => {
-            console.log(error);
+          console.log(error);
         })
         return true;
       }
     )
       .catch(error => {
-        dispatchWithNotification(dispatch, { type: error.errType === "network error" ? (keepToken ? LOGOUT.SUCCEEDED : LOGOUT.ENDED ) : LOGOUT.FAILED, payload: error });
+        dispatchWithNotification(dispatch, { type: (error.errType === "network error" || error.errType === "fetch error") ? (keepToken ? LOGOUT.SUCCEEDED : LOGOUT.ENDED) : LOGOUT.FAILED, payload: error });
         return Promise.reject(error);
       })
   }
 }
 
 export function reloadCurrentUser(reAuth) {
-  return (dispatch, getState, ...rest ) => {
+  return (dispatch, getState, ...rest) => {
     return authService.renewAccessToken(null, reAuth)
       .then(
         token => {
-          return getCurrentUser(true)(dispatch,getState,...rest);
+          return getCurrentUser(true)(dispatch, getState, ...rest);
         }
       )
       .then(
@@ -483,7 +527,7 @@ export function getCurrentUser(silent = false) {
 
     //if (!authService.isAuthenticated()) return;
     const access_token = await authService.getAccessToken();
-    const refresh_token = authService.getRefreshToken().refresh_token;
+    const refresh_token = (await authService.getRefreshToken()).refresh_token;
     if (!refresh_token) {
       log.debug('no refresh token');
       return Promise.resolve({});
@@ -500,20 +544,28 @@ export function getCurrentUser(silent = false) {
             if (!auth.menu) {
               authService.getMenu().then(
                 data => {
-                    dispatchWithNotification(dispatch, { type: GET_MENU.SUCCEEDED, payload: data.data });
-                    
+                  dispatchWithNotification(dispatch, { type: GET_MENU.SUCCEEDED, payload: data.data });
+
                 },
                 error => {
-                    dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
+                  dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
                 });
 
               authService.getSystems().then(
-                 data => {
-                    dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.SUCCEEDED, payload: data.data });
-                    
+                data => {
+                  dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.SUCCEEDED, payload: data.data });
+
                 },
                 error => {
-                    dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.FAILED, payload: error });
+                  dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.FAILED, payload: error });
+                });
+
+              authService.getServerIdentity().then(
+                data => {
+                  dispatchWithNotification(dispatch, { type: GET_SERVERIDENTITY.SUCCEEDED, payload: data.data });
+                },
+                error => {
+                  dispatchWithNotification(dispatch, { type: GET_SERVERIDENTITY.FAILED, payload: error });
                 });
             }
             return Promise.resolve(data.data);
@@ -540,11 +592,10 @@ export function getCurrentUser(silent = false) {
           if (authService.isAuthenticated()) {
             //dispatchWithNotification(dispatch, { type: GET_USER.FAILED, payload: error });
           }
-          else 
-          {
+          else {
             // silent
             log.debug("flush user redux");
-            dispatch({ type: error.errType === "network error" ? GET_USER.ENDED : GET_USER.FAILED, payload: error });
+            dispatch({ type: (error.errType === "network error" || error.errType === "fetch error") ? GET_USER.ENDED : GET_USER.FAILED, payload: error });
           }
           return Promise.reject(error);
         }
@@ -609,7 +660,7 @@ export function resetPasswordEmail(values) {
 export function switchCurrent(companyId, projectId, culture) {
   return (dispatch, getState, { webApi }) => {
     dispatchWithNotification(dispatch, { type: SWITCH_CURRENT.STARTED, payload: { message: "Profile Update started" } });
-    
+
     systemService.switchCurrent(companyId, projectId, (culture || { key: "1" }).key).then(
       (ret => {
         switchLanguage((culture || { lang: "en" }).lang, (culture || { CultureId: "1" }).CultureId);
@@ -635,7 +686,7 @@ export function requestResetPwdEmail(email, reCaptchaRequest, refCode) {
           dispatchWithNotification(dispatch, { type: RESET_PASSWORD_EMAIL.FAILED, payload: error });
         }
       )
-     //dispatch({ type: RESET_PASSWORD_EMAIL.SUCCEEDED, payload: { nounce: 'abc', ticketRight: '46346' }  })
+    //dispatch({ type: RESET_PASSWORD_EMAIL.SUCCEEDED, payload: { nounce: 'abc', ticketRight: '46346' }  })
   }
 }
 

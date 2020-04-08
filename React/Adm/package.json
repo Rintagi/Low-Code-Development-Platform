@@ -62,6 +62,7 @@
     "rc-slider": "8.6.3",
     "rc-time-picker": "3.4.0",
     "react": "16.10.1",
+    "react-awesome-slider": "4.1.0",
     "react-big-calendar": "0.18.0",
     "react-bootstrap-typeahead": "3.2.4",
     "react-chartjs-2": "2.7.4",

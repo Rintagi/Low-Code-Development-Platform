@@ -1467,3 +1467,4 @@
 7580~@~1317~@~230~@~~@~WebAddress~@~VwRintagi - WebAddress~@~15~@~50~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
 7581~@~1305~@~210~@~~@~UsrEmail~@~SrUsr - UsrEmail~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7582~@~1305~@~30~@~~@~UsrName~@~SrUsr - UsrName~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7587~@~39~@~130~@~~@~ReactQuickMenu~@~Menu - ReactQuickMenu~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~This menu item will show up on the react default page for quick access if checked.~@~

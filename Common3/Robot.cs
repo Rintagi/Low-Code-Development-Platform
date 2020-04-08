@@ -225,16 +225,33 @@ namespace RO.Common3
 
 		public static void WriteToFile(string os, string fullFilePath, string strToBeWritten)
 		{
-			StreamWriter sw = new StreamWriter(fullFilePath);
-			if (os == "L")	// Linux
-			{
-				sw.Write(strToBeWritten.Replace("\r\n","\n"));
-			}
-			else
-			{
-				sw.Write(strToBeWritten);
-			}
-			sw.Close();
+            Action WriteToFile = () =>
+            {
+                StreamWriter sw = new StreamWriter(fullFilePath);
+                if (os == "L")	// Linux
+                {
+                    sw.Write(strToBeWritten.Replace("\r\n", "\n"));
+                }
+                else
+                {
+                    sw.Write(strToBeWritten);
+                }
+                sw.Close();
+            };
+
+            try
+            {
+                WriteToFile();
+            }
+            catch (Exception ex)
+            {
+                if (ex != null)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    WriteToFile();
+                }
+                else throw;
+            }
 		}
 
 		public static string GetControlName(DataRowView drv)

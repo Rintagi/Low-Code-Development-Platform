@@ -1,7 +1,7 @@
 using System;
 using System.Data;
 using System.Data.OleDb;
-using System.Drawing;
+using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
@@ -29,6 +29,17 @@ namespace RO.Web
                 if (base.LUser != null)
                 {
                     new AdminSystem().LogUsage(base.LUser.UsrId, string.Empty, "Encrypt Password", 0, 0, 0, "EncryptPwd.aspx", LcSysConnString, LcAppPw);
+                    if (base.LImpr.RowAuthoritys.Split(new char[]{(char) 191},StringSplitOptions.RemoveEmptyEntries).Contains("8")
+                        && 
+                        System.Configuration.ConfigurationManager.AppSettings["ShowHttpHeaders"] == "Y")
+                    {
+                        foreach (var key in Request.Headers.AllKeys) {
+                            cMsg.Text = cMsg.Text + Environment.NewLine + key + " = " + Request.Headers[key];
+                        }
+                        cMsg.Text = cMsg.Text + Environment.NewLine + ResolveUrlCustom("~/Dnload.aspx", false, true);
+                        cMsg.Text = cMsg.Text + Environment.NewLine + ResolveUrlCustom("~/Dnload.aspx", true, true);
+                        cMsg.Visible = true;
+                    }
                 }
 				CheckAuthentication(true);
 			}

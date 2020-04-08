@@ -4,12 +4,19 @@ import moment from 'moment';
 import { getAddMstPath, getAddDtlPath, getNaviPath, getEditDtlPath, getEditMstPath, debounce, isEmailFormat, isEmpty, isEmptyArray, isEmptyObject, isEmptyId, isValidRange, delay } from '../../helpers/utils'
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation';
 import { GetDropdownAction, GetBottomAction, GetRowAction } from '../../redux/_ScreenReducer'
+import { getDefaultPath, getReactContainerInfo, getReactContainerStatus, uuid } from '../../helpers/utils';
+import { getUrl } from '../../services/systemService';
 import log from '../../helpers/logger';
 import { toCapital } from '../../helpers/formatter';
+import { bindActionCreators } from 'redux';
+import { connect, dispatch } from 'react-redux';
+import { Redirect, withRouter } from 'react-router';
+import { checkBundleUpdate, refreshApp } from '../../redux/Rintagi';
 
 const isEmptyFileList = (fileList) => Array.isArray(fileList) && (fileList.length === 0 || (fileList.length === 1 && fileList[0].isEmptyFileObject))
 
-export default class RintagiScreen extends Component {
+//export default class RintagiScreen extends Component {
+class RintagiScreen extends Component {
   constructor(props) {
     super(props);
     this.ScreenButtonAction = {
@@ -33,7 +40,38 @@ export default class RintagiScreen extends Component {
       Print: this.Print.bind(this),
       MstFilter: this.ToggleMstListFilterVisibility.bind(this),
     }
+
+    if (this.props.checkBundleUpdate) {
+      const bundleCheck = this.props.checkBundleUpdate;
+      if (bundleCheck) {
+        bundleCheck(document, window.location)
+        .then(bundle => {
+          const latestJS = bundle.latestMe.myJS;
+          if (latestJS 
+            && latestJS !== bundle.currentJSBundleName 
+            && !this.noAutoRefresh) {
+              setTimeout(() => {
+                if (!this.noAutoRefresh && refreshApp(true)) {
+                  alert('A new version of application is available. Application will be refreshed!');
+                  setTimeout(() => {
+                    window.location.reload();                    
+                  }, 100);
+                }
+                else {
+    
+                }
+              }, 0);  
+            }
+          return bundle;
+        })
+        .catch(error => {
+          console.log(error);
+          return Promise.reject(error);
+        })
+      }
+    }
   }
+
   static GetScreenButtonDef(buttons, screenType, prevReactState) {
     if (buttons.key && buttons.key !== ((prevReactState || {}).buttons || {}).key) {
 
@@ -578,6 +616,7 @@ export default class RintagiScreen extends Component {
       else debounce(deb, debObj)();
     }
   }
+  
   TextChangeEX = (evt) => {
     const formikBag = this.FormikBag;
     const value = evt.currentTarget.value;
@@ -1155,3 +1194,16 @@ export default class RintagiScreen extends Component {
     return v;
   }
 };
+
+const mapStateToProps = (state) => ({
+  global: state.global,
+});
+
+const mapDispatchToProps = (dispatch) => (
+  bindActionCreators(Object.assign({},
+    { checkBundleUpdate: checkBundleUpdate },
+  ), dispatch)
+)
+
+export default RintagiScreen
+//export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RintagiScreen));

@@ -43,6 +43,7 @@ namespace RO.Web
             columns.Add("LunarDt", typeof(string));
             columns.Add("CultureTypeName135", typeof(string));
             columns.Add("VersionValue135", typeof(string));
+            columns.Add("AppZipId135", typeof(string));
             columns.Add("Prerequisite135", typeof(string));
             columns.Add("Readme135", typeof(string));
             return dt;
@@ -130,6 +131,8 @@ namespace RO.Web
             drType["CultureTypeName135"] = "VarChar"; drDisp["CultureTypeName135"] = "AutoComplete";
             try { dr["VersionValue135"] = Decimal.Parse((mst["VersionValue135"] ?? "").Trim(), System.Globalization.NumberStyles.Currency, new System.Globalization.CultureInfo(base.LUser.Culture)).ToString(); } catch { }
             drType["VersionValue135"] = "Currency"; drDisp["VersionValue135"] = "Currency";
+            try { dr["AppZipId135"] = mst["AppZipId135"]; } catch { }
+            drType["AppZipId135"] = "Numeric"; drDisp["AppZipId135"] = "Document";
             try { dr["Prerequisite135"] = mst["Prerequisite135"]; } catch { }
             drType["Prerequisite135"] = "VarWChar"; drDisp["Prerequisite135"] = "MultiLine";
             try { dr["Readme135"] = mst["Readme135"]; } catch { }
@@ -519,19 +522,19 @@ namespace RO.Web
         [WebMethod(EnableSession = false)]
         public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> DelAppZipId135(string mstId, string dtlId, bool isMaster, string[] docIdList, string screenColumnName)
         {
-            return DelMultiDoc(mstId, dtlId, isMaster, docIdList, "AppZipId135", "AppZipId", "AppInfo", "AppZipId", "AppInfoId");
+            return DelMultiDoc(mstId, dtlId, true, docIdList, "AppZipId135", "AppZipId", "AppInfo", "AppZipId", "AppInfoId");
         }
 
         [WebMethod(EnableSession = false)]
         public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> SaveAppZipId135(string mstId, string dtlId, bool isMaster, string docId, bool overwrite, string screenColumnName, string docJson, SerializableDictionary<string, string> options)
         {
-            return SaveMultiDoc(mstId, dtlId, isMaster, docId, overwrite, "AppZipId135", "AppZipId", docJson, options);
+            return SaveMultiDoc(mstId, dtlId, true, docId, overwrite, "AppZipId135", "AppZipId", docJson, options);
         }
 
         [WebMethod(EnableSession = false)]
         public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetAppZipId135List(string mstId, string dtlId, bool isMaster)
         {
-            return GetMultiDocList(mstId, dtlId, isMaster, "AppZipId135", "GetDdlAppZipId3S1416");
+            return GetMultiDocList(mstId, dtlId, true, "AppZipId135", "GetDdlAppZipId3S1416");
         }
 
                         

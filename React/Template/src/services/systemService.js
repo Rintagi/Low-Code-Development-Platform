@@ -69,3 +69,30 @@ export function switchCurrent(companyId, projectId, cultureId) {
         }
     )
 }
+
+export function getUrl(url, options={}) {
+    const requestOptions = {
+        method: 'GET',
+        ...options,
+        };   
+    return fetch(url, requestOptions)
+            .then(response => {
+                let ret = response.text();
+                return ret.then(content => {
+                    return {
+                        headers: response.headers,
+                        content: content,
+                        status: response.status,
+                        ok: response.ok,
+                        redirected: response.redirected,
+                        url: response.url,
+                    }
+                }
+                )
+            })
+            .catch(error => {
+                log.debug(error);
+                return Promise.reject(error);
+            })
+
+}

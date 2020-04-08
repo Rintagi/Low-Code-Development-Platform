@@ -119,12 +119,10 @@ namespace RO.Web
 					}
 				}
 				DataTable dt;
-				DataView dv;
 				dt = (new AdminSystem()).GetLastCriteria(2,0,59,base.LUser.UsrId,LcSysConnString,LcAppPw);
 				if ((bool)Session[KEY_bClCriVisible]) {cClearCriButton.Visible = cCriteria.Visible;} else {cClearCriButton.Visible = false;}
 				if ((bool)Session[KEY_bShCriVisible]) {cShowCriButton.Visible = !cCriteria.Visible;} else {cShowCriButton.Visible = false;}
 				DataTable dtCri = GetReportCriHlp();
-				string selectedVal = null;
 				base.SetCriBehavior(cMonthEnding, cMonthEndingP1, cMonthEndingLabel, dtCri.Rows[0]);
 				cMonthEnding.AutoPostBack = false;
 				if (dt.Rows[0]["LastCriteria"].ToString() != string.Empty)

@@ -121,11 +121,11 @@ namespace RO.Web
 				}
 				DataTable dt;
 				DataView dv;
+				string selectedVal = null;
 				dt = (new AdminSystem()).GetLastCriteria(3,0,53,base.LUser.UsrId,LcSysConnString,LcAppPw);
 				if ((bool)Session[KEY_bClCriVisible]) {cClearCriButton.Visible = cCriteria.Visible;} else {cClearCriButton.Visible = false;}
 				if ((bool)Session[KEY_bShCriVisible]) {cShowCriButton.Visible = !cCriteria.Visible;} else {cShowCriButton.Visible = false;}
 				DataTable dtCri = GetReportCriHlp();
-				string selectedVal = null;
 				base.SetCriBehavior(cActive, cActiveP1, cActiveLabel, dtCri.Rows[0]);
 				cActive.AutoPostBack = false;
 				try {selectedVal = dt.Rows[0]["LastCriteria"].ToString();} catch { selectedVal = null;};

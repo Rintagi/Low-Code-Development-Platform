@@ -1294,8 +1294,13 @@ namespace RO.Rule3
 				sb.Append("					}" + Environment.NewLine);
 				sb.Append("				}" + Environment.NewLine);
 			}
+            bool hasDdl = dvCri.Table.AsEnumerable().Where(dr => "ComboBox,DropDownList,ListBox,RadioButtonList".IndexOf(dr["DisplayName"].ToString()) >= 0).Count() > 0;
 			sb.Append("				DataTable dt;" + Environment.NewLine);
-            sb.Append("				DataView dv;" + Environment.NewLine);
+            if (hasDdl)
+            {
+                sb.Append("				DataView dv;" + Environment.NewLine);
+                sb.Append("				string selectedVal = null;" + Environment.NewLine);
+            }
             //sb.Append("				if (Config.Architect == \"W\")" + Environment.NewLine);
             //sb.Append("				{" + Environment.NewLine);
             //sb.Append("					dt = XmlUtils.XmlToDataTable(AdminFacade().GetLastCriteria(" + dvCri.Count.ToString() + ",0," + reportId.ToString() + ",base.LUser.UsrId,LcSysConnString,LcAppPw));" + Environment.NewLine);
@@ -1309,7 +1314,6 @@ namespace RO.Rule3
 			ii = 0;
 			bListBox = false;
 			sb.Append("				DataTable dtCri = GetReportCriHlp();" + Environment.NewLine);
-            sb.Append("				string selectedVal = null;" + Environment.NewLine);
             foreach (DataRowView drv in dvCri)
             {
                 DataView dvDependent = new DataView(dvCri.Table, "DdlFtrColumnId = " + drv["ReportCriId"].ToString() + " AND DisplayMode <> 'AutoComplete' AND DisplayName in ('ComboBox','DropDownList','ListBox','RadioButtonList')", "", DataViewRowState.CurrentRows);

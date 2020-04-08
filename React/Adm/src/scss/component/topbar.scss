@@ -468,7 +468,7 @@
 
       @include themify($themes) {
         // background-color: themed('colorHover');
-        color: $color-fintrux;
+        color: #fff;
       }
     }
   }

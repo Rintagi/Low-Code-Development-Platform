@@ -1481,6 +1481,7 @@ WizardId int NULL ,
 StaticPgId int NULL ,
 IconUrl nvarchar (300) NULL ,
 Popup char (1) NOT NULL CONSTRAINT DF_Menu_Popup DEFAULT ('N'),
+ReactQuickMenu char (1) NOT NULL CONSTRAINT DF_Menu_ReactQuickMenu DEFAULT ('N'),
 CONSTRAINT PK_Menu PRIMARY KEY CLUSTERED (
 MenuId
 )

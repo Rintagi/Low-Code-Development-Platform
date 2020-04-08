@@ -149,6 +149,22 @@ export function GetScreenFilter(accessScope) {
         }
     )
 }
+export function GetSearchList(searchStr, topN, filterId, desiredScreenCriteria, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenFilterWs.asmx/GetSearchList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    searchStr: searchStr || '',
+                    topN: topN || 0,
+                    filterId: ('' + (filterId || 0)),
+                    desiredScreenCriteria: desiredScreenCriteria || {},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 export function GetAdmScreenFilter59List(searchStr, topN, filterId, accessScope) {
     return fetchData(baseUrl + '/AdmScreenFilterWs.asmx/GetAdmScreenFilter59List'
         , {
@@ -164,14 +180,13 @@ export function GetAdmScreenFilter59List(searchStr, topN, filterId, accessScope)
         }
     )
 }
-export const GetSearchList = GetAdmScreenFilter59List;
-export function GetAdmScreenFilter59ById(keyId, accessScope) {
+export function GetAdmScreenFilter59ById(keyId, options, accessScope) {
     return fetchData(baseUrl + '/AdmScreenFilterWs.asmx/GetAdmScreenFilter59ById'
         , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
-                    options: {
+                    options: options || {
                         CurrentScreenCriteria: JSON.stringify({}),
                     },
                 }),
@@ -182,13 +197,13 @@ export function GetAdmScreenFilter59ById(keyId, accessScope) {
     )
 }
 export const GetMstById = GetAdmScreenFilter59ById;
-export function GetAdmScreenFilter59DtlById(keyId, filterId, accessScope) {
+export function GetAdmScreenFilter59DtlById(keyId, filterId, options, accessScope) {
     return fetchData(baseUrl + '/AdmScreenFilterWs.asmx/GetAdmScreenFilter59DtlById'
         , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
-                    options: {
+                    options: options || {
                         CurrentScreenCriteria: JSON.stringify({}),
                     },
                     filterId: filterId || 0,

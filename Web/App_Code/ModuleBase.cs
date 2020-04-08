@@ -18,6 +18,7 @@ using System.Linq;
 using System.Net;
 using System.IO;
 using System.Web.Script.Serialization;
+using System.Web.Configuration;
 using System.Security.Cryptography.X509Certificates;
 using RoboCoder.WebControls;
 
@@ -95,6 +96,24 @@ namespace RO.Web
         }
     }
 
+    public class ZipMultiDocRequest
+    {
+        public List<string> scr;
+        public List<List<string>> cols;
+    }
+
+    public class ZipEmbeddedDocRequest
+    {
+        public List<string> scr;
+        public List<List<string>> cols;
+    }
+    public class ZipDownloadRequest
+    {
+        public string zN;
+        public long e;
+        public List<ZipMultiDocRequest> md;
+        public List<ZipEmbeddedDocRequest> ed;
+    }
 	public class PgStateAdapter : System.Web.UI.Adapters.PageAdapter
 	{
 		public override PageStatePersister GetStatePersister()
@@ -221,8 +240,9 @@ namespace RO.Web
                 Session[KEY_SystemsList] = dt;
                 dt.PrimaryKey = new DataColumn[] { dt.Columns["SystemId"] };
                 bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
-                foreach (DataRow dr in dt.Rows)
+                for (int i = dt.Rows.Count; i < dt.Rows.Count; i++)
                 {
+                    DataRow dr = dt.Rows[i];
                     if (dr["Active"].ToString() == "N")
                     {
                         dr.Delete();
@@ -2134,6 +2154,222 @@ namespace RO.Web
             return iEmailsSentToday;
         }
 
+        #region Document zip download helpers
+        // must be in-sync with AsmxBase.cs
+        protected string EncodeRequest<T>(T request, bool noEncrypt = false)
+        {
+            int round = 1;
+            var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string requestJSON = jss.Serialize(request);
+            if (noEncrypt) return base64UrlEncode(System.Text.UTF8Encoding.UTF8.GetBytes(requestJSON));
+            RO.Facade3.Auth authObject = GetAuthObject();
+            string password = authObject.GetSessionEncryptionKey("", ""); // global non-user specific
+            string salt = password; // global, no salt
+            string encodedRequest = base64UrlEncode(
+                                        Encrypt(System.Text.UTF8Encoding.UTF8.GetBytes(requestJSON),
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(password),
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(salt), round));
+            return encodedRequest;
+        }
+        protected T DecodeRequest<T>(string encodedRequest, bool noEncrypt = false)
+        {
+            int round = 1;
+            byte[] x = base64UrlDecode(encodedRequest);
+            var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            RO.Facade3.Auth authObject = GetAuthObject();
+            string password = authObject.GetSessionEncryptionKey("", ""); // global non-user specific
+            string salt = password; // global, no salt
+            T request = jss.Deserialize<T>(
+                                            System.Text.UTF8Encoding.UTF8.GetString(
+                                            noEncrypt
+                                            ? x
+                                            : Decrypt(x,
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(password),
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(salt), round)));
+            return request;
+        }
+
+        protected string EncodeZipDownloadRequest(ZipDownloadRequest request, bool noEncrypt = false)
+        {
+            int round = 1;
+            var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string requestJSON = jss.Serialize(request);
+            if (noEncrypt) return base64UrlEncode(System.Text.UTF8Encoding.UTF8.GetBytes(requestJSON));
+            RO.Facade3.Auth authObject = GetAuthObject();
+            string password = authObject.GetSessionEncryptionKey("", ""); // global non-user specific
+            string salt = password; // global, no salt
+            string encodedRequest = base64UrlEncode(
+                                        Encrypt(System.Text.UTF8Encoding.UTF8.GetBytes(requestJSON),
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(password),
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(salt), round));
+            return encodedRequest;
+        }
+        protected ZipDownloadRequest DecodeZipDownloadRequest(string encodedRequest, bool noEncrypt = false)
+        {
+            // must be in-sync with AsmxBase.cs
+            int round = 1;
+            byte[] x = base64UrlDecode(encodedRequest);
+            var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            RO.Facade3.Auth authObject = GetAuthObject();
+            string password = authObject.GetSessionEncryptionKey("", ""); // global non-user specific
+            string salt = password; // global, no salt
+            ZipDownloadRequest request = jss.Deserialize<ZipDownloadRequest>(
+                                            System.Text.UTF8Encoding.UTF8.GetString(
+                                            noEncrypt
+                                            ? x
+                                            : Decrypt(x,
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(password),
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(salt), round)));
+
+            return request;
+        }
+
+        protected byte[] GetColumnContent(string systemId, string screenId, string mstId, string tableName, string keyColumnName, string columnName)
+        {
+            byte sid = byte.Parse(systemId);
+            int scrId = int.Parse(screenId);
+            string dbConnectionString = AppConnectStr(sid);
+            string dbPwd = AppPwd(sid);
+            DataTable dt = (new AdminSystem()).GetDbImg(mstId, tableName, keyColumnName, columnName, dbConnectionString, dbPwd);
+            return ((byte[])dt.Rows[0][0]);
+        }
+
+        protected virtual Ionic.Zip.ZipFile GetMultiDoc(string systemId, string screenId, string mstId, string spName, string tableName, string parentDirectory, Ionic.Zip.ZipFile zipObject, string rootDirectory, string docLs = null)
+        {
+            byte sid = byte.Parse(systemId);
+            int scrId = int.Parse(screenId);
+            string dbConnectionString = AppConnectStr(sid);
+            string dbPwd = AppPwd(sid);
+            List<string> selectedIds = docLs == null ? null : docLs.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
+            DataTable dt = (new AdminSystem()).GetDdl(scrId, spName, false, false, 0, mstId, dbConnectionString, dbPwd, string.Empty, LImpr, LCurr);
+            if (dt.Rows.Count > 0)
+            {
+                string baseDirectory = rootDirectory + "/" + parentDirectory;
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (!Directory.Exists(baseDirectory)) Directory.CreateDirectory(baseDirectory);
+                    string docId = dr["DocId"].ToString();
+                    if (docLs != null && !docLs.Contains(docId)) continue;
+                    DataTable dtDoc = (new AdminSystem()).GetDbDoc(docId, tableName, dbConnectionString, dbPwd);
+                    if (dtDoc.Rows.Count > 0)
+                    {
+                        string tempLocation = baseDirectory + "/" + dr["DocName"].ToString();
+                        byte[] content = dtDoc.Rows[0]["DocImage"] as byte[];
+                        using (FileStream fs = new FileStream(tempLocation, FileMode.Create))
+                        {
+                            fs.Write(content, 0, content.Length);
+                            fs.Close();
+                        }
+                        File.SetCreationTimeUtc(tempLocation, (DateTime)dr["InputOn"]);
+                        File.SetLastWriteTimeUtc(tempLocation, (DateTime)dr["InputOn"]);
+                    }
+
+                }
+                zipObject.AddDirectory(baseDirectory, parentDirectory);
+            }
+            return zipObject;
+        }
+        protected virtual byte[] GetMultiDoc(RO.Web.ZipDownloadRequest request)
+        {
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            try
+            {
+                Directory.CreateDirectory(tempDirectory);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (Ionic.Zip.ZipFile resultFile = new Ionic.Zip.ZipFile())
+                    {
+                        resultFile.CompressionMethod = Ionic.Zip.CompressionMethod.Deflate;
+                        resultFile.CompressionLevel = Ionic.Zlib.CompressionLevel.BestCompression;
+                        foreach (var r in request.md)
+                        {
+                            int usrId = int.Parse(r.scr[3]);
+                            LImpr = null;
+                            SetImpersonation(usrId);
+                            foreach (var c in r.cols)
+                            {
+                                GetMultiDoc(r.scr[0], r.scr[1], r.scr[2], c[0], c[1], c[2], resultFile, tempDirectory);
+                            }
+                        }
+
+                        resultFile.Save(ms);
+                    }
+                    ms.Close();
+                    return ms.ToArray();
+                };
+
+            }
+            catch (Exception ex)
+            {
+                Exception e = new Exception("problem zipping documents", ex);
+                ErrorTrace(e, "error");
+                throw;
+            }
+            finally
+            {
+                try
+                {
+                    Directory.Delete(tempDirectory, true);
+                }
+                catch (Exception ex)
+                {
+                    ErrorTrace(new Exception("problem removing temp directory for zip usage", ex), "warning");
+                }
+            }
+
+        }
+        protected virtual RO.Web.ZipMultiDocRequest MakeZipMultiDocRequest(byte sysId, int screenId, string mstId, string getListSPName, string docTableName, string baseDirectoryName, List<string> docIdLs = null)
+        {
+            return new RO.Web.ZipMultiDocRequest()
+            {
+                scr = new List<string>() { sysId.ToString(), screenId.ToString(), mstId, LUser.UsrId.ToString() },
+                cols = new List<List<string>>() { new List<string>() { getListSPName, docTableName, baseDirectoryName, docIdLs == null ? null : string.Join(",", docIdLs.ToArray()) } }
+            };
+        }
+        protected virtual List<RO.Web.ZipMultiDocRequest> CompressZipMultiDocRequest(List<RO.Web.ZipMultiDocRequest> md)
+        {
+            List<RO.Web.ZipMultiDocRequest> _md = new List<RO.Web.ZipMultiDocRequest>();
+            Func<List<List<string>>, List<List<string>>> shortenContent = cols => cols.Select(r => (r.Select((c, i) => i == 0 ? c.Replace("GetDdl", "") : c)).ToList()).ToList();
+            foreach (var _x in md)
+            {
+                bool merged = false;
+                foreach (var y in _md)
+                {
+                    if (Enumerable.SequenceEqual(_x.scr, y.scr))
+                    {
+
+                        //                        y.cols.AddRange(_x.cols.Select(r => (r.Select((c, i) => i == 0 ? c.Replace("GetDdl", "") : c)).ToList()));
+                        y.cols.AddRange(shortenContent(_x.cols));
+                        merged = true;
+                    }
+                }
+                if (!merged) _md.Add(new RO.Web.ZipMultiDocRequest() { scr = _x.scr, cols = shortenContent(_x.cols) });
+            }
+            return _md;
+        }
+        protected virtual List<RO.Web.ZipMultiDocRequest> ExpandZipMultiDocRequest(List<RO.Web.ZipMultiDocRequest> md)
+        {
+            return md.Select(z => new RO.Web.ZipMultiDocRequest()
+            {
+                scr = z.scr
+                ,
+                cols = z.cols.Select(r => r.Select((c, i) => i == 0 ? "GetDdl" + c : c).ToList()).ToList()
+            }).ToList();
+        }
+        protected virtual void ReturnAsAttachment(byte[] content, string fileName, string mimeType = "application/octet-stream", bool inline = true)
+        {
+            Response.Buffer = true;
+            Response.ClearHeaders();
+            Response.ClearContent();
+            Response.ContentType = mimeType;
+            string contentDisposition = inline ? "attachment" : "inline";
+            Response.AppendHeader("Content-Disposition", contentDisposition + "; Filename=" + fileName);
+            Response.BinaryWrite(content);
+            Response.End();
+        }
+
+        #endregion
         protected void LoadGoogleClient(string clientId)
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "GoogleClient",
@@ -2328,7 +2564,7 @@ namespace RO.Web
                 HMACMD5 hmac = new HMACMD5(code);
                 byte[] hash = hmac.ComputeHash(content);
                 string hasString = BitConverter.ToString(hash);
-                Common3.Converter converter = new Converter();
+                Common3.Converter converter = new Common3.Converter();
                 converter.Url = Config.WsConverterUrl;
                 byte[] converted = converter.XML2XLS(content, hasString);
                 if (converted.Length > 5) return converted;
@@ -2417,6 +2653,59 @@ namespace RO.Web
             if (!SecureEquals(qsHash, GetQSHash())) throw new HttpException(403, "Accessed denied");
         }
 
+        protected void ValidateQSV2()
+        {
+            try
+            {
+                /* must sync wih asmxbase.cs */
+                int round = 1;
+                string _h = Request.QueryString["_h"];
+                byte[] x = base64UrlDecode(_h);
+                var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                RO.Facade3.Auth authObject = GetAuthObject();
+                string password = authObject.GetSessionEncryptionKey("", ""); // global non-user specific
+                string hashKey = authObject.GetSessionSigningKey("", "");
+                string salt = password; // global, no salt
+                Dictionary<string, string> request = jss.Deserialize<Dictionary<string, string>>(
+                                                System.Text.UTF8Encoding.UTF8.GetString(
+                                                Decrypt(x,
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(password),
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(salt), round)));
+                long expiry = long.Parse(request["e"]);
+
+                if (DateTime.UtcNow.ToFileTimeUtc() > expiry) throw new HttpException(403, "Accessed denied");
+
+                List<string> param = new List<string>();
+                foreach (string key in Request.QueryString)
+                {
+                    if (key.ToLower() != "_h"
+                        && key.ToLower() != "inline"
+                        && key.ToLower() != "ico"
+                        )
+                    {
+                        param.Add(key.ToLower() + "=" + Request.QueryString[key]);
+                    }
+                }
+                string qsToHash = string.Join("&", param.OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim();
+                byte[] code = Convert.FromBase64String(request["_s"]);
+                System.Security.Cryptography.HMACMD5 hmac = new System.Security.Cryptography.HMACMD5(code);
+                byte[] hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(Convert.ToBase64String(code) + qsToHash.ToString()));
+                string hashString = Convert.ToBase64String(hash);
+                if (!SecureEquals(hashString, request["_h"])) throw new HttpException(403, "Accessed denied");
+                if (LUser == null)
+                {
+                    AnonymousLogin();
+                    int usrId = int.Parse(request["id"]);
+                    SetImpersonation(usrId);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorTrace(ex, "error");
+                throw;
+            }
+        }
+
         public string GetQSHash()
         {
             return GetQSHash(Request.QueryString);
@@ -2435,9 +2724,9 @@ namespace RO.Web
             return path + "?" + qs + "&hash=" + GetQSHash(string.Join("&", qs.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries).OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim());
         }
 
-        protected byte[] Encrypt(byte[] clearData, byte[] password, byte[] salt)
+        protected byte[] Encrypt(byte[] clearData, byte[] password, byte[] salt, int round = 1000)
         {
-            System.Security.Cryptography.Rfc2898DeriveBytes pdb = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt, 1000);
+            System.Security.Cryptography.Rfc2898DeriveBytes pdb = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt, round);
             System.Security.Cryptography.AesManaged aes = new System.Security.Cryptography.AesManaged();
             aes.Key = pdb.GetBytes(aes.KeySize / 8); pdb.Reset(); aes.IV = pdb.GetBytes(aes.BlockSize / 8);
             using (System.Security.Cryptography.ICryptoTransform enc = aes.CreateEncryptor())
@@ -2451,9 +2740,9 @@ namespace RO.Web
             }
         }
 
-        protected byte[] Decrypt(byte[] encryptedData, byte[] password, byte[] salt)
+        protected byte[] Decrypt(byte[] encryptedData, byte[] password, byte[] salt, int round = 1000)
         {
-            System.Security.Cryptography.Rfc2898DeriveBytes pdb = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt, 1000);
+            System.Security.Cryptography.Rfc2898DeriveBytes pdb = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt, round);
             System.Security.Cryptography.AesManaged aes = new System.Security.Cryptography.AesManaged();
             aes.Key = pdb.GetBytes(aes.KeySize / 8); pdb.Reset(); aes.IV = pdb.GetBytes(aes.BlockSize / 8);
             using (System.Security.Cryptography.ICryptoTransform enc = aes.CreateDecryptor())
@@ -2465,6 +2754,25 @@ namespace RO.Web
                 ms.Close();
                 return ms.ToArray();
             }
+        }
+
+        /* this is must be in-sync with AsmxBase.cs version */
+        protected RO.Facade3.Auth GetAuthObject()
+        {
+            string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
+            if (string.IsNullOrEmpty(jwtMasterKey))
+            {
+                RO.Facade3.Auth.GenJWTMasterKey();
+                System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"] = jwtMasterKey;
+                Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
+                if (config.AppSettings.Settings["JWTMasterKey"] != null) config.AppSettings.Settings["JWTMasterKey"].Value = jwtMasterKey;
+                else config.AppSettings.Settings.Add("JWTMasterKey", jwtMasterKey);
+                // save to web.config on production, but silently failed. this would remove comments in appsettings 
+                if (Config.DeployType == "PRD") config.Save(ConfigurationSaveMode.Modified);
+            }
+
+            var auth = RO.Facade3.Auth.GetInstance(jwtMasterKey);
+            return auth;
         }
 
         protected KeyValuePair<string, string> GetResetLoginUrl(string UsrId, string LoginName, string Email, string keyAs, string userState, string signUpURL, string returnUrl)
@@ -2883,6 +3191,16 @@ namespace RO.Web
             }
         }
 
+        public static byte[] base64UrlDecode(string s)
+        {
+            return Convert.FromBase64String(s.Replace('-', '+').Replace('_', '/') + (s.Length % 4 > 1 ? new string('=', 4 - s.Length % 4) : ""));
+        }
+
+        public static string base64UrlEncode(byte[] content)
+        {
+            return Convert.ToBase64String(content).TrimEnd(new char[] { '=' }).Replace('/', '_').Replace('+', '-');
+
+        }
         #region XlsImportExport
         public List<string> GetSheetNames(string fileFullName)
         {

@@ -149,6 +149,22 @@ export function GetScreenFilter(accessScope) {
         }
     )
 }
+export function GetSearchList(searchStr, topN, filterId, desiredScreenCriteria, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetSearchList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    searchStr: searchStr || '',
+                    topN: topN || 0,
+                    filterId: ('' + (filterId || 0)),
+                    desiredScreenCriteria: desiredScreenCriteria || {},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 export function GetAdmSystems87List(searchStr, topN, filterId, accessScope) {
     return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetAdmSystems87List'
         , {
@@ -164,14 +180,13 @@ export function GetAdmSystems87List(searchStr, topN, filterId, accessScope) {
         }
     )
 }
-export const GetSearchList = GetAdmSystems87List;
-export function GetAdmSystems87ById(keyId, accessScope) {
+export function GetAdmSystems87ById(keyId, options, accessScope) {
     return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetAdmSystems87ById'
         , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
-                    options: {
+                    options: options || {
                         CurrentScreenCriteria: JSON.stringify({}),
                     },
                 }),
@@ -182,13 +197,13 @@ export function GetAdmSystems87ById(keyId, accessScope) {
     )
 }
 export const GetMstById = GetAdmSystems87ById;
-export function GetAdmSystems87DtlById(keyId, filterId, accessScope) {
+export function GetAdmSystems87DtlById(keyId, filterId, options, accessScope) {
     return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetAdmSystems87DtlById'
         , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
-                    options: {
+                    options: options || {
                         CurrentScreenCriteria: JSON.stringify({}),
                     },
                     filterId: filterId || 0,
@@ -286,7 +301,7 @@ export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColum
                     dtlId: dtlId || '',
                     screenColumnName: screenColumnName,
                     columnName: columnName,
-                    isMaster: isMaster,
+                    isMaster: isMaster || false,
                 }),
             },
             ...(getAccessControlInfo()),
@@ -299,7 +314,7 @@ export function GetEmbeddedDoc(mstId, dtlId, isMaster, screenColumnName, accessS
     const reqJson = JSON.stringify({
         mstId: mstId || '',
         dtlId: dtlId || '',
-        isMaster: isMaster,
+        isMaster: isMaster || false,
         columnName: screenColumnName || '',
         screenColumnName: screenColumnName || '',
     });
@@ -318,7 +333,7 @@ export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJ
     const reqJson = JSON.stringify({
         mstId: mstId || '',
         dtlId: dtlId || '',
-        isMaster: isMaster,
+        isMaster: isMaster || false,
         screenColumnName: screenColumnName || '',
         docJson: docJson || '',
         options: options || {},
@@ -327,6 +342,21 @@ export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJ
         , {
             requestOptions: {
                 body: reqJson,
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+export function GetDocZipDownload(keyId, options, accessScope) {
+    return fetchData(baseUrl + '/AdmSystemsWs.asmx/GetDocZipDownload'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    keyId: keyId || null,
+                    options: options ||{},
+                }),
             },
             ...(getAccessControlInfo()),
             ...(accessScope)

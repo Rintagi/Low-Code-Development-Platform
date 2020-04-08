@@ -1,99 +1,25 @@
 import { fetchService } from './fetchService';
 import log from '../helpers/logger';
 import { delay } from '../helpers/utils';
-import { setupRuntime } from '../helpers/utils';
-
+import { getCookie, setCookie, eraseCookie, parsedUrl } from '../helpers/domutils';
+import { setupRuntime, getRintagiConfig, getFingerPrint, myMachine } from '../helpers/config';
+import { LocalStorage, SessionStorage } from '../helpers/asyncStorage';
 var sjcl = require('sjcl');
-var Fingerprint2 = require('fingerprintjs2');
 var pbkdf2 = require('pbkdf2');
+
 var currentAccessScope = {};
 
 export const authService = {
     login, logout, renewAccessToken, getToken, getAccessToken, getAccessControlInfo
-    , isAuthenticated, getUsr, getMenu, getRefreshToken, setAccessScope, getAccessScope, resetPwdEmail, resetPassword
-};
-
-let myMachine = null;
-function getFingerPrint() {
-    return new Promise(function (resolve, reject) {
-        setTimeout(() => {
-            Fingerprint2.get(function (components) {
-                components.sort();
-                //log.debug(components);
-                const a = JSON.stringify(components);
-                const sha256 = new sjcl.hash.sha256();
-                sha256.update(a);
-                const h = btoa(sha256.finalize());
-                myMachine = h;
-                resolve(h);
-            })
-        }, 500);
-    });
+    , isAuthenticated, getUsr, getMenu, getReactQuickMenu, getSystems, getServerIdentity, getRefreshToken, setAccessScope, getAccessScope, resetPwdEmail, resetPassword
 };
 
 const getMyMachine = getFingerPrint();
-
-function setCookie(name, value, days, path) {
-    var expires = "";
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    const href = window.location.href;
-    document.cookie = name + "=" + (value || "") + expires + "; path=" + (path || "/") + ";secure";
-}
-function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
-function eraseCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999;path=/;';
-}
-
-function parsedUrl(url) {
-    var parser = document.createElement("a");
-    parser.href = url;
-    var o = {};
-    // IE 8 and 9 dont load the attributes "protocol" and "host" in case the source URL
-    // is just a pathname, that is, "/example" and not "http://domain.com/example".
-    parser.href = parser.href;
-
-    // IE 7 and 6 wont load "protocol" and "host" even with the above workaround,
-    // so we take the protocol/host from window.location and place them manually
-    if (parser.host === "") {
-        var newProtocolAndHost = window.location.protocol + "//" + window.location.host;
-        if (url.charAt(1) === "/") {
-            parser.href = newProtocolAndHost + url;
-        } else {
-            // the regex gets everything up to the last "/"
-            // /path/takesEverythingUpToAndIncludingTheLastForwardSlash/thisIsIgnored
-            // "/" is inserted before because IE takes it of from pathname
-            var currentFolder = ("/" + parser.pathname).match(/.*\//)[0];
-            parser.href = newProtocolAndHost + currentFolder + url;
-        }
-    }
-
-    // copies all the properties to this object
-    var properties = ['host', 'hostname', 'hash', 'href', 'port', 'protocol', 'search'];
-    for (var i = 0, n = properties.length; i < n; i++) {
-        o[properties[i]] = parser[properties[i]];
-    }
-
-    // pathname is special because IE takes the "/" of the starting of pathname
-    o.pathname = (parser.pathname.charAt(0) !== "/" ? "/" : "") + parser.pathname;
-    return o;
-}
+const rintagi = getRintagiConfig() || {};
 
 // const baseUrl = 'http://fintruxdev/RC/';
 //const baseUrl= '/rc/';
-const runtimeConfig = (document.Rintagi || {});
+const runtimeConfig = rintagi;
 const debuglog = runtimeConfig.debugAlert ? alert : log.debug;
 const apiBasename = runtimeConfig.apiBasename;
 const appDomainUrl = runtimeConfig.appDomainUrl || runtimeConfig.apiBasename;
@@ -103,7 +29,7 @@ const fetchAPIResult = fetchService.fetchAPIResult;
 const getAPIResult = fetchService.getAPIResult;
 
 function getSystemId() {
-    return (document.Rintagi || {}).systemId;
+    return runtimeConfig.systemId;
 }
 
 function makeNameFromNS(name) {
@@ -151,33 +77,46 @@ function arrayBufferToBase64(buffer) {
     return btoa(binary);
 }
 
-function rememberUserHandle(userIdentity) {
+async function rememberUserHandle(userIdentity) {
     const h = sjcl.hash.sha256.hash(userIdentity);
     const handle = arrayBufferToBase64(wordArrayToByteArray(h, h.length)).replace(/=/g, '_');
-    localStorage.setItem(makeNameFromNS("user_handle"), handle);
+    //localStorage.setItem(makeNameFromNS("user_handle"), handle);
+    LocalStorage.setItem(makeNameFromNS("user_handle"), handle)
+        .then(ret => {
+
+        })
+        .catch(error => {
+            log.error(error);
+        })
     setCookie(makeNameFromNS("tokenInCookieJS"), handle, null, appNS);
 }
-function getTokenName(name) {
-    const x = btoa(sjcl.hash.sha256.hash((appDomainUrl || "").toLowerCase() + name + (getUserHandle() || "") + (myMachine || "")));
-    return x;
-}
-function eraseUserHandle() {
-    localStorage.removeItem(makeNameFromNS("user_handle"));
-    eraseCookie(makeNameFromNS("tokenInCookieJS"));
-}
-function getUserHandle() {
-    const x = localStorage[makeNameFromNS("user_handle")] || getCookie(makeNameFromNS("tokenInCookieJS"));
+async function getTokenName(name) {
+    const userHandle = await getUserHandle();
+    const x = btoa(sjcl.hash.sha256.hash((appDomainUrl || "").toLowerCase() + name + (userHandle || "") + (myMachine || "")));
     return x;
 }
 
-function getLoginFromCookie() {
+async function eraseUserHandle() {
+    //localStorage.removeItem(makeNameFromNS("user_handle"));
+    LocalStorage.removeItem(makeNameFromNS("user_handle"));
+    eraseCookie(makeNameFromNS("tokenInCookieJS"));
+}
+async function getUserHandle() {
+    //const x = localStorage[makeNameFromNS("user_handle")] || getCookie(makeNameFromNS("tokenInCookieJS"));
+    const x = await LocalStorage.getItem(makeNameFromNS("user_handle")) || getCookie(makeNameFromNS("tokenInCookieJS"));
+    return x;
+}
+
+async function getLoginFromCookie() {
     try {
         var user_handle = getCookie(makeNameFromNS("tokenInCookieJS"));
         var token = getCookie(makeNameFromNS("tokenJS"));
         if (user_handle && token) {
-            localStorage.setItem(makeNameFromNS("user_handle"), user_handle);
-            var tokenName = getTokenName("refresh_token");
-            localStorage.setItem(tokenName, JSON.stringify({ refresh_token: token }));
+            //localStorage.setItem(makeNameFromNS("user_handle"), user_handle);
+            LocalStorage.setItem(makeNameFromNS("user_handle"), user_handle);
+            var tokenName = await getTokenName("refresh_token");
+            //localStorage.setItem(tokenName, JSON.stringify({ refresh_token: token }));
+            LocalStorage.setItem(makeNameFromNS("user_handle"), user_handle);
             eraseCookie(makeNameFromNS("tokenInCookieJS"));
             eraseCookie(makeNameFromNS("tokenJS"));
         }
@@ -185,33 +124,42 @@ function getLoginFromCookie() {
 
 }
 
-function getAccessToken() {
+async function getAccessToken() {
     return getMyMachine
-        .then(() => {
+        .then(async () => {
             try {
-                getLoginFromCookie();
-                if (!getUserHandle()) return {};
-                return JSON.parse(
-                    sessionStorage[getTokenName("access_token")] ||
-                    localStorage[getTokenName("access_token")] ||
-                    ((atob((getCookie(getTokenName("access_token")) || "").replace("_", '='))) && false))
+                await getLoginFromCookie();
+                const userHandle = await getUserHandle();
+                if (!userHandle) return {};
+                const tokenName = await getTokenName("access_token");
+                const accessToken = await SessionStorage.getItem(tokenName) 
+                                    ||
+                                    await LocalStorage.getItem(tokenName)
+                                    ||
+                                    ((atob((getCookie(tokenName) || "").replace("_", '='))) && false)
+                                    ;
+                return JSON.parse(accessToken);
             }
             catch (e) {
                 return {}
             }
         })
 };
-function getRefreshToken() {
-    try {
-        var x = JSON.parse(
-            sessionStorage[getTokenName("refresh_token")] ||
-            localStorage[getTokenName("refresh_token")] ||
-            ((atob((getCookie(getTokenName("refresh_token")) || "").replace("_", '='))) && false)
-        );
 
+async function getRefreshToken() {
+    try {
+        const tokenName = await getTokenName("refresh_token");
+        const refreshToken = await SessionStorage.getItem(tokenName) 
+                            ||
+                            await LocalStorage.getItem(tokenName)
+                            ||
+                            ((atob((getCookie(tokenName) || "").replace("_", '='))) && false)
+                            ;
+        var x = JSON.parse(refreshToken);
         return x;
     }
     catch (e) {
+        log.error(e);
         const tokenInCookie = getCookie(makeNameFromNS("tokenJS"));
         if (tokenInCookie) {
             return {
@@ -222,6 +170,7 @@ function getRefreshToken() {
             return {}
     }
 };
+
 function setAccessScope(accessScope, replace) {
     currentAccessScope = {
         ...(replace ? {} : currentAccessScope),
@@ -229,42 +178,68 @@ function setAccessScope(accessScope, replace) {
     };
     return currentAccessScope;
 };
+
 function getAccessScope() { return currentAccessScope; };
-const storeAccessToken = (access_token, resources, scope, expires_in) => {
+
+const storeAccessToken = async (access_token, resources, scope, expires_in, isLogout) => {
     if (access_token) {
         const tokenString = JSON.stringify({ access_token: access_token, expires_in: expires_in });
         const tokenStringForCookie = btoa(tokenString).replace(/=/g, '_');
+        const tokenName = await getTokenName("access_token");
         //setCookie(getTokenName("access_token"),tokenStringForCookie);
-        sessionStorage.setItem(getTokenName("access_token"), tokenString);
-        localStorage.setItem(getTokenName("access_token"), tokenString);
+        //sessionStorage.setItem(getTokenName("access_token"), tokenString);
+        SessionStorage.setItem(tokenName, tokenString);
+        //localStorage.setItem(getTokenName("access_token"), tokenString);
+        LocalStorage.setItem(tokenName, tokenString);
     }
     else {
         //eraseCookie(getTokenName("access_token"));
-        sessionStorage.removeItem(getTokenName("access_token"));
-        localStorage.removeItem(getTokenName("access_token"));
-    }
-}
-const storeRefreshToken = (refresh_token, resources) => {
-    if (refresh_token) {
-        const tokenString = JSON.stringify({ refresh_token: refresh_token });
-        const tokenStringForCookie = btoa(tokenString).replace(/=/g, '_');
-        //setCookie(getTokenName("refresh_token"),tokenStringForCookie);
-        sessionStorage.setItem(getTokenName("refresh_token"), tokenString);
-        localStorage.setItem(getTokenName("refresh_token"), tokenString);
-    }
-    else {
-        //eraseCookie(getTokenName("refresh_token"));
-        sessionStorage.removeItem(getTokenName("refresh_token"));
-        localStorage.removeItem(getTokenName("refresh_token"));
+        if (isLogout) {
+            console.log('logout clean up');
+        }
+        console.log('erase access token');
+        const tokenName = await getTokenName("access_token");
+        //sessionStorage.removeItem(getTokenName("access_token"));
+        SessionStorage.removeItem(tokenName);
+        //localStorage.removeItem(getTokenName("access_token"));
+        LocalStorage.removeItem(tokenName);
     }
 }
 
-const eraseRefreshToken = () => {
+const storeRefreshToken = async (refresh_token, resources, isLogout) => {
+    if (refresh_token) {
+        const tokenString = JSON.stringify({ refresh_token: refresh_token });
+        const tokenStringForCookie = btoa(tokenString).replace(/=/g, '_');
+        const tokenName = await getTokenName("refresh_token");
+        //setCookie(getTokenName("refresh_token"),tokenStringForCookie);
+        //sessionStorage.setItem(getTokenName("refresh_token"), tokenString);
+        SessionStorage.setItem(tokenName, tokenString);
+        //localStorage.setItem(getTokenName("refresh_token"), tokenString);
+        LocalStorage.setItem(tokenName, tokenString);
+    }
+    else {
+        //eraseCookie(getTokenName("refresh_token"));
+        if (isLogout) {
+            console.log('logout clean up');
+        }
+        console.log('erase refresh token');
+        const tokenName = await getTokenName("refresh_token");
+        //sessionStorage.removeItem(getTokenName("refresh_token"));
+        SessionStorage.removeItem(tokenName);
+        //localStorage.removeItem(getTokenName("refresh_token"));
+        LocalStorage.removeItem(tokenName);
+    }
+}
+
+const eraseRefreshToken = async () => {
     //eraseCookie(getTokenName("refresh_token"));
     eraseCookie(makeNameFromNS("tokenInCookieJS"));
     eraseCookie(makeNameFromNS("tokenJS"));
-    sessionStorage.removeItem(getTokenName("refresh_token"));
-    localStorage.removeItem(getTokenName("refresh_token"));
+    const tokenName = await getTokenName("refresh_token");
+    //sessionStorage.removeItem(getTokenName("refresh_token"));
+    SessionStorage.removeItem(tokenName);
+    //localStorage.removeItem(getTokenName("refresh_token"));
+    LocalStorage.removeItem(tokenName);
 }
 
 function getAccessControlInfo() {
@@ -387,8 +362,16 @@ async function getToken(code, options = {}) {
         })
         .then(result => {
             if (result.status === "success" && result.data.value.d && result.data.value.d.access_token) {
-                storeAccessToken(result.data.value.d.access_token, result.data.value.d.resources, result.data.value.d.scope, result.data.value.d.expires_in);
-                storeRefreshToken(result.data.value.d.refresh_token, result.data.value.d.resources);
+                const access_token = result.data.value.d.access_token;
+                const refresh_token = result.data.value.d.refresh_token;
+                if (!access_token || !refresh_token) {
+                    console.log('no token returned');
+                    console.log(result);
+                }
+                else {
+                    storeAccessToken(result.data.value.d.access_token, result.data.value.d.resources, result.data.value.d.scope, result.data.value.d.expires_in);
+                    storeRefreshToken(result.data.value.d.refresh_token, result.data.value.d.resources);    
+                }
                 return {
                     access_token: result.data.value.d.access_token,
                     refresh_token: result.data.value.d.refresh_token,
@@ -417,10 +400,11 @@ async function getToken(code, options = {}) {
 
 async function logout(keepToken = false, currentSessionOnly = false) {
     return getAccessToken().then(
-        token => {
-            var refresh_token = (getRefreshToken() || {}).refresh_token;
+        async (token) => {
+            console.log('logout successful');
+            var refresh_token = (await getRefreshToken() || {}).refresh_token;
             if (!keepToken) {
-                storeAccessToken(null);
+                storeAccessToken(null, null, null, true);
             }
             if (!keepToken) {
                 eraseRefreshToken();
@@ -443,12 +427,21 @@ async function logout(keepToken = false, currentSessionOnly = false) {
 
 }
 async function renewAccessToken(refresh_token, re_auth) {
-    return getToken(refresh_token || (getRefreshToken() || {}).refresh_token, { grant_type: "refresh_token", re_auth })
+    return getToken(refresh_token || (await getRefreshToken() || {}).refresh_token, { grant_type: "refresh_token", re_auth })
 
         .catch(error => {
             if (!refresh_token) {
-                storeRefreshToken(null);
-                storeAccessToken(null);
+                if (error.errType !== "network error" 
+                    && error.errorMsg !== "Failed to fetch" 
+                    && error.errType !== "fetch error" 
+                    ) {
+                    console.log('failed to renew access token, flushing tokens');
+                    console.log(error);
+                    storeRefreshToken(null);
+                    storeAccessToken(null);    
+                } else {
+                    console.log('failed to renew access token, network error, keep token');
+                }
             }
             return Promise.reject(error);
         }
@@ -596,6 +589,41 @@ async function getMenu(scope) {
         )
 }
 
+async function getReactQuickMenu(systemId, scope) {
+    return fetchAPIResult(baseUrl + "/authWs.asmx/GetReactQuickMenu"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    scope: scope || "",
+                    systemId: systemId || getSystemId() || 5,
+
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                        supportingData: getAPIResult(result).supportingData || {}
+                    }
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        )
+}
+
 async function getSystems(ignoreCache, scope) {
     return fetchAPIResult(baseUrl + "/authWs.asmx/GetSystems"
         , {
@@ -603,6 +631,39 @@ async function getSystems(ignoreCache, scope) {
                 body: JSON.stringify({
                     scope: scope || "",
                     ignoreCache: ignoreCache || false,
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                        supportingData: getAPIResult(result).supportingData || {}
+                    }
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        )
+}
+
+async function getServerIdentity(scope) {
+    return fetchAPIResult(baseUrl + "/authWs.asmx/GetServerIdentity"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    scope: scope || ""
                 })
             },
             ...(getAccessControlInfo())

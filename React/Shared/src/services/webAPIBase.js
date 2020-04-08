@@ -1,8 +1,11 @@
 import { fetchService } from './fetchService';
 import { authService } from './authService';
+import { getRintagiConfig } from '../helpers/config';
 import log from '../helpers/logger';
 
-export const baseUrl = (document.Rintagi || {}).apiBasename + "/webservices";
+const rintagi = getRintagiConfig() || {};
+
+export const baseUrl = rintagi.apiBasename + "/webservices";
 export const fetchAPIResult = fetchService.fetchAPIResult;
 export const getAPIResult = fetchService.getAPIResult;
 export const getAccessControlInfo = authService.getAccessControlInfo;
@@ -24,7 +27,7 @@ export function fetchData(url,options)
                 status : "failed",
                 url:url,
                 errType: result.status === "success" ? "api call error" : result.errType,
-                errSubType: result.errSubType || (result.status === "success" ?  result.data.value.d.errMsg : ""),
+                errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.status || result.data.value.d.errMsg : ""),
                 errMsg : result.status === "success" ? result.data.value.d.errorMsg : result.errType,
                 validationErrors: result.status === "success" ? result.data.value.d.validationErrors : null,
             })

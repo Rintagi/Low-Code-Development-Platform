@@ -9326,7 +9326,7 @@ namespace RO.Rule3
                         if (drv["DefaultValue"].ToString() != string.Empty && (drv["DefAfter"].ToString() == "Y" || drv["DefAlways"].ToString() == "Y"))
                         {
                             sb.Append("				dr[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"] = ");
-                            sb.Append("(drv[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"].ToString() == string.Empty && bAdd) " + (drv["DefAlways"].ToString() == "Y" ? " || true " : ""));
+                            sb.Append("(drv[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"].ToString() == string.Empty && bAdd) " + (drv["DefAlways"].ToString() == "Y" ? " || dtAuth != null " : ""));
                             sb.Append(" ? (object) " + Robot.QuoteRequired(false, drv["DataTypeSysName"].ToString(), drv["DefaultValue"].ToString()) + drv["DefaultValue"].ToString() + Robot.QuoteRequired(false, drv["DataTypeSysName"].ToString(), drv["DefaultValue"].ToString()));
                             sb.Append("	: (object) " + "drv[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"]");
                             sb.Append(";" + Environment.NewLine);
