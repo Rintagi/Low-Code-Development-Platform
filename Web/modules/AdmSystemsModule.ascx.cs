@@ -1712,28 +1712,42 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                         : Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "status -s -uno", true, appRoot);
 
                 // checkout, overwrite all local changes
-                var revertChangesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
-                                                    , "checkout"
-                                                        + (
-                                                        string.IsNullOrEmpty(branch)
-                                                        ? " HEAD "
-                                                        : (branch.Contains("/") ? " " + branch + " -B master "
-                                                        : " " + branch + " "
-                                                        ))
-                                                        + "-f -- "
-                                                        , true, appRoot);
-                if (revertChangesRet.Item1 != 0)
-                {
-                    throw new Exception(revertChangesRet.Item3);
-                }
+                //var revertChangesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
+                //                                    , "checkout"
+                //                                        + (
+                //                                        string.IsNullOrEmpty(branch)
+                //                                        ? " HEAD "
+                //                                        : (branch.Contains("/") ? " " + branch + " -B master "
+                //                                        : " " + branch + " "
+                //                                        ))
+                //                                        + "-f -- "
+                //                                        , true, appRoot);
+                //if (revertChangesRet.Item1 != 0)
+                //{
+                //    throw new Exception(revertChangesRet.Item3);
+                //}
 
                 // change summary
                 int lastX = 20;
                 var lastXcommitLog = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
                     , string.Format("--no-pager log -n {0} --pretty=\"%an %ci %H %s\" -n{0}", lastX)
                     , true, appRoot);
-                System.Collections.Generic.List<string> ruleTierProjects = new System.Collections.Generic.List<string>() { "UsrRules", "UsrAccess" };
-                bool needMSBuild = ruleTierProjects.Where(m => new Regex(string.Format("/{0}/", m), RegexOptions.IgnoreCase).IsMatch(changedFilesRet.Item2)).Count() > 0;
+                System.Collections.Generic.List<string> ruleTierProjects = new System.Collections.Generic.List<string>() { 
+                    "Access3" 
+                    ,"Common3" 
+                    ,"Facade3" 
+                    ,"License3" 
+                    ,"Rule3" 
+                    ,"Service3" 
+                    ,"SystemFrameWk" 
+                    ,"WebControls" 
+                    ,"WebRules" 
+                    ,"UsrAccess" 
+                    ,"UsrRules"
+                };
+                bool needMSBuild = true || ruleTierProjects
+                                        .Where(m => new Regex(string.Format("/{0}/", m), RegexOptions.IgnoreCase).IsMatch(changedFilesRet.Item2))
+                                        .Any();
                 bool noWebSiteBuild = true;
 
                 System.Collections.Generic.List<string> stdOut = new System.Collections.Generic.List<string>();
@@ -1741,7 +1755,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                 //bool webSiteBuildSkipped = false;
                 if (needMSBuild)
                 {
-
                     int? _runningPid = null;
                     Func<int, string, bool> stdOutHandler = (pid, data) =>
                     {
@@ -1761,7 +1774,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                         stdErr.Add(data);
                         return false;
                     };
-                    var publishRet = Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format(""), true, stdOutHandler, stdErrHandler, appRoot);
+                    var publishRet =
+                        Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format("/v:m {0}/{1}.sln", appRoot, Config.AppNameSpace), true, stdOutHandler, stdErrHandler, appRoot);
 
                 }
                 else
@@ -1778,7 +1792,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
             {
                 PreMsgPopup(ex.Message);
             }
-
 
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
