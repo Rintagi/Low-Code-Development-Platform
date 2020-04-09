@@ -20,6 +20,7 @@ import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPa
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import AdmReleaseReduxObj, { ShowMstFilterApplied } from '../../redux/AdmRelease';
+import { checkBundleUpdate } from '../../redux/Rintagi';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { getNaviBar } from './index';
 import MstRecord from './MstRecord';
@@ -586,6 +587,7 @@ const mapDispatchToProps = (dispatch) => (
     { changeMstListFilterVisibility: AdmReleaseReduxObj.ChangeMstListFilterVisibility.bind(AdmReleaseReduxObj) },
     { SetScreenCriteria: AdmReleaseReduxObj.SetScreenCriteria.bind(AdmReleaseReduxObj) },
 
+    { checkBundleUpdate: checkBundleUpdate },
     { setTitle: setTitle },
     { setSpinner: setSpinner },
   ), dispatch)

@@ -149,6 +149,22 @@ export function GetScreenFilter(accessScope) {
         }
     )
 }
+export function GetSearchList(searchStr, topN, filterId, desiredScreenCriteria, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetSearchList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    searchStr: searchStr || '',
+                    topN: topN || 0,
+                    filterId: ('' + (filterId || 0)),
+                    desiredScreenCriteria: desiredScreenCriteria || {},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 export function GetAdmAppInfo82List(searchStr, topN, filterId, accessScope) {
     return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAdmAppInfo82List'
         , {
@@ -164,14 +180,13 @@ export function GetAdmAppInfo82List(searchStr, topN, filterId, accessScope) {
         }
     )
 }
-export const GetSearchList = GetAdmAppInfo82List;
-export function GetAdmAppInfo82ById(keyId, accessScope) {
+export function GetAdmAppInfo82ById(keyId, options, accessScope) {
     return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAdmAppInfo82ById'
         , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
-                    options: {
+                    options: options || {
                         CurrentScreenCriteria: JSON.stringify({}),
                     },
                 }),
@@ -182,13 +197,13 @@ export function GetAdmAppInfo82ById(keyId, accessScope) {
     )
 }
 export const GetMstById = GetAdmAppInfo82ById;
-export function GetAdmAppInfo82DtlById(keyId, filterId, accessScope) {
+export function GetAdmAppInfo82DtlById(keyId, filterId, options, accessScope) {
     return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetAdmAppInfo82DtlById'
         , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
-                    options: {
+                    options: options || {
                         CurrentScreenCriteria: JSON.stringify({}),
                     },
                     filterId: filterId || 0,
@@ -295,6 +310,21 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
         }
     )
 }
+export function GetDocZipDownload(keyId, options, accessScope) {
+    return fetchData(baseUrl + '/AdmAppInfoWs.asmx/GetDocZipDownload'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    keyId: keyId || null,
+                    options: options ||{},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
 /*screen criteria dll and screen dropdownlist/autocomplete*/
 
 export function GetScreenCriVersionDt10List(query, topN, filterBy, accessScope) {

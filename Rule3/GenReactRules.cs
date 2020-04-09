@@ -28,6 +28,7 @@ namespace RO.Rule3
             string DisplayMode = dr["DisplayMode"].ToString();
             string DisplayName = dr["DisplayName"].ToString();
             string DdlRefColumnId = dr["DdlRefColumnId"].ToString();
+            string TableId = dr["TableId"].ToString();
 
             return   
             (
@@ -37,6 +38,7 @@ namespace RO.Rule3
             || DisplayName == "Editor"
             || DisplayName == "Signature"
             || DisplayName == "Label" // for some reason this is treated as 'input' even though the save SQL ignore this
+            || (DisplayMode == "ImageButton" && !string.IsNullOrEmpty(TableId))
             ) 
             && string.IsNullOrEmpty(DdlRefColumnId)
             )
@@ -44,6 +46,7 @@ namespace RO.Rule3
             || DisplayName == "DropDownList"
             || DisplayName == "ListBox"
             || DisplayName == "RadioButtonList"
+            || DisplayMode == "Document"
             ;
         }
 
@@ -299,6 +302,7 @@ SuppressGenRoute ? [] : [
             sb.Append(@"
 import { sidebarReducer } from './SideBar';
 import { authReducer } from './Auth';
+import { rintagiReducer } from './Rintagi';
 import { notificationReducer } from './Notification';
 import { globalReducer } from './Global';
 import { SqlReportReducer } from './SqlReport';
@@ -310,6 +314,7 @@ import { CustomReducer } from './Custom';
             sb.Append(@"
 export default {
     auth: authReducer,
+    rintagi: rintagiReducer,
     global: globalReducer,
     sidebar: sidebarReducer,
     notification: notificationReducer,
@@ -613,6 +618,7 @@ import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPa
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import [[---ScreenName---]]ReduxObj, { ShowMstFilterApplied } from '../../redux/[[---ScreenName---]]';
+import { checkBundleUpdate } from '../../redux/Rintagi';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { getNaviBar } from './index';
 import MstRecord from './MstRecord';
@@ -1149,6 +1155,7 @@ const mapDispatchToProps = (dispatch) => (
 ");
             sb.Append(GetCriteriaBotCnt);
             sb.Append(@"
+    { checkBundleUpdate: checkBundleUpdate },
     { setTitle: setTitle },
     { setSpinner: setSpinner },
   ), dispatch)
@@ -5095,6 +5102,22 @@ export function GetScreenFilter(accessScope) {
         }
     )
 }
+export function GetSearchList(searchStr, topN, filterId, desiredScreenCriteria, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetSearchList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    searchStr: searchStr || '',
+                    topN: topN || 0,
+                    filterId: ('' + (filterId || 0)),
+                    desiredScreenCriteria: desiredScreenCriteria || {},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 export function Get[[---ScreenDef---]]List(searchStr, topN, filterId, accessScope) {
     return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Get[[---ScreenDef---]]List'
         , {
@@ -5110,14 +5133,13 @@ export function Get[[---ScreenDef---]]List(searchStr, topN, filterId, accessScop
         }
     )
 }
-export const GetSearchList = Get[[---ScreenDef---]]List;
-export function Get[[---ScreenDef---]]ById(keyId, accessScope) {
+export function Get[[---ScreenDef---]]ById(keyId, options, accessScope) {
     return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Get[[---ScreenDef---]]ById'
         , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
-                    options: {
+                    options: options || {
                         CurrentScreenCriteria: JSON.stringify({}),
                     },
                 }),
@@ -5128,13 +5150,13 @@ export function Get[[---ScreenDef---]]ById(keyId, accessScope) {
     )
 }
 export const GetMstById = Get[[---ScreenDef---]]ById;
-export function Get[[---ScreenDef---]]DtlById(keyId, filterId, accessScope) {
+export function Get[[---ScreenDef---]]DtlById(keyId, filterId, options, accessScope) {
     return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/Get[[---ScreenDef---]]DtlById'
         , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
-                    options: {
+                    options: options || {
                         CurrentScreenCriteria: JSON.stringify({}),
                     },
                     filterId: filterId || 0,
@@ -5236,7 +5258,7 @@ export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColum
                     dtlId: dtlId || '',
                     screenColumnName: screenColumnName,
                     columnName: columnName,
-                    isMaster: isMaster,
+                    isMaster: isMaster || false,
                 }),
             },
             ...(getAccessControlInfo()),
@@ -5249,7 +5271,7 @@ export function GetEmbeddedDoc(mstId, dtlId, isMaster, screenColumnName, accessS
     const reqJson = JSON.stringify({
         mstId: mstId || '',
         dtlId: dtlId || '',
-        isMaster: isMaster,
+        isMaster: isMaster || false,
         columnName: screenColumnName || '',
         screenColumnName: screenColumnName || '',
     });
@@ -5268,7 +5290,7 @@ export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJ
     const reqJson = JSON.stringify({
         mstId: mstId || '',
         dtlId: dtlId || '',
-        isMaster: isMaster,
+        isMaster: isMaster || false,
         screenColumnName: screenColumnName || '',
         docJson: docJson || '',
         options: options || {},
@@ -5307,6 +5329,26 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
         }
     )
 }")
++(
+(!bHasDocument && !bHasImageButton)
+? ""
+: @"
+export function GetDocZipDownload(keyId, options, accessScope) {
+    return fetchData(baseUrl + '/[[---ScreenName---]]Ws.asmx/GetDocZipDownload'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    keyId: keyId || null,
+                    options: options ||{},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+"
+)
 + @"
 /*screen criteria dll and screen dropdownlist/autocomplete*/
 ");
@@ -5469,12 +5511,11 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                 bool directSaveToDB = DirectSaveToDb(drv.Row);
 
                 if (
-                    directSaveToDB &&
+                    (directSaveToDB &&
                     (
                     drv["DefAlways"].ToString() == "N" 
                     || (drv["DefAlways"].ToString() == "Y" && string.IsNullOrEmpty(drv["SystemValue"].ToString()))
-                    )
-                    )
+                    )))
                 {
                     if (drv["MasterTable"].ToString() == "Y")
                     {
@@ -5551,6 +5592,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                 string DdlPrimaryKey = drv["PrimaryKey"].ToString();
                 string DdlBaseColumnName = drv["ColName"].ToString();
                 string DdlBaseTableId = drv["TableId"].ToString();
+                string DdlBaseTableName = drv["TableName"].ToString();
                 string DdlKeyColumnName = drv["DdlKeyColumnName"].ToString();
                 string DdlKeyTableId = drv["DdlKeyTableId"].ToString();
                 string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
@@ -5593,7 +5635,12 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                 }
                 else if (!string.IsNullOrEmpty(DdlRefColumnId))
                 {
-                    string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + RefSPName + "\"},{\"mKey\",\"" + (DdlRefColumnName + DdlRefTableId) + "\"},{\"mVal\",\"" + (DdlBaseColumnName + DdlBaseTableId) + "\"}, " + AdditionalColumn + "}},";
+                    string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + RefSPName + "\"},{\"mKey\",\"" + (DdlRefColumnName + DdlRefTableId) + "\"},{\"mVal\",\"" + (DdlBaseColumnName + DdlBaseTableId) + "\"}, "
+                                                + "{\"baseTbl\", \"" + DdlBaseTableName + "\"},"
+                                                + "{\"baseKeyCol\", \"" + DdlPrimaryKey + "\"},"
+                                                + "{\"baseColName\", \"" + DdlBaseColumnName + "\"},"
+                                                + AdditionalColumn 
+                                                + "}},";
                     ScreenDdlDefResults.Add(ScreenDdlDefValue);
                 }
             }
@@ -6514,7 +6561,7 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
                 string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
                 string DdlAdnColumnName = drv["DdlAdnColumnName"].ToString();
                 string TableName = drv["TableName"].ToString();
-
+                bool isMaster = drv["MasterTable"].ToString() == "Y";
                 if (DisplayMode == "AutoComplete")
                 {
                     string GetScreenDdlFunctionsValue = @"
@@ -6596,19 +6643,19 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
         [WebMethod(EnableSession = false)]
         public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> Del" + columnId + @"(string mstId, string dtlId, bool isMaster, string[] docIdList, string screenColumnName)
         {
-            return DelMultiDoc(mstId, dtlId, isMaster, docIdList, """ + columnId + @""", """ + ColumnName + @""", """ + mstTableName + @""", """ + ColumnName + @""", """ + mstPKeyColumnName + @""");
+            return DelMultiDoc(mstId, dtlId, " + (isMaster ? "true" : "false") + @", docIdList, """ + columnId + @""", """ + ColumnName + @""", """ + mstTableName + @""", """ + ColumnName + @""", """ + mstPKeyColumnName + @""");
         }
 
         [WebMethod(EnableSession = false)]
         public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> Save" + columnId + @"(string mstId, string dtlId, bool isMaster, string docId, bool overwrite, string screenColumnName, string docJson, SerializableDictionary<string, string> options)
         {
-            return SaveMultiDoc(mstId, dtlId, isMaster, docId, overwrite, """ + columnId + @""", """ + ColumnName + @""", docJson, options);
+            return SaveMultiDoc(mstId, dtlId, " + (isMaster ? "true" : "false") + @", docId, overwrite, """ + columnId + @""", """ + ColumnName + @""", docJson, options);
         }
 
         [WebMethod(EnableSession = false)]
         public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> Get" + columnId + @"List(string mstId, string dtlId, bool isMaster)
         {
-            return GetMultiDocList(mstId, dtlId, isMaster, """ + columnId + @""", """ + SPName + @""");
+            return GetMultiDocList(mstId, dtlId, " + (isMaster ? "true" : "false")  + @", """ + columnId + @""", """ + SPName + @""");
         }
 ";
                     GetScreenDdlFunctionsResults.Add(GetScreenDdlFunctionsValue);

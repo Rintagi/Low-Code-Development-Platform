@@ -52,13 +52,27 @@ export function register(scope) {
   }
 }
 
-function registerValidSW(swUrl,scope) {
+function registerValidSW(swUrl, scope) {
   navigator.serviceWorker
-    .register(swUrl,scope)
+    .register(swUrl, scope)
     .then(registration => {
-      registration.onupdatefound = () => {
+      // it is ridiculous that this is not stored somewhere or pass to other part of the system
+      // via postMessage(if there are listener setup BEFORE difficult, see index.js as this happens way earlier than React)
+      // so we stuck it to document object(which should never go away except refresh)
+      document.swRegistration = registration;
+      listenForWaitingServiceWorker(registration, promptUserToRefresh);
+      console.log('service work registration');
+      console.log(registration);
+      const sw = registration.installing || registration.waiting || registration.active;
+      if (sw) {
+        sw.addEventListener("statechange", (e) => {
+          console.log(e);
+        })
+      }
+      registration.addEventListener('updatefound', () => {
         const installingWorker = registration.installing;
-        installingWorker.onstatechange = () => {
+        console.log('new sw version found');
+        installingWorker.addEventListener('statechange', () => {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
               // At this point, the old content will have been purged and
@@ -73,8 +87,8 @@ function registerValidSW(swUrl,scope) {
               console.log('Content is cached for offline use.');
             }
           }
-        };
-      };
+        });
+      });
     })
     .catch(error => {
       console.error('Error during service worker registration:', error);
@@ -108,6 +122,43 @@ function checkValidServiceWorker(swUrl,scope) {
     });
 }
 
+function listenForWaitingServiceWorker(reg, callback) {
+  function awaitStateChange() {
+    console.log('waiting for new SW installation');
+    reg.installing.addEventListener('statechange', function(e) {
+      console.log('new SW installed');
+      console.log(this);
+      console.log(e);
+      if (this.state === 'installed') callback(reg);
+    });
+  }
+  if (!reg) return;
+  if (reg.waiting) return callback(reg);
+  if (reg.installing) awaitStateChange();
+  reg.addEventListener('updatefound', awaitStateChange);
+}
+
+// reload once when the new Service Worker starts activating
+var refreshing;
+
+(navigator.serviceWorker && navigator.serviceWorker.addEventListener('controllerchange',
+  function() {
+    console.log('controller changed, should find a way to refresh window ');
+    if (refreshing) return;
+    refreshing = true;
+    //window.location.reload();
+  }
+));
+
+function promptUserToRefresh(reg) {
+  // this is just an example
+  // don't use window.confirm in real life; it's terrible
+  // blind skip
+  reg.waiting.postMessage('skipWaiting');
+  // if (window.confirm("New SW version available! OK to refresh?")) {
+  // }
+}
+
 export function unregister() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready.then(registration => {
@@ -115,3 +166,4 @@ export function unregister() {
     });
   }
 }
+

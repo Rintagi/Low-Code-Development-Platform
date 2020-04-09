@@ -1,4 +1,5 @@
 import log from '../helpers/logger';
+import { delay } from '../helpers/utils';
 
 export const fetchService = {
     fetchAPIResult,tryParseJSON,getAPIResult
@@ -87,26 +88,35 @@ async function fetchAPIResult(url, options={headers:{},requestOptions:{}}) {
                         if ((response.status === 401 || response.status === 403 || (((parsedRet || {}).value || {}).d || {}).status === "access_denied") 
                             && renewAccessToken 
                             && !tokenRenewed) {
-                            log.debug('refresh token');
+                            //console.log('refresh token');
                             return renewAccessToken()
                                 .then(
                                     newToken=>{
+                                    //console.log('token renewed')
                                     return fetchAPIResult(url, {
                                         ...(options),
                                         access_token:newToken.access_token,
                                         tokenRenewed:true
                                     }) 
                                 }
-/*                                 , error => {
-                                    return Promise.reject(error);
-                                } */
+                                 , 
+                                error => {
+                                    if (error.errType == 'network error' || error.errType == 'fetch error') {
+                                        console.log('renew token network error, should retry via refresh');
+                                        return Promise.reject({...error, renewTokenError: true});
+                                    }
+                                    else
+                                        return Promise.reject({...error, renewTokenError: true});
+                                } 
                                 )
                                 .catch(error=>{
+                                    console.log('refresh token catch', error);
                                     return Promise.reject(error)
                                 }) 
                         }
                         else {
-                            log.debug('refresh token failed');
+                            console.log('refresh token failed ');
+                            //console.log(response);
                             return ({
                                 data: parsedRet,
                                 status: "failed",

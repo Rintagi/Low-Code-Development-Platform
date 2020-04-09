@@ -46,6 +46,7 @@ namespace RO.Web
             columns.Add("UsrEmail1", typeof(string));
             columns.Add("UsrMobile1", typeof(string));
             columns.Add("UsrGroupLs1", typeof(string));
+            columns.Add("PicMed1", typeof(string));
             columns.Add("IPAlert1", typeof(string));
             columns.Add("PwdNoRepeat1", typeof(string));
             columns.Add("PwdDuration1", typeof(string));
@@ -176,6 +177,7 @@ namespace RO.Web
             drType["UsrMobile1"] = "VarChar"; drDisp["UsrMobile1"] = "TextBox";
             try { dr["UsrGroupLs1"] = mst["UsrGroupLs1"]; } catch { }
             drType["UsrGroupLs1"] = "VarChar"; drDisp["UsrGroupLs1"] = "ListBox";
+            
             try { dr["IPAlert1"] = (mst["IPAlert1"] ?? "").Trim().Left(1); } catch { }
             drType["IPAlert1"] = "Char"; drDisp["IPAlert1"] = "CheckBox";
             try { dr["PwdNoRepeat1"] = (mst["PwdNoRepeat1"] ?? "").Trim().Left(9999999); } catch { }

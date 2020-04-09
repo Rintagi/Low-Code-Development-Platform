@@ -88,7 +88,7 @@ namespace RO.Web
             {"RuleTypeId24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleTypeId3S151"},{"mKey","RuleTypeId24"},{"mVal","RuleTypeId24Text"}, }},
             {"ScreenId24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlScreenId3S139"},{"mKey","ScreenId24"},{"mVal","ScreenId24Text"}, }},
             {"BeforeCRUD24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlBeforeCRUD3S163"},{"mKey","BeforeCRUD24"},{"mVal","BeforeCRUD24Text"}, }},
-            {"CrudTypeDesc1289", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlBeforeCRUD3S163"},{"mKey","BeforeCRUD24"},{"mVal","CrudTypeDesc1289"}, }},
+            {"CrudTypeDesc1289", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlBeforeCRUD3S163"},{"mKey","BeforeCRUD24"},{"mVal","CrudTypeDesc1289"}, {"baseTbl", "CtCrudType"},{"baseKeyCol", "CrudTypeCd"},{"baseColName", "CrudTypeDesc"},}},
             {"ModifiedBy24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlModifiedBy3S1397"},{"mKey","ModifiedBy24"},{"mVal","ModifiedBy24Text"}, }},
         };
 

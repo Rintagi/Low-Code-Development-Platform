@@ -56,7 +56,9 @@ namespace RO.Web
         //}
         private static object o_lock = new object();
         private static string ROVersion = null;
-        protected enum IncludeBLOB { None, Icon, Content };
+        private string PageUrlBase;
+        private string IntPageUrlBase;
+        protected enum IncludeBLOB { None, Icon, Content, DownloadLink };
         private string SystemListCacheWatchFile { get {return Server.MapPath("~/RefreshSystemList.txt");}}
 
 		private const String KEY_SystemsList = "Cache:SystemsList";
@@ -125,6 +127,7 @@ namespace RO.Web
         public abstract ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetMstById(string keyId, SerializableDictionary<string, string> options);
 
         protected virtual bool AllowAnonymous() { return false; }
+        protected virtual byte GetDbId() { return GetSystemId(); }
 
         static protected List<string> LisSuggestsOptions = new List<string>() { "startKeyVal", "startLabelVal" };
 
@@ -260,7 +263,11 @@ namespace RO.Web
             public List<SerializableDictionary<string, string>> SearchList;
             public SerializableDictionary<string, string> SearchListParam;
             public SerializableDictionary<string, string> Mst;
+            public SerializableDictionary<string, List<SerializableDictionary<string, string>>> MstPullUp;
             public List<SerializableDictionary<string, string>> Dtl;
+            public SerializableDictionary<string, string> NewMst;
+            public SerializableDictionary<string, string> NewDtl;
+            public List<SerializableDictionary<string, string>> SystemLabels;
         }
         private static string _masterkey;
 
@@ -359,6 +366,16 @@ namespace RO.Web
             }
             return msg;
         }
+        public static byte[] base64UrlDecode(string s)
+        {
+            return Convert.FromBase64String(s.Replace('-', '+').Replace('_', '/') + (s.Length % 4 > 1 ? new string('=', 4 - s.Length % 4) : ""));
+        }
+
+        public static string base64UrlEncode(byte[] content)
+        {
+            return Convert.ToBase64String(content).TrimEnd(new char[] { '=' }).Replace('/', '_').Replace('+', '-');
+
+        }
         #endregion
         public class ReCaptcha
         {
@@ -450,6 +467,7 @@ namespace RO.Web
         }
 
         #region Authentications
+        /* this is must be in-sync with ModuleBase.cs version */
         protected RO.Facade3.Auth GetAuthObject()
         {
             string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
@@ -696,16 +714,22 @@ namespace RO.Web
             if (sysDict == null) {
                 sysDict = new Dictionary<byte, Dictionary<string, string>>();
                 DataTable dt = LoadSystemsList(ignoreCache);
+                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
                 dt.PrimaryKey = new DataColumn[] { dt.Columns["SystemId"] };
-                foreach (DataRow dr in dt.Rows)
+                for (int i = dt.Rows.Count; i < dt.Rows.Count; i++)
                 {
+                    DataRow dr = dt.Rows[i];
                     if (dr["Active"].ToString() == "N")
                     {
                         dr.Delete();
                     }
+                    else if (singleSQLCredential)
+                    {
+                        dr["ServerName"] = Config.DesServer;
+                    }
+
                 }
                 dt.AcceptChanges();
-                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y"; 
                 foreach (DataRow dr in dt.Rows)
 			    {
 				    Dictionary<string,string> dict = new Dictionary<string,string>();
@@ -821,7 +845,7 @@ namespace RO.Web
                     }
                     catch
                     {
-                        throw new Exception("access_denied");
+                        throw new UnauthorizedAccessException("access_denied");
                     }
 
                 }
@@ -835,7 +859,7 @@ namespace RO.Web
                     }
                     catch
                     {
-                        throw new Exception("access_denied");
+                        throw new UnauthorizedAccessException("access_denied");
                     }
                 }
                 return true;
@@ -944,18 +968,18 @@ namespace RO.Web
             if (checkSysId)
             {
                 DataTable dtMenu = _GetMenu(sysId);
-                if (dtMenu.Rows.Count == 0) throw new Exception("access_denied");
+                if (dtMenu.Rows.Count == 0) throw new UnauthorizedAccessException("access_denied");
             }
             /* validate selected company/project */
             if (checkCompanyId && LCurr.CompanyId > 0)
             {
                 DataTable dtCompany = _GetCompanyList();
-                if (LCurr.CompanyId != LUser.DefCompanyId && dtCompany.AsEnumerable().Where(dr => dr["CompanyId"].ToString() == LCurr.CompanyId.ToString()).Count() == 0) throw new Exception("access_denied");
+                if (LCurr.CompanyId != LUser.DefCompanyId && dtCompany.AsEnumerable().Where(dr => dr["CompanyId"].ToString() == LCurr.CompanyId.ToString()).Count() == 0) throw new UnauthorizedAccessException("access_denied");
             }
             if (checkProjectId && LCurr.ProjectId > 0)
             {
                 DataTable dtProject = _GetProjectList(LCurr.CompanyId);
-                if (LCurr.ProjectId != LUser.DefProjectId && dtProject.AsEnumerable().Where(dr => dr["ProjectId"].ToString() == LCurr.ProjectId.ToString()).Count() == 0) throw new Exception("access_denied");
+                if (LCurr.ProjectId != LUser.DefProjectId && dtProject.AsEnumerable().Where(dr => dr["ProjectId"].ToString() == LCurr.ProjectId.ToString()).Count() == 0) throw new UnauthorizedAccessException("access_denied");
             }
 
         }
@@ -1208,7 +1232,10 @@ namespace RO.Web
         {
             GetErrorTracingEx(HttpContext.Current != null ? HttpContext.Current.Request : null)(e, null);
         }
-
+        protected void ErrorTrace(Exception e, string severity)
+        {
+            GetErrorTracingEx(HttpContext.Current != null ? HttpContext.Current.Request : null)(e, severity);
+        }
         protected ApiResponse<T,S> ManagedApiCall<T,S>(Func<ApiResponse<T,S>> apiCallFn)
         {
             try 
@@ -1273,7 +1300,7 @@ namespace RO.Web
                 }
                 return new ApiResponse<T,S>() { 
                     errorMsg = e.Message + (Config.DeployType=="DEV" ? e.StackTrace : "")
-                    , status = "failed"
+                    ,status = e is UnauthorizedAccessException ? "unauthorized_access" : "failed"
                 };
             }
         }
@@ -1334,7 +1361,7 @@ namespace RO.Web
                 {
                     errorMsg = e.Message + (Config.DeployType == "DEV" ? e.StackTrace : "")
                     ,
-                    status = "failed"
+                    status = e is UnauthorizedAccessException ? "unauthorized_access" : "failed"
                 };
             }
         }
@@ -2227,12 +2254,19 @@ namespace RO.Web
             string extBaseUrl = Config.ExtBaseUrl;
             string xForwardedFor = Request.Headers["X-Forwarded-For"];
             string xOriginalUrl = Request.Headers["X-Orginal-URL"];
+            string isaHttps = Request.Headers["Front-End-Https"];
             string host = Request.Url.Host;
             string appPath = Request.ApplicationPath;
+            string behindProxy = System.Configuration.ConfigurationManager.AppSettings["BehindProxy"];
 
-            return !string.IsNullOrEmpty(extBasePath)
-                && !string.IsNullOrEmpty(xForwardedFor)
-                && appPath.ToLower() != extBasePath.ToLower();
+            return
+                behindProxy == "Y"
+                ||
+                (
+                !string.IsNullOrEmpty(extBasePath)
+                && (!string.IsNullOrEmpty(xForwardedFor) || !string.IsNullOrEmpty(isaHttps)))
+                //                && appPath.ToLower() != extBasePath.ToLower();
+                ;
 
         }
 
@@ -2341,6 +2375,284 @@ namespace RO.Web
             return iEmailsSentToday;
         }
 
+        #region Document zip download helpers
+        protected string EncodeRequest<T>(T request, bool noEncrypt = false)
+        {
+            int round = 1;
+            var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string requestJSON = jss.Serialize(request);            
+            if (noEncrypt) return base64UrlEncode(System.Text.UTF8Encoding.UTF8.GetBytes(requestJSON));
+            RO.Facade3.Auth authObject = GetAuthObject();
+            string password = authObject.GetSessionEncryptionKey("", ""); // global non-user specific
+            string salt = password; // global, no salt
+            string encodedRequest = base64UrlEncode(
+                                        Encrypt(System.Text.UTF8Encoding.UTF8.GetBytes(requestJSON),
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(password),
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(salt), round));
+            return encodedRequest;
+        }
+        protected T DecodeRequest<T>(string encodedRequest, bool noEncrypt = false)
+        {
+            int round = 1;
+            byte[] x = base64UrlDecode(encodedRequest);
+            var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            RO.Facade3.Auth authObject = GetAuthObject();
+            string password = authObject.GetSessionEncryptionKey("", ""); // global non-user specific
+            string salt = password; // global, no salt
+            T request = jss.Deserialize<T>(
+                                            System.Text.UTF8Encoding.UTF8.GetString(
+                                            noEncrypt 
+                                            ? x
+                                            : Decrypt(x,
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(password),
+                                                System.Text.UTF8Encoding.UTF8.GetBytes(salt), round)));
+            return request;
+        }
+        protected string EncodeZipDownloadRequest(ZipDownloadRequest request)
+        {
+            return EncodeRequest<ZipDownloadRequest>(request);
+        }
+        protected ZipDownloadRequest DecodeZipDownloadRequest(string encodedRequest)
+        {
+            return DecodeRequest<ZipDownloadRequest>(encodedRequest);
+        }
+        protected virtual string MakeZipAllParam(string mstId, string jsonColumnParam, string fileName)
+        {
+            System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            List<Dictionary<string, string>> selectedDocList = string.IsNullOrEmpty(jsonColumnParam)
+                                                                ? null
+                                                                : jss.Deserialize<List<Dictionary<string, string>>>(jsonColumnParam);
+            Func<string, Dictionary<string, string>> selectedColumn =
+                columnName => selectedDocList == null
+                    ? null
+                    : selectedDocList.Where(d => d.ContainsKey("ColumnName") && !string.IsNullOrEmpty(d["ColumnName"]) && d["ColumnName"] == columnName).FirstOrDefault();
+
+            byte dbId = GetDbId();
+            byte sysId = GetSystemId();
+            int screenId = GetScreenId();
+
+            List<RO.Web.ZipMultiDocRequest> md = new List<RO.Web.ZipMultiDocRequest>
+            {
+            };
+
+            DataTable dtAut = _GetAuthCol(screenId);
+            DataTable dtLabel = _GetScreenLabel(screenId);
+            int ii = 0;
+            foreach (DataRow drLabel in dtLabel.Rows)
+            {
+                DataRow drAuth = dtAut.Rows[ii];
+                bool colVisible = drAuth["ColVisible"].ToString() == "Y";
+                if (!string.IsNullOrEmpty(drLabel["TableId"].ToString())
+                    && colVisible
+                    && drAuth["MasterTable"].ToString() == "Y"
+                    && drLabel["DisplayMode"].ToString() == "Document"
+                    )
+                {
+                    string colName = drLabel["ColumnName"].ToString() + drLabel["TableId"].ToString();
+                    var col = selectedColumn(colName);
+                    string tableColumnName = drLabel["ColumnName"].ToString();
+                    string dirName = col != null && col.ContainsKey("DirName") && !string.IsNullOrEmpty(col["DirName"]) ? col["DirName"] : tableColumnName;
+                    List<string> docIdLs = col != null && col.ContainsKey("IdLs") && col["IdLs"] != null
+                                                ? col["IdLs"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
+                                                : null
+                                                ;
+                    if (selectedDocList == null
+                        || col != null)
+                    {
+                        md.Add(MakeZipMultiDocRequest(sysId, screenId, mstId
+                            , "GetDdl" + tableColumnName + GetSystemId() + "S" + drLabel["ScreenObjId"].ToString(), drLabel["ColumnName"].ToString(), dirName, docIdLs));
+                    }
+                }
+                ii = ii + 1;
+            }
+
+            RO.Web.ZipDownloadRequest r = new RO.Web.ZipDownloadRequest()
+            {
+                zN = fileName,
+                e = DateTime.UtcNow.AddMinutes(60).ToFileTimeUtc(),
+                md = CompressZipMultiDocRequest(md)
+            };
+            string encodedRequest = EncodeZipDownloadRequest(r);
+            return encodedRequest;
+        }
+        protected virtual Tuple<string, string, byte[]> ZipAllDoc(string encodedZipAllRequest)
+        {
+            RO.Web.ZipDownloadRequest x = DecodeZipDownloadRequest(encodedZipAllRequest);
+
+            byte[] zipResult = GetMultiDoc(new RO.Web.ZipDownloadRequest() { zN = x.zN, md = ExpandZipMultiDocRequest(x.md), ed = x.ed });
+            return new Tuple<string, string, byte[]>(x.zN, "application/zip", zipResult);
+        }
+        protected virtual Ionic.Zip.ZipFile GetMultiDoc(string systemId, string screenId, string mstId, string spName, string tableName, string parentDirectory, Ionic.Zip.ZipFile zipObject, string rootDirectory, string docLs = null)
+        {
+            byte sid = byte.Parse(systemId);
+            int scrId = int.Parse(screenId);
+            string dbConnectionString = LcAppConnString;
+            string dbPwd = LcAppPw ;
+            List<string> selectedIds = docLs == null ? null : docLs.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries).Select(s=>s.Trim()).ToList();
+            DataTable dt = (new AdminSystem()).GetDdl(scrId, spName, false, false, 0, mstId, dbConnectionString, dbPwd, string.Empty, LImpr, LCurr);
+            if (dt.Rows.Count > 0)
+            {
+                string baseDirectory = rootDirectory + "/" + parentDirectory;
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (!Directory.Exists(baseDirectory)) Directory.CreateDirectory(baseDirectory);
+                    string docId = dr["DocId"].ToString();
+                    if (docLs != null && !docLs.Contains(docId)) continue;
+                    DataTable dtDoc = (new AdminSystem()).GetDbDoc(docId, tableName, dbConnectionString, dbPwd);
+                    if (dtDoc.Rows.Count > 0)
+                    {
+                        string tempLocation = baseDirectory + "/" + dr["DocName"].ToString();
+                        byte[] content = dtDoc.Rows[0]["DocImage"] as byte[];
+                        using (FileStream fs = new FileStream(tempLocation, FileMode.Create))
+                        {
+                            fs.Write(content, 0, content.Length);
+                            fs.Close();
+                        }
+                        File.SetCreationTimeUtc(tempLocation, (DateTime)dr["InputOn"]);
+                        File.SetLastWriteTimeUtc(tempLocation, (DateTime)dr["InputOn"]);
+                    }
+
+                }
+                zipObject.AddDirectory(baseDirectory, parentDirectory);
+            }
+            return zipObject;
+        }
+        protected virtual byte[] GetMultiDoc(RO.Web.ZipDownloadRequest request)
+        {
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            try
+            {
+                Directory.CreateDirectory(tempDirectory);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (Ionic.Zip.ZipFile resultFile = new Ionic.Zip.ZipFile())
+                    {
+                        resultFile.CompressionMethod = Ionic.Zip.CompressionMethod.Deflate;
+                        resultFile.CompressionLevel = Ionic.Zlib.CompressionLevel.BestCompression;
+                        foreach (var r in request.md)
+                        {
+                            foreach (var c in r.cols)
+                            {
+                                GetMultiDoc(r.scr[0], r.scr[1], r.scr[2], c[0], c[1], c[2], resultFile, tempDirectory, c[3]);
+                            }
+                        }
+
+                        resultFile.Save(ms);
+                    }
+                    ms.Close();
+                    return ms.ToArray();
+                };
+
+            }
+            catch (Exception ex)
+            {
+                Exception e = new Exception("problem zipping documents", ex);
+                ErrorTrace(e, "error");
+                throw;
+            }
+            finally
+            {
+                try
+                {
+                    Directory.Delete(tempDirectory, true);
+                }
+                catch (Exception ex)
+                {
+                    ErrorTrace(new Exception("problem removing temp directory for zip usage", ex), "warning");
+                }
+            }
+
+        }
+        protected virtual RO.Web.ZipMultiDocRequest MakeZipMultiDocRequest(byte sysId, int screenId, string mstId, string getListSPName, string docTableName, string baseDirectoryName, List<string> docIdLs = null)
+        {
+            return new RO.Web.ZipMultiDocRequest()
+            {
+                scr = new List<string>() { sysId.ToString(), screenId.ToString(), mstId, LUser.UsrId.ToString() },
+                cols = new List<List<string>>() { new List<string>() { getListSPName, docTableName, baseDirectoryName, docIdLs == null ? null : string.Join(",", docIdLs.ToArray()) } }
+            };
+        }
+        protected virtual List<RO.Web.ZipMultiDocRequest> CompressZipMultiDocRequest(List<RO.Web.ZipMultiDocRequest> md)
+        {
+            List<RO.Web.ZipMultiDocRequest> _md = new List<RO.Web.ZipMultiDocRequest>();
+            Func<List<List<string>>, List<List<string>>> shortenContent = cols => cols.Select(r => (r.Select((c, i) => i == 0 ? c.Replace("GetDdl", "") : c)).ToList()).ToList();
+            foreach (var _x in md)
+            {
+                bool merged = false;
+                foreach (var y in _md)
+                {
+                    if (Enumerable.SequenceEqual(_x.scr, y.scr))
+                    {
+
+                        //                        y.cols.AddRange(_x.cols.Select(r => (r.Select((c, i) => i == 0 ? c.Replace("GetDdl", "") : c)).ToList()));
+                        y.cols.AddRange(shortenContent(_x.cols));
+                        merged = true;
+                    }
+                }
+                if (!merged) _md.Add(new RO.Web.ZipMultiDocRequest() { scr = _x.scr, cols = shortenContent(_x.cols) });
+            }
+            return _md;
+        }
+        protected virtual List<RO.Web.ZipMultiDocRequest> ExpandZipMultiDocRequest(List<RO.Web.ZipMultiDocRequest> md)
+        {
+            return md.Select(z => new RO.Web.ZipMultiDocRequest()
+            {
+                scr = z.scr
+                ,
+                cols = z.cols.Select(r => r.Select((c, i) => i == 0 ? "GetDdl" + c : c).ToList()).ToList()
+            }).ToList();
+        }
+        protected virtual void ReturnAsAttachment(HttpResponse Response, byte[] content, string fileName, string mimeType = "application/octet-stream", bool inline = true)
+        {
+            Response.Buffer = true;
+            Response.ClearHeaders();
+            Response.ClearContent();
+            Response.ContentType = mimeType;
+            string contentDisposition = inline ? "attachment" : "inline";
+            Response.AppendHeader("Content-Disposition", contentDisposition + "; Filename=" + fileName);
+            Response.BinaryWrite(content);
+            Response.End();
+        }
+        protected virtual string GetUrlWithQSHashV2(string url, bool noEncrypt = false)
+        {
+            /* this one must match with the validation side in ModuleBase.cs ValidateQSV2 */
+            int questionMarkPos = url.IndexOf('?');
+            string path = questionMarkPos >= 0 ? url.Substring(0, questionMarkPos) : url;
+            string qs = questionMarkPos >= 0 ? url.Substring(questionMarkPos).Substring(1) : "";
+
+            if (string.IsNullOrEmpty(qs)) return url;
+            if (!(path.ToLower().EndsWith("~/dnload.aspx") 
+                || path.ToLower().EndsWith("/dnload.aspx") 
+                || path.ToLower().EndsWith("~/upload.aspx") 
+                || path.ToLower().EndsWith("/upload.aspx"))
+                ) return url;
+            List<string> qsList = qs.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (qsList.Where(q => q.ToLower().Contains("sys=")).Count() == 0)
+            {
+                qsList.Add("sys=" + GetSystemId().ToString());
+            }
+            string qsToHash = string.Join("&",
+                        qsList.Where(s=>!s.StartsWith("inline") && !s.StartsWith("ico")).OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim();
+
+            //RandomNumberGenerator rng = new RNGCryptoServiceProvider();
+            //byte[] tokenData = new byte[8];
+            //rng.GetBytes(tokenData);
+            byte[] tokenData = Guid.NewGuid().ToByteArray();
+            Dictionary<string, string> _h = new Dictionary<string, string>();
+            _h["_s"] = Convert.ToBase64String(tokenData);
+            System.Security.Cryptography.HMACMD5 hmac = new System.Security.Cryptography.HMACMD5(tokenData);
+            byte[] hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(Convert.ToBase64String(tokenData) + qsToHash.ToString()));
+            string hashString = Convert.ToBase64String(hash);
+            _h["_h"] = hashString;
+            _h["id"] = LUser.UsrId.ToString();
+            _h["e"] = DateTime.UtcNow.AddMinutes(60).ToFileTimeUtc().ToString();
+            string qsHash = EncodeRequest<Dictionary<string, string>>(_h, noEncrypt);
+            //string qsHash = hashString;
+            /* url with hash to prevent tampering of manual construction, only for dnload.aspx */
+            return path + "?" + string.Join("&", qsList.ToArray()) + "&_h=" + qsHash;
+        }
+
+        #endregion
 
         protected DataTable GetLis(string getLisMethod, int systemId, int screenId, string searchStr, List<string> criteria, string filterId, string conn, string isSys, int topN, bool addRow = true)
         {
@@ -2399,7 +2711,7 @@ namespace RO.Web
                 || (dtAuthRow.Rows[0]["AllowDel"].ToString() == "N" && action == "D")
                )
             {
-                throw new Exception("access denied");
+                throw new UnauthorizedAccessException("access denied");
             }
         }
         protected void ValidatedMstId(string getListMethod, byte csy, int screenId, string query, List<string> criteria, bool isAdd = false)
@@ -2413,17 +2725,46 @@ namespace RO.Web
                 )
                 && !isAdd)
             {
-                throw new Exception("access denied " + query);
+                throw new UnauthorizedAccessException("access denied " + query);
             }
             else if (isAdd)
             {
                 DataTable dtAuthRow = _GetAuthRow(screenId);
                 if (dtAuthRow.Rows[0]["AllowAdd"].ToString() == "N") 
                 {
-                    throw new Exception("access denied on add");
+                    throw new UnauthorizedAccessException("access denied on add");
                 }
             }
         }
+        protected string ValidatedColAuth(string screenColumnName, bool isMaster, string DisplayMode, string DisplayName, bool isUpdate)
+        {
+            DataTable dtAut = _GetAuthCol(GetScreenId());
+            DataTable dtLabel = _GetScreenLabel(GetScreenId());
+            int ii = 0;
+            foreach (DataRow drLabel in dtLabel.Rows)
+            {
+                DataRow drAuth = dtAut.Rows[ii];
+                if (
+                    (
+                    (drLabel["ColumnName"].ToString() + drLabel["TableId"].ToString()) == screenColumnName
+                    &&
+                    (string.IsNullOrEmpty(DisplayMode) && string.IsNullOrEmpty(DisplayName))
+                    || drLabel["DisplayName"].ToString() == DisplayName
+                    || drLabel["DisplayMode"].ToString() == DisplayMode
+                    )
+                    && !string.IsNullOrEmpty(drLabel["TableId"].ToString())
+                    && drAuth["MasterTable"].ToString() == (isMaster ? "Y" : "N")
+                    && drAuth["ColVisible"].ToString() == "Y"
+                    )
+                {
+                    string tableColumnName = drLabel["ColumnName"].ToString();
+                    return tableColumnName;
+                }
+                ii = ii + 1;
+            }
+            return "";
+        }
+
         protected List<string> MatchScreenCriteria(DataView dvCri, string jsonCri)
         {
             List<string> scrCri = new List<string>();
@@ -2487,6 +2828,7 @@ namespace RO.Web
             bool hasDtlRColumn = dtSuggest.Columns.Contains(keyF + "DtlR");
             bool hasIconColumn = dtSuggest.Columns.Contains(keyF + "Url");
             bool hasImgColumn = dtSuggest.Columns.Contains(keyF + "Img");
+            bool hasActive = dtSuggest.Columns.Contains("Active");
             total = dtSuggest.Rows.Count;
             int skipped = 0;
             List<SerializableDictionary<string, string>> results = new List<SerializableDictionary<string, string>>();
@@ -2522,23 +2864,26 @@ namespace RO.Web
                         Choices[drv[keyF].ToString()] = drv[valF].ToString();
                         if (dropEnded || startTaking)
                         {
-                            var image = imgF != "" && !string.IsNullOrEmpty(drv[imgF].ToString())
-                                        ? BlobImage(drv[imgF] as byte[], bFullImage) ?? new Tuple<string, byte[]>("application/base64", new byte[0])
-                                        : new Tuple<string, byte[]>("application/base64", new byte[0])
-                                        ;
-                            results.Add(new SerializableDictionary<string, string> { 
-                            {"key",drv[keyF].ToString()}, // internal key 
-                            {"label",drv[valF].ToString()}, // visible dropdown list as used in jquery's autocomplete
-                            {"labelL",rx.Replace(drv[valF].ToString(),"")}, // stripped desc
-                            {"value", valueIsKey ? drv[keyF].ToString() : drv[valF].ToString()}, // visible value shown in jquery's autocomplete box, react expect this to be the key not label
-                            {"iconUrl",iconUrlF !="" ?  drv[iconUrlF].ToString() : null}, // optional icon url
-                            {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "": "data:" + image.Item1 + ";base64," + Convert.ToBase64String(image.Item2))  : null}, // optional embedded image
-                            {"tooltips",tipF !="" ? drv[tipF].ToString() : ""},// optional alternative tooltips(say expanded description)
-                            {"detail",dtlF !="" ? ToStandardString(dtlF,drv.Row) : null}, // optional detail info
-                            {"labelR",valFR !="" ? ToStandardString(valFR,drv.Row) : null}, // optional title(right hand side for react presentation)
-                            {"detailR",dtlFR !="" ? ToStandardString(dtlFR,drv.Row) : null} // optional detail info(right hand side for react presentation)
+                            //var image = imgF != "" && !string.IsNullOrEmpty(drv[imgF].ToString())
+                            //            ? BlobImage(drv[imgF] as byte[], bFullImage) ?? new Tuple<string, byte[]>("application/base64", new byte[0])
+                            //            : new Tuple<string, byte[]>("application/base64", new byte[0])
+                            //            ;
+                            var rec = new SerializableDictionary<string, string> { 
+                                {"key",drv[keyF].ToString()}, // internal key 
+                                {"label",drv[valF].ToString()}, // visible dropdown list as used in jquery's autocomplete
+                                {"labelL",rx.Replace(drv[valF].ToString(),"")}, // stripped desc
+                                {"value", valueIsKey ? drv[keyF].ToString() : drv[valF].ToString()}, // visible value shown in jquery's autocomplete box, react expect this to be the key not label
+                                {"iconUrl",iconUrlF !="" ? drv[iconUrlF].ToString() == "" ? "" : ResolveUrlCustom(GetUrlWithQSHashV2(drv[iconUrlF].ToString()),false,true) : null}, // optional icon url
+                                {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "": RO.Common3.Utils.BlobPlaceHolder(drv[imgF] as byte[], true))  : null}, // optional embedded image
+                                {"tooltips",tipF !="" ? drv[tipF].ToString() : ""},// optional alternative tooltips(say expanded description)
+                                {"detail",dtlF !="" ? ToStandardString(dtlF,drv.Row) : null}, // optional detail info
+                                {"labelR",valFR !="" ? ToStandardString(valFR,drv.Row) : null}, // optional title(right hand side for react presentation)
+                                {"detailR",dtlFR !="" ? ToStandardString(dtlFR,drv.Row) : null} // optional detail info(right hand side for react presentation)
                             /* more can be added in the future for say multi-column list */
-                            });
+                            };
+                            if (hasActive) rec["Active"] = drv["Active"].ToString();
+                            results.Add(rec);
+    
                         }
                         else 
                         {
@@ -2596,6 +2941,8 @@ namespace RO.Web
             string tipF = context.ContainsKey("mTip") ? context["mTip"] : "";
             string imgF = context.ContainsKey("mImg") && extendedContent ? context["mImg"] : "";
             bool valueIsKey = context.ContainsKey("valueIsKey") || true;
+            bool hasActive = dtSuggest.Columns.Contains("Active");
+
             total = dtSuggest.Rows.Count;
             List<SerializableDictionary<string, string>> results = new List<SerializableDictionary<string, string>>();
             Dictionary<string, string> Choices = new Dictionary<string, string>();
@@ -2684,14 +3031,16 @@ namespace RO.Web
                     else if (regex.IsMatch(drv[valF].ToString().ToLower()) || query.StartsWith(doublestar) || string.IsNullOrEmpty(query))
                     {
                         Choices[drv[keyF].ToString()] = drv[valF].ToString();
-                        results.Add(new SerializableDictionary<string, string> { 
+                        var rec = new SerializableDictionary<string, string> { 
                             {"key", getNonEmptyStr(drv[keyF].ToString())}, // internal key 
                             {"label", getNonEmptyStr(drv[valF].ToString())}, // visible dropdown list as used in jquery's autocomplete
                             {"value", getNonEmptyStr(valueIsKey ? drv[keyF].ToString() : drv[valF].ToString())}, // visible value shown in jquery's autocomplete box, react expect it to be key not label
-                            {"img", imgF !="" ? drv[imgF].ToString() : null}, // optional image
+                            {"img", imgF !="" ? RO.Common3.Utils.BlobPlaceHolder(drv[imgF] as byte[],true) : null}, // optional image
                             {"tooltips",tipF !="" ? drv[tipF].ToString() : ""} // optional alternative tooltips(say expanded description)
                             /* more can be added in the future for say multi-column list */
-                            });
+                            };
+                        if (hasActive) rec["Active"] = drv["Active"].ToString();
+                        results.Add(rec);
                     }
                     else
                     {
@@ -2860,7 +3209,7 @@ namespace RO.Web
                 {
                     FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
                     string mimeType = string.IsNullOrEmpty(fileInfo.mimeType) ? "application/base64" : fileInfo.mimeType;
-                    var resized =tryResizeImage(Convert.FromBase64String(fileInfo.base64),mimeType,bFullBLOB);
+                    var resized =tryResizeImage(Convert.FromBase64String(fileInfo.base64),mimeType, !bFullBLOB);
                     return new Tuple<string, byte[]>(resized.Item1, resized.Item2);
                 }
                 catch
@@ -2872,7 +3221,7 @@ namespace RO.Web
                         foreach (var fileInfo in fileList)
                         {
                             string mimeType = string.IsNullOrEmpty(fileInfo.mimeType) ? "application/base64" : fileInfo.mimeType;
-                            var resized = tryResizeImage(Convert.FromBase64String(fileInfo.base64), mimeType, bFullBLOB);
+                            var resized = tryResizeImage(Convert.FromBase64String(fileInfo.base64), mimeType, !bFullBLOB);
                             return new Tuple<string, byte[]>(resized.Item1, resized.Item2);
                         }
                         return null;
@@ -2880,7 +3229,7 @@ namespace RO.Web
                     catch
                     {
                         string mimeType = "image/jpeg";
-                        var resized = tryResizeImage(Convert.FromBase64String(fileContent), mimeType, bFullBLOB);
+                        var resized = tryResizeImage(Convert.FromBase64String(fileContent), mimeType, !bFullBLOB);
                         return new Tuple<string, byte[]>(resized.Item1, resized.Item2);
                     }
                 }
@@ -2891,7 +3240,7 @@ namespace RO.Web
             }
         }
 
-        protected string BlobPlaceHolder(byte[] content)
+        protected string BlobPlaceHolder(byte[] content, bool resize = true)
         {
             const int maxOriginalSize = 2000;
 
@@ -2969,6 +3318,17 @@ namespace RO.Web
             //    );
             List<SerializableDictionary<string, string>> ret = new List<SerializableDictionary<string, string>>();
             if (dt == null) return ret;
+            bool isDtlTbl = GetScreenId() > 0 && dt.Columns.Contains(GetDtlKeyColumnName(false));
+            bool isMstTbl = GetScreenId() > 0 && !isDtlTbl && dt.Columns.Contains(GetMstKeyColumnName(false));
+            string tableId = isDtlTbl ? 
+                                GetDtlTableName(true).Replace(GetDtlTableName(false),"")
+                                : (isMstTbl ? GetMstTableName(true).Replace(GetMstTableName(false),"") 
+                                : ""
+                                );
+            string tableName = GetScreenId() > 0 ? (isDtlTbl ? GetDtlTableName(true) : (isMstTbl ? GetMstTableName(true) : "")) : null;
+            string keyColumnName = GetScreenId() > 0 ? (isDtlTbl ? GetDtlKeyColumnName(false) : (isMstTbl ? GetMstKeyColumnName(false) : "")) : "";
+            string keyColumnUnderlyingName = GetScreenId() > 0 ? (isDtlTbl ? GetDtlKeyColumnName(true) : (isMstTbl ? GetMstKeyColumnName(true) : "")) : "";
+            Regex rxBaseCol = new Regex(tableId + "$");
             Func<string, DataRow, string> convertByteArrayToString = (columnName, dr) =>
             {
                 // technically wrong as there should be associating of colAuth with direct DB retrieval on content type, FIXME
@@ -2995,9 +3355,48 @@ namespace RO.Web
                 else
                 {
                     // assume to be ImageButton;
-                    return  (includeBLOB == IncludeBLOB.Content || ((byte[])(dr[columnName])).Length < 256) 
-                                            ? DecodeFileStream((byte[])(dr[columnName]),true) 
-                                            : includeBLOB == IncludeBLOB.None ? null : BlobPlaceHolder((byte[])(dr[columnName]));
+                    if (includeBLOB == IncludeBLOB.None)
+                        return null;
+                    else if (includeBLOB == IncludeBLOB.DownloadLink 
+                            && !string.IsNullOrEmpty(tableName)
+                            && (
+                            (!string.IsNullOrEmpty(tableId) && rxBaseCol.IsMatch(columnName))
+                            ||
+                            GetDdlContext().ContainsKey(columnName)
+                            )
+                            )
+                    {
+                        var keyId = dr[keyColumnName].ToString();
+                        var baseColName = rxBaseCol.Replace(columnName,"");
+                        if (GetDdlContext().ContainsKey(columnName))
+                        {
+                            // pull up image from another table
+                            var ddlContext = GetDdlContext();
+                            tableName = ddlContext[columnName]["baseTbl"];
+                            keyColumnUnderlyingName = ddlContext[columnName]["baseKeyCol"];
+                            baseColName = ddlContext[columnName]["baseColName"];
+                            keyId = dr[ddlContext[columnName]["mKey"]].ToString();
+                        }
+                        string url = "~/Dnload.aspx?"
+                                + "tbl=" + tableName
+                                + "&" + "knm=" + keyColumnUnderlyingName
+                                + "&" + "key=" + keyId
+                                + "&" + "col=" + baseColName
+                                + "&" + "sys=" + GetSystemId()
+                                ;
+                        return GetUrlWithQSHashV2(url);
+                    }
+                    else if (includeBLOB == IncludeBLOB.Content || ((byte[])(dr[columnName])).Length < 256)
+                        return DecodeFileStream((byte[])(dr[columnName]), true);
+                    else if (includeBLOB == IncludeBLOB.Icon)
+                        return BlobPlaceHolder((byte[])(dr[columnName]));
+                    else if (includeBLOB == IncludeBLOB.DownloadLink && string.IsNullOrEmpty(tableName)) {
+                        // inplace link instead if not table backed
+                        return RO.Common3.Utils.BlobPlaceHolder(dr[columnName] as byte[], true);
+                        //var x = BlobImage(dr[columnName] as byte[], true);
+                        //return "data:" + x.Item1 + ";base64," + Convert.ToBase64String(dr[columnName] as byte[]);
+                    }
+                    else return null;
                 }
             }
             ;
@@ -3238,9 +3637,88 @@ namespace RO.Web
             return menus;
         }
 
+        #region app domain resolving helpers
+        protected string ResolveUrlCustom(string relativeUrl, bool isInternal = false, bool withDomain = false)
+        {
+            var Request = Context.Request;
+            string url = ResolveUrl(relativeUrl);
+            string extBasePath = Config.ExtBasePath;
+            string extDomain = Config.ExtDomain;
+            string extBaseUrl = Config.ExtBaseUrl;
+            string xForwardedFor = Request.Headers["X-Forwarded-For"];
+            string xOriginalUrl = Request.Headers["X-Orginal-URL"];
+            string host = Request.Url.Host;
+            string appPath = Request.ApplicationPath;
+            if (IsProxy()
+                 && !isInternal
+                //&& Config.TranslateExtUrl
+                 && (
+                 url.ToLower().StartsWith(("https://" + host + appPath).ToLower())
+                 ||
+                 url.ToLower().StartsWith(("http://" + host + appPath).ToLower())
+                 ||
+                 (url.ToLower().StartsWith((appPath).ToLower()) && appPath != "/")
+                 ||
+                 (appPath == "/" && url.StartsWith("/"))
+                 ||
+                 !url.StartsWith("/")
+                ))
+            {
+                Dictionary<string, string> requestHeader = new Dictionary<string, string>();
+                foreach (string x in Request.Headers.Keys)
+                {
+                    requestHeader[x] = Request.Headers[x];
+                }
+                requestHeader["Host"] = host;
+                requestHeader["ApplicationPath"] = appPath;
+                url = Utils.transformProxyUrl(url, requestHeader);
+                return withDomain ? url : new Regex("^" + GetDomainUrl(), RegexOptions.IgnoreCase).Replace(url, "");
+            }
+            else
+            {
+                return withDomain
+                        ? (url.StartsWith("http") ? url : GetDomainUrl(false) + (url.StartsWith("/") ? "" : "/") + url)
+                        : new Regex("^" + GetDomainUrl(false), RegexOptions.IgnoreCase).Replace(url, "");
+            }
+
+        }
+        protected string GetDomainUrl(bool isInternal = false)
+        {
+            var Request = HttpContext.Current.Request;
+            string intBaseUrl = ((Request.IsSecureConnection) ? "https://" : "http://")
+                        + HttpContext.Current.Request.Url.Host
+                        + (HttpContext.Current.Request.Url.IsDefaultPort ? "" : ":" + HttpContext.Current.Request.Url.Port.ToString());
+
+            if (isInternal || !IsProxy() || string.IsNullOrEmpty(Config.ExtBaseUrl))
+                return intBaseUrl;
+            else
+                return Config.ExtBaseUrl.Replace(Config.ExtBasePath, "");
+        }
+        protected string GetBaseUrl(bool isInternal = false)
+        {
+            var Request = HttpContext.Current.Request;
+            string applicationPath = HttpRuntime.AppDomainAppVirtualPath;
+            string intBaseUrl = ((Request.IsSecureConnection) ? "https://" : "http://")
+                        + HttpContext.Current.Request.Url.Host
+                        + (HttpContext.Current.Request.Url.IsDefaultPort ? "" : ":" + HttpContext.Current.Request.Url.Port.ToString())
+                        + (applicationPath == "/" ? "" : applicationPath);
+            string baseUrl = ResolveUrlCustom(intBaseUrl, isInternal);
+            return baseUrl.EndsWith("/") ? baseUrl.Left(baseUrl.Length - 1) : baseUrl;
+        }
+
+        protected string GetExtUrl(string url)
+        {
+            return ResolveUrlCustom(url, false, true);
+        }
+        #endregion
         public AsmxBase()
         {
- 
+            var Request = HttpContext.Current.Request;
+            IntPageUrlBase = (Request.IsSecureConnection ? "https://" : "http://")
+                                + Request.Url.Host
+                                + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port.ToString())
+                                + (Request.ApplicationPath + "/").Replace("//", "/");
+            PageUrlBase = ResolveUrlCustom("~/", false, true);
         }
 
 
@@ -3279,15 +3757,24 @@ namespace RO.Web
             {
                 SwitchContext(GetSystemId(), LCurr.CompanyId, LCurr.ProjectId);
                 ValidatedMstId(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "**" + mstId, MatchScreenCriteria(new DataView(_GetScrCriteria(GetScreenId())), null));
+                string tableColumnName = ValidatedColAuth(screenColumnName, isMaster, "Document", null, true);
                 List<string> deletedDocId = new List<string>();
                 DataTable dtDocList = _GetDocList(mstId, screenColumnName);
+                if (string.IsNullOrEmpty(tableColumnName))
+                {
+                    dtDocList.Clear();
+                    dtDocList.AcceptChanges();
+                }
                 foreach (var docId in docIdList)
                 {
                     bool hasDoc = (from x in dtDocList.AsEnumerable() where !string.IsNullOrEmpty(docId) && x["DocId"].ToString() == docId select x).Count() > 0;
                     bool canDeleteMultiDoc = PreDelMultiDoc(mstId, dtlId, isMaster, docId, true, screenColumnName, mstTableName, null, null);
-                    (new AdminSystem()).DelDoc(isMaster ? mstId : dtlId, docId, LUser.UsrId.ToString(), ddlKeyTableName, mstTableName, columnName, mstKeyColumnName, LcAppConnString, LcAppPw);
-                    PostDelMultiDoc(mstId, dtlId, isMaster, docId, true, screenColumnName, mstTableName, ddlKeyTableName, null);
-                    deletedDocId.Add(docId);
+                    if (hasDoc && canDeleteMultiDoc && !string.IsNullOrEmpty(tableColumnName))
+                    {
+                        (new AdminSystem()).DelDoc(isMaster ? mstId : dtlId, docId, LUser.UsrId.ToString(), ddlKeyTableName, mstTableName, columnName, mstKeyColumnName, LcAppConnString, LcAppPw);
+                        PostDelMultiDoc(mstId, dtlId, isMaster, docId, true, screenColumnName, mstTableName, ddlKeyTableName, null);
+                        deletedDocId.Add(docId);
+                    }
                 }
 
                 ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
@@ -3315,6 +3802,7 @@ namespace RO.Web
             {
                 SwitchContext(GetSystemId(), LCurr.CompanyId, LCurr.ProjectId);
                 ValidatedMstId(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "**" + mstId, MatchScreenCriteria(new DataView(_GetScrCriteria(GetScreenId())), null));
+                string tableColumnName = ValidatedColAuth(screenColumnName, isMaster, "Document", null, true);
                 List<_ReactFileUploadObj> fileArray = DestructureFileUploadObject(docJson);
                 DataTable dtDocList = _GetDocList(mstId, screenColumnName);
                 bool hasDoc = (from x in dtDocList.AsEnumerable() where x["DocId"].ToString() == docId select x).Count() > 0;
@@ -3324,13 +3812,22 @@ namespace RO.Web
                 byte[] content = Convert.FromBase64String(fileObj.base64);
                 DocId = new AdminSystem().GetDocId(isMaster ? mstId : dtlId, tableName, fileObj.fileName, LUser.UsrId.ToString(), LcAppConnString, LcAppPw);
                 bool canSaveMultiDoc = PreSaveMultiDoc(mstId, dtlId, isMaster, DocId, overwrite, screenColumnName, tableName, docJson, options);
-                if (DocId == string.Empty || !overwrite)
+                if (string.IsNullOrEmpty(tableColumnName) || !canSaveMultiDoc) throw new UnauthorizedAccessException("access denied on add");
+                try
                 {
-                    DocId = new AdminSystem().AddDbDoc(isMaster ? mstId : dtlId, tableName, fileObj.fileName, fileObj.mimeType, content.Length, content, LcAppConnString, LcAppPw, LUser);
+                    if (DocId == string.Empty || !overwrite)
+                    {
+                        DocId = new AdminSystem().AddDbDoc(isMaster ? mstId : dtlId, tableName, fileObj.fileName, fileObj.mimeType, content.Length, content, LcAppConnString, LcAppPw, LUser);
+                    }
+                    else
+                    {
+                        new AdminSystem().UpdDbDoc(DocId, tableName, fileObj.fileName, fileObj.mimeType, content.Length, content, LcAppConnString, LcAppPw, LUser);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    new AdminSystem().UpdDbDoc(DocId, tableName, fileObj.fileName, fileObj.mimeType, content.Length, content, LcAppConnString, LcAppPw, LUser);
+                    ErrorTracing(new Exception(string.Format("{0}, {1}, {2}-{3}({4})", mstId, docId, fileObj.fileName, fileObj.mimeType), ex));
+                    throw;
                 }
                 PostSaveMultiDoc(mstId, dtlId, isMaster, DocId, overwrite, screenColumnName, tableName, docJson, options);
                 ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
@@ -3361,9 +3858,22 @@ namespace RO.Web
                 var LastScreenCriteria = GetScreenCriteria();
                 var savedScreenCriteria = LastScreenCriteria.data.data;
                 var currentScrCriteria = _GetCurrentScrCriteria(dvScreenCriteria, savedScreenCriteria, true);
-
                 ValidatedMstId(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "**" + mstId, MatchScreenCriteria(dvScreenCriteria, new JavaScriptSerializer().Serialize(currentScrCriteria.Item2)));
+                string tableColumnName = ValidatedColAuth(screenColumnName, isMaster, "Document", null, false);
                 DataTable dt = (new AdminSystem()).GetDdl(GetScreenId(), getDdlMethod, false, false, 0, mstId, LcAppConnString, LcAppPw, string.Empty, LImpr, LCurr);
+                for (int i = dt.Rows.Count; i < dt.Rows.Count; i++)
+                {
+                    DataRow dr = dt.Rows[i];
+                    if (string.IsNullOrEmpty(tableColumnName))
+                        dt.Rows.Remove(dr);
+                    else
+                    {
+                        string url = ResolveUrlCustom(dr["DocLink"].ToString(), false, true);
+                        string securedUrl = GetUrlWithQSHashV2(url);
+                        dr["DocLink"] = securedUrl;
+                    }
+                }
+                dt.AcceptChanges();
                 return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), GetScreenId(), "R", screenColumnName, emptyAutoCompleteResponse), AllowAnonymous());
@@ -3374,6 +3884,9 @@ namespace RO.Web
             int screenId = GetScreenId();
             byte systemId = GetSystemId();
             string custLabelCat = GetProgramName().Replace(screenId.ToString(), "");
+            // do this FIRST as it would switch context
+            var sysLabels = GetSystemLabels("cSystem");
+            // now we switch back to our own context
             SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, accessControlled, false, false, true);
             var dtAuthCol = _GetAuthCol(screenId);
             var dtAuthRow = _GetAuthRow(screenId);
@@ -3383,7 +3896,6 @@ namespace RO.Web
             var dtScreenHlp = _GetScreenHlp(screenId);
             var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
             var dtLabel = _GetLabels(custLabelCat);
-
             LoadScreenPageResponse result = new LoadScreenPageResponse()
             {
                 AuthCol = DataTableToListOfObject(dtAuthCol),
@@ -3394,6 +3906,7 @@ namespace RO.Web
                 ScreenCriteria = DataTableToListOfObject(dtScreenCriteria),
                 ScreenFilter = DataTableToListOfObject(dtScreenFilter),
                 ScreenHlp = DataTableToListOfObject(dtScreenHlp),
+                SystemLabels = sysLabels.data.data,
             };
             return result;
         }
@@ -3486,8 +3999,10 @@ namespace RO.Web
         {
             string[] isDdlType = { "ComboBox", "DropDownList", "ListBox", "RadioButtonList" };
             string[] isMultiValueType = { "ListBox" };
-            string[] isSimpleTextType = { "TextBox", "MultiLine"};
-            string[] isStringDataType = { "10","11","14","15","Char"};
+            string[] isSimpleTextType = { "TextBox", "MultiLine", "Money", "Currency"};
+            string[] isStringDataType = { "10","11","14","15"};
+            string[] isBlobType = { "8", "9" };
+            string[] isDateType = { "12", "21" };
             string colName = drLabel["ColumnName"].ToString() + drLabel["TableId"].ToString();
             string displayName = drLabel["DisplayName"].ToString();
             string displayMode = drLabel["DisplayMode"].ToString();
@@ -3580,6 +4095,40 @@ namespace RO.Web
                 {
                     // trim then silent cut off, columnLength == 0 means unlimited 
                     val = string.IsNullOrEmpty(val) ? val : (hasColumnLength ? val.Trim().Left(columnLength > 0 ? columnLength : 999999) : val.Trim());
+                }
+            }
+            else if (!isStringDataType.Contains(dataType)
+                    && !isDateType.Contains(dataType)
+                    && !isBlobType.Contains(dataType)
+                    && !string.IsNullOrEmpty(val)
+                )
+            {
+                try
+                {
+                    decimal v = decimal.Parse(val);
+                }
+                catch
+                {
+                    // bounce on non-parsable numeric format, not sure how to handle thousand seperator or other
+                    // odd cases like money symbol etc. FIXME
+                    errors.Add(new KeyValuePair<string, string>(colName, "invalid numeric format"));
+                }
+            }
+            else if (isSimpleTextType.Contains(displayMode)
+                    && isDateType.Contains(dataType)
+                    && !isBlobType.Contains(dataType)
+                    && !string.IsNullOrEmpty(val)
+                )
+            {
+                try
+                {
+                    DateTime v = DateTime.Parse(val);
+                }
+                catch
+                {
+                    // bounce on non-parsable numeric format, not sure how to handle thousand seperator or other
+                    // odd cases like money symbol etc. FIXME
+                    errors.Add(new KeyValuePair<string, string>(colName, "invalid date/time format"));
                 }
             }
             if (drLabel["RequiredValid"].ToString() == "Y" && string.IsNullOrEmpty(val) && !skippedValidation.Contains("RequiredValid") && !skipAllValidation.Contains("RequiredValid"))
@@ -3708,9 +4257,9 @@ namespace RO.Web
             }
             catch { return "ERR!"; }
         }
-        protected byte[] Encrypt(byte[] clearData, byte[] password, byte[] salt)
+        protected byte[] Encrypt(byte[] clearData, byte[] password, byte[] salt, int round = 1000)
         {
-            System.Security.Cryptography.Rfc2898DeriveBytes pdb = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt, 1000);
+            System.Security.Cryptography.Rfc2898DeriveBytes pdb = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt, round);
             System.Security.Cryptography.AesManaged aes = new System.Security.Cryptography.AesManaged();
             aes.Key = pdb.GetBytes(aes.KeySize / 8); pdb.Reset(); aes.IV = pdb.GetBytes(aes.BlockSize / 8);
             using (System.Security.Cryptography.ICryptoTransform enc = aes.CreateEncryptor())
@@ -3723,9 +4272,9 @@ namespace RO.Web
                 return ms.ToArray();
             }
         }
-        protected byte[] Decrypt(byte[] encryptedData, byte[] password, byte[] salt)
+        protected byte[] Decrypt(byte[] encryptedData, byte[] password, byte[] salt, int round = 1000)
         {
-            System.Security.Cryptography.Rfc2898DeriveBytes pdb = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt, 1000);
+            System.Security.Cryptography.Rfc2898DeriveBytes pdb = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt, round);
             System.Security.Cryptography.AesManaged aes = new System.Security.Cryptography.AesManaged();
             aes.Key = pdb.GetBytes(aes.KeySize / 8); pdb.Reset(); aes.IV = pdb.GetBytes(aes.BlockSize / 8);
             using (System.Security.Cryptography.ICryptoTransform enc = aes.CreateDecryptor())
@@ -4056,11 +4605,43 @@ namespace RO.Web
              
                 SerializableDictionary<string, string> result = new SerializableDictionary<string, string>();
                DataTable dtMenu = _GetMenu(LCurr.SystemId, true);
+               
                 ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
                 mr.data = DataTableToListOfObject(dtMenu, false, null);
                 mr.status = "success";
                 mr.errorMsg = "";
                 return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), 0, "R", null));
+            return ret;
+        }
+
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetReactQuickMenu(byte systemId)
+        {
+            Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+            {
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+
+                SerializableDictionary<string, string> result = new SerializableDictionary<string, string>();
+                ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
+                DataTable dtMenu = _GetMenu(LCurr.SystemId, true);
+                if (dtMenu.Rows.Count > 0)
+                {
+                    var reactMenu = dtMenu.AsEnumerable().Where(dr => dr["ReactQuickMenu"].ToString() == "Y");
+                    DataTable dtMenuFiltered = reactMenu.Any() ? reactMenu.CopyToDataTable() : dtMenu.Clone();
+                    mr.data = DataTableToListOfObject(dtMenuFiltered, IncludeBLOB.None, null, null, new List<string>() { "MenuText", "NavigateUrl", "ReactQuickMenu" });
+                    mr.status = "success";
+                    mr.errorMsg = "";
+                    return mr;
+                }
+                else
+                {
+                    mr.status = "failed";
+                    mr.errorMsg = "No quick menu available";
+                    mr.data = null;
+                    return mr;
+                }
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), 0, "R", null));
             return ret;
@@ -4077,9 +4658,32 @@ namespace RO.Web
                 DataTable dt = LoadSystemsList(true);
 
                 ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.data = DataTableToListOfObject(dt, IncludeBLOB.None, null, null, new List<string>() { "SystemAbbr", "Active" });
+                mr.data = DataTableToListOfObject(dt, IncludeBLOB.None, null, null, new List<string>() { "SystemId", "SystemAbbr", "SystemName", "Active" });
                 mr.status = "success";
                 mr.errorMsg = "";
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), 0, "R", null));
+            return ret;
+        }
+
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<SerializableDictionary<string, string>, object> GetServerIdentity()
+        {
+            Func<ApiResponse<SerializableDictionary<string, string>, object>> fn = () =>
+            {
+                string ServerIdentity = System.Configuration.ConfigurationManager.AppSettings["ServerIdentity"];
+
+                ApiResponse<SerializableDictionary<string, string>, object> mr = new ApiResponse<SerializableDictionary<string, string>, object>();
+
+                SerializableDictionary<string, string> result = new SerializableDictionary<string, string>();
+
+                result.Add("serverIdentity", ServerIdentity);
+
+                mr.status = "success";
+                mr.errorMsg = "";
+                mr.data = result;
+
                 return mr;
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), 0, "R", null));
@@ -4271,6 +4875,7 @@ namespace RO.Web
                     if ("HyperLink,ImageButton".IndexOf(drLabel["DisplayName"].ToString()) >= 0
                         && !string.IsNullOrEmpty(drLabel["TableId"].ToString())
                         && drAuth["MasterTable"].ToString() == (isMaster ? "Y" : "N")
+                        && drAuth["ColVisible"].ToString() == "Y"
                         && (drLabel["ColumnName"].ToString() + drLabel["TableId"].ToString()) == screenColumnName)
                     {
                         /* both are technically wrong as there is no info for the underlying tablecolumnname in GetScreenLabel or GetAuthCol 
@@ -4299,7 +4904,7 @@ namespace RO.Web
                     ii = ii + 1;
                 }
                 mr.data = null;
-                mr.status = "failed";
+                mr.status = "unauthorized_access";
                 mr.errorMsg = "access denied";
                 return mr;
             };
@@ -4339,6 +4944,7 @@ namespace RO.Web
                     if (
                         !string.IsNullOrEmpty(drLabel["TableId"].ToString())
                         && drAuth["MasterTable"].ToString() == (isMaster ? "Y" : "N")
+                        && drAuth["ColVisible"].ToString() == "Y"
                         && (drLabel["ColumnName"].ToString() + drLabel["TableId"].ToString()) == refScreenColumnName)
                     {
                         /* both are technically wrong as there is no info for the underlying tablecolumnname in GetScreenLabel or GetAuthCol 
@@ -4395,7 +5001,7 @@ namespace RO.Web
                     ii = ii + 1;
                 }
                 mr.data = null;
-                mr.status = "failed";
+                mr.status = "unauthorized_access";
                 mr.errorMsg = "access denied";
                 return mr;
             };
@@ -4421,6 +5027,7 @@ namespace RO.Web
                     if ("HyperLink,ImageButton".IndexOf(drLabel["DisplayName"].ToString()) >= 0
                         && !string.IsNullOrEmpty(drLabel["TableId"].ToString())
                         && drAuth["MasterTable"].ToString() == (isMaster ? "Y" : "N")
+                        && drAuth["ColVisible"].ToString() == "Y"
                         && (drLabel["ColumnName"].ToString() + drLabel["TableId"].ToString()) == screenColumnName)
                     {
                         /* both are technically wrong as there is no info for the underlying tablecolumnname in GetScreenLabel or GetAuthCol 
@@ -4534,7 +5141,7 @@ namespace RO.Web
 
                 return new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>()
                 {
-                    status = "failed",
+                    status = "unauthorized_access",
                     errorMsg = "access_denied",
                 };
 
@@ -4595,11 +5202,9 @@ namespace RO.Web
 
                 return new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>()
                 {
-                    status = "failed",
+                    status = "unauthorized_access",
                     errorMsg = "access_denied",
                 };
-
-
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), GetScreenId(), "R", screenColumnName));
             return ret;
@@ -4612,11 +5217,12 @@ namespace RO.Web
             {
                 SwitchContext(GetSystemId(), LCurr.CompanyId, LCurr.ProjectId);
                 ValidatedMstId(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "**" + mstId, MatchScreenCriteria(new DataView(_GetScrCriteria(GetScreenId())), null));
+                string tableColumnName = ValidatedColAuth(screenColumnName, isMaster, "Document", null, false);
                 DataTable dtDocList = _GetDocList(isMaster ? mstId : dtlId, screenColumnName);
                 bool hasDoc = (from x in dtDocList.AsEnumerable() where !string.IsNullOrEmpty(docId) && x["DocId"].ToString() == docId select x).Count() > 0;
                 ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
 
-                if (hasDoc)
+                if (hasDoc && !string.IsNullOrEmpty(tableColumnName))
                 {
                     DataTable dt = (new AdminSystem()).GetDbDoc(docId, _GetDocTableName(screenColumnName), LcAppConnString, LcAppPw);
                     mr.data = DataTableToListOfObject(dt, IncludeBLOB.Content);
@@ -4629,7 +5235,7 @@ namespace RO.Web
                     return new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>()
                     {
                         data = null,
-                        status = "failed",
+                        status = "unauthorized_access",
                         errorMsg = "access denied"
                     };
                 }
@@ -4645,7 +5251,21 @@ namespace RO.Web
             {
                 SwitchContext(GetSystemId(), LCurr.CompanyId, LCurr.ProjectId);
                 ValidatedMstId(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "**" + mstId, MatchScreenCriteria(new DataView(_GetScrCriteria(GetScreenId())), null));
+                string tableColumnName = ValidatedColAuth(screenColumnName, isMaster, "Document", null, false);
                 DataTable dt = _GetDocList(isMaster ? mstId : dtlId, screenColumnName);
+                for (int i = dt.Rows.Count; i < dt.Rows.Count; i++)
+                {
+                    DataRow dr = dt.Rows[i];
+                    if (string.IsNullOrEmpty(tableColumnName))
+                        dt.Rows.Remove(dr);
+                    else
+                    {
+                        string url = ResolveUrlCustom(dr["DocLink"].ToString(), false, true);
+                        string securedUrl = GetUrlWithQSHashV2(url);
+                        dr["DocLink"] = securedUrl;
+                    }
+                }
+                dt.AcceptChanges();
                 return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), GetScreenId(), "R", screenColumnName, emptyAutoCompleteResponse), AllowAnonymous());
@@ -4779,6 +5399,7 @@ namespace RO.Web
             bool loadFirst = (options.ContainsKey("FirstOrDefault") && options["FirstOrDefault"] == "Y") || !string.IsNullOrEmpty(mstId);
             bool skipMetaData = options.ContainsKey("SkipMetaData") && options["SkipMetaData"] == "Y";
             bool skipSupportingData = options.ContainsKey("SkipSupportingData") && options["SkipSupportingData"] == "Y";
+            bool skipOnDemandData = options.ContainsKey("SkipOnDemandData") && options["SkipOnDemandData"] == "Y";
             string filterId = options.ContainsKey("FilterId") ? options["FilterId"] : "";
             string filterName = options.ContainsKey("FilterName") ? options["FilterName"] : "";
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y";
@@ -4792,10 +5413,14 @@ namespace RO.Web
                 LoadScreenPageResponse result = skipMetaData ? new LoadScreenPageResponse() : _GetScreenMetaData(!AllowAnonymous());
                 var dtScreenCriteria = _GetScrCriteria(GetScreenId());
                 var FirstOrDefault = LoadFirstOrDefault(dtScreenCriteria, loadFirst, filterId, mstId, topN, currentScreenCriteria);
+                var newMst = InitMaster();
+                var newDtl = InitDtl();
                 result.SearchList = FirstOrDefault.Item1;
                 result.SearchListParam = FirstOrDefault.Item2;
                 result.Mst = FirstOrDefault.Item3;
                 result.Dtl = FirstOrDefault.Item4;
+                result.NewMst = newMst;
+                result.NewDtl = newDtl;
                 result.Ddl = skipSupportingData ? null : _GetScreeDdls(!AllowAnonymous());
                 ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
                 mr.status = "success";
@@ -4805,6 +5430,56 @@ namespace RO.Web
                 return mr;
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), GetScreenId(), "R", null));
+            return ret;
+        }
+
+        [WebMethod(EnableSession = false)]
+        public virtual ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, AutoCompleteResponse>> GetDocZipDownload(string keyId, SerializableDictionary<string, string> options)
+        {
+            byte systemId = GetSystemId();
+            byte dbId = GetDbId();
+            int screenId = GetScreenId();
+            Func<ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+            {
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true);
+                string jsonCri = options.ContainsKey("CurrentScreenCriteria") ? options["CurrentScreenCriteria"] : null;
+                string jsonRequestList = options.ContainsKey("CurrentScreenCriteria") ? options["CurrentScreenCriteria"] : null;
+                string jsonColumnParam = options.ContainsKey("ColumnParam") ? options["ColumnParam"] : null;
+                string zipFileName = options.ContainsKey("ZipFileName") ? options["ZipFileName"] : null;
+                string browserTitle = options.ContainsKey("BrowserTitle") ? options["BrowserTitle"] : "something for browser title";
+
+                ValidatedMstId(GetValidateMstIdSPName(), systemId, screenId, "**" + keyId, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));
+                ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, AutoCompleteResponse>>();
+                SerializableDictionary<string, AutoCompleteResponse> supportingData = new SerializableDictionary<string, AutoCompleteResponse>();
+                SerializableDictionary<string, string> result = new SerializableDictionary<string, string>()
+                {
+                    {"_r","abcde"},
+                    {"_actionUrl",GetExtUrl("~/Dnload.aspx")},
+                    {"title",browserTitle},
+//                    {"base64","actual content in base64"},
+                    {"mimeType","application/zip"},
+                    {"fileName",zipFileName ?? "abcd.zip"},
+                };
+
+                var req = MakeZipAllParam(keyId, jsonColumnParam, zipFileName ?? "abcd.zip");
+                string ZipViaDirectPost = System.Configuration.ConfigurationManager.AppSettings["ZipViaDirectPost"];
+                if (ZipViaDirectPost == "N")
+                {
+                    var f = ZipAllDoc(req);
+                    result["base64"] = f.Item3 == null ? null : Convert.ToBase64String(f.Item3);
+                    result["fileName"] = f.Item1;
+                }
+                else
+                {
+                    result["_r"] = req;
+                }
+
+                mr.data = result;
+                mr.status = "success";
+                mr.errorMsg = "";
+                return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
             return ret;
         }
 

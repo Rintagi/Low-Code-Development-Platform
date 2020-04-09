@@ -161,6 +161,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
                     {
                         foreach (DataRow dr in SystemList.Rows)
                         {
+                            if (dr["Active"].ToString() != "Y") continue;
                             string connStr = Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", dr["dbAppUserId"].ToString());
                             DataTable dtJobs = (new AdminSystem()).GetCronJob(null,string.Empty, connStr
                                 , singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString());

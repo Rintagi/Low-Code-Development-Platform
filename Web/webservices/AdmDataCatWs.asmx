@@ -41,6 +41,7 @@ namespace RO.Web
             columns.Add("RptwizCatName181", typeof(string));
             columns.Add("CatDescription181", typeof(string));
             columns.Add("TableId181", typeof(string));
+            columns.Add("SampleImage181", typeof(string));
             return dt;
         }
 
@@ -155,6 +156,7 @@ namespace RO.Web
             drType["CatDescription181"] = "VarWChar"; drDisp["CatDescription181"] = "MultiLine";
             try { dr["TableId181"] = mst["TableId181"]; } catch { }
             drType["TableId181"] = "Numeric"; drDisp["TableId181"] = "AutoComplete";
+            
 
             if (dtl != null)
             {

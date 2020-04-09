@@ -351,14 +351,31 @@ module.exports = {
         }
         console.log(message);
       },
+      // turn this off to debug and/or hand code AFTER generation, pointless to minify as it is small and used only once, gary
+      // DO NOT minify, it has problem with importScripts, generate buggy version !!! gary
       minify: true,
+      // this doesn't work when file size is too large BUT no warning/message etc.!!!! so main.xxxx.js is not cached
+      // though we don't care as that is only used once, we use cache-control on server header instead to infinity
+      // as these js never changed or they get different name in each build. this is just FYI
+      // we use web.config cache control to cache it FOREVER
+      mergeStaticsConfig: true,
+      staticFileGlobs:['./build/static/js/*.js'],
       // For unknown URLs, fallback to the index page
       navigateFallback: publicUrl + '/index.html',
       // Ignores URLs starting from /__ (useful for Firebase):
       // https://github.com/facebookincubator/create-react-app/issues/2237#issuecomment-302693219
-      navigateFallbackWhitelist: [/^(?!\/__).*/],
+      // gary
+      // freaking bug of the generated service-worker.js
+      // this is used as a 'negate' so it should be whitelist.all() but written as whitelist.some()
+      // which means there can only be ONE negate regex, we use helper/ 
+      // original was /^(?!\\/__).*/
+      // may be /^((?!__).)*$/ to say any __ in the url is whitelisted and don't cache
+      navigateFallbackWhitelist: [/^((?!helper\/).)*$/],
       // Don't precache sourcemaps (they're large) and build asset manifest:
-      staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
+      // used BUILD for search, not runtime url path, should add /index.html/,  !!! gary
+      staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/,/index.html/],
+      // import custom code to service-worker.js, must be under public/(as this is runtime import not build time!!!!)
+      importScripts:['custom-service-worker.js']
     }),
     // Moment.js is an extremely popular library that bundles large locale files
     // by default due to how Webpack interprets its code. This is a practical

@@ -7,8 +7,9 @@ import fixOrientation from 'fix-orientation';
 import { Row, Col, Spinner } from 'reactstrap';
 import { showNotification } from '../../redux/Notification';
 import Skeleton from 'react-skeleton-loader';
-import { formatBytes } from '../../helpers/formatter';
-import { previewContent, uuid } from '../../helpers/utils';
+import { formatBytes, readUrl } from '../../helpers/formatter';
+import { uuid } from '../../helpers/utils';
+import { previewContent } from '../../helpers/domutils';
 import moment from 'moment';
 
 function calcSize(width, height, max_width, max_height, noSwap) {
@@ -115,7 +116,6 @@ function getFile(file, index, options, success, state, setState) {
     // });
     setState({ progress: true });
   }
-
   if (fileType.split('/')[0] === 'image') {
 
     // const _this = this;
@@ -186,7 +186,7 @@ function getFile(file, index, options, success, state, setState) {
       success(index, {
         // file: file,
         fileName: reader.fileName,
-        mimeType: file.type,
+        mimeType: file.type || (reader.fileName.includes('.xls') && 'application/vnd.ms-excel'),
         size: file.size,
         lastModified: file.lastModified,
         base64: stripEmbeddedBase64Prefix(reader.result),
@@ -213,8 +213,14 @@ function getFile(file, index, options, success, state, setState) {
   }
 }
 
-const MAX_FILE_SIZE = 1 * 1024 * 1024;
-const ALLOWED_MIME_TYPE = ['image/png', 'image/jpeg', 'image/gif', 'pdf'];
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const ALLOWED_MIME_TYPE = ['image/png', 'image/jpeg', 'image/gif', 'pdf',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'text/csv',
+  'application/msword',
+  'application/vnd.ms-excel'
+];
 const MAX_ALLOWED = 999999;
 
 class FileInputField extends Component {
@@ -381,7 +387,7 @@ class FileInputField extends Component {
       fileSig: previewSig,
     };
     /* window.open MUST BE DONE here in the click even function or it would be blocked by popup blocker */
-    sessionStorage.setItem("PreviewAttachment", JSON.stringify({ ...dataObj, fileSig: previewSig }));
+    // sessionStorage.setItem("PreviewAttachment", JSON.stringify({ ...dataObj, fileSig: previewSig }));
     const win = (!isIE || isImage) && !download && window.open(envPublicUrl + '/helper/showAttachment.html' + '?fileSig=' + previewSig, '_blank');
     previewContent({
       dataObj: dataObj
@@ -389,7 +395,7 @@ class FileInputField extends Component {
       , winObj: win
       , dataPromise: undefined
       , previewSig: previewSig
-      , containerUrl: envPublicUrl + '/helper/showAttachment.html'
+      , containerUrl: envPublicUrl + '/helper/showAttachment.html' + '?fileSig=' + previewSig
     });
     return;
     const makeDoc = (body) => {
@@ -516,18 +522,44 @@ class FileInputField extends Component {
   }
 
   icon = i => {
-    const mimeType = (this.state.files[i] || {}).mimeType;
+    const mimeType = (this.state.files.sort((a, b) => a.DocId - b.DocId)[i] || {}).mimeType;
 
+    if (mimeType === 'image/png') {
+      return 'fa-file-image-o';
+    }
+    if (mimeType === 'image/jpeg') {
+      return 'fa-file-image-o';
+    }
+    if (mimeType === 'image/gif') {
+      return 'fa-file-image-o';
+    }
     if (mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return 'fa-file-word-o';
+    }
+    if (mimeType === 'application/msword') {
       return 'fa-file-word-o';
     }
     if (mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       return 'fa-file-excel-o';
     }
+    if (mimeType === 'text/csv') {
+      return 'fa-file-excel-o';
+    }
+    if (mimeType === 'application/vnd.ms-excel') {
+      return 'fa-file-excel-o';
+    }
     if (mimeType === 'application/pdf') {
       return 'fa-file-pdf-o';
     }
-    if (mimeType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || 'application/pdf') {
+    if (mimeType !== 'image/png' ||
+      mimeType !== 'image/jpeg' ||
+      mimeType !== 'image/gif' ||
+      mimeType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      mimeType !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+      mimeType !== 'application/pdf' ||
+      mimeType !== 'application/msword' ||
+      mimeType !== 'text/csv' ||
+      mimeType !== 'application/vnd.ms-excel') {
       return 'fa-file-o';
     }
   }
@@ -646,8 +678,11 @@ class FileInputField extends Component {
                         style={{ minWidth: "40px", minHeight: "40px", backgroundImage: 'url(' + addPreviewUrl(obj).previewUrl + ')' }}
                         onClick={(obj || {}).base64 || (obj || {}).icon ? this.previewSelectedFile(i) : this.downloadFile(i)} >
                         {(!(obj || {}).base64 && !(obj || {}).icon) && <Skeleton height="100px" widthRandomness="0" />}
+                        {obj && (obj.mimeType || '').match(/image/) && (!obj.base64 && !obj.icon) &&
+                          <i className={`fa ${this.icon(i)} fs-38 color-green fileUpload-icon`}></i>
+                        }
                         {obj && !(obj.mimeType || '').match(/image/) &&
-                          <i className={`fa ${this.icon(i)} fs-38 color-green`}></i>
+                          <i className={`fa ${this.icon(i)} fs-38 color-green fileUpload-icon`}></i>
                         }
                         {obj && obj.ts && <p className={`dropzone__img-name truncate-inline pb-17 ${this.props.disabled && 'bblr-4'}`}><u>{moment(obj.ts).format('MMM D, YYYY')}</u></p>}
                         {obj && obj.InputOn && <p className={`dropzone__img-name truncate-inline pb-17 ${this.props.disabled && 'bblr-4'}`}><u>{moment(obj.InputOn, moment.ISO_8601).format('MMM D, YYYY')}</u></p>}

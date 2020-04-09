@@ -2473,4 +2473,33 @@ In default.master: replace section.css with the following:
 2. generate signature control for react
 3. lay ground work for context sensitive GetLis and GetDdl SP calls
 4. lay ground work for cross module navigation for react~@~~@~en-US~@~
-11571~@~  11. 133~@~11~@~133~@~~@~~@~~@~~@~~@~~@~
+11571~@~  11. 133.00316~@~11~@~133~@~2020-03-16 00:00:00.000~@~~@~~@~1. pass screenId to GetLis/GetDdl(prepare for function)
+2. add cross system navigation in react~@~~@~en-US~@~
+12571~@~  11. 134.00326~@~11~@~134~@~2020-03-26 00:00:00.000~@~~@~~@~1. add server zipping of multiple document support
+2. add server identity info for react(which server the client is talked to)
+3. add react program change checking capability
+4. improve cronjob to ignore inactive modules
+5. improve auto-gen audit SP for missing cross db namespace and too restrictive length for money etc. fields
+6. better handling of transient network in chrome(different message/type from fetch call)
+7. pass on active flag(if available for autocomplete control) to react client~@~~@~en-US~@~
+12572~@~  11. 135.00327~@~11~@~135~@~2020-03-27 00:00:00.000~@~~@~~@~1. further cleanup of generated audit SP
+2. make multidoc save helper more tolerant
+3. only preview known file type(everything else straight download in react)~@~~@~en-US~@~
+12573~@~  11. 136.00328~@~11~@~136~@~2020-03-28 00:00:00.000~@~~@~~@~1. performance improvement for image and on demand loading for react etc.~@~~@~en-US~@~
+12574~@~  11. 137.00331~@~11~@~137~@~2020-03-31 00:00:00.000~@~~@~~@~1. enhance react download feature
+2. extend generated web service api layer for performance optimization~@~~@~en-US~@~
+12575~@~  11. 138.00401~@~11~@~138~@~2020-04-01 00:00:00.000~@~~@~~@~1. session less doclink/url link creation for web service calls~@~~@~en-US~@~
+12576~@~  11. 139.00402~@~11~@~139~@~2020-04-02 00:00:00.000~@~~@~~@~1. revise screen SP generation to support function as search table, instead of just view
+2. enhance menu system to handle react module usage~@~~@~en-US~@~
+12577~@~  11. 140.00403~@~11~@~140~@~2020-04-03 00:00:00.000~@~~@~~@~1. add proper support for on demand download of image column via protected session less dnload.aspx link
+2. add proper support to generate GetById SP for table value function~@~~@~en-US~@~
+12578~@~  11. 141.00403~@~11~@~141~@~2020-04-03 00:00:00.000~@~~@~~@~1. change menu table structure for react~@~~@~en-US~@~
+12579~@~  11. 142.00404~@~11~@~142~@~2020-04-04 00:00:00.000~@~~@~~@~1. pass FilterText to table value function(used as rintagi table) for optimization usage~@~~@~en-US~@~
+12580~@~  11. 143.00405~@~11~@~143~@~2020-04-05 00:00:00.000~@~~@~~@~1. optimize SP generation(GetScreenLisXProc and GetScreenObjDdlProc) to only do substitution for TVF source
+2. minor fix of compilation warning and safe guard CopyToTable usage in Asmxbase.cs~@~~@~en-US~@~
+12581~@~  11. 144.00407~@~11~@~144~@~2020-04-07 00:00:00.000~@~~@~~@~1. further optimization on metadata client side caching for react
+2. add react bundle version checking(for auto client side upgrade)
+3. revise service worker logic to handle service worker change detection(prepare for future service worker enhancement)~@~~@~en-US~@~
+12582~@~  11. 145.00408~@~11~@~145~@~2020-04-08 00:00:00.000~@~~@~~@~1. minor enhancement to react publish to site feature
+2. manual override of behind proxy detection~@~~@~en-US~@~
+12583~@~  11. 146~@~11~@~146~@~~@~~@~~@~~@~~@~~@~

@@ -149,6 +149,22 @@ export function GetScreenFilter(accessScope) {
         }
     )
 }
+export function GetSearchList(searchStr, topN, filterId, desiredScreenCriteria, accessScope) {
+    return fetchData(baseUrl + '/AdmReportWs.asmx/GetSearchList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    searchStr: searchStr || '',
+                    topN: topN || 0,
+                    filterId: ('' + (filterId || 0)),
+                    desiredScreenCriteria: desiredScreenCriteria || {},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
 export function GetAdmReport67List(searchStr, topN, filterId, accessScope) {
     return fetchData(baseUrl + '/AdmReportWs.asmx/GetAdmReport67List'
         , {
@@ -164,14 +180,13 @@ export function GetAdmReport67List(searchStr, topN, filterId, accessScope) {
         }
     )
 }
-export const GetSearchList = GetAdmReport67List;
-export function GetAdmReport67ById(keyId, accessScope) {
+export function GetAdmReport67ById(keyId, options, accessScope) {
     return fetchData(baseUrl + '/AdmReportWs.asmx/GetAdmReport67ById'
         , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
-                    options: {
+                    options: options || {
                         CurrentScreenCriteria: JSON.stringify({}),
                     },
                 }),
@@ -182,13 +197,13 @@ export function GetAdmReport67ById(keyId, accessScope) {
     )
 }
 export const GetMstById = GetAdmReport67ById;
-export function GetAdmReport67DtlById(keyId, filterId, accessScope) {
+export function GetAdmReport67DtlById(keyId, filterId, options, accessScope) {
     return fetchData(baseUrl + '/AdmReportWs.asmx/GetAdmReport67DtlById'
         , {
             requestOptions: {
                 body: JSON.stringify({
                     keyId: keyId || '',
-                    options: {
+                    options: options || {
                         CurrentScreenCriteria: JSON.stringify({}),
                     },
                     filterId: filterId || 0,
@@ -286,7 +301,7 @@ export function GetColumnContent(mstId, dtlId, columnName, isMaster, screenColum
                     dtlId: dtlId || '',
                     screenColumnName: screenColumnName,
                     columnName: columnName,
-                    isMaster: isMaster,
+                    isMaster: isMaster || false,
                 }),
             },
             ...(getAccessControlInfo()),
@@ -299,7 +314,7 @@ export function GetEmbeddedDoc(mstId, dtlId, isMaster, screenColumnName, accessS
     const reqJson = JSON.stringify({
         mstId: mstId || '',
         dtlId: dtlId || '',
-        isMaster: isMaster,
+        isMaster: isMaster || false,
         columnName: screenColumnName || '',
         screenColumnName: screenColumnName || '',
     });
@@ -318,7 +333,7 @@ export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJ
     const reqJson = JSON.stringify({
         mstId: mstId || '',
         dtlId: dtlId || '',
-        isMaster: isMaster,
+        isMaster: isMaster || false,
         screenColumnName: screenColumnName || '',
         docJson: docJson || '',
         options: options || {},
@@ -352,6 +367,21 @@ export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessSc
         }
     )
 }
+export function GetDocZipDownload(keyId, options, accessScope) {
+    return fetchData(baseUrl + '/AdmReportWs.asmx/GetDocZipDownload'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    keyId: keyId || null,
+                    options: options ||{},
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
 /*screen criteria dll and screen dropdownlist/autocomplete*/
 
 export function GetReportTypeCd22List(query, topN, filterBy, accessScope) {

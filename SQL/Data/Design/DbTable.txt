@@ -17,7 +17,7 @@
 24~@~3~@~ServerRule~@~Adm - Server Rule~@~Y~@~N~@~~@~This table captures all server side rules for all screens.~@~~@~55~@~2016-12-06 13:52:56.113~@~2016-12-06 05:53:21.663
 25~@~3~@~CtRuleType~@~Adm - Rule Type (General)~@~N~@~N~@~~@~This is a code table capturing general server rule type information.~@~~@~55~@~2019-05-31 21:59:05.343~@~
 27~@~5~@~Investor~@~Cmn - Investor Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-02-27 13:41:06.717~@~
-39~@~3~@~Menu~@~Adm - Menu Items~@~Y~@~N~@~~@~This captures the menu information.~@~~@~55~@~2017-03-02 19:57:17.413~@~2017-03-02 11:57:24.700
+39~@~3~@~Menu~@~Adm - Menu Items~@~Y~@~N~@~~@~This captures the menu information.~@~~@~2~@~2020-04-04 00:15:22.750~@~2020-04-03 17:17:15.090
 40~@~3~@~MenuHlp~@~Adm - Menu Items Label~@~Y~@~N~@~~@~This captures the display label of each menu item in its locale.~@~~@~55~@~2011-05-10 14:43:58.750~@~2011-05-10 14:45:52.367
 45~@~3~@~Systems~@~Adm - Systems Particulars~@~N~@~N~@~~@~This captures all systems information for the databases.~@~~@~55~@~2017-03-25 06:46:05.780~@~2017-03-24 23:46:17.410
 52~@~5~@~Customer~@~Cmn - Customer Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-02-27 13:40:33.913~@~

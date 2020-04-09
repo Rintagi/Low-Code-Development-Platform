@@ -1,6 +1,7 @@
 
 import { sidebarReducer } from './SideBar';
 import { authReducer } from './Auth';
+import { rintagiReducer } from './Rintagi';
 import { notificationReducer } from './Notification';
 import { globalReducer } from './Global';
 import { SqlReportReducer } from './SqlReport';
@@ -66,6 +67,7 @@ import AdmWizardObjReduxObj from './AdmWizardObj';
 import AdmWizardRuleReduxObj from './AdmWizardRule';
 export default {
     auth: authReducer,
+    rintagi: rintagiReducer,
     global: globalReducer,
     sidebar: sidebarReducer,
     notification: notificationReducer,

@@ -49,6 +49,11 @@ export default class LoginInfo extends Component {
                                 <i className="fa fa-chevron-down topbar-chevron ml-7"></i>
                             </DropdownToggle>
                             <DropdownMenu className='topbar__menu dropdown__menu'>
+                                <Link className='topbar__link' onClick={this.close} to='/default'>
+                                    <DropdownItem className="topbar-dropdown-item">
+                                        <span className='topbar__link-title'><i className='topbar-icon-small fa fa-folder mr-11 fill-fintrux'></i>{this.props.auth.Label.SystemsList}</span>
+                                    </DropdownItem>
+                                </Link>
                                 <Link className='topbar__link' onClick={this.close} to='/profile'>
                                     <DropdownItem className="topbar-dropdown-item">
                                         <span className='topbar__link-title'><i className='topbar-icon-small fa fa-address-card-o mr-11 fill-fintrux'></i>{this.props.auth.Label.Profile}</span>

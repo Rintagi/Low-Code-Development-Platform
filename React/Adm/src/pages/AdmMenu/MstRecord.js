@@ -144,6 +144,7 @@ class MstRecord extends RintagiScreen {
               lastTS: values.cIconUrl39.ts,
               base64: this.StripEmbeddedBase64Prefix(values.cIconUrl39.base64)
             }) : null,
+          ReactQuickMenu39: values.cReactQuickMenu39 ? 'Y' : 'N',
         },
         [],
         {
@@ -365,6 +366,7 @@ class MstRecord extends RintagiScreen {
         Height: (columnLabel.IconUrl39 || {}).ColumnHeight,
       },
     }
+    const ReactQuickMenu39 = currMst.ReactQuickMenu39;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
@@ -415,6 +417,7 @@ class MstRecord extends RintagiScreen {
                     cStaticPgId39: StaticPgId39List.filter(obj => { return obj.key === StaticPgId39 })[0],
                     cMiscellaneous39: formatContent(Miscellaneous39 || '', 'TextBox'),
                     cIconUrl39: IconUrl39,
+                    cReactQuickMenu39: ReactQuickMenu39 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -749,6 +752,27 @@ class MstRecord extends RintagiScreen {
                                 </Col>
                               }
 
+                              {(authCol.ReactQuickMenu39 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cReactQuickMenu39'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cReactQuickMenu39}
+                                        disabled={(authCol.ReactQuickMenu39 || {}).readonly || !(authCol.ReactQuickMenu39 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.ReactQuickMenu39 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.ReactQuickMenu39 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.ReactQuickMenu39 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ReactQuickMenu39 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>

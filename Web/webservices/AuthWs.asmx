@@ -647,13 +647,28 @@ public partial class AuthWs : AsmxBase
             {
                 var token = GetAuthObject().GetSignedToken(GuidString + emailAddress);
                 string emailCnt = "";
-                DataTable dtEmail = new AdminSystem().RunWrRule(0, "WrGetEmailCnt", LcAppConnString, LcAppPw, string.Format("<Params><templateId>{0}</templateId></Params>", "11"), LImpr, LCurr);
-                string emlSubject = dtEmail.Rows[0]["EmailSubject"].ToString();
-                string emlSenderTitle = dtEmail.Rows[0]["SenderName"].ToString();
-                string emlHtml = dtEmail.Rows[0]["EmailTempCnt"].ToString();
+                string emlSubject = "";
+                string emlSenderTitle = "";
+                string emlHtml = "";
+                string emailTemplateId = System.Configuration.ConfigurationManager.AppSettings["ResetPwdEmailTemp"];
+
+                if (!string.IsNullOrEmpty(emailTemplateId))
+                {
+                    DataTable dtEmail = new AdminSystem().RunWrRule(0, "WrGetEmailCnt", LcAppConnString, LcAppPw, string.Format("<Params><templateId>{0}</templateId></Params>", emailTemplateId), LImpr, LCurr);
+                    emlSubject = dtEmail.Rows[0]["EmailSubject"].ToString();
+                    emlSenderTitle = dtEmail.Rows[0]["SenderName"].ToString();
+                    emlHtml = dtEmail.Rows[0]["EmailTempCnt"].ToString();
+                }
+                else
+                {
+                    emlSubject = "Password Reset Request";
+                    emlSenderTitle = "Customer Support";
+                    emlHtml = "<div>Hi there,</div><br/><br/><div>Please use the following confirmation code to reset your password</div><br/><br/>"
+                            + "<div>[[Token]]</div><br/><br/><div>If you are not aware of such request, please contact customer support ASAP as there may be intruder(s) attempting to break into your account </div>";
+                }
 
                 emailCnt = emlHtml.Replace("[[Token]]", token.Item1);
-                string from = "no-reply@fintrux.com";
+                string from = base.SysCustServEmail(base.LCurr.SystemId) ?? "cs@robocoder.com";
                 base.SendEmail(emlSubject, emailCnt, emailAddress, from, from, emlSenderTitle, true);
                 mr.status = "success";
                 mr.errorMsg = "";

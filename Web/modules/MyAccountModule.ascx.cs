@@ -807,26 +807,6 @@ namespace RO.Web
             return SetLoginUser(usr, redirect, locked, failed, cr,"","");
         }
 
-        /* this is must be in-sync with AsmxBase.cs version */
-        protected RO.Facade3.Auth GetAuthObject()
-        {
-            string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
-            if (string.IsNullOrEmpty(jwtMasterKey))
-            {
-                jwtMasterKey = RO.Facade3.Auth.GenJWTMasterKey();
-                System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"] = jwtMasterKey;
-                Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
-                if (config.AppSettings.Settings["JWTMasterKey"] != null) config.AppSettings.Settings["JWTMasterKey"].Value = jwtMasterKey;
-                else config.AppSettings.Settings.Add("JWTMasterKey", jwtMasterKey);
-                // save to web.config on production, but silently failed. this would remove comments in appsettings 
-                if (Config.DeployType == "PRD") config.Save(ConfigurationSaveMode.Modified);
-            }
-
-            var auth = RO.Facade3.Auth.GetInstance(jwtMasterKey);
-            return auth;
-        }
-
-
         public void SSOLogin(string SelectedLoginName, string ProviderLoginName, string Provider)
         {
             LoginUsr intendedUser = Provider == "SJ" ? LoginByJWTToken(cJWTToken.Text) : null;

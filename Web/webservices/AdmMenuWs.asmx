@@ -45,6 +45,8 @@ namespace RO.Web
             columns.Add("WizardId39", typeof(string));
             columns.Add("StaticPgId39", typeof(string));
             columns.Add("Miscellaneous39", typeof(string));
+            columns.Add("IconUrl39", typeof(string));
+            columns.Add("ReactQuickMenu39", typeof(string));
             return dt;
         }
 
@@ -135,6 +137,9 @@ namespace RO.Web
             drType["StaticPgId39"] = "Numeric"; drDisp["StaticPgId39"] = "AutoComplete";
             try { dr["Miscellaneous39"] = (mst["Miscellaneous39"] ?? "").Trim().Left(1000); } catch { }
             drType["Miscellaneous39"] = "VarChar"; drDisp["Miscellaneous39"] = "TextBox";
+            
+            try { dr["ReactQuickMenu39"] = (mst["ReactQuickMenu39"] ?? "").Trim().Left(1); } catch { }
+            drType["ReactQuickMenu39"] = "Char"; drDisp["ReactQuickMenu39"] = "CheckBox";
 
             if (dtl != null)
             {
@@ -184,6 +189,7 @@ namespace RO.Web
                 {"StaticPgId39",""},
                 {"Miscellaneous39",""},
                 {"IconUrl39",""},
+                {"ReactQuickMenu39",""},
 
             };
             /* AsmxRule: Init Master Table */

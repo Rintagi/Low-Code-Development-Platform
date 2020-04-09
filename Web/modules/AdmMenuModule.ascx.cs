@@ -44,6 +44,7 @@ namespace RO.Common3.Data
 			columns.Add("StaticPgId39", typeof(string));
 			columns.Add("Miscellaneous39", typeof(string));
 			columns.Add("IconUrl39", typeof(string));
+			columns.Add("ReactQuickMenu39", typeof(string));
 			return dt;
 		}
 	}
@@ -547,6 +548,7 @@ namespace RO.Web
 						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[6]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[6]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[7]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[8]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -560,6 +562,7 @@ namespace RO.Web
 						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["WizardId39"].ToString() + (char)9 + drv["WizardId39Text"].ToString() + (char)9);}
 						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["StaticPgId39"].ToString() + (char)9 + drv["StaticPgId39Text"].ToString() + (char)9);}
 						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["Miscellaneous39"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ReactQuickMenu39"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmMenu.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
@@ -617,6 +620,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -635,6 +639,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[6]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[8]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -666,6 +671,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["WizardId39Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["StaticPgId39Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(drv["Miscellaneous39"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(drv["ReactQuickMenu39"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1639,6 +1645,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				SetStaticPgId39(cStaticPgId39,string.Empty);
 				base.SetFoldBehavior(cMiscellaneous39, dtAuth.Rows[8], cMiscellaneous39P1, cMiscellaneous39Label, cMiscellaneous39P2, null, dtLabel.Rows[8], null, null, null);
 				base.SetFoldBehavior(cIconUrl39, dtAuth.Rows[9], cIconUrl39P1, cIconUrl39Label, cIconUrl39P2, cIconUrl39Tgo, cIconUrl39Div, dtLabel.Rows[9], null, null, null);
+				base.SetFoldBehavior(cReactQuickMenu39, dtAuth.Rows[10], cReactQuickMenu39P1, cReactQuickMenu39Label, cReactQuickMenu39P2, null, dtLabel.Rows[10], null, null, null);
 			}
 			if ((cPopup39.Attributes["OnClick"] == null || cPopup39.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cPopup39.Visible && cPopup39.Enabled) {cPopup39.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cParentId39.Attributes["OnChange"] == null || cParentId39.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cParentId39.Visible && !cParentId39.ReadOnly) {cParentId39.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -1653,6 +1660,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (cStaticPgId39Search.Attributes["OnClick"] == null || cStaticPgId39Search.Attributes["OnClick"].IndexOf("_bConfirm") < 0) {cStaticPgId39Search.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';";}
 			if ((cMiscellaneous39.Attributes["OnChange"] == null || cMiscellaneous39.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cMiscellaneous39.Visible && !cMiscellaneous39.ReadOnly) {cMiscellaneous39.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cIconUrl39Div.Attributes["OnChange"] == null || cIconUrl39Div.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cIconUrl39Tgo.Visible) {cIconUrl39Div.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cReactQuickMenu39.Attributes["OnClick"] == null || cReactQuickMenu39.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cReactQuickMenu39.Visible && cReactQuickMenu39.Enabled) {cReactQuickMenu39.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 		}
 
 		private DataTable SetFunctionality(DataTable dt)
@@ -1726,6 +1734,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[7]["ColVisible"].ToString() == "Y" && dt.Rows[7]["ColReadOnly"].ToString() != "Y") {cStaticPgId39.ClearSearch();}
 			if (dt.Rows[8]["ColVisible"].ToString() == "Y" && dt.Rows[8]["ColReadOnly"].ToString() != "Y") {cMiscellaneous39.Text = string.Empty;}
 			if (dt.Rows[9]["ColVisible"].ToString() == "Y" && dt.Rows[9]["ColReadOnly"].ToString() != "Y") {cIconUrl39.ImageUrl = "~/images/DefaultImg.png"; cIconUrl39Div.Text = cIconUrl39.ImageUrl; }
+			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {cReactQuickMenu39.Checked = base.GetBool("N");}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -1741,6 +1750,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cStaticPgId39.ClearSearch();
 			cMiscellaneous39.Text = string.Empty;
 			cIconUrl39.ImageUrl = "~/images/DefaultImg.png"; cIconUrl39Div.Text = cIconUrl39.ImageUrl;
+			cReactQuickMenu39.Checked = base.GetBool("N");
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 		protected void cAdmMenu35List_TextChanged(object sender, System.EventArgs e)
@@ -1784,6 +1794,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cMiscellaneous39.Text = dr["Miscellaneous39"].ToString();} catch {cMiscellaneous39.Text = string.Empty;}
 					try { cIconUrl39.ImageUrl = RO.Common3.Utils.AddTilde(GetUrlWithQSHash(dr["IconUrl39"].ToString()));	cIconUrl39Div.Text = cIconUrl39.ImageUrl; cIconUrl39_Click(sender, new ImageClickEventArgs(0, 0)); }
 					catch { cIconUrl39.ImageUrl = string.Empty; }
+					try {cReactQuickMenu39.Checked = base.GetBool(dr["ReactQuickMenu39"].ToString());} catch {cReactQuickMenu39.Checked = false;}
 				}
 			}
 			cButPanel.DataBind();
@@ -2101,6 +2112,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["Miscellaneous39"] = "VarChar"; drDisp["Miscellaneous39"] = "TextBox";
 			try {dr["IconUrl39"] = Utils.StripTilde(cIconUrl39Div.Text, true);} catch {}
 			drType["IconUrl39"] = "VarWChar"; drDisp["IconUrl39"] = "TextBox";
+			try {dr["ReactQuickMenu39"] = base.SetBool(cReactQuickMenu39.Checked);} catch {}
+			drType["ReactQuickMenu39"] = "Char"; drDisp["ReactQuickMenu39"] = "CheckBox";
 			if (bAdd)
 			{
 			}

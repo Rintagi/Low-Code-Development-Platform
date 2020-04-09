@@ -106,11 +106,11 @@
 320~@~AdmDbTable [  260] Main Info: ColumnScale (en-US)~@~428~@~1~@~Decimal~@~This is the number of decimal places for the decimal data type.~@~~@~
 323~@~AdmDbTable [   20] Main Info: SystemId (en-US)~@~430~@~1~@~Database~@~This is the database this table is located.~@~Please select the database this table is located.~@~
 324~@~AdmMenu [   10] Main Info: MenuId (en-US)~@~431~@~1~@~ID~@~This is the internal ID uniquely represents this menu item.~@~~@~
-325~@~AdmMenu [   20] Main Info: ParentId (en-US)~@~432~@~1~@~Parent Item~@~This is the parent of this menu item.~@~~@~
-326~@~AdmMenu [   30] Main Info: MenuIndex (en-US)~@~433~@~1~@~Order~@~This is an integer tab index order between 0 - 9999 with an interval of 10 starting at 10.~@~Please enter an integer tab index order between 0 - 9999 with an interval of 10 starting at 10.~@~
-328~@~AdmMenu [   40] Main Info: ScreenId (en-US)~@~435~@~1~@~Screen~@~This is the screen this menu item should invoke, if applicable.~@~~@~
-329~@~AdmMenu [   50] Main Info: ReportId (en-US)~@~436~@~1~@~Report~@~This is the report this menu item should invoke, if applicable.~@~~@~
-330~@~AdmMenu [   80] Main Info: Miscellaneous (en-US)~@~437~@~1~@~Miscellaneous~@~This is the custom program or http:/https:/file:/mailto: this menu item should invoke, if applicable. Enclosing it with "javascript:window.open('')" will open new tab.~@~~@~
+325~@~AdmMenu [   30] Main Info: ParentId (en-US)~@~432~@~1~@~Parent Item~@~This is the parent of this menu item.~@~~@~
+326~@~AdmMenu [   40] Main Info: MenuIndex (en-US)~@~433~@~1~@~Order~@~This is an integer tab index order between 0 - 9999 with an interval of 10 starting at 10.~@~Please enter an integer tab index order between 0 - 9999 with an interval of 10 starting at 10.~@~
+328~@~AdmMenu [   50] Main Info: ScreenId (en-US)~@~435~@~1~@~Screen~@~This is the screen this menu item should invoke, if applicable.~@~~@~
+329~@~AdmMenu [   60] Main Info: ReportId (en-US)~@~436~@~1~@~Report~@~This is the report this menu item should invoke, if applicable.~@~~@~
+330~@~AdmMenu [   90] Main Info: Miscellaneous (en-US)~@~437~@~1~@~Miscellaneous~@~This is the custom program or http:/https:/file:/mailto: this menu item should invoke, if applicable. Enclosing it with "javascript:window.open('')" will open new tab.~@~~@~
 339~@~AdmMenuHlp [   20] Main Info: MenuHlpId (en-US)~@~447~@~1~@~Menu Label ID~@~This is the internal ID representing this culture specific menu label.~@~~@~
 340~@~AdmMenuHlp [   30] Main Info: CultureId (en-US)~@~448~@~1~@~Culture~@~This is the culture for this label.~@~Please select the culture for this label.~@~
 342~@~AdmMenuHlp [   40] Main Info: MenuText (en-US)~@~450~@~1~@~Menu Label~@~This is the unique label in the selected cultural language for this menu item.~@~Please enter a unique label in the selected cultural language for this menu item.~@~
@@ -153,7 +153,7 @@
 729~@~AdmMenuPerm [   20] Main Info: MenuPrmId (en-US)~@~831~@~1~@~Permission Id~@~This is the internal ID uniquely representing this menu permission.~@~~@~
 731~@~AdmMenuPerm [   40] Main Info: PermKeyId (en-US)~@~833~@~1~@~Entity Type~@~This is the entity type being granted or denied access to this menu item.~@~Please select the entity type to be granted or denied access to this menu item.~@~
 736~@~AdmMenuPerm [   30] Main Info: GrantDeny (en-US)~@~838~@~1~@~Grant/Deny~@~Keep all rows empty if everyone should has access to this menu item.~@~Please select if everyone should have access to this menu item.~@~
-737~@~AdmMenu [   60] Main Info: WizardId (en-US)~@~839~@~1~@~Wizard~@~This is the import wizard this menu item should invoke, if applicable.~@~~@~
+737~@~AdmMenu [   70] Main Info: WizardId (en-US)~@~839~@~1~@~Wizard~@~This is the import wizard this menu item should invoke, if applicable.~@~~@~
 738~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (en-US)~@~840~@~1~@~Filter ID~@~This is the internal ID unqiuely identifies this screen filter.~@~~@~
 739~@~AdmScreenFilter [   20] Main Info: ScreenId (en-US)~@~841~@~1~@~Screen~@~This is the screen this filter applies.~@~Please select the screen this filter applies.~@~
 740~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (en-US)~@~842~@~1~@~Filter Name~@~This is the unique name representing this filter clause.~@~Please enter a unique name to represent this filter clause.~@~
@@ -452,10 +452,10 @@
 1448~@~AdmCtDisplayType [   30] Main Info: TypeDesc (zh-CN)~@~420~@~4~@~描述型~@~这说明这个展览.~@~请进入这一展示说明.~@~
 1449~@~AdmCtDisplayType [   40] Main Info: DisplayDefault (zh-CN)~@~421~@~4~@~展示违约~@~如果这是检查显示器违约.~@~~@~
 1451~@~AdmDbTable [   20] Main Info: SystemId (zh-CN)~@~430~@~4~@~数据库~@~这是这个数据库表所在.~@~这是这个数据库表所在.~@~
-1453~@~AdmMenu [   20] Main Info: ParentId (zh-CN)~@~432~@~4~@~父母项目~@~这是父母这一项目菜单.~@~~@~
-1456~@~AdmMenu [   40] Main Info: ScreenId (zh-CN)~@~435~@~4~@~屏幕~@~这是本屏幕菜单项目引用,如果适用.~@~~@~
-1457~@~AdmMenu [   50] Main Info: ReportId (zh-CN)~@~436~@~4~@~报告~@~这是该报告援引这一菜单项目,如果适用.~@~~@~
-1458~@~AdmMenu [   80] Main Info: Miscellaneous (zh-CN)~@~437~@~4~@~杂~@~这是风俗节目或http:/https:/file:/mailto:这应该援引菜单项目,如果适用.~@~~@~
+1453~@~AdmMenu [   30] Main Info: ParentId (zh-CN)~@~432~@~4~@~父母项目~@~这是父母这一项目菜单.~@~~@~
+1456~@~AdmMenu [   50] Main Info: ScreenId (zh-CN)~@~435~@~4~@~屏幕~@~这是本屏幕菜单项目引用,如果适用.~@~~@~
+1457~@~AdmMenu [   60] Main Info: ReportId (zh-CN)~@~436~@~4~@~报告~@~这是该报告援引这一菜单项目,如果适用.~@~~@~
+1458~@~AdmMenu [   90] Main Info: Miscellaneous (zh-CN)~@~437~@~4~@~杂~@~这是风俗节目或http:/https:/file:/mailto:这应该援引菜单项目,如果适用.~@~~@~
 1459~@~AdmMenuHlp [   20] Main Info: MenuHlpId (zh-CN)~@~447~@~4~@~菜单标签身份证~@~这是本文化内部的身分,代表特定菜单标签.~@~~@~
 1461~@~AdmMenuHlp [   40] Main Info: MenuText (zh-CN)~@~450~@~4~@~菜单标签~@~这是独特的语言文化标签选中这个菜单项.~@~进入一个独特的标签,请选中此菜单语言文化项目.~@~
 1464~@~AdmUsr [   70] Main Info: DefSystemId (zh-CN)~@~497~@~4~@~违约制度~@~这是该系统登录后展示.~@~这是该系统登录后展示.~@~
@@ -489,7 +489,7 @@
 1496~@~AdmScreenTab [   80] Main Info: TabFolderName (zh-CN)~@~722~@~4~@~统计表名称~@~统计表显示,这是在其家乡的名字.~@~请进入统计表现场展示其姓名.~@~
 1498~@~AdmMenuPerm [   10] Main Info: MenuId (zh-CN)~@~820~@~4~@~菜单编号~@~这是菜单项目设置许可.~@~~@~
 1499~@~AdmMenuPerm [   20] Main Info: MenuPrmId (zh-CN)~@~831~@~4~@~MenuPrm身份证~@~这是内部的身分,代表这一独特菜单许可.~@~~@~
-1506~@~AdmMenu [   60] Main Info: WizardId (zh-CN)~@~839~@~4~@~男巫~@~这是这个菜单项应该引用觋进口,如果适用.~@~~@~
+1506~@~AdmMenu [   70] Main Info: WizardId (zh-CN)~@~839~@~4~@~男巫~@~这是这个菜单项应该引用觋进口,如果适用.~@~~@~
 1507~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (zh-CN)~@~840~@~4~@~过滤身分~@~这是内部编号unqiuely过滤筛选确定本.~@~~@~
 1508~@~AdmScreenFilter [   20] Main Info: ScreenId (zh-CN)~@~841~@~4~@~屏幕~@~这是这个过滤筛适用.~@~这是这个过滤筛适用.~@~
 1509~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (zh-CN)~@~842~@~4~@~滤波器名称~@~这是代表这个独一无二的名字第过滤.~@~请进入这个独特的名字,代表第过滤.~@~
@@ -751,10 +751,10 @@
 1966~@~AdmCtDisplayType [   30] Main Info: TypeDesc (fr-FR)~@~420~@~2~@~Dactylographier la description~@~C'est la description de cet affichage.~@~Veuillez écrire la description de cet affichage.~@~
 1967~@~AdmCtDisplayType [   40] Main Info: DisplayDefault (fr-FR)~@~421~@~2~@~Défaut d'affichage~@~Ceci est vérifié si cet affichage est défaut.~@~~@~
 1969~@~AdmDbTable [   20] Main Info: SystemId (fr-FR)~@~430~@~2~@~Base de données~@~C'est la base de données que cette table est localisée.~@~C'est la base de données que cette table est localisée.~@~
-1971~@~AdmMenu [   20] Main Info: ParentId (fr-FR)~@~432~@~2~@~Article de parent~@~C'est le parent de cet article de menu.~@~~@~
-1974~@~AdmMenu [   40] Main Info: ScreenId (fr-FR)~@~435~@~2~@~Écran~@~C'est l'écran que cet article de menu devrait appeler, si c'est approprié.~@~~@~
-1975~@~AdmMenu [   50] Main Info: ReportId (fr-FR)~@~436~@~2~@~Rapport~@~C'est le rapport que cet article de menu devrait appeler, si c'est approprié.~@~~@~
-1976~@~AdmMenu [   80] Main Info: Miscellaneous (fr-FR)~@~437~@~2~@~Divers~@~C'est le programme personnalisé ou http:/https:/file:/mailto : cet article de menu devrait appeler, si c'est approprié.~@~~@~
+1971~@~AdmMenu [   30] Main Info: ParentId (fr-FR)~@~432~@~2~@~Article de parent~@~C'est le parent de cet article de menu.~@~~@~
+1974~@~AdmMenu [   50] Main Info: ScreenId (fr-FR)~@~435~@~2~@~Écran~@~C'est l'écran que cet article de menu devrait appeler, si c'est approprié.~@~~@~
+1975~@~AdmMenu [   60] Main Info: ReportId (fr-FR)~@~436~@~2~@~Rapport~@~C'est le rapport que cet article de menu devrait appeler, si c'est approprié.~@~~@~
+1976~@~AdmMenu [   90] Main Info: Miscellaneous (fr-FR)~@~437~@~2~@~Divers~@~C'est le programme personnalisé ou http:/https:/file:/mailto : cet article de menu devrait appeler, si c'est approprié.~@~~@~
 1977~@~AdmMenuHlp [   20] Main Info: MenuHlpId (fr-FR)~@~447~@~2~@~Identification d'étiquette de menu~@~C'est l'identification interne représentant cette étiquette spécifique de menu de culture.~@~~@~
 1979~@~AdmMenuHlp [   40] Main Info: MenuText (fr-FR)~@~450~@~2~@~Étiquette de menu~@~C'est l'étiquette unique dans la langue culturelle choisie pour cet article de menu.~@~Veuillez écrire une étiquette unique dans la langue culturelle choisie pour cet article de menu.~@~
 1982~@~AdmUsr [   70] Main Info: DefSystemId (fr-FR)~@~497~@~2~@~Système de défaut~@~C'est le système à montrer après ouverture.~@~C'est le système à montrer après ouverture.~@~
@@ -788,7 +788,7 @@
 2014~@~AdmScreenTab [   80] Main Info: TabFolderName (fr-FR)~@~722~@~2~@~Nom d'étiquette~@~C'est le nom d'affichage d'étiquette dans son lieu.~@~Veuillez écrire le nom d'affichage d'étiquette dans son lieu.~@~
 2016~@~AdmMenuPerm [   10] Main Info: MenuId (fr-FR)~@~820~@~2~@~Identification de menu~@~C'est l'article de menu pour l'arrangement de permission.~@~~@~
 2017~@~AdmMenuPerm [   20] Main Info: MenuPrmId (fr-FR)~@~831~@~2~@~Identification de MenuPrm~@~C'est l'identification interne représentant uniquement cette permission de menu.~@~~@~
-2024~@~AdmMenu [   60] Main Info: WizardId (fr-FR)~@~839~@~2~@~Magicien~@~C'est le magicien d'importation que cet article de menu devrait appeler, si c'est approprié.~@~~@~
+2024~@~AdmMenu [   70] Main Info: WizardId (fr-FR)~@~839~@~2~@~Magicien~@~C'est le magicien d'importation que cet article de menu devrait appeler, si c'est approprié.~@~~@~
 2025~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (fr-FR)~@~840~@~2~@~Identification de filtre~@~C'est l'identification interne identifie unqiuely ce filtre d'écran.~@~~@~
 2026~@~AdmScreenFilter [   20] Main Info: ScreenId (fr-FR)~@~841~@~2~@~Écran~@~C'est l'écran que ce filtre applique.~@~C'est l'écran que ce filtre applique.~@~
 2027~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (fr-FR)~@~842~@~2~@~Nom de filtre~@~C'est le nom unique représentant cette clause de filtre.~@~Veuillez écrire un nom unique pour représenter cette clause de filtre.~@~
@@ -1946,10 +1946,10 @@
 3730~@~AdmCtDisplayType [   30] Main Info: TypeDesc (hi-IN)~@~420~@~8~@~प्रकार वर्णन~@~यह इस प्रदर्शन का वर्णन है.~@~कृपया इस प्रदर्शन का विवरण दर्ज करें.~@~
 3731~@~AdmCtDisplayType [   40] Main Info: DisplayDefault (hi-IN)~@~421~@~8~@~प्रदर्शन डिफ़ॉल्ट~@~इस जाँच की अगर इस प्रदर्शन डिफ़ॉल्ट है.~@~~@~
 3733~@~AdmDbTable [   20] Main Info: SystemId (hi-IN)~@~430~@~8~@~डेटाबेस~@~इस डाटाबेस में इस मेज पर स्थित है.~@~कृपया इस डेटाबेस तालिका स्थित है का चयन करें.~@~
-3735~@~AdmMenu [   20] Main Info: ParentId (hi-IN)~@~432~@~8~@~माता पिता के आइटम~@~यह इस मेनू आइटम के माता पिता है.~@~~@~
-3738~@~AdmMenu [   40] Main Info: ScreenId (hi-IN)~@~435~@~8~@~परदा~@~इस स्क्रीन इस मेनू मद को लागू करना चाहिए, यदि लागू है.~@~~@~
-3739~@~AdmMenu [   50] Main Info: ReportId (hi-IN)~@~436~@~8~@~रिपोर्ट~@~यह रिपोर्ट इस मेनू मद को लागू करना चाहिए, यदि लागू है.~@~~@~
-3740~@~AdmMenu [   80] Main Info: Miscellaneous (hi-IN)~@~437~@~8~@~विविध~@~यह कस्टम प्रोग्राम या http:/https:/file:/mailto है: इस मेनू आइटम का नारा, यदि लागू हो जाना चाहिए.~@~~@~
+3735~@~AdmMenu [   30] Main Info: ParentId (hi-IN)~@~432~@~8~@~माता पिता के आइटम~@~यह इस मेनू आइटम के माता पिता है.~@~~@~
+3738~@~AdmMenu [   50] Main Info: ScreenId (hi-IN)~@~435~@~8~@~परदा~@~इस स्क्रीन इस मेनू मद को लागू करना चाहिए, यदि लागू है.~@~~@~
+3739~@~AdmMenu [   60] Main Info: ReportId (hi-IN)~@~436~@~8~@~रिपोर्ट~@~यह रिपोर्ट इस मेनू मद को लागू करना चाहिए, यदि लागू है.~@~~@~
+3740~@~AdmMenu [   90] Main Info: Miscellaneous (hi-IN)~@~437~@~8~@~विविध~@~यह कस्टम प्रोग्राम या http:/https:/file:/mailto है: इस मेनू आइटम का नारा, यदि लागू हो जाना चाहिए.~@~~@~
 3741~@~AdmMenuHlp [   20] Main Info: MenuHlpId (hi-IN)~@~447~@~8~@~मेनू लेबल आईडी~@~यह आंतरिक इस संस्कृति को विशिष्ट मेनू लेबल का प्रतिनिधित्व आईडी है.~@~~@~
 3743~@~AdmMenuHlp [   40] Main Info: MenuText (hi-IN)~@~450~@~8~@~मेनू लेबल~@~यह इस मेनू आइटम के लिए चयनित सांस्कृतिक भाषा में अद्वितीय लेबल है.~@~कृपया इस मेनू आइटम के लिए चयनित सांस्कृतिक भाषा में एक अद्वितीय लेबल दर्ज करें.~@~
 3746~@~AdmUsr [   70] Main Info: DefSystemId (hi-IN)~@~497~@~8~@~डिफ़ॉल्ट सिस्टम~@~इस प्रणाली में प्रवेश के बाद प्रदर्शन है.~@~कृपया प्रणाली में प्रवेश के बाद प्रदर्शन का चयन करें.~@~
@@ -1986,7 +1986,7 @@
 3780~@~AdmMenuPerm [   20] Main Info: MenuPrmId (hi-IN)~@~831~@~8~@~अनुमति आईडी~@~यह आंतरिक विशिष्ट इस मेनू का प्रतिनिधित्व करने की अनुमति आईडी.~@~~@~
 3781~@~AdmMenuPerm [   40] Main Info: PermKeyId (hi-IN)~@~833~@~8~@~इकाई प्रकार~@~इस इकाई दिया जा रहा है या प्रकार से वंचित इस मेनू मद में पहुँच रहा है.~@~कृपया इकाई प्रकार से या प्रदान की इस मेनू आइटम का उपयोग करने से वंचित होने का चयन करें.~@~
 3782~@~AdmMenuPerm [   30] Main Info: GrantDeny (hi-IN)~@~838~@~8~@~अनुदान मना /~@~सभी पंक्तियाँ रख खाली अगर हर कोई इस मेनू आइटम के लिए उपयोग किया जाना चाहिए.~@~कृपया चुनें अगर हर कोई इस मेनू आइटम के लिए उपयोग किया जाना चाहिए.~@~
-3783~@~AdmMenu [   60] Main Info: WizardId (hi-IN)~@~839~@~8~@~जादूगर~@~यह आयात है इस मेनू आइटम चाहिए आह्वान जादूगर, यदि लागू हो.~@~~@~
+3783~@~AdmMenu [   70] Main Info: WizardId (hi-IN)~@~839~@~8~@~जादूगर~@~यह आयात है इस मेनू आइटम चाहिए आह्वान जादूगर, यदि लागू हो.~@~~@~
 3784~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (hi-IN)~@~840~@~8~@~फ़िल्टर आईडी~@~यह आंतरिक आईडी unqiuely इस स्क्रीन को दिखाता है फिल्टर है.~@~~@~
 3785~@~AdmScreenFilter [   20] Main Info: ScreenId (hi-IN)~@~841~@~8~@~परदा~@~इस स्क्रीन इस फिल्टर लागू होता है.~@~कृपया स्क्रीन इस फिल्टर लागू होता है का चयन करें.~@~
 3786~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (hi-IN)~@~842~@~8~@~फ़िल्टर नाम~@~इस अनूठी इस फिल्टर खंड का प्रतिनिधित्व करने का नाम है.~@~कृपया एक अनन्य नाम दर्ज करें इस फिल्टर खंड प्रतिनिधित्व करते हैं.~@~
@@ -2495,10 +2495,10 @@
 4476~@~AdmCtDisplayType [   30] Main Info: TypeDesc (pt-BR)~@~420~@~9~@~Descrição do tipo~@~Esta é a descrição desta tela.~@~Por favor, digite a descrição desta tela.~@~
 4477~@~AdmCtDisplayType [   40] Main Info: DisplayDefault (pt-BR)~@~421~@~9~@~Apresentação por Omissão~@~Isso é verificado se este monitor é padrão.~@~~@~
 4479~@~AdmDbTable [   20] Main Info: SystemId (pt-BR)~@~430~@~9~@~Banco de dados~@~Este é o banco de dados esta tabela está localizado.~@~Por favor, selecione o banco esta tabela está localizado.~@~
-4481~@~AdmMenu [   20] Main Info: ParentId (pt-BR)~@~432~@~9~@~Item pai~@~Este é o pai deste item de menu.~@~~@~
-4484~@~AdmMenu [   40] Main Info: ScreenId (pt-BR)~@~435~@~9~@~Tela~@~Esta é a tela deste item de menu deve invocar, se aplicável.~@~~@~
-4485~@~AdmMenu [   50] Main Info: ReportId (pt-BR)~@~436~@~9~@~Relatório~@~Este é o relatório deste item de menu deve invocar, se aplicável.~@~~@~
-4486~@~AdmMenu [   80] Main Info: Miscellaneous (pt-BR)~@~437~@~9~@~Diverso~@~Este é o programa personalizado ou http:/https:/file:/mailto: este item de menu deve invocar, se aplicável. Encerrando-o com "javascript: window.open ('')" vai abrir nova guia.~@~~@~
+4481~@~AdmMenu [   30] Main Info: ParentId (pt-BR)~@~432~@~9~@~Item pai~@~Este é o pai deste item de menu.~@~~@~
+4484~@~AdmMenu [   50] Main Info: ScreenId (pt-BR)~@~435~@~9~@~Tela~@~Esta é a tela deste item de menu deve invocar, se aplicável.~@~~@~
+4485~@~AdmMenu [   60] Main Info: ReportId (pt-BR)~@~436~@~9~@~Relatório~@~Este é o relatório deste item de menu deve invocar, se aplicável.~@~~@~
+4486~@~AdmMenu [   90] Main Info: Miscellaneous (pt-BR)~@~437~@~9~@~Diverso~@~Este é o programa personalizado ou http:/https:/file:/mailto: este item de menu deve invocar, se aplicável. Encerrando-o com "javascript: window.open ('')" vai abrir nova guia.~@~~@~
 4488~@~AdmMenuHlp [   20] Main Info: MenuHlpId (pt-BR)~@~447~@~9~@~ID rótulo de menu~@~Esta é a identificação interna que representa essa cultura rótulo de menu específico.~@~~@~
 4490~@~AdmMenuHlp [   40] Main Info: MenuText (pt-BR)~@~450~@~9~@~Etiqueta de menu~@~Este é o rótulo original no idioma selecionado cultural para este item de menu.~@~Por favor, insira um rótulo exclusivo no idioma selecionado cultural para este item de menu.~@~
 4492~@~AdmUsr [   70] Main Info: DefSystemId (pt-BR)~@~497~@~9~@~Sistema padrão~@~Este é o sistema para mostrar após o login.~@~Selecione o sistema para mostrar após o login.~@~
@@ -2535,7 +2535,7 @@
 4526~@~AdmMenuPerm [   20] Main Info: MenuPrmId (pt-BR)~@~831~@~9~@~Id permissão~@~Esta é a identificação interna exclusiva que representa essa permissão menu.~@~~@~
 4527~@~AdmMenuPerm [   40] Main Info: PermKeyId (pt-BR)~@~833~@~9~@~Tipo de entidade~@~Este é o tipo de entidade a ser concedido ou negado o acesso a este item do menu.~@~Por favor, selecione o tipo de entidade a ser concedido ou negado o acesso a este item do menu.~@~
 4528~@~AdmMenuPerm [   30] Main Info: GrantDeny (pt-BR)~@~838~@~9~@~Grant / Deny~@~Manter todas as linhas em branco se todos devem ter acesso a este item do menu.~@~Por favor, selecione se todos devem ter acesso a este item do menu.~@~
-4529~@~AdmMenu [   60] Main Info: WizardId (pt-BR)~@~839~@~9~@~Feiticeiro~@~Este é o assistente de importação este item de menu deve invocar, se aplicável.~@~~@~
+4529~@~AdmMenu [   70] Main Info: WizardId (pt-BR)~@~839~@~9~@~Feiticeiro~@~Este é o assistente de importação este item de menu deve invocar, se aplicável.~@~~@~
 4530~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (pt-BR)~@~840~@~9~@~Filtro de ID~@~Esta é a identificação interna unqiuely identifica este filtro tela.~@~~@~
 4531~@~AdmScreenFilter [   20] Main Info: ScreenId (pt-BR)~@~841~@~9~@~Tela~@~Esta é a tela deste filtro se aplica.~@~Por favor, selecione a tela deste filtro se aplica.~@~
 4532~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (pt-BR)~@~842~@~9~@~Nome do filtro~@~Este é o nome exclusivo que representa esta cláusula de filtro.~@~Por favor, insira um nome exclusivo para representar esta cláusula de filtro.~@~
@@ -3250,10 +3250,10 @@
 5507~@~AdmCtDisplayType [   30] Main Info: TypeDesc (tr-TR)~@~420~@~11~@~Tür Açıklama~@~Bu ekran açıklamasıdır.~@~Bu ekran açıklama giriniz.~@~
 5508~@~AdmCtDisplayType [   40] Main Info: DisplayDefault (tr-TR)~@~421~@~11~@~Varsayılan Görünüm~@~Bu ekran varsayılan ise bu kontrol edilir.~@~~@~
 5510~@~AdmDbTable [   20] Main Info: SystemId (tr-TR)~@~430~@~11~@~Veritabanı~@~Bu tabloda yer alan veritabanı.~@~Lütfen bu tabloda yer alan Veri Tabanı seçin.~@~
-5512~@~AdmMenu [   20] Main Info: ParentId (tr-TR)~@~432~@~11~@~Veli Öğe~@~Bu, bu menü öğesi ana.~@~~@~
-5515~@~AdmMenu [   40] Main Info: ScreenId (tr-TR)~@~435~@~11~@~Ekran~@~Bu, eğer varsa, bu menü öğesi çağırmak ekran.~@~~@~
-5516~@~AdmMenu [   50] Main Info: ReportId (tr-TR)~@~436~@~11~@~Rapor~@~Bu rapor varsa bu menü öğesi, çağırmak gerekir.~@~~@~
-5517~@~AdmMenu [   80] Main Info: Miscellaneous (tr-TR)~@~437~@~11~@~Çeşitli~@~Bu, özel bir program ya da http:/https:/file:/mailto: varsa bu menü öğesi, çağırmak gerekir. "Javascript: window.open ('')" çevreleyen yeni bir sekme açılacaktır.~@~~@~
+5512~@~AdmMenu [   30] Main Info: ParentId (tr-TR)~@~432~@~11~@~Veli Öğe~@~Bu, bu menü öğesi ana.~@~~@~
+5515~@~AdmMenu [   50] Main Info: ScreenId (tr-TR)~@~435~@~11~@~Ekran~@~Bu, eğer varsa, bu menü öğesi çağırmak ekran.~@~~@~
+5516~@~AdmMenu [   60] Main Info: ReportId (tr-TR)~@~436~@~11~@~Rapor~@~Bu rapor varsa bu menü öğesi, çağırmak gerekir.~@~~@~
+5517~@~AdmMenu [   90] Main Info: Miscellaneous (tr-TR)~@~437~@~11~@~Çeşitli~@~Bu, özel bir program ya da http:/https:/file:/mailto: varsa bu menü öğesi, çağırmak gerekir. "Javascript: window.open ('')" çevreleyen yeni bir sekme açılacaktır.~@~~@~
 5518~@~AdmMenuHlp [   20] Main Info: MenuHlpId (tr-TR)~@~447~@~11~@~Menü Label ID~@~Bu, bu kültürü belirli bir menü etiket temsil eden iç kimliğidir.~@~~@~
 5520~@~AdmMenuHlp [   40] Main Info: MenuText (tr-TR)~@~450~@~11~@~Menü Etiket~@~Bu, bu menü öğesi için seçilen kültür dili benzersiz bir etikettir.~@~Lütfen bu menü öğesi için seçilen kültür dili eşsiz bir etiket girin.~@~
 5523~@~AdmUsr [   70] Main Info: DefSystemId (tr-TR)~@~497~@~11~@~Default System~@~Bu giriş yaptıktan sonra görüntülemek için bir sistemdir.~@~Lütfen giriş yaptıktan sonra görüntülemek için sistemini seçin.~@~
@@ -3290,7 +3290,7 @@
 5557~@~AdmMenuPerm [   20] Main Info: MenuPrmId (tr-TR)~@~831~@~11~@~İzin Kimliği~@~Bu benzersiz Bu menü izni temsil eden iç kimliğidir.~@~~@~
 5558~@~AdmMenuPerm [   40] Main Info: PermKeyId (tr-TR)~@~833~@~11~@~Varlık Türü~@~Bu menü öğesi erişim izni verilen veya reddedilen varlık türüdür.~@~Lütfen verilen veya bu menü öğesi erişim engellendi varlık türünü seçin.~@~
 5559~@~AdmMenuPerm [   30] Main Info: GrantDeny (tr-TR)~@~838~@~11~@~Reddet / Hibe~@~Herkes bu menü öğesi erişim gerekiyorsa tüm satırları boş tutun.~@~Lütfen seçin eğer herkes bu menü öğesi erişimi olmalıdır.~@~
-5560~@~AdmMenu [   60] Main Info: WizardId (tr-TR)~@~839~@~11~@~Sihirbaz~@~Bu ithalat sihirbaz varsa bu menü öğesi, çağırmak gerekir.~@~~@~
+5560~@~AdmMenu [   70] Main Info: WizardId (tr-TR)~@~839~@~11~@~Sihirbaz~@~Bu ithalat sihirbaz varsa bu menü öğesi, çağırmak gerekir.~@~~@~
 5561~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (tr-TR)~@~840~@~11~@~Filtre ID~@~Bu iç kimliği unqiuely bu ekran filtresi tanımlar.~@~~@~
 5562~@~AdmScreenFilter [   20] Main Info: ScreenId (tr-TR)~@~841~@~11~@~Ekran~@~Bu, bu filtre geçerli olan ekran.~@~Lütfen bu filtre geçerli olan ekran seçin.~@~
 5563~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (tr-TR)~@~842~@~11~@~Filtre Adı~@~Bu filtre maddesi temsil eden benzersiz bir ad.~@~Lütfen bu filtre maddesini temsil etmek için benzersiz bir ad girin.~@~
@@ -3867,10 +3867,10 @@
 6333~@~AdmCtDisplayType [   30] Main Info: TypeDesc (ja-JP)~@~420~@~14~@~タイプ説明~@~これは、この画面の説明です。~@~この表示の説明を入力してください。~@~
 6334~@~AdmCtDisplayType [   40] Main Info: DisplayDefault (ja-JP)~@~421~@~14~@~デフォルトを表示します。~@~この表示がデフォルトの場合、これがチェックされます。~@~~@~
 6336~@~AdmDbTable [   20] Main Info: SystemId (ja-JP)~@~430~@~14~@~データベース~@~これは、このテーブルが配置されているデータベースです。~@~このテーブルが配置されているデータベースを選択してください。~@~
-6338~@~AdmMenu [   20] Main Info: ParentId (ja-JP)~@~432~@~14~@~親アイテム~@~これは、このメニュー項目の親です。~@~~@~
-6341~@~AdmMenu [   40] Main Info: ScreenId (ja-JP)~@~435~@~14~@~スクリーン~@~これが該当する場合、このメニュー項目が起動するはずの画面です。~@~~@~
-6342~@~AdmMenu [   50] Main Info: ReportId (ja-JP)~@~436~@~14~@~レポート~@~これは、レポート該当する場合は、このメニュー項目は、起動するはずです。~@~~@~
-6343~@~AdmMenu [   80] Main Info: Miscellaneous (ja-JP)~@~437~@~14~@~その他~@~これにより、カスタムプログラムまたはhttp:/https:/file:/mailtoです：該当する場合は、このメニュー項目は、呼び出す必要があります。 "javascriptでそれを囲む：window.openの('')"は、新しいタブを開きます。~@~~@~
+6338~@~AdmMenu [   30] Main Info: ParentId (ja-JP)~@~432~@~14~@~親アイテム~@~これは、このメニュー項目の親です。~@~~@~
+6341~@~AdmMenu [   50] Main Info: ScreenId (ja-JP)~@~435~@~14~@~スクリーン~@~これが該当する場合、このメニュー項目が起動するはずの画面です。~@~~@~
+6342~@~AdmMenu [   60] Main Info: ReportId (ja-JP)~@~436~@~14~@~レポート~@~これは、レポート該当する場合は、このメニュー項目は、起動するはずです。~@~~@~
+6343~@~AdmMenu [   90] Main Info: Miscellaneous (ja-JP)~@~437~@~14~@~その他~@~これにより、カスタムプログラムまたはhttp:/https:/file:/mailtoです：該当する場合は、このメニュー項目は、呼び出す必要があります。 "javascriptでそれを囲む：window.openの('')"は、新しいタブを開きます。~@~~@~
 6345~@~AdmMenuHlp [   20] Main Info: MenuHlpId (ja-JP)~@~447~@~14~@~メニューのラベルのID~@~これは、この文化固有のメニューのラベルを表す内部IDです。~@~~@~
 6347~@~AdmMenuHlp [   40] Main Info: MenuText (ja-JP)~@~450~@~14~@~メニューラベル~@~これは、このメニュー項目の選択された文化的な言語のユニークなラベルです。~@~このメニュー項目の選択された文化的な言語で一意のラベルを入力してください。~@~
 6349~@~AdmUsr [   70] Main Info: DefSystemId (ja-JP)~@~497~@~14~@~デフォルトのシステム~@~これはログインの後に表示するシステムです。~@~ログインの後に表示するシステムを選択してください。~@~
@@ -3907,7 +3907,7 @@
 6383~@~AdmMenuPerm [   20] Main Info: MenuPrmId (ja-JP)~@~831~@~14~@~許可ID]が~@~これは、一意にこのメニューのアクセス権を表す内部IDです。~@~~@~
 6384~@~AdmMenuPerm [   40] Main Info: PermKeyId (ja-JP)~@~833~@~14~@~エンティティのタイプ~@~これは、このメニュー項目へのアクセスを許可または拒否されるエンティティの型です。~@~このメニュー項目へのアクセスを許可または拒否されるエンティティの種類を選択してください。~@~
 6385~@~AdmMenuPerm [   30] Main Info: GrantDeny (ja-JP)~@~838~@~14~@~拒否/付与~@~誰もがこのメニュー項目へのアクセス権を持っているかどうかすべての行を空にしておく。~@~誰もがこのメニュー項目へのアクセスを与える必要がある場合は選択してください。~@~
-6386~@~AdmMenu [   60] Main Info: WizardId (ja-JP)~@~839~@~14~@~ウィザード~@~これは、インポートウィザード該当する場合は、このメニュー項目は、起動するはずです。~@~~@~
+6386~@~AdmMenu [   70] Main Info: WizardId (ja-JP)~@~839~@~14~@~ウィザード~@~これは、インポートウィザード該当する場合は、このメニュー項目は、起動するはずです。~@~~@~
 6387~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (ja-JP)~@~840~@~14~@~フィルタID~@~これは、内部​​IDはunqiuelyこの画面のフィルタを識別です。~@~~@~
 6388~@~AdmScreenFilter [   20] Main Info: ScreenId (ja-JP)~@~841~@~14~@~スクリーン~@~これは、このフィルタが適用される画面です。~@~このフィルタが適用される画面を選択してください。~@~
 6389~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (ja-JP)~@~842~@~14~@~フィルタ名~@~これは、このフィルタ句を表す一意の名前です。~@~このフィルタ句を表現するために一意の名前を入力してください。~@~
@@ -4484,10 +4484,10 @@
 7159~@~AdmCtDisplayType [   30] Main Info: TypeDesc (ru-RU)~@~420~@~12~@~Тип Описание~@~Это описание этого показа.~@~Пожалуйста, введите описание этого показа.~@~
 7160~@~AdmCtDisplayType [   40] Main Info: DisplayDefault (ru-RU)~@~421~@~12~@~Показать умолчанию~@~Это проверяется, если этот дисплей по умолчанию.~@~~@~
 7162~@~AdmDbTable [   20] Main Info: SystemId (ru-RU)~@~430~@~12~@~База данных~@~Это база данных этой таблицы находится.~@~Пожалуйста, выберите базу данных этой таблицы находится.~@~
-7164~@~AdmMenu [   20] Main Info: ParentId (ru-RU)~@~432~@~12~@~Родитель Пункт~@~Это родителя этого пункта меню.~@~~@~
-7167~@~AdmMenu [   40] Main Info: ScreenId (ru-RU)~@~435~@~12~@~Экран~@~Это экран, этот пункт меню должны ссылаться, если применимо.~@~~@~
-7168~@~AdmMenu [   50] Main Info: ReportId (ru-RU)~@~436~@~12~@~Отчет~@~Это докладе этот пункт меню должны ссылаться, если применимо.~@~~@~
-7169~@~AdmMenu [   80] Main Info: Miscellaneous (ru-RU)~@~437~@~12~@~Разнообразный~@~Это пользовательские программы или http:/https:/file:/mailto: этот пункт меню должны ссылаться, если применимо. Заключение его с "JavaScript: window.open ('')" откроет новую вкладку.~@~~@~
+7164~@~AdmMenu [   30] Main Info: ParentId (ru-RU)~@~432~@~12~@~Родитель Пункт~@~Это родителя этого пункта меню.~@~~@~
+7167~@~AdmMenu [   50] Main Info: ScreenId (ru-RU)~@~435~@~12~@~Экран~@~Это экран, этот пункт меню должны ссылаться, если применимо.~@~~@~
+7168~@~AdmMenu [   60] Main Info: ReportId (ru-RU)~@~436~@~12~@~Отчет~@~Это докладе этот пункт меню должны ссылаться, если применимо.~@~~@~
+7169~@~AdmMenu [   90] Main Info: Miscellaneous (ru-RU)~@~437~@~12~@~Разнообразный~@~Это пользовательские программы или http:/https:/file:/mailto: этот пункт меню должны ссылаться, если применимо. Заключение его с "JavaScript: window.open ('')" откроет новую вкладку.~@~~@~
 7171~@~AdmMenuHlp [   20] Main Info: MenuHlpId (ru-RU)~@~447~@~12~@~ID метки меню~@~Это внутренний идентификатор представляющие эту культуру определенной меткой меню.~@~~@~
 7173~@~AdmMenuHlp [   40] Main Info: MenuText (ru-RU)~@~450~@~12~@~Меню этикетки~@~Это уникальные метки в отдельных культурных язык для данного пункта меню.~@~Пожалуйста, введите уникальную метку в отдельных культурных язык для данного пункта меню.~@~
 7175~@~AdmUsr [   70] Main Info: DefSystemId (ru-RU)~@~497~@~12~@~Системы по умолчанию~@~Это система для показа после Войти.~@~Пожалуйста, выберите систему для отображения после Войти.~@~
@@ -4524,7 +4524,7 @@
 7209~@~AdmMenuPerm [   20] Main Info: MenuPrmId (ru-RU)~@~831~@~12~@~Разрешение Id~@~Это внутренний идентификатор однозначно представляющие этом меню разрешения.~@~~@~
 7210~@~AdmMenuPerm [   40] Main Info: PermKeyId (ru-RU)~@~833~@~12~@~Тип объекта~@~Это тип сущности быть разрешен или запрещен доступ к этому пункту меню.~@~Пожалуйста, выберите тип объекта, чтобы быть разрешен или запрещен доступ к этому пункту меню.~@~
 7211~@~AdmMenuPerm [   30] Main Info: GrantDeny (ru-RU)~@~838~@~12~@~Грант / Deny~@~Держите все строки пустые, если все должны имеет доступ к этому пункту меню.~@~Пожалуйста, выберите, если каждый человек должен иметь доступ к этому пункту меню.~@~
-7212~@~AdmMenu [   60] Main Info: WizardId (ru-RU)~@~839~@~12~@~Мастер~@~Это мастер импорта данного пункта меню должны ссылаться, если применимо.~@~~@~
+7212~@~AdmMenu [   70] Main Info: WizardId (ru-RU)~@~839~@~12~@~Мастер~@~Это мастер импорта данного пункта меню должны ссылаться, если применимо.~@~~@~
 7213~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (ru-RU)~@~840~@~12~@~Фильтра ID~@~Это внутренний идентификатор unqiuely идентифицирует этот сетчатый фильтр.~@~~@~
 7214~@~AdmScreenFilter [   20] Main Info: ScreenId (ru-RU)~@~841~@~12~@~Экран~@~Это экран этот фильтр применяется.~@~Пожалуйста, выберите экран этот фильтр применяется.~@~
 7215~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (ru-RU)~@~842~@~12~@~Имя фильтра~@~Это уникальное имя, представляющий этот фильтр пункта.~@~Пожалуйста, введите уникальное имя для представления этого предложения фильтра.~@~
@@ -5101,10 +5101,10 @@
 7985~@~AdmCtDisplayType [   30] Main Info: TypeDesc (es-ES)~@~420~@~13~@~Descripción del tipo de~@~Esta es la descripción de esta pantalla.~@~Por favor, introduzca la descripción de esta pantalla.~@~
 7986~@~AdmCtDisplayType [   40] Main Info: DisplayDefault (es-ES)~@~421~@~13~@~Mostrado por Defecto~@~Esto se comprueba si esta pantalla es el predeterminado.~@~~@~
 7988~@~AdmDbTable [   20] Main Info: SystemId (es-ES)~@~430~@~13~@~Base de datos~@~Esta es la base de datos se encuentra esta tabla.~@~Por favor, seleccione la base de datos se encuentra esta tabla.~@~
-7990~@~AdmMenu [   20] Main Info: ParentId (es-ES)~@~432~@~13~@~Padres artículo~@~Este es el padre de este elemento del menú.~@~~@~
-7993~@~AdmMenu [   40] Main Info: ScreenId (es-ES)~@~435~@~13~@~Pantalla~@~Esta es la pantalla de este elemento de menú debe invocar, en su caso.~@~~@~
-7994~@~AdmMenu [   50] Main Info: ReportId (es-ES)~@~436~@~13~@~Informe~@~Este es el informe de este elemento de menú debe invocar, en su caso.~@~~@~
-7995~@~AdmMenu [   80] Main Info: Miscellaneous (es-ES)~@~437~@~13~@~Misceláneo~@~Este es el programa personalizado o http:/https:/file:/mailto: este elemento de menú debe invocar, en su caso. Rodeándolo con "javascript: window.open ('')" se abrirá una nueva pestaña.~@~~@~
+7990~@~AdmMenu [   30] Main Info: ParentId (es-ES)~@~432~@~13~@~Padres artículo~@~Este es el padre de este elemento del menú.~@~~@~
+7993~@~AdmMenu [   50] Main Info: ScreenId (es-ES)~@~435~@~13~@~Pantalla~@~Esta es la pantalla de este elemento de menú debe invocar, en su caso.~@~~@~
+7994~@~AdmMenu [   60] Main Info: ReportId (es-ES)~@~436~@~13~@~Informe~@~Este es el informe de este elemento de menú debe invocar, en su caso.~@~~@~
+7995~@~AdmMenu [   90] Main Info: Miscellaneous (es-ES)~@~437~@~13~@~Misceláneo~@~Este es el programa personalizado o http:/https:/file:/mailto: este elemento de menú debe invocar, en su caso. Rodeándolo con "javascript: window.open ('')" se abrirá una nueva pestaña.~@~~@~
 7997~@~AdmMenuHlp [   20] Main Info: MenuHlpId (es-ES)~@~447~@~13~@~Menú de identificación de etiquetas~@~Este es el ID interno que representa esta etiqueta cultura menú específico.~@~~@~
 7999~@~AdmMenuHlp [   40] Main Info: MenuText (es-ES)~@~450~@~13~@~Menú de etiquetas~@~Esta es la única etiqueta en el idioma seleccionado culturales para este elemento del menú.~@~Por favor, introduzca una etiqueta única en el idioma seleccionado culturales para este elemento del menú.~@~
 8001~@~AdmUsr [   70] Main Info: DefSystemId (es-ES)~@~497~@~13~@~Por defecto del sistema~@~Este es el sistema de pantalla después de iniciar sesión.~@~Seleccione el sistema de pantalla después de iniciar sesión.~@~
@@ -5141,7 +5141,7 @@
 8035~@~AdmMenuPerm [   20] Main Info: MenuPrmId (es-ES)~@~831~@~13~@~Permiso Id~@~Este es el ID interno único que representa este permiso menú.~@~~@~
 8036~@~AdmMenuPerm [   40] Main Info: PermKeyId (es-ES)~@~833~@~13~@~Tipo de entidad~@~Este es el tipo de entidad concede o niega el acceso a este elemento de menú.~@~Por favor, seleccione el tipo de entidad que se concede o deniega el acceso a este elemento de menú.~@~
 8037~@~AdmMenuPerm [   30] Main Info: GrantDeny (es-ES)~@~838~@~13~@~La concesión / denegación~@~Mantenga todas las filas vacías, si todo el mundo debe tiene acceso a este elemento de menú.~@~Por favor, seleccione si todo el mundo debería tener acceso a este elemento de menú.~@~
-8038~@~AdmMenu [   60] Main Info: WizardId (es-ES)~@~839~@~13~@~Mago~@~Este es el asistente de importación de este elemento de menú debe invocar, en su caso.~@~~@~
+8038~@~AdmMenu [   70] Main Info: WizardId (es-ES)~@~839~@~13~@~Mago~@~Este es el asistente de importación de este elemento de menú debe invocar, en su caso.~@~~@~
 8039~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (es-ES)~@~840~@~13~@~Filtro de Id.~@~Este es el ID interno unqiuely identifica este filtro de pantalla.~@~~@~
 8040~@~AdmScreenFilter [   20] Main Info: ScreenId (es-ES)~@~841~@~13~@~Pantalla~@~Esta es la pantalla de este filtro se aplica.~@~Por favor, seleccione la pantalla de este filtro se aplica.~@~
 8041~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (es-ES)~@~842~@~13~@~Nombre del filtro~@~Este es el nombre único que representa esta cláusula de filtro.~@~Por favor, introduzca un nombre único para representar a esta cláusula de filtro.~@~
@@ -5689,15 +5689,15 @@
 8795~@~AdmLabel [   50] Main Info: LabelText (en-US)~@~1970~@~1~@~Label Text~@~Enter your desired custom label text.~@~Please enter your desired custom label text.~@~
 8796~@~AdmLabel [   60] Main Info: CompanyId (en-US)~@~1971~@~1~@~Company~@~Select the only company this label can access if this is important.~@~~@~
 8797~@~AdmLabel [   70] Main Info: SortOrder (en-US)~@~1972~@~1~@~Sort Order~@~Enter a sort order within the above category if this is important.~@~~@~
-8798~@~AdmMenu [   90] Main Info: IconUrl (en-US)~@~1973~@~1~@~Icon Url~@~This is the icon representing this menu item, if applicable.~@~~@~
-8799~@~AdmMenu [   90] Main Info: IconUrl (fr-FR)~@~1973~@~2~@~URL de l'icône~@~C'est l'icône représentant cet élément de menu, le cas échéant.~@~~@~
-8800~@~AdmMenu [   90] Main Info: IconUrl (zh-CN)~@~1973~@~4~@~图标网址~@~这是该图标表示该菜单项，如适用。~@~~@~
-8801~@~AdmMenu [   90] Main Info: IconUrl (hi-IN)~@~1973~@~8~@~आइकन URL~@~यह इस मेनू आइटम का प्रतिनिधित्व चिह्न है, यदि लागू हो.~@~~@~
-8802~@~AdmMenu [   90] Main Info: IconUrl (pt-BR)~@~1973~@~9~@~Ícone da URL~@~Este é o ícone que representa este item de menu, se aplicável.~@~~@~
-8803~@~AdmMenu [   90] Main Info: IconUrl (tr-TR)~@~1973~@~11~@~Simge URL~@~Bu, eğer varsa, bu menü öğesi temsil eden simge.~@~~@~
-8804~@~AdmMenu [   90] Main Info: IconUrl (ru-RU)~@~1973~@~12~@~Иконка URL~@~Это значок, представляющий этот пункт меню, если это применимо.~@~~@~
-8805~@~AdmMenu [   90] Main Info: IconUrl (es-ES)~@~1973~@~13~@~Icono de URL~@~Este es el icono que representa este elemento de menú, en su caso.~@~~@~
-8806~@~AdmMenu [   90] Main Info: IconUrl (ja-JP)~@~1973~@~14~@~アイコンのURL~@~これが該当する場合、このメニュー項目を表すアイコンです。~@~~@~
+8798~@~AdmMenu [  100] Main Info: IconUrl (en-US)~@~1973~@~1~@~Icon Url~@~This is the icon representing this menu item, if applicable.~@~~@~
+8799~@~AdmMenu [  100] Main Info: IconUrl (fr-FR)~@~1973~@~2~@~URL de l'icône~@~C'est l'icône représentant cet élément de menu, le cas échéant.~@~~@~
+8800~@~AdmMenu [  100] Main Info: IconUrl (zh-CN)~@~1973~@~4~@~图标网址~@~这是该图标表示该菜单项，如适用。~@~~@~
+8801~@~AdmMenu [  100] Main Info: IconUrl (hi-IN)~@~1973~@~8~@~आइकन URL~@~यह इस मेनू आइटम का प्रतिनिधित्व चिह्न है, यदि लागू हो.~@~~@~
+8802~@~AdmMenu [  100] Main Info: IconUrl (pt-BR)~@~1973~@~9~@~Ícone da URL~@~Este é o ícone que representa este item de menu, se aplicável.~@~~@~
+8803~@~AdmMenu [  100] Main Info: IconUrl (tr-TR)~@~1973~@~11~@~Simge URL~@~Bu, eğer varsa, bu menü öğesi temsil eden simge.~@~~@~
+8804~@~AdmMenu [  100] Main Info: IconUrl (ru-RU)~@~1973~@~12~@~Иконка URL~@~Это значок, представляющий этот пункт меню, если это применимо.~@~~@~
+8805~@~AdmMenu [  100] Main Info: IconUrl (es-ES)~@~1973~@~13~@~Icono de URL~@~Este es el icono que representa este elemento de menú, en su caso.~@~~@~
+8806~@~AdmMenu [  100] Main Info: IconUrl (ja-JP)~@~1973~@~14~@~アイコンのURL~@~これが該当する場合、このメニュー項目を表すアイコンです。~@~~@~
 8825~@~AdmTbdRule [   10] Main Info: TbdRuleId (en-US)~@~1976~@~1~@~Tbd Rule ID~@~This ID uniquely identifies this to be done rule.~@~~@~
 8826~@~AdmTbdRule [   20] Main Info: ScreenId (en-US)~@~1977~@~1~@~Screen~@~This is the screen this rule should apply to.~@~Please select the screen this rule should apply to.~@~
 8827~@~AdmTbdRule [   30] Main Info: TbdRuleName (en-US)~@~1978~@~1~@~Rule Name~@~This is the short description representing this rule.~@~Please enter a short description for this rule.~@~
@@ -5705,7 +5705,7 @@
 8830~@~AdmRowOvrd [  100] Main Info: AndCondition (en-US)~@~1981~@~1~@~Condition~@~This is the And/Or condition for this permission key override.~@~Please select the And/Or condition for this permission key override.~@~
 8831~@~AdmScreenObj [  100] Main Info: IgnoreConfirm (en-US)~@~1982~@~1~@~Ignore Confirm~@~Uncheck this to prompt the tooltips to confirm the postback action or not.~@~~@~
 8836~@~AdmMenu [   10] Main Info: MenuId (zh-CN)~@~431~@~4~@~编号~@~这是内部ID的唯一代表该菜单项。~@~~@~
-8837~@~AdmMenu [   30] Main Info: MenuIndex (zh-CN)~@~433~@~4~@~秩序~@~这是一个整数标签索引顺序从0  -  9999间隔10 10时开始。~@~请输入一个整数标签索引顺序从0  -  9999间隔10 10时开始。~@~
+8837~@~AdmMenu [   40] Main Info: MenuIndex (zh-CN)~@~433~@~4~@~秩序~@~这是一个整数标签索引顺序从0  -  9999间隔10 10时开始。~@~请输入一个整数标签索引顺序从0  -  9999间隔10 10时开始。~@~
 8838~@~AdmScreen [  180] Main Info: GenerateSc (zh-CN)~@~1247~@~4~@~产生信贷挂钩票据~@~取消选中此，如果暂时没有客户端程序应产生这种屏幕。~@~~@~
 8840~@~AdmWebRule [   70] Main Info: ButtonTypeId (zh-CN)~@~1288~@~4~@~系统按钮~@~这是系统的按钮适用于本网站规则，如果适用。~@~~@~
 8841~@~AdmRptWiz [  120] Main Info: RptwizCatImg (zh-CN)~@~1654~@~4~@~Report Layout Example~@~这是选定的数据类别的图案描述。~@~~@~
@@ -5738,15 +5738,15 @@
 8880~@~AdmStaticPg [  100] Style: StaticPgCss (en-US)~@~1995~@~1~@~~@~This is the cascade style sheet for this static page.~@~~@~
 8881~@~AdmStaticPg [   90] HTML: StaticPgHtm (en-US)~@~1996~@~1~@~~@~This is the HTML codes for this static page; all text enclosed by "[=[" and "]]" will be replaced by auto-generated keys and inserted into custom label for translation.~@~Please enter the HTML codes for this static page; all text enclosed by "[=[" and "]]" will be replaced by auto-generated keys and inserted into custom label for translation.~@~
 8882~@~AdmStaticPg [   40] Main Info: MasterPgFile (en-US)~@~1997~@~1~@~Master Page File~@~This is the master page file used for this static page, if available.~@~~@~
-8883~@~AdmMenu [   70] Main Info: StaticPgId (en-US)~@~1998~@~1~@~Static Page~@~This is the statisc page this menu item should invoke, if applicable.~@~~@~
-8884~@~AdmMenu [   70] Main Info: StaticPgId (fr-FR)~@~1998~@~2~@~Magicien~@~C'est le magicien d'importation que cet article de menu devrait appeler, si c'est approprié.~@~~@~
-8885~@~AdmMenu [   70] Main Info: StaticPgId (zh-CN)~@~1998~@~4~@~男巫~@~这是这个菜单项应该引用觋进口,如果适用.~@~~@~
-8886~@~AdmMenu [   70] Main Info: StaticPgId (hi-IN)~@~1998~@~8~@~जादूगर~@~यह आयात है इस मेनू आइटम चाहिए आह्वान जादूगर, यदि लागू हो.~@~~@~
-8887~@~AdmMenu [   70] Main Info: StaticPgId (pt-BR)~@~1998~@~9~@~Feiticeiro~@~Este é o assistente de importação este item de menu deve invocar, se aplicável.~@~~@~
-8888~@~AdmMenu [   70] Main Info: StaticPgId (tr-TR)~@~1998~@~11~@~Sihirbaz~@~Bu ithalat sihirbaz varsa bu menü öğesi, çağırmak gerekir.~@~~@~
-8889~@~AdmMenu [   70] Main Info: StaticPgId (ru-RU)~@~1998~@~12~@~Мастер~@~Это мастер импорта данного пункта меню должны ссылаться, если применимо.~@~~@~
-8890~@~AdmMenu [   70] Main Info: StaticPgId (es-ES)~@~1998~@~13~@~Mago~@~Este es el asistente de importación de este elemento de menú debe invocar, en su caso.~@~~@~
-8891~@~AdmMenu [   70] Main Info: StaticPgId (ja-JP)~@~1998~@~14~@~ウィザード~@~これは、インポートウィザード該当する場合は、このメニュー項目は、起動するはずです。~@~~@~
+8883~@~AdmMenu [   80] Main Info: StaticPgId (en-US)~@~1998~@~1~@~Static Page~@~This is the statisc page this menu item should invoke, if applicable.~@~~@~
+8884~@~AdmMenu [   80] Main Info: StaticPgId (fr-FR)~@~1998~@~2~@~Magicien~@~C'est le magicien d'importation que cet article de menu devrait appeler, si c'est approprié.~@~~@~
+8885~@~AdmMenu [   80] Main Info: StaticPgId (zh-CN)~@~1998~@~4~@~男巫~@~这是这个菜单项应该引用觋进口,如果适用.~@~~@~
+8886~@~AdmMenu [   80] Main Info: StaticPgId (hi-IN)~@~1998~@~8~@~जादूगर~@~यह आयात है इस मेनू आइटम चाहिए आह्वान जादूगर, यदि लागू हो.~@~~@~
+8887~@~AdmMenu [   80] Main Info: StaticPgId (pt-BR)~@~1998~@~9~@~Feiticeiro~@~Este é o assistente de importação este item de menu deve invocar, se aplicável.~@~~@~
+8888~@~AdmMenu [   80] Main Info: StaticPgId (tr-TR)~@~1998~@~11~@~Sihirbaz~@~Bu ithalat sihirbaz varsa bu menü öğesi, çağırmak gerekir.~@~~@~
+8889~@~AdmMenu [   80] Main Info: StaticPgId (ru-RU)~@~1998~@~12~@~Мастер~@~Это мастер импорта данного пункта меню должны ссылаться, если применимо.~@~~@~
+8890~@~AdmMenu [   80] Main Info: StaticPgId (es-ES)~@~1998~@~13~@~Mago~@~Este es el asistente de importación de este elemento de menú debe invocar, en su caso.~@~~@~
+8891~@~AdmMenu [   80] Main Info: StaticPgId (ja-JP)~@~1998~@~14~@~ウィザード~@~これは、インポートウィザード該当する場合は、このメニュー項目は、起動するはずです。~@~~@~
 8892~@~AdmScreenObj [  230] Main Info: DisplayDesc (en-US)~@~1999~@~1~@~~@~This is the detail display description.~@~~@~
 8893~@~AdmClnTier [  120] Main Info: CombineAsm (en-US)~@~2000~@~1~@~Combine Assemblies~@~This is checked to combine assemblies provided performace is the highest concern and minor upgrade is infrequent.~@~~@~
 8894~@~AdmClnTier [  120] Main Info: CombineAsm (fr-FR)~@~2000~@~2~@~Est la valeur par défaut~@~Cela est vérifié si c'est le client par défaut de niveau à utiliser.~@~~@~
@@ -5897,7 +5897,7 @@
 10100~@~AdmScreenObj [  250] Main Info: DdlRefColumnId (fr-FR)~@~83~@~2~@~Colonne de référence~@~Le cas échéant, il s'agit de la colonne d'affichage DropDown, ComboBox RadioButton, ListBox ou une référence à un article précédent que tirer vers le haut; C'est à la culture (lecture seule) d'espèces~@~~@~
 10101~@~AdmDbTable [  260] Main Info: ColumnScale (fr-FR)~@~428~@~2~@~Décimal~@~C'est le nombre de décimales pour le type de données decimal.~@~~@~
 10102~@~AdmMenu [   10] Main Info: MenuId (fr-FR)~@~431~@~2~@~ID~@~Il s'agit de l'ID interne représente uniquement cet élément de menu.~@~~@~
-10103~@~AdmMenu [   30] Main Info: MenuIndex (fr-FR)~@~433~@~2~@~Ordre~@~Il s'agit d'un ordre de tabulation entier indice entre 0 à 9999, avec un intervalle de 10 à 10.~@~S'il vous plaît entrer un ordre de tabulation entier indice entre 0 à 9999, avec un intervalle de 10 à 10.~@~
+10103~@~AdmMenu [   40] Main Info: MenuIndex (fr-FR)~@~433~@~2~@~Ordre~@~Il s'agit d'un ordre de tabulation entier indice entre 0 à 9999, avec un intervalle de 10 à 10.~@~S'il vous plaît entrer un ordre de tabulation entier indice entre 0 à 9999, avec un intervalle de 10 à 10.~@~
 10104~@~AdmScreenCri [   90] Main Info: RequiredValid (fr-FR)~@~1187~@~2~@~Exiger de validation~@~Lorsqu'elle est cochée, ce critère devient obligatoire. Dans une liste déroulante, etc, si les lignes extraites est inférieur au total, il est réputé manadatory indépendamment.~@~~@~
 10105~@~AdmScreenObj [   40] Main Info: ColumnWrap (fr-FR)~@~1203~@~2~@~Wrap contenu~@~Décochez la case si aucune synthèse est requis pour le contenu.~@~~@~
 10107~@~AdmScreen [  180] Main Info: GenerateSc (fr-FR)~@~1247~@~2~@~Générer CLN~@~Décochez cette option si aucun programme client temporaire doit être généré pour cet écran.~@~~@~
@@ -6077,11 +6077,11 @@
 10313~@~AdmDbTable [  260] Main Info: ColumnScale (de-DE)~@~428~@~68~@~Dezimal~@~Dies ist die Anzahl der Nachkommastellen für die decimal-Datentyp.~@~~@~
 10314~@~AdmDbTable [   20] Main Info: SystemId (de-DE)~@~430~@~68~@~Datenbank~@~Dies ist die Datenbank die Tabelle befindet.~@~Wählen Sie die Datenbank Tabelle befindet.~@~
 10315~@~AdmMenu [   10] Main Info: MenuId (de-DE)~@~431~@~68~@~Identifikation~@~Dies ist die interne ID eindeutig repräsentiert diesen Menüpunkt.~@~~@~
-10316~@~AdmMenu [   20] Main Info: ParentId (de-DE)~@~432~@~68~@~Übergeordneter Artikel~@~Dies ist die Muttergesellschaft von diesem Menüpunkt.~@~~@~
-10317~@~AdmMenu [   30] Main Info: MenuIndex (de-DE)~@~433~@~68~@~Bestellen~@~Dies ist ein Integer Registerkarte Index um zwischen 0 - 9999 mit einem Intervall von 10 ab 10.~@~Bitte geben Sie eine ganze Zahl Registerkarte Index-Reihenfolge zwischen 0 bis 9999 mit einem Intervall von 10 ab 10.~@~
-10319~@~AdmMenu [   40] Main Info: ScreenId (de-DE)~@~435~@~68~@~Bildschirm~@~Dies ist der Bildschirm dieser Menüpunkt aufrufen muss, falls zutreffend.~@~~@~
-10320~@~AdmMenu [   50] Main Info: ReportId (de-DE)~@~436~@~68~@~Bericht~@~Dies ist der Bericht dieser Menüpunkt aufrufen muss, falls zutreffend.~@~~@~
-10321~@~AdmMenu [   80] Main Info: Miscellaneous (de-DE)~@~437~@~68~@~Verschieden~@~Dies ist die benutzerdefinierte Programm oder http:/https:/file:/mailto: Dieser Menüpunkt aufrufen muss, falls zutreffend. Umschließende es mit "javascript: window.open ('')" öffnet neue Registerkarte~@~~@~
+10316~@~AdmMenu [   30] Main Info: ParentId (de-DE)~@~432~@~68~@~Übergeordneter Artikel~@~Dies ist die Muttergesellschaft von diesem Menüpunkt.~@~~@~
+10317~@~AdmMenu [   40] Main Info: MenuIndex (de-DE)~@~433~@~68~@~Bestellen~@~Dies ist ein Integer Registerkarte Index um zwischen 0 - 9999 mit einem Intervall von 10 ab 10.~@~Bitte geben Sie eine ganze Zahl Registerkarte Index-Reihenfolge zwischen 0 bis 9999 mit einem Intervall von 10 ab 10.~@~
+10319~@~AdmMenu [   50] Main Info: ScreenId (de-DE)~@~435~@~68~@~Bildschirm~@~Dies ist der Bildschirm dieser Menüpunkt aufrufen muss, falls zutreffend.~@~~@~
+10320~@~AdmMenu [   60] Main Info: ReportId (de-DE)~@~436~@~68~@~Bericht~@~Dies ist der Bericht dieser Menüpunkt aufrufen muss, falls zutreffend.~@~~@~
+10321~@~AdmMenu [   90] Main Info: Miscellaneous (de-DE)~@~437~@~68~@~Verschieden~@~Dies ist die benutzerdefinierte Programm oder http:/https:/file:/mailto: Dieser Menüpunkt aufrufen muss, falls zutreffend. Umschließende es mit "javascript: window.open ('')" öffnet neue Registerkarte~@~~@~
 10322~@~AdmMenuHlp [   20] Main Info: MenuHlpId (de-DE)~@~447~@~68~@~Menu Label ID~@~Dies ist die interne ID, die diese Kultur bestimmtes Menü Etikett.~@~~@~
 10324~@~AdmMenuHlp [   40] Main Info: MenuText (de-DE)~@~450~@~68~@~Menu Etikett~@~Dies ist die eindeutige Bezeichnung des ausgewählten Kultursprache zu diesem Menüpunkt.~@~Bitte geben Sie eine eindeutige Bezeichnung in der ausgewählten Kultursprache zu diesem Menüpunkt.~@~
 10327~@~AdmUsr [   70] Main Info: DefSystemId (de-DE)~@~497~@~68~@~Default System~@~Dies ist das System nach dem Login angezeigt.~@~Bitte wählen Sie das System nach dem Login angezeigt.~@~
@@ -6118,7 +6118,7 @@
 10361~@~AdmMenuPerm [   20] Main Info: MenuPrmId (de-DE)~@~831~@~68~@~Permission Id~@~Dies ist die interne ID eindeutig repräsentiert dieses Menü Erlaubnis.~@~~@~
 10362~@~AdmMenuPerm [   40] Main Info: PermKeyId (de-DE)~@~833~@~68~@~Entitätstyp~@~Dies ist der Entitätstyp die Gewährung oder den Zugang zu diesem Menüpunkt verweigert.~@~Bitte wählen Sie den Entitätstyp gewährt oder verweigert werden Zugang zu diesem Menüpunkt.~@~
 10363~@~AdmMenuPerm [   30] Main Info: GrantDeny (de-DE)~@~838~@~68~@~Gewähren / Verweigern~@~Halten Sie alle Zeilen leer, wenn jeder sollte Zugang zu diesem Menüpunkt.~@~Bitte wählen Sie, wenn jeder Zugang zu diesem Menüpunkt haben sollte.~@~
-10364~@~AdmMenu [   60] Main Info: WizardId (de-DE)~@~839~@~68~@~Zauberer~@~Dies ist der Import-Assistent diesen Menüpunkt aufrufen muss, falls zutreffend.~@~~@~
+10364~@~AdmMenu [   70] Main Info: WizardId (de-DE)~@~839~@~68~@~Zauberer~@~Dies ist der Import-Assistent diesen Menüpunkt aufrufen muss, falls zutreffend.~@~~@~
 10365~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (de-DE)~@~840~@~68~@~Filter ID~@~Dies ist die interne ID unqiuely identifiziert dieses Siebfilter.~@~~@~
 10366~@~AdmScreenFilter [   20] Main Info: ScreenId (de-DE)~@~841~@~68~@~Bildschirm~@~Dies ist der Bildschirm dieser Filter gilt.~@~Bitte wählen Sie den Bildschirm dieser Filter gilt.~@~
 10367~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (de-DE)~@~842~@~68~@~Filter Name~@~Dies ist der eindeutige Name repräsentiert diesen Filter-Klausel.~@~Bitte geben Sie einen eindeutigen Namen zu diesen Filter-Klausel darstellen.~@~
@@ -6640,7 +6640,7 @@
 11018~@~AdmLabel [   50] Main Info: LabelText (de-DE)~@~1970~@~68~@~Label Text~@~Geben Sie die gewünschte benutzerdefinierte Label-Text.~@~Bitte geben Sie Ihren gewünschten benutzerdefinierten Beschriftungstext.~@~
 11019~@~AdmLabel [   60] Main Info: CompanyId (de-DE)~@~1971~@~68~@~Firma~@~Wählen Sie das einzige Unternehmen, das dieses Label zugreifen, wenn dies wichtig sein können.~@~~@~
 11020~@~AdmLabel [   70] Main Info: SortOrder (de-DE)~@~1972~@~68~@~Sortierung~@~Geben Sie eine Sortierreihenfolge innerhalb des oben Kategorie, wenn dies wichtig ist.~@~~@~
-11021~@~AdmMenu [   90] Main Info: IconUrl (de-DE)~@~1973~@~68~@~Icon Url~@~Dies ist das Symbol für dieses Menü, falls zutreffend.~@~~@~
+11021~@~AdmMenu [  100] Main Info: IconUrl (de-DE)~@~1973~@~68~@~Icon Url~@~Dies ist das Symbol für dieses Menü, falls zutreffend.~@~~@~
 11022~@~AdmTbdRule [   10] Main Info: TbdRuleId (de-DE)~@~1976~@~68~@~Tbd Rule ID~@~Diese ID eindeutig identifiziert zu tun Regel.~@~~@~
 11023~@~AdmTbdRule [   20] Main Info: ScreenId (de-DE)~@~1977~@~68~@~Bildschirm~@~Dies ist der Bildschirm diese Regel gelten soll.~@~Bitte wählen Sie den Bildschirm diese Regel gelten soll.~@~
 11024~@~AdmTbdRule [   30] Main Info: TbdRuleName (de-DE)~@~1978~@~68~@~Name der Regel~@~Dies ist die kurze Beschreibung was diese Regel.~@~Bitte geben Sie eine kurze Beschreibung für diese Regel.~@~
@@ -6660,7 +6660,7 @@
 11040~@~AdmStaticPg [  100] Style: StaticPgCss (de-DE)~@~1995~@~68~@~~@~Dies ist die Kaskade Stylesheet für diese statische Seite.~@~~@~
 11041~@~AdmStaticPg [   90] HTML: StaticPgHtm (de-DE)~@~1996~@~68~@~~@~Dies ist die HTML-Codes für diese statische Seite, alle Text eingeschlossen von "[= [" und "]]" wird durch automatisch generierte Schlüssel ersetzt werden und in benutzerdefinierte Bezeichnung für die~@~Bitte geben Sie die HTML-Codes für diese statische Seite, alle Text eingeschlossen von "[= [" und "]]" wird durch automatisch generierte Schlüssel ersetzt werden und in benutzerdefinierte Bezeichnung für die Übersetzung.~@~
 11042~@~AdmStaticPg [   40] Main Info: MasterPgFile (de-DE)~@~1997~@~68~@~Master Page File~@~Dies ist der Master-Seite Datei für diese statische Seite verwendet, falls verfügbar.~@~~@~
-11043~@~AdmMenu [   70] Main Info: StaticPgId (de-DE)~@~1998~@~68~@~Statische Seite~@~Dies ist die statisc Seite dieser Menüpunkt aufrufen muss, falls zutreffend.~@~~@~
+11043~@~AdmMenu [   80] Main Info: StaticPgId (de-DE)~@~1998~@~68~@~Statische Seite~@~Dies ist die statisc Seite dieser Menüpunkt aufrufen muss, falls zutreffend.~@~~@~
 11044~@~AdmScreenObj [  230] Main Info: DisplayDesc (de-DE)~@~1999~@~68~@~~@~Dies ist der Detail-Anzeige Beschreibung.~@~~@~
 11045~@~AdmClnTier [  120] Main Info: CombineAsm (de-DE)~@~2000~@~68~@~Kombinieren Assemblies~@~Dies wird überprüft, um Versammlungen vorgesehen performace ist die höchste Sorge und kleineres Update ist selten zu kombinieren.~@~~@~
 11046~@~AdmStaticCs [   10] Main Info: StaticCsId (de-DE)~@~2001~@~68~@~Statische CSS ID~@~Diese eindeutig identifiziert diese gemeinsame CSS.~@~~@~
@@ -6718,7 +6718,7 @@
 11110~@~AdmScreenObj [  250] Main Info: DdlRefColumnId (hi-IN)~@~83~@~8~@~संदर्भ कॉलम~@~यदि लागू हो, यह ड्रॉपडाउन, ComboBox, पुनर्स्थापित करें, ListBox या पिछले एक स्तंभ के रूप में ऊपर खींचने के संदर्भ के प्रदर्शन स्तंभ है, यह मुद्रा या LUser.Culture की संस्कृति (readonly) माना जाता है.~@~~@~
 11111~@~AdmDbTable [  260] Main Info: ColumnScale (hi-IN)~@~428~@~8~@~दशमलव~@~यह दशमलव डेटा प्रकार के लिए दशमलव स्थानों की संख्या है.~@~~@~
 11112~@~AdmMenu [   10] Main Info: MenuId (hi-IN)~@~431~@~8~@~आईडी~@~यह आंतरिक आईडी विशिष्ट यह मेनू आइटम का प्रतिनिधित्व करता है.~@~~@~
-11113~@~AdmMenu [   30] Main Info: MenuIndex (hi-IN)~@~433~@~8~@~आदेश~@~10 के अंतराल पर शुरू 10 - 9999 के साथ यह एक पूर्णांक टैब 0 के बीच सूचकांक आदेश है.~@~9999 - 10 के अंतराल पर शुरू 10 के साथ एक पूर्णांक टैब 0 के बीच सूचकांक आदेश दर्ज करें.~@~
+11113~@~AdmMenu [   40] Main Info: MenuIndex (hi-IN)~@~433~@~8~@~आदेश~@~10 के अंतराल पर शुरू 10 - 9999 के साथ यह एक पूर्णांक टैब 0 के बीच सूचकांक आदेश है.~@~9999 - 10 के अंतराल पर शुरू 10 के साथ एक पूर्णांक टैब 0 के बीच सूचकांक आदेश दर्ज करें.~@~
 11114~@~AdmScreenCri [   90] Main Info: RequiredValid (hi-IN)~@~1187~@~8~@~सत्यापन की आवश्यकता~@~जाँच इस मानदंड अनिवार्य हो जाता है. , आदि एक ड्रॉपडाउन में, अगर पुनः प्राप्त पंक्तियों कुल की तुलना में कम है, यह manadatory परवाह किए बिना समझा जाता है.~@~~@~
 11115~@~AdmScreenObj [   40] Main Info: ColumnWrap (hi-IN)~@~1203~@~8~@~सामग्री लपेटें~@~सही का निशान हटाएँ अगर कोई लपेटो सामग्री के लिए आवश्यक है.~@~~@~
 11117~@~AdmScreen [  180] Main Info: GenerateSc (hi-IN)~@~1247~@~8~@~CLN उत्पन्न~@~इसे अनचेक अस्थायी अगर कोई क्लाइंट प्रोग्राम इस स्क्रीन के लिए तैयार किया जाना चाहिए.~@~~@~
@@ -6816,7 +6816,7 @@
 11227~@~AdmScreenObj [  250] Main Info: DdlRefColumnId (ja-JP)~@~83~@~14~@~参照カラム~@~該当する場合、これは表示ドロップダウンの列、コンボボックス、ラジオボタン、リストボックス（ListBox）コントロールまたはプルアップとして、前の列への参照であり、これは、通貨またはLUser.Cultureの（読み取り専用） - 文化にあるとみなされます。~@~~@~
 11228~@~AdmDbTable [  260] Main Info: ColumnScale (ja-JP)~@~428~@~14~@~10進数~@~これは、10進データ型の小数点以下の桁数です。~@~~@~
 11229~@~AdmMenu [   10] Main Info: MenuId (ja-JP)~@~431~@~14~@~番号~@~これは、内部​​IDは、このメニュー項目を表しています。~@~~@~
-11230~@~AdmMenu [   30] Main Info: MenuIndex (ja-JP)~@~433~@~14~@~オーダー~@~10で始まる10の間隔で9999  - これは0の間の整数でタブインデックスの順序です。~@~10で始まる10の間隔で9999から0までの整数のタブインデックス順序を入力してください。~@~
+11230~@~AdmMenu [   40] Main Info: MenuIndex (ja-JP)~@~433~@~14~@~オーダー~@~10で始まる10の間隔で9999  - これは0の間の整数でタブインデックスの順序です。~@~10で始まる10の間隔で9999から0までの整数のタブインデックス順序を入力してください。~@~
 11231~@~AdmScreenCri [   90] Main Info: RequiredValid (ja-JP)~@~1187~@~14~@~検証が必要~@~チェックボックスをオンにすると、この条件は必須となります。等、ドロップダウンでは、取得された行は合計よりも小さい場合、それは関係なくmanadatoryみなされる。~@~~@~
 11232~@~AdmScreenObj [   40] Main Info: ColumnWrap (ja-JP)~@~1203~@~14~@~コンテンツラップ~@~ノーラップがコンテンツを必要としない場合はチェックをはずします。~@~~@~
 11234~@~AdmScreen [  180] Main Info: GenerateSc (ja-JP)~@~1247~@~14~@~CLNを生成~@~チェックを外して、この一時的な場合にはクライアントプログラムは、この画面のために生成するべきではありません。~@~~@~
@@ -6996,11 +6996,11 @@
 11440~@~AdmDbTable [  260] Main Info: ColumnScale (ko-KR)~@~428~@~28~@~소수~@~이것은 소수점 데이터 유형에 대한 소수점 이하 자릿수입니다.~@~~@~
 11441~@~AdmDbTable [   20] Main Info: SystemId (ko-KR)~@~430~@~28~@~데이터베이스~@~이 표가있는 데이터베이스입니다.~@~이 표가있는 데이터베이스를 선택하십시오.~@~
 11442~@~AdmMenu [   10] Main Info: MenuId (ko-KR)~@~431~@~28~@~신분증~@~이 내부 ID는 고유이 메뉴 항목을 나타냅니다이다.~@~~@~
-11443~@~AdmMenu [   20] Main Info: ParentId (ko-KR)~@~432~@~28~@~부모 항목~@~이렇게하면이 메뉴 항목의 부모입니다.~@~~@~
-11444~@~AdmMenu [   30] Main Info: MenuIndex (ko-KR)~@~433~@~28~@~순서~@~10 간격이 10에서 시작과 9999 -이 0 사이의 정수 탭 인덱스 순서입니다.~@~10 간격이 10에서 시작과 9999-0 사이의 정수 탭 인덱스 순서를 입력하십시오.~@~
-11446~@~AdmMenu [   40] Main Info: ScreenId (ko-KR)~@~435~@~28~@~화면~@~이 해당 될 경우,이 메뉴 항목이 호출해야 화면입니다.~@~~@~
-11447~@~AdmMenu [   50] Main Info: ReportId (ko-KR)~@~436~@~28~@~신고~@~이 해당 될 경우,이 메뉴 항목이 호출해야 보고서입니다.~@~~@~
-11448~@~AdmMenu [   80] Main Info: Miscellaneous (ko-KR)~@~437~@~28~@~여러 가지 잡다한~@~이 사용자 정의 프로그램이나 http:/https:/file:/mailto입니다 :이 메뉴 항목이 호출해야 해당되는 경우. "자바 스크립트 : window.open ('')"로 둘러싸는 새 탭을 열 수 있습니다.~@~~@~
+11443~@~AdmMenu [   30] Main Info: ParentId (ko-KR)~@~432~@~28~@~부모 항목~@~이렇게하면이 메뉴 항목의 부모입니다.~@~~@~
+11444~@~AdmMenu [   40] Main Info: MenuIndex (ko-KR)~@~433~@~28~@~순서~@~10 간격이 10에서 시작과 9999 -이 0 사이의 정수 탭 인덱스 순서입니다.~@~10 간격이 10에서 시작과 9999-0 사이의 정수 탭 인덱스 순서를 입력하십시오.~@~
+11446~@~AdmMenu [   50] Main Info: ScreenId (ko-KR)~@~435~@~28~@~화면~@~이 해당 될 경우,이 메뉴 항목이 호출해야 화면입니다.~@~~@~
+11447~@~AdmMenu [   60] Main Info: ReportId (ko-KR)~@~436~@~28~@~신고~@~이 해당 될 경우,이 메뉴 항목이 호출해야 보고서입니다.~@~~@~
+11448~@~AdmMenu [   90] Main Info: Miscellaneous (ko-KR)~@~437~@~28~@~여러 가지 잡다한~@~이 사용자 정의 프로그램이나 http:/https:/file:/mailto입니다 :이 메뉴 항목이 호출해야 해당되는 경우. "자바 스크립트 : window.open ('')"로 둘러싸는 새 탭을 열 수 있습니다.~@~~@~
 11449~@~AdmMenuHlp [   20] Main Info: MenuHlpId (ko-KR)~@~447~@~28~@~메뉴 라벨 ID~@~이 문화가 특정 메뉴 레이블을 대표하는 내부 ID입니다.~@~~@~
 11451~@~AdmMenuHlp [   40] Main Info: MenuText (ko-KR)~@~450~@~28~@~메뉴 레이블~@~이렇게하면이 메뉴 항목에 대해 선택된 문화 언어의 고유 한 레이블입니다.~@~이 메뉴 항목에 대해 선택된 문화 언어에 고유 한 레이블을 입력하십시오.~@~
 11454~@~AdmUsr [   70] Main Info: DefSystemId (ko-KR)~@~497~@~28~@~기본 시스템~@~이 로그인 한 후 표시 할 수있는 시스템입니다.~@~로그인 후 표시 할 시스템을 선택하십시오.~@~
@@ -7037,7 +7037,7 @@
 11488~@~AdmMenuPerm [   20] Main Info: MenuPrmId (ko-KR)~@~831~@~28~@~권한 이드~@~이 독특한이 메뉴 권한을 대표하는 내부 ID입니다.~@~~@~
 11489~@~AdmMenuPerm [   40] Main Info: PermKeyId (ko-KR)~@~833~@~28~@~법인 유형~@~이렇게하면이 메뉴 항목에 대한 액세스 권한이 부여되거나 거부되는 개체 유형입니다.~@~부여하거나이 메뉴 항목에 대한 액세스를 거부 할 개체 유형을 선택하십시오.~@~
 11490~@~AdmMenuPerm [   30] Main Info: GrantDeny (ko-KR)~@~838~@~28~@~거부 / 부여~@~모든 사람들이이 메뉴 항목에 액세스 할 수 있습니다해야하는 경우 모든 행이 비어하세요.~@~모든 사람들이이 메뉴 항목에 액세스 할 수 있어야합니다 경우 선택하십시오.~@~
-11491~@~AdmMenu [   60] Main Info: WizardId (ko-KR)~@~839~@~28~@~마법사~@~이 해당 될 경우,이 메뉴 항목이 호출해야 가져 오기 마법사입니다.~@~~@~
+11491~@~AdmMenu [   70] Main Info: WizardId (ko-KR)~@~839~@~28~@~마법사~@~이 해당 될 경우,이 메뉴 항목이 호출해야 가져 오기 마법사입니다.~@~~@~
 11492~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (ko-KR)~@~840~@~28~@~필터 ID~@~이 내부 ID가 unqiuely이 화면 필터를 식별합니다.~@~~@~
 11493~@~AdmScreenFilter [   20] Main Info: ScreenId (ko-KR)~@~841~@~28~@~화면~@~이이 필터가 적용되는 화면입니다.~@~이 필터가 적용되는 화면을 선택하십시오.~@~
 11494~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (ko-KR)~@~842~@~28~@~필터 이름~@~이이 필터 조항을 대표하는 고유 한 이름입니다.~@~이 필터 조항을 대표 할 수있는 고유 한 이름을 입력하십시오.~@~
@@ -7559,7 +7559,7 @@
 12145~@~AdmLabel [   50] Main Info: LabelText (ko-KR)~@~1970~@~28~@~레이블 텍스트~@~원하는 사용자 지정 레이블 텍스트를 입력합니다.~@~원하는 사용자 지정 레이블 텍스트를 입력하십시오.~@~
 12146~@~AdmLabel [   60] Main Info: CompanyId (ko-KR)~@~1971~@~28~@~회사~@~이 중요한 경우이 라벨이 액세스 할 수있는 유일한 회사를 선택합니다.~@~~@~
 12147~@~AdmLabel [   70] Main Info: SortOrder (ko-KR)~@~1972~@~28~@~정렬 순서~@~이 중요한 경우 위의 카테고리에서 정렬 순서를 입력합니다.~@~~@~
-12148~@~AdmMenu [   90] Main Info: IconUrl (ko-KR)~@~1973~@~28~@~Icon Url~@~이 해당 될 경우,이 메뉴 항목을 나타내는 아이콘입니다.~@~~@~
+12148~@~AdmMenu [  100] Main Info: IconUrl (ko-KR)~@~1973~@~28~@~Icon Url~@~이 해당 될 경우,이 메뉴 항목을 나타내는 아이콘입니다.~@~~@~
 12149~@~AdmTbdRule [   10] Main Info: TbdRuleId (ko-KR)~@~1976~@~28~@~미정 규칙 ID~@~이 ID는 고유이 수행 할 수있는 규칙을 식별합니다.~@~~@~
 12150~@~AdmTbdRule [   20] Main Info: ScreenId (ko-KR)~@~1977~@~28~@~화면~@~이이 규칙에 적용해야 화면입니다.~@~이 규칙에 적용해야 화면을 선택하십시오.~@~
 12151~@~AdmTbdRule [   30] Main Info: TbdRuleName (ko-KR)~@~1978~@~28~@~규칙 이름~@~이이 규칙을 나타내는 간단한 설명입니다.~@~이 규칙에 대한 간단한 설명을 입력하십시오.~@~
@@ -7579,7 +7579,7 @@
 12167~@~AdmStaticPg [  100] Style: StaticPgCss (ko-KR)~@~1995~@~28~@~~@~이이 정적 페이지에 대한 캐스케이드 스타일 시트입니다.~@~~@~
 12168~@~AdmStaticPg [   90] HTML: StaticPgHtm (ko-KR)~@~1996~@~28~@~~@~이이 정적 페이지에 대한 HTML 코드이다;에 의해 둘러싸인 모든 텍스트 "[= ["와 "]]"자동 생성 키에 의해 대체 및 번역에 대한 사용자 지정 레이블에 삽입됩니다.~@~이 정적 페이지에 대한 HTML 코드를 입력하세요,에 의해 둘러싸인 모든 텍스트 "[= ["와 "]]"자동 생성 키에 의해 대체 및 번역에 대한 사용자 지정 레이블에 삽입됩니다.~@~
 12169~@~AdmStaticPg [   40] Main Info: MasterPgFile (ko-KR)~@~1997~@~28~@~마스터 페이지 파일~@~이 사용 가능한 경우,이 정적 페이지에 사용 된 마스터 페이지 파일입니다.~@~~@~
-12170~@~AdmMenu [   70] Main Info: StaticPgId (ko-KR)~@~1998~@~28~@~정적 페이지~@~이 해당 될 경우,이 메뉴 항목이 호출해야 statisc 페이지입니다.~@~~@~
+12170~@~AdmMenu [   80] Main Info: StaticPgId (ko-KR)~@~1998~@~28~@~정적 페이지~@~이 해당 될 경우,이 메뉴 항목이 호출해야 statisc 페이지입니다.~@~~@~
 12171~@~AdmScreenObj [  230] Main Info: DisplayDesc (ko-KR)~@~1999~@~28~@~~@~이 세부 표시 설명입니다.~@~~@~
 12172~@~AdmClnTier [  120] Main Info: CombineAsm (ko-KR)~@~2000~@~28~@~어셈블리를 결합~@~이것은 성능이 가장 높은 관심사입니다 마이너 업그레이드가 드문이 제공 어셈블리를 결합하여 확인합니다.~@~~@~
 12173~@~AdmStaticCs [   10] Main Info: StaticCsId (ko-KR)~@~2001~@~28~@~정적 CSS ID~@~이 독특한이 공유 CSS를 식별합니다.~@~~@~
@@ -7637,7 +7637,7 @@
 12237~@~AdmScreenObj [  250] Main Info: DdlRefColumnId (pt-BR)~@~83~@~9~@~Coluna de referência~@~Se for o caso, esta é a coluna exibição de DropDown, ComboBox, RadioButton, ListBox ou referência a uma coluna anterior como puxar para cima; Esta é a cultura (somente leitura) de moeda ou LUser.Cultu~@~~@~
 12238~@~AdmDbTable [  260] Main Info: ColumnScale (pt-BR)~@~428~@~9~@~Decimal~@~Este é o número de casas decimais para o tipo de dados decimal.~@~~@~
 12239~@~AdmMenu [   10] Main Info: MenuId (pt-BR)~@~431~@~9~@~ID~@~Este é o ID interno representa com exclusividade este item de menu.~@~~@~
-12240~@~AdmMenu [   30] Main Info: MenuIndex (pt-BR)~@~433~@~9~@~Ordem~@~Trata-se de uma ordem de índice inteiro separador entre 0 - 9999 com um intervalo de 10 a partir de 10.~@~Por favor insira uma ordem índice inteiro separador entre 0 - 9999 com um intervalo de 10 a partir de 10.~@~
+12240~@~AdmMenu [   40] Main Info: MenuIndex (pt-BR)~@~433~@~9~@~Ordem~@~Trata-se de uma ordem de índice inteiro separador entre 0 - 9999 com um intervalo de 10 a partir de 10.~@~Por favor insira uma ordem índice inteiro separador entre 0 - 9999 com um intervalo de 10 a partir de 10.~@~
 12241~@~AdmScreenCri [   90] Main Info: RequiredValid (pt-BR)~@~1187~@~9~@~Exigir Validação~@~Quando marcado, este critério torna-se obrigatória. Em uma suspenso, etc, se linhas recuperadas é inferior ao total, entende-se manadatory independentemente.~@~~@~
 12242~@~AdmScreenObj [   40] Main Info: ColumnWrap (pt-BR)~@~1203~@~9~@~Enrole conteúdo~@~Desmarque se sem quebra é necessária para o conteúdo.~@~~@~
 12244~@~AdmScreen [  180] Main Info: GenerateSc (pt-BR)~@~1247~@~9~@~Gerar CLN~@~Desmarque esta se temporária nenhum programa cliente deve ser gerado para esta tela.~@~~@~
@@ -7735,7 +7735,7 @@
 12354~@~AdmScreenObj [  250] Main Info: DdlRefColumnId (ru-RU)~@~83~@~12~@~Ссылка колонки~@~Если возможно, это дисплей колонки DropDown, ComboBox, RadioButton, ListBox или ссылки на предыдущую колонку, как подтянуть, это к культуре (только для чтения) валюты или LUser.Culture предполагается.~@~~@~
 12355~@~AdmDbTable [  260] Main Info: ColumnScale (ru-RU)~@~428~@~12~@~Десятичный~@~Это число знаков после запятой для десятичного типа данных.~@~~@~
 12356~@~AdmMenu [   10] Main Info: MenuId (ru-RU)~@~431~@~12~@~ID~@~Это внутренний ID однозначно представляет этот пункт меню.~@~~@~
-12357~@~AdmMenu [   30] Main Info: MenuIndex (ru-RU)~@~433~@~12~@~Заказ~@~Это целое число, чтобы индекс вкладки между 0 - 9999 с интервалом в 10 года, в 10.~@~Пожалуйста, введите целого порядка индекс вкладки между 0 - 9999 с интервалом в 10 года, в 10.~@~
+12357~@~AdmMenu [   40] Main Info: MenuIndex (ru-RU)~@~433~@~12~@~Заказ~@~Это целое число, чтобы индекс вкладки между 0 - 9999 с интервалом в 10 года, в 10.~@~Пожалуйста, введите целого порядка индекс вкладки между 0 - 9999 с интервалом в 10 года, в 10.~@~
 12358~@~AdmScreenCri [   90] Main Info: RequiredValid (ru-RU)~@~1187~@~12~@~Требуется проверка~@~При выборе этого критерия становится обязательным. В раскрывающемся списке, и т.д., если извлекаемых строк меньше, чем общее, то он считается обязательные поля независимо.~@~~@~
 12359~@~AdmScreenObj [   40] Main Info: ColumnWrap (ru-RU)~@~1203~@~12~@~Содержимое Wrap~@~Снимите флажок, если не перенос необходим для содержания.~@~~@~
 12361~@~AdmScreen [  180] Main Info: GenerateSc (ru-RU)~@~1247~@~12~@~Создание CLN~@~Снимите это, если временно не клиентские программы должны быть созданы для этого экрана.~@~~@~
@@ -7833,7 +7833,7 @@
 12471~@~AdmScreenObj [  250] Main Info: DdlRefColumnId (es-ES)~@~83~@~13~@~Referencia de columna~@~En su caso, esta es la columna de visualización de ComboBox DropDown, RadioButton, ListBox o referencia a una columna anterior como levantar, lo que es a la cultura (sólo lectura) de la moneda o LUser~@~~@~
 12472~@~AdmDbTable [  260] Main Info: ColumnScale (es-ES)~@~428~@~13~@~Decimal~@~Este es el número de decimales para el tipo de datos decimal.~@~~@~
 12473~@~AdmMenu [   10] Main Info: MenuId (es-ES)~@~431~@~13~@~Identificación~@~Este es el ID interno representa de forma exclusiva este elemento del menú.~@~~@~
-12474~@~AdmMenu [   30] Main Info: MenuIndex (es-ES)~@~433~@~13~@~Orden~@~Este es un orden de tabulación índice de número entero entre 0 - 9999 con un intervalo de 10 a partir de las 10.~@~Por favor, introduzca una orden de tabulación índice de número entero entre 0 a 9999 con un intervalo de 10 a partir de 10.~@~
+12474~@~AdmMenu [   40] Main Info: MenuIndex (es-ES)~@~433~@~13~@~Orden~@~Este es un orden de tabulación índice de número entero entre 0 - 9999 con un intervalo de 10 a partir de las 10.~@~Por favor, introduzca una orden de tabulación índice de número entero entre 0 a 9999 con un intervalo de 10 a partir de 10.~@~
 12475~@~AdmScreenCri [   90] Main Info: RequiredValid (es-ES)~@~1187~@~13~@~Requerir validación~@~Cuando se activa, este criterio se convierte en obligatoria. En un menú desplegable, etc, si las filas recuperadas es inferior al total, se considera manadatory pesar de todo.~@~~@~
 12476~@~AdmScreenObj [   40] Main Info: ColumnWrap (es-ES)~@~1203~@~13~@~Contenido Wrap~@~No seleccionar ninguna envoltura se requiere para el contenido.~@~~@~
 12478~@~AdmScreen [  180] Main Info: GenerateSc (es-ES)~@~1247~@~13~@~Generar CLN~@~Desactive esta opción si no temporal programas cliente deben ser generados para esta pantalla.~@~~@~
@@ -8466,12 +8466,12 @@
 16465~@~AdmCtDisplayType [   40] Main Info: DisplayDefault (en-US)~@~421~@~114~@~Afficher par défaut~@~Ceci est vérifié si cet affichage est par défaut.~@~~@~
 16466~@~AdmDbTable [  260] Main Info: ColumnScale (en-US)~@~428~@~114~@~Décimal~@~Il s'agit du nombre de décimales pour le type de données décimal.~@~~@~
 16467~@~AdmDbTable [   20] Main Info: SystemId (en-US)~@~430~@~114~@~Base de données~@~Il s'agit de la base de données dans laquelle se trouve cette table.~@~Veuillez sélectionner la base de données dans laquelle se trouve cette table.~@~
-16468~@~AdmMenu [   10] Main Info: MenuId (en-US)~@~431~@~114~@~Identifiant~@~Il s'agit de l'ID interne qui représente uniquement cet élément de menu.~@~~@~
-16469~@~AdmMenu [   20] Main Info: ParentId (en-US)~@~432~@~114~@~Élément parent~@~Il s'agit du parent de cet élément de menu.~@~~@~
-16470~@~AdmMenu [   30] Main Info: MenuIndex (en-US)~@~433~@~114~@~Commande~@~Il s'agit d'un ordre d'index de tabulation entier compris entre 0 et 9999 avec un intervalle de 10 commençant à 10.~@~Veuillez entrer un ordre d'index de tabulation entier compris entre 0 et 9999 avec un intervalle de 10 commençant à 10.~@~
-16471~@~AdmMenu [   40] Main Info: ScreenId (en-US)~@~435~@~114~@~Écran~@~Il s'agit de l'écran que cet élément de menu doit appeler, le cas échéant.~@~~@~
-16472~@~AdmMenu [   50] Main Info: ReportId (en-US)~@~436~@~114~@~rapport~@~Il s'agit du rapport que cet élément de menu doit appeler, le cas échéant.~@~~@~
-16473~@~AdmMenu [   80] Main Info: Miscellaneous (en-US)~@~437~@~114~@~Divers~@~Il s'agit du programme personnalisé ou http: / https: / fichier: / mailto: cet élément de menu doit être appelé, le cas échéant. Le joindre à "javascript: window.open ('')" ouvrira un nouvel onglet.~@~~@~
+16468~@~AdmMenu [   10] Main Info: MenuId (fr-CA)~@~431~@~114~@~Identifiant~@~Il s'agit de l'ID interne qui représente uniquement cet élément de menu.~@~~@~
+16469~@~AdmMenu [   30] Main Info: ParentId (fr-CA)~@~432~@~114~@~Élément parent~@~Il s'agit du parent de cet élément de menu.~@~~@~
+16470~@~AdmMenu [   40] Main Info: MenuIndex (fr-CA)~@~433~@~114~@~Commande~@~Il s'agit d'un ordre d'index de tabulation entier compris entre 0 et 9999 avec un intervalle de 10 commençant à 10.~@~Veuillez entrer un ordre d'index de tabulation entier compris entre 0 et 9999 avec un intervalle de 10 commençant à 10.~@~
+16471~@~AdmMenu [   50] Main Info: ScreenId (fr-CA)~@~435~@~114~@~Écran~@~Il s'agit de l'écran que cet élément de menu doit appeler, le cas échéant.~@~~@~
+16472~@~AdmMenu [   60] Main Info: ReportId (fr-CA)~@~436~@~114~@~rapport~@~Il s'agit du rapport que cet élément de menu doit appeler, le cas échéant.~@~~@~
+16473~@~AdmMenu [   90] Main Info: Miscellaneous (fr-CA)~@~437~@~114~@~Divers~@~Il s'agit du programme personnalisé ou http: / https: / fichier: / mailto: cet élément de menu doit être appelé, le cas échéant. Le joindre à "javascript: window.open ('')" ouvrira un nouvel onglet.~@~~@~
 16474~@~AdmMenuHlp [   10] Main Info: MenuId (en-US)~@~446~@~114~@~ID du menu~@~Il s'agit de l'ID interne représentant ce menu.~@~~@~
 16475~@~AdmMenuHlp [   20] Main Info: MenuHlpId (en-US)~@~447~@~114~@~ID d'étiquette de menu~@~Il s'agit de l'ID interne représentant cette étiquette de menu spécifique à la culture.~@~~@~
 16476~@~AdmMenuHlp [   30] Main Info: CultureId (en-US)~@~448~@~114~@~Culture~@~C'est la culture de ce label.~@~Veuillez sélectionner la culture de cette étiquette.~@~
@@ -8514,7 +8514,7 @@
 16513~@~AdmMenuPerm [   20] Main Info: MenuPrmId (en-US)~@~831~@~114~@~Identifiant d'autorisation~@~Il s'agit de l'ID interne représentant uniquement cette autorisation de menu.~@~~@~
 16514~@~AdmMenuPerm [   40] Main Info: PermKeyId (en-US)~@~833~@~114~@~Type d'entité~@~Il s'agit du type d'entité qui se voit accorder ou refuser l'accès à cet élément de menu.~@~Veuillez sélectionner le type d'entité à accorder ou refuser l'accès à cet élément de menu.~@~
 16515~@~AdmMenuPerm [   30] Main Info: GrantDeny (en-US)~@~838~@~114~@~Accorder / refuser~@~Gardez toutes les lignes vides si tout le monde doit avoir accès à cet élément de menu.~@~Veuillez sélectionner si tout le monde doit avoir accès à cet élément de menu.~@~
-16516~@~AdmMenu [   60] Main Info: WizardId (en-US)~@~839~@~114~@~sorcier~@~Il s'agit de l'assistant d'importation que cet élément de menu doit appeler, le cas échéant.~@~~@~
+16516~@~AdmMenu [   70] Main Info: WizardId (fr-CA)~@~839~@~114~@~sorcier~@~Il s'agit de l'assistant d'importation que cet élément de menu doit appeler, le cas échéant.~@~~@~
 16517~@~AdmScreenFilter [   10] Main Info: ScreenFilterId (en-US)~@~840~@~114~@~ID de filtre~@~Il s'agit de l'ID interne qui identifie de manière non équivoque ce filtre d'écran.~@~~@~
 16518~@~AdmScreenFilter [   20] Main Info: ScreenId (en-US)~@~841~@~114~@~Écran~@~C'est l'écran auquel ce filtre s'applique.~@~Veuillez sélectionner l'écran auquel ce filtre s'applique.~@~
 16519~@~AdmScreenFilter [   30] Main Info: ScreenFilterName (en-US)~@~842~@~114~@~Nom du filtre~@~Il s'agit du nom unique représentant cette clause de filtrage.~@~Veuillez saisir un nom unique pour représenter cette clause de filtrage.~@~
@@ -9074,7 +9074,7 @@
 17073~@~AdmLabel [   50] Main Info: LabelText (en-US)~@~1970~@~114~@~Texte de l'étiquette~@~Saisissez le texte d'étiquette personnalisé souhaité.~@~Veuillez saisir le texte d'étiquette personnalisé souhaité.~@~
 17074~@~AdmLabel [   60] Main Info: CompanyId (en-US)~@~1971~@~114~@~Entreprise~@~Sélectionnez la seule entreprise à laquelle ce label peut accéder si cela est important.~@~~@~
 17075~@~AdmLabel [   70] Main Info: SortOrder (en-US)~@~1972~@~114~@~Ordre de tri~@~Entrez un ordre de tri dans la catégorie ci-dessus si cela est important.~@~~@~
-17076~@~AdmMenu [   90] Main Info: IconUrl (en-US)~@~1973~@~114~@~Icon Url~@~Il s'agit de l'icône représentant cet élément de menu, le cas échéant.~@~~@~
+17076~@~AdmMenu [  100] Main Info: IconUrl (fr-CA)~@~1973~@~114~@~Icon Url~@~Il s'agit de l'icône représentant cet élément de menu, le cas échéant.~@~~@~
 17077~@~AdmTbdRule [   10] Main Info: TbdRuleId (en-US)~@~1976~@~114~@~ID de règle Tbd~@~Cet ID identifie de manière unique cette règle à effectuer.~@~~@~
 17078~@~AdmTbdRule [   20] Main Info: ScreenId (en-US)~@~1977~@~114~@~Écran~@~Il s'agit de l'écran auquel cette règle doit s'appliquer.~@~Veuillez sélectionner l'écran auquel cette règle doit s'appliquer.~@~
 17079~@~AdmTbdRule [   30] Main Info: TbdRuleName (en-US)~@~1978~@~114~@~Nom de la règle~@~Il s'agit de la courte description représentant cette règle.~@~Veuillez saisir une brève description de cette règle.~@~
@@ -9095,7 +9095,7 @@
 17094~@~AdmStaticPg [  100] Style: StaticPgCss (en-US)~@~1995~@~114~@~~@~Il s'agit de la feuille de style en cascade pour cette page statique.~@~~@~
 17095~@~AdmStaticPg [   90] HTML: StaticPgHtm (en-US)~@~1996~@~114~@~~@~Ce sont les codes HTML de cette page statique; tout le texte entre "[= [" et "]]" sera remplacé par des clés générées automatiquement et inséré dans une étiquette personnalisée pour la traduction.~@~Veuillez saisir les codes HTML de cette page statique; tout le texte entre "[= [" et "]]" sera remplacé par des clés générées automatiquement et inséré dans une étiquette personnalisée pour la traduction.~@~
 17096~@~AdmStaticPg [   40] Main Info: MasterPgFile (en-US)~@~1997~@~114~@~Fichier de page maître~@~Il s'agit du fichier de page maître utilisé pour cette page statique, s'il est disponible.~@~~@~
-17097~@~AdmMenu [   70] Main Info: StaticPgId (en-US)~@~1998~@~114~@~Page statique~@~Il s'agit de la page de statistiques que cet élément de menu doit appeler, le cas échéant.~@~~@~
+17097~@~AdmMenu [   80] Main Info: StaticPgId (fr-CA)~@~1998~@~114~@~Page statique~@~Il s'agit de la page de statistiques que cet élément de menu doit appeler, le cas échéant.~@~~@~
 17098~@~AdmScreenObj [  230] Main Info: DisplayDesc (en-US)~@~1999~@~114~@~~@~Ceci est la description de l'affichage détaillé.~@~~@~
 17099~@~AdmClnTier [  120] Main Info: CombineAsm (en-US)~@~2000~@~114~@~Combiner des assemblages~@~Ceci est vérifié pour combiner les assemblages à condition que la performance soit la plus grande préoccupation et que la mise à niveau mineure soit peu fréquente.~@~~@~
 17100~@~AdmStaticCs [   10] Main Info: StaticCsId (en-US)~@~2001~@~114~@~ID CSS statique~@~Cela identifie de manière unique ce CSS partagé.~@~~@~
@@ -9121,3 +9121,4 @@
 17120~@~AdmCronJob [   90] Main Info: Day (en-US)~@~2023~@~114~@~journée~@~Il s'agit du jour UTC spécifique du mois pour exécuter cette tâche; la plage est comprise entre 1 et 31; il est vide s'il doit être exécuté tous les jours;~@~Veuillez saisir le jour spécifique du mois pour exécuter ce travail; la plage est comprise entre 1 et 31; il est vide s'il doit être exécuté tous les jours;~@~
 17121~@~AdmCronJob [  100] Main Info: Hour (en-US)~@~2024~@~114~@~Heure~@~Il s'agit de l'heure UTC spécifique de la journée pour exécuter ce travail; la plage est comprise entre 0 et 24; il est vide s'il doit être exécuté toutes les heures;~@~Veuillez entrer l'heure précise de la journée pour exécuter ce travail; la plage est comprise entre 0 et 24; il est vide s'il doit être exécuté toutes les heures;~@~
 17122~@~AdmLicense [   60] Main: AppNameSpace (en-US)~@~4305~@~1~@~App Namespace~@~~@~~@~
+17170~@~AdmMenu [  110] Main Info: ReactQuickMenu (en-US)~@~4353~@~1~@~React Quick Menu~@~~@~~@~

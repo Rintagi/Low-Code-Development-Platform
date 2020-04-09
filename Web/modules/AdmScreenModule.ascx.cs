@@ -2841,7 +2841,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				DataRow dr = dt.NewRow();
 				int? sortorder = null;
 				dr["CultureId16"] = 1;
-				dr["IncrementMsg16"] = "View {10} more";
+				dr["IncrementMsg16"] = "View {0} more";
 				dr["NoMasterMsg16"] = "No master record selected";
 				dr["NoDetailMsg16"] = "No detail record selected";
 				dr["AddMasterMsg16"] = "Click here to enter a new master record";
@@ -3146,7 +3146,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					{
 						dt.Rows.Add(dt.NewRow());
 						if (rows[iRow][1].ToString() == string.Empty && rows[iRow][2].ToString() == string.Empty) { rows[iRow][1] = 1;}
-						if (rows[iRow][9].ToString() == string.Empty) { rows[iRow][9] = "View {10} more";}
+						if (rows[iRow][9].ToString() == string.Empty) { rows[iRow][9] = "View {0} more";}
 						if (rows[iRow][10].ToString() == string.Empty) { rows[iRow][10] = "No master record selected";}
 						if (rows[iRow][11].ToString() == string.Empty) { rows[iRow][11] = "No detail record selected";}
 						if (rows[iRow][12].ToString() == string.Empty) { rows[iRow][12] = "Click here to enter a new master record";}

@@ -1701,7 +1701,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                     }
                     catch (Exception ex)
                     {
-                        throw;
+                        throw ex;
                     }
                 }
 
@@ -1778,6 +1778,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
             {
                 PreMsgPopup(ex.Message);
             }
+
 
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
@@ -2019,6 +2020,7 @@ document.Rintagi = {{
                         {
                             var aa = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("add {0} {1}", string.Format("package.json"), string.Format("src/app/Version.js")), true, reactModuleDir);
                             var bb = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("commit -m \"{0}\"", string.Format("advance UI to version {0}", newVer)), true, reactModuleDir);
+                            var cc = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("push"), true, reactModuleDir);
                         }
                         catch (Exception ex)
                         {
@@ -2140,6 +2142,7 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
+
 
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.

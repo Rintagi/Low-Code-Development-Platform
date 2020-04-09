@@ -43,6 +43,7 @@ namespace RO.Web
             columns.Add("CopyReportId22", typeof(string));
             columns.Add("ModifiedBy22", typeof(string));
             columns.Add("TemplateName22", typeof(string));
+            columns.Add("RptTemplate22", typeof(string));
             columns.Add("UnitCd22", typeof(string));
             columns.Add("TopMargin22", typeof(string));
             columns.Add("BottomMargin22", typeof(string));
@@ -164,6 +165,8 @@ namespace RO.Web
             drType["ModifiedBy22"] = "Numeric"; drDisp["ModifiedBy22"] = "DropDownList";
             try { dr["TemplateName22"] = (mst["TemplateName22"] ?? "").Trim().Left(50); } catch { }
             drType["TemplateName22"] = "VarChar"; drDisp["TemplateName22"] = "TextBox";
+            try { dr["RptTemplate22"] = mst["RptTemplate22"]; } catch { }
+            drType["RptTemplate22"] = "Numeric"; drDisp["RptTemplate22"] = "Document";
             try { dr["UnitCd22"] = mst["UnitCd22"]; } catch { }
             drType["UnitCd22"] = "Char"; drDisp["UnitCd22"] = "DropDownList";
             try { dr["TopMargin22"] = (mst["TopMargin22"] ?? "").Trim().Left(9999999); } catch { }
@@ -668,19 +671,19 @@ namespace RO.Web
         [WebMethod(EnableSession = false)]
         public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> DelRptTemplate22(string mstId, string dtlId, bool isMaster, string[] docIdList, string screenColumnName)
         {
-            return DelMultiDoc(mstId, dtlId, isMaster, docIdList, "RptTemplate22", "RptTemplate", "Report", "RptTemplate", "ReportId");
+            return DelMultiDoc(mstId, dtlId, true, docIdList, "RptTemplate22", "RptTemplate", "Report", "RptTemplate", "ReportId");
         }
 
         [WebMethod(EnableSession = false)]
         public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> SaveRptTemplate22(string mstId, string dtlId, bool isMaster, string docId, bool overwrite, string screenColumnName, string docJson, SerializableDictionary<string, string> options)
         {
-            return SaveMultiDoc(mstId, dtlId, isMaster, docId, overwrite, "RptTemplate22", "RptTemplate", docJson, options);
+            return SaveMultiDoc(mstId, dtlId, true, docId, overwrite, "RptTemplate22", "RptTemplate", docJson, options);
         }
 
         [WebMethod(EnableSession = false)]
         public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetRptTemplate22List(string mstId, string dtlId, bool isMaster)
         {
-            return GetMultiDocList(mstId, dtlId, isMaster, "RptTemplate22", "GetDdlRptTemplate3S1728");
+            return GetMultiDocList(mstId, dtlId, true, "RptTemplate22", "GetDdlRptTemplate3S1728");
         }
 
                         
