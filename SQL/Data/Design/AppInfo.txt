@@ -2504,10 +2504,6 @@ In default.master: replace section.css with the following:
 2. manual override of behind proxy detection~@~~@~en-US~@~
 12583~@~  11. 146.00409~@~11~@~146~@~2020-04-09 00:00:00.000~@~~@~~@~1. React LoadPage can have alternative filterId than 'remembered' one
 2. minor improvement to git reset to always compile libraries(in case it is changed)~@~~@~en-US~@~
-<<<<<<< HEAD
-12584~@~  11. 147~@~11~@~147~@~~@~~@~~@~~@~~@~~@~
-=======
 12584~@~  11. 147.00410~@~11~@~147~@~2020-04-10 00:00:00.000~@~~@~~@~1. fix selfinvoke path construction issue 
 2. better error tracing for DirectPost~@~~@~en-US~@~
 12585~@~  11. 148~@~11~@~148~@~~@~~@~~@~~@~~@~~@~
->>>>>>> master
