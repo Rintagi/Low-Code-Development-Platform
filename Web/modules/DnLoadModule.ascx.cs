@@ -69,8 +69,21 @@ namespace RO.Web
                     int usrId = int.Parse(r.scr[3]);
                     LImpr = null;
                     SetImpersonation(usrId);
+<<<<<<< HEAD
                     byte[] content = GetColumnContent(r.scr[0], r.scr[1], r.scr[2], c[0], c[1], c[2]);
                     return new Tuple<string, string, byte[]>("", "", content);
+=======
+                    try
+                    {
+                        byte[] content = GetColumnContent(r.scr[0], r.scr[1], r.scr[2], c[0], c[1], c[2]);
+                        return new Tuple<string, string, byte[]>("", "", content);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorTrace(new Exception(string.Format("systemId {0}", string.Join(",", r.scr.ToArray())), ex), "error");
+                        throw;
+                    }
+>>>>>>> master
                 }
             }
             return null;
