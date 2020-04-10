@@ -686,10 +686,6 @@ export function htmlToBase64(htmlContent) {
   });
 }
 
-export function uuid() {
-  return Array.from((window.crypto || window.msCrypto).getRandomValues(new Uint32Array(4))).map(n => n.toString(16)).join('-');
-}
-
 /* redux autocomplete helper, already implemented in base reducer but this is here for those not comform to the coding style */
 export function AutoCompleteSearch({ dispatch, v, topN, filterOn, searchApi, SucceededActionType, FailedActionType, ColumnName, forDtl, forMst }) {
   const keyLookup = (v || '').startsWith("**")
@@ -745,40 +741,6 @@ export function getListDisplayContent(obj, column){
       }else{
         return formatContent(obj[columnDef], column["DisplayMode"]);
       }
-  }
-}
-
-export function getCurrentReactUrlPath() {
-  const href = window.location.href;
-  return href.replace(/\?.*$/, '');
-}
-
-export function getCurrentReactUrlSearch() {
-  const href = window.location.href;
-  return href.replace(/^[^?]*\?/, '');
-}
-
-export function isTouchDevice() {
-  if ('ontouchstart' in window || navigator.msMaxTouchPoints) {
-    return true;
-  }
-}
-
-export function isAndroid() {
-  if (navigator.userAgent.includes('Android')) {
-    return true;
-  }
-}
-
-export function isIphone() {
-  if (navigator.userAgent.includes('iPhone')) {
-    return true;
-  }
-}
-
-export function isHttps() {
-  if (window.location.protocol === 'https:') {
-    return true;
   }
 }
 

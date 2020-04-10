@@ -2263,20 +2263,20 @@ document.Rintagi = {{
                         : Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "status -s -uno", true, appRoot);
 
                 // checkout, overwrite all local changes
-                //var revertChangesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
-                //                                    , "checkout"
-                //                                        + (
-                //                                        string.IsNullOrEmpty(branch)
-                //                                        ? " HEAD "
-                //                                        : (branch.Contains("/") ? " " + branch + " -B master "
-                //                                        : " " + branch + " "
-                //                                        ))
-                //                                        + "-f -- "
-                //                                        , true, appRoot);
-                //if (revertChangesRet.Item1 != 0)
-                //{
-                //    throw new Exception(revertChangesRet.Item3);
-                //}
+                var revertChangesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
+                                                    , "checkout"
+                                                        + (
+                                                        string.IsNullOrEmpty(branch)
+                                                        ? " HEAD "
+                                                        : (branch.Contains("/") ? " " + branch + " -B master "
+                                                        : " " + branch + " "
+                                                        ))
+                                                        + "-f -- "
+                                                        , true, appRoot);
+                if (revertChangesRet.Item1 != 0)
+                {
+                    throw new Exception(revertChangesRet.Item3);
+                }
 
                 // change summary
                 int lastX = 20;
@@ -2343,6 +2343,7 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
+
 ~@~~@~~@~~@~~@~~@~~@~~@~
 181~@~4~@~Publish React to Site~@~Systems Maintenance: Publish React to Site~@~Ready React code for production~@~87~@~4219~@~~@~1~@~            try
             {

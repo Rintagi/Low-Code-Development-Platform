@@ -8,8 +8,7 @@ import { Row, Col, Spinner } from 'reactstrap';
 import { showNotification } from '../../redux/Notification';
 import Skeleton from 'react-skeleton-loader';
 import { formatBytes, readUrl } from '../../helpers/formatter';
-import { uuid } from '../../helpers/utils';
-import { previewContent } from '../../helpers/domutils';
+import { previewContent, uuid } from '../../helpers/domutils';
 import moment from 'moment';
 
 function calcSize(width, height, max_width, max_height, noSwap) {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Popover, PopoverBody, PopoverHeader, UncontrolledPopover } from 'reactstrap';
 import log from '../../helpers/logger';
-import { isTouchDevice } from '../../helpers/utils';
+import { isTouchDevice } from '../../helpers/domutils';
 
 export default class ControlledPopover extends Component {
   constructor(props) {

@@ -1712,20 +1712,20 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                         : Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "status -s -uno", true, appRoot);
 
                 // checkout, overwrite all local changes
-                //var revertChangesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
-                //                                    , "checkout"
-                //                                        + (
-                //                                        string.IsNullOrEmpty(branch)
-                //                                        ? " HEAD "
-                //                                        : (branch.Contains("/") ? " " + branch + " -B master "
-                //                                        : " " + branch + " "
-                //                                        ))
-                //                                        + "-f -- "
-                //                                        , true, appRoot);
-                //if (revertChangesRet.Item1 != 0)
-                //{
-                //    throw new Exception(revertChangesRet.Item3);
-                //}
+                var revertChangesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
+                                                    , "checkout"
+                                                        + (
+                                                        string.IsNullOrEmpty(branch)
+                                                        ? " HEAD "
+                                                        : (branch.Contains("/") ? " " + branch + " -B master "
+                                                        : " " + branch + " "
+                                                        ))
+                                                        + "-f -- "
+                                                        , true, appRoot);
+                if (revertChangesRet.Item1 != 0)
+                {
+                    throw new Exception(revertChangesRet.Item3);
+                }
 
                 // change summary
                 int lastX = 20;
@@ -1792,6 +1792,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
             {
                 PreMsgPopup(ex.Message);
             }
+
 
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
