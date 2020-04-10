@@ -1595,10 +1595,10 @@ namespace RO.Web
                 ? ((Request.IsSecureConnection ? "https://" : "http://")
                     + myUri.Host
                     + (myUri.IsDefaultPort ? "" : ":" + myUri.Port.ToString())
-                    + Request.ApplicationPath == "/" ? "" : Request.ApplicationPath
+//                    + Request.ApplicationPath == "/" ? "" : Request.ApplicationPath
                     )
 //                    ? "http://localhost/" + (Request.ApplicationPath + "/").Replace("//", "/") 
-                    : Config.IntBaseUrl ;
+                    : Config.IntDomain;
 
             string newUrl =
                 //myUri.Scheme
@@ -2289,7 +2289,15 @@ namespace RO.Web
                             SetImpersonation(usrId);
                             foreach (var c in r.cols)
                             {
-                                GetMultiDoc(r.scr[0], r.scr[1], r.scr[2], c[0], c[1], c[2], resultFile, tempDirectory);
+                                try
+                                {
+                                    GetMultiDoc(r.scr[0], r.scr[1], r.scr[2], c[0], c[1], c[2], resultFile, tempDirectory);
+                                }
+                                catch (Exception ex)
+                                {
+                                    ErrorTrace(new Exception(string.Format("systemId {0}", string.Join(",", r.scr.ToArray())), ex), "error");
+                                    throw;
+                                }
                             }
                         }
 
@@ -2959,11 +2967,14 @@ namespace RO.Web
             string appPath = Request.ApplicationPath;
             string behindProxy = System.Configuration.ConfigurationManager.AppSettings["BehindProxy"];
 
-            return !string.IsNullOrEmpty(extBasePath)
-                && (!string.IsNullOrEmpty(xForwardedFor) || !string.IsNullOrEmpty(isaHttps))
-                //&& appPath.ToLower() != extBasePath.ToLower()
+            return
+                behindProxy == "Y"
+                ||
+                (
+                !string.IsNullOrEmpty(extBasePath)
+                && (!string.IsNullOrEmpty(xForwardedFor) || !string.IsNullOrEmpty(isaHttps)))
+            //                && appPath.ToLower() != extBasePath.ToLower();
                 ;
-
         }
 
         protected string ResolveUrlCustom(string relativeUrl, bool isInternal = false, bool withDomain = false)

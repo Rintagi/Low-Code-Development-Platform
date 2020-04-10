@@ -765,7 +765,7 @@ export class RintagiScreenRedux {
       const { mstId, dtlId, reloadMst, reloadMstList, reloadDtl } = options;
       const searchStr = currentRedux.ScreenCriteria.SearchStr;
       const topN = ((options || {}).topN) || currentRedux.ScreenCriteria.TopN;
-      const filterId = currentRedux.ScreenCriteria.FilterId;
+      const filterId = ((options || {}).FilterId) || currentRedux.ScreenCriteria.FilterId;
       const isInitialized = currentRedux.initialized;
       const specificMstId = typeof mstId !== 'undefined' && mstId !== '_';
 //      const rememberedMst = GetCurrent(persistMstName);
