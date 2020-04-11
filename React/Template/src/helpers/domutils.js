@@ -1,5 +1,43 @@
 import { makeBlob } from './utils';
 
+export function getCurrentReactUrlPath() {
+  const href = window.location.href;
+  return href.replace(/\?.*$/, '');
+}
+
+export function getCurrentReactUrlSearch() {
+  const href = window.location.href;
+  return href.replace(/^[^?]*\?/, '');
+}
+
+export function isTouchDevice() {
+  if ('ontouchstart' in window || navigator.msMaxTouchPoints) {
+    return true;
+  }
+}
+
+export function isAndroid() {
+  if (navigator.userAgent.includes('Android')) {
+    return true;
+  }
+}
+
+export function isIphone() {
+  if (navigator.userAgent.includes('iPhone')) {
+    return true;
+  }
+}
+
+export function isHttps() {
+  if (window.location.protocol === 'https:') {
+    return true;
+  }
+}
+
+export function uuid() {
+  return Array.from((window.crypto || window.msCrypto).getRandomValues(new Uint32Array(4))).map(n => n.toString(16)).join('-');
+}
+
 export function previewContent({ dataObj, winObj, containerUrl, download, isImage, features, replace, dataPromise, previewSig } = {}) {
   
     const isIE = window.navigator && window.navigator.msSaveOrOpenBlob && false;

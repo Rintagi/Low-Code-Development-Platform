@@ -2238,7 +2238,7 @@ document.Rintagi = {{
 
                 string branch = System.Configuration.ConfigurationManager.AppSettings["GitCheckoutBranch"];
 
-                if (branch.Contains("/"))
+                if ((branch ?? "").Contains("/"))
                 {
                     // fetch latest
                     try
@@ -2326,7 +2326,7 @@ document.Rintagi = {{
                         return false;
                     };
                     var publishRet =
-                        Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format("/v:m {0}/{1}.sln", appRoot, Config.AppNameSpace), true, stdOutHandler, stdErrHandler, appRoot);
+                        Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format("/v:n {0}/{1}.sln", appRoot, Config.AppNameSpace), true, stdOutHandler, stdErrHandler, appRoot);
 
                 }
                 else
@@ -2343,6 +2343,7 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
+
 ~@~~@~~@~~@~~@~~@~~@~~@~
 181~@~4~@~Publish React to Site~@~Systems Maintenance: Publish React to Site~@~Ready React code for production~@~87~@~4219~@~~@~1~@~            try
             {

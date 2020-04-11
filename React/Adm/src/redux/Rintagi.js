@@ -1,7 +1,7 @@
 import log from '../helpers/logger';
 import { getUrl } from '../services/systemService';
-import { getDefaultPath, uuid } from '../helpers/utils';
-import { getReactContainerInfo, getReactContainerStatus } from '../helpers/domutils';
+import { getDefaultPath } from '../helpers/utils';
+import { getReactContainerInfo, getReactContainerStatus, uuid } from '../helpers/domutils';
 
 /* this is rintagi controlled redux, DO NOT EXPAND OR MODIFY
  * it would be overwritten
