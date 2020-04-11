@@ -2506,4 +2506,5 @@ In default.master: replace section.css with the following:
 2. minor improvement to git reset to always compile libraries(in case it is changed)~@~~@~en-US~@~
 12584~@~  11. 147.00410~@~11~@~147~@~2020-04-10 00:00:00.000~@~~@~~@~1. fix selfinvoke path construction issue 
 2. better error tracing for DirectPost~@~~@~en-US~@~
-12585~@~  11. 148~@~11~@~148~@~~@~~@~~@~~@~~@~~@~
+12585~@~  11. 148.00410~@~11~@~148~@~2020-04-10 00:00:00.000~@~~@~~@~1. further cleanup to separate dom/browser dependent calls to domutils in react~@~~@~en-US~@~
+12586~@~  11. 149~@~11~@~149~@~~@~~@~~@~~@~~@~~@~

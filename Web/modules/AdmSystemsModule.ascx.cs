@@ -1687,7 +1687,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 
                 string branch = System.Configuration.ConfigurationManager.AppSettings["GitCheckoutBranch"];
 
-                if (branch.Contains("/"))
+                if ((branch ?? "").Contains("/"))
                 {
                     // fetch latest
                     try
@@ -1775,7 +1775,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                         return false;
                     };
                     var publishRet =
-                        Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format("/v:m {0}/{1}.sln", appRoot, Config.AppNameSpace), true, stdOutHandler, stdErrHandler, appRoot);
+                        Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format("/v:n {0}/{1}.sln", appRoot, Config.AppNameSpace), true, stdOutHandler, stdErrHandler, appRoot);
 
                 }
                 else
