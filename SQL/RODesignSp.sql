@@ -1018,7 +1018,9 @@ GO
 SET ANSI_NULLS ON
 GO
 -- Only in ??Design.
-CREATE FUNCTION [dbo].[fSredTime]() RETURNS TABLE 
+CREATE FUNCTION [dbo].[fSredTime]() 
+RETURNS TABLE 
+/* WITH ENCRYPTION */  
 AS
 RETURN 
 (
@@ -1191,6 +1193,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+-- Only in ??Design.
 CREATE FUNCTION [dbo].[fUsrImprChain] 
 (
 )
@@ -1304,12 +1307,14 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+-- Only in ??Design.
 CREATE FUNCTION [dbo].[Split_Strings_XML]
 (
    @List       NVARCHAR(MAX),
    @Delimiter  NVARCHAR(255)
 )
 RETURNS TABLE
+/* WITH ENCRYPTION */  
 AS
    RETURN 
    (  
@@ -1337,6 +1342,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+-- Only in ??Design.
 CREATE FUNCTION [dbo].[SplitID_Match]
 (
    @List1       NVARCHAR(MAX),
@@ -1345,6 +1351,7 @@ CREATE FUNCTION [dbo].[SplitID_Match]
    @Op                  char(1) -- O(one) at least one match, S(same) all match, I(in) all List1 appears in List2, C(Contains) - List1 contains all List2
 )
 RETURNS TABLE
+/* WITH ENCRYPTION */  
 AS
 RETURN 
 ( 
