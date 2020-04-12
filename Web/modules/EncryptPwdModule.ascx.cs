@@ -34,10 +34,27 @@ namespace RO.Web
                         System.Configuration.ConfigurationManager.AppSettings["ShowHttpHeaders"] == "Y")
                     {
                         foreach (var key in Request.Headers.AllKeys) {
-                            cMsg.Text = cMsg.Text + Environment.NewLine + key + " = " + Request.Headers[key];
+                            // don't show cookie or auth header
+                            if (!key.Contains("Cookie")
+                                &&
+                                !key.Contains("Authorization")
+                                )
+                            {
+                                cMsg.Text = cMsg.Text + Environment.NewLine + key + " = " + Request.Headers[key];
+                            }
                         }
+                        cMsg.Text = cMsg.Text + Environment.NewLine + string.Format("IsProxy: {0}",IsProxy());
+                        cMsg.Text = cMsg.Text + Environment.NewLine + ResolveUrl("~/Dnload.aspx");
                         cMsg.Text = cMsg.Text + Environment.NewLine + ResolveUrlCustom("~/Dnload.aspx", false, true);
                         cMsg.Text = cMsg.Text + Environment.NewLine + ResolveUrlCustom("~/Dnload.aspx", true, true);
+                        cMsg.Text = cMsg.Text + Environment.NewLine + Config.ExtBaseUrl;
+                        cMsg.Text = cMsg.Text + Environment.NewLine + GetDomainUrl(false);
+                        cMsg.Text = cMsg.Text + Environment.NewLine + Config.ExtDomain;
+                        cMsg.Text = cMsg.Text + Environment.NewLine + Config.ExtBasePath;
+                        cMsg.Text = cMsg.Text + Environment.NewLine + Config.IntBaseUrl;
+                        cMsg.Text = cMsg.Text + Environment.NewLine + GetDomainUrl(true);
+                        cMsg.Text = cMsg.Text + Environment.NewLine + Config.IntDomain;
+                        cMsg.Text = cMsg.Text + Environment.NewLine + Config.IntBasePath;
                         cMsg.Visible = true;
                     }
                 }

@@ -302,7 +302,7 @@ SuppressGenRoute ? [] : [
             sb.Append(@"
 import { sidebarReducer } from './SideBar';
 import { authReducer } from './Auth';
-import { rintagiReducer } from './Rintagi';
+import { rintagiReducer } from './_Rintagi';
 import { notificationReducer } from './Notification';
 import { globalReducer } from './Global';
 import { SqlReportReducer } from './SqlReport';
@@ -618,7 +618,7 @@ import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPa
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import [[---ScreenName---]]ReduxObj, { ShowMstFilterApplied } from '../../redux/[[---ScreenName---]]';
-import { checkBundleUpdate } from '../../redux/Rintagi';
+import { checkBundleUpdate } from '../../redux/_Rintagi';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { getNaviBar } from './index';
 import MstRecord from './MstRecord';

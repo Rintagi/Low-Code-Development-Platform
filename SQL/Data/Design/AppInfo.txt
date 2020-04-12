@@ -2507,4 +2507,7 @@ In default.master: replace section.css with the following:
 12584~@~  11. 147.00410~@~11~@~147~@~2020-04-10 00:00:00.000~@~~@~~@~1. fix selfinvoke path construction issue 
 2. better error tracing for DirectPost~@~~@~en-US~@~
 12585~@~  11. 148.00410~@~11~@~148~@~2020-04-10 00:00:00.000~@~~@~~@~1. further cleanup to separate dom/browser dependent calls to domutils in react~@~~@~en-US~@~
-12586~@~  11. 149~@~11~@~149~@~~@~~@~~@~~@~~@~~@~
+12586~@~  11. 149.00411~@~11~@~149~@~2020-04-11 00:00:00.000~@~~@~~@~1. refine behind proxy situation(mis-configured proxy server etc.)~@~~@~en-US~@~
+12587~@~  11. 150.00412~@~11~@~150~@~2020-04-12 00:00:00.000~@~~@~~@~1. add screen last criteria pivot helper function in SQL
+2. rename react global Rintagi redux to _Rintagi(deployment name clash)~@~~@~en-US~@~
+12588~@~  11. 151~@~11~@~151~@~~@~~@~~@~~@~~@~~@~

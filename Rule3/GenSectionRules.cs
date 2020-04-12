@@ -383,6 +383,7 @@
             sb.Append("namespace RO.Web" + Environment.NewLine);
             sb.Append("{" + Environment.NewLine);
             sb.Append("    using System;" + Environment.NewLine);
+            sb.Append("    using System.Collections.Generic;" + Environment.NewLine);
             sb.Append("    using System.Data;" + Environment.NewLine);
             sb.Append("    using System.Drawing;" + Environment.NewLine);
             sb.Append("    using System.Web;" + Environment.NewLine);
@@ -401,7 +402,16 @@
             sb.Append("        protected void Page_Load(object sender, System.EventArgs e)" + Environment.NewLine);
             sb.Append("        {" + Environment.NewLine);
             sb.Append("            if (!IsPostBack)" + Environment.NewLine);
+            
+            
+            ;
+            
+
             sb.Append("            {" + Environment.NewLine);
+            sb.Append("                bool isFullyLicensed = RO.Common3.Utils.IsFullyLicense(\"Design\", \"Deploy\");" + Environment.NewLine);
+            sb.Append("                Tuple<string, bool, string> licenseDetail = RO.Common3.Utils.DecodeLicense(null);" + Environment.NewLine);
+            sb.Append("                Dictionary<string, Dictionary<string, string>> moduleList = RO.Common3.Utils.DecodeLicenseDetail(licenseDetail.Item1);" + Environment.NewLine);
+            sb.Append("                Dictionary<string, string> admLicenseDetail = moduleList.ContainsKey(\"Design\") ? moduleList[\"Design\"] : null;" + Environment.NewLine);
             sb.Append("                if (Session[KEY_" + SectionNm + "Generated] == null) try" + Environment.NewLine);
             sb.Append("                {" + Environment.NewLine);
             sb.Append("                    if (base.CPrj != null && base.CSrc != null && Config.DeployType == \"DEV\" && (new AdminSystem()).IsRegenNeeded(\"" + SectionNm + "\", 0, 0, 0, string.Empty, string.Empty))" + Environment.NewLine);
@@ -430,7 +440,16 @@
             {
                 sb.Append("                    try {" + Environment.NewLine);
                 sb.Append("                        byte sid = byte.Parse(((DropDownList)Page.Master.FindControl(\"ModuleHeader\").FindControl(\"ModuleProfile\").FindControl(\"SystemsList\")).SelectedValue);" + Environment.NewLine);
-                sb.Append("                        cVersionTxt.Text = \"&#169;1999-\" + DateTime.Now.Year.ToString() + \" Robocoder Corporation. All rights reserved (V\" + (new LoginSystem()).GetAppVersion(base.SysConnectStr(sid), base.AppPwd(sid)) + \" by R\" + (new LoginSystem()).GetRbtVersion() + \"). Protected by U.S. Patent 6,876,314.\";" + Environment.NewLine);
+                sb.Append("                        cVersionTxt.Text = \"&#169;1999-\" + DateTime.Now.Year.ToString()" + Environment.NewLine);
+                sb.Append("                                            + \" Robocoder Corporation. All rights reserved (V\" + (new LoginSystem()).GetAppVersion(base.SysConnectStr(sid), base.AppPwd(sid))" + Environment.NewLine);
+                sb.Append("                                            + \" by R\" + (new LoginSystem()).GetRbtVersion() + \"). Protected by U.S. Patent 6,876,314.\"" + Environment.NewLine);
+                sb.Append("                                            + (" + Environment.NewLine);
+                sb.Append("                                                isFullyLicensed && !licenseDetail.Item2" + Environment.NewLine);
+                sb.Append("                                                ? \" Perpetual license\"" + Environment.NewLine);
+                sb.Append("                                                : !licenseDetail.Item2 || admLicenseDetail == null ? \" Trial license\"" + Environment.NewLine);
+                sb.Append("                                                : string.Format(\" Licensed till {0}\", admLicenseDetail[\"Expiry\"])" + Environment.NewLine);
+                sb.Append("                                                )" + Environment.NewLine);
+                sb.Append("                                                ;" + Environment.NewLine);
                 sb.Append("                    } catch { cVersionTxt.Text = \"&#169;1999-\" + DateTime.Now.Year.ToString() + \" Robocoder Corporation. All rights reserved.\"; }" + Environment.NewLine);
             }
             if (dtObj.Select("LinkTypeCd = 'CUL'").Count() > 0)
