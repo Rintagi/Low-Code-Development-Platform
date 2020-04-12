@@ -1591,19 +1591,19 @@ namespace RO.Web
             /* we cannot use myUrl.Host as dns name may not be the same as access from outside 
              * use either localhost assuming default web site or must be configured
              */
-            string intBaseUrl = string.IsNullOrEmpty(Config.IntBaseUrl) 
+            string intDomainUrl = string.IsNullOrEmpty(Config.IntBaseUrl) 
                 ? ((Request.IsSecureConnection ? "https://" : "http://")
                     + myUri.Host
                     + (myUri.IsDefaultPort ? "" : ":" + myUri.Port.ToString())
 //                    + Request.ApplicationPath == "/" ? "" : Request.ApplicationPath
                     )
 //                    ? "http://localhost/" + (Request.ApplicationPath + "/").Replace("//", "/") 
-                    : Config.IntDomain;
+                    : GetDomainUrl(true);
 
             string newUrl =
                 //myUri.Scheme
                 //+ "://" + myUri.Host + ":" + myUri.Port
-                intBaseUrl
+                intDomainUrl
                 + ResolveUrl((url.StartsWith("~/") || url.StartsWith("/") || url.StartsWith("http") ? "" : "~/") + url) + (url.Contains("?") ? "&" : "?") + "runas=" + ticket;
 
             System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(newUrl);
@@ -1743,11 +1743,17 @@ namespace RO.Web
                     Response.AppendCookie(y);
                     if (
                         !string.IsNullOrEmpty(Request.Headers["X-ARR-LOG-ID"])
-                        && Request.Headers["X-Forwarded-Https"] == "off" // iis urlrewrite can't handle same domain redirect from http => https, endless loop
-                        //|| Request.Headers["Front-End-Https"] == "off"
+                        && 
+                        (
+                        Request.Headers["X-Forwarded-Https"] != "on" // iis urlrewrite can't handle same domain redirect from http => https, endless loop
+                        //Request.Headers["Front-End-Https"] == "off"
+                        )
                         )
                     {
-                        throw new Exception(string.Format("Proxy configuration issue for IIS Urlrewrite(https:{0}) vs {1}, must enforce https:// before proxying", Request.Headers["X-Forwarded-Https"], Config.ExtBaseUrl));
+                        ErrorTrace(new Exception(string.Format("Proxy configuration issue for IIS UrlRewrite(https:{0}) vs {1}, must enforce https:// before proxying", Request.Headers["X-Forwarded-Https"] ?? "null", Config.ExtBaseUrl))
+                        , "warning");
+
+                        throw new Exception(string.Format("Please use <a href='{0}'> {0} </a>", ResolveUrlCustom(Request.Url.AbsoluteUri, false, true)));
                     }
                     else
                     {
@@ -1755,7 +1761,10 @@ namespace RO.Web
                         {
                             Response.Cookies[sessionCookieName].Expires = new DateTime(1900, 1, 1);
                         }
-                        this.Redirect(Request.Url.AbsoluteUri.Replace("http://", "https://"));
+                        this.Redirect(
+                        //    ResolveUrlCustom(Request.Url.AbsoluteUri, false, true)
+                            Request.Url.AbsoluteUri.Replace("http://", "https://")
+                        );
                     }
                 }
                 if (sessionCookie != null)
@@ -3011,27 +3020,29 @@ namespace RO.Web
                 requestHeader["Host"] = host;
                 requestHeader["ApplicationPath"] = appPath;
                 url = Utils.transformProxyUrl(url, requestHeader);
-                return withDomain ? url : new Regex("^" + GetDomainUrl(), RegexOptions.IgnoreCase).Replace(url, "");
+                return withDomain ? url : new Regex("^" + GetDomainUrl(false), RegexOptions.IgnoreCase).Replace(url, "");
             }
             else
             {
                 return withDomain 
-                        ? (url.StartsWith("http") ? url : GetDomainUrl(false) + (url.StartsWith("/") ? "" : "/") + url) 
-                        : new Regex("^" + GetDomainUrl(false), RegexOptions.IgnoreCase).Replace(url,"");
+                        ? (url.StartsWith("http") ? url : GetDomainUrl(true) + (url.StartsWith("/") ? "" : "/") + url) 
+                        : new Regex("^" + GetDomainUrl(true), RegexOptions.IgnoreCase).Replace(url,"");
             }
 
         }
         protected string GetDomainUrl(bool isInternal = false)
         {
-            var Request = Context.Request;
-            string intBaseUrl = ((Request.IsSecureConnection) ? "https://" : "http://")
-                        + HttpContext.Current.Request.Url.Host
-                        + (HttpContext.Current.Request.Url.IsDefaultPort ? "" : ":" + HttpContext.Current.Request.Url.Port.ToString());
+            var Request = HttpContext.Current.Request;
+            string intDomainUrl = ((Request.IsSecureConnection) ? "https://" : "http://")
+                        + Request.Url.Host
+                        + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port.ToString());
 
-            if (isInternal || !IsProxy() || string.IsNullOrEmpty(Config.ExtBaseUrl)) 
-                return intBaseUrl;
-            else 
-                return Config.ExtBaseUrl.Replace(Config.ExtBasePath, "");
+            if (isInternal
+                || !IsProxy()
+                || string.IsNullOrEmpty(Config.ExtBaseUrl))
+                return string.IsNullOrEmpty(Config.IntBaseUrl) ? intDomainUrl : new Regex(Config.IntBasePath + "$").Replace(Config.IntBaseUrl, "");
+            else
+                return new Regex(Config.ExtBasePath + "$").Replace(Config.ExtBaseUrl, "");
         }
         protected string GetBaseUrl(bool isInternal = false)
         {
@@ -3167,7 +3178,12 @@ namespace RO.Web
                     string domain = smtpConfig.Length > 5 ? smtpConfig[5].Trim() : null;
                     System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
                     string[] receipients = to.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    string sourceIP = string.Format("From: {0}\r\n\r\n", Request != null ? Request.UserHostAddress : "unknown request url");
+                    var request = Request;
+                    string xForwardedFor = request != null ? request.Headers["X-Forwarded-For"] : null;
+                    string xForwardedHost = request != null ? request.Headers["X-Forwarded-Host"] : null;
+                    string xForwardedProto = request != null ? request.Headers["X-Forwarded-Proto"] : null;
+                    string xOriginalURL = request != null ? request.Headers["X-Original-URL"] : null;
+                    string sourceIP = string.Format("From: {0}, Forwarded for: {1}\r\n\r\n", Request != null ? Request.UserHostAddress : "unknown request url", xForwardedFor);
                     string machine = string.Format("Machine: {0}\r\n\r\n", Environment.MachineName);
                     string usrId = string.Format("User: {0}\r\n\r\n", LUser != null ? LUser.UsrId.ToString() : "");
                     string currentTime = string.Format("Server Time: {0} \r\n\r\n UTC: {1} \r\n\r\n", DateTime.Now.ToString("O"), DateTime.UtcNow.ToString("O"));

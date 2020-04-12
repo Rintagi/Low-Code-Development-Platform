@@ -88,6 +88,48 @@ END
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fScreenLastCri') AND type='IF')
+DROP FUNCTION dbo.fScreenLastCri
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE FUNCTION [dbo].[fScreenLastCri] 
+(
+@ScreenId	int
+,@UsrId		int
+)
+RETURNS TABLE 
+/* WITH ENCRYPTION */  
+AS
+RETURN 
+(
+SELECT
+ScreenId , UsrId,   
+Cri1, Cri2, Cri3, Cri4, Cri5, Cri6,Cri7, Cri8, Cri9, Cri10  
+FROM  
+(select
+sc.ScreenId, lc.UsrId
+, CriName = 'Cri' + CONVERT(VARCHAR, ROW_NUMBER() OVER (PARTITION BY Sc.ScreenId, Lc.UsrId ORDER BY Sc.TabIndex))
+, LastCriteria = LastCriteria
+from
+dbo.ScreenCri sc
+left outer join dbo.ScreenLstCri lc on lc.ScreenCriId = sc.ScreenCriId 
+WHERE
+(sc.ScreenId = @ScreenId OR @ScreenId IS NULL) 
+AND
+(lc.UsrId = @UsrId OR @UsrId IS NULL)
+) AS SourceTable  
+PIVOT  
+(  
+MAX(LastCriteria)  
+FOR CriName IN ([Cri1], [Cri2], [Cri3], [Cri4], [Cri5], [Cri6], [Cri7], [Cri8], [Cri9], [Cri10])  
+) AS PivotTable
+)
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fSelRowAuth') AND type='FN')
 DROP FUNCTION dbo.fSelRowAuth
 GO
@@ -26253,7 +26295,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
-		 SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))

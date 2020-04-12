@@ -1,7 +1,7 @@
 
 import { sidebarReducer } from './SideBar';
 import { authReducer } from './Auth';
-import { rintagiReducer } from './Rintagi';
+import { rintagiReducer } from './_Rintagi';
 import { notificationReducer } from './Notification';
 import { globalReducer } from './Global';
 import { SqlReportReducer } from './SqlReport';
