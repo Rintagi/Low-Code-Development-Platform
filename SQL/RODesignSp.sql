@@ -2524,7 +2524,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-ALTER PROCEDURE [dbo].[_GetInCBox] AS SELECT CheckBoxCd, CheckBoxName FROM dbo.CtCheckBox WHERE CultureId = 1
+ALTER PROCEDURE dbo._GetInCBox AS SELECT CheckBoxCd, CheckBoxName FROM dbo.CtCheckBox WHERE CultureId = 1
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
@@ -3052,7 +3052,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-ALTER PROCEDURE [dbo].[_GetS03Rptwiz15R]
+ALTER PROCEDURE dbo._GetS03Rptwiz15R
  @wClause	nvarchar(max)
 ,@LoginSuccess10	Char(1)
 /* WITH ENCRYPTION */
@@ -3081,7 +3081,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-ALTER PROCEDURE [dbo].[_GetS03Rptwiz15V]
+ALTER PROCEDURE dbo._GetS03Rptwiz15V
  @wClause	nvarchar(max)
 ,@LoginSuccess10	Char(1)
 /* WITH ENCRYPTION */
@@ -13301,6 +13301,9 @@ ALTER PROCEDURE [dbo].[GetDdlAccessCd3S1673]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -13520,6 +13523,9 @@ ALTER PROCEDURE [dbo].[GetDdlAggregateCd3S1652]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -20501,6 +20507,9 @@ ALTER PROCEDURE [dbo].[GetDdlGFormat3S1794]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(4000)
+,@Guarantors		varchar(4000)
+,@Lenders		varchar(4000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -20553,6 +20562,9 @@ ALTER PROCEDURE [dbo].[GetDdlGPositive3S1637]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -24179,6 +24191,9 @@ ALTER PROCEDURE [dbo].[GetDdlOrientationCd3S1674]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -26995,6 +27010,9 @@ ALTER PROCEDURE [dbo].[GetDdlReportId3S1672]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -27787,6 +27805,9 @@ ALTER PROCEDURE [dbo].[GetDdlRptChaTypeCd3S1739]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(4000)
+,@Guarantors		varchar(4000)
+,@Lenders		varchar(4000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -28553,6 +28574,9 @@ ALTER PROCEDURE [dbo].[GetDdlRptwizCatId3S1638]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(4000)
+,@Guarantors		varchar(4000)
+,@Lenders		varchar(4000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -28605,6 +28629,9 @@ ALTER PROCEDURE [dbo].[GetDdlRptwizTypeCd3S1637]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(4000)
+,@Guarantors		varchar(4000)
+,@Lenders		varchar(4000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -35703,6 +35730,9 @@ ALTER PROCEDURE [dbo].[GetDdlUnitCd3S1679]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -36199,6 +36229,9 @@ ALTER PROCEDURE [dbo].[GetDdlUsrId3S1641]
 ,@Companys		varchar(4000)
 ,@Projects		varchar(4000)
 ,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		smallint
 ,@FilterTxt		nvarchar(1000) = null
@@ -53546,6 +53579,9 @@ ALTER PROCEDURE [dbo].[GetLisAdmRptWiz95]
 ,@Companys		varchar(1000)
 ,@Projects		varchar(1000)
 ,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@Key			nvarchar(500)
 ,@FilterTxt		nvarchar(500)
 ,@screenFilterId	int
@@ -58755,6 +58791,9 @@ ALTER PROCEDURE GetS03Rptwiz11
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@MultiDesignDb10 Char(1)
@@ -58826,7 +58865,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-ALTER PROCEDURE [dbo].[GetS03Rptwiz15]
+ALTER PROCEDURE GetS03Rptwiz15
  @reportId		int
 ,@RowAuthoritys		varchar(1000)
 ,@Usrs		varchar(1000)
@@ -58840,6 +58879,9 @@ ALTER PROCEDURE [dbo].[GetS03Rptwiz15]
 ,@Investors		varchar(1000)
 ,@Members		varchar(1000)
 ,@Vendors		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
 ,@currCompanyId		int
 ,@currProjectId		int
 ,@LoginSuccess10 Char(1)
@@ -67617,7 +67659,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-ALTER PROCEDURE [dbo].[MemS03Rptwiz15]
+ALTER PROCEDURE MemS03Rptwiz15
  @PublicAccess char(1)
 ,@RptMemCriId int
 ,@RptMemFldId int
@@ -71795,7 +71837,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-ALTER PROCEDURE [dbo].[UpdS03Rptwiz15]
+ALTER PROCEDURE UpdS03Rptwiz15
  @reportId int
 ,@usrId int
 ,@LoginSuccess10 Char(1)

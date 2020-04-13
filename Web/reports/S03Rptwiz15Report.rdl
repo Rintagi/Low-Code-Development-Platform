@@ -94,9 +94,9 @@
 					<Margin>true</Margin><Scalar>true</Scalar>
 					<MajorTickMarks>Outside</MajorTickMarks><Visible>true</Visible>
 				</Axis></ValueAxis>
-				<CategoryGroupings><CategoryGrouping><DynamicCategories><Grouping Name="CG1038"><GroupExpressions><GroupExpression>=Fields!LoginName.Value</GroupExpression></GroupExpressions></Grouping><Label>=Fields!LoginName.Value</Label></DynamicCategories></CategoryGrouping></CategoryGroupings>
+				<CategoryGroupings><CategoryGrouping><DynamicCategories><Grouping Name="CG1039"><GroupExpressions><GroupExpression>=Fields!LoginName.Value</GroupExpression></GroupExpressions></Grouping><Label>=Fields!LoginName.Value</Label></DynamicCategories></CategoryGrouping></CategoryGroupings>
 				<ChartData><ChartSeries><DataPoints><DataPoint><DataValues><DataValue><Value>=Fields!NumAttempt.Value</Value></DataValue></DataValues><Marker><Size>6pt</Size></Marker></DataPoint></DataPoints></ChartSeries></ChartData>
-				<SeriesGroupings><SeriesGrouping><DynamicSeries><Grouping Name="SG1038"><GroupExpressions><GroupExpression>=Fields!LoginSuccess.Value</GroupExpression></GroupExpressions></Grouping><Label>=Fields!LoginSuccess.Value</Label></DynamicSeries></SeriesGrouping></SeriesGroupings>
+				<SeriesGroupings><SeriesGrouping><DynamicSeries><Grouping Name="SG1039"><GroupExpressions><GroupExpression>=Fields!LoginSuccess.Value</GroupExpression></GroupExpressions></Grouping><Label>=Fields!LoginSuccess.Value</Label></DynamicSeries></SeriesGrouping></SeriesGroupings>
 			</Chart>
 		</ReportItems>
 	</Body>
