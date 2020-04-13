@@ -3124,7 +3124,7 @@ namespace RO.Web
                     if (dr["RptwizCatImg181"].ToString() == string.Empty) { cRptwizCatImg181.Visible = false; }
                     else
                     {
-                        cRptwizCatImg181.ImageUrl = "~/DnLoad.aspx?key=" + cRptwizCatId183.Text + "&tbl=dbo.RptwizCat&knm=RptwizCatId&col=SampleImage&sys=" + base.LCurr.DbId.ToString();
+                        cRptwizCatImg181.ImageUrl = GetUrlWithQSHash("~/DnLoad.aspx?key=" + cRptwizCatId183.Text + "&tbl=dbo.RptwizCat&knm=RptwizCatId&col=SampleImage&sys=" + base.LCurr.DbId.ToString());
                         cRptwizCatImg181.Visible = true;
                     }
                 }

@@ -1712,7 +1712,14 @@ namespace RO.Access3
                 cmd.Parameters.Add("@ReportId183", OleDbType.Numeric).Value = row["ReportId183"].ToString().Trim();
             }
             cmd.Parameters.Add("@AccessCd183", OleDbType.Char).Value = row["AccessCd183"].ToString().Trim();
-            cmd.Parameters.Add("@UsrId183", OleDbType.Numeric).Value = row["UsrId183"].ToString().Trim();
+            if (row["UsrId183"].ToString().Trim() == string.Empty)
+            {
+                cmd.Parameters.Add("@UsrId183", OleDbType.Numeric).Value = LUser.UsrId;
+            }
+            else
+            {
+                cmd.Parameters.Add("@UsrId183", OleDbType.Numeric).Value = row["UsrId183"].ToString().Trim();
+            }
             cmd.Parameters.Add("@TtemplateName183", OleDbType.VarChar).Value = row["TemplateName183"].ToString().Trim();
             cmd.Parameters.Add("@OrientationCd183", OleDbType.Char).Value = row["OrientationCd183"].ToString().Trim();
             cmd.Parameters.Add("@UnitCd183", OleDbType.Char).Value = row["UnitCd183"].ToString().Trim();
