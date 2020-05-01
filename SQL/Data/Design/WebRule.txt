@@ -2406,7 +2406,7 @@ document.Rintagi = {{
                         try
                         {
                             var aa = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("add {0} {1}", string.Format("package.json"), string.Format("src/app/Version.js")), true, reactModuleDir);
-                            var bb = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("commit -m \"{0}\"", string.Format("advance UI to version {0}", newVer)), true, reactModuleDir);
+                            var bb = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("commit -m \"{0}\"", string.Format("advance React module {1} UI to version {0}", newVer, systemAbbr)), true, reactModuleDir);
                             var cc = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("push"), true, reactModuleDir);
                         }
                         catch (Exception ex)
@@ -2529,7 +2529,6 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
-
 ~@~~@~~@~~@~~@~~@~~@~~@~
 182~@~1~@~GrabLicenseDetail~@~Rintagi Installation: GrabLicenseDetail~@~retrieve current saved license~@~1022~@~~@~~@~11~@~            var LicenseServer = !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]) ? System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]
                                 : "https://www.rintagi.com";
@@ -2618,11 +2617,161 @@ document.Rintagi = {{
                         // report error to the front end as cron invoked has no visual error reporting
                         UpdCronStatus(ex.Message, LcSysConnString, LcAppPw);
                         // backend support
-                        ErrorTrace(ex, "error");
+
+                        ErrorTrace(ex, "error", GetRequestInfo());
                     }
                 }
+
 ~@~~@~~@~~@~~@~~@~~@~~@~
 188~@~2~@~modify button behavior~@~Rintagi Installation: modify button behavior~@~~@~1022~@~~@~~@~9~@~                cSaveButton.Visible = false;
                 if (cAcquireLicense.Attributes["OnClick"] == null || cAcquireLicense.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cAcquireLicense.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
                 if (cRenewLicense.Attributes["OnClick"] == null || cRenewLicense.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cRenewLicense.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+~@~~@~~@~~@~~@~~@~~@~~@~
+189~@~4~@~Webhook~@~Rintagi Installation: Webhook~@~Webhook handling(non-manned usage)~@~1022~@~~@~~@~17~@~            var qs = Request.QueryString;
+            // anything in the form of ?something&somethingelse, i.e. without =
+            var qsFlags = Request.QueryString[null];
+            Dictionary<string, string> requestInfo = GetRequestInfo();
+            string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+            string appRoot = webAppRoot.Replace("/Web/", "");
+            bool requestIsProxied = IsProxy();
+            bool isSecureConntection = Request.IsSecureConnection;
+            string myUrl = ResolveUrlCustom(Request.Path, true, true);
+
+            if (!requestIsProxied
+                &&
+                !isSecureConntection
+                )
+            {
+                if (qs["GitCheckout"] != null && HasGitRepo())
+                {
+                    // should validate request
+                    string somethingRunning = Application["BuildRunning"] as string;
+                    if (string.IsNullOrEmpty(somethingRunning))
+                    {
+                        bool publish = qs["PublishReactModule"] != null;
+                        string publishQS = CloneMyQueryString(new List<string>() { "GitCheckout" });
+                        var checkOutTask = GitCheckOutAsync(qs["GitCheckout"], requestInfo);
+
+                        if (publish)
+                        {
+                            var publishTask =  Task.WhenAll(new Task[] { checkOutTask })
+                                .ContinueWith((task) => {
+                                    // checkout would cause rebuild and we have to revisit without the checkout 
+                                    // for continuing
+                                    try
+                                    {
+                                        Thread.Sleep(1000);
+                                        VisitUrl(myUrl + "?" + publishQS);
+                                    }
+                                    catch { }
+                                    // return PublishReactAsync(qs["PublishReactModule"], requestInfo, false);
+                                }
+                            );
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("submitted"));
+                        }
+                        else if (qs["Wait"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("wait"))
+                        {
+                            var result = checkOutTask.Result;
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("success \r\n" + result));
+                        }
+                        else
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("submitted"));
+                    }
+                    else
+                    {
+                        EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("ignored: " + somethingRunning));
+                    }
+                }
+                else if (qs["PublishReactModule"] != null)
+                {
+
+                    string somethingRunning = Application["BuildRunning"] as string;
+                    string createInstallerQS = CloneMyQueryString(new List<string>() { "PublishReactModule" });
+
+                    if (string.IsNullOrEmpty(somethingRunning))
+                    {
+                        var publishReactTask = PublishReactAsync(qs["PublishReactModule"], requestInfo, false);
+                        if (qs["Wait"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("wait"))
+                        {
+                            var result = publishReactTask.Result;
+                            bool hasError = result.Any(p => !p.Item1);
+                            string[] pubRet = result.Select(i => ((i.Item1 ? "success" : "failed") + " " + i.Item5)).ToArray();
+                            string ret = string.Format("{0} {1}\r\n{2}", !hasError ? "success" : "failed", qs["PublishReactModule"], string.Join("\r\n", pubRet));
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes(ret));
+                        }
+                        else
+                        {
+                            if (qs["CreateInstaller"] != null)
+                            {
+                                publishReactTask.ContinueWith((task) =>
+                                {
+                                    Thread.Sleep(1000);
+                                    try
+                                    {
+                                        Thread.Sleep(1000);
+                                        VisitUrl(myUrl + "?" + createInstallerQS);
+                                    }
+                                    catch { }
+
+                                });
+                            }
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("submitted"));
+                        }
+                    }
+                    else
+                    {
+                        EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("ignored:" + somethingRunning));
+                    }
+                }
+                else if (qs["CreateInstaller"] != null)
+                {
+                    string somethingRunning = Application["BuildRunning"] as string;
+                    if (string.IsNullOrEmpty(somethingRunning))
+                    {
+                        if (LUser == null) AnonymousLogin();
+                        string[] config = qs["CreateInstaller"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        DataTable dt = (new RO.Rule3.Deploy()).GetRelease();
+                        Dictionary<string, Tuple<short, short, string, string, string>> releases = new Dictionary<string, Tuple<short, short, string, string, string>>();
+                        List<Task<Tuple<bool, string, string, string, string>>> installerTasks = new List<Task<Tuple<bool, string, string, string, string>>>();
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            string releaseId = dr["ReleaseId"].ToString();
+                            string releaseTypeAbbr = dr["ReleaseTypeAbbr"].ToString();
+                            string DeployPath = dr["PrepDeplPath"].ToString();
+                            foreach (string r in config)
+                            {
+                                if (new Regex(r + @"[/]?$", RegexOptions.IgnoreCase).IsMatch(DeployPath.Replace("\\", "/")))
+                                {
+                                    var release = new Tuple<short, short, string, string, string>(
+                                                    releases.ContainsKey(r) && releases[r].Item1 != 0 ? releases[r].Item1 : releaseTypeAbbr.StartsWith("N") ? (short) 0 : short.Parse(releaseId)
+                                                    , releases.ContainsKey(r) && releases[r].Item2 != 0 ? releases[r].Item2 : !releaseTypeAbbr.StartsWith("N") ? (short) 0 : short.Parse(releaseId)
+                                                    , DeployPath
+                                                    , releaseTypeAbbr
+                                                    , r
+                                                    );
+                                    releases[r] = release;
+                                }
+                            }
+                        }
+                        foreach (var x in releases) {
+                            installerTasks.Add(CreateInstallerAsync(x.Value.Item1, x.Value.Item2, x.Value.Item3, x.Value.Item4, x.Value.Item5, LcSysConnString, LcAppConnString, GetRequestInfo()));
+                        }
+                        if (qs["Wait"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("wait"))
+                        {
+                            var result = Task.WhenAll(installerTasks).Result;
+                            string[] ret = result.Select(i => ((i.Item1 ? "success" : "failed") + " " + i.Item2 + " " + i.Item3 + " " + i.Item4 + " " + i.Item5)).ToArray();
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes(string.Join("\r\n", ret)));
+                        }
+                        else
+                        {
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("submitted"));
+                        }
+                    }
+                    else
+                    {
+                        EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("ignored " + somethingRunning));
+                    }
+                }
+            }
+
 ~@~~@~~@~~@~~@~~@~~@~~@~

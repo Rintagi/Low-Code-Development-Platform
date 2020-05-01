@@ -691,42 +691,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "AsmxEventId128", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmWebRule");
-                var SearchList = GetAdmWebRule80List("", 0, "");
-                var RuleTypeId128List = GetRuleTypeId128List("", 0, "");
-                var ScreenId128List = GetScreenId128List("", 0, "");
-                var ScreenObjId128List = GetScreenObjId128List("", 0, "");
-                var ButtonTypeId128List = GetButtonTypeId128List("", 0, "");
-                var EventId128List = GetEventId128List("", 0, "");
-                var ReactEventId128List = GetReactEventId128List("", 0, "");
-                var ReduxEventId128List = GetReduxEventId128List("", 0, "");
-                var ServiceEventId128List = GetServiceEventId128List("", 0, "");
-                var AsmxEventId128List = GetAsmxEventId128List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -229,7 +230,156 @@ namespace RO.Web
 
 		protected void Page_Init(object sender, EventArgs e)
 		{
-			// *** Page Init (Front of) Web Rule starts here *** //
+			//WebRule: Webhook
+            var qs = Request.QueryString;
+            // anything in the form of ?something&somethingelse, i.e. without =
+            var qsFlags = Request.QueryString[null];
+            Dictionary<string, string> requestInfo = GetRequestInfo();
+            string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+            string appRoot = webAppRoot.Replace("/Web/", "");
+            bool requestIsProxied = IsProxy();
+            bool isSecureConntection = Request.IsSecureConnection;
+            string myUrl = ResolveUrlCustom(Request.Path, true, true);
+
+            if (!requestIsProxied
+                &&
+                !isSecureConntection
+                )
+            {
+                if (qs["GitCheckout"] != null && HasGitRepo())
+                {
+                    // should validate request
+                    string somethingRunning = Application["BuildRunning"] as string;
+                    if (string.IsNullOrEmpty(somethingRunning))
+                    {
+                        bool publish = qs["PublishReactModule"] != null;
+                        string publishQS = CloneMyQueryString(new List<string>() { "GitCheckout" });
+                        var checkOutTask = GitCheckOutAsync(qs["GitCheckout"], requestInfo);
+
+                        if (publish)
+                        {
+                            var publishTask =  Task.WhenAll(new Task[] { checkOutTask })
+                                .ContinueWith((task) => {
+                                    // checkout would cause rebuild and we have to revisit without the checkout 
+                                    // for continuing
+                                    try
+                                    {
+                                        Thread.Sleep(1000);
+                                        VisitUrl(myUrl + "?" + publishQS);
+                                    }
+                                    catch { }
+                                    // return PublishReactAsync(qs["PublishReactModule"], requestInfo, false);
+                                }
+                            );
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("submitted"));
+                        }
+                        else if (qs["Wait"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("wait"))
+                        {
+                            var result = checkOutTask.Result;
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("success \r\n" + result));
+                        }
+                        else
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("submitted"));
+                    }
+                    else
+                    {
+                        EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("ignored: " + somethingRunning));
+                    }
+                }
+                else if (qs["PublishReactModule"] != null)
+                {
+
+                    string somethingRunning = Application["BuildRunning"] as string;
+                    string createInstallerQS = CloneMyQueryString(new List<string>() { "PublishReactModule" });
+
+                    if (string.IsNullOrEmpty(somethingRunning))
+                    {
+                        var publishReactTask = PublishReactAsync(qs["PublishReactModule"], requestInfo, false);
+                        if (qs["Wait"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("wait"))
+                        {
+                            var result = publishReactTask.Result;
+                            bool hasError = result.Any(p => !p.Item1);
+                            string[] pubRet = result.Select(i => ((i.Item1 ? "success" : "failed") + " " + i.Item5)).ToArray();
+                            string ret = string.Format("{0} {1}\r\n{2}", !hasError ? "success" : "failed", qs["PublishReactModule"], string.Join("\r\n", pubRet));
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes(ret));
+                        }
+                        else
+                        {
+                            if (qs["CreateInstaller"] != null)
+                            {
+                                publishReactTask.ContinueWith((task) =>
+                                {
+                                    Thread.Sleep(1000);
+                                    try
+                                    {
+                                        Thread.Sleep(1000);
+                                        VisitUrl(myUrl + "?" + createInstallerQS);
+                                    }
+                                    catch { }
+
+                                });
+                            }
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("submitted"));
+                        }
+                    }
+                    else
+                    {
+                        EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("ignored:" + somethingRunning));
+                    }
+                }
+                else if (qs["CreateInstaller"] != null)
+                {
+                    string somethingRunning = Application["BuildRunning"] as string;
+                    if (string.IsNullOrEmpty(somethingRunning))
+                    {
+                        if (LUser == null) AnonymousLogin();
+                        string[] config = qs["CreateInstaller"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        DataTable dt = (new RO.Rule3.Deploy()).GetRelease();
+                        Dictionary<string, Tuple<short, short, string, string, string>> releases = new Dictionary<string, Tuple<short, short, string, string, string>>();
+                        List<Task<Tuple<bool, string, string, string, string>>> installerTasks = new List<Task<Tuple<bool, string, string, string, string>>>();
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            string releaseId = dr["ReleaseId"].ToString();
+                            string releaseTypeAbbr = dr["ReleaseTypeAbbr"].ToString();
+                            string DeployPath = dr["PrepDeplPath"].ToString();
+                            foreach (string r in config)
+                            {
+                                if (new Regex(r + @"[/]?$", RegexOptions.IgnoreCase).IsMatch(DeployPath.Replace("\\", "/")))
+                                {
+                                    var release = new Tuple<short, short, string, string, string>(
+                                                    releases.ContainsKey(r) && releases[r].Item1 != 0 ? releases[r].Item1 : releaseTypeAbbr.StartsWith("N") ? (short) 0 : short.Parse(releaseId)
+                                                    , releases.ContainsKey(r) && releases[r].Item2 != 0 ? releases[r].Item2 : !releaseTypeAbbr.StartsWith("N") ? (short) 0 : short.Parse(releaseId)
+                                                    , DeployPath
+                                                    , releaseTypeAbbr
+                                                    , r
+                                                    );
+                                    releases[r] = release;
+                                }
+                            }
+                        }
+                        foreach (var x in releases) {
+                            installerTasks.Add(CreateInstallerAsync(x.Value.Item1, x.Value.Item2, x.Value.Item3, x.Value.Item4, x.Value.Item5, LcSysConnString, LcAppConnString, GetRequestInfo()));
+                        }
+                        if (qs["Wait"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("wait"))
+                        {
+                            var result = Task.WhenAll(installerTasks).Result;
+                            string[] ret = result.Select(i => ((i.Item1 ? "success" : "failed") + " " + i.Item2 + " " + i.Item3 + " " + i.Item4 + " " + i.Item5)).ToArray();
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes(string.Join("\r\n", ret)));
+                        }
+                        else
+                        {
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("submitted"));
+                        }
+                    }
+                    else
+                    {
+                        EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes("ignored " + somethingRunning));
+                    }
+                }
+            }
+
+
+			// *** WebRule End *** //
 			InitializeComponent();
 			// *** Page Init (End of) Web Rule starts here *** //
 		}
@@ -1361,8 +1511,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dtAuth != null && dtLabel != null)
 			{
 				base.SetFoldBehavior(cSystemId1317, dtAuth.Rows[0], cSystemId1317P1, cSystemId1317Label, cSystemId1317P2, null, dtLabel.Rows[0], cRFVSystemId1317, null, null);
-				base.SetFoldBehavior(cSystemName1317, dtAuth.Rows[1], cSystemName1317P1, cSystemName1317Label, cSystemName1317P2, null, dtLabel.Rows[1], cRFVSystemName1317, null, null);
-				base.SetFoldBehavior(cSystemAbbr1317, dtAuth.Rows[2], cSystemAbbr1317P1, cSystemAbbr1317Label, cSystemAbbr1317P2, null, dtLabel.Rows[2], cRFVSystemAbbr1317, null, null);
+				base.SetFoldBehavior(cSystemName1317, dtAuth.Rows[1], cSystemName1317P1, cSystemName1317Label, cSystemName1317P2, null, dtLabel.Rows[1], null, null, null);
+				base.SetFoldBehavior(cSystemAbbr1317, dtAuth.Rows[2], cSystemAbbr1317P1, cSystemAbbr1317Label, cSystemAbbr1317P2, null, dtLabel.Rows[2], null, null, null);
 				base.SetFoldBehavior(cInstallID, dtAuth.Rows[3], cInstallIDP1, cInstallIDLabel, cInstallIDP2, null, dtLabel.Rows[3], null, null, null);
 				base.SetFoldBehavior(cAppID, dtAuth.Rows[4], cAppIDP1, cAppIDLabel, cAppIDP2, null, dtLabel.Rows[4], null, null, null);
 				base.SetFoldBehavior(cAppNameSpace, dtAuth.Rows[5], cAppNameSpaceP1, cAppNameSpaceLabel, cAppNameSpaceP2, null, dtLabel.Rows[5], null, null, null);

@@ -3892,23 +3892,23 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), GetScreenId(), "R", screenColumnName, emptyAutoCompleteResponse), AllowAnonymous());
             return ret;
         }
-        protected LoadScreenPageResponse _GetScreenMetaData(bool accessControlled)
+        protected LoadScreenPageResponse _GetScreenMetaData(bool accessControlled, List<string> includedList = null)
         {
             int screenId = GetScreenId();
             byte systemId = GetSystemId();
-            string custLabelCat = GetProgramName().Replace(screenId.ToString(), "");
-            // do this FIRST as it would switch context
-            var sysLabels = GetSystemLabels("cSystem");
+            string custLabelCat = new Regex(screenId.ToString() + "$").Replace(GetProgramName(), "");
+            // MUST DO THIS FIRST as it would switch system context
+            var systemLabels = includedList == null || includedList.Contains("SystemLabels") ? GetSystemLabels("cSystem") : null;
             // now we switch back to our own context
             SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, accessControlled, false, false, true);
-            var dtAuthCol = _GetAuthCol(screenId);
-            var dtAuthRow = _GetAuthRow(screenId);
-            var dtScreenLabel = _GetScreenLabel(screenId);
-            var dtScreenCriteria = _GetScrCriteria(screenId);
-            var dtScreenFilter = _GetScreenFilter(screenId);
-            var dtScreenHlp = _GetScreenHlp(screenId);
-            var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-            var dtLabel = _GetLabels(custLabelCat);
+            var dtAuthCol = includedList == null || includedList.Contains("AuthCol") ? _GetAuthCol(screenId) : null;
+            var dtAuthRow = includedList == null || includedList.Contains("AuthRow") ? _GetAuthRow(screenId) : null;
+            var dtScreenLabel = includedList == null || includedList.Contains("ScreenLabel") ? _GetScreenLabel(screenId) : null;
+            var dtScreenCriteria = includedList == null || includedList.Contains("ScreenCriteria") ? _GetScrCriteria(screenId) : null;
+            var dtScreenFilter = includedList == null || includedList.Contains("ScreenFilter") ? _GetScreenFilter(screenId) : null;
+            var dtScreenHlp = includedList == null || includedList.Contains("ScreenHlp") ? _GetScreenHlp(screenId) : null;
+            var dtScreenButtonHlp = includedList == null || includedList.Contains("ScreenButtonHlp") ? _GetScreenButtonHlp(screenId) : null;
+            var dtLabel = includedList == null || includedList.Contains("Labels") ? _GetLabels(custLabelCat) : null;
             LoadScreenPageResponse result = new LoadScreenPageResponse()
             {
                 AuthCol = DataTableToListOfObject(dtAuthCol),
@@ -3919,12 +3919,12 @@ namespace RO.Web
                 ScreenCriteria = DataTableToListOfObject(dtScreenCriteria),
                 ScreenFilter = DataTableToListOfObject(dtScreenFilter),
                 ScreenHlp = DataTableToListOfObject(dtScreenHlp),
-                SystemLabels = sysLabels.data.data,
+                SystemLabels = systemLabels == null ? new List<SerializableDictionary<string,string>>() : systemLabels.data.data,
             };
             return result;
         }
 
-        protected SerializableDictionary<string, List<SerializableDictionary<string, string>>> _GetScreeDdls(bool accessControlled)
+        protected SerializableDictionary<string, List<SerializableDictionary<string, string>>> _GetScreeDdls(bool accessControlled, List<string> includedList = null)
         {
             int screenId = GetScreenId();
             byte systemId = GetSystemId();
@@ -3938,7 +3938,11 @@ namespace RO.Web
             var Ddl = new SerializableDictionary<string, List<SerializableDictionary<string, string>>>();
 
             foreach (var x in ddlContext.Select((context)=>{
-                if (!accessControlled || _AllowScreenColumnAccess(screenId, context.Key, "R", dtMenuAccess, dtAuthRow, authCol))
+                if (
+                    (includedList == null || includedList.Contains(context.Key))
+                    &&
+                    (!accessControlled || _AllowScreenColumnAccess(screenId, context.Key, "R", dtMenuAccess, dtAuthRow, authCol))
+                    )
                 {
                     bool bAll = true;
                     bool bAddNew = true;
@@ -3951,7 +3955,8 @@ namespace RO.Web
                 {
                     return new KeyValuePair<string, List<SerializableDictionary<string, string>>>(context.Key, new List<SerializableDictionary<string, string>>());
                 }
-            })) {
+            })) 
+            {
                 Ddl[x.Key] = x.Value;
             }
             return Ddl;

@@ -159,11 +159,14 @@ class MstRecord extends RintagiScreen {
           ParameterNames24: values.cParameterNames24 || '',
           ParameterTypes24: values.cParameterTypes24 || '',
           CallingParams24: values.cCallingParams24 || '',
+          RemoveSP: values.cRemoveSP ? 'Y' : 'N',
           MasterTable24: values.cMasterTable24 ? 'Y' : 'N',
           OnAdd24: values.cOnAdd24 ? 'Y' : 'N',
           OnUpd24: values.cOnUpd24 ? 'Y' : 'N',
           OnDel24: values.cOnDel24 ? 'Y' : 'N',
           BeforeCRUD24: (values.cBeforeCRUD24 || {}).value || '',
+          SrcNS24: values.cSrcNS24 || '',
+          RunMode24: (values.cRunMode24 || {}).value || '',
           RuleCode24: values.cRuleCode24 || '',
           ModifiedBy24: (values.cModifiedBy24 || {}).value || '',
           ModifiedOn24: values.cModifiedOn24 || '',
@@ -375,12 +378,16 @@ class MstRecord extends RintagiScreen {
     const ParameterNames24 = currMst.ParameterNames24;
     const ParameterTypes24 = currMst.ParameterTypes24;
     const CallingParams24 = currMst.CallingParams24;
+    const RemoveSP = currMst.RemoveSP;
     const MasterTable24 = currMst.MasterTable24;
     const OnAdd24 = currMst.OnAdd24;
     const OnUpd24 = currMst.OnUpd24;
     const OnDel24 = currMst.OnDel24;
     const BeforeCRUD24List = AdmServerRuleReduxObj.ScreenDdlSelectors.BeforeCRUD24(AdmServerRuleState);
     const BeforeCRUD24 = currMst.BeforeCRUD24;
+    const SrcNS24 = currMst.SrcNS24;
+    const RunMode24List = AdmServerRuleReduxObj.ScreenDdlSelectors.RunMode24(AdmServerRuleState);
+    const RunMode24 = currMst.RunMode24;
     const RuleCode24 = currMst.RuleCode24;
     const ModifiedBy24List = AdmServerRuleReduxObj.ScreenDdlSelectors.ModifiedBy24(AdmServerRuleState);
     const ModifiedBy24 = currMst.ModifiedBy24;
@@ -436,11 +443,14 @@ class MstRecord extends RintagiScreen {
                     cParameterNames24: formatContent(ParameterNames24 || '', 'TextBox'),
                     cParameterTypes24: formatContent(ParameterTypes24 || '', 'TextBox'),
                     cCallingParams24: formatContent(CallingParams24 || '', 'TextBox'),
+                    cRemoveSP: RemoveSP === 'Y',
                     cMasterTable24: MasterTable24 === 'Y',
                     cOnAdd24: OnAdd24 === 'Y',
                     cOnUpd24: OnUpd24 === 'Y',
                     cOnDel24: OnDel24 === 'Y',
                     cBeforeCRUD24: BeforeCRUD24List.filter(obj => { return obj.key === BeforeCRUD24 })[0],
+                    cSrcNS24: formatContent(SrcNS24 || '', 'TextBox'),
+                    cRunMode24: RunMode24List.filter(obj => { return obj.key === RunMode24 })[0],
                     cRuleCode24: formatContent(RuleCode24 || '', 'MultiLine'),
                     cModifiedBy24: ModifiedBy24List.filter(obj => { return obj.key === ModifiedBy24 })[0],
                     cModifiedOn24: ModifiedOn24 || new Date(),
@@ -757,6 +767,27 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
+                              {(authCol.RemoveSP || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cRemoveSP'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cRemoveSP}
+                                        disabled={(authCol.RemoveSP || {}).readonly || !(authCol.RemoveSP || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.RemoveSP || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.RemoveSP || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.RemoveSP || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RemoveSP || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
                               {(authCol.MasterTable24 || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -874,6 +905,51 @@ class MstRecord extends RintagiScreen {
                                         )}
                                       </label>
                                     }
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.SrcNS24 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmServerRuleState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.SrcNS24 || {}).ColumnHeader} {(columnLabel.SrcNS24 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.SrcNS24 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SrcNS24 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmServerRuleState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cSrcNS24'
+                                          disabled={(authCol.SrcNS24 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cSrcNS24 && touched.cSrcNS24 && <span className='form__form-group-error'>{errors.cSrcNS24}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.RunMode24 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmServerRuleState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.RunMode24 || {}).ColumnHeader} {(columnLabel.RunMode24 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.RunMode24 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.RunMode24 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmServerRuleState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <DropdownField
+                                          name='cRunMode24'
+                                          onChange={this.DropdownChangeV1(setFieldValue, setFieldTouched, 'cRunMode24')}
+                                          value={values.cRunMode24}
+                                          options={RunMode24List}
+                                          placeholder=''
+                                          disabled={(authCol.RunMode24 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cRunMode24 && touched.cRunMode24 && <span className='form__form-group-error'>{errors.cRunMode24}</span>}
                                   </div>
                                 </Col>
                               }

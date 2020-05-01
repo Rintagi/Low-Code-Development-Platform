@@ -767,43 +767,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "ClientScript127", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmClientRule");
-                var SearchList = GetAdmClientRule79List("", 0, "");
-                var RuleMethodId127List = GetRuleMethodId127List("", 0, "");
-                var RuleTypeId127List = GetRuleTypeId127List("", 0, "");
-                var ScreenId127List = GetScreenId127List("", 0, "");
-                var ReportId127List = GetReportId127List("", 0, "");
-                var CultureId127List = GetCultureId127List("", 0, "");
-                var ScreenObjHlpId127List = GetScreenObjHlpId127List("", 0, "");
-                var ScreenCriHlpId127List = GetScreenCriHlpId127List("", 0, "");
-                var ReportCriHlpId127List = GetReportCriHlpId127List("", 0, "");
-                var RuleCntTypeId127List = GetRuleCntTypeId127List("", 0, "");
-                var ClientScript127List = GetClientScript127List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

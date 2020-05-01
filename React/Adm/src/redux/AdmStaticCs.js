@@ -87,8 +87,8 @@ class AdmStaticCsRedux extends RintagiScreenRedux {
           value: v.labelL || v.label || ' ',
           label: v.labelL || v.label || ' ',
           labelR: v.labelR || ' ',
-          detailR: v.detailR,
-          detail: v.detail || '',
+          detailR: v.detailR || ' ',
+          detail: v.detail || ' ',
           idx: i,
           isSelected: v.isSelected,
         }

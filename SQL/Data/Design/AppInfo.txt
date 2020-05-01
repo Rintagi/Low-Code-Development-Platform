@@ -2511,4 +2511,29 @@ In default.master: replace section.css with the following:
 12587~@~  11. 150.00412~@~11~@~150~@~2020-04-12 00:00:00.000~@~~@~~@~1. add screen last criteria pivot helper function in SQL
 2. rename react global Rintagi redux to _Rintagi(deployment name clash)~@~~@~en-US~@~
 12588~@~  11. 151.00413~@~11~@~151~@~2020-04-13 00:00:00.000~@~~@~~@~1. fixed multiple issues in Report generator screen~@~~@~en-US~@~
-12589~@~  11. 152~@~11~@~152~@~~@~~@~~@~~@~~@~~@~
+12589~@~  11. 152.00415~@~11~@~152~@~2020-04-15 00:00:00.000~@~~@~~@~1. make asp.net code structure Async/Task friendly
+2. enhance tracing in Async context
+3. enhance Community PTY installer to preserve Cmon during upgrade~@~~@~en-US~@~
+12590~@~  11. 153.00421~@~11~@~153~@~2020-04-21 00:00:00.000~@~~@~~@~1. enhancement for html printing(css)
+2. webhook functionality to checkout git report and/or publish React modules
+3. better handling of undefined/null content in React for detailR/detailL~@~~@~en-US~@~
+12591~@~  11. 154.00422~@~11~@~154~@~2020-04-22 00:00:00.000~@~~@~~@~1. add GUID/RunMode to server rule~@~~@~en-US~@~
+12592~@~  11. 155.00423~@~11~@~155~@~2020-04-23 00:00:00.000~@~~@~~@~1. initial ground work for customizable local server rule
+2. better react generator for multiple doc when backing table name is not the same as column name
+3. revert correct LoginInfo in react template and various css fixes~@~~@~en-US~@~
+12593~@~  11. 156.00424~@~11~@~156~@~2020-04-24 00:00:00.000~@~~@~~@~1. change server rule screen for specifying local rule
+2. add SP for server rule merge on installation upgrade
+3. change installer to support pre/post upgrade SP execution~@~~@~en-US~@~
+12594~@~  11. 157.00424~@~11~@~157~@~2020-04-24 00:00:00.000~@~~@~~@~1. add server rule override ACL table~@~~@~en-US~@~
+12595~@~  11. 158.00425~@~11~@~158~@~2020-04-25 00:00:00.000~@~~@~~@~1. add server rule override table~@~~@~en-US~@~
+12596~@~  11. 159.00425~@~11~@~159~@~2020-04-25 00:00:00.000~@~~@~~@~1. suppress server rule functionality added~@~~@~en-US~@~
+12597~@~  11. 160.00426~@~11~@~160~@~2020-04-26 00:00:00.000~@~~@~~@~1. add backward compatible ErrorTrace(sync version) to cater old WebRule
+2. add option to disable DROP PROCEURE when deleting server rule~@~~@~en-US~@~
+12598~@~  11. 161.00429~@~11~@~161~@~2020-04-29 00:00:00.000~@~~@~~@~1. Add Guid to AtServerRuleOvrd and AtServerRuleOvrdPrm for future 'merge' usage~@~~@~en-US~@~
+12599~@~  11. 162.00430~@~11~@~162~@~2020-04-30 00:00:00.000~@~~@~~@~1. add utServerRuleOvrd* for future local copy on write in production setup
+2. add logic to preserve local change of server rule permission
+3. change deployment to skip utServerRuleOvrd*
+4. add field to indicate if server rule override is 'local'(and need to be preserved)~@~~@~en-US~@~
+12600~@~  11. 163.00501~@~11~@~163~@~2020-05-01 00:00:00.000~@~~@~~@~1. minor enhancement to webhook deployment features
+2. change default deployment table exclusion for server rule related table~@~~@~en-US~@~
+12601~@~  11. 164~@~11~@~164~@~~@~~@~~@~~@~~@~~@~

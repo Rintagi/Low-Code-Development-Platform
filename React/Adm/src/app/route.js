@@ -47,6 +47,7 @@ import {pagesRoutes as AdmSctGrpColRoute} from '../pages/AdmSctGrpCol/index'
 import {pagesRoutes as AdmPageObjRoute} from '../pages/AdmPageObj/index'
 import {pagesRoutes as AdmSctGrpRowRoute} from '../pages/AdmSctGrpRow/index'
 import {pagesRoutes as AdmServerRuleRoute} from '../pages/AdmServerRule/index'
+import {pagesRoutes as AdmServerRuleOvrdRoute} from '../pages/AdmServerRuleOvrd/index'
 import {pagesRoutes as AdmSignupRoute} from '../pages/AdmSignup/index'
 import {pagesRoutes as AdmStaticCsRoute} from '../pages/AdmStaticCs/index'
 import {pagesRoutes as AdmStaticJsRoute} from '../pages/AdmStaticJs/index'
@@ -72,7 +73,7 @@ SuppressGenRoute ? [] : [
 ),
 ...(
 SuppressGenRoute ? [] : [
-            ...AdmAtRowAuthRoute,
+...AdmAtRowAuthRoute,
 ...AdmChgPwdRoute,
 ...AdmClientRuleRoute,
 ...AdmClnTierRoute,
@@ -115,6 +116,7 @@ SuppressGenRoute ? [] : [
 ...AdmPageObjRoute,
 ...AdmSctGrpRowRoute,
 ...AdmServerRuleRoute,
+...AdmServerRuleOvrdRoute,
 ...AdmSignupRoute,
 ...AdmStaticCsRoute,
 ...AdmStaticJsRoute,

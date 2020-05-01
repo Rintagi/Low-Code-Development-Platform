@@ -453,7 +453,7 @@
 
 .rbt-menu {
   top: calc(100% - 36px) !important;
-  max-height: 200px !important;
+  max-height: 173px !important;
 }
 
 .form-control:focus {
@@ -2150,7 +2150,7 @@ mark {
     // padding-right: 0px;
   }
 
-  .col-6:first-child {
+  .top-level-split > .row > .col-6:first-child {
     position: fixed;
     top: 133px;
     bottom: 0px;
@@ -2159,7 +2159,7 @@ mark {
     left: calc(0px + 250px);
   }
 
-  .col-6:last-child:not(:first-child) {
+  .top-level-split  > .row > .col-6:last-child:not(:first-child) {
     position: fixed;
     top: 133px;
     bottom: 0px;
@@ -2792,43 +2792,45 @@ label {
 //   top: 60px;
 // }
 .defaultSliderStyle .awssld__content{
-   background-color: #EAF7FF;
-  // background: linear-gradient(to bottom, #247BA0 0%, #38c5e6 100%);
+  //background-color: #EAF7FF;
+  //background-color: #247BA0;
+  background: linear-gradient(to bottom, #247BA0 5%, #38c5e6 100%);
 }
 
-.awssld--fill-parent.defaultSliderStyle{
-  top: 60px;
-  height: calc(100% - 60px) !important;
-}
+// .awssld--fill-parent.defaultSliderStyle{
+//  top: 60px;
+// //  height: calc(100vh - 60px) !important;
+// height: 100% !important;
+// }
 
 .defaultSliderStyle .SliderSec{
-  height: 100%;
-  width: 100%;
+ height: 100%;
+ width: 100%;
 }
 
 .defaultSliderStyle .menuSec{
-  background: white;
-  height: 100%;
-  margin: 20px;
+ background: white;
+ height: 100%;
+ margin: 20px;
 }
 
 .defaultSliderStyle .systemLogo{
- position: absolute;
- top: -40px;
- left: 50%;
- margin-left: -40px;
+position: absolute;
+top: -40px;
+left: 50%;
+margin-left: -40px;
 }
 
 .defaultSliderStyle .systemLogo h5{
-  color: white;
-  padding-top: 25px;
-  background: #247BA0;
-  //background: linear-gradient(to bottom, #247BA0 0%, #38c5e6 100%);
-  min-height: 80px;
-  width: 80px;
-  border-radius: 50%;
-  text-align: center;
-  border: 5px solid white;
+ color: white;
+ padding-top: 25px;
+ background: #247BA0;
+//  background: linear-gradient(to bottom, #247BA0 0%, #38c5e6 100%);
+ min-height: 80px;
+ width: 80px;
+ border-radius: 50%;
+ text-align: center;
+ border: 5px solid white;
 }
 
 .defaultSliderStyle .systemSelected{
@@ -2855,82 +2857,88 @@ label {
 // }
 
 .notificationSec{
-  margin-top: 80px;
-  color: #999999;
+ margin-top: 30px;
+ //color: #999999;
+ color: #f8f8f8;
 }
 
 .defaultSliderStyle .systemTitle{
-  color: #247BA0;
+ color: #247BA0;
 }
 
 .switchBtn{
-  width: 100%;
+ width: 100%;
+}
+
+.switchBtn:hover{
+  background-color: #247BA0 !important;
+  color: white !important;
 }
 
 .defaultSliderStyle .curSystemIdication{
-  color: #555;
+ color: #555;
 }
 
 .defaultSliderStyle .curSystemIdication.highlight{
-  color: #247BA0 !important;
-  background: #EAF7FF;
-  margin-bottom: 20px;
-  padding: 8px 0;
-  border-radius: 5px;
+ color: #247BA0 !important;
+ background: #EAF7FF;
+ margin-bottom: 20px;
+ padding: 8px 0;
+ border-radius: 5px;
 }
 
 .titleSeprate{
-  width: 150px;
-  margin-bottom: 15px !important;
+ width: 150px;
+ margin-bottom: 15px !important;
 }
 
 .switchSystem{
-  color: #70BBFD !important;
-  cursor: pointer;
+ color: #70BBFD !important;
+ cursor: pointer;
 }
 
 .switchSystem:hover{
-  color: #247BA0 !important;
+ color: #247BA0 !important;
 }
 
 .showOnMobile{
-  display: none;
+ display: none;
 }
 
 .hideOnMobile{
-  display: block;
+ display: block;
 }
 
 .systemSelection .card{
-  padding-bottom: 15px;
+ padding-bottom: 15px;
 }
 
 .systemSelection .card .card-body{
- background: #F2F5FF;
- padding: 25px 30px 25px 30px;
+background: #F2F5FF;
+padding: 25px 30px 25px 30px;
 }
 
 .systemSelection .card.active .card-body{
-  background: #247BA0;
+ background: #247BA0;
 }
 
 .systemSelection .card .card-body h5{
-  color: #666;
+ color: #666;
 }
 
 .systemSelection .card.active .card-body h5{
-  color: white;
+ color: white;
 }
 
 .systemSelection .card a .card-body:hover{
-  background: #D9DFE7;
-  cursor: pointer;
+ background: #D9DFE7;
+ cursor: pointer;
 }
 
 .systemSelection .checkedSys{
-  position: absolute;
-  top: 25px;
-  right: 0;
+ position: absolute;
+ top: 25px;
+ right: 0;
 }
 
 .quickMenuSection{
@@ -2967,15 +2975,68 @@ label {
   padding-bottom: 0;
   min-height: 425px;
   margin-top: 100px;
+  padding: 0 4px;
+}
+
+.awssld__controls__arrow-left, .awssld__controls__arrow-right{
+  height: 14px !important;
+}
+
+.awssld__controls__arrow-left:before, .awssld__controls__arrow-left:after, .awssld__controls__arrow-right:before, .awssld__controls__arrow-right:after{
+  background-color: white !important;
+}
+
+.awssld__controls__arrow-left:before{
+  transform: rotate(30deg) !important;
+}
+
+.awssld__controls__arrow-left:after{
+  transform: rotate(-30deg) !important;
+}
+
+.awssld__controls__arrow-right:before{
+  transform: rotate(-30deg) !important;
+}
+
+.awssld__controls__arrow-right:after{
+  transform: rotate(30deg) !important;
+}
+
+.awssld__controls button .awssld__controls__arrow-left, .awssld__controls button .awssld__controls__arrow-right{
+  opacity: 1 !important;
+}
+
+.rightSliderButton{
+    position: absolute;
+    top: calc(50% - 10px) !important;
+    right: 12px;
+    background: transparent;
+    border: none;
+}
+
+.leftSliderButton{
+  position: absolute;
+  top: calc(50% - 10px) !important;
+  left: 12px;
+  background: transparent;
+  border: none;
 }
 
 @media only screen and (max-device-width: 520px) {
-// @media only screen and (max-width: 520px) {
-  .showOnMobile{
-    display: block;
-  }
-  
-  .hideOnMobile{
-    display: none;
-  }
+//@media only screen and (max-width: 520px) {
+ .showOnMobile{
+   display: block;
+ }
+ 
+ .hideOnMobile{
+   display: none;
+ }
+
+ .container__wrap{
+   min-height: 100%;
+ }
+
+ .awssld__controls{
+   visibility: visible !important;
+ }
 }

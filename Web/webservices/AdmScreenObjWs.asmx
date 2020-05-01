@@ -994,48 +994,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "MatchCd14", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmScreenObj");
-                var SearchList = GetAdmScreenObj10List("", 0, "");
-                var GridGrpCd14List = GetGridGrpCd14List("", 0, "");
-                var ColumnJustify14List = GetColumnJustify14List("", 0, "");
-                var ScreenId14List = GetScreenId14List("", 0, "");
-                var GroupRowId14List = GetGroupRowId14List("", 0, "");
-                var GroupColId14List = GetGroupColId14List("", 0, "");
-                var ColumnId14List = GetColumnId14List("", 0, "");
-                var DisplayModeId14List = GetDisplayModeId14List("", 0, "");
-                var DdlKeyColumnId14List = GetDdlKeyColumnId14List("", 0, "");
-                var DdlRefColumnId14List = GetDdlRefColumnId14List("", 0, "");
-                var DdlSrtColumnId14List = GetDdlSrtColumnId14List("", 0, "");
-                var DdlAdnColumnId14List = GetDdlAdnColumnId14List("", 0, "");
-                var DdlFtrColumnId14List = GetDdlFtrColumnId14List("", 0, "");
-                var DtlLstPosId14List = GetDtlLstPosId14List("", 0, "");
-                var AggregateCd14List = GetAggregateCd14List("", 0, "");
-                var MatchCd14List = GetMatchCd14List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

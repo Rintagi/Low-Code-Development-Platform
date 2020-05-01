@@ -14,7 +14,7 @@
 21~@~3~@~ScreenObjHlp~@~Adm - Screen Object Messages~@~Y~@~N~@~~@~This captures culture specific screen column labels.~@~~@~55~@~2015-02-10 18:36:33.783~@~2015-02-05 00:32:33.000
 22~@~3~@~Report~@~Adm - Report Definition~@~Y~@~N~@~~@~This captures all reports information.~@~~@~55~@~2015-11-20 18:58:26.503~@~2015-11-20 10:07:56.000
 23~@~3~@~ReportObj~@~Adm - Report Columns Characteristics~@~Y~@~N~@~~@~This captures all columns and their characteristics for the report.~@~~@~55~@~2014-07-14 00:42:46.387~@~2014-07-13 17:42:54.510
-24~@~3~@~ServerRule~@~Adm - Server Rule~@~Y~@~N~@~~@~This table captures all server side rules for all screens.~@~~@~55~@~2016-12-06 13:52:56.113~@~2016-12-06 05:53:21.663
+24~@~3~@~ServerRule~@~Adm - Server Rule~@~Y~@~N~@~~@~This table captures all server side rules for all screens.~@~~@~2~@~2020-04-22 19:48:01.610~@~2020-04-22 12:48:09.670
 25~@~3~@~CtRuleType~@~Adm - Rule Type (General)~@~N~@~N~@~~@~This is a code table capturing general server rule type information.~@~~@~55~@~2019-05-31 21:59:05.343~@~
 27~@~5~@~Investor~@~Cmn - Investor Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-02-27 13:41:06.717~@~
 39~@~3~@~Menu~@~Adm - Menu Items~@~Y~@~N~@~~@~This captures the menu information.~@~~@~2~@~2020-04-04 00:15:22.750~@~2020-04-03 17:17:15.090
@@ -134,7 +134,7 @@ WHERE ObjectType = 'S'
 221~@~3~@~CtFormat~@~Adm - Format Type~@~N~@~N~@~~@~This is the available format types, culture dependent.~@~~@~55~@~2008-06-14 09:10:56.420~@~2008-06-14 09:11:28.310
 225~@~3~@~CtLinkType~@~Adm - Link Type~@~N~@~N~@~~@~This is a code table capturing the widgets (home logo, social icons, links, etc.) available for Header, Footer, and Side Panels.~@~~@~55~@~2014-06-11 18:16:01.990~@~2014-06-10 21:06:40.000
 227~@~3~@~CtMatch~@~Adm - Match Type~@~N~@~N~@~~@~This is a code table capturing the match types for grid import~@~~@~55~@~2008-08-22 11:47:19.193~@~2008-08-22 11:47:41.783
-228~@~3~@~CtAccess~@~Adm - Access Type~@~N~@~N~@~~@~This is a code table stating 'P' when public, 'V' when private.~@~~@~55~@~2017-05-09 19:06:27.637~@~2012-06-13 14:37:35.000
+228~@~3~@~CtAccess~@~Adm - Access Type~@~N~@~N~@~~@~This is a code table stating 'P' when public, 'V' when private.~@~~@~2~@~2020-04-25 21:30:53.663~@~2012-06-13 14:37:35.000
 229~@~3~@~CtEveryone~@~Adm - Everyone Code Table~@~N~@~N~@~~@~This is a code table with three rows for Menu Permission purpose: Y for All, G for Grant and D for Deny.~@~~@~55~@~2009-06-06 21:09:04.660~@~2009-06-15 13:38:57.803
 230~@~3~@~VwPermKey~@~Adm - Permission Keys View~@~N~@~Y~@~CREATE VIEW [dbo].[VwPermKey]
 AS
@@ -339,3 +339,9 @@ FROM dbo.Usr~@~~@~~@~2~@~2020-03-04 17:54:11.960~@~2017-05-09 11:05:51.000
 1315~@~3~@~CtRuleServiceType~@~Adm - Rule Event/Type (Service)~@~N~@~N~@~~@~This is a code table capturing service rule event/type information.~@~~@~55~@~2019-08-28 23:30:02.190~@~2019-08-28 16:28:50.000
 1316~@~3~@~CtRuleReduxType~@~Adm - Rule Event/Type (Redux)~@~N~@~N~@~~@~This is a code table capturing Redux rule event/type information.~@~~@~55~@~2019-08-28 23:29:44.533~@~2019-08-28 16:29:52.937
 1317~@~3~@~VwRintagi~@~Adm - Rintagi Installation~@~N~@~N~@~~@~~@~~@~2~@~2019-12-03 20:05:14.610~@~2019-12-03 12:04:58.000
+1319~@~3~@~AtServerRule~@~Adm - Server Rule(local)~@~Y~@~N~@~~@~Application level server rule(mirror of ServerRule and some)~@~~@~2~@~2020-04-30 20:55:30.430~@~2020-04-30 13:55:37.800
+1320~@~3~@~VwServerRuleRunMode~@~Adm - Server Rule Run Mode View~@~Y~@~Y~@~~@~~@~~@~2~@~2020-04-24 17:30:45.560~@~2020-04-24 10:30:27.000
+1321~@~3~@~AtServerRuleOvrdPrm~@~Adm - Server Rule Override Permission~@~Y~@~N~@~~@~Server Rule suppression configuration~@~~@~2~@~2020-04-29 22:17:26.247~@~2020-04-29 15:17:34.667
+1322~@~3~@~AtServerRuleOvrd~@~Adm - Server Rule Override~@~Y~@~N~@~~@~Server Rule override(enable/disable)~@~~@~2~@~2020-04-30 14:54:54.903~@~2020-04-30 07:55:07.210
+1323~@~3~@~utServerRuleOvrd~@~Adm - Server Rule Override (local COW)~@~Y~@~N~@~~@~Server Rule override(enable/disable), local setup copy on write~@~~@~2~@~2020-04-30 14:56:26.497~@~2020-04-30 07:56:45.640
+1324~@~3~@~utServerRuleOvrdPrm~@~Adm - Server Rule Override Permission(COW)~@~Y~@~N~@~~@~Server Rule suppression configuration(local copy on write, for merging)~@~~@~2~@~2020-04-30 15:26:55.353~@~2020-04-30 07:58:01.000

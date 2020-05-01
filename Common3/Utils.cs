@@ -1718,6 +1718,20 @@
         {
             if (ex != null) throw ex;
         }
+        public static void SearchDirX(string Pattern, DirectoryInfo SearchDir, XmlNode ItemNode, XmlDocument xd, string DeployPath)
+        {
+            XmlNode NewNode;
+            XmlAttribute xa;
+            foreach (FileInfo fi in SearchDir.GetFiles(Pattern))
+            {
+                NewNode = xd.CreateNode(XmlNodeType.Element, "EmbeddedResource", null);
+                xa = xd.CreateAttribute("Include");
+                xa.Value = fi.FullName.Replace(DeployPath, "");
+                NewNode.Attributes.Append(xa);
+                ItemNode.AppendChild(NewNode);
+            }
+        }
+
         // Should only execute this on the client tier:
         //public static System.Collections.ArrayList GetSheetNames(string fileFullName)
         //{

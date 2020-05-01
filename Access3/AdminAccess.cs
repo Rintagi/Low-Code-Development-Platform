@@ -1620,7 +1620,7 @@ namespace RO.Access3
             {
                 dtScr = dac.GetScreenById(ScreenId, CPrj, CSrc);
                 dtAud = dac.GetScreenAud(ScreenId, dtScr.Rows[0]["ScreenTypeName"].ToString(), CPrj.SrcDesDatabase, dtScr.Rows[0]["MultiDesignDb"].ToString(), CSrc);
-                dvSRule = new DataView(dac.GetServerRule(ScreenId, CPrj, CSrc));
+                dvSRule = new DataView(dac.GetServerRule(ScreenId, CPrj, CSrc, LImpr, LCurr));
                 dvCol = new DataView(dac.GetScreenColumns(ScreenId, CPrj, CSrc));
             }
             string appDbName = dtScr.Rows[0]["dbAppDatabase"].ToString();
@@ -1799,7 +1799,7 @@ namespace RO.Access3
             {
                 dtScr = dac.GetScreenById(ScreenId, CPrj, CSrc);
                 dtAud = dac.GetScreenAud(ScreenId, dtScr.Rows[0]["ScreenTypeName"].ToString(), CPrj.SrcDesDatabase, dtScr.Rows[0]["MultiDesignDb"].ToString(), CSrc);
-                dvSRule = new DataView(dac.GetServerRule(ScreenId, CPrj, CSrc));
+                dvSRule = new DataView(dac.GetServerRule(ScreenId, CPrj, CSrc, LImpr, LCurr));
                 dvCol = new DataView(dac.GetScreenColumns(ScreenId, CPrj, CSrc));
             }
             string appDbName = dtScr.Rows[0]["dbAppDatabase"].ToString();
@@ -2122,7 +2122,7 @@ namespace RO.Access3
             {
                 dtScr = dac.GetScreenById(ScreenId, CPrj, CSrc);
                 dtAud = dac.GetScreenAud(ScreenId, dtScr.Rows[0]["ScreenTypeName"].ToString(), CPrj.SrcDesDatabase, dtScr.Rows[0]["MultiDesignDb"].ToString(), CSrc);
-                dvSRule = new DataView(dac.GetServerRule(ScreenId, CPrj, CSrc));
+                dvSRule = new DataView(dac.GetServerRule(ScreenId, CPrj, CSrc, LImpr, LCurr));
                 dvCol = new DataView(dac.GetScreenColumns(ScreenId, CPrj, CSrc));
             }
             string appDbName = dtScr.Rows[0]["dbAppDatabase"].ToString();

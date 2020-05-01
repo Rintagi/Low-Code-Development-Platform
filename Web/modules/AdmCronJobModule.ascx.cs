@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -159,9 +160,11 @@ namespace RO.Web
                         // report error to the front end as cron invoked has no visual error reporting
                         UpdCronStatus(ex.Message, LcSysConnString, LcAppPw);
                         // backend support
-                        ErrorTrace(ex, "error");
+
+                        ErrorTrace(ex, "error", GetRequestInfo());
                     }
                 }
+
 
 				// *** WebRule End *** //
 			}

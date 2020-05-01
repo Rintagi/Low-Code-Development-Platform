@@ -226,6 +226,10 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     		<div id="cCallingParams24P1" class="r-td r-labelR" runat="server"><asp:Label id="cCallingParams24Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cCallingParams24P2" class="r-td r-content" runat="server"><asp:TextBox id="cCallingParams24" CssClass="inp-txt" runat="server" /><asp:ImageButton id="cCallingParams24Search" CssClass="r-icon" onclick="cCallingParams24Search_Click" runat="server" ImageUrl="~/Images/Link.gif" CausesValidation="true" /></div>
     	</div>
+    	<div class="r-tr">
+    		<div id="cRemoveSPP1" class="r-td r-labelR" runat="server"><asp:Label id="cRemoveSPLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cRemoveSPP2" class="r-td r-content" runat="server"><asp:CheckBox id="cRemoveSP" CssClass="inp-chk" runat="server" /></div>
+    	</div>
     </div></div></div>
     <div class="r-td rc-9-11"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
@@ -251,6 +255,14 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	<div class="r-tr">
     		<div class="r-td"></div>
     		<div id="cCrudTypeDesc1289P2" class="r-td r-content" style="font-size:8pt; color:#777; padding-top:10px;" runat="server"><asp:Label id="cCrudTypeDesc1289" CssClass="inp-txt" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cSrcNS24P1" class="r-td r-labelR" runat="server"><asp:Label id="cSrcNS24Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cSrcNS24P2" class="r-td r-content" runat="server"><asp:TextBox id="cSrcNS24" CssClass="inp-txt" MaxLength="30" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cRunMode24P1" class="r-td r-labelR" runat="server"><asp:Label id="cRunMode24Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cRunMode24P2" class="r-td r-content" runat="server"><asp:DropDownList id="cRunMode24" CssClass="inp-ddl" DataValueField="RunMode24" DataTextField="RunMode24Text" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

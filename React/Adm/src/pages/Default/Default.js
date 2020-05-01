@@ -23,28 +23,21 @@ class Default extends Component {
 
     this.buildQuickMenuTree = this.buildQuickMenuTree.bind(this);
     this.switchSystem = this.switchSystem.bind(this);
-    this.showFullList = this.showFullList.bind(this);
-  }
-
-
-  buildSystem(systemList, curSystemId) {
   }
 
   switchSystem(e) {
+    setTimeout(()=>{
     log.debug('switchSystem', e, e.currentMedia.id);
     this.buildQuickMenuTree(e.currentMedia.id);
+    },0);
   };
-
-  showFullList() {
-    alert("test");
-  }
 
   buildQuickMenuTree(systemId) {
     return authService.getReactQuickMenu(systemId)
       .then(
         data => {
           log.debug("data", data.data);
-          this.setState({ reactQuickMenu: data.data });
+          this.setState({ reactQuickMenu: data.data});
           return data;
         }).catch(error => {
           this.setState({ reactQuickMenu: [] });
@@ -70,6 +63,7 @@ class Default extends Component {
       this.props.setTitle(siteTitle);
       this.titleSet = true;
     }
+
   }
 
   render() {
@@ -77,12 +71,10 @@ class Default extends Component {
     const curSystemId = runtimeConfig.systemId || '';
     const appDomainUrl = runtimeConfig.appDomainUrl || "";
     const systemList = (this.props.system || {}).systemList || [];
-    log.debug("systemList", systemList);
     var newSysList = [];
     const selectedSys = systemList.filter((v) => (v.SystemId == curSystemId));
     const unSelectedSys = systemList.filter((v) => (v.SystemId != curSystemId));
     if (unSelectedSys) { newSysList = selectedSys.concat(unSelectedSys) } else { newSysList = selectedSys }
-    log.debug("newSystemList", newSysList);
 
     const location = window.location;
 
@@ -90,9 +82,8 @@ class Default extends Component {
     const localOnly = location.port >= 3000 && location.port <= 3100;
     //const localOnly = false;
 
-    log.debug("reactQuickMenu", this.state.reactQuickMenu);
     const reactQuickMenu = this.state.reactQuickMenu || [];
-    log.debug(reactQuickMenu, reactQuickMenu.length);
+    log.debug("reactQuickMenu after", reactQuickMenu);
     return (
       <div>
         {/* Show this if it's local development */}
@@ -180,11 +171,14 @@ class Default extends Component {
                 bullets={false}
                 className="defaultSliderStyle"
                 buttons={false}
+                organicArrows = {true}
                 onTransitionEnd={(e) => this.switchSystem(e)}
               >
                 {newSysList.map((obj, i) => {
                   return (
                     <div className="col-12 col-md-12 col-lg-12" key={i} id={obj.SystemId}>
+                      <button class="leftSliderButton"><span class="awssld__controls__arrow-left"></span></button>
+                      <button class="rightSliderButton"><span class="awssld__controls__arrow-right"></span></button>
                       <div className="card customCard">
                         <div className="card-body">
                           <div className="systemLogo">
@@ -200,8 +194,7 @@ class Default extends Component {
                             <hr className="titleSeprate" />
                             {/* {curSystemId === obj.SystemId? <h5 className="text-center account__subhead curSystemIdication highlight">Current System</h5> : ""} */}
                             <div className="quickMenuSection">
-                              {
-                                reactQuickMenu.length > 0 ?
+                              {reactQuickMenu.length > 0 ?
                                   reactQuickMenu.map((o, i) => {
                                     var navigateUrl = o.NavigateUrl ? (appDomainUrl + "/react/" + obj.SystemAbbr + "/#/" + getDefaultPath(o.NavigateUrl.replace('.aspx', ''))) : "";
                                     return (
@@ -226,6 +219,7 @@ class Default extends Component {
                           </div>
                         </div>
                       </div>
+                   
                       {/* <div>
                   {curSystemId === obj.SystemId? '' : <a className="btn btn-outline-primary btn-lg switchBtn" href={appDomainUrl + "/react/" + obj.SystemAbbr}>Switch System</a>}
                 </div> */}

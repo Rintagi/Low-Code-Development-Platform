@@ -1243,6 +1243,64 @@ inner join Usr u on u.UsrId = ISNULL(OffspringId, uc.ImprUsrId)
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fUsrRole') AND type='IF')
+DROP FUNCTION dbo.fUsrRole
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+-- Only in ??Design.
+CREATE FUNCTION [dbo].[fUsrRole] 
+(
+@Usrs			varchar(max) = NULL
+,@RowAuthoritys		varchar(max) = NULL
+,@Customers		varchar(max) = NULL
+,@Vendors		varchar(max) = NULL
+,@Members		varchar(max) = NULL
+,@Investors		varchar(max) = NULL
+,@Agents		varchar(max) = NULL
+,@Brokers		varchar(max) = NULL
+,@UsrGroups		varchar(max) = NULL
+,@Companys		varchar(max) = NULL
+,@Projects		varchar(max) = NULL
+,@Cultures		varchar(max) = NULL
+,@Borrowers		varchar(max) = NULL
+,@Guarantors		varchar(max) = NULL
+,@Lenders		varchar(max) = NULL
+)
+RETURNS TABLE 
+/* WITH ENCRYPTION */  
+AS
+RETURN 
+(
+/* return user perm key list  */
+
+SELECT
+*
+, UsrRole = CASE 
+			WHEN p.PermKeyDesc = 'Agent' THEN @Agents 
+			WHEN p.PermKeyDesc = 'Broker' THEN @Brokers 
+			WHEN p.PermKeyDesc = 'Culture' THEN @Cultures 
+			WHEN p.PermKeyDesc = 'Customer' THEN @Customers 
+			WHEN p.PermKeyDesc = 'Investor' THEN @Investors 
+			WHEN p.PermKeyDesc = 'Member' THEN @Members 
+			WHEN p.PermKeyDesc = 'UsrGroup' THEN @UsrGroups 
+			WHEN p.PermKeyDesc = 'Vendor' THEN @Vendors 
+			WHEN p.PermKeyDesc = 'Company' THEN @Companys 
+			WHEN p.PermKeyDesc = 'Project' THEN @Projects 
+			WHEN p.PermKeyDesc = 'Usr' THEN @Usrs 
+			WHEN p.PermKeyDesc = 'Lender' THEN @Lenders 
+			WHEN p.PermKeyDesc = 'Borrower' THEN @Borrowers 
+			WHEN p.PermKeyDesc = 'Guarantor' THEN @Guarantors 
+			ELSE NULL
+			END
+FROM
+dbo.VwPermKey p
+)
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fWeekDays') AND type='FN')
 DROP FUNCTION dbo.fWeekDays
 GO
@@ -3204,6 +3262,7 @@ SET ANSI_NULLS ON
 GO
 ALTER PROCEDURE [dbo].[Ae_DelServerRule]
  @ServerRuleId		int
+ ,@RemoveSP			char(1) = 'N'
 /* WITH ENCRYPTION */
 AS
 DECLARE	 @ScreenId	int
@@ -3216,7 +3275,7 @@ SET NOCOUNT ON
 SELECT @ScreenId = ScreenId, @ProcedureName = ProcedureName FROM dbo.ServerRule WHERE ServerRuleId = @ServerRuleId
 SELECT @MultiDesignDb = b.MultiDesignDb FROM dbo.Screen a INNER JOIN dbo.DbTable b on a.MasterTableId = b.TableId WHERE a.ScreenId = @ScreenId
 SELECT @dClause = 'IF EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = object_id(''''' + @ProcedureName + ''''') AND type=''''P'''') DROP PROCEDURE ' + @ProcedureName
-IF @MultiDesignDb = 'Y'
+IF @MultiDesignDb = 'Y' AND @RemoveSP = 'Y'
 BEGIN
 	DECLARE curs CURSOR FAST_FORWARD FOR SELECT dbDesDatabase FROM RODesign.dbo.Systems FOR READ ONLY
 	OPEN curs FETCH NEXT FROM curs INTO @DesDb
@@ -3232,6 +3291,59 @@ ELSE
 BEGIN
 	EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @dClause + '''')
 END
+
+/* DELETE OVERRIDE */
+DELETE p
+FROM
+dbo.AtServerRuleOvrdPrm p
+INNER JOIN dbo.AtServerRuleOvrd o on p.AtServerRuleOvrdId = o.AtServerRuleOvrdId
+WHERE o.ServerRuleId = @ServerRuleId
+
+DELETE p
+FROM
+dbo.utServerRuleOvrdPrm p
+INNER JOIN dbo.AtServerRuleOvrd o on p.AtServerRuleOvrdGuid = o.Guid
+WHERE o.ServerRuleId = @ServerRuleId
+
+DELETE o
+FROM
+dbo.AtServerRuleOvrd o 
+WHERE o.ServerRuleId = @ServerRuleId
+
+DELETE o
+FROM
+dbo.utServerRuleOvrd o 
+INNER JOIN dbo.ServerRule r on r.Guid = o.ServerRuleGuid
+WHERE r.ServerRuleId = @ServerRuleId
+
+
+/* DELETE COW(AtServerRule) or should it be turned as 'Skipped' to persist on upgrade from upstream ? */
+
+DECLARE @MyNS varchar(30)
+
+SELECT
+@MyNS = REPLACE(s.dbDesDatabase, 'Design', '')
+FROM
+RODesign.dbo.Systems s
+WHERE s.SysProgram = 'Y'
+AND s.Active = 'Y'
+
+DELETE a
+FROM
+dbo.ServerRule s
+INNER JOIN dbo.AtServerRule a on a.Guid = s.Guid AND a.ScreenId = s.ScreenId
+	 AND a.SrcNS = @MyNS --local created copy
+	 AND s.RunMode IS NOT NULL  
+WHERE s.ServerRuleId = @ServerRuleId
+
+UPDATE a
+Set RunMode = 'S' -- skipped(i.e. don't run)
+FROM
+dbo.ServerRule s
+INNER JOIN dbo.AtServerRule a on a.Guid = s.Guid AND a.ScreenId = s.ScreenId
+	 AND (a.SrcNS IS NOT NULL AND a.SrcNS <> @MyNS) --upstream copy
+WHERE s.ServerRuleId = @ServerRuleId
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -11707,12 +11819,142 @@ SELECT @sClause = 'SELECT ServerRuleId24=b24.ServerRuleId'
 + ', OnUpd24=b24.OnUpd'
 + ', OnDel24=b24.OnDel'
 + ', BeforeCRUD24=b24.BeforeCRUD'
++ ', SrcNS24=b24.SrcNS'
++ ', RunMode24=b24.RunMode'
 + ', RuleCode24=b24.RuleCode'
 + ', ModifiedBy24=b24.ModifiedBy'
 + ', ModifiedOn24=b24.ModifiedOn'
 + ', LastGenDt24=b24.LastGenDt'
 SELECT @wClause = 'WHERE b24.ServerRuleId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmServerRuleOvrd1026ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmServerRuleOvrd1026ById AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetAdmServerRuleOvrd1026ById
+ @KeyId1		nvarchar(1000)
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+SELECT @fClause = 'FROM dbo.AtServerRuleOvrd b1322'
+SELECT @sClause = 'SELECT AtServerRuleOvrdId1322=b1322.AtServerRuleOvrdId'
++ ', ServerRuleOvrdDesc1322=b1322.ServerRuleOvrdDesc'
++ ', ServerRuleOvrdName1322=b1322.ServerRuleOvrdName'
++ ', ServerRuleId1322=b1322.ServerRuleId'
++ ', ScreenId1322=b1322.ScreenId'
++ ', Priority1322=b1322.Priority'
++ ', Disable1322=b1322.Disable'
++ ', RunMode1322=b1322.RunMode'
+SELECT @wClause = 'WHERE b1322.AtServerRuleOvrdId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmServerRuleOvrd1026DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmServerRuleOvrd1026DtlById AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetAdmServerRuleOvrd1026DtlById
+ @screenId		int
+,@keyId		nvarchar(1000)
+,@Usrs		varchar(1000)
+,@RowAuthoritys		varchar(1000)
+,@Customers		varchar(1000)
+,@Vendors		varchar(1000)
+,@Members		varchar(1000)
+,@Investors		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@screenFilterId	int
+,@currCompanyId		int
+,@currProjectId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+	,@filterClause		nvarchar(2000)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@SelUsr		char(1)
+	,@SelUsrGroup		char(1)
+	,@SelCulture		char(1)
+	,@SelCompany		char(1)
+	,@SelAgent		char(1)
+	,@SelBroker		char(1)
+	,@SelCustomer		char(1)
+	,@SelInvestor		char(1)
+	,@SelMember		char(1)
+	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
+	,@SelProject		char(1)
+	,@RowAuthorityId	smallint
+SELECT @fClause = 'FROM dbo.AtServerRuleOvrdPrm b1321' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey)x7618 ON b1321.PermKeyId = x7618.PermKeyId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyRowId,PermIdText,PermKeyId FROM RODesign.dbo.VwPermKeyRow)x7635 ON b1321.PermKeyRowId = x7635.PermKeyRowId AND x7618.PermKeyId = x7635.PermKeyId'
+SELECT @sClause = 'SELECT ServerRuledOvrdPrmId1321=b1321.ServerRuledOvrdPrmId'
++ ', PermKeyId1321=x7618.PermKeyId'
++ ', PermKeyId1321Text=x7618.PermKeyDesc'
++ ', PermKeyRowId1321=x7635.PermKeyRowId'
++ ', PermKeyRowId1321Text=x7635.PermIdText'
++ ', AndCondition1321=b1321.AndCondition'
++ ', Match1321=b1321.Match'
+SELECT @oClause = ''
+SELECT @wClause = 'WHERE b1321.AtServerRuleOvrdId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
+SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@keyId,CHAR(191),','), '''',''''''),'NULL'))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId' ,CONVERT(varchar,@currCompanyId))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',CONVERT(varchar,@currProjectId))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @filterClause=replace(@filterClause,'@screenId',CONVERT(varchar,@screenId))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -24798,6 +25040,61 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyId3S4363') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPermKeyId3S4363 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlPermKeyId3S4363
+ @screenId		int
+,@bAll		char(1)
+,@keyId		SmallInt
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PermKeyId1321=a230.PermKeyId, PermKeyId1321Text=a230.PermKeyDesc'
+SELECT @fClause = 'FROM RODesign.dbo.VwPermKey a230'
+SELECT @oClause = 'ORDER BY a230.PermKeyDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a230.PermKeyDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a230.PermKeyId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT PermKeyId1321=null, PermKeyId1321Text=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyId3S833') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetDdlPermKeyId3S833 AS SELECT 1')
 GO
@@ -24922,6 +25219,79 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PermKeyRowId241=null, PermKeyRowId241Text=null, Active=null, PermKeyId=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyRowId3S4369') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPermKeyRowId3S4369 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlPermKeyRowId3S4369
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PermKeyRowId1321=a1299.PermKeyRowId, PermKeyRowId1321Text=a1299.PermIdText, a1299.Active, a1299.PermKeyId'
+SELECT @fClause = 'FROM RODesign.dbo.VwPermKeyRow a1299'
+SELECT @oClause = 'ORDER BY a1299.PermIdText'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1299.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1299.PermIdText LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1299.PermKeyRowId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyId','Company','a1299.','Y','N',null,'Y','PermKeyRowId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a1299.','Y','Y',null,'Y','PermKeyRowId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','a1299.','Y','N',null,'Y','PermKeyRowId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Projects,'ProjectId','Project','a1299.','Y','N',null,'Y','PermKeyRowId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Projects,'ProjectLs','Project','a1299.','Y','Y',null,'Y','PermKeyRowId',@wClause OUTPUT,@Usrs
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Customers,'CustomerId','Customer','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'InvestorId','Investor','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Members,'MemberId','Member','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupId','UsrGroup','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Vendors,'VendorId','Vendor','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1299.','Y',null,'PermKeyRowId',@wClause OUTPUT
+EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1299.','Y',null,'PermKeyRowId',@wClause OUTPUT
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT PermKeyRowId1321=null, PermKeyRowId1321Text=null, Active=null, PermKeyId=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -29200,6 +29570,116 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRunMode3S4354') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRunMode3S4354 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlRunMode3S4354
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Char(100)
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RunMode24=a1320.RunModeCd, RunMode24Text=a1320.RunModeDesc, a1320.SrtOrder'
+SELECT @fClause = 'FROM dbo.VwServerRuleRunMode a1320'
+SELECT @oClause = 'ORDER BY a1320.SrtOrder'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1320.RunModeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1320.RunModeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT RunMode24=null, RunMode24Text=null, SrtOrder=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlRunMode3S4373') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlRunMode3S4373 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlRunMode3S4373
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Char(100)
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RunMode1322=a1320.RunModeCd, RunMode1322Text=a1320.RunModeDesc'
+SELECT @fClause = 'FROM dbo.VwServerRuleRunMode a1320'
+SELECT @oClause = 'ORDER BY a1320.RunModeDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1320.RunModeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1320.RunModeCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT RunMode1322=null, RunMode1322Text=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenCriHlpId3S1266') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetDdlScreenCriHlpId3S1266 AS SELECT 1')
 GO
@@ -29963,6 +30443,61 @@ SELECT @oClause = 'ORDER BY a15.ScreenDesc'
 SELECT @wClause = 'WHERE ( 1=1 ' 
  + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
 SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1085') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C1085 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlScreenId103C1085
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
@@ -31690,6 +32225,61 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT ScreenId39=null, ScreenId39Text=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId3S4367') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId3S4367 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlScreenId3S4367
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ScreenId1322=a15.ScreenId, ScreenId1322Text=a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a15.ScreenId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId1322=null, ScreenId1322Text=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -33883,6 +34473,62 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT SeriesGrp206=null, SeriesGrp206Text=null, ReportId=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlServerRuleId3S4359') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlServerRuleId3S4359 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlServerRuleId3S4359
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ServerRuleId1322=a24.ServerRuleId, ServerRuleId1322Text=a24.RuleDesc'
+SELECT @fClause = 'FROM dbo.ServerRule a24'
+SELECT @oClause = 'ORDER BY a24.RuleDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a24.RuleDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a24.ServerRuleId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a24.','N','N',null,'Y','ServerRuleId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ServerRuleId1322=null, ServerRuleId1322Text=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -43907,6 +44553,7 @@ SELECT @fClause='FROM dbo.ServerRule b24 (NOLOCK)'
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleTypeId,RuleTypeDesc FROM RODesign.dbo.CtRuleType (NOLOCK))x188 ON b24.RuleTypeId = x188.RuleTypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen (NOLOCK))x1140 ON b24.ScreenId = x1140.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CrudTypeCd,CrudTypeName,CrudTypeDesc FROM RODesign.dbo.CtCrudType (NOLOCK))x200 ON b24.BeforeCRUD = x200.CrudTypeCd' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RunModeCd,RunModeDesc FROM dbo.VwServerRuleRunMode (NOLOCK))x7589 ON b24.RunMode = x7589.RunModeCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT UsrId,UsrName FROM RODesign.dbo.Usr (NOLOCK))x1264 ON b24.ModifiedBy = x1264.UsrId'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ServerRuleId24Text=b24.ServerRuleId'
 + ', ServerRuleId24=b24.ServerRuleId'
@@ -43928,6 +44575,9 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', BeforeCRUD24=x200.CrudTypeCd'
 + ', BeforeCRUD24Text=x200.CrudTypeName'
 + ', CrudTypeDesc1289=x200.CrudTypeDesc'
++ ', SrcNS24=b24.SrcNS'
++ ', RunMode24=x7589.RunModeCd'
++ ', RunMode24Text=x7589.RunModeDesc'
 + ', RuleCode24=b24.RuleCode'
 + ', ModifiedBy24=x1264.UsrId'
 + ', ModifiedBy24Text=x1264.UsrName'
@@ -43985,6 +44635,152 @@ IF @key is not null SELECT @wClause = @wClause + ' AND (b24.ServerRuleId = ' + R
 ELSE
 BEGIN
 	IF @ScreenId16 is not null SELECT @wClause = @wClause + ' AND (b24.ScreenId = ' + convert(varchar,@ScreenId16) + ')'
+END
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmServerRuleOvrd1026') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmServerRuleOvrd1026 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetExpAdmServerRuleOvrd1026
+ @useGlobalFilter	char(1)
+,@screenId		int
+,@Usrs			varchar(1000)
+,@RowAuthoritys		varchar(1000)
+,@Customers		varchar(1000)
+,@Vendors		varchar(1000)
+,@Members		varchar(1000)
+,@Investors		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@Key		nvarchar(500)
+,@FilterTxt		nvarchar(500)
+,@ScreenId1085	Int
+,@screenFilterId	int
+,@currCompanyId	int
+,@currProjectId	int
+,@topN	smallint = null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@filterClause		nvarchar(2000)
+	,@bUsr		char(1)
+	,@UsrId			int
+	,@tClause		nvarchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@SelUsr		char(1)
+	,@SelUsrGroup		char(1)
+	,@SelCulture		char(1)
+	,@SelCompany		char(1)
+	,@SelAgent		char(1)
+	,@SelBroker		char(1)
+	,@SelCustomer		char(1)
+	,@SelInvestor		char(1)
+	,@SelMember		char(1)
+	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
+	,@SelProject		char(1)
+	,@RowAuthorityId	smallint
+SELECT @fClause='FROM dbo.AtServerRuleOvrd b1322 (NOLOCK)' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ServerRuleId,RuleDesc FROM dbo.ServerRule (NOLOCK))x7624 ON b1322.ServerRuleId = x7624.ServerRuleId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen (NOLOCK))x7630 ON b1322.ScreenId = x7630.ScreenId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RunModeCd,RunModeDesc FROM dbo.VwServerRuleRunMode (NOLOCK))x7640 ON b1322.RunMode = x7640.RunModeCd' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.AtServerRuleOvrdPrm b1321 (NOLOCK) ON b1322.AtServerRuleOvrdId = b1321.AtServerRuleOvrdId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey (NOLOCK))x7618 ON b1321.PermKeyId = x7618.PermKeyId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyRowId,PermIdText,PermKeyId FROM RODesign.dbo.VwPermKeyRow (NOLOCK))x7635 ON b1321.PermKeyRowId = x7635.PermKeyRowId AND x7618.PermKeyId = x7635.PermKeyId'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AtServerRuleOvrdId1322Text=b1322.AtServerRuleOvrdId'
++ ', AtServerRuleOvrdId1322=b1322.AtServerRuleOvrdId'
++ ', ServerRuleOvrdDesc1322=b1322.ServerRuleOvrdDesc'
++ ', ServerRuleOvrdName1322=b1322.ServerRuleOvrdName'
++ ', ServerRuleId1322=x7624.ServerRuleId'
++ ', ServerRuleId1322Text=x7624.RuleDesc'
++ ', ScreenId1322=x7630.ScreenId'
++ ', ScreenId1322Text=x7630.ScreenDesc'
++ ', Priority1322=b1322.Priority'
++ ', Disable1322=b1322.Disable'
++ ', RunMode1322=x7640.RunModeCd'
++ ', RunMode1322Text=x7640.RunModeDesc'
++ ', ServerRuledOvrdPrmId1321=' + case when charindex('b1321 ',@fClause) > 0 then 'b1321.ServerRuledOvrdPrmId' else 'null' end
++ ', PermKeyId1321=x7618.PermKeyId'
++ ', PermKeyId1321Text=x7618.PermKeyDesc'
++ ', PermKeyRowId1321=x7635.PermKeyRowId'
++ ', PermKeyRowId1321Text=x7635.PermIdText'
++ ', AndCondition1321=' + case when charindex('b1321 ',@fClause) > 0 then 'b1321.AndCondition' else 'null' end
++ ', Match1321=' + case when charindex('b1321 ',@fClause) > 0 then 'b1321.Match' else 'null' end + ''
+SELECT @oClause='ORDER BY b1322.AtServerRuleOvrdId'
+SELECT @wClause='WHERE 1=1', @bUsr='Y'
+SELECT @pp = @Usrs
+WHILE @pp <> '' AND datalength(@pp) > 0
+BEGIN
+	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT
+	IF @bUsr='Y'
+	BEGIN
+		SELECT @bUsr='N'
+		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@Key,CHAR(191),','), '''',''''''),'NULL'))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId', CONVERT(varchar,@currCompanyId))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId', CONVERT(varchar,@currProjectId))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@Cri10', ISNULL(REPLACE(REPLACE(@ScreenId1085, CHAR(191), ','), '''', ''''''), 'NULL'))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
+		IF @useGlobalFilter='Y'
+		BEGIN
+			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
+			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1322.')
+			ELSE
+			BEGIN
+				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'
+				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1322.')
+			END
+		END
+	END
+END
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b1322.AtServerRuleOvrdId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
+ELSE
+BEGIN
+	IF @ScreenId1085 is not null SELECT @wClause = @wClause + ' AND (b1322.ScreenId = ' + convert(varchar,@ScreenId1085) + ')'
 END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
@@ -55107,6 +55903,129 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmServerRuleOvrd1026') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmServerRuleOvrd1026 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetLisAdmServerRuleOvrd1026
+ @useGlobalFilter	char(1)
+,@screenId		int
+,@Usrs			varchar(1000)
+,@RowAuthoritys		varchar(1000)
+,@Customers		varchar(1000)
+,@Vendors		varchar(1000)
+,@Members		varchar(1000)
+,@Investors		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@Key		nvarchar(500)
+,@FilterTxt		nvarchar(500)
+,@ScreenId1085	Int
+,@screenFilterId	int
+,@currCompanyId	int
+,@currProjectId	int
+,@topN	smallint = null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@filterClause		nvarchar(2000)
+	,@bUsr		char(1)
+	,@UsrId			int
+	,@tClause		nvarchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@SelUsr		char(1)
+	,@SelUsrGroup		char(1)
+	,@SelCulture		char(1)
+	,@SelCompany		char(1)
+	,@SelAgent		char(1)
+	,@SelBroker		char(1)
+	,@SelCustomer		char(1)
+	,@SelInvestor		char(1)
+	,@SelMember		char(1)
+	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
+	,@SelProject		char(1)
+	,@RowAuthorityId	smallint
+SELECT @fClause='FROM dbo.AtServerRuleOvrd b1322 (NOLOCK)'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AtServerRuleOvrdId1322=b1322.AtServerRuleOvrdId, AtServerRuleOvrdId1322Text=b1322.ServerRuleOvrdDesc, MatchCount=COUNT(1) OVER ()'
+SELECT @oClause='ORDER BY b1322.ServerRuleOvrdDesc'
+SELECT @wClause='WHERE 1=1', @bUsr='Y'
+SELECT @pp = @Usrs
+WHILE @pp <> '' AND datalength(@pp) > 0
+BEGIN
+	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT
+	IF @bUsr='Y'
+	BEGIN
+		SELECT @bUsr='N'
+		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@Key,CHAR(191),','), '''',''''''),'NULL'))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId', CONVERT(varchar,@currCompanyId))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId', CONVERT(varchar,@currProjectId))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@Cri10', ISNULL(REPLACE(REPLACE(@ScreenId1085, CHAR(191), ','), '''', ''''''), 'NULL'))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
+		IF @useGlobalFilter='Y'
+		BEGIN
+			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
+			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1322.')
+			ELSE
+			BEGIN
+				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'
+				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1322.')
+			END
+		END
+	END
+END
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b1322.AtServerRuleOvrdId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
+ELSE
+BEGIN
+	IF @ScreenId1085 is not null SELECT @wClause = @wClause + ' AND (b1322.ScreenId = ' + convert(varchar,@ScreenId1085) + ')'
+END
+
+SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
+IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1322.ServerRuleOvrdDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmSignup1018') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetLisAdmSignup1018 AS SELECT 1')
 GO
@@ -57902,10 +58821,14 @@ a.ReleaseOs,a.EntityId,c.EntityCode
 ,PrepDir = right('000'+convert(varchar,a.ReleaseId),4) + '_' + b.ReleaseTypeAbbr + '_' + c.EntityCode
 ,PrepPath = c.DeployPath + right('000'+convert(varchar,a.ReleaseId),4) + '_' + b.ReleaseTypeAbbr + '_' + c.EntityCode + CASE WHEN a.ReleaseOs = 'L' THEN '/' ELSE '\' END
 ,InstPath = c.DeployPath + right('000'+convert(varchar,a.ReleaseId),4) + '_' + b.ReleaseTypeAbbr + '_' + c.EntityCode + CASE WHEN a.ReleaseOs = 'L' THEN '/' ELSE '\' END
+,a.ReleaseId,c.EntityName, a.ReleaseDate 
 FROM dbo.Release a
 INNER JOIN dbo.CtReleaseType b ON a.ReleaseTypeId = b.ReleaseTypeId
 INNER JOIN dbo.Entity c ON a.EntityId = c.EntityId
 WHERE a.ReleaseId = @ReleaseId
+OR
+@ReleaseId IS NULL
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -62798,6 +63721,24 @@ SET ANSI_NULLS ON
 GO
 ALTER PROCEDURE [dbo].[GetServerRule]
  @screenId		int
+,@Usrs			varchar(4000) = NULL
+,@RowAuthoritys		varchar(4000) = NULL
+,@Customers		varchar(4000) = NULL
+,@Vendors		varchar(4000) = NULL
+,@Members		varchar(4000) = NULL
+,@Investors		varchar(4000) = NULL
+,@Agents		varchar(4000) = NULL
+,@Brokers		varchar(4000) = NULL
+,@UsrGroups		varchar(4000) = NULL
+,@Companys		varchar(4000) = NULL
+,@Projects		varchar(4000) = NULL
+,@Cultures		varchar(4000) = NULL
+,@Borrowers		varchar(4000) = NULL
+,@Guarantors		varchar(4000) = NULL
+,@Lenders		varchar(4000) = NULL
+,@currCompanyId	int = NULL
+,@currProjectId	int = NULL
+
 /* WITH ENCRYPTION */
 AS
 DECLARE	 @sClause	varchar(8000)
@@ -62805,6 +63746,8 @@ DECLARE	 @sClause	varchar(8000)
 	,@wClause	varchar(8000)
 	,@oClause	varchar(8000)
 SET NOCOUNT ON
+/*
+no point to use dynamic SQL 2020.4.23 gary
 SELECT @sClause = 'SELECT a.BeforeCRUD,a.ProcedureName,a.MasterTable'
 + ',ParameterNames = (CASE WHEN a.ParameterNames IS NULL THEN '''' ELSE REPLACE(a.ParameterNames,SPACE(1),'''') END)'
 + ',ParameterTypes = (CASE WHEN a.ParameterTypes IS NULL THEN '''' ELSE REPLACE(a.ParameterTypes,SPACE(1),'''') END)'
@@ -62814,6 +63757,107 @@ SELECT @fClause = 'FROM dbo.ServerRule a'
 SELECT @wClause = 'WHERE a.ScreenId = ' + CONVERT(varchar,@screenId)
 SELECT @oClause = 'ORDER BY a.RuleOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+*/
+
+DECLARE @ServerRuleOvrd table (AtServerRuleOvrdId int, ServerRuleId int, Disable char(1), Priority int, FirstPriority int)
+
+
+INSERT INTO @ServerRuleOvrd
+(AtServerRuleOvrdId, ServerRuleId, Disable, Priority, FirstPriority)
+SELECT
+AtServerRuleOvrdId, ServerRuleId, Disable, Priority, FirstPrority = MIN(Priority) OVER (PARTITION BY ServerRuleId)
+FROM
+(
+SELECT
+DISTINCT x.AtServerRuleOvrdId, x.ServerRuleId, x.Disable, x.Priority 
+FROM
+(
+SELECT
+o.AtServerRuleOvrdId, o.Disable, o.Priority, o.ServerRuleId
+, AllCount = SUM(CASE WHEN p.ServerRuledOvrdPrmId IS NOT NULL THEN 1 ELSE 0 END) OVER (PARTITION BY o.AtServerRuleOvrdId)
+, AndCount = SUM(CASE WHEN p.AndCondition = 'Y' THEN 1 ELSE 0 END) OVER (PARTITION BY o.AtServerRuleOvrdId)
+, OrCount = SUM(CASE WHEN p.AndCondition = 'N' THEN 1 ELSE 0 END) OVER (PARTITION BY o.AtServerRuleOvrdId)
+, MatchCount = SUM(CASE WHEN p.Match = 'Y' THEN CASE WHEN ur.PermKeyId IS NOT NULL THEN 1 ELSE 0 END
+					ELSE CASE WHEN ur.PermKeyId IS NULL THEN 1 ELSE 0 END
+					END
+					) OVER (PARTITION BY o.AtServerRuleOvrdId)
+,MatchAndCount = SUM(
+				 CASE WHEN p.AndCondition = 'Y' THEN
+					 CASE WHEN p.Match = 'Y' OR 1=1 THEN CASE WHEN ur.PermKeyId IS NOT NULL THEN 1 ELSE 0 END
+						ELSE CASE WHEN ur.PermKeyId IS NULL THEN 1 ELSE 0 END
+						END
+				 ELSE 0 END
+					) OVER (PARTITION BY o.AtServerRuleOvrdId)
+,MatchOrCount = SUM(
+				 CASE WHEN p.AndCondition = 'N' THEN
+					CASE WHEN p.Match = 'Y' OR 1=1 THEN CASE WHEN ur.PermKeyId IS NOT NULL THEN 1 ELSE 0 END
+						ELSE CASE WHEN ur.PermKeyId IS NULL THEN 1 ELSE 0 END
+						END
+				 ELSE 0 END
+					) OVER (PARTITION BY o.AtServerRuleOvrdId)
+FROM
+dbo.AtServerRuleOvrd o
+LEFT OUTER JOIN dbo.AtServerRuleOvrdPrm p on o.AtServerRuleOvrdId = p.AtServerRuleOvrdId
+LEFT OUTER JOIN
+(
+SELECT
+*
+FROM
+RODesign.dbo.fUsrRole(
+@Usrs, @RowAuthoritys, @Customers, @Vendors,@Members, @Investors, @Agents		
+, @Brokers, @UsrGroups, @Companys, @Projects ,@Cultures, @Borrowers, @Guarantors, @Lenders		
+)
+) ur on ur.PermKeyId = p.PermKeyId 
+	AND CASE 
+		WHEN p.PermId IS NULL THEN  
+			CASE WHEN ur.PermKeyDesc = 'Company' OR ur.PermKeyDesc = 'Project' OR ur.UsrRole = '0' THEN 'Y' ELSE 'N' END 
+		WHEN CHARINDEX(
+			CHAR(191) + CONVERT(varchar, p.PermId) + CHAR(191)
+			, CHAR(191) + ISNULL(ur.UsrRole, CASE WHEN p.Match = 'Y' THEN '-1' ELSE CONVERT(VARCHAR, p.PermId) END) + CHAR(191)
+			) > 0 
+		THEN 'Y'
+		ELSE 'N' END = p.Match
+	AND 
+	(
+	(ur.PermKeyDesc <> 'Company' AND ur.PermKeyDesc <> 'Project')
+	OR
+	(
+	(p.PermId IS NULL AND ur.PermKeyDesc = 'Company' AND CASE WHEN @currCompanyId <> 0 THEN 'N' ELSE 'Y' END = p.Match)
+	OR
+	(p.PermId IS NULL AND ur.PermKeyDesc = 'Project' AND CASE WHEN @currProjectId <> 0 THEN 'N' ELSE 'Y' END = p.Match)
+	OR
+	(ur.PermKeyDesc = 'Company' AND CASE WHEN @currCompanyId = p.PermId THEN 'Y' ELSE 'N' END = p.Match)
+	OR
+	(ur.PermKeyDesc = 'Project' AND CASE WHEN @currProjectId = p.PermId THEN 'Y' ELSE 'N' END = p.Match)
+	)
+	)
+WHERE o.ScreenId = @screenId
+)  x
+WHERE 
+x.AllCount IS NULL 
+OR x.AllCount = 0
+OR (x.MatchOrCount > 0 AND x.OrCount > 0)
+OR (x.MatchAndCount >= x.AndCount AND x.AndCount > 0)
+) y
+
+
+SELECT a.BeforeCRUD,a.ProcedureName,a.MasterTable
+,ParameterNames = (CASE WHEN a.ParameterNames IS NULL THEN '' ELSE REPLACE(a.ParameterNames,SPACE(1),'') END)
+,ParameterTypes = (CASE WHEN a.ParameterTypes IS NULL THEN '' ELSE REPLACE(a.ParameterTypes,SPACE(1),'') END)
+,CallingParams = (CASE WHEN a.CallingParams IS NULL THEN '' ELSE REPLACE(a.CallingParams,SPACE(1),'') END)
+,a.OnAdd,a.OnUpd,a.OnDel
+,a.RunMode
+FROM dbo.ServerRule a
+LEFT OUTER JOIN @ServerRuleOvrd o ON o.ServerRuleId = a.ServerRuleId AND o.FirstPriority = o.Priority
+WHERE 
+a.ScreenId = @screenId
+AND
+(o.ServerRuleId IS NULL OR o.Disable <> 'Y')
+AND 
+(ISNULL(a.RunMode,'') <> 'S' OR o.Disable = 'N')
+ORDER BY a.RuleOrder
+
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -63828,7 +64872,22 @@ DELETE FROM dbo.ScreenObj WHERE ScreenId = @ScreenId
 DELETE FROM dbo.RowOvrd WHERE ScreenId = @ScreenId
 DELETE FROM dbo.ScrMemCriDtl WHERE ScrMemCriId IN (SELECT ScrMemCriId FROM dbo.ScrMemCri WHERE ScreenId = @ScreenId)
 DELETE FROM dbo.ScrMemCri WHERE ScreenId = @ScreenId
+DELETE p
+FROM
+dbo.AtServerRuleOvrdPrm p
+INNER JOIN dbo.AtServerRuleOvrd o on p.AtServerRuleOvrdId = o.AtServerRuleOvrdId
+INNER JOIN dbo.ServerRule  s on s.ServerRuleId = o.ServerRuleId
+WHERE s.ScreenId = @ScreenId
+
+DELETE o
+FROM
+dbo.AtServerRuleOvrd o 
+INNER JOIN dbo.ServerRule  s on s.ServerRuleId = o.ServerRuleId
+WHERE s.ScreenId = @ScreenId
+
 DELETE FROM dbo.ServerRule WHERE ScreenId = @ScreenId
+/* COW Server Rule */
+DELETE FROM dbo.AtServerRule WHERE ScreenId = @ScreenId
 DELETE FROM dbo.WebRule WHERE ScreenId = @ScreenId
 DELETE FROM dbo.ScreenFilterHlp WHERE ScreenFilterId IN (SELECT ScreenFilterId FROM dbo.ScreenFilter WHERE ScreenId = @ScreenId)
 DELETE FROM dbo.ScreenFilter WHERE ScreenId = @ScreenId
@@ -64033,6 +65092,71 @@ SET NOCOUNT ON
 SELECT @TmplPrefix = TmplPrefix, @TmplDefault = TmplDefault FROM dbo.Template WHERE TemplateId = @TemplateId
 IF @TmplDefault = 'Y' BEGIN RAISERROR('{39}',18,2) WITH SETERROR RETURN 1 END
 IF @TmplPrefix <> '' DELETE FROM dbo.RptTemplate WHERE charindex(@TmplPrefix,DocName) = 1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelServerRuleOvrd') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelServerRuleOvrd AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[Ir_DelServerRuleOvrd]
+ @AtServerRuleOvrdId		int
+,@UsrId						int = null
+
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+
+/* pre delete of atServerRuleOvrd */
+
+/* remove copy on write version in ut - permission rows */
+DELETE o
+FROM
+dbo.utServerRuleOvrdPrm o
+WHERE
+o.AtServerRuleOvrdId = @AtServerRuleOvrdId
+
+/* remove copy on write version in ut - configuration */
+DELETE o
+FROM
+dbo.utServerRuleOvrd o
+WHERE
+o.AtServerRuleOvrdId = @AtServerRuleOvrdId
+
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_DelServerRuleOvrdPrm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_DelServerRuleOvrdPrm AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[Ir_DelServerRuleOvrdPrm]
+ @ServerRuleOvrdPrmId		int
+,@UsrId						int = null
+
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+
+/* pre delete of atServerRuleOvrdPrm */
+
+/* remove copy on write version in ut, if it is there via guid */
+DELETE o
+FROM
+dbo.AtServerRuleOvrdPrm p
+INNER JOIN dbo.utServerRuleOvrdPrm o on o.Guid = p.Guid
+WHERE
+p.ServerRuledOvrdPrmId = @ServerRuleOvrdPrmId
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -66146,15 +67270,78 @@ GO
 SET ANSI_NULLS ON
 GO
 ALTER PROCEDURE [dbo].[Ir_UpdServerRule]
- @ScreenId		int
-,@CultureId		smallint
+ @ScreenId		int = null
+,@CultureId		smallint = null
+,@ServerRuleId	int = null
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
 DECLARE	 @ROrder		int
-		,@ServerRuleId	int
 		,@DefCultureId	smallint
+
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
+
+IF (
+	(SELECT COUNT(*) FROM dbo.ServerRule WHERE ScreenId = @ScreenId) > 3274
+	)
+BEGIN
+	RAISERROR('There is no way we can have that many server rules for a screen; please contact the administrator ASAP.',18,2) WITH SETERROR
+	RETURN 1
+END
+
+DECLARE @MyNS varchar(30)
+
+SELECT
+@MyNS = REPLACE(s.dbDesDatabase, 'Design', '')
+FROM
+RODesign.dbo.Systems s
+WHERE s.SysProgram = 'Y'
+AND s.Active = 'Y'
+
+UPDATE a
+SET RuleOrder = ROrder * 10
+		, RuleDesc = isnull(b.ScreenTitle,space(0)) + right(space(5)+convert(varchar,ROrder * 10),5)
+		+ ' [' + CASE WHEN a.MasterTable = 'Y' THEN 'Master' ELSE 'Detail' END
+		+ ': ' + CASE WHEN a.BeforeCRUD = 'Y' THEN 'Before CRUD' 
+					  WHEN a.BeforeCRUD = 'S' THEN 'Skip CRUD' 
+					  WHEN a.BeforeCRUD = 'N' THEN 'After CRUD' 
+					  ELSE 'Last Rule' END
+		+ '] ' + a.RuleName + CASE WHEN a.RunMode = 'S' THEN ' - Suppressed' ELSE '' END
+, SrcNS = ISNULL(SrcNS, @MyNS)
+FROM
+dbo.ServerRule a
+INNER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId
+								AND b.CultureId = CASE 
+													WHEN EXISTS (SELECT 1 FROM dbo.ScreenHlp x WHERE x.ScreenId = a.ScreenId AND x.CultureId = @CultureId) THEN @CultureId 
+													ELSE @DefCultureId END
+INNER JOIN 
+(
+SELECT
+a.ScreenId
+,a.ServerRuleId
+, ROrder = ROW_NUMBER() OVER (PARTITION BY a.ScreenId 
+							ORDER BY 
+								CASE WHEN a.BeforeCRUD = 'C' THEN 2 ELSE 1 END -- 'last rule'(i.e. C always come last)
+								,b.CrudTypeSort
+								,a.MasterTable DESC
+								, CASE WHEN a.RunMode = 'B' THEN 1 --before upstream 
+									   WHEN a.RunMode = 'A' THEN 3 --after upstream
+									   WHEN a.RunMode = 'S' THEN 99 --skipped, last of block
+									   ELSE 2 END --empty means upstream
+								, a.RuleOrder
+								, a.ServerRuleId
+							) 
+FROM
+dbo.ServerRule a
+INNER JOIN RODesign.dbo.CtCrudType b ON a.BeforeCRUD = b.CrudTypeCd
+WHERE 
+a.ScreenId = @ScreenId OR @ScreenId IS NULL
+) x ON x.ServerRuleId = a.ServerRuleId
+WHERE 
+a.ScreenId = @ScreenId OR @ScreenId IS NULL
+
+RETURN 0
+
 /* Need to reorder Tab Index */
 IF object_id('tempdb.dbo.#rule') is not null DROP TABLE dbo.#rule
 CREATE TABLE dbo.#rule (ROrder int IDENTITY(1,1) not null, ServerRuleId int not null)
@@ -66191,6 +67378,337 @@ BEGIN
 END
 CLOSE cur DEALLOCATE cur
 DROP TABLE dbo.#rule
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdServerRuleCOW') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdServerRuleCOW AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[Ir_UpdServerRuleCOW]
+ @ServerRuleId		int
+,@UsrId				int = null
+
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+/* copy on write to AtServerRule 
+ * this only applies when we make a XX -> YY installation
+ * where XX was the initial app namespace and YY is the current local namespace
+ */
+DECLARE @MyNS varchar(30)
+
+SELECT
+@MyNS = REPLACE(s.dbDesDatabase, 'Design', '')
+FROM
+RODesign.dbo.Systems s
+WHERE s.SysProgram = 'Y'
+AND s.Active = 'Y'
+
+/* make a copy of the change, different from up stream and can be overwritten(revert) on next upgrade */
+INSERT INTO dbo.AtServerRule
+(
+ScreenId, RuleTypeId, MasterTable, RuleName, RuleDesc, RuleDescription
+,RuleOrder, ProcedureName, ParameterNames, ParameterTypes, CallingParams
+,OnAdd, OnUpd, OnDel, BeforeCRUD, RuleCode
+,ModifiedBy, ModifiedOn, LastGenDt
+,[Guid], RunMode, SrcNS
+)
+SELECT
+ScreenId, RuleTypeId, MasterTable, RuleName, RuleDesc, RuleDescription
+,RuleOrder, ProcedureName, ParameterNames, ParameterTypes, CallingParams
+,OnAdd, OnUpd, OnDel, BeforeCRUD, RuleCode
+,ModifiedBy, ModifiedOn, LastGenDt
+,[Guid], RunMode, ISNULL(SrcNS, @MyNS)
+FROM
+dbo.ServerRule r
+WHERE 
+ServerRuleId = @ServerRuleId
+--AND SrcNS IS NOT NULL -- upstream
+--AND SrcNS <> @MyNS -- I am spawned from upstream(thus different NS)
+AND NOT EXISTS (SELECT 1 FROM dbo.AtServerRule a WHERE a.Guid IS NOT NULL AND a.Guid = r.Guid)
+--only for specific selected server rules via RunMode
+AND r.RunMode IS NOT NULL
+
+UPDATE a
+SET [ScreenId] = r.ScreenId
+    ,[RuleTypeId] = r.RuleTypeId
+    ,[MasterTable] = r.MasterTable
+    ,[RuleName] = r.RuleName
+    ,[RuleDesc] = r.RuleDesc
+    ,[RuleDescription] = r.RuleDescription
+    ,[RuleOrder] = r.RuleOrder
+    ,[ProcedureName] = r.ProcedureName
+    ,[ParameterNames] = r.ParameterNames
+    ,[ParameterTypes] = r.ParameterTypes
+    ,[CallingParams] = r.CallingParams
+    ,[OnAdd] = r.OnAdd
+    ,[OnUpd] = r.OnUpd
+    ,[OnDel] = r.OnDel
+    ,[BeforeCRUD] = r.BeforeCRUD
+    ,[RuleCode] = r.RuleCode
+    ,[ModifiedBy] = r.ModifiedBy
+    ,[ModifiedOn] = r.ModifiedOn
+    ,[LastGenDt] = r.LastGenDt
+    ,[Guid] = r.Guid
+    ,[RunMode] = r.RunMode
+    ,[SrcNS] = ISNULL(r.SrcNS, @MyNS)
+FROM
+dbo.ServerRule r
+INNER JOIN dbo.AtServerRule a on a.Guid = r.Guid AND a.Guid IS NOT NULL
+WHERE r.ServerRuleId = @ServerRuleId
+
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdServerRuleOvrd') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdServerRuleOvrd AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[Ir_UpdServerRuleOvrd]
+ @AtServerRuleOvrdId		int
+,@UsrId						int = null
+
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+
+IF EXISTS
+(
+SELECT
+1
+FROM
+dbo.AtServerRuleOvrd o
+WHERE 
+AtServerRuleOvrdId = @AtServerRuleOvrdId
+AND
+(o.Priority BETWEEN 5000 AND 20000)
+AND
+o.RunMode IS NOT NULL
+)
+BEGIN
+	RAISERROR('local override cannot have priority between 5000 and 20000.',18,2) WITH SETERROR
+	RETURN 1
+END
+
+IF EXISTS
+(
+SELECT
+1
+FROM
+dbo.AtServerRuleOvrd o
+WHERE 
+AtServerRuleOvrdId = @AtServerRuleOvrdId
+AND
+(ISNULL(o.Priority, 10000) NOT BETWEEN 5000 AND 20000)
+AND
+o.RunMode IS NULL
+)
+BEGIN
+	RAISERROR('global override must have priority between 5000 and 20000.',18,2) WITH SETERROR
+	RETURN 1
+END
+
+
+UPDATE o
+SET ServerRuleGuid = s.Guid
+, ServerRuleOvrdDesc = s.RuleDesc + ' - ' + RIGHT(SPACE(5) + CONVERT(varchar,ISNULL(Priority, 10000)), 5) + ' '  + o.ServerRuleOvrdName
+, Priority = ISNULL(Priority, 10000)
+, ScreenId = s.ScreenId
+FROM
+dbo.AtServerRuleOvrd o
+INNER JOIN dbo.ServerRule s on o.ServerRuleId = s.ServerRuleId
+WHERE o.AtServerRuleOvrdId = @AtServerRuleOvrdId
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdServerRuleOvrdCOW') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdServerRuleOvrdCOW AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[Ir_UpdServerRuleOvrdCOW]
+ @AtServerRuleOvrdId		int
+,@UsrId						int = null
+
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+
+/* copy on write for local server rule override(i.e. preserved on upstream deployment), only run when everything is done */
+
+UPDATE p
+SET AtServerRuleOvrdGuid = o.Guid
+FROM
+dbo.AtServerRuleOvrdPrm p
+INNER JOIN dbo.AtServerRuleOvrd o on o.AtServerRuleOvrdId = p.AtServerRuleOvrdId
+WHERE 
+p.AtServerRuleOvrdId = @AtServerRuleOvrdId
+AND
+p.AtServerRuleOvrdGuid IS NULL
+
+/* copy permission configuration for local definition */
+INSERT INTO dbo.utServerRuleOvrdPrm
+           (PermKeyId
+           ,AndCondition
+           ,AtServerRuleOvrdId
+           ,Match
+           ,PermKeyRowId
+           ,PermId
+           ,Guid
+           ,AtServerRuleOvrdGuid)
+
+SELECT p.PermKeyId
+      ,p.AndCondition
+      ,p.AtServerRuleOvrdId
+      ,p.Match
+      ,p.PermKeyRowId
+      ,p.PermId
+      ,p.Guid
+      ,p.AtServerRuleOvrdGuid
+  FROM dbo.AtServerRuleOvrdPrm p
+  INNER JOIN dbo.AtServerRuleOvrd o on p.AtServerRuleOvrdId = o.AtServerRuleOvrdId
+  LEFT OUTER JOIN dbo.utServerRuleOvrdPrm x on x.Guid = p.Guid
+  WHERE 
+  o.AtServerRuleOvrdId = @AtServerRuleOvrdId
+  AND
+  /* only local */
+  o.RunMode IS NOT NULL
+  AND
+  /* and not already there */
+  x.ServerRuledOvrdPrmId IS NULL
+
+/* delete obsolete ones in ut */
+DELETE p
+  FROM dbo.utServerRuleOvrdPrm p
+  INNER JOIN dbo.AtServerRuleOvrd o on p.AtServerRuleOvrdId = o.AtServerRuleOvrdId
+  LEFT OUTER JOIN dbo.atServerRuleOvrdPrm x on x.Guid = p.Guid
+  WHERE 
+  o.AtServerRuleOvrdId = @AtServerRuleOvrdId
+  AND
+  (
+   /* and no longer there there */	
+   x.ServerRuledOvrdPrmId IS NULL
+   OR
+   /* changed to non-local */
+   o.RunMode IS NULL
+   )
+
+/* upd permission rows if it is still there, via guid not Id */
+UPDATE p
+   SET [PermKeyId] = x.PermKeyId
+      ,[AndCondition] = x.AndCondition
+      ,[AtServerRuleOvrdId] = x.AtServerRuleOvrdId
+      ,[Match] = x.Match
+      ,[PermKeyRowId] = x.PermKeyRowId
+      ,[PermId] = x.PermId
+      ,[Guid] = x.Guid
+      ,[AtServerRuleOvrdGuid] = o.Guid
+  FROM dbo.utServerRuleOvrdPrm p
+  INNER JOIN dbo.AtServerRuleOvrd o on p.AtServerRuleOvrdId = o.AtServerRuleOvrdId
+  INNER JOIN dbo.atServerRuleOvrdPrm x on x.Guid = p.Guid
+  WHERE 
+  o.AtServerRuleOvrdId = @AtServerRuleOvrdId
+
+/* copy override configure */
+
+INSERT INTO dbo.utServerRuleOvrd
+           (AtServerRuleOvrdId
+           ,ServerRuleOvrdDesc
+           ,ServerRuleOvrdName
+           ,ServerRuleId
+           ,Disable
+           ,ServerRuleGuid
+           ,ScreenId
+           ,Priority
+           ,Guid
+           ,RunMode)
+SELECT o.AtServerRuleOvrdId
+      ,o.ServerRuleOvrdDesc
+      ,o.ServerRuleOvrdName
+      ,o.ServerRuleId
+      ,o.Disable
+      ,o.ServerRuleGuid
+      ,o.ScreenId
+      ,o.Priority
+      ,o.Guid
+      ,o.RunMode
+  FROM [dbo].[AtServerRuleOvrd] o
+  LEFT OUTER JOIN dbo.utServerRuleOvrd x on x.Guid = o.Guid
+  WHERE 
+  o.AtServerRuleOvrdId = @AtServerRuleOvrdId
+  AND
+  /* local only */
+  o.RunMode IS NOT NULL
+  AND
+  /* not there yet */
+  x.AtServerRuleOvrdId IS NULL
+
+/* delete obsolete ones in ut */
+DELETE p
+  FROM dbo.utServerRuleOvrd p
+  INNER JOIN dbo.AtServerRuleOvrd o on p.AtServerRuleOvrdId = o.AtServerRuleOvrdId
+  WHERE 
+  o.AtServerRuleOvrdId = @AtServerRuleOvrdId
+  AND
+   /* changed to non-local */
+  o.RunMode IS NULL
+
+/* update configuration if it is still there */
+UPDATE o
+   SET [AtServerRuleOvrdId] = x.AtServerRuleOvrdId
+      ,[ServerRuleOvrdDesc] = x.ServerRuleOvrdDesc
+      ,[ServerRuleOvrdName] = x.ServerRuleOvrdName
+      ,[ServerRuleId] = x.ServerRuleId
+      ,[Disable] = x.Disable
+      ,[ServerRuleGuid] = x.ServerRuleGuid
+      ,[ScreenId] = x.ScreenId
+      ,[Priority] = x.Priority
+      ,[Guid] = x.Guid
+      ,[RunMode] = x.RunMode
+  FROM [dbo].[utServerRuleOvrd] o
+  INNER JOIN dbo.atServerRuleOvrd x on x.Guid = o.Guid
+  WHERE 
+  x.AtServerRuleOvrdId = @AtServerRuleOvrdId
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Ir_UpdServerRuleOvrdPrm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Ir_UpdServerRuleOvrdPrm AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[Ir_UpdServerRuleOvrdPrm]
+ @ServerRuleOvrdPrmId	int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+
+UPDATE p
+Set PermId = pkr.PermId
+FROM
+dbo.AtServerRuleOvrdPrm p
+LEFT OUTER JOIN RODesign.dbo.VwPermKeyRow pkr on pkr.PermKeyRowId = p.PermKeyRowId
+WHERE
+p.ServerRuledOvrdPrmId = @ServerRuleOvrdPrmId
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -69588,14 +71106,22 @@ DECLARE	 @procedureAddSql	varchar(max)
 		,@varName			varchar(100)
 		,@masterTable		varchar(100)
 		,@masterTableId		int
+		,@importFileNameLen int = 30
+
 SET NOCOUNT ON
 SELECT @ins1Clause = '', @ins2Clause = '', @masterTable = ''
-SELECT @procedureAddSql = 'CREATE PROCEDURE Wiz' + @procedureName + CHAR(13) + ' @ImportFileName	nvarchar(30)' + CHAR(13)
+SELECT @procedureAddSql = 'CREATE PROCEDURE Wiz' + @procedureName + CHAR(13) + CHAR(10) + ' @ImportFileName	nvarchar(max)' + CHAR(13) + CHAR(10)
 SELECT @masterTable = c.dbAppDatabase + '.dbo.' + b.TableName, @masterTableId = a.MasterTableId
 	FROM dbo.Wizard a
 	INNER JOIN dbo.DbTable b ON a.MasterTableId = b.TableId
 	INNER JOIN RODesign.dbo.Systems c ON b.SystemId = c.SystemId
 	WHERE a.WizardId = @wizardId
+
+SELECT @importFileNameLen = ISNULL(c.ColumnLength, 0)
+	FROM dbo.DbColumn c
+	WHERE c.TableId = @tableId
+	AND c.ColumnName = 'ImportFileName'
+
 DECLARE objCursor CURSOR
 FOR SELECT b.TableId, b.ColumnName, b.ColumnLength, DataTypeSqlName = CASE WHEN d.DataTypeSqlName = 'Decimal' THEN 'Float' ELSE d.DataTypeSqlName END
 	FROM dbo.WizardObj a
@@ -69617,8 +71143,9 @@ BEGIN
 	END
 	SELECT @varName =  '@' + @columnName + CONVERT(VARCHAR,@tableId) + CHAR(9) + @DataTypeSqlName
 	IF CHARINDEX(lower(@DataTypeSqlName),'binary,varbinary,nchar,nvarchar,char,varchar') > 0
-		SELECT @varName = @varName + '(' + case when @columnLength > 0 then convert(varchar,@columnLength) else 'max' end + ')'
-	SELECT @procedureAddSql = @procedureAddSql + ',' + @varName + CHAR(13)
+		SELECT @varName = @varName + '(' 
+									+ case when @columnLength > 0 then convert(varchar,@columnLength) else 'max' end + ')'
+	SELECT @procedureAddSql = @procedureAddSql + ',' + @varName + CHAR(13) + CHAR(10)
 	IF @ins1Clause <> '' SELECT @ins1Clause = @ins1Clause + ','
 	SELECT @ins1Clause = @ins1Clause + @columnName
 	IF @ins2Clause <> '' SELECT @ins2Clause = @ins2Clause + ','
@@ -69627,11 +71154,14 @@ BEGIN
 END
 CLOSE objCursor
 DEALLOCATE objCursor
-SELECT @procedureAddSql = @procedureAddSql + '/* WITH ENCRYPTION */' + CHAR(13) + 'AS' + CHAR(13)
-+ 'SET NOCOUNT ON' + CHAR(13)
-+ 'INSERT ' + @masterTable + ' (' + @ins1Clause + ',ImportFileName)' + CHAR(13)
-+ 'SELECT ' + @ins2Clause + ',@ImportFileName' + CHAR(13)
-+ 'RETURN 0' + CHAR(13)
+SELECT @procedureAddSql = @procedureAddSql + '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10) + 'AS' + CHAR(13) + CHAR(10)
++ 'SET NOCOUNT ON' + CHAR(13) + CHAR(10)
++ CASE WHEN @importFileNameLen > 0 THEN 
+	'IF LEN(@ImportFileName) > ' +  CONVERT(varchar, @importFileNameLen) + ' BEGIN RAISERROR(''''Import File Name is restricted to ' +  CONVERT(varchar, @importFileNameLen) + ' characters'''',18,2) WITH SETERROR RETURN 1 END' + CHAR(13) + CHAR(10)
+  ELSE '' END
++ 'INSERT ' + @masterTable + ' (' + @ins1Clause + ',ImportFileName)' + CHAR(13) + CHAR(10)
++ 'SELECT ' + @ins2Clause + ',@ImportFileName' + CHAR(13) + CHAR(10)
++ 'RETURN 0' + CHAR(13) + CHAR(10)
 IF @procedureAddSql IS NULL
 	RAISERROR('Stored Procedure Wiz% not generated.',18,2,@procedureName) WITH SETERROR
 ELSE
@@ -71254,6 +72784,29 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdAdmServerRuleOvrd1026In') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdAdmServerRuleOvrd1026In AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE UpdAdmServerRuleOvrd1026In
+ @screenId int
+,@usrId int
+,@isCriVisible char(1)
+,@ScreenId1085 Int
+/* WITH ENCRYPTION */
+AS
+DECLARE @cri nvarchar(900)
+SET NOCOUNT ON
+EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
+SELECT @cri = convert(nvarchar,@ScreenId1085)
+EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 1085, @cri
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdAdmSredTime123In') AND type='P')
 EXEC('CREATE PROCEDURE dbo.UpdAdmSredTime123In AS SELECT 1')
 GO
@@ -72071,7 +73624,7 @@ GO
 SET ANSI_NULLS ON
 GO
 ALTER PROCEDURE WizAdmImpCulture
- @ImportFileName	nvarchar(30)
+ @ImportFileName	nvarchar(max)
 ,@CultureTypeName8	VarChar(10)
 ,@CultureTypeDesc8	NVarChar(50)
 ,@CultureDefault8	Char(1)
@@ -72082,6 +73635,7 @@ ALTER PROCEDURE WizAdmImpCulture
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
+IF LEN(@ImportFileName) > 30 BEGIN RAISERROR('Import File Name is restricted to 30 characters',18,2) WITH SETERROR RETURN 1 END
 INSERT RODesign.dbo.CtCulture (CultureTypeName,CultureTypeDesc,CultureDefault,EnNumberRule,CountryCd,CurrencyCd,ToTranslate,ImportFileName)
 SELECT @CultureTypeName8,@CultureTypeDesc8,@CultureDefault8,@EnNumberRule8,@CountryCd8,@CurrencyCd8,@ToTranslate8,@ImportFileName
 RETURN 0
@@ -73894,6 +75448,30 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetRelease') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetRelease AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+-- ??Design only
+ALTER PROCEDURE [dbo].[WrGetRelease]
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+
+SELECT
+r.ReleaseId, r.ReleaseName, rt.ReleaseTypeAbbr, rt.ReleaseTypeName, e.EntityCode, e.DeployPath
+FROM
+dbo.Release r
+INNER JOIN dbo.CtReleaseType rt on rt.ReleaseTypeId = r.ReleaseTypeId
+INNER JOIN dbo.Entity e on r.EntityId = e.EntityId
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetReportApp') AND type='P')
 EXEC('CREATE PROCEDURE dbo.WrGetReportApp AS SELECT 1')
 GO
@@ -74088,7 +75666,7 @@ SELECT a.ScreenTabId, ah.TabFolderName, a.TabFolderOrder, c.GridGrpCd, c.ColumnH
 	,DdlFtrColumnName=x2.ColumnName
 	,DdlRefColumnName=x3.ColumnName
 	,c.DdlKeyColumnId, DdlKeyTableId=k.TableId, DdlKeyColumnName=k.ColumnName
-	,c.DdlRefColumnId, DdlRefTableId=x3.TableId, DdlRefScreenObjId = r.ScreenObjId
+	,c.DdlRefColumnId, DdlRefTableId=x3.TableId, DdlRefTableName = t3.TableName, DdlRefScreenObjId = r.ScreenObjId
 	,c.DdlFtrColumnId, DdlFtrTableId=x2.TableId
 	,DdlAdnDataType = ISNULL(d1.DataTypeSqlName,'VarChar')
 	,DdlFtrDataType = ISNULL(d2.DataTypeSqlName,'VarChar')
@@ -74136,6 +75714,7 @@ LEFT OUTER JOIN RODesign.dbo.CtDisplayType dt ON c.DisplayModeId = dt.TypeId
 LEFT OUTER JOIN dbo.DbColumn x1 ON c.DdlAdnColumnId = x1.ColumnId
 LEFT OUTER JOIN dbo.DbColumn x2 ON c.DdlFtrColumnId = x2.ColumnId
 LEFT OUTER JOIN dbo.DbColumn x3 ON c.DdlRefColumnId = x3.ColumnId
+LEFT OUTER JOIN dbo.DbTable t3 ON t3.TableId = x3.TableId
 LEFT OUTER JOIN RODesign.dbo.CtDataType d1 ON x1.DataType = d1.DataTypeId
 LEFT OUTER JOIN RODesign.dbo.CtDataType d2 ON x2.DataType = d2.DataTypeId
 LEFT OUTER JOIN RODesign.dbo.CtDataType d3 ON d.DataType = d3.DataTypeId
@@ -74701,6 +76280,369 @@ SET NOCOUNT ON
 INSERT INTO dbo.ScreenTabHlp (ScreenTabId, CultureId, TabFolderName)
 	SELECT ScreenTabId, @CultureId, @TabFolderName
 	FROM dbo.ScreenTabHlp WHERE ScreenTabHlpId = @ScreenTabHlpId
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrMergeServerRule') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrMergeServerRule AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[WrMergeServerRule]
+ @UsrId			int = null
+,@SrcNS			varchar(30) = NULL
+,@TarNS varchar(30) = NULL
+,@DeployType varchar(30) = NULL
+
+/* WITH ENCRYPTION */
+AS
+
+SET NOCOUNT ON
+/* this SP should be run AFTER upstream upgrade, either by installer or some how manually */
+DECLARE @MyNS varchar(30)
+
+SELECT
+@MyNS = REPLACE(s.dbDesDatabase, 'Design', '')
+FROM
+RODesign.dbo.Systems s
+WHERE s.SysProgram = 'Y'
+AND s.Active = 'Y'
+
+/* remove AtServerRule if Screen has been removed */
+
+DELETE a
+FROM
+dbo.AtServerRule a
+WHERE
+NOT EXISTS (SELECT 1 FROM dbo.Screen s WHERE s.ScreenId = a.ScreenId)
+
+/* put back rule when upstream zap ours */
+INSERT INTO dbo.ServerRule
+(
+ScreenId, RuleTypeId, MasterTable, RuleName, RuleDesc, RuleDescription
+,RuleOrder, ProcedureName, ParameterNames, ParameterTypes, CallingParams
+,OnAdd, OnUpd, OnDel, BeforeCRUD, RuleCode
+,ModifiedBy, ModifiedOn, LastGenDt
+,[Guid], RunMode, SrcNS
+)
+SELECT
+ScreenId, RuleTypeId, MasterTable, RuleName, RuleDesc, RuleDescription
+,RuleOrder, ProcedureName, ParameterNames, ParameterTypes, CallingParams
+,OnAdd, OnUpd, OnDel, BeforeCRUD, RuleCode
+,ModifiedBy, ModifiedOn, LastGenDt
+,[Guid], RunMode, ISNULL(SrcNS, @MyNS)
+FROM
+dbo.AtServerRule a
+WHERE NOT EXISTS (SELECT 1 FROM ServerRule r WHERE r.Guid = a.Guid)
+/* only when it is local as specified */
+AND a.RunMode IS NOT NULL
+
+/* restore local changes */
+UPDATE r
+/* full restore 
+SET [ScreenId] = a.ScreenId
+    ,[RuleTypeId] = a.RuleTypeId
+    ,[MasterTable] = a.MasterTable
+    ,[RuleName] = a.RuleName
+    ,[RuleDesc] = a.RuleDesc
+    ,[RuleDescription] = a.RuleDescription
+    ,[RuleOrder] = a.RuleOrder
+    ,[ProcedureName] = a.ProcedureName
+    ,[ParameterNames] = a.ParameterNames
+    ,[ParameterTypes] = a.ParameterTypes
+    ,[CallingParams] = a.CallingParams
+    ,[OnAdd] = a.OnAdd
+    ,[OnUpd] = a.OnUpd
+    ,[OnDel] = a.OnDel
+    ,[BeforeCRUD] = a.BeforeCRUD
+    ,[RuleCode] = a.RuleCode
+    ,[ModifiedBy] = a.ModifiedBy
+    ,[ModifiedOn] = a.ModifiedOn
+    ,[LastGenDt] = a.LastGenDt
+    ,[Guid] = a.Guid
+    ,[RunMode] = a.RunMode
+    ,[SrcNS] = ISNULL(a.SrcNS, @MyNS)
+	*/
+/* only run mode */
+SET RunMode = a.RunMode
+FROM
+dbo.AtServerRule a
+INNER JOIN dbo.ServerRule r on a.Guid = r.Guid AND a.Guid IS NOT NULL
+/* only when it is local as specified */
+WHERE a.RunMode IS NOT NULL
+
+/* id may be re-numbered 
+ * don't need as this is not used 
+UPDATE a
+SET ServerRuleId = s.ServerRuleId
+FROM
+dbo.AtServerRule a
+INNER JOIN dbo.ServerRule s on s.Guid = a.Guid
+*/
+/* remove obsolete server rule override */
+DELETE p
+FROM
+dbo.AtServerRuleOvrdPrm p
+INNER JOIN dbo.AtServerRuleOvrd o on p.AtServerRuleOvrdId = o.AtServerRuleOvrdId
+LEFT OUTER JOIN dbo.ServerRule  s on s.Guid = o.ServerRuleGuid
+WHERE s.ServerRuleId IS NULL
+
+DELETE o
+FROM
+dbo.AtServerRuleOvrd o 
+LEFT OUTER JOIN dbo.ServerRule  s on s.Guid = o.ServerRuleGuid
+WHERE s.ServerRuleId IS NULL
+
+/* revise override if ServerRuleId changed */
+UPDATE o
+SET ServerRuleId = s.ServerRuleId
+FROM
+dbo.AtServerRuleOvrd o 
+INNER JOIN dbo.ServerRule  s on s.Guid = o.ServerRuleGuid
+WHERE s.ServerRuleId <> o.ServerRuleId
+
+/* re-order all server rules */
+EXEC Ir_UpdServerRule NULL, NULL, NULL
+
+--RETURN 0
+
+/* merge local server rule override here, TBD suppressed by the above RETURN 0 */
+
+/* remove override tied to non-existing server rule(after upgrade) */
+DELETE p
+FROM
+dbo.utServerRuleOvrdPrm p
+INNER JOIN dbo.utServerRuleOvrd o on p.AtServerRuleOvrdId = o.AtServerRuleOvrdId
+LEFT OUTER JOIN dbo.ServerRule r on r.Guid = o.ServerRuleGuid
+WHERE 
+r.ServerRuleId IS NULL
+
+DELETE o
+FROM
+dbo.utServerRuleOvrd o 
+LEFT OUTER JOIN dbo.ServerRule r on r.Guid = o.ServerRuleGuid
+WHERE 
+r.ServerRuleId IS NULL
+
+/* put back rule override definition from ut to at when upstream zap ours */
+INSERT INTO dbo.atServerRuleOvrd
+           (ServerRuleOvrdDesc
+           ,ServerRuleOvrdName
+          ,ServerRuleId
+           ,Disable
+           ,ServerRuleGuid
+           ,ScreenId
+           ,Priority
+           ,Guid
+           ,RunMode)
+SELECT o.ServerRuleOvrdDesc
+      ,o.ServerRuleOvrdName
+	  /* this may be changed upstream, always use Guid version */
+      ,ServerRuleId = r.ServerRuleId
+      ,o.Disable
+      ,o.ServerRuleGuid
+      ,o.ScreenId
+      ,o.Priority
+      ,o.Guid
+      ,o.RunMode
+  FROM [dbo].[utServerRuleOvrd] o
+  INNER JOIN dbo.ServerRule r on r.Guid = o.ServerRuleGuid
+  LEFT OUTER JOIN dbo.AtServerRuleOvrd x on x.Guid = o.Guid
+  WHERE 
+  /* not there yet */
+  x.AtServerRuleOvrdId IS NULL
+
+/* make sure the server rule id is correct assuming it is re-numbered */
+UPDATE o
+SET ServerRuleId = r.ServerRuleId
+FROM
+dbo.AtServerRuleOvrd o
+INNER JOIN dbo.ServerRule r on r.Guid = o.ServerRuleGuid
+
+UPDATE o
+SET ServerRuleId = r.ServerRuleId
+FROM
+dbo.utServerRuleOvrd o
+INNER JOIN dbo.ServerRule r on r.Guid = o.ServerRuleGuid
+
+/* put back rule override definition permission from ut to at when upstream zap ours */
+
+INSERT INTO dbo.atServerRuleOvrdPrm
+           (PermKeyId
+           ,AndCondition
+           ,AtServerRuleOvrdId
+           ,Match
+           ,PermKeyRowId
+           ,PermId
+           ,Guid
+           ,AtServerRuleOvrdGuid)
+
+SELECT p.PermKeyId
+      ,p.AndCondition
+	  /* this can be changed, always use Guid join version */
+      ,AtServerRuleOvrd = o.AtServerRuleOvrdId
+      ,p.Match
+      ,p.PermKeyRowId
+      ,p.PermId
+      ,p.Guid
+      ,p.AtServerRuleOvrdGuid
+  FROM dbo.utServerRuleOvrdPrm p
+  INNER JOIN dbo.AtServerRuleOvrd o on p.AtServerRuleOvrdGuid = o.Guid
+  LEFT OUTER JOIN dbo.atServerRuleOvrdPrm x on x.Guid = p.Guid
+  WHERE 
+  /* and not already there */
+  x.ServerRuledOvrdPrmId IS NULL
+
+/* make sure the override id is correct assuming it is re-numbered */
+UPDATE p
+SET AtServerRuleOvrdId = o.AtServerRuleOvrdId
+FROM
+dbo.AtServerRuleOvrdPrm p
+INNER JOIN dbo.AtServerRuleOvrd o on o.Guid = p.AtServerRuleOvrdGuid
+
+UPDATE p
+SET AtServerRuleOvrdId = o.AtServerRuleOvrdId
+FROM
+dbo.utServerRuleOvrdPrm p
+INNER JOIN dbo.AtServerRuleOvrd o on o.Guid = p.AtServerRuleOvrdGuid
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrPostUpgrade') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrPostUpgrade AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[WrPostUpgrade]
+@SrcNS varchar(30) = NULL
+,@TarNS varchar(30) = NULL
+,@DeployType varchar(30) = NULL
+
+/* WITH ENCRYPTION */
+AS
+
+SET NOCOUNT ON
+
+/* this SP would be call after installer completed upgrade */
+DECLARE @MyNS varchar(30), @MyDesignServerName varchar(100), @MyDbName varchar(50), @MyAppDbName varchar(50),  @Ret int
+
+SELECT
+@MyDbName = DB_NAME()
+
+SELECT
+@MyNS = REPLACE(s.dbDesDatabase, 'Design', ''), @MyDesignServerName = ServerName
+FROM
+RODesign.dbo.Systems s
+WHERE s.SysProgram = 'Y'
+AND s.Active = 'Y'
+
+SELECT
+@MyAppDbName = s.dbAppDatabase
+FROM
+RODesign.dbo.Systems s
+WHERE
+s.dbDesDatabase = @MyDbName
+AND s.ServerName = @MyDesignServerName
+AND s.Active = 'Y'
+
+
+
+/* restore local Server rule */
+EXEC @Ret = dbo.WrMergeServerRule NULL, @SrcNS, @TarNS, @DeployType 
+
+/* call App Post upgrade script
+ * skip for now due to deployment sequence issue
+
+DECLARE @AppPostUpgradeSP varchar(256)
+SELECT @AppPostUpgradeSP = @MyAppDbName + '.dbo._PostUpgrade' 
+IF OBJECT_ID(@AppPostUpgradeSP) IS NOT NULL
+BEGIN
+	SELECT @AppPostUpgradeSP = @AppPostUpgradeSP + ' ' + ISNULL(@SrcNS, 'NULL') + ', ' + ISNULL(@TarNS, 'NULL') + ', ' + ISNULL(@DeployType, 'NULL')  
+	EXEC(@AppPostUpgradeSP)
+END
+
+ */
+
+/* call local design _PostUpgrade */
+DECLARE @DesPostUpgradeSP varchar(256)
+SELECT @DesPostUpgradeSP = 'dbo._PostUpgrade' 
+IF OBJECT_ID(@DesPostUpgradeSP) IS NOT NULL
+BEGIN
+	SELECT @DesPostUpgradeSP = @DesPostUpgradeSP + ' ' + ISNULL(@SrcNS, 'NULL') + ', ' + ISNULL(@TarNS, 'NULL') + ', ' + ISNULL(@DeployType, 'NULL') 
+	EXEC(@DesPostUpgradeSP)
+END
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrPreUpgrade') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrPreUpgrade AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[WrPreUpgrade]
+@SrcNS varchar(30) = NULL
+,@TarNS varchar(30) = NULL
+,@DeployType varchar(30) = NULL
+/* WITH ENCRYPTION */
+AS
+
+SET NOCOUNT ON
+
+/* this SP would be before installer upgrade */
+DECLARE @MyNS varchar(30), @MyDesignServerName varchar(100), @MyDbName varchar(50), @MyAppDbName varchar(50),  @Ret int
+
+SELECT
+@MyDbName = DB_NAME()
+
+SELECT
+@MyNS = REPLACE(s.dbDesDatabase, 'Design', ''), @MyDesignServerName = ServerName
+FROM
+RODesign.dbo.Systems s
+WHERE s.SysProgram = 'Y'
+AND s.Active = 'Y'
+
+SELECT
+@MyAppDbName = s.dbAppDatabase
+FROM
+RODesign.dbo.Systems s
+WHERE
+s.dbDesDatabase = @MyDbName
+AND s.ServerName = @MyDesignServerName
+AND s.Active = 'Y'
+
+
+/* call App Pre upgrade script
+ * skip for now due to deployment sequence issue 
+
+DECLARE @AppPreUpgradeSP varchar(256)
+SELECT @AppPreUpgradeSP = @MyAppDbName + '.dbo._PreUpgrade' 
+IF OBJECT_ID(@AppPreUpgradeSP) IS NOT NULL
+BEGIN
+	SELECT @AppPreUpgradeSP = @AppPreUpgradeSP + ' ' + ISNULL(@SrcNS, 'NULL') + ', ' + ISNULL(@TarNS, 'NULL') + ', ' + ISNULL(@DeployType, 'NULL') 
+	EXEC(@AppPreUpgradeSP)
+END
+*/
+
+/* call local design _PreUpgrade */
+DECLARE @DesPreUpgradeSP varchar(256)
+SELECT @DesPreUpgradeSP = 'dbo._PreUpgrade' 
+IF OBJECT_ID(@DesPreUpgradeSP) IS NOT NULL
+BEGIN
+	SELECT @DesPreUpgradeSP = @DesPreUpgradeSP + ' ' + ISNULL(@SrcNS, 'NULL') + ', ' + ISNULL(@TarNS, 'NULL') + ', ' + ISNULL(@DeployType, 'NULL') 
+	EXEC(@DesPreUpgradeSP)
+END
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -76051,6 +77993,47 @@ FROM ScreenTab t
 INNER JOIN Screen s on t.ScreenId = s.ScreenId
 WHERE t.ScreenTabId = @ScreenTabId
 	
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrUpdServerRuleSrcNS') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrUpdServerRuleSrcNS AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[WrUpdServerRuleSrcNS]
+ @MyNS			varchar(30) = null
+ ,@UsrId		int = NULL
+/* WITH ENCRYPTION */
+AS
+/* should be a once off run to update  SrcNS(if null) for historical server rules */
+
+SET NOCOUNT ON
+SELECT
+@MyNS = ISNULL(@MyNS, REPLACE(s.dbDesDatabase, 'Design', ''))
+FROM
+RODesign.dbo.Systems s
+WHERE s.SysProgram = 'Y'
+AND s.Active = 'Y'
+
+UPDATE r
+SET SrcNS = ISNULL(SrcNS, ns.MyNS)
+FROM
+dbo.ServerRule r
+INNER JOIN
+(
+SELECT
+MyNS = REPLACE(s.dbDesDatabase, 'Design', '')
+FROM
+RODesign.dbo.Systems s
+WHERE s.SysProgram = 'Y'
+AND s.Active = 'Y'
+) ns ON 1=1
+WHERE r.SrcNS IS NULL
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF

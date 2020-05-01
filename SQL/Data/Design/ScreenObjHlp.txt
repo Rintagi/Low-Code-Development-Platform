@@ -353,9 +353,9 @@
 1275~@~AdmAppItem [  160] Represent: CustomId (en-US)~@~1367~@~1~@~Custom~@~This is the custom structure from which this item is generated, if applicable.  This is not relevant when the tier chosen is Data.~@~~@~
 1278~@~AdmScreen [  310] Main Info: FootNote (en-US)~@~1370~@~1~@~Foot Note~@~This is the initial on-line foot note for this screen 400 characters or less.~@~Please enter a message 400 characters or less to be displayed as footnote.~@~Foot Note
 1279~@~AdmScreen [  200] Main Info: ValidateReq (en-US)~@~1371~@~1~@~Validate Request~@~Uncheck this if script-injection-attack is not a concern and inputs should allow html tags.~@~~@~
-1305~@~AdmServerRule [  170] Content: RuleCode (en-US)~@~1396~@~1~@~S.Procedure~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~~@~
-1306~@~AdmServerRule [  200] Content: ModifiedBy (en-US)~@~1397~@~1~@~Modified By~@~This was last modified by this user.~@~This was last modified by this user.~@~
-1308~@~AdmServerRule [  210] Content: ModifiedOn (en-US)~@~1399~@~1~@~Modified On~@~This rule was last modified on this date and time.~@~~@~
+1305~@~AdmServerRule [  200] Content: RuleCode (en-US)~@~1396~@~1~@~S.Procedure~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~~@~
+1306~@~AdmServerRule [  230] Content: ModifiedBy (en-US)~@~1397~@~1~@~Modified By~@~This was last modified by this user.~@~This was last modified by this user.~@~
+1308~@~AdmServerRule [  240] Content: ModifiedOn (en-US)~@~1399~@~1~@~Modified On~@~This rule was last modified on this date and time.~@~~@~
 1309~@~AdmDbTable [  210] Main Info: ColumnIndex (en-US)~@~1400~@~1~@~Order~@~This is the order of this column in the database table in multiple of ten.~@~~@~
 1310~@~AdmDbTable [  270] Main Info: DefaultValue (en-US)~@~1401~@~1~@~Default~@~This is the default value applied to the data table column (non-function and non-numeric value should be enclosed by single quotes).~@~~@~
 1311~@~AdmDbTable [   60] Main Info: SyncByDb (en-US)~@~1402~@~1~@~~@~Click here to synchronize by the physical database; Columns from external tables will be ignored.~@~~@~
@@ -369,9 +369,9 @@
 1323~@~AdmMsgCenter [   60] Main Info: CultureId (en-US)~@~1414~@~1~@~Culture~@~This is the culture for this message.~@~Please select the culture for this message.~@~
 1324~@~AdmMsgCenter [   70] Main Info: Msg (en-US)~@~1415~@~1~@~Message~@~This is the appropriate message for this culture.~@~Please enter the appropriate message for this culture.~@~
 1325~@~AdmAppInfo [   80] Main Info: AppZipId (en-US)~@~1416~@~1~@~Deployment~@~Click the icon to the right to upload document or click the trash icon to delete unwanted document, real time without clicking Save button. Only owner can delete or replace documents belong to them.~@~~@~
-1327~@~AdmServerRule [  190] Content: SyncToDb (en-US)~@~1418~@~1~@~~@~Click here to synchronize this stored procedure to the physical database immediately.~@~~@~
-1328~@~AdmServerRule [  220] Content: LastGenDt (en-US)~@~1419~@~1~@~Last Applied~@~This stored procedure was last applied on this date.~@~~@~
-1329~@~AdmServerRule [  180] Content: SyncByDb (en-US)~@~1420~@~1~@~~@~Click here to obtain the stored procedure from the physical database.~@~~@~
+1327~@~AdmServerRule [  220] Content: SyncToDb (en-US)~@~1418~@~1~@~~@~Click here to synchronize this stored procedure to the physical database immediately.~@~~@~
+1328~@~AdmServerRule [  250] Content: LastGenDt (en-US)~@~1419~@~1~@~Last Applied~@~This stored procedure was last applied on this date.~@~~@~
+1329~@~AdmServerRule [  210] Content: SyncByDb (en-US)~@~1420~@~1~@~~@~Click here to obtain the stored procedure from the physical database.~@~~@~
 1331~@~AdmUsr [   10] Main Info: UsrId (zh-CN)~@~1~@~4~@~登入~@~这是国内独一无二的身分查明这家.~@~~@~
 1333~@~AdmUsr [   30] Main Info: UsrName (zh-CN)~@~3~@~4~@~用户名称~@~这是使用者名称照准.~@~这是使用者名称照准.~@~
 1335~@~AdmUsr [  310] Status: CustomerId (zh-CN)~@~6~@~4~@~客户~@~这是这家客户已经接触,就是空的.~@~~@~
@@ -655,8 +655,8 @@
 1802~@~AdmAppItem [  160] Represent: CustomId (zh-CN)~@~1367~@~4~@~风俗~@~这是这个项目的习俗是从哪个结构产生的,如果适用.~@~~@~
 1804~@~AdmScreen [  310] Main Info: FootNote (zh-CN)~@~1370~@~4~@~附注~@~这是首次在网上附注400字以内.~@~请进入讯息或少于400字将展现作为注脚.~@~
 1805~@~AdmScreen [  200] Main Info: ValidateReq (zh-CN)~@~1371~@~4~@~甄请求~@~若不受制约这个剧本注射攻击不是应该让HTML标记关注和投入.~@~~@~
-1827~@~AdmServerRule [  170] Content: RuleCode (zh-CN)~@~1396~@~4~@~林程序~@~这一内容将在相应的SQL数据库枪决(S)已在不空.~@~~@~
-1828~@~AdmServerRule [  200] Content: ModifiedBy (zh-CN)~@~1397~@~4~@~改性~@~这是一次更新的用户.~@~这是一次更新的用户.~@~
+1827~@~AdmServerRule [  200] Content: RuleCode (zh-CN)~@~1396~@~4~@~林程序~@~这一内容将在相应的SQL数据库枪决(S)已在不空.~@~~@~
+1828~@~AdmServerRule [  230] Content: ModifiedBy (zh-CN)~@~1397~@~4~@~改性~@~这是一次更新的用户.~@~这是一次更新的用户.~@~
 1830~@~AdmDbTable [  210] Main Info: ColumnIndex (zh-CN)~@~1400~@~4~@~命令~@~这是为了在数据库表这一栏10多.~@~~@~
 1831~@~AdmDbTable [  270] Main Info: DefaultValue (zh-CN)~@~1401~@~4~@~默认~@~这是默认值设置在数据库(非功能和非数字值应括在单引号).~@~~@~
 1832~@~AdmDbTable [   60] Main Info: SyncByDb (zh-CN)~@~1402~@~4~@~~@~点此同步的物理数据库; 从外部栏目表会被忽视.~@~~@~
@@ -668,8 +668,8 @@
 1841~@~AdmMsgCenter [   60] Main Info: CultureId (zh-CN)~@~1414~@~4~@~文化~@~这就是文化这个讯息.~@~这就是文化这个讯息.~@~
 1842~@~AdmMsgCenter [   70] Main Info: Msg (zh-CN)~@~1415~@~4~@~电文~@~这是适当的讯息,这种文化.~@~请进入这个讯息的适当文化.~@~
 1843~@~AdmAppInfo [   80] Main Info: AppZipId (zh-CN)~@~1416~@~4~@~部署~@~请点击图标就有权对这个档案上传的ZIP部署释放.~@~~@~
-1845~@~AdmServerRule [  190] Content: SyncToDb (zh-CN)~@~1418~@~4~@~~@~点此同步这个数据库存储过程的物理立即~@~~@~
-1847~@~AdmServerRule [  180] Content: SyncByDb (zh-CN)~@~1420~@~4~@~~@~点此获取存储过程从物理数据库.~@~~@~
+1845~@~AdmServerRule [  220] Content: SyncToDb (zh-CN)~@~1418~@~4~@~~@~点此同步这个数据库存储过程的物理立即~@~~@~
+1847~@~AdmServerRule [  210] Content: SyncByDb (zh-CN)~@~1420~@~4~@~~@~点此获取存储过程从物理数据库.~@~~@~
 1849~@~AdmUsr [   10] Main Info: UsrId (fr-FR)~@~1~@~2~@~User-id~@~C'est l'identification interne identifient uniquement cet utilisateur.~@~~@~
 1850~@~AdmUsr [   80] Main Info: UsrEmail (fr-FR)~@~2~@~2~@~Email d'utilisateur~@~C'est l'email address de l'utilisateur, si disponible.~@~~@~
 1851~@~AdmUsr [   30] Main Info: UsrName (fr-FR)~@~3~@~2~@~Nom d'utilisateur~@~C'est le nom d'utilisateur entièrement.~@~C'est le nom d'utilisateur entièrement.~@~
@@ -955,8 +955,8 @@
 2320~@~AdmAppItem [  160] Represent: CustomId (fr-FR)~@~1367~@~2~@~Coutume~@~C'est la structure faite sur commande dont cet article est produit, si c'est approprié.~@~~@~
 2322~@~AdmScreen [  310] Main Info: FootNote (fr-FR)~@~1370~@~2~@~Note de pied~@~C'est les caractères en ligne initiaux ou moins de la note 400 de pied.~@~Veuillez entrer dans les caractères ou moins d'un message 400 à montrer comme apostille.~@~
 2323~@~AdmScreen [  200] Main Info: ValidateReq (fr-FR)~@~1371~@~2~@~Valider la demande~@~Uncheck que ce si manuscrit-injection-attaquer n'est pas un souci et des entrées devrait permettre des étiquettes de HTML.~@~~@~
-2345~@~AdmServerRule [  170] Content: RuleCode (fr-FR)~@~1396~@~2~@~S.Procedure~@~Ce contenu sera exécuté comme SQL sur les bases de données relavant quand non vide.~@~~@~
-2346~@~AdmServerRule [  200] Content: ModifiedBy (fr-FR)~@~1397~@~2~@~Modifié près~@~Ceci a été pour la dernière fois mis à jour par cet utilisateur.~@~Ceci a été pour la dernière fois mis à jour par cet utilisateur.~@~
+2345~@~AdmServerRule [  200] Content: RuleCode (fr-FR)~@~1396~@~2~@~S.Procedure~@~Ce contenu sera exécuté comme SQL sur les bases de données relavant quand non vide.~@~~@~
+2346~@~AdmServerRule [  230] Content: ModifiedBy (fr-FR)~@~1397~@~2~@~Modifié près~@~Ceci a été pour la dernière fois mis à jour par cet utilisateur.~@~Ceci a été pour la dernière fois mis à jour par cet utilisateur.~@~
 2348~@~AdmDbTable [  210] Main Info: ColumnIndex (fr-FR)~@~1400~@~2~@~Ordre~@~C'est l'ordre de cette colonne dans la table de base de données dans le multiple de dix.~@~~@~
 2349~@~AdmDbTable [  270] Main Info: DefaultValue (fr-FR)~@~1401~@~2~@~Défaut~@~C'est la valeur par défaut à installer dans la base de données (valeur non-numérique jointe par des citations simples).~@~~@~
 2350~@~AdmDbTable [   60] Main Info: SyncByDb (fr-FR)~@~1402~@~2~@~~@~Cliquer ici pour synchroniser par la base de données physique ; Des colonnes des tables externes seront ignorées.~@~~@~
@@ -968,8 +968,8 @@
 2359~@~AdmMsgCenter [   60] Main Info: CultureId (fr-FR)~@~1414~@~2~@~Culture~@~C'est la culture pour ce message.~@~C'est la culture pour ce message.~@~
 2360~@~AdmMsgCenter [   70] Main Info: Msg (fr-FR)~@~1415~@~2~@~Message~@~C'est le message approprié pour cette culture.~@~Veuillez écrire le message approprié pour cette culture.~@~
 2361~@~AdmAppInfo [   80] Main Info: AppZipId (fr-FR)~@~1416~@~2~@~Déploiement~@~Veuillez cliquer l'icône du côté droit de télécharger le dossier fermé la fermeture éclair de déploiement pour ce dégagement.~@~~@~
-2363~@~AdmServerRule [  190] Content: SyncToDb (fr-FR)~@~1418~@~2~@~~@~Cliquer ici pour synchroniser ce procédé stocké à la base de données physique immédiatement.~@~~@~
-2365~@~AdmServerRule [  180] Content: SyncByDb (fr-FR)~@~1420~@~2~@~~@~Cliquer ici pour obtenir le procédé stocké de la base de données physique.~@~~@~
+2363~@~AdmServerRule [  220] Content: SyncToDb (fr-FR)~@~1418~@~2~@~~@~Cliquer ici pour synchroniser ce procédé stocké à la base de données physique immédiatement.~@~~@~
+2365~@~AdmServerRule [  210] Content: SyncByDb (fr-FR)~@~1420~@~2~@~~@~Cliquer ici pour obtenir le procédé stocké de la base de données physique.~@~~@~
 2367~@~AdmScreenObj [  110] Main Info: ColumnJustify (en-US)~@~1422~@~1~@~Justify~@~This is the horizontal alignment of column display (Left, Right or Center).~@~Please select the horizontal alignment of column display (Left, Right or Center).~@~
 2371~@~AdmScreenCri [  100] Main Info: ColumnJustify (en-US)~@~1425~@~1~@~Justify~@~This is the justification of column display (Left, Right or Center).~@~Please select the justification of column display (Left, Right or Center).~@~
 2373~@~AdmCtCulture [   70] Main Info: EnNumberRule (en-US)~@~1427~@~1~@~11/12 Rule~@~This is checked if this culture uses eleven and twelve in words.~@~~@~
@@ -2159,8 +2159,8 @@
 4007~@~AdmAppItem [  160] Represent: CustomId (hi-IN)~@~1367~@~8~@~प्रथा~@~यह कस्टम संरचना, जहां से इस मद पैदा होता है, यदि लागू है. यह प्रासंगिक नहीं है जब चुना स्तरीय डाटा है.~@~~@~
 4008~@~AdmScreen [  310] Main Info: FootNote (hi-IN)~@~1370~@~8~@~फुट नोट~@~इस पर शुरुआती लाइन पैर ध्यान इस स्क्रीन 400 वर्ण या उससे कम समय के लिए है.~@~कृपया 400 अक्षरों संदेश या कम दर्ज पाद टिप्पणी के रूप में प्रदर्शित होगा.~@~
 4009~@~AdmScreen [  200] Main Info: ValidateReq (hi-IN)~@~1371~@~8~@~मान्य अनुरोध~@~यदि सही का निशान हटाएँ इस पटकथा इंजेक्शन हमले चिंता का विषय है और जानकारी HTML टैग की अनुमति चाहिए नहीं है.~@~~@~
-4029~@~AdmServerRule [  170] Content: RuleCode (hi-IN)~@~1396~@~8~@~एस प्रक्रिया~@~इस सामग्री को प्रासंगिक डाटाबेस (s) जब नहीं खाली पर संग्रहित प्रक्रिया (SQL) के रूप में निष्पादित करेंगे.~@~~@~
-4030~@~AdmServerRule [  200] Content: ModifiedBy (hi-IN)~@~1397~@~8~@~संशोधित करके~@~यह पिछले इस उपयोगकर्ता के द्वारा संशोधित किया गया था.~@~यह पिछले इस उपयोगकर्ता के द्वारा संशोधित किया गया था.~@~
+4029~@~AdmServerRule [  200] Content: RuleCode (hi-IN)~@~1396~@~8~@~एस प्रक्रिया~@~इस सामग्री को प्रासंगिक डाटाबेस (s) जब नहीं खाली पर संग्रहित प्रक्रिया (SQL) के रूप में निष्पादित करेंगे.~@~~@~
+4030~@~AdmServerRule [  230] Content: ModifiedBy (hi-IN)~@~1397~@~8~@~संशोधित करके~@~यह पिछले इस उपयोगकर्ता के द्वारा संशोधित किया गया था.~@~यह पिछले इस उपयोगकर्ता के द्वारा संशोधित किया गया था.~@~
 4032~@~AdmDbTable [  210] Main Info: ColumnIndex (hi-IN)~@~1400~@~8~@~आदेश~@~यह दस के कई में डेटाबेस तालिका में इस स्तंभ के आदेश है.~@~~@~
 4033~@~AdmDbTable [  270] Main Info: DefaultValue (hi-IN)~@~1401~@~8~@~चूक~@~यह डिफ़ॉल्ट मान को डेटाबेस में सेटअप है (गैर संख्यात्मक एक उद्धरण से घिरा मूल्य).~@~~@~
 4034~@~AdmDbTable [   60] Main Info: SyncByDb (hi-IN)~@~1402~@~8~@~~@~यहाँ क्लिक करें; को भौतिक डेटाबेस द्वारा सिंक्रनाइज़ बाहरी टेबल से कॉलम नज़रअंदाज़ कर दिया जाएगा.~@~~@~
@@ -2172,8 +2172,8 @@
 4043~@~AdmMsgCenter [   60] Main Info: CultureId (hi-IN)~@~1414~@~8~@~संस्कृति~@~यह इस संदेश के लिए संस्कृति है.~@~कृपया इस संदेश के लिए संस्कृति का चयन करें.~@~
 4044~@~AdmMsgCenter [   70] Main Info: Msg (hi-IN)~@~1415~@~8~@~संदेश~@~ये इस संस्कृति के लिए उचित संदेश है.~@~कृपया इस संस्कृति के लिए उचित संदेश प्रविष्ट करें.~@~
 4045~@~AdmAppInfo [   80] Main Info: AppZipId (hi-IN)~@~1416~@~8~@~तैनाती~@~दस्तावेज़ अपलोड करें क्लिक करें या कचरा आइकन के अधिकार के लिए सहेजें बटन क्लिक करने के बिना अवांछित दस्तावेज़ हटाने के लिए, वास्तविक समय आइकन पर क्लिक करें. केवल मालिक को नष्ट कर सकते हैं या दस्तावेजो~@~~@~
-4046~@~AdmServerRule [  190] Content: SyncToDb (hi-IN)~@~1418~@~8~@~~@~यहाँ क्लिक करें शारीरिक डेटाबेस इस संग्रहीत प्रक्रिया तुरंत सिंक्रनाइज़.~@~~@~
-4048~@~AdmServerRule [  180] Content: SyncByDb (hi-IN)~@~1420~@~8~@~~@~यहाँ क्लिक करें शारीरिक डेटाबेस से संग्रहीत प्रक्रिया प्राप्त करने के लिए.~@~~@~
+4046~@~AdmServerRule [  220] Content: SyncToDb (hi-IN)~@~1418~@~8~@~~@~यहाँ क्लिक करें शारीरिक डेटाबेस इस संग्रहीत प्रक्रिया तुरंत सिंक्रनाइज़.~@~~@~
+4048~@~AdmServerRule [  210] Content: SyncByDb (hi-IN)~@~1420~@~8~@~~@~यहाँ क्लिक करें शारीरिक डेटाबेस से संग्रहीत प्रक्रिया प्राप्त करने के लिए.~@~~@~
 4049~@~AdmScreenObj [  110] Main Info: ColumnJustify (hi-IN)~@~1422~@~8~@~औचित्य साबित~@~इस स्तंभ के प्रदर्शन में क्षैतिज संरेखण (बाएँ है, सही है या केंद्र).~@~कृपया कॉलम प्रदर्शन का क्षैतिज संरेखण (वामपंथियों, सही है का चयन करें या केंद्र).~@~
 4052~@~AdmScreenCri [  100] Main Info: ColumnJustify (hi-IN)~@~1425~@~8~@~औचित्य साबित~@~इस कॉलम प्रदर्शन के औचित्य (वाम है, सही है या केंद्र).~@~कृपया कॉलम प्रदर्शन का औचित्य (वामपंथियों, सही है का चयन करें या केंद्र).~@~
 4054~@~AdmCtCulture [   70] Main Info: EnNumberRule (hi-IN)~@~1427~@~8~@~11/12 नियम~@~इस जाँच की अगर इस संस्कृति शब्दों में ग्यारह और बारह का उपयोग करता है.~@~~@~
@@ -2709,8 +2709,8 @@
 4753~@~AdmAppItem [  160] Represent: CustomId (pt-BR)~@~1367~@~9~@~Personalizado~@~Esta é a estrutura personalizada a partir do qual este item é gerado, se for o caso. Isso não é relevante quando o nível é escolhido de Dados.~@~~@~
 4754~@~AdmScreen [  310] Main Info: FootNote (pt-BR)~@~1370~@~9~@~Nota pé~@~Esta é a nota pé inicial on-line para esta tela 400 caracteres ou menos.~@~Por favor digite uma mensagem de 400 caracteres ou menos para ser exibido como nota de rodapé.~@~
 4755~@~AdmScreen [  200] Main Info: ValidateReq (pt-BR)~@~1371~@~9~@~Validar Pedido~@~Desmarque essa se o script de injeção-ataque não é uma preocupação e insumos deve permitir tags de html.~@~~@~
-4775~@~AdmServerRule [  170] Content: RuleCode (pt-BR)~@~1396~@~9~@~Procedimento S.~@~Este conteúdo será executado como Stored Procedure (SQL) no banco de dados relevantes (s) quando não estiver vazio.~@~~@~
-4776~@~AdmServerRule [  200] Content: ModifiedBy (pt-BR)~@~1397~@~9~@~Modificado por~@~Este foi modificada pela última vez por esse usuário.~@~Este foi modificada pela última vez por esse usuário.~@~
+4775~@~AdmServerRule [  200] Content: RuleCode (pt-BR)~@~1396~@~9~@~Procedimento S.~@~Este conteúdo será executado como Stored Procedure (SQL) no banco de dados relevantes (s) quando não estiver vazio.~@~~@~
+4776~@~AdmServerRule [  230] Content: ModifiedBy (pt-BR)~@~1397~@~9~@~Modificado por~@~Este foi modificada pela última vez por esse usuário.~@~Este foi modificada pela última vez por esse usuário.~@~
 4778~@~AdmDbTable [  210] Main Info: ColumnIndex (pt-BR)~@~1400~@~9~@~Ordem~@~Este é o fim desta coluna na tabela de banco de dados em múltiplos de dez.~@~~@~
 4779~@~AdmDbTable [  270] Main Info: DefaultValue (pt-BR)~@~1401~@~9~@~Padrão~@~Este é o valor padrão aplicado à coluna da tabela de dados (não-função e não-numéricos valor deve ser entre aspas simples).~@~~@~
 4780~@~AdmDbTable [   60] Main Info: SyncByDb (pt-BR)~@~1402~@~9~@~~@~Clique aqui para sincronizar pelo banco de dados físico; colunas de tabelas externas serão ignorados.~@~~@~
@@ -2722,8 +2722,8 @@
 4789~@~AdmMsgCenter [   60] Main Info: CultureId (pt-BR)~@~1414~@~9~@~Cultura~@~Esta é a cultura para esta mensagem.~@~Por favor seleccione a cultura para esta mensagem.~@~
 4790~@~AdmMsgCenter [   70] Main Info: Msg (pt-BR)~@~1415~@~9~@~Mensagem~@~Esta é a mensagem adequada para essa cultura.~@~Por favor digite a mensagem apropriada para essa cultura.~@~
 4791~@~AdmAppInfo [   80] Main Info: AppZipId (pt-BR)~@~1416~@~9~@~Desenvolvimento~@~Clique no ícone à direita para fazer o upload do documento ou clique no ícone da lixeira para excluir documento não desejadas, tempo real, sem clicar no botão Salvar. Somente o proprietário pode exclu~@~~@~
-4792~@~AdmServerRule [  190] Content: SyncToDb (pt-BR)~@~1418~@~9~@~~@~Clique aqui para sincronizar esse procedimento armazenado no banco de dados físico imediatamente.~@~~@~
-4794~@~AdmServerRule [  180] Content: SyncByDb (pt-BR)~@~1420~@~9~@~~@~Clique aqui para obter o procedimento armazenado no banco de dados físico.~@~~@~
+4792~@~AdmServerRule [  220] Content: SyncToDb (pt-BR)~@~1418~@~9~@~~@~Clique aqui para sincronizar esse procedimento armazenado no banco de dados físico imediatamente.~@~~@~
+4794~@~AdmServerRule [  210] Content: SyncByDb (pt-BR)~@~1420~@~9~@~~@~Clique aqui para obter o procedimento armazenado no banco de dados físico.~@~~@~
 4795~@~AdmScreenObj [  110] Main Info: ColumnJustify (pt-BR)~@~1422~@~9~@~Justificar~@~Este é o alinhamento horizontal de exibição da coluna (direita, esquerda ou centro).~@~Por favor seleccione o alinhamento horizontal de exibição da coluna (direita, esquerda ou centro).~@~
 4798~@~AdmScreenCri [  100] Main Info: ColumnJustify (pt-BR)~@~1425~@~9~@~Justificar~@~Esta é a justificativa de exibição da coluna (direita, esquerda ou centro).~@~Por favor seleccione a justificação de exibição da coluna (direita, esquerda ou centro).~@~
 4800~@~AdmCtCulture [   70] Main Info: EnNumberRule (pt-BR)~@~1427~@~9~@~Regra 11/12~@~Isso é verificado se essa cultura usa onze e doze em palavras.~@~~@~
@@ -3464,8 +3464,8 @@
 5784~@~AdmAppItem [  160] Represent: CustomId (tr-TR)~@~1367~@~11~@~Özel~@~Bu varsa, bu öğeyi oluşturulan özel bir yapıdır. Bu katman seçilen Veri zaman önemli değildir.~@~~@~
 5785~@~AdmScreen [  310] Main Info: FootNote (tr-TR)~@~1370~@~11~@~Ayak Not~@~Bu, bu ekran 400 karakter veya daha az için ilk on-line bir dip not.~@~Dipnot olarak görüntülenecek bir mesaj 400 karakter veya daha az giriniz.~@~
 5786~@~AdmScreen [  200] Main Info: ValidateReq (tr-TR)~@~1371~@~11~@~İstek Doğrula~@~Script-enjeksiyon-saldırı bir endişe ve girdilerin değilse bu işaretini kaldırın html etiketlerini izin vermelidir.~@~~@~
-5806~@~AdmServerRule [  170] Content: RuleCode (tr-TR)~@~1396~@~11~@~S. Prosedürü~@~Bu içerik ile ilgili bir veritabanı (ler) boş değil Saklı Yordam (SQL) olarak çalıştırılacaktır.~@~~@~
-5807~@~AdmServerRule [  200] Content: ModifiedBy (tr-TR)~@~1397~@~11~@~Değiştiren~@~Bu son kullanıcı tarafından güncellenmiştir.~@~Bu son kullanıcı tarafından güncellenmiştir.~@~
+5806~@~AdmServerRule [  200] Content: RuleCode (tr-TR)~@~1396~@~11~@~S. Prosedürü~@~Bu içerik ile ilgili bir veritabanı (ler) boş değil Saklı Yordam (SQL) olarak çalıştırılacaktır.~@~~@~
+5807~@~AdmServerRule [  230] Content: ModifiedBy (tr-TR)~@~1397~@~11~@~Değiştiren~@~Bu son kullanıcı tarafından güncellenmiştir.~@~Bu son kullanıcı tarafından güncellenmiştir.~@~
 5809~@~AdmDbTable [  210] Main Info: ColumnIndex (tr-TR)~@~1400~@~11~@~Sipariş~@~Bu on birden fazla veritabanı tablo bu sütun sırası.~@~~@~
 5810~@~AdmDbTable [  270] Main Info: DefaultValue (tr-TR)~@~1401~@~11~@~Standart~@~Bu veri tablosu kolon (non-fonksiyon ve sayısal olmayan değer tek tırnak içine alınması) uygulanan varsayılan değerdir.~@~~@~
 5811~@~AdmDbTable [   60] Main Info: SyncByDb (tr-TR)~@~1402~@~11~@~~@~Fiziksel veritabanı ile senkronize etmek için burayı tıklayın; dış tablolardan Sütunlar göz ardı edilecektir.~@~~@~
@@ -3477,8 +3477,8 @@
 5820~@~AdmMsgCenter [   60] Main Info: CultureId (tr-TR)~@~1414~@~11~@~Kültür~@~Bu mesaj için kültür.~@~Lütfen bu mesaj için kültür seçin.~@~
 5821~@~AdmMsgCenter [   70] Main Info: Msg (tr-TR)~@~1415~@~11~@~Mesaj~@~Bu, bu kültür için uygun bir mesajdır.~@~Lütfen bu kültür için uygun mesajınızı girin.~@~
 5822~@~AdmAppInfo [   80] Main Info: AppZipId (tr-TR)~@~1416~@~11~@~Dağıtım~@~Belgeyi karşıya yüklemek veya Kaydet butonuna tıklayarak istenmeyen belge, gerçek zamanlı silmek için çöp tenekesi simgesini tıklatın sağ simgesini tıklatın. Sadece sahibi silmek veya belgeleri onlara~@~~@~
-5823~@~AdmServerRule [  190] Content: SyncToDb (tr-TR)~@~1418~@~11~@~~@~Bu saklı yordam hemen fiziksel veritabanı senkronize etmek için buraya tıklayın.~@~~@~
-5825~@~AdmServerRule [  180] Content: SyncByDb (tr-TR)~@~1420~@~11~@~~@~Fiziksel veritabanı saklı yordam elde etmek için buraya tıklayın.~@~~@~
+5823~@~AdmServerRule [  220] Content: SyncToDb (tr-TR)~@~1418~@~11~@~~@~Bu saklı yordam hemen fiziksel veritabanı senkronize etmek için buraya tıklayın.~@~~@~
+5825~@~AdmServerRule [  210] Content: SyncByDb (tr-TR)~@~1420~@~11~@~~@~Fiziksel veritabanı saklı yordam elde etmek için buraya tıklayın.~@~~@~
 5826~@~AdmScreenObj [  110] Main Info: ColumnJustify (tr-TR)~@~1422~@~11~@~Haklı çıkarmak~@~Bu sütun ekran (sol, sağ ya da Merkezi) yatay hizalama.~@~Lütfen sütun ekran (sol, sağ ya da Merkezi) yatay hizalamayı seçin.~@~
 5829~@~AdmScreenCri [  100] Main Info: ColumnJustify (tr-TR)~@~1425~@~11~@~Haklı çıkarmak~@~Bu sütunu görüntülemek gerekçesi (Sol, Sağ veya Merkezi).~@~Lütfen sütununda gösterilecek gerekçesi seçin (sol, sağ ya da Merkezi).~@~
 5831~@~AdmCtCulture [   70] Main Info: EnNumberRule (tr-TR)~@~1427~@~11~@~11/12 Kuralı~@~Bu kültürün bir deyişle on bir ve on iki kullanıyorsa, bu kontrol edilir.~@~~@~
@@ -4081,8 +4081,8 @@
 6610~@~AdmAppItem [  160] Represent: CustomId (ja-JP)~@~1367~@~14~@~カスタム~@~これが該当する場合、このアイテムが生成されるから、カスタム構造体です。これは、層の選択されたが、データの場合には関係ありません。~@~~@~
 6611~@~AdmScreen [  310] Main Info: FootNote (ja-JP)~@~1370~@~14~@~フットノート~@~これは400文字以下この画面の初期のオンラインフットノートです。~@~脚注として表示されるメッセージ400文字以下を入力してください。~@~
 6612~@~AdmScreen [  200] Main Info: ValidateReq (ja-JP)~@~1371~@~14~@~要求を検証~@~スクリプトインジェクション攻撃が懸念され、入力がない場合は、このチェックを外してhtmlタグを許可する必要があります。~@~~@~
-6632~@~AdmServerRule [  170] Content: RuleCode (ja-JP)~@~1396~@~14~@~S.の手順~@~このコンテンツは、関連するデータベース（の）空ではないのストアドプロシージャ（SQL）として実行されます。~@~~@~
-6633~@~AdmServerRule [  200] Content: ModifiedBy (ja-JP)~@~1397~@~14~@~変更者~@~これは、最後に、このユーザによって変更されました。~@~これは、最後に、このユーザによって変更されました。~@~
+6632~@~AdmServerRule [  200] Content: RuleCode (ja-JP)~@~1396~@~14~@~S.の手順~@~このコンテンツは、関連するデータベース（の）空ではないのストアドプロシージャ（SQL）として実行されます。~@~~@~
+6633~@~AdmServerRule [  230] Content: ModifiedBy (ja-JP)~@~1397~@~14~@~変更者~@~これは、最後に、このユーザによって変更されました。~@~これは、最後に、このユーザによって変更されました。~@~
 6635~@~AdmDbTable [  210] Main Info: ColumnIndex (ja-JP)~@~1400~@~14~@~ご注文~@~これは10の倍数で、データベーステーブル内のこの列の順序です。~@~~@~
 6636~@~AdmDbTable [  270] Main Info: DefaultValue (ja-JP)~@~1401~@~14~@~デフォルトの~@~これは、データテーブルの列（非機能および非数値の値が単一引用符で囲む必要がある）に適用されるデフォルト値です。~@~~@~
 6637~@~AdmDbTable [   60] Main Info: SyncByDb (ja-JP)~@~1402~@~14~@~~@~物理的なデータベースで同期させるために、ここをクリックして、外部表からの列は無視されます。~@~~@~
@@ -4094,8 +4094,8 @@
 6646~@~AdmMsgCenter [   60] Main Info: CultureId (ja-JP)~@~1414~@~14~@~文化~@~これは、このメッセージのための文化です。~@~このメッセージのための文化を選択してください。~@~
 6647~@~AdmMsgCenter [   70] Main Info: Msg (ja-JP)~@~1415~@~14~@~メッセージ~@~これは、この文化のための適切なメッセージです。~@~この文化のための適切なメッセージを入力してください。~@~
 6648~@~AdmAppInfo [   80] Main Info: AppZipId (ja-JP)~@~1416~@~14~@~展開~@~ドキュメントをアップロードまたは[保存]ボタンをクリックせずに、不要な文書、リアルタイムを削除するには、ゴミ箱のアイコンをクリックして右側にあるアイコンをクリックします。唯一の所有者は、文書がそれらに属する、削除または置換することができます。~@~~@~
-6649~@~AdmServerRule [  190] Content: SyncToDb (ja-JP)~@~1418~@~14~@~~@~すぐに物理的なデータベースにこのストアドプロシージャを同期させるためにはここをクリックしてください。~@~~@~
-6651~@~AdmServerRule [  180] Content: SyncByDb (ja-JP)~@~1420~@~14~@~~@~物理的なデータベースからストアドプロシージャを取得するには、ここをクリックしてください。~@~~@~
+6649~@~AdmServerRule [  220] Content: SyncToDb (ja-JP)~@~1418~@~14~@~~@~すぐに物理的なデータベースにこのストアドプロシージャを同期させるためにはここをクリックしてください。~@~~@~
+6651~@~AdmServerRule [  210] Content: SyncByDb (ja-JP)~@~1420~@~14~@~~@~物理的なデータベースからストアドプロシージャを取得するには、ここをクリックしてください。~@~~@~
 6652~@~AdmScreenObj [  110] Main Info: ColumnJustify (ja-JP)~@~1422~@~14~@~正当化する~@~これは、列の表示（左、右またはセンター）の水平方向の配置です。~@~列の表示（左、右またはセンター）の水平方向の配置を選択してください。~@~
 6655~@~AdmScreenCri [  100] Main Info: ColumnJustify (ja-JP)~@~1425~@~14~@~正当化する~@~これは、列の表示（左、右またはセンター）の正当化である。~@~列の表示（左、右またはセンター）の正当化を選択してください。~@~
 6657~@~AdmCtCulture [   70] Main Info: EnNumberRule (ja-JP)~@~1427~@~14~@~11/12ルール~@~この文化は11と言葉の12を使用している場合はこれがチェックされます。~@~~@~
@@ -4698,8 +4698,8 @@
 7436~@~AdmAppItem [  160] Represent: CustomId (ru-RU)~@~1367~@~12~@~Обычай~@~Это пользовательские структуры, из которой этот пункт создается, если применимо. Это не имеет значения, когда ярус выбран данных.~@~~@~
 7437~@~AdmScreen [  310] Main Info: FootNote (ru-RU)~@~1370~@~12~@~Ноги Примечание~@~Это начальное он-лайн ногу отметить для данного экрана 400 знаков или меньше.~@~Пожалуйста, введите сообщение 400 знаков или меньше будет отображаться в виде сноски.~@~
 7438~@~AdmScreen [  200] Main Info: ValidateReq (ru-RU)~@~1371~@~12~@~Проверка запроса~@~Снимите это, если скрипт-инъекции атака не озабоченность и входы должны позволить HTML тэгов.~@~~@~
-7458~@~AdmServerRule [  170] Content: RuleCode (ru-RU)~@~1396~@~12~@~С. Процедура~@~Это содержимое будет выполняться, как хранимые процедуры (SQL) на соответствующую базу данных (ы), когда он не пустой.~@~~@~
-7459~@~AdmServerRule [  200] Content: ModifiedBy (ru-RU)~@~1397~@~12~@~Автор изменений~@~Это было последнее изменение этого пользователя.~@~Это было последнее изменение этого пользователя.~@~
+7458~@~AdmServerRule [  200] Content: RuleCode (ru-RU)~@~1396~@~12~@~С. Процедура~@~Это содержимое будет выполняться, как хранимые процедуры (SQL) на соответствующую базу данных (ы), когда он не пустой.~@~~@~
+7459~@~AdmServerRule [  230] Content: ModifiedBy (ru-RU)~@~1397~@~12~@~Автор изменений~@~Это было последнее изменение этого пользователя.~@~Это было последнее изменение этого пользователя.~@~
 7461~@~AdmDbTable [  210] Main Info: ColumnIndex (ru-RU)~@~1400~@~12~@~Порядок~@~Это порядок этого столбца в таблице базы данных, в нескольких из десяти.~@~~@~
 7462~@~AdmDbTable [  270] Main Info: DefaultValue (ru-RU)~@~1401~@~12~@~Умолчание~@~Это значение по умолчанию применяется к столбцу таблицы данных (не функция и не числовое значение должно быть заключено в одинарные).~@~~@~
 7463~@~AdmDbTable [   60] Main Info: SyncByDb (ru-RU)~@~1402~@~12~@~~@~Кликните здесь, чтобы синхронизировать по физической базы данных; столбцов из внешних таблиц будут игнорироваться.~@~~@~
@@ -4711,8 +4711,8 @@
 7472~@~AdmMsgCenter [   60] Main Info: CultureId (ru-RU)~@~1414~@~12~@~Культура~@~Это культура для этого сообщения.~@~Пожалуйста, выберите культуры для этого сообщения.~@~
 7473~@~AdmMsgCenter [   70] Main Info: Msg (ru-RU)~@~1415~@~12~@~Сообщение~@~Это соответствующее сообщение на эту культуру.~@~Пожалуйста, введите соответствующее сообщение на эту культуру.~@~
 7474~@~AdmAppInfo [   80] Main Info: AppZipId (ru-RU)~@~1416~@~12~@~Развертывание~@~Нажмите на иконку справа, чтобы загрузить документ или щелкните значок корзины для удаления нежелательных документа в реальном времени без нажатия на кнопку Сохранить. Только владелец может удалить ил~@~~@~
-7475~@~AdmServerRule [  190] Content: SyncToDb (ru-RU)~@~1418~@~12~@~~@~Кликните здесь, чтобы синхронизировать эту хранимую процедуру для физической базы данных немедленно.~@~~@~
-7477~@~AdmServerRule [  180] Content: SyncByDb (ru-RU)~@~1420~@~12~@~~@~Кликните здесь, чтобы получить хранимую процедуру из физической базы данных.~@~~@~
+7475~@~AdmServerRule [  220] Content: SyncToDb (ru-RU)~@~1418~@~12~@~~@~Кликните здесь, чтобы синхронизировать эту хранимую процедуру для физической базы данных немедленно.~@~~@~
+7477~@~AdmServerRule [  210] Content: SyncByDb (ru-RU)~@~1420~@~12~@~~@~Кликните здесь, чтобы получить хранимую процедуру из физической базы данных.~@~~@~
 7478~@~AdmScreenObj [  110] Main Info: ColumnJustify (ru-RU)~@~1422~@~12~@~Оправдывать~@~Это выравнивание по горизонтали отображение столбца (левая, правая или центр).~@~Пожалуйста, выберите горизонтальное выравнивание отображение столбца (левая, правая или центр).~@~
 7481~@~AdmScreenCri [  100] Main Info: ColumnJustify (ru-RU)~@~1425~@~12~@~Оправдывать~@~Это обоснование отображение столбца (левая, правая или центр).~@~Пожалуйста, выберите обоснование отображение столбца (левая, правая или центр).~@~
 7483~@~AdmCtCulture [   70] Main Info: EnNumberRule (ru-RU)~@~1427~@~12~@~Правило 11/12~@~Это проверяется, если эта культура используется одиннадцатью и двенадцатью словами.~@~~@~
@@ -5315,8 +5315,8 @@
 8262~@~AdmAppItem [  160] Represent: CustomId (es-ES)~@~1367~@~13~@~Costumbre~@~Esta es la estructura a medida que se genera a partir de este punto, en su caso. Esto no es relevante cuando el nivel es elegido de datos.~@~~@~
 8263~@~AdmScreen [  310] Main Info: FootNote (es-ES)~@~1370~@~13~@~Nota al pie~@~Esta es la primera en la línea de la nota al pie de esta pantalla de 400 caracteres o menos.~@~Por favor, introduzca un mensaje de 400 caracteres o menos para que se muestre como nota al pie.~@~
 8264~@~AdmScreen [  200] Main Info: ValidateReq (es-ES)~@~1371~@~13~@~Validar Solicitud~@~Desactive esta opción si la inyección de secuencias de comandos de ataque no es una preocupación e insumos debe permitir etiquetas html.~@~~@~
-8284~@~AdmServerRule [  170] Content: RuleCode (es-ES)~@~1396~@~13~@~S. Procedimiento~@~Este contenido se ejecutará como procedimiento almacenado (SQL) en la base de datos correspondiente (s) cuando no está vacío.~@~~@~
-8285~@~AdmServerRule [  200] Content: ModifiedBy (es-ES)~@~1397~@~13~@~Modificado por~@~Esto fue modificada por última vez de este usuario.~@~Esto fue modificada por última vez de este usuario.~@~
+8284~@~AdmServerRule [  200] Content: RuleCode (es-ES)~@~1396~@~13~@~S. Procedimiento~@~Este contenido se ejecutará como procedimiento almacenado (SQL) en la base de datos correspondiente (s) cuando no está vacío.~@~~@~
+8285~@~AdmServerRule [  230] Content: ModifiedBy (es-ES)~@~1397~@~13~@~Modificado por~@~Esto fue modificada por última vez de este usuario.~@~Esto fue modificada por última vez de este usuario.~@~
 8287~@~AdmDbTable [  210] Main Info: ColumnIndex (es-ES)~@~1400~@~13~@~Orden~@~Este es el orden de esta columna en la tabla de base de datos en múltiples de diez.~@~~@~
 8288~@~AdmDbTable [  270] Main Info: DefaultValue (es-ES)~@~1401~@~13~@~Defecto~@~Este es el valor predeterminado que se aplica a la columna de la tabla de datos (no de función y no numéricos, el valor debe estar encerrado entre comillas simples).~@~~@~
 8289~@~AdmDbTable [   60] Main Info: SyncByDb (es-ES)~@~1402~@~13~@~~@~Haga clic aquí para sincronizar la base de datos física, las columnas de las tablas externas se tendrá en cuenta.~@~~@~
@@ -5328,8 +5328,8 @@
 8298~@~AdmMsgCenter [   60] Main Info: CultureId (es-ES)~@~1414~@~13~@~Cultura~@~Esta es la cultura de este mensaje.~@~Por favor, seleccione la cultura de este mensaje.~@~
 8299~@~AdmMsgCenter [   70] Main Info: Msg (es-ES)~@~1415~@~13~@~Mensaje~@~Este es el mensaje apropiado para este cultivo.~@~Por favor, introduzca el mensaje apropiado para este cultivo.~@~
 8300~@~AdmAppInfo [   80] Main Info: AppZipId (es-ES)~@~1416~@~13~@~Despliegue~@~Haga clic en el icono a la derecha para subir el documento o haga clic en el icono de la papelera para eliminar documentos no deseados, en tiempo real sin hacer clic en el botón Guardar. Sólo el propi~@~~@~
-8301~@~AdmServerRule [  190] Content: SyncToDb (es-ES)~@~1418~@~13~@~~@~Haga clic aquí para sincronizar este procedimiento almacenado para la base de datos física de inmediato.~@~~@~
-8303~@~AdmServerRule [  180] Content: SyncByDb (es-ES)~@~1420~@~13~@~~@~Haga clic aquí para obtener el procedimiento almacenado en la base de datos física.~@~~@~
+8301~@~AdmServerRule [  220] Content: SyncToDb (es-ES)~@~1418~@~13~@~~@~Haga clic aquí para sincronizar este procedimiento almacenado para la base de datos física de inmediato.~@~~@~
+8303~@~AdmServerRule [  210] Content: SyncByDb (es-ES)~@~1420~@~13~@~~@~Haga clic aquí para obtener el procedimiento almacenado en la base de datos física.~@~~@~
 8304~@~AdmScreenObj [  110] Main Info: ColumnJustify (es-ES)~@~1422~@~13~@~Justificar~@~Esta es la alineación horizontal de visualización de las columnas (izquierda, derecha o centro).~@~Por favor, seleccione la alineación horizontal de visualización de las columnas (izquierda, derecha o centro).~@~
 8307~@~AdmScreenCri [  100] Main Info: ColumnJustify (es-ES)~@~1425~@~13~@~Justificar~@~Esta es la justificación de la presentación de las columnas (izquierda, derecha o centro).~@~Por favor, seleccione la justificación de la presentación de las columnas (izquierda, derecha o centro).~@~
 8309~@~AdmCtCulture [   70] Main Info: EnNumberRule (es-ES)~@~1427~@~13~@~Regla 11/12~@~Esto se comprueba si esta cultura utiliza once y doce de las palabras.~@~~@~
@@ -6299,8 +6299,8 @@
 10585~@~AdmAppItem [  160] Represent: CustomId (de-DE)~@~1367~@~68~@~Brauch~@~Dies ist die benutzerdefinierte Struktur, aus der dieser Artikel wird generiert, wenn anwendbar. Dies ist nicht relevant, wenn das Tier ausgewählten Daten ist.~@~~@~
 10586~@~AdmScreen [  310] Main Info: FootNote (de-DE)~@~1370~@~68~@~Fuß Hinweis~@~Dies ist der erste Online-Fußnote für diesen Bildschirm 400 Zeichen oder weniger.~@~Bitte geben Sie eine Nachricht 400 Zeichen oder weniger als Fußnote angezeigt.~@~
 10587~@~AdmScreen [  200] Main Info: ValidateReq (de-DE)~@~1371~@~68~@~Bestätigen Anfrage~@~Deaktivieren Sie diese Option, wenn Skript-Injection-Angriff ist nicht ein Anliegen und Eingängen müsste html-Tags.~@~~@~
-10607~@~AdmServerRule [  170] Content: RuleCode (de-DE)~@~1396~@~68~@~S.Procedure~@~Diese Inhalte werden als Stored Procedure (SQL) auf der entsprechenden Datenbank (en), wenn nicht leer ausgeführt werden.~@~~@~
-10608~@~AdmServerRule [  200] Content: ModifiedBy (de-DE)~@~1397~@~68~@~Geändert von~@~Dies wurde zuletzt durch diesen Benutzer geändert.~@~Dies wurde zuletzt durch diesen Benutzer geändert.~@~
+10607~@~AdmServerRule [  200] Content: RuleCode (de-DE)~@~1396~@~68~@~S.Procedure~@~Diese Inhalte werden als Stored Procedure (SQL) auf der entsprechenden Datenbank (en), wenn nicht leer ausgeführt werden.~@~~@~
+10608~@~AdmServerRule [  230] Content: ModifiedBy (de-DE)~@~1397~@~68~@~Geändert von~@~Dies wurde zuletzt durch diesen Benutzer geändert.~@~Dies wurde zuletzt durch diesen Benutzer geändert.~@~
 10610~@~AdmDbTable [  210] Main Info: ColumnIndex (de-DE)~@~1400~@~68~@~Bestellen~@~Dies ist die Reihenfolge dieser Spalte in der Datenbank-Tabelle in Vielfachen von zehn.~@~~@~
 10611~@~AdmDbTable [  270] Main Info: DefaultValue (de-DE)~@~1401~@~68~@~Default~@~Dies ist der Standardwert angewendet auf die Daten Tabellenspalte (non-Funktion und nicht-numerischen Wert sollte durch einfache Anführungszeichen eingeschlossen werden).~@~~@~
 10612~@~AdmDbTable [   60] Main Info: SyncByDb (de-DE)~@~1402~@~68~@~~@~Klicken Sie hier, um durch die physische Datenbank zu synchronisieren; Spalten aus externen Tabellen werden ignoriert.~@~~@~
@@ -6312,8 +6312,8 @@
 10621~@~AdmMsgCenter [   60] Main Info: CultureId (de-DE)~@~1414~@~68~@~Kultur~@~Das ist die Kultur für diese Nachricht.~@~Bitte wählen Sie die Kultur für diese Nachricht.~@~
 10622~@~AdmMsgCenter [   70] Main Info: Msg (de-DE)~@~1415~@~68~@~Nachricht~@~Dies ist die geeignete Nachricht für diese Kultur.~@~Bitte geben Sie die entsprechende Meldung für diese Kultur.~@~
 10623~@~AdmAppInfo [   80] Main Info: AppZipId (de-DE)~@~1416~@~68~@~Einsatz~@~Klicken Sie auf das Symbol, um das Recht auf Dokument hochladen oder klicken Sie auf das Papierkorb-Symbol, um unerwünschte Dokument in Echtzeit zu löschen, ohne auf die Schaltfläche Speichern. Nur de~@~~@~
-10624~@~AdmServerRule [  190] Content: SyncToDb (de-DE)~@~1418~@~68~@~~@~Klicken Sie hier, um diese gespeicherte Prozedur, um die physische Datenbank sofort zu synchronisieren.~@~~@~
-10626~@~AdmServerRule [  180] Content: SyncByDb (de-DE)~@~1420~@~68~@~~@~Klicken Sie hier, um die gespeicherte Prozedur aus der physischen Datenbank zu erhalten.~@~~@~
+10624~@~AdmServerRule [  220] Content: SyncToDb (de-DE)~@~1418~@~68~@~~@~Klicken Sie hier, um diese gespeicherte Prozedur, um die physische Datenbank sofort zu synchronisieren.~@~~@~
+10626~@~AdmServerRule [  210] Content: SyncByDb (de-DE)~@~1420~@~68~@~~@~Klicken Sie hier, um die gespeicherte Prozedur aus der physischen Datenbank zu erhalten.~@~~@~
 10627~@~AdmScreenObj [  110] Main Info: ColumnJustify (de-DE)~@~1422~@~68~@~Rechtfertigen~@~Dies ist die horizontale Ausrichtung der Spalte angezeigt (links, rechts oder mittig).~@~Bitte wählen Sie die horizontale Ausrichtung der Spalte Display (Links, Rechts oder Mitte).~@~
 10630~@~AdmScreenCri [  100] Main Info: ColumnJustify (de-DE)~@~1425~@~68~@~Rechtfertigen~@~Dies ist die Rechtfertigung der Spalte Display (Links, Rechts oder Mitte).~@~Bitte wählen Sie die Begründung der Spalte angezeigt (links, rechts oder mittig).~@~
 10632~@~AdmCtCulture [   70] Main Info: EnNumberRule (de-DE)~@~1427~@~68~@~11/12 Regel~@~Dies wird überprüft, ob diese Kultur verwendet elf und zwölf in Worten.~@~~@~
@@ -7218,8 +7218,8 @@
 11712~@~AdmAppItem [  160] Represent: CustomId (ko-KR)~@~1367~@~28~@~관습~@~이 해당 될 경우,이 항목이 생성되어있는 사용자 정의 구조입니다. 이 계층 개만이 데이터 경우 관련되지 않습니다.~@~~@~
 11713~@~AdmScreen [  310] Main Info: FootNote (ko-KR)~@~1370~@~28~@~발 주~@~이 화면 400 자 이하의 초기 온라인 발 노트입니다.~@~메시지를 각주로 표시 할 400 자 이하를 입력 해주세요.~@~
 11714~@~AdmScreen [  200] Main Info: ValidateReq (ko-KR)~@~1371~@~28~@~요청 확인~@~스크립트 주입 공격이 아닌 경우 선택을 취소 관심과 입력은 html 태그를 허용해야합니다이.~@~~@~
-11734~@~AdmServerRule [  170] Content: RuleCode (ko-KR)~@~1396~@~28~@~S.Procedure~@~이 내용은 관련 데이터베이스 (들)에 대한 저장 프로 시저 (SQL) 비어 있지로 실행됩니다.~@~~@~
-11735~@~AdmServerRule [  200] Content: ModifiedBy (ko-KR)~@~1397~@~28~@~으로 수정~@~이것은 마지막으로 사용자가 바뀌 었습니다.~@~이것은 마지막으로 사용자가 바뀌 었습니다.~@~
+11734~@~AdmServerRule [  200] Content: RuleCode (ko-KR)~@~1396~@~28~@~S.Procedure~@~이 내용은 관련 데이터베이스 (들)에 대한 저장 프로 시저 (SQL) 비어 있지로 실행됩니다.~@~~@~
+11735~@~AdmServerRule [  230] Content: ModifiedBy (ko-KR)~@~1397~@~28~@~으로 수정~@~이것은 마지막으로 사용자가 바뀌 었습니다.~@~이것은 마지막으로 사용자가 바뀌 었습니다.~@~
 11737~@~AdmDbTable [  210] Main Info: ColumnIndex (ko-KR)~@~1400~@~28~@~순서~@~이 10의 배수에서 데이터베이스 테이블에이 칼럼의 순서입니다.~@~~@~
 11738~@~AdmDbTable [  270] Main Info: DefaultValue (ko-KR)~@~1401~@~28~@~기본~@~이 데이터 테이블 열 (비 기능과 숫자가 아닌 값이 단일 따옴표로 묶어야 함)에 적용되는 기본값입니다.~@~~@~
 11739~@~AdmDbTable [   60] Main Info: SyncByDb (ko-KR)~@~1402~@~28~@~~@~물리적 데이터베이스에 의해 동기화하려면 여기를 클릭하십시오, 외부 테이블에서 열은 무시됩니다.~@~~@~
@@ -7231,8 +7231,8 @@
 11748~@~AdmMsgCenter [   60] Main Info: CultureId (ko-KR)~@~1414~@~28~@~문화~@~이이 메시지에 대한 문화입니다.~@~이 메시지에 대한 문화를 선택하십시오.~@~
 11749~@~AdmMsgCenter [   70] Main Info: Msg (ko-KR)~@~1415~@~28~@~메시지~@~이이 문화에 해당하는 메시지입니다.~@~이 문화에 적합한 메시지를 입력하세요.~@~
 11750~@~AdmAppInfo [   80] Main Info: AppZipId (ko-KR)~@~1416~@~28~@~전개~@~저장 버튼을 클릭하지 않고 문서를 업로드하거나 원하지 않는 문서를 실시간으로 삭제하려면 휴지통 아이콘을 클릭 할 수있는 권리에 아이콘을 클릭합니다. 소유자 만 삭제하거나 문서가 그들에게 속한 바꿀 수 있습니다.~@~~@~
-11751~@~AdmServerRule [  190] Content: SyncToDb (ko-KR)~@~1418~@~28~@~~@~즉시 실제 데이터베이스에이 저장 프로 시저 (Stored Procedure)를 동기화하려면 여기를 클릭하십시오.~@~~@~
-11753~@~AdmServerRule [  180] Content: SyncByDb (ko-KR)~@~1420~@~28~@~~@~물리적 데이터베이스에서 저장 프로 시저 (Stored Procedure)를 얻기 위해 여기를 클릭하십시오.~@~~@~
+11751~@~AdmServerRule [  220] Content: SyncToDb (ko-KR)~@~1418~@~28~@~~@~즉시 실제 데이터베이스에이 저장 프로 시저 (Stored Procedure)를 동기화하려면 여기를 클릭하십시오.~@~~@~
+11753~@~AdmServerRule [  210] Content: SyncByDb (ko-KR)~@~1420~@~28~@~~@~물리적 데이터베이스에서 저장 프로 시저 (Stored Procedure)를 얻기 위해 여기를 클릭하십시오.~@~~@~
 11754~@~AdmScreenObj [  110] Main Info: ColumnJustify (ko-KR)~@~1422~@~28~@~옳다고 주장하다~@~이 항목 표시의 수평 정렬 (왼쪽, 오른쪽 또는 센터)입니다.~@~열 디스플레이의 수평 정렬 (왼쪽, 오른쪽 또는 가운데)을 선택하십시오.~@~
 11757~@~AdmScreenCri [  100] Main Info: ColumnJustify (ko-KR)~@~1425~@~28~@~옳다고 주장하다~@~이 항목 표시 (왼쪽, 오른쪽 또는 센터)의 정당성이다.~@~열 디스플레이의 정당화 (왼쪽, 오른쪽 또는 센터)를 선택하십시오.~@~
 11759~@~AdmCtCulture [   70] Main Info: EnNumberRule (ko-KR)~@~1427~@~28~@~12분의 11 규칙~@~이 문화는 단어의 Eleven 및 12 사용하는 경우를 검사한다.~@~~@~
@@ -7992,8 +7992,8 @@
 14687~@~AdmScreenObj [  190] Main Info: GroupColId (zh-CN)~@~1204~@~4~@~列组~@~这是从12格列列组。~@~请从12柱网选择合适的栏目组。~@~
 14688~@~AdmWebRule [   90] Main Info: WebRuleProg (zh-CN)~@~1290~@~4~@~C＃的业务规则~@~这是要生成到程序的经过充分测试的规则。~@~请复制到这里要生成到程序的行之有效的规则。~@~
 14689~@~AdmDbTable [   50] Main Info: TblObjective (zh-CN)~@~1332~@~4~@~~@~这说明，在不到500个字符这张表的目的。~@~请描述少于500个字符这张表的目的。~@~
-14690~@~AdmServerRule [  210] Content: ModifiedOn (zh-CN)~@~1399~@~4~@~修改于~@~这个规则最后修改于这个日期和时间。~@~~@~
-14691~@~AdmServerRule [  220] Content: LastGenDt (zh-CN)~@~1419~@~4~@~最后应用~@~此存储过程的最后应用在此日期。~@~~@~
+14690~@~AdmServerRule [  240] Content: ModifiedOn (zh-CN)~@~1399~@~4~@~修改于~@~这个规则最后修改于这个日期和时间。~@~~@~
+14691~@~AdmServerRule [  250] Content: LastGenDt (zh-CN)~@~1419~@~4~@~最后应用~@~此存储过程的最后应用在此日期。~@~~@~
 14692~@~AdmSystems [   10] Main Info: SystemId (zh-CN)~@~1428~@~4~@~ID~@~这是一个整数介于1到255唯一代表此应用程序/数据库（政府应该永远是3）。~@~请输入1之间的一个整数到255唯一地代表这个应用程序/数据库（政府应该永远是3）。~@~
 14693~@~AdmSystems [  250] Main Info: WebAddress (zh-CN)~@~1449~@~4~@~默认页面覆盖~@~这是默认的页面，在这个数据库中orverride OrdUrl和SslUrl在Web.config中。~@~~@~
 14694~@~AdmRptStyle [   10] Main Info: RptStyleId (zh-CN)~@~1533~@~4~@~ID~@~这个内部标识唯一地表示这份报告的风格。~@~~@~
@@ -8062,8 +8062,8 @@
 14780~@~AdmScreenObj [  190] Main Info: GroupColId (ko-KR)~@~1204~@~28~@~열 그룹~@~이것은 12 컬럼 그리드에서 컬럼 그룹이다.~@~12 기둥 그리드에서 해당 열 그룹을 선택하십시오.~@~
 14781~@~AdmWebRule [   90] Main Info: WebRuleProg (ko-KR)~@~1290~@~28~@~C # 비즈니스 규칙~@~이것은 프로그램 상에 생성 될 잘 시험 규칙이다.~@~프로그램에 생성 할 수있는 잘 테스트 규칙을 여기에 복사하세요.~@~
 14782~@~AdmDbTable [   50] Main Info: TblObjective (ko-KR)~@~1332~@~28~@~~@~이는 500 개 이하의 문자에이 테이블의 목적을 설명한다.~@~미만의 500 자에이 테이블의 목적을 설명하십시오.~@~
-14783~@~AdmServerRule [  210] Content: ModifiedOn (ko-KR)~@~1399~@~28~@~에 수정~@~이 규칙은 마지막이 날짜와 시간에 수정되었습니다.~@~~@~
-14784~@~AdmServerRule [  220] Content: LastGenDt (ko-KR)~@~1419~@~28~@~마지막 응용~@~이 저장 프로시 저는 마지막이 날짜에 적용되었다.~@~~@~
+14783~@~AdmServerRule [  240] Content: ModifiedOn (ko-KR)~@~1399~@~28~@~에 수정~@~이 규칙은 마지막이 날짜와 시간에 수정되었습니다.~@~~@~
+14784~@~AdmServerRule [  250] Content: LastGenDt (ko-KR)~@~1419~@~28~@~마지막 응용~@~이 저장 프로시 저는 마지막이 날짜에 적용되었다.~@~~@~
 14785~@~AdmSystems [   10] Main Info: SystemId (ko-KR)~@~1428~@~28~@~신분증~@~이것은 (관리는 항상 3이어야 함) 1-255 사이의 interger이 유일하게이 응용 프로그램 / 데이터베이스를 나타냅니다.~@~(관리는 항상 3이어야 함) 고유이 응용 프로그램 / 데이터베이스를 나타 내기 위해 1 ~ 255 사이의 interger를 입력하십시오.~@~
 14786~@~AdmSystems [  250] Main Info: WebAddress (ko-KR)~@~1449~@~28~@~기본 페이지 재정의~@~이이 데이터베이스 내에서의 Web.config에 OrdUrl과 SslUrl을 orverride하는 기본 페이지입니다.~@~~@~
 14787~@~AdmRptStyle [   10] Main Info: RptStyleId (ko-KR)~@~1533~@~28~@~신분증~@~이 내부 ID는 유일하게이 보고서 스타일을 나타냅니다.~@~~@~
@@ -8420,21 +8420,21 @@
 16419~@~AdmReportObj [   30] Main Info: ColumnName (en-US)~@~130~@~114~@~Nom de colonne~@~Il s'agit du nom de colonne unique à référencer dans la clause Select.~@~Veuillez saisir un nom de colonne unique à référencer dans la clause de sélection.~@~
 16420~@~AdmReportObj [   90] Main Info: DataTypeId (en-US)~@~133~@~114~@~Type de données~@~Il s'agit du type de données pour cette colonne de rapport.~@~Veuillez sélectionner le type de données pour cette colonne de rapport.~@~
 16421~@~AdmReportObj [   50] Main Info: TabIndex (en-US)~@~138~@~114~@~Ordre de tabulation~@~Il s'agit de l'ordre de tabulation de cette colonne de rapport par rapport aux autres colonnes. Lorsqu'un nombre singulier est entré, tout l'ordre de tabulation des critères pour le même rapport sera renuméroté de 10 à part.~@~Veuillez entrer un ordre de tabulation de cette colonne de rapport par rapport aux autres colonnes. Lorsqu'un nombre singulier est entré, tout l'ordre de tabulation des critères pour le même rapport sera renuméroté de 10 à part.~@~
-16422~@~AdmServerRule [   50] Main Info: ScreenId (en-US)~@~139~@~114~@~Écran~@~Il s'agit de l'écran pour appliquer cette règle de serveur.~@~~@~
-16423~@~AdmServerRule [   10] Main Info: ServerRuleId (en-US)~@~149~@~114~@~Identifiant de règle~@~Il s'agit de l'ID interne représentant uniquement cette règle de serveur.~@~~@~
-16424~@~AdmServerRule [   40] Main Info: RuleTypeId (en-US)~@~151~@~114~@~Type de règle~@~Il s'agit du type de règle (contrainte, calcul, inférence ou action enabler) pour cette règle de serveur.~@~Veuillez sélectionner le type de règle (contrainte, calcul, inférence ou action enabler) pour cette règle de serveur.~@~
-16425~@~AdmServerRule [  110] Main Info: MasterTable (en-US)~@~152~@~114~@~Master Table~@~Ceci est vérifié si cette règle de serveur doit se déclencher sur chaque ligne de la table principale; décochée signifie tirer sur la table de détail.~@~~@~
-16426~@~AdmServerRule [   20] Main Info: RuleName (en-US)~@~153~@~114~@~Nom de la règle~@~Il s'agit du nom unique de cette règle de serveur de 100 caractères ou moins.~@~Veuillez saisir un nom unique pour cette règle de serveur de 100 caractères ou moins.~@~
-16427~@~AdmServerRule [   30] Main Info: RuleDescription (en-US)~@~154~@~114~@~La description~@~Il s'agit de la description détaillée de cette règle de serveur.~@~Veuillez entrer une description détaillée de cette règle de serveur.~@~
-16428~@~AdmServerRule [   60] Main Info: RuleOrder (en-US)~@~155~@~114~@~Ordre d'exécution~@~Il s'agit de l'ordre d'exécution de cette règle de serveur; la réorganisation est automatique si elle est ignorée ou si le dernier chiffre est différent de zéro.~@~Veuillez saisir un entier représentant l'ordre d'exécution de cette règle de serveur.~@~
-16429~@~AdmServerRule [   70] Main Info: ProcedureName (en-US)~@~156~@~114~@~Nom de la procédure~@~Il s'agit du nom de procédure de cette règle de serveur de 20 caractères ou moins.~@~Veuillez saisir un nom de procédure unique pour cette règle de 20 caractères ou moins.~@~
-16430~@~AdmServerRule [   80] Main Info: ParameterNames (en-US)~@~157~@~114~@~Noms des paramètres~@~Il s'agit des noms de paramètres à utiliser dans la procédure stockée délimitée par des virgules, le cas échéant.~@~~@~
-16431~@~AdmServerRule [   90] Main Info: ParameterTypes (en-US)~@~158~@~114~@~Types de paramètres~@~Il s'agit des types de données (sans taille) pour décrire les paramètres ci-dessus, séparés par des virgules, le cas échéant.~@~~@~
-16432~@~AdmServerRule [  100] Main Info: CallingParams (en-US)~@~159~@~114~@~Paramètres d'appel~@~Il s'agit des paramètres d'appel correspondants avec une tableId de fin et des virgules, le cas échéant. LUser.?, LImpr.?, LCurr.? et Config.? peut également être utilisé.~@~~@~
-16433~@~AdmServerRule [  120] Main Info: OnAdd (en-US)~@~160~@~114~@~Sur ajouter~@~Ceci est vérifié s'il doit se déclencher lors de l'ajout d'une ligne.~@~~@~
-16434~@~AdmServerRule [  130] Main Info: OnUpd (en-US)~@~161~@~114~@~À jour~@~Ceci est vérifié s'il doit se déclencher lors de la mise à jour d'une ligne.~@~~@~
-16435~@~AdmServerRule [  140] Main Info: OnDel (en-US)~@~162~@~114~@~Lors de la suppression~@~Ceci est vérifié s'il doit se déclencher lors de la suppression d'une ligne.~@~~@~
-16436~@~AdmServerRule [  150] Main Info: BeforeCRUD (en-US)~@~163~@~114~@~CRUD~@~Il s'agit de déterminer s'il doit se déclencher avant / après / ignorer l'insertion, la mise à jour ou la suppression.~@~~@~
+16422~@~AdmServerRule [   50] Main Info: ScreenId (fr-CA)~@~139~@~114~@~Écran~@~Il s'agit de l'écran pour appliquer cette règle de serveur.~@~~@~
+16423~@~AdmServerRule [   10] Main Info: ServerRuleId (fr-CA)~@~149~@~114~@~Identifiant de règle~@~Il s'agit de l'ID interne représentant uniquement cette règle de serveur.~@~~@~
+16424~@~AdmServerRule [   40] Main Info: RuleTypeId (fr-CA)~@~151~@~114~@~Type de règle~@~Il s'agit du type de règle (contrainte, calcul, inférence ou action enabler) pour cette règle de serveur.~@~Veuillez sélectionner le type de règle (contrainte, calcul, inférence ou action enabler) pour cette règle de serveur.~@~
+16425~@~AdmServerRule [  110] Main Info: MasterTable (fr-CA)~@~152~@~114~@~Master Table~@~Ceci est vérifié si cette règle de serveur doit se déclencher sur chaque ligne de la table principale; décochée signifie tirer sur la table de détail.~@~~@~
+16426~@~AdmServerRule [   20] Main Info: RuleName (fr-CA)~@~153~@~114~@~Nom de la règle~@~Il s'agit du nom unique de cette règle de serveur de 100 caractères ou moins.~@~Veuillez saisir un nom unique pour cette règle de serveur de 100 caractères ou moins.~@~
+16427~@~AdmServerRule [   30] Main Info: RuleDescription (fr-CA)~@~154~@~114~@~La description~@~Il s'agit de la description détaillée de cette règle de serveur.~@~Veuillez entrer une description détaillée de cette règle de serveur.~@~
+16428~@~AdmServerRule [   60] Main Info: RuleOrder (fr-CA)~@~155~@~114~@~Ordre d'exécution~@~Il s'agit de l'ordre d'exécution de cette règle de serveur; la réorganisation est automatique si elle est ignorée ou si le dernier chiffre est différent de zéro.~@~Veuillez saisir un entier représentant l'ordre d'exécution de cette règle de serveur.~@~
+16429~@~AdmServerRule [   70] Main Info: ProcedureName (fr-CA)~@~156~@~114~@~Nom de la procédure~@~Il s'agit du nom de procédure de cette règle de serveur de 20 caractères ou moins.~@~Veuillez saisir un nom de procédure unique pour cette règle de 20 caractères ou moins.~@~
+16430~@~AdmServerRule [   80] Main Info: ParameterNames (fr-CA)~@~157~@~114~@~Noms des paramètres~@~Il s'agit des noms de paramètres à utiliser dans la procédure stockée délimitée par des virgules, le cas échéant.~@~~@~
+16431~@~AdmServerRule [   90] Main Info: ParameterTypes (fr-CA)~@~158~@~114~@~Types de paramètres~@~Il s'agit des types de données (sans taille) pour décrire les paramètres ci-dessus, séparés par des virgules, le cas échéant.~@~~@~
+16432~@~AdmServerRule [  100] Main Info: CallingParams (fr-CA)~@~159~@~114~@~Paramètres d'appel~@~Il s'agit des paramètres d'appel correspondants avec une tableId de fin et des virgules, le cas échéant. LUser.?, LImpr.?, LCurr.? et Config.? peut également être utilisé.~@~~@~
+16433~@~AdmServerRule [  120] Main Info: OnAdd (fr-CA)~@~160~@~114~@~Sur ajouter~@~Ceci est vérifié s'il doit se déclencher lors de l'ajout d'une ligne.~@~~@~
+16434~@~AdmServerRule [  130] Main Info: OnUpd (fr-CA)~@~161~@~114~@~À jour~@~Ceci est vérifié s'il doit se déclencher lors de la mise à jour d'une ligne.~@~~@~
+16435~@~AdmServerRule [  140] Main Info: OnDel (fr-CA)~@~162~@~114~@~Lors de la suppression~@~Ceci est vérifié s'il doit se déclencher lors de la suppression d'une ligne.~@~~@~
+16436~@~AdmServerRule [  150] Main Info: BeforeCRUD (fr-CA)~@~163~@~114~@~CRUD~@~Il s'agit de déterminer s'il doit se déclencher avant / après / ignorer l'insertion, la mise à jour ou la suppression.~@~~@~
 16437~@~AdmDbKey [   10] Main Info: KeyId (en-US)~@~164~@~114~@~ID clé~@~Il s'agit de l'ID interne qui représente uniquement cette clé étrangère.~@~~@~
 16438~@~AdmDbKey [   20] Main Info: KeyName (en-US)~@~165~@~114~@~Nom de la clé étrangère~@~Il s'agit du nom de clé étrangère unique de cinquante caractères maximum. Habituellement préfixé par "FK_" suivi par la table FK et la table PK séparés par "_".~@~Veuillez saisir un nom de clé étrangère unique de cinquante caractères ou moins.~@~
 16439~@~AdmDbKey [   30] Main Info: TableId (en-US)~@~166~@~114~@~Table FK~@~Il s'agit du nom de la table de clé étrangère et est généralement la table qui héberge la liste déroulante.~@~Veuillez sélectionner le nom de la table de clés étrangères et c'est généralement la table qui héberge la liste déroulante.~@~
@@ -8714,9 +8714,9 @@
 16713~@~AdmAppItem [  160] Represent: CustomId (en-US)~@~1367~@~114~@~Douane~@~Il s'agit de la structure personnalisée à partir de laquelle cet élément est généré, le cas échéant. Cela n'est pas pertinent lorsque le niveau choisi est Données.~@~~@~
 16714~@~AdmScreen [  310] Main Info: FootNote (en-US)~@~1370~@~114~@~Note de bas de page~@~Il s'agit de la note de bas de page en ligne initiale pour cet écran de 400 caractères ou moins.~@~Veuillez entrer un message de 400 caractères ou moins pour être affiché comme note de bas de page.~@~Note de bas de page
 16715~@~AdmScreen [  200] Main Info: ValidateReq (en-US)~@~1371~@~114~@~Valider la demande~@~Décochez cette option si script-injection-attack n'est pas un problème et que les entrées doivent autoriser les balises html.~@~~@~
-16716~@~AdmServerRule [  170] Content: RuleCode (en-US)~@~1396~@~114~@~S.Procedure~@~Ce contenu sera exécuté en tant que procédure stockée (SQL) sur la ou les bases de données pertinentes lorsqu'il n'est pas vide.~@~~@~
-16717~@~AdmServerRule [  200] Content: ModifiedBy (en-US)~@~1397~@~114~@~Modifié par~@~Cette dernière a été modifiée par cet utilisateur.~@~Cette dernière a été modifiée par cet utilisateur.~@~
-16718~@~AdmServerRule [  210] Content: ModifiedOn (en-US)~@~1399~@~114~@~Modifié le~@~Cette règle a été modifiée pour la dernière fois à cette date et à cette heure.~@~~@~
+16716~@~AdmServerRule [  200] Content: RuleCode (fr-CA)~@~1396~@~114~@~S.Procedure~@~Ce contenu sera exécuté en tant que procédure stockée (SQL) sur la ou les bases de données pertinentes lorsqu'il n'est pas vide.~@~~@~
+16717~@~AdmServerRule [  230] Content: ModifiedBy (fr-CA)~@~1397~@~114~@~Modifié par~@~Cette dernière a été modifiée par cet utilisateur.~@~Cette dernière a été modifiée par cet utilisateur.~@~
+16718~@~AdmServerRule [  240] Content: ModifiedOn (fr-CA)~@~1399~@~114~@~Modifié le~@~Cette règle a été modifiée pour la dernière fois à cette date et à cette heure.~@~~@~
 16719~@~AdmDbTable [  210] Main Info: ColumnIndex (en-US)~@~1400~@~114~@~Commande~@~Il s'agit de l'ordre de cette colonne dans la table de base de données par multiple de dix.~@~~@~
 16720~@~AdmDbTable [  270] Main Info: DefaultValue (en-US)~@~1401~@~114~@~Défaut~@~Il s'agit de la valeur par défaut appliquée à la colonne du tableau de données (les valeurs non fonctionnelles et non numériques doivent être entourées de guillemets simples).~@~~@~
 16721~@~AdmDbTable [   60] Main Info: SyncByDb (en-US)~@~1402~@~114~@~~@~Cliquez ici pour synchroniser par la base de données physique; Les colonnes des tables externes seront ignorées.~@~~@~
@@ -8730,9 +8730,9 @@
 16729~@~AdmMsgCenter [   60] Main Info: CultureId (en-US)~@~1414~@~114~@~Culture~@~Telle est la culture de ce message.~@~Veuillez sélectionner la culture de ce message.~@~
 16730~@~AdmMsgCenter [   70] Main Info: Msg (en-US)~@~1415~@~114~@~Message~@~C'est le message approprié pour cette culture.~@~Veuillez saisir le message approprié pour cette culture.~@~
 16731~@~AdmAppInfo [   80] Main Info: AppZipId (en-US)~@~1416~@~114~@~Déploiement~@~Cliquez sur l'icône à droite pour télécharger le document ou cliquez sur l'icône de la corbeille pour supprimer le document indésirable, en temps réel sans cliquer sur le bouton Enregistrer. Seul le propriétaire peut supprimer ou remplacer les documents lui appartenant.~@~~@~
-16732~@~AdmServerRule [  190] Content: SyncToDb (en-US)~@~1418~@~114~@~~@~Cliquez ici pour synchroniser immédiatement cette procédure stockée avec la base de données physique.~@~~@~
-16733~@~AdmServerRule [  220] Content: LastGenDt (en-US)~@~1419~@~114~@~Dernière application~@~Cette procédure stockée a été appliquée pour la dernière fois à cette date.~@~~@~
-16734~@~AdmServerRule [  180] Content: SyncByDb (en-US)~@~1420~@~114~@~~@~Cliquez ici pour obtenir la procédure stockée à partir de la base de données physique.~@~~@~
+16732~@~AdmServerRule [  220] Content: SyncToDb (fr-CA)~@~1418~@~114~@~~@~Cliquez ici pour synchroniser immédiatement cette procédure stockée avec la base de données physique.~@~~@~
+16733~@~AdmServerRule [  250] Content: LastGenDt (fr-CA)~@~1419~@~114~@~Dernière application~@~Cette procédure stockée a été appliquée pour la dernière fois à cette date.~@~~@~
+16734~@~AdmServerRule [  210] Content: SyncByDb (fr-CA)~@~1420~@~114~@~~@~Cliquez ici pour obtenir la procédure stockée à partir de la base de données physique.~@~~@~
 16735~@~AdmScreenObj [  110] Main Info: ColumnJustify (en-US)~@~1422~@~114~@~Justifier~@~Il s'agit de l'alignement horizontal de l'affichage des colonnes (gauche, droite ou centre).~@~Veuillez sélectionner l'alignement horizontal de l'affichage des colonnes (gauche, droite ou centre).~@~
 16736~@~AdmScreenCri [  100] Main Info: ColumnJustify (en-US)~@~1425~@~114~@~Justifier~@~Il s'agit de la justification de l'affichage des colonnes (gauche, droite ou centre).~@~Veuillez sélectionner la justification de l'affichage des colonnes (gauche, droite ou centre).~@~
 16737~@~AdmCtCulture [   70] Main Info: EnNumberRule (en-US)~@~1427~@~114~@~11/12 Règle~@~Ceci est vérifié si cette culture utilise onze et douze mots.~@~~@~
@@ -9122,3 +9122,19 @@
 17121~@~AdmCronJob [  100] Main Info: Hour (en-US)~@~2024~@~114~@~Heure~@~Il s'agit de l'heure UTC spécifique de la journée pour exécuter ce travail; la plage est comprise entre 0 et 24; il est vide s'il doit être exécuté toutes les heures;~@~Veuillez entrer l'heure précise de la journée pour exécuter ce travail; la plage est comprise entre 0 et 24; il est vide s'il doit être exécuté toutes les heures;~@~
 17122~@~AdmLicense [   60] Main: AppNameSpace (en-US)~@~4305~@~1~@~App Namespace~@~~@~~@~
 17170~@~AdmMenu [  110] Main Info: ReactQuickMenu (en-US)~@~4353~@~1~@~React Quick Menu~@~~@~~@~
+17171~@~AdmServerRule [  180] Main Info: RunMode (en-US)~@~4354~@~1~@~Run Mode~@~For local server rule(that is not in upstream) or control upstream server rule. Leave blank unless you are defining local or suppressing upstream~@~~@~
+17172~@~AdmServerRule [  170] Main Info: SrcNS (en-US)~@~4355~@~1~@~Source NS~@~Original Namespace this Server Rule comes from~@~~@~
+17173~@~AdmServerRuleOvrd [   10] Main: AtServerRuleOvrdId (en-US)~@~4356~@~1~@~AtServerRuleOvrdId~@~~@~~@~
+17174~@~AdmServerRuleOvrd [   20] Main: ServerRuleOvrdDesc (en-US)~@~4357~@~1~@~ServerRuleOvrdDesc~@~~@~~@~
+17175~@~AdmServerRuleOvrd [   30] Main: ServerRuleOvrdName (en-US)~@~4358~@~1~@~ServerRuleOvrdName~@~~@~~@~
+17176~@~AdmServerRuleOvrd [   40] Main: ServerRuleId (en-US)~@~4359~@~1~@~ServerRuleId~@~~@~~@~
+17177~@~AdmServerRuleOvrd [   70] Main: Disable (en-US)~@~4360~@~1~@~Disable~@~~@~~@~
+17178~@~AdmServerRuleOvrd [   90] Main: ServerRuledOvrdPrmId (en-US)~@~4361~@~1~@~ServerRuledOvrdPrmId~@~~@~~@~
+17180~@~AdmServerRuleOvrd [  100] Main: PermKeyId (en-US)~@~4363~@~1~@~Entity Type~@~~@~Entity Type cannot be empty~@~
+17181~@~AdmServerRuleOvrd [  120] Main: AndCondition (en-US)~@~4364~@~1~@~AndCondition~@~~@~~@~
+17183~@~AdmServerRuleOvrd [   60] Main: Priority (en-US)~@~4366~@~1~@~Priority~@~Priority of this rule, first match trump subsequent~@~~@~
+17184~@~AdmServerRuleOvrd [   50] Main: ScreenId (en-US)~@~4367~@~1~@~Screen~@~~@~~@~
+17186~@~AdmServerRuleOvrd [  110] Main: PermKeyRowId (en-US)~@~4369~@~1~@~Entity~@~~@~~@~
+17188~@~AdmServerRuleOvrd [  130] Main: Match (en-US)~@~4371~@~1~@~Match~@~~@~~@~
+17189~@~AdmServerRule [  110] Main Info: RemoveSP (en-US)~@~4372~@~1~@~Remove SP when delete this rule~@~check if you want to remove underlying SP when you delete this record~@~~@~
+17190~@~AdmServerRuleOvrd [   80] Main: RunMode (en-US)~@~4373~@~1~@~Run Mode~@~Leave blank for development time configuration or select the priority over upstream~@~~@~

@@ -193,7 +193,7 @@ namespace RO.Rule3
                 DataView dvSRule = null;
 				using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
 				{
-					dvSRule = new DataView(dac.GetServerRule(screenId, CPrj, CSrc));
+					dvSRule = new DataView(dac.GetServerRule(screenId, CPrj, CSrc, null, null));
 				}
                 try
 				{
@@ -1810,6 +1810,7 @@ namespace RO.Rule3
 			sb.Append("using System.Web.UI.HtmlControls;" + Environment.NewLine);
 			sb.Append("using System.Globalization;" + Environment.NewLine);
 			sb.Append("using System.Threading;" + Environment.NewLine);
+            sb.Append("using System.Threading.Tasks;" + Environment.NewLine);
             sb.Append("using System.Linq;" + Environment.NewLine);
             sb.Append("using System.Diagnostics;" + Environment.NewLine);
             sb.Append("using System.Collections.Generic;" + Environment.NewLine);

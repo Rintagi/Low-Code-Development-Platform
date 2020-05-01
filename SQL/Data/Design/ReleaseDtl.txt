@@ -14,8 +14,8 @@
 403~@~86~@~40~@~ROCmonD~@~~@~Deleted |Usage |ScrAudit |ScrAuditDtl~@~D~@~~@~2~@~2~@~2~@~P~@~N
 405~@~87~@~10~@~Web.config |rintagi.js |License3.*~@~~@~.git |Thumbs.* |.vs |*.pdb~@~C~@~2~@~~@~~@~~@~A~@~N
 406~@~87~@~20~@~RODesign~@~~@~Deleted |Printer |Printer_MemberId |Printer_UsrGroupId |ReportLstCri |ScreenLstInf |ScreenLstCri |Usage |Usr |UsrAudit |UsrImpr |UsrLink |UsrProvider |UsrPwd |UsrSafeIP |ScrAudit |ScrAuditDtl~@~D~@~~@~2~@~2~@~2~@~X~@~N
-408~@~87~@~50~@~ROCmon~@~~@~Agent |Broker |Customer |Investor |Member |Project |Vendor~@~D~@~~@~2~@~2~@~2~@~X~@~N
-410~@~87~@~40~@~ROCmonD~@~~@~Deleted |Usage |ScrAudit |ScrAuditDtl~@~D~@~~@~2~@~2~@~2~@~X~@~N
+408~@~87~@~50~@~ROCmon~@~~@~Agent |Borrower |Broker |Company |Customer |Firm |FxRate |Guarantor |Investor |Lender |Member |Project |Vendor~@~D~@~~@~2~@~2~@~2~@~X~@~N
+410~@~87~@~40~@~ROCmonD~@~~@~Deleted |Usage |ScrAudit |ScrAuditDtl~@~D~@~~@~2~@~2~@~2~@~P~@~N
 412~@~86~@~30~@~Access3\*.* |Common3\*.* |Facade3\*.* |License3\*.* |Rule3\*.* |Service3\*.* |Systemframewk\*.* |WebControls\*.* |WebRules\*.* |Lib\*.* |UsrAccess\*.* |UsrRules\*.* |React\*.* |*.sln |.gitignore~@~~@~.git |Key.cs |*\public\runtime\rintagi.js |*.user~@~R~@~~@~2~@~~@~~@~A~@~N
 413~@~87~@~30~@~n/a~@~~@~.git |Key.cs |UsrRule.cs |UsrAccess.cs |.vs |*.pdb |*.user~@~R~@~~@~2~@~~@~~@~A~@~N
 414~@~88~@~20~@~Web.config |data |home |Anonymous.* |index.* |UserRule.js |dashboards |rintagi.js |License3.*~@~~@~data |home |.git |Anonymous.* |index.* |Thumbs.* |.vs  |*.pdb~@~C~@~7~@~~@~~@~~@~A~@~N
@@ -28,20 +28,14 @@
 426~@~85~@~30~@~*\Adm\public\runtime\*.* |React\Adm\src\scripts\*.*~@~~@~.git |.vs |*.user~@~R~@~~@~7~@~~@~~@~A~@~N
 427~@~89~@~10~@~Web.Config |rintagi.js~@~~@~.git |Thumbs.* |.vs |*.pdb | Common3.dll |License3.dll~@~C~@~2~@~~@~~@~~@~A~@~N
 428~@~89~@~20~@~RODesign~@~~@~Deleted |Printer |Printer_MemberId |Printer_UsrGroupId |ReportLstCri |ScreenLstInf |ScreenLstCri |Usage |Usr |UsrAudit |UsrImpr |UsrLink |UsrProvider |UsrPwd |UsrSafeIP |ScrAudit |ScrAuditDtl~@~D~@~~@~2~@~2~@~2~@~X~@~N
-429~@~89~@~30~@~RODesign~@~~@~~@~D~@~~@~~@~2~@~22~@~A~@~N
 430~@~89~@~40~@~n/a~@~~@~.git |Key.cs |UsrRule.cs |UsrAccess.cs |Common3\Encryption.cs |Rule3\Deploy.cs |.vs |*.pdb |*.user~@~R~@~~@~2~@~~@~~@~A~@~N
-431~@~89~@~50~@~ROCmon~@~~@~Agent |Broker |Customer |Investor |Member |Project |Vendor~@~D~@~~@~2~@~2~@~2~@~X~@~N
-432~@~89~@~60~@~ROCmon~@~~@~~@~D~@~~@~~@~2~@~22~@~A~@~N
-433~@~89~@~70~@~ROCmonD~@~~@~Deleted |Usage |ScrAudit |ScrAuditDtl~@~D~@~~@~2~@~2~@~2~@~X~@~N
-434~@~89~@~80~@~ROCmonD~@~~@~~@~D~@~~@~~@~2~@~22~@~A~@~N
-435~@~90~@~10~@~*.*~@~~@~Web.config |.git |Thumbs.* |dashboards |.vs |.Vscode |*.pdb |Common3.dll |License3.dll |rintagi.js |*.user~@~C~@~2~@~~@~~@~~@~A~@~N
+431~@~89~@~50~@~ROCmon~@~~@~Agent |Borrower |Broker |Company |Customer |Firm |FxRate |Guarantor |Investor |Lender |Member |Project |Vendor~@~D~@~~@~2~@~2~@~2~@~P~@~N
+433~@~89~@~70~@~ROCmonD~@~~@~Deleted |Usage |ScrAudit |ScrAuditDtl |Template~@~D~@~~@~2~@~2~@~2~@~X~@~N
+435~@~90~@~10~@~*.*~@~~@~Web.config |.git |Thumbs.* |dashboards |.vs |.Vscode |*.pdb |Common3.dll |License3.dll |Rule3.dll |rintagi.js |*.user |License.txt~@~C~@~2~@~~@~~@~~@~A~@~N
 436~@~90~@~20~@~RODesign~@~~@~ClientTier |DataTier |Deleted |Entity |LastEmail |Printer |Printer_MemberId |Printer_UsrGroupId |ReportLstCri |RuleTier |ScrAudit |ScrAuditDtl |ScreenLstInf |ScreenLstCri |Systems |Usage |Usr |UsrAudit |UsrImpr |UsrLink |UsrProvider |UsrPwd |UsrSafeIP |UtReport |UtReportCri |UtReportCriHlp |UtReportDel |UtReportHlp |UtReportLstCri |UtReportObj |UtReportObjHlp |UtRptCel |UtRptCha |UtRptCtr |UtRptElm |UtRptMemCri |UtRptMemCriDtl |UtRptMemFld |UtRptTbl~@~D~@~~@~2~@~2~@~2~@~P~@~N
-437~@~90~@~30~@~RODesign~@~~@~~@~D~@~~@~~@~2~@~22~@~A~@~N
-438~@~90~@~40~@~Access3\*.* |Common3\*.* |Facade3\*.* |License3\*.* |Rule3\*.* |Service3\*.* |Systemframewk\*.* |WebControls\*.* |WebRules\*.* |Lib\*.* |UsrAccess\*.* |UsrRules\*.* |Shadow\ComPty\*.*  |React\*.* |*.sln |.gitignore~@~~@~.git |Key.cs |Common3\Encryption.cs |Rule3\Deploy.cs |*.pdb  |rintagi.js |*.user~@~R~@~~@~2~@~~@~~@~A~@~N
-439~@~90~@~50~@~ROCmon~@~~@~~@~D~@~~@~2~@~2~@~2~@~Y~@~N
-440~@~90~@~60~@~ROCmon~@~~@~~@~D~@~~@~~@~2~@~22~@~A~@~N
-441~@~90~@~70~@~ROCmonD~@~~@~Deleted |Usage |ScrAudit |ScrAuditDtl~@~D~@~~@~2~@~2~@~2~@~P~@~N
-442~@~90~@~80~@~ROCmonD~@~~@~~@~D~@~~@~~@~2~@~22~@~A~@~N
+438~@~90~@~40~@~Access3\*.* |Common3\*.* |Facade3\*.* |License3\*.* |Rule3\*.* |Service3\*.* |Systemframewk\*.* |WebControls\*.* |WebRules\*.* |Lib\*.* |UsrAccess\*.* |UsrRules\*.* |Shadow\ComPty\*.*  |React\*.* |.gitignore~@~~@~.git |Key.cs |Common3\Encryption.cs |Rule3\Deploy.cs |*.pdb  |rintagi.js |*.user~@~R~@~~@~2~@~~@~~@~A~@~N
+439~@~90~@~50~@~ROCmon~@~~@~~@~D~@~~@~2~@~2~@~2~@~A~@~N
+441~@~90~@~70~@~ROCmonD~@~~@~~@~D~@~~@~2~@~2~@~2~@~Y~@~N
 443~@~91~@~10~@~Web.config |home |application.* |Default*.* |Footer*.* |Header*.* |index.* |section*.css |Sidebar*.* |UserRule.js |CmnSignup*.* |dashboards |rintagi.js |License3.dll~@~~@~home |.git |Anonymous.* |index.* |Thumbs.* |.vs~@~C~@~4~@~~@~~@~~@~A~@~N
 444~@~91~@~20~@~RODesign~@~~@~AtRowAuth |AtRowAuthPrm |Deleted |DshAvail |DshFld |DshFldDtl |LastEmail |MaintMsg |Printer |Printer_MemberId |Printer_UsrGroupId |ReportLstCri |RptTemplate |Rptwiz |RptwizDtl |ScrAudit |ScrAuditDtl |ScreenLstInf |ScreenLstCri |SredMebr |SredTime |Template |Usage |Usr |UsrAudit |UsrImpr |UsrLink |UsrProvider |UsrPwd |UsrSafeIP |UtRptMemCri |UtRptMemCriDtl |UtRptMemFld |UtReport |UtReportDel |UtReportHlp |UtReportCri |UtReportCriHlp |UtReportObj |UtReportObjHlp |UtRptElm |UtRptCel |UtRptTbl |UtRptCha |UtRptCtr |UtReportLstCri |UtRptMemCri |UtRptMemCriDtl~@~D~@~~@~~@~4~@~4~@~P~@~N
 445~@~91~@~30~@~*\Adm\public\runtime\*.*~@~~@~.git |.vs |*.user~@~R~@~~@~7~@~~@~~@~A~@~N

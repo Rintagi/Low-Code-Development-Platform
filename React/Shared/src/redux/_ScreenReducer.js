@@ -1114,11 +1114,11 @@ export class RintagiScreenRedux {
           });
           this.BackFillDtlAsyncColumns(mst, dtl, dispatch, getState, { webApi });
           dispatch({ type: EDIT_DTL.SUCCEEDED, payload: { dtl: dtl || (dtlId === '_' && (rememberedMstId === mst[mstKeyColumeName]) ? rememberedDtl : {}) } });
-          return Promise.resolve(dtl);
+          return dtl;
         }
         else {
           dispatch({ type: EDIT_DTL.SUCCEEDED, payload: { dtl: {} } });
-          return (Promise.reslove({}));
+          return {};
         }
       }
       else {
@@ -1192,8 +1192,11 @@ export class RintagiScreenRedux {
       const _options = {
         ...rest
       }
-
-      return apiService.SaveData(_mst, _dtl, { ...rest })
+      
+      return apiService.SaveData(
+          Object.keys(_mst || {}).reduce((a, k, i) => { a[k] = Array.isArray(_mst[k]) ? null : _mst[k]; return a;}, {})
+          , _dtl.map(o => Object.keys(o || {}).reduce((a, k, i) => { a[k] = Array.isArray(o[k]) ? null : o[k]; return a;}, {}))
+          , { ...rest })
         .then(
           (ret => {
             dispatchWithNotification(dispatch, { type: SAVE_MST.SUCCEEDED, payload: { Mst: ret.data.mst, keepDtl: keepDtl, message: ret.data.message, deferredRelease: true, } });

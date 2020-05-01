@@ -1,6 +1,8 @@
 using System;
 using System.Data;
 using System.Data.OleDb;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -154,7 +156,7 @@ namespace RO.Web
 		private const String KEY_CacheCTar = "Cache:CTar";
 		private const String KEY_CacheVMenu = "Cache:VMenu";
         private static string _ROVersion = null;
-        private static object o_lock = new object();
+        protected static object o_lock = new object();
         protected static string ROVersion { 
             get {
                 if (_ROVersion == null)
@@ -1584,6 +1586,76 @@ namespace RO.Web
 
         }
 
+        protected string CloneMyQueryString(List<string> ignore = null)
+        {
+            string[] qs = Request.QueryString.AllKeys.Where(key => ignore == null || !ignore.Contains(key, StringComparer.InvariantCultureIgnoreCase))
+                                       .Select(key => key + "=" + HttpUtility.UrlEncode(Request.QueryString[key])).ToArray();
+            return string.Join("&", qs.ToArray());
+        }
+
+        protected void VisitUrl(string url)
+        {
+            HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
+            wr.CookieContainer = new CookieContainer();
+            wr.BeginGetResponse(x =>
+            {
+                try
+                {
+                    using (WebResponse resp = (x.AsyncState as WebRequest).EndGetResponse(x))
+                    {
+                        using (Stream stream = resp.GetResponseStream())
+                        {
+                            using (StreamReader sr = new StreamReader(stream))
+                            {
+                                sr.ReadToEnd();
+                                sr.Close();
+                            }
+                            stream.Close();
+                        }
+                        resp.Close();
+                    }
+                }
+                catch (WebException we)
+                {
+                    if (we.Status == WebExceptionStatus.ProtocolError)
+                    {
+                        var response = we.Response as HttpWebResponse;
+
+                        if (response != null)
+                        {
+                            try
+                            {
+                                int status = (int)response.StatusCode;
+                                if (status >= 400)
+                                {
+                                }
+                                else if (status >= 300)
+                                {
+                                    throw new Exception("redirect " + url);
+                                }
+                            }
+                            catch {
+                                throw;
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("no response code from web request " + url, we);
+                            // no http status code available
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("other error web request " + url, we);
+                        // no http status code available
+                    }
+                }
+                catch (Exception e) {
+                    if (e == null) throw;
+                }
+            }, wr);
+        }
+
         protected InvokeResult SelfInvoke(string url, string expectedContentType)
         {
             Uri myUri = Request.Url; 
@@ -1751,7 +1823,7 @@ namespace RO.Web
                         )
                     {
                         ErrorTrace(new Exception(string.Format("Proxy configuration issue for IIS UrlRewrite(https:{0}) vs {1}, must enforce https:// before proxying", Request.Headers["X-Forwarded-Https"] ?? "null", Config.ExtBaseUrl))
-                        , "warning");
+                        , "warning", null, Request);
 
                         throw new Exception(string.Format("Please use <a href='{0}'> {0} </a>", ResolveUrlCustom(Request.Url.AbsoluteUri, false, true)));
                     }
@@ -2304,7 +2376,7 @@ namespace RO.Web
                                 }
                                 catch (Exception ex)
                                 {
-                                    ErrorTrace(new Exception(string.Format("systemId {0}", string.Join(",", r.scr.ToArray())), ex), "error");
+                                    ErrorTrace(new Exception(string.Format("systemId {0}", string.Join(",", r.scr.ToArray())), ex), "error", null, Request);
                                     throw;
                                 }
                             }
@@ -2320,7 +2392,7 @@ namespace RO.Web
             catch (Exception ex)
             {
                 Exception e = new Exception("problem zipping documents", ex);
-                ErrorTrace(e, "error");
+                ErrorTrace(e, "error", null, Request);
                 throw;
             }
             finally
@@ -2331,7 +2403,7 @@ namespace RO.Web
                 }
                 catch (Exception ex)
                 {
-                    ErrorTrace(new Exception("problem removing temp directory for zip usage", ex), "warning");
+                    ErrorTrace(new Exception("problem removing temp directory for zip usage", ex), "warning", null, Request);
                 }
             }
 
@@ -2718,7 +2790,7 @@ namespace RO.Web
             }
             catch (Exception ex)
             {
-                ErrorTrace(ex, "error");
+                ErrorTrace(ex, "error", null, Request);
                 throw;
             }
         }
@@ -2871,6 +2943,22 @@ namespace RO.Web
                 return jss.Deserialize<Dictionary<string, string>>(content);
             }
             catch { return null; }
+        }
+
+        protected Dictionary<string, string> GetRequestInfo()
+        {
+            Dictionary<string, string> requestInfo = new Dictionary<string, string>();
+            string applicationPath = Request.ApplicationPath;
+
+            foreach (string x in Request.Headers.Keys)
+            {
+                requestInfo[x] = Request.Headers[x];
+            }
+            requestInfo["Host"] = Request.Url.Host;
+            requestInfo["ApplicationPath"] = applicationPath;
+            requestInfo["Url"] = Request.Url.ToString();
+            requestInfo["UserHostAddress"] = Request.UserHostAddress;
+            return requestInfo;
         }
 
         protected string GetSiteUrl(bool bIncludeTitle = false)
@@ -3156,9 +3244,10 @@ namespace RO.Web
             return msg;
         }
 
-        protected void ErrorTrace(Exception e, string severity) 
+        protected void ErrorTrace(Exception e, string severity, Dictionary<string,string> requestInfo, HttpRequest request = null) 
         {
             string supportEmail = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"];
+            string subjectServerity = string.IsNullOrEmpty(severity) ? "Error" : severity.Substring(0, 1).ToUpper() + (severity.Length > 1 ? severity.Substring(1) : "");
             if (supportEmail != "none" && supportEmail != string.Empty)
             {
                 try
@@ -3178,12 +3267,19 @@ namespace RO.Web
                     string domain = smtpConfig.Length > 5 ? smtpConfig[5].Trim() : null;
                     System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
                     string[] receipients = to.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    var request = Request;
-                    string xForwardedFor = request != null ? request.Headers["X-Forwarded-For"] : null;
-                    string xForwardedHost = request != null ? request.Headers["X-Forwarded-Host"] : null;
-                    string xForwardedProto = request != null ? request.Headers["X-Forwarded-Proto"] : null;
-                    string xOriginalURL = request != null ? request.Headers["X-Original-URL"] : null;
-                    string sourceIP = string.Format("From: {0}, Forwarded for: {1}\r\n\r\n", Request != null ? Request.UserHostAddress : "unknown request url", xForwardedFor);
+                    string xForwardedFor = request != null ? request.Headers["X-Forwarded-For"] 
+                                            : requestInfo != null && requestInfo.ContainsKey("X-Forwarded-For") ? requestInfo["X-Forwarded-For"] : null;
+                    string xForwardedHost = request != null ? request.Headers["X-Forwarded-Host"]
+                                            : requestInfo != null && requestInfo.ContainsKey("X-Forwarded-Host") ? requestInfo["X-Forwarded-Host"] : null;
+                    string xForwardedProto = request != null ? request.Headers["X-Forwarded-Proto"]
+                                            : requestInfo != null && requestInfo.ContainsKey("X-Forwarded-Proto") ? requestInfo["X-Forwarded-Proto"] : null;
+                    string xOriginalURL = request != null ? request.Headers["X-Original-URL"]
+                                            : requestInfo != null && requestInfo.ContainsKey("X-Original-URL") ? requestInfo["X-Original-URL"] : null;
+
+                    string sourceIP = string.Format("From: {0}, Forwarded for: {1}\r\n\r\n", 
+                                request != null ? request.UserHostAddress 
+                                : requestInfo != null && requestInfo.ContainsKey("UserHostAddress") ? requestInfo["UserHostAddress"] : null
+                                , xForwardedFor);
                     string machine = string.Format("Machine: {0}\r\n\r\n", Environment.MachineName);
                     string usrId = string.Format("User: {0}\r\n\r\n", LUser != null ? LUser.UsrId.ToString() : "");
                     string currentTime = string.Format("Server Time: {0} \r\n\r\n UTC: {1} \r\n\r\n", DateTime.Now.ToString("O"), DateTime.UtcNow.ToString("O"));
@@ -3195,8 +3291,13 @@ namespace RO.Web
                     {
                         mm.To.Add(new System.Net.Mail.MailAddress(t.Trim()));
                     }
-                    mm.Subject = webtitle + " Application Error " + (Request != null ? Request.Url.GetLeftPart(UriPartial.Path) : "unknown request url");
-                    mm.Body = (Request != null ? Request.Url.ToString() : "unknown request url")
+                    mm.Subject = webtitle + string.Format(" Application {0} ", subjectServerity) 
+                            + (request != null ? request.Url.GetLeftPart(UriPartial.Path) 
+                            : requestInfo != null && requestInfo.ContainsKey("Url") ? requestInfo["Url"] : "unknown request url"
+                            );
+                    mm.Body = (request != null ? request.Url.ToString() 
+                                            : requestInfo != null && requestInfo.ContainsKey("Url") ? requestInfo["Url"] : "unknown request url"
+                            )
                             + "\r\n\r\n"
                             + sourceIP
                             + usrId
@@ -3204,7 +3305,7 @@ namespace RO.Web
                             + currentTime
                             + roVersion
                             + exMessages[exMessages.Count - 1] + "\r\n\r\n" + e.StackTrace + (innerException != null ? "\r\n InnerException: \r\n\r\n" + string.Join("\r\n", exMessages.ToArray()) + "\r\n\r\n" + innerException.StackTrace : "") + "\r\n";
-                    mm.IsBodyHtml = false;
+                    mm.IsBodyHtml = false; // must be false or it needs to be properly format for \r\n to <br/>
                     mm.From = new System.Net.Mail.MailAddress(string.IsNullOrEmpty(username) || !(username ?? "").Contains("@") ? from : username, string.IsNullOrEmpty(fromTitle) ? from : fromTitle);    // Address must be the same as the smtp login user.
                     mm.ReplyToList.Add(new System.Net.Mail.MailAddress(string.IsNullOrEmpty(replyTo) ? from : replyTo)); // supplied from would become reply too for the 'sending on behalf of'
                     (new RO.WebRules.WebRule()).SendEmail(bSsl, port, server, username, password, domain, mm);
@@ -3218,7 +3319,16 @@ namespace RO.Web
                 }
             }
         }
-
+        protected void ErrorTrace(Exception e, string severity)
+        {
+            try
+            {
+                ErrorTrace(e, severity, GetRequestInfo());
+            }
+            catch {
+                ErrorTrace(e, severity, null);
+            }
+        }
         public static byte[] base64UrlDecode(string s)
         {
             return Convert.FromBase64String(s.Replace('-', '+').Replace('_', '/') + (s.Length % 4 > 1 ? new string('=', 4 - s.Length % 4) : ""));
@@ -3294,5 +3404,813 @@ namespace RO.Web
         }
         #endregion
 
+        #region CI_CD deployment/integration helpers
+        protected void EndWebHookRequest(string mimeType, byte[] content, Dictionary<string,string> responseHeader = null)
+        {
+            try
+            {
+                Response.Buffer = true;
+                Response.ClearHeaders();
+                Response.ClearContent();
+                Response.ContentType = mimeType;
+                if (responseHeader != null)
+                {
+                    foreach (var h in responseHeader)
+                    {
+                        Response.AppendHeader(h.Key, h.Value);
+                    }
+                }
+                Response.BinaryWrite(content);
+                Response.Flush(); // Sends all currently buffered output to the client.
+                Response.End();
+            }
+            catch (ThreadAbortException ex)
+            {
+                RO.Common3.Utils.NeverThrow(ex);
+            }
+            catch (Exception ex)
+            {
+                RO.Common3.Utils.NeverThrow(ex);
+            }
+        }
+        protected string GitCheckout(string branchOrRef)
+        {
+            try
+            {
+                string webRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+                string appRoot = webRoot.Replace("/Web/", "");
+
+                string branch = System.Configuration.ConfigurationManager.AppSettings["GitCheckoutBranch"];
+
+                if ((branch ?? "").Contains("/"))
+                {
+                    // fetch latest
+                    try
+                    {
+                        // .git/config must properly configured(credential in url or else would stall)
+                        var fetchResult = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "fetch -v ", true, appRoot);
+                        if (fetchResult.Item1 != 0)
+                        {
+                            throw new Exception(fetchResult.Item3);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+
+                // get change set
+                var changedFilesRet =
+                        (branch ?? "").Contains("/")
+                        ? Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "diff --name-status master " + branch + " --", true, appRoot)
+                        : Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "status -s -uno", true, appRoot);
+
+                // checkout, overwrite all local changes
+                var revertChangesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
+                                                    , "checkout"
+                                                        + (
+                                                        string.IsNullOrEmpty(branch)
+                                                        ? " HEAD "
+                                                        : (branch.Contains("/") ? " " + branch + " -B master "
+                                                        : " " + branch + " "
+                                                        ))
+                                                        + "-f -- "
+                                                        , true, appRoot);
+                if (revertChangesRet.Item1 != 0)
+                {
+                    throw new Exception(revertChangesRet.Item3);
+                }
+
+                // change summary
+                int lastX = 20;
+                var lastXcommitLog = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
+                    , string.Format("--no-pager log -n {0} --pretty=\"%an %ci %H %s\" -n{0}", lastX)
+                    , true, appRoot);
+                System.Collections.Generic.List<string> ruleTierProjects = new System.Collections.Generic.List<string>() { 
+                    "Access3" 
+                    ,"Common3" 
+                    ,"Facade3" 
+                    ,"License3" 
+                    ,"Rule3" 
+                    ,"Service3" 
+                    ,"SystemFrameWk" 
+                    ,"WebControls" 
+                    ,"WebRules" 
+                    ,"UsrAccess" 
+                    ,"UsrRules"
+                };
+                bool needMSBuild = true || ruleTierProjects
+                                        .Where(m => new Regex(string.Format("/{0}/", m), RegexOptions.IgnoreCase).IsMatch(changedFilesRet.Item2))
+                                        .Any();
+                bool noWebSiteBuild = true;
+
+                System.Collections.Generic.List<string> stdOut = new System.Collections.Generic.List<string>();
+                System.Collections.Generic.List<string> stdErr = new System.Collections.Generic.List<string>();
+                //bool webSiteBuildSkipped = false;
+                if (needMSBuild)
+                {
+                    int? _runningPid = null;
+                    Func<int, string, bool> stdOutHandler = (pid, data) =>
+                    {
+                        _runningPid = pid;
+                        stdOut.Add(data);
+                        if (data.Contains("aspnet_compiler.exe") && noWebSiteBuild)
+                        {
+                            stdOut.Add("Skip website rebuild\r\n");
+                            //webSiteBuildSkipped = true;
+                            return true;
+                        }
+                        return false;
+                    };
+                    Func<int, string, bool> stdErrHandler = (pid, data) =>
+                    {
+                        _runningPid = pid;
+                        stdErr.Add(data);
+                        return false;
+                    };
+                    var publishRet =
+                        Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format("/v:n {0}/{1}.sln", appRoot, Config.AppNameSpace), true, stdOutHandler, stdErrHandler, appRoot);
+
+                }
+                else
+                {
+                    stdOut.Add("No rebuild needed\r\n");
+                }
+
+                return ("Changed Files\r\n"
+                        + changedFilesRet.Item2
+                        + "Last " + lastX.ToString() + " commits\r\n"
+                        + lastXcommitLog.Item2.Replace("\n\r","\r").Replace("\r\n","\r").Replace("\n","\r").Replace("\r","\r\n\r\n") 
+                        + "\r\n\r\n Build Result\r\n" + string.Join("", stdOut.ToArray()));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+        protected bool HasGitRepo()
+        {
+            string webRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+            string appRoot = webRoot.Replace("/Web/", "");
+            return (Directory.Exists(appRoot + "/.git"));
+        }
+        protected Tuple<bool, List<string>, List<string>, List<string>, string> PublishReactModule(string systemAbbr, string systemId, bool gitCommit = true)
+        {
+            bool published = false;
+            List<string> msg = new List<string>();
+            List<string> errMsg = new List<string>();
+            List<string> gitActions = new List<string>();// git command line arguments, one for each command
+            string gitActionWorkingDir = "";
+
+            try
+            {
+                string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+                string appRoot = webAppRoot.Replace("/Web/", "");
+                string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
+                string reactTemplateDir = reactRootDir + "/Template";
+                string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
+                string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
+                string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string siteApplicationPath = Context.Request.ApplicationPath;
+                string machineName = Environment.MachineName;
+                string rintagiJSContent =
+string.Format(@"
+/* this is runtime loading script for actual installation(production) configuration override say putting app to deep directory structure or
+ * web service end point not the same as the app loading source
+ * typically for situation where the apps are hosted in CDN and/or not at root level of the domain
+ * for reactjs configuration, make sure homepage is set to './' so everything generated is relative 
+ */
+document.Rintagi = {{
+  appRelBase:['React','ReactProxy','ReactPort'],  // path this app is serving UNDER(can be multiple), implicitly assume they are actually /Name/, do not put begin/end slash 
+  appNS:'', // used for login token sync(shared login when served under the same domain) between apps and asp.net site
+  appDomainUrl:'', // master domain this app is targetting, empty/null means the same as apiBasename, no ending slash, design for multiple api endpoint usage(js hosting not the same as webservice hosting)
+  apiBasename: '', // webservice url, can be relative or full http:// etc., no ending slash
+  useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
+  appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
+  appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
+  systemId: {3}                
+}}
+", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName, systemId, siteApplicationPath);
+                if (!Directory.Exists(reactModuleDir))
+                {
+                    errMsg.Add(string.Format("React app for {0} not found at {1}", systemAbbr, reactModuleDir));
+                    return new Tuple<bool, List<string>, List<string>, List<string>, string>(false, msg, errMsg, gitActions, reactModuleDir);
+                }
+                if (System.Configuration.ConfigurationManager.AppSettings["AdvanceReactBuildVersion"] != "N")
+                {
+                    using (var sr = new System.IO.StreamReader(reactModuleDir + "/package.json", System.Text.UTF8Encoding.UTF8))
+                    {
+                        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                        dynamic packageJson = jss.DeserializeObject(sr.ReadToEnd());
+                        var ver = ((string)((IDictionary<string, object>)packageJson)["version"]).Split(new char[] { '.' });
+                        var _x = ver.Select((v, i) => int.Parse(v) + (i == ver.Length - 1 ? 1 : 0)).Select(v => v.ToString()).ToArray();
+                        var newVer = string.Join(".", _x);
+                        ((IDictionary<string, object>)packageJson)["version"] = newVer;
+
+                        sr.Close();
+
+                        using (var sw = new System.IO.StreamWriter(reactModuleDir + "/src/app/Version.js", false, System.Text.UTF8Encoding.UTF8))
+                        {
+                            sw.WriteLine(string.Format("export const Version = '{0}';", newVer));
+                            sw.Close();
+                        }
+                        using (var sw = new System.IO.StreamWriter(reactModuleDir + "/package.json", false, new System.Text.UTF8Encoding(false)))
+                        {
+                            sw.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(packageJson, Newtonsoft.Json.Formatting.Indented).Replace(@"\u003c", "<").Replace(@"\u003e", ">"));
+                            //sw.Write(jss.Serialize(packageJson).Replace(@"\u003c", "<").Replace(@"\u003e", ">"));
+                            sw.Close();
+                        }
+                        try
+                        {
+                            string gitAddAction = string.Format("add {0} {1}", string.Format("package.json"), string.Format("src/app/Version.js"));
+                            string gitCommitAction = string.Format("commit -m \"{0}\"", string.Format("advance {1} UI to version {0}", newVer, systemAbbr));
+                            if (HasGitRepo())
+                            {
+                                if (gitCommit)
+                                {
+                                    var aa = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", gitAddAction, true, reactModuleDir);
+                                    var bb = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", gitCommitAction, true, reactModuleDir);
+                                    var cc = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("push"), true, reactModuleDir);
+                                }
+                                else
+                                {
+                                    gitActions.Add(gitAddAction);
+                                    gitActions.Add(gitCommitAction);
+                                    gitActionWorkingDir = reactModuleDir;
+                                    // we don't specify push, that should be done at higher level
+                                    // gitActions.Add("push");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // no git is fine
+                            msg.Add(ex.Message);
+                        }
+
+                    };
+                }
+
+                System.Collections.Generic.List<string> stdIn = new System.Collections.Generic.List<string>();
+                System.Collections.Generic.List<string> stdOut = new System.Collections.Generic.List<string>();
+                int? _runningPid = null;
+                Func<int, string, bool> stdInHandler = (pid, output) =>
+                {
+                    _runningPid = pid;
+                    return false;
+                };
+                Func<int, string, bool> stdErrHandler = (pid, output) =>
+                {
+                    _runningPid = pid;
+                    return false;
+                };
+
+                string npmPath = @"C:\Program Files\nodejs\npm.cmd";
+                if (!System.IO.File.Exists(reactModuleDir + "/.npmrc"))
+                {
+                    using (var sr = new System.IO.StreamWriter(reactModuleDir + "/.npmrc", false, System.Text.UTF8Encoding.UTF8))
+                    {
+                        sr.WriteLine(string.Format("prefix={0}npm", reactRootDir.Replace("/", @"\")));
+                        sr.WriteLine(string.Format("cache={0}npm-cache", reactRootDir.Replace("/", @"\")));
+                        sr.WriteLine(string.Format("update-notifier=false", reactRootDir.Replace("/", @"\")));
+                        sr.Flush();
+                        sr.Close();
+                    }
+                }
+                //var ret1 = WinProc(npmPath, "cache clean --force", true, reactModuleDir);
+                var npmInstallRet = Utils.WinProc(npmPath, @"install  --no-optional --no-update-notifier", true, stdInHandler, stdErrHandler, reactModuleDir);
+                var npmRunBuildRet = Utils.WinProc(npmPath, "run build", true, stdInHandler, stdErrHandler, reactModuleDir);
+                var buildDir = reactModuleDir + "/build";
+                var webSiteTargetDir = webAppRoot + "/React/" + systemAbbr;
+                bool isReady = npmRunBuildRet.Item2.Contains("The build folder is ready to be deployed");
+
+                if ((npmRunBuildRet.Item1 != 0 || npmRunBuildRet.Item3.Contains("ERR")))
+                {
+                    errMsg.Add(npmRunBuildRet.Item3);
+                }
+                else
+                {
+
+                    var webSiteRuntimeDir = string.Format("{0}/runtime", webSiteTargetDir);
+                    var webSiteRuntimeJS = string.Format("{0}/rintagi.js", webSiteRuntimeDir);
+                    var publishRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /MIR /XF rintagi.js", buildDir, webSiteTargetDir), true, appRoot);
+                    if (publishRet.Item1 >= 8)
+                    {
+                        // weird robocopy return code for error
+                        errMsg.Add(publishRet.Item3 + "\r\n" + publishRet.Item2);
+                    }
+                    else
+                    {
+                        if (File.Exists(webSiteRuntimeJS))
+                        {
+                            if (!Directory.Exists(webSiteRuntimeDir)) Directory.CreateDirectory(webSiteRuntimeDir);
+                            using (var sr = new StreamWriter(webSiteRuntimeJS, false, System.Text.UTF8Encoding.UTF8))
+                            {
+                                sr.WriteLine(rintagiJSContent);
+                                sr.Close();
+                            }
+                        }
+                        published = true;
+                        msg.Add(string.Format("React app for {0} deployed to {1}", systemAbbr, webSiteTargetDir));
+
+                        string gitAddAction = string.Format("add .");
+                        string gitCommitAction = string.Format("commit -m \"{0}\"", string.Format("revised React {0} module after npm build", systemAbbr));
+                        if (HasGitRepo())
+                        {
+                            if (gitCommit)
+                            {
+                                var aa = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", gitAddAction, true, reactModuleDir);
+                                var bb = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", gitCommitAction, true, reactModuleDir);
+                                var cc = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("push"), true, reactModuleDir);
+                            }
+                            else
+                            {
+                                gitActions.Add(gitAddAction);
+                                gitActions.Add(gitCommitAction);
+                                gitActionWorkingDir = reactModuleDir;
+                                // we don't specify push, that should be done at higher level
+                                // gitActions.Add("push");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                errMsg.Add(systemAbbr + "\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+            }
+            return new Tuple<bool, List<string>, List<string>, List<string>, string>(published, msg, errMsg, gitActions, gitActionWorkingDir);
+        }
+
+
+        protected Task<Tuple<bool, List<string>, List<string>, List<string>, string>[]> PublishReactAsync(string modules, Dictionary<string, string> requestInfo, bool gitCommit = true)
+        {
+            string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+            string appRoot = webAppRoot.Replace("/Web/", "");
+
+            string somethingRunning = Application["BuildRunning"] as string;
+            Func<string, string, Task<Tuple<bool, List<string>, List<string>, List<string>, string>>> publishReactModule = (systemAbbr, systemId) =>
+            {
+                return Task.Run<Tuple<bool, List<string>, List<string>, List<string>, string>>(() =>
+                {
+                    try
+                    {
+                        var result = PublishReactModule(systemAbbr, systemId, false);
+                        if (result.Item1)
+                        {
+                            ErrorTrace(new Exception(string.Format("React Module {0} published\r\n\r\n{1}"
+                                                        , systemAbbr, string.Join("\r\n", result.Item2.ToArray())))
+                                                     , "info", requestInfo);
+                        }
+                        else
+                        {
+                            ErrorTrace(new Exception(
+                                        string.Format("React Module {0} publish failed\r\n\r\n{1}"
+                                                , systemAbbr
+                                                , string.Join("\r\n", result.Item3.ToArray()))
+                                                ), "error", requestInfo);
+                        }
+                        return result;
+                    }
+                    catch (Exception ex)
+                    {
+                        //RO.Common3.Utils.NeverThrow(ex);
+                        //return null;
+                        throw ex;
+                    }
+                });
+            };
+            Func<Task<Tuple<bool, List<string>, List<string>, List<string>, string>[]>> publishAll = async () =>
+            {
+                Task<Tuple<bool, List<string>, List<string>, List<string>, string>[]> aggregationTask = null;
+                try
+                {
+                    lock (o_lock)
+                    {
+                        Application["BuildRunning"] = "publishing react";
+                    }
+                    List<Task<Tuple<bool, List<string>, List<string>, List<string>, string>>> publishTasks = new List<Task<Tuple<bool, List<string>, List<string>, List<string>, string>>>()
+                    {
+                    };
+                    string[] ReactModules = (System.Configuration.ConfigurationManager.AppSettings["PublishReactModules"] ?? "").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] RequestedModules = string.IsNullOrEmpty(modules) ? null : modules.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    DataTable dtSystems = SystemsList ?? (new LoginSystem()).GetSystemsList(string.Empty, string.Empty);
+                    List<string> publishedModules = new List<string>();
+                    foreach (DataRow dr in dtSystems.Rows)
+                    {
+                        string systemAbbr = dr["SystemAbbr"].ToString();
+                        if (ReactModules.Contains(systemAbbr, StringComparer.InvariantCultureIgnoreCase) 
+                            && 
+                            (RequestedModules == null 
+                            || RequestedModules.Contains("all", StringComparer.InvariantCultureIgnoreCase)
+                            || RequestedModules.Contains(systemAbbr , StringComparer.InvariantCultureIgnoreCase)) 
+                           )
+                        {
+                            publishTasks.Add(publishReactModule(systemAbbr, dr["SystemId"].ToString()));
+                            publishedModules.Add(systemAbbr);
+                        }
+                    }
+                    ErrorTrace(new Exception(string.Format("Publishing React module(s) {0}"
+                                                , string.Join(",", publishedModules.ToArray())))
+                              , "info", requestInfo);
+                    aggregationTask = Task.WhenAll(publishTasks.ToArray());
+                    Tuple<bool, List<string>, List<string>, List<string>, string>[] x = await aggregationTask;
+                    List<string> publishResult = new List<string>();
+                    bool hasError = false;
+                    bool hasGitAction = false;
+                    foreach (var y in x)
+                    {
+                        hasError = hasError || !y.Item1;
+                        publishResult.Add(y.Item1 ? string.Join("", y.Item2.ToArray()) : string.Join("", y.Item3.ToArray()));
+                        try
+                        {
+                            foreach (var z in y.Item4)
+                            {
+                                try
+                                {
+                                    Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", z, true, y.Item5);
+                                    hasGitAction = true;
+                                }
+                                catch { }
+                            }
+                        }
+                        catch { }
+                    }
+                    try
+                    {
+                        if (hasGitAction)
+                        {
+                            var cc = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("push"), true, appRoot);
+                        }
+                    }
+                    catch { }
+                    if (publishResult.Count > 0)
+                    {
+                        ErrorTrace(new Exception(string.Format("React Publish result \r\n{0}"
+                                                    , string.Join("\r\n\r\n", publishResult.ToArray())))
+                                  , hasError ? "warning" : "info", requestInfo);
+                    }
+                    else
+                    {
+                        ErrorTrace(new Exception(string.Format("React Publish result \r\n{0}"
+                                                    , "nothing to publish"))
+                                  , hasError ? "warning" : "info", requestInfo);
+                    }
+                    return x;
+                }
+                catch (Exception ex)
+                {
+                    if (aggregationTask != null
+                        && aggregationTask.Exception != null
+                        && aggregationTask.Exception.InnerException != null
+                        && aggregationTask.Exception.InnerExceptions.Any()
+                        )
+                    {
+                        List<string> errors = GetExceptionMessage(aggregationTask.Exception);
+                        foreach (var innerEx in aggregationTask.Exception.InnerExceptions)
+                        {
+                            string error = innerEx.Message;
+                        }
+                        ErrorTrace(new Exception(string.Format("Publish React Module(s) error \r\n{0}"
+                            , string.Join("\r\n\r\n", errors.ToArray())))
+                            , "error", requestInfo);
+                    }
+                    else
+                    {
+                        List<string> errors = GetExceptionMessage(ex);
+                        ErrorTrace(new Exception(string.Format("Publish React Module(s) error \r\n{0}"
+                            , string.Join("\r\n\r\n", errors.ToArray())))
+                            , "error", requestInfo);
+                    }
+
+                    throw ex;
+                }
+                finally
+                {
+                    lock (o_lock)
+                    {
+                        Application["BuildRunning"] = null;
+                    }
+                }
+            };
+            if (string.IsNullOrEmpty(somethingRunning))
+            {
+                return Task.Run(publishAll);
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        protected void UpdateInstallerSln(string DeployPath)
+        {
+            System.Collections.ArrayList ToDelete;
+            System.Xml.XmlNode xn;
+            System.Xml.XmlNodeList xl;
+            string InstallProj = "Install.csproj";
+            System.Xml.XmlDocument xd = new System.Xml.XmlDocument();
+            xd.Load(DeployPath + InstallProj);
+
+            // Step 1: Remove all existing EmbeddedResource and None:
+            ToDelete = new System.Collections.ArrayList();
+            xl = xd.GetElementsByTagName("EmbeddedResource");
+            foreach (System.Xml.XmlNode node in xl)
+            {
+                if (node.Attributes != null)
+                {
+                    string attr = node.Attributes[0].Value;
+                    if (attr.Contains(".zip") || attr.Contains(".bat") || attr.Contains(".sql")) { ToDelete.Add(node); }
+                }
+            }
+            xl = xd.GetElementsByTagName("None");
+            foreach (System.Xml.XmlNode node in xl)
+            {
+                if (node.Attributes != null)
+                {
+                    string attr = node.Attributes[0].Value;
+                    if (attr.Contains(".zip") || attr.Contains(".bat") || attr.Contains(".sql")) { ToDelete.Add(node); }
+                }
+            }
+            for (int ii = 0; ii < ToDelete.Count; ii++)
+            {
+                xn = (System.Xml.XmlNode)ToDelete[ii];
+                xn.ParentNode.RemoveChild(xn);
+            }
+
+            // Step 2: Remove all empty ItemGroup:
+            ToDelete = new System.Collections.ArrayList();
+            xl = xd.GetElementsByTagName("ItemGroup");
+            foreach (System.Xml.XmlNode node in xl)
+            {
+                if (!node.HasChildNodes) { ToDelete.Add(node); }
+            }
+            for (int ii = 0; ii < ToDelete.Count; ii++)
+            {
+                xn = (System.Xml.XmlNode)ToDelete[ii];
+                xn.ParentNode.RemoveChild(xn);
+            }
+
+            //Step 3: Embedded ncessary resources:
+            xn = xd.DocumentElement;
+            System.Xml.XmlNode NewItemNode = xd.CreateNode(System.Xml.XmlNodeType.Element, "ItemGroup", string.Empty);
+            DirectoryInfo di = new DirectoryInfo(DeployPath);
+            foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+                if (dir.Name != "bin" && dir.Name != "obj")
+                {
+                    RO.Common3.Utils.SearchDirX("*.bat", dir, NewItemNode, xd, DeployPath);
+                    RO.Common3.Utils.SearchDirX("*.sql", dir, NewItemNode, xd, DeployPath);
+                    RO.Common3.Utils.SearchDirX("*.zip", dir, NewItemNode, xd, DeployPath);
+                    // Two directories deep for now:
+                    foreach (DirectoryInfo dir1 in dir.GetDirectories())
+                    {
+                        RO.Common3.Utils.SearchDirX("*.bat", dir1, NewItemNode, xd, DeployPath);
+                        RO.Common3.Utils.SearchDirX("*.sql", dir1, NewItemNode, xd, DeployPath);
+                        RO.Common3.Utils.SearchDirX("*.zip", dir1, NewItemNode, xd, DeployPath);
+                        foreach (DirectoryInfo dir2 in dir1.GetDirectories())
+                        {
+                            RO.Common3.Utils.SearchDirX("*.bat", dir2, NewItemNode, xd, DeployPath);
+                            RO.Common3.Utils.SearchDirX("*.sql", dir2, NewItemNode, xd, DeployPath);
+                            RO.Common3.Utils.SearchDirX("*.zip", dir2, NewItemNode, xd, DeployPath);
+                        }
+                    }
+                }
+            }
+            xn.AppendChild(NewItemNode);
+            xd.Save(DeployPath + InstallProj);
+
+            //for some reason .net leaves  xmlns="" which VS.NET doesnt like so we need to remove it
+            StreamReader sr = new StreamReader(DeployPath + InstallProj);
+            StringBuilder csproj = new StringBuilder();
+            string line;
+            while ((line = sr.ReadLine()) != null) { csproj.AppendLine(line); }
+            sr.Close();
+            StreamWriter sw = new StreamWriter(DeployPath + InstallProj, false);
+            sw.Write(csproj.ToString().Replace(" xmlns=\"\"", ""));
+            sw.Close();
+
+        }
+
+        protected Task<Tuple<bool, string, string, string, string>> CreateInstallerAsync(short upgradeReleaseId, short newReleaseId, string DeployPath, string releaseTypeAbbr, string package, string SysConnString, string SysAppPw, Dictionary<string, string> requestInfo)
+        {
+            string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
+            string appRoot = webAppRoot.Replace("/Web/", "");
+            string somethingRunning = Application["BuildRunning"] as string;
+            string deployPath = DeployPath;
+            string deployName = deployPath;
+            string lockFilePath = DeployPath + "/build.lock";
+            Func<short, Task<Tuple<bool, string>>> createPackage = (releaseId) =>
+            {
+                return Task.Run<Tuple<bool, string>>(() =>
+                {
+                    try
+                    {
+                        if (releaseId > 0 &&
+                            (new AdmPuMkDeploySystem()).UpdReleaseBuild(releaseId, (new LoginSystem()).GetRbtVersion()))
+                        {
+                            RO.Rule3.Deploy dp = new RO.Rule3.Deploy();
+                            CurrSrc src = new CurrSrc(true, null);
+                            CurrTar tar = new CurrTar(true, null);
+                            string sbWarnMsg = dp.PrepInstall(releaseId, src, tar, SysConnString, SysAppPw);
+                            return new Tuple<bool, string>(true, sbWarnMsg);
+                        }
+                        return new Tuple<bool, string>(true, "");
+                    }
+                    catch (Exception ex)
+                    {
+                        //RO.Common3.Utils.NeverThrow(ex);
+                        //return null;
+                        throw ex;
+                    }
+                });
+            };
+            Func<Task<Tuple<bool, string, string, string, string>>> createInstaller = async () =>
+            {
+                Task<Tuple<bool, string>[]> aggregationTask = null;
+                try
+                {
+                    lock (o_lock)
+                    {
+                        Application["BuildRunning"] = "creating installer";
+                    }
+                    List<Task<Tuple<bool, string>>> createPackageTasks = new List<Task<Tuple<bool, string>>>()
+                    {
+                    };
+                    try
+                    {
+                        File.Create(lockFilePath);
+                    }
+                    catch { }
+
+                    if (newReleaseId > 0)
+                    {
+                        var newPackage = createPackage(newReleaseId);
+                        createPackageTasks.Add(newPackage);
+                        if (upgradeReleaseId > 0)
+                        {
+                            // must be sync as they write to same files !
+                            await newPackage;
+                            createPackageTasks.Add(createPackage(upgradeReleaseId));
+                        }
+                    }
+                    else if (upgradeReleaseId > 0)
+                        createPackageTasks.Add(createPackage(upgradeReleaseId));
+                    ErrorTrace(new Exception(string.Format("Creating Installer {0}"
+                                                , deployName))
+                              , "info", requestInfo);
+                    aggregationTask = Task.WhenAll(createPackageTasks.ToArray());
+                    Tuple<bool, string>[] x = await aggregationTask;
+                    bool hasError = false;
+                    UpdateInstallerSln(deployPath);
+                    string cmd_path = "\"" + Config.BuildExe + "\"";
+                    string cmd_arg = "\"" + deployPath + "Install.sln\" /p:Configuration=Release /t:Rebuild /v:minimal /nologo";
+                    string compileResult = Utils.WinProc(cmd_path, cmd_arg, true);
+                    string dropInstallerLocation = System.Configuration.ConfigurationManager.AppSettings["DeployDropLocation"];
+                    string installerPath = "";
+                    string dropError = "";
+                    string dropToPathName = "";
+                    string installerFileName = "";
+                    if (compileResult.IndexOf("failed") >= 0
+                        || compileResult.Replace("errorreport", string.Empty).Replace("warnaserror", string.Empty).IndexOf("error") >= 0)
+                    {
+                        hasError = true;
+                    }
+                    else
+                    {
+                        installerPath = new Regex(@"Install\s*->\s*(.*)\r\n$").Match(compileResult).Groups[1].Value;
+                        installerFileName = DateTime.Now.ToString("yyyyMMdd") + "_" 
+                                                    + new Regex("^Deploy",RegexOptions.IgnoreCase).Replace(package,"").ToUpper() 
+                                                    + "_Install.exe";
+                        hasError = false;
+                        try
+                        {
+                            if (!string.IsNullOrWhiteSpace(dropInstallerLocation)) {
+                                dropToPathName = dropInstallerLocation + "/" + installerFileName;
+                                System.IO.File.Copy(installerPath, dropToPathName, true);
+                            }
+                        }
+                        catch (Exception ex) {
+                            dropError = string.Join("\n", GetExceptionMessage(ex).ToArray());
+
+                        }
+                    }
+
+                    ErrorTrace(new Exception(string.Format("Create {2} Installer result \r\n{0}\r\n{1}"
+                                                , string.Join("\r\n\r\n", compileResult), dropError, package))
+                              , hasError ? "warning" : "info", requestInfo);
+                    if (!hasError)
+                    {
+                        //System.IO.File.Copy(compileResult, @"\\RCGIT\Deploy\Canary\" + installerFileName);
+                    }
+                    return new Tuple<bool, string, string, string, string>(!hasError, package, installerPath, installerFileName, dropToPathName);
+                }
+                catch (Exception ex)
+                {
+                    if (aggregationTask != null
+                        && aggregationTask.Exception != null
+                        && aggregationTask.Exception.InnerException != null
+                        && aggregationTask.Exception.InnerExceptions.Any()
+                        )
+                    {
+                        List<string> errors = GetExceptionMessage(aggregationTask.Exception);
+                        ErrorTrace(new Exception(string.Format("Create {1} Installer error \r\n{0}"
+                            , string.Join("\r\n\r\n", errors.ToArray()), package))
+                            , "error", requestInfo);
+                        return new Tuple<bool, string, string, string, string>(false, package, string.Join("\r\n\r\n", errors), "", "");
+                    }
+                    else
+                    {
+                        List<string> errors = GetExceptionMessage(ex);
+                        ErrorTrace(new Exception(string.Format("Create {1} Installer error \r\n{0}"
+                            , string.Join("\r\n\r\n", errors.ToArray(), package)))
+                            , "error", requestInfo);
+                        return new Tuple<bool, string, string, string, string>(false, package, string.Join("\r\n\r\n", GetExceptionMessage(ex).ToArray()), "", "");
+                    }
+                }
+                finally
+                {
+                    lock (o_lock)
+                    {
+                        Application["BuildRunning"] = null;
+                    }
+                    try
+                    {
+                        File.Delete(lockFilePath);
+                    }
+                    catch
+                    {
+                    }
+                }
+            };
+
+            bool createInProgress = File.Exists(lockFilePath) && new FileInfo(lockFilePath).LastWriteTimeUtc.AddMinutes(30) > DateTime.UtcNow;
+
+            if (
+                string.IsNullOrEmpty(somethingRunning)
+                ||
+                (somethingRunning == "creating installer" || !createInProgress)
+                )
+            {
+                return Task.Run(createInstaller);
+            }
+            else
+            {
+                return Task.Run(() => { return new Tuple<bool, string, string, string, string>(false, package, "another building in progress", "", ""); });
+            }
+
+        }
+
+        protected Task<string> GitCheckOutAsync(string _branch, Dictionary<string,string> requestInfo)
+        {
+            string branch = System.Configuration.ConfigurationManager.AppSettings["GitCheckoutBranch"];
+            string somethingRunning = Application["BuildRunning"] as string;
+            Func<Task<string>> gitResetFromRepo = () =>
+            {
+                return Task.Run(() =>
+                {
+                    try
+                    {
+                        lock (o_lock)
+                        {
+                            Application["BuildRunning"] = "git reset";
+                        }
+                        string result = GitCheckout(branch);
+                        string checkoutMsg = result.Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", "\r\n");
+                        ErrorTrace(new Exception(string.Format("git checkout {0}\r\n{1}", branch, checkoutMsg)), "info", requestInfo);
+                    }
+                    catch (Exception ex)
+                    {
+                        List<string> errors = GetExceptionMessage(ex);
+                        ErrorTrace(new Exception(string.Format("GitCheckout error \r\n{0}"
+                            , string.Join("\r\n\r\n", errors.ToArray())))
+                            , "error", requestInfo);
+                    }
+                    finally
+                    {
+                        lock (o_lock)
+                        {
+                            Application["BuildRunning"] = null;
+                        }
+                    }
+                    return branch;
+
+                }
+                );
+            };
+            if (string.IsNullOrEmpty(somethingRunning))
+            {
+                return gitResetFromRepo();
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        #endregion
     }
 }

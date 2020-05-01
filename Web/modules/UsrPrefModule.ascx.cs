@@ -46,10 +46,17 @@ namespace RO.Web
                     Response.Cache.SetExpires(DateTime.Now.AddSeconds(-60));
                     Response.Cache.SetValidUntilExpires(true);
                 }
-                Response.ContentType = "text/css";
-                Response.Write(sb);  
-				Response.Flush();
-				Response.End();
+                try
+                {
+                    Response.ContentType = "text/css";
+                    Response.Write(sb);
+                    Response.Flush();
+                    Response.End();
+                }
+                catch (Exception ex)
+                {
+                    RO.Common3.Utils.NeverThrow(ex);
+                }
 			}
 		}
 

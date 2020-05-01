@@ -46,11 +46,14 @@ namespace RO.Web
             columns.Add("ParameterNames24", typeof(string));
             columns.Add("ParameterTypes24", typeof(string));
             columns.Add("CallingParams24", typeof(string));
+            columns.Add("RemoveSP", typeof(string));
             columns.Add("MasterTable24", typeof(string));
             columns.Add("OnAdd24", typeof(string));
             columns.Add("OnUpd24", typeof(string));
             columns.Add("OnDel24", typeof(string));
             columns.Add("BeforeCRUD24", typeof(string));
+            columns.Add("SrcNS24", typeof(string));
+            columns.Add("RunMode24", typeof(string));
             columns.Add("RuleCode24", typeof(string));
             columns.Add("ModifiedBy24", typeof(string));
             columns.Add("LastGenDt24", typeof(string));
@@ -89,6 +92,7 @@ namespace RO.Web
             {"ScreenId24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlScreenId3S139"},{"mKey","ScreenId24"},{"mVal","ScreenId24Text"}, }},
             {"BeforeCRUD24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlBeforeCRUD3S163"},{"mKey","BeforeCRUD24"},{"mVal","BeforeCRUD24Text"}, }},
             {"CrudTypeDesc1289", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlBeforeCRUD3S163"},{"mKey","BeforeCRUD24"},{"mVal","CrudTypeDesc1289"}, {"baseTbl", "CtCrudType"},{"baseKeyCol", "CrudTypeCd"},{"baseColName", "CrudTypeDesc"},}},
+            {"RunMode24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRunMode3S4354"},{"mKey","RunMode24"},{"mVal","RunMode24Text"}, }},
             {"ModifiedBy24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlModifiedBy3S1397"},{"mKey","ModifiedBy24"},{"mVal","ModifiedBy24Text"}, }},
         };
 
@@ -147,6 +151,8 @@ namespace RO.Web
             drType["ParameterTypes24"] = "VarChar"; drDisp["ParameterTypes24"] = "TextBox";
             try { dr["CallingParams24"] = (mst["CallingParams24"] ?? "").Trim().Left(0); } catch { }
             drType["CallingParams24"] = "VarChar"; drDisp["CallingParams24"] = "TextBox";
+            try { dr["RemoveSP"] = (mst["RemoveSP"] ?? "").Trim().Left(9999999); } catch { }
+            drType["RemoveSP"] = string.Empty; drDisp["RemoveSP"] = "CheckBox";
             try { dr["MasterTable24"] = (mst["MasterTable24"] ?? "").Trim().Left(1); } catch { }
             drType["MasterTable24"] = "Char"; drDisp["MasterTable24"] = "CheckBox";
             try { dr["OnAdd24"] = (mst["OnAdd24"] ?? "").Trim().Left(1); } catch { }
@@ -157,6 +163,10 @@ namespace RO.Web
             drType["OnDel24"] = "Char"; drDisp["OnDel24"] = "CheckBox";
             try { dr["BeforeCRUD24"] = mst["BeforeCRUD24"]; } catch { }
             drType["BeforeCRUD24"] = "Char"; drDisp["BeforeCRUD24"] = "DropDownList";
+            try { dr["SrcNS24"] = (mst["SrcNS24"] ?? "").Trim().Left(30); } catch { }
+            drType["SrcNS24"] = "VarChar"; drDisp["SrcNS24"] = "TextBox";
+            try { dr["RunMode24"] = mst["RunMode24"]; } catch { }
+            drType["RunMode24"] = "Char"; drDisp["RunMode24"] = "DropDownList";
             try { dr["RuleCode24"] = mst["RuleCode24"]; } catch { }
             drType["RuleCode24"] = "VarWChar"; drDisp["RuleCode24"] = "MultiLine";
             try { dr["ModifiedBy24"] = mst["ModifiedBy24"]; } catch { }
@@ -212,11 +222,14 @@ namespace RO.Web
                 {"ParameterNames24",""},
                 {"ParameterTypes24",""},
                 {"CallingParams24",""},
+                {"RemoveSP","N"},
                 {"MasterTable24",""},
                 {"OnAdd24",""},
                 {"OnUpd24",""},
                 {"OnDel24",""},
                 {"BeforeCRUD24",""},
+                {"SrcNS24",""},
+                {"RunMode24",""},
                 {"RuleCode24",""},
                 {"SyncByDb","~/images/custom/adm/SyncByDb.gif"},
                 {"SyncToDb","~/images/custom/adm/SyncToDb.gif"},
@@ -579,6 +592,22 @@ namespace RO.Web
         }
                         
         [WebMethod(EnableSession = false)]
+        public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetRunMode24List(string query, int topN, string filterBy)
+        {
+            Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+            {
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+                bool bAll = !query.StartsWith("**");
+                bool bAddNew = !query.StartsWith("**");
+                string keyId = query.Replace("**", "");
+                DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, "GetDdlRunMode3S4354", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
+                return DataTableToApiResponse(dt, "", 0);
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "RunMode24", emptyAutoCompleteResponse));
+            return ret;
+        }
+                        
+        [WebMethod(EnableSession = false)]
         public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetModifiedBy24List(string query, int topN, string filterBy)
         {
             Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
@@ -593,37 +622,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "ModifiedBy24", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmServerRule");
-                var SearchList = GetAdmServerRule14List("", 0, "");
-                var RuleTypeId24List = GetRuleTypeId24List("", 0, "");
-                var ScreenId24List = GetScreenId24List("", 0, "");
-                var BeforeCRUD24List = GetBeforeCRUD24List("", 0, "");
-                var ModifiedBy24List = GetModifiedBy24List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

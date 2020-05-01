@@ -401,11 +401,11 @@ namespace RO.Access3
 			cn.Open();
 			OleDbCommand cmd = new OleDbCommand("GetReleaseInf", cn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ReleaseId", OleDbType.Numeric).Value = releaseId;
+			cmd.Parameters.Add("@ReleaseId", OleDbType.Numeric).Value = releaseId == -1 ? (object) DBNull.Value : (object) releaseId;
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
-			ApplicationAssert.CheckCondition(dt.Rows.Count == 1, "GetReleaseInf", "", "Release information not avaliable for Id# " + releaseId.ToString() + "!");
+			ApplicationAssert.CheckCondition(dt.Rows.Count == 1 || releaseId == -1, "GetReleaseInf", "", "Release information not avaliable for Id# " + releaseId.ToString() + "!");
 			return dt;
 		}
 

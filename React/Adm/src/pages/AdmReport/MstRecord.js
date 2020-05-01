@@ -792,6 +792,7 @@ class MstRecord extends RintagiScreen {
                                             this.props.showNotification('E', { message: 'problem loading file ' + fileName })
                                           }}
                                           multiple
+                                          disabled={(authCol.RptTemplate22 || {}).readonly || !(authCol.RptTemplate22 || {}).visible || !ReportId22}
                                         />
                                       </div>
                                     }

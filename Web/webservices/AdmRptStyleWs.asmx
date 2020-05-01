@@ -826,47 +826,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "VerticalAlign167", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmRptStyle");
-                var SearchList = GetAdmRptStyle89List("", 0, "");
-                var DefaultCd167List = GetDefaultCd167List("", 0, "");
-                var BgGradType167List = GetBgGradType167List("", 0, "");
-                var Direction167List = GetDirection167List("", 0, "");
-                var WritingMode167List = GetWritingMode167List("", 0, "");
-                var BorderStyleD167List = GetBorderStyleD167List("", 0, "");
-                var BorderStyleL167List = GetBorderStyleL167List("", 0, "");
-                var BorderStyleR167List = GetBorderStyleR167List("", 0, "");
-                var BorderStyleT167List = GetBorderStyleT167List("", 0, "");
-                var BorderStyleB167List = GetBorderStyleB167List("", 0, "");
-                var FontStyle167List = GetFontStyle167List("", 0, "");
-                var FontWeight167List = GetFontWeight167List("", 0, "");
-                var TextDecor167List = GetTextDecor167List("", 0, "");
-                var TextAlign167List = GetTextAlign167List("", 0, "");
-                var VerticalAlign167List = GetVerticalAlign167List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

@@ -787,42 +787,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "CtrGrouping161", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmRptCtr");
-                var SearchList = GetAdmRptCtr90List("", 0, "");
-                var ReportId161List = GetReportId161List("", 0, "");
-                var PRptCtrId161List = GetPRptCtrId161List("", 0, "");
-                var RptElmId161List = GetRptElmId161List("", 0, "");
-                var RptCelId161List = GetRptCelId161List("", 0, "");
-                var RptStyleId161List = GetRptStyleId161List("", 0, "");
-                var RptCtrTypeCd161List = GetRptCtrTypeCd161List("", 0, "");
-                var CtrVisibility161List = GetCtrVisibility161List("", 0, "");
-                var CtrToggle161List = GetCtrToggle161List("", 0, "");
-                var CtrGrouping161List = GetCtrGrouping161List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

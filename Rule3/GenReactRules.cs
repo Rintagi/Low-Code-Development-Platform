@@ -253,7 +253,7 @@ SuppressGenRoute ? [] : [
 ),
 ...(
 SuppressGenRoute ? [] : [
-            ");
+");
             sb.Append(ExportDefaultCnt);
             sb.Append(@"
 ]),
@@ -1913,6 +1913,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                             this.props.showNotification('E', { message: 'problem loading file ' + fileName })
                                           }}
                                           multiple
+                                          disabled={(authCol." + columnId + @" || {}).readonly || !(authCol." + columnId + @" || {}).visible || !" + screenPrimaryKey + @"}
                                         />
                                       </div>
                                     }
@@ -4582,7 +4583,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
                 string DdlRefColumnName = drv["DdlRefColumnName"].ToString();
                 string DdlRefColumnId = drv["DdlRefColumnId"].ToString();
                 string DdlRefTableId = drv["DdlRefTableId"].ToString();
-                string DdlTableName = drv["DdlRefTableId"].ToString();
+                string DdlRefTableName = drv["DdlRefTableId"].ToString();
                 string DdlPrimaryKey = drv["PrimaryKey"].ToString();
                 string DdlBaseColumnName = drv["ColName"].ToString();
                 string DdlBaseTableId = drv["TableId"].ToString();
@@ -4757,8 +4758,8 @@ class [[---ScreenName---]]Redux extends RintagiScreenRedux {
           value: v.labelL || v.label || ' ',
           label: v.labelL || v.label || ' ',
           labelR: v.labelR || ' ',
-          detailR: v.detailR,
-          detail: v.detail || '',
+          detailR: v.detailR || ' ',
+          detail: v.detail || ' ',
           idx: i,
           isSelected: v.isSelected,
         }
@@ -5588,7 +5589,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 string DdlRefColumnName = drv["DdlRefColumnName"].ToString();
                 string DdlRefColumnId = drv["DdlRefColumnId"].ToString();
                 string DdlRefTableId = drv["DdlRefTableId"].ToString();
-                string DdlTableName = drv["DdlRefTableId"].ToString();
+                string DdlRefTableName = drv["DdlRefTableName"].ToString();
                 string DdlPrimaryKey = drv["PrimaryKey"].ToString();
                 string DdlBaseColumnName = drv["ColName"].ToString();
                 string DdlBaseTableId = drv["TableId"].ToString();
@@ -5624,12 +5625,12 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 {
                     if (drv["MasterTable"].ToString() == "Y")
                     {
-                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + "DocId" + "\"},{\"mVal\",\"" + "FileName" + "\"}, " + "{ \"tableName\", \"" + ColumnName + "\" }" + "}},";
+                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + "DocId" + "\"},{\"mVal\",\"" + "FileName" + "\"}, " + "{ \"tableName\", \"" + DdlRefTableName + "\" }" + "}},";
                         ScreenDdlDefResults.Add(ScreenDdlDefValue);
                     }
                     else
                     {
-                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + "DocId" + "\"},{\"mVal\",\"" + "FileName" + "\"}, " + "{ \"tableName\", \"" + ColumnName + "\" }" + "}},";
+                        string ScreenDdlDefValue = "{\"" + ColumnId + "\", new SerializableDictionary<string,string>() {{\"scr\",screenId.ToString()},{\"csy\",systemId.ToString()},{\"conn\",\"\"},{\"addnew\",\"N\"},{\"isSys\",\"" + Robot.GetIsSys(multiDesignDb, "N") + "\"}, {\"method\",\"" + SPName + "\"},{\"mKey\",\"" + "DocId" + "\"},{\"mVal\",\"" + "FileName" + "\"}, " + "{ \"tableName\", \"" + DdlRefTableName + "\" }" + "}},";
                         ScreenDdlDefResults.Add(ScreenDdlDefValue);
                     }
                 }
@@ -6561,6 +6562,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
                 string DdlAdnColumnName = drv["DdlAdnColumnName"].ToString();
                 string TableName = drv["TableName"].ToString();
+                string DdlRefTableName = drv["DdlRefTableName"].ToString();
                 bool isMaster = drv["MasterTable"].ToString() == "Y";
                 if (DisplayMode == "AutoComplete")
                 {
@@ -6643,13 +6645,13 @@ export function GetDocZipDownload(keyId, options, accessScope) {
         [WebMethod(EnableSession = false)]
         public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> Del" + columnId + @"(string mstId, string dtlId, bool isMaster, string[] docIdList, string screenColumnName)
         {
-            return DelMultiDoc(mstId, dtlId, " + (isMaster ? "true" : "false") + @", docIdList, """ + columnId + @""", """ + ColumnName + @""", """ + mstTableName + @""", """ + ColumnName + @""", """ + mstPKeyColumnName + @""");
+            return DelMultiDoc(mstId, dtlId, " + (isMaster ? "true" : "false") + @", docIdList, """ + columnId + @""", """ + ColumnName + @""", """ + mstTableName + @""", """ + DdlRefTableName + @""", """ + mstPKeyColumnName + @""");
         }
 
         [WebMethod(EnableSession = false)]
         public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> Save" + columnId + @"(string mstId, string dtlId, bool isMaster, string docId, bool overwrite, string screenColumnName, string docJson, SerializableDictionary<string, string> options)
         {
-            return SaveMultiDoc(mstId, dtlId, " + (isMaster ? "true" : "false") + @", docId, overwrite, """ + columnId + @""", """ + ColumnName + @""", docJson, options);
+            return SaveMultiDoc(mstId, dtlId, " + (isMaster ? "true" : "false") + @", docId, overwrite, """ + columnId + @""", """ + DdlRefTableName + @""", docJson, options);
         }
 
         [WebMethod(EnableSession = false)]
@@ -6672,6 +6674,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             StringBuilder sb = new StringBuilder();
 
             sb.Append(GetScreenDdlFunctionsCnt);
+#if FALSE
             sb.Append(@"
         public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
         {
@@ -6703,7 +6706,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             return ret;
         }           
             ");
-
+#endif
             return sb;
         }
         //End Asmx Generation

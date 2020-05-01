@@ -184,11 +184,11 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cSystemName1317P1" class="r-td r-labelR" runat="server"><asp:Label id="cSystemName1317Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cSystemName1317P2" class="r-td r-content" runat="server"><asp:TextBox id="cSystemName1317" CssClass="inp-txt" MaxLength="50" runat="server" /><asp:RequiredFieldValidator id="cRFVSystemName1317" ControlToValidate="cSystemName1317" display="none" runat="server" /></div>
+    		<div id="cSystemName1317P2" class="r-td r-content" runat="server"><asp:TextBox id="cSystemName1317" CssClass="inp-txt" MaxLength="50" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cSystemAbbr1317P1" class="r-td r-labelR" runat="server"><asp:Label id="cSystemAbbr1317Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cSystemAbbr1317P2" class="r-td r-content" runat="server"><asp:TextBox id="cSystemAbbr1317" CssClass="inp-txt" MaxLength="4" runat="server" /><asp:RequiredFieldValidator id="cRFVSystemAbbr1317" ControlToValidate="cSystemAbbr1317" display="none" runat="server" /></div>
+    		<div id="cSystemAbbr1317P2" class="r-td r-content" runat="server"><asp:TextBox id="cSystemAbbr1317" CssClass="inp-txt" MaxLength="4" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cInstallIDP1" class="r-td r-labelR" runat="server"><asp:Label id="cInstallIDLabel" CssClass="inp-lbl" runat="server" /></div>

@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -44,11 +45,14 @@ namespace RO.Common3.Data
 			columns.Add("ParameterNames24", typeof(string));
 			columns.Add("ParameterTypes24", typeof(string));
 			columns.Add("CallingParams24", typeof(string));
+			columns.Add("RemoveSP", typeof(string));
 			columns.Add("MasterTable24", typeof(string));
 			columns.Add("OnAdd24", typeof(string));
 			columns.Add("OnUpd24", typeof(string));
 			columns.Add("OnDel24", typeof(string));
 			columns.Add("BeforeCRUD24", typeof(string));
+			columns.Add("SrcNS24", typeof(string));
+			columns.Add("RunMode24", typeof(string));
 			columns.Add("RuleCode24", typeof(string));
 			columns.Add("SyncByDb", typeof(string));
 			columns.Add("SyncToDb", typeof(string));
@@ -75,6 +79,7 @@ namespace RO.Web
 		private const string KEY_dtRuleTypeId24 = "Cache:dtRuleTypeId24";
 		private const string KEY_dtScreenId24 = "Cache:dtScreenId24";
 		private const string KEY_dtBeforeCRUD24 = "Cache:dtBeforeCRUD24";
+		private const string KEY_dtRunMode24 = "Cache:dtRunMode24";
 		private const string KEY_dtModifiedBy24 = "Cache:dtModifiedBy24";
 
 		private const string KEY_dtSystems = "Cache:dtSystems3_14";
@@ -137,6 +142,7 @@ namespace RO.Web
 				Session.Remove(KEY_dtRuleTypeId24);
 				Session.Remove(KEY_dtScreenId24);
 				Session.Remove(KEY_dtBeforeCRUD24);
+				Session.Remove(KEY_dtRunMode24);
 				Session.Remove(KEY_dtModifiedBy24);
 				SetButtonHlp();
 				GetSystems();
@@ -572,16 +578,18 @@ if (Config.DeployType == "PRD" || LImpr.UsrGroups == "1") {cRuleCode24.Enabled =
 						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[8]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[9]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[11]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[12]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[13]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[14]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[14]["ColumnHeader"].ToString() + " Text" + (char)9);}
-						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[15]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[14]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[15]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[15]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[16]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[19]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[19]["ColumnHeader"].ToString() + " Text" + (char)9);}
-						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[20]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[21]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[17]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[18]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[18]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[19]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[22]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[22]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[23]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[24]["ColumnHeader"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -596,16 +604,18 @@ if (Config.DeployType == "PRD" || LImpr.UsrGroups == "1") {cRuleCode24.Enabled =
 						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ParameterNames24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ParameterTypes24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CallingParams24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MasterTable24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["OnAdd24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["OnUpd24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["OnDel24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["BeforeCRUD24"].ToString().Replace("\"","\"\"") + "\"" + (char)9 + "\"" + drv["BeforeCRUD24Text"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CrudTypeDesc1289"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["RuleCode24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["ModifiedBy24"].ToString() + (char)9 + drv["ModifiedBy24Text"].ToString() + (char)9);}
-						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn24"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
-						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt24"].ToString() + (char)9);}
+						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MasterTable24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["OnAdd24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["OnUpd24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["OnDel24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["BeforeCRUD24"].ToString().Replace("\"","\"\"") + "\"" + (char)9 + "\"" + drv["BeforeCRUD24Text"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CrudTypeDesc1289"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["SrcNS24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["RunMode24"].ToString().Replace("\"","\"\"") + "\"" + (char)9 + "\"" + drv["RunMode24Text"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["RuleCode24"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["ModifiedBy24"].ToString() + (char)9 + drv["ModifiedBy24Text"].ToString() + (char)9);}
+						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn24"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
+						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt24"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmServerRule.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
@@ -664,16 +674,18 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
-					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
-					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
-					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -693,16 +705,18 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[8]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[9]["ColumnHeader"].ToString() + @"\cell ");}
-					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[11]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[12]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[13]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[14]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[15]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[16]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[17]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[18]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[19]["ColumnHeader"].ToString() + @"\cell ");}
-					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[20]["ColumnHeader"].ToString() + @"\cell ");}
-					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[21]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[22]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[23]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[24]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -735,16 +749,18 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["ParameterNames24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(drv["ParameterTypes24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(drv["CallingParams24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterTable24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["OnAdd24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(drv["OnUpd24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["OnDel24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(drv["BeforeCRUD24Text"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(drv["CrudTypeDesc1289"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(drv["RuleCode24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["ModifiedBy24Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn24"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
-					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt24"].ToString() + @"\cell ");}
+					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["MasterTable24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(drv["OnAdd24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["OnUpd24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(drv["OnDel24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(drv["BeforeCRUD24Text"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(drv["CrudTypeDesc1289"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["SrcNS24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(drv["RunMode24Text"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["RuleCode24"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["ModifiedBy24Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn24"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
+					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt24"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1571,6 +1587,61 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 		}
 
+		private void SetRunMode24(DropDownList ddl, string keyId)
+		{
+			DataTable dt = (DataTable)Session[KEY_dtRunMode24];
+			DataView dv = dt != null ? dt.DefaultView : null;
+			if (ddl != null)
+			{
+				string ss = string.Empty;
+				ListItem li = null;
+				bool bFirst = false;
+				bool bAll = false; if (ddl.Enabled && ddl.Visible) {bAll = true;}
+				if (dv == null)
+				{
+					bFirst = true;
+					try
+					{
+						dv = new DataView((new AdminSystem()).GetDdl(14,"GetDdlRunMode3S4354",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
+					}
+					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				}
+				if (dv != null)
+				{
+					if (dv.Table.Columns.Contains("ServerRuleId"))
+					{
+						ss = "(ServerRuleId is null";
+						if (string.IsNullOrEmpty(cAdmServerRule14List.SelectedValue)) {ss = ss + ")";} else {ss = ss + " OR ServerRuleId = " + cAdmServerRule14List.SelectedValue + ")";}
+					}
+					if (!string.IsNullOrEmpty(keyId) && !ddl.Enabled) { ss = ss + (string.IsNullOrEmpty(ss) ? string.Empty : " AND ") + "RunMode24 is not NULL"; }
+					dv.RowFilter = ss;
+					ddl.DataSource = dv; ddl.DataBind();
+					li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					else if (!bFirst)
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(14,"GetDdlRunMode3S4354",true,bAll,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					if (dv.Count <= 1 && keyId != string.Empty)	// In case invalid value casued by copy action.
+					{
+						try
+						{
+							dv = new DataView((new AdminSystem()).GetDdl(14,"GetDdlRunMode3S4354",true,true,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
+						}
+						catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+						dv.RowFilter = ss; ddl.DataSource = dv; ddl.DataBind();
+						li = ddl.Items.FindByValue(keyId); if (li != null) {li.Selected = true;}
+					}
+					Session[KEY_dtRunMode24] = dv.Table;
+				}
+			}
+		}
+
 		private void SetModifiedBy24(DropDownList ddl, string keyId)
 		{
 			DataTable dt = (DataTable)Session[KEY_dtModifiedBy24];
@@ -1706,19 +1777,22 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cParameterNames24, dtAuth.Rows[7], cParameterNames24P1, cParameterNames24Label, cParameterNames24P2, null, dtLabel.Rows[7], null, null, null);
 				base.SetFoldBehavior(cParameterTypes24, dtAuth.Rows[8], cParameterTypes24P1, cParameterTypes24Label, cParameterTypes24P2, null, dtLabel.Rows[8], null, null, null);
 				base.SetFoldBehavior(cCallingParams24, dtAuth.Rows[9], cCallingParams24P1, cCallingParams24Label, cCallingParams24P2, null, dtLabel.Rows[9], null, null, null);
-				base.SetFoldBehavior(cMasterTable24, dtAuth.Rows[10], cMasterTable24P1, cMasterTable24Label, cMasterTable24P2, null, dtLabel.Rows[10], null, null, null);
-				base.SetFoldBehavior(cOnAdd24, dtAuth.Rows[11], cOnAdd24P1, cOnAdd24Label, cOnAdd24P2, null, dtLabel.Rows[11], null, null, null);
-				base.SetFoldBehavior(cOnUpd24, dtAuth.Rows[12], cOnUpd24P1, cOnUpd24Label, cOnUpd24P2, null, dtLabel.Rows[12], null, null, null);
-				base.SetFoldBehavior(cOnDel24, dtAuth.Rows[13], cOnDel24P1, cOnDel24Label, cOnDel24P2, null, dtLabel.Rows[13], null, null, null);
-				base.SetFoldBehavior(cBeforeCRUD24, dtAuth.Rows[14], cBeforeCRUD24P1, cBeforeCRUD24Label, cBeforeCRUD24P2, null, dtLabel.Rows[14], cRFVBeforeCRUD24, null, null);
-				base.SetFoldBehavior(cCrudTypeDesc1289, dtAuth.Rows[15], null, null, null, dtLabel.Rows[15], null, null, null);
-				base.SetFoldBehavior(cRuleCode24, dtAuth.Rows[16], cRuleCode24P1, cRuleCode24Label, cRuleCode24P2, cRuleCode24E, null, dtLabel.Rows[16], null, null, null);
+				base.SetFoldBehavior(cRemoveSP, dtAuth.Rows[10], cRemoveSPP1, cRemoveSPLabel, cRemoveSPP2, null, dtLabel.Rows[10], null, null, null);
+				base.SetFoldBehavior(cMasterTable24, dtAuth.Rows[11], cMasterTable24P1, cMasterTable24Label, cMasterTable24P2, null, dtLabel.Rows[11], null, null, null);
+				base.SetFoldBehavior(cOnAdd24, dtAuth.Rows[12], cOnAdd24P1, cOnAdd24Label, cOnAdd24P2, null, dtLabel.Rows[12], null, null, null);
+				base.SetFoldBehavior(cOnUpd24, dtAuth.Rows[13], cOnUpd24P1, cOnUpd24Label, cOnUpd24P2, null, dtLabel.Rows[13], null, null, null);
+				base.SetFoldBehavior(cOnDel24, dtAuth.Rows[14], cOnDel24P1, cOnDel24Label, cOnDel24P2, null, dtLabel.Rows[14], null, null, null);
+				base.SetFoldBehavior(cBeforeCRUD24, dtAuth.Rows[15], cBeforeCRUD24P1, cBeforeCRUD24Label, cBeforeCRUD24P2, null, dtLabel.Rows[15], cRFVBeforeCRUD24, null, null);
+				base.SetFoldBehavior(cCrudTypeDesc1289, dtAuth.Rows[16], null, null, null, dtLabel.Rows[16], null, null, null);
+				base.SetFoldBehavior(cSrcNS24, dtAuth.Rows[17], cSrcNS24P1, cSrcNS24Label, cSrcNS24P2, null, dtLabel.Rows[17], null, null, null);
+				base.SetFoldBehavior(cRunMode24, dtAuth.Rows[18], cRunMode24P1, cRunMode24Label, cRunMode24P2, null, dtLabel.Rows[18], null, null, null);
+				base.SetFoldBehavior(cRuleCode24, dtAuth.Rows[19], cRuleCode24P1, cRuleCode24Label, cRuleCode24P2, cRuleCode24E, null, dtLabel.Rows[19], null, null, null);
 				cRuleCode24E.Attributes["label_id"] = cRuleCode24Label.ClientID; cRuleCode24E.Attributes["target_id"] = cRuleCode24.ClientID;
-				base.SetFoldBehavior(cSyncByDb, dtAuth.Rows[17], cSyncByDbP1, cSyncByDbLabel, cSyncByDbP2, null, dtLabel.Rows[17], null, null, null);
-				base.SetFoldBehavior(cSyncToDb, dtAuth.Rows[18], cSyncToDbP1, cSyncToDbLabel, cSyncToDbP2, null, dtLabel.Rows[18], null, null, null);
-				base.SetFoldBehavior(cModifiedBy24, dtAuth.Rows[19], cModifiedBy24P1, cModifiedBy24Label, cModifiedBy24P2, null, dtLabel.Rows[19], null, null, null);
-				base.SetFoldBehavior(cModifiedOn24, dtAuth.Rows[20], cModifiedOn24P1, cModifiedOn24Label, cModifiedOn24P2, null, dtLabel.Rows[20], null, null, null);
-				base.SetFoldBehavior(cLastGenDt24, dtAuth.Rows[21], cLastGenDt24P1, cLastGenDt24Label, cLastGenDt24P2, null, dtLabel.Rows[21], null, null, null);
+				base.SetFoldBehavior(cSyncByDb, dtAuth.Rows[20], cSyncByDbP1, cSyncByDbLabel, cSyncByDbP2, null, dtLabel.Rows[20], null, null, null);
+				base.SetFoldBehavior(cSyncToDb, dtAuth.Rows[21], cSyncToDbP1, cSyncToDbLabel, cSyncToDbP2, null, dtLabel.Rows[21], null, null, null);
+				base.SetFoldBehavior(cModifiedBy24, dtAuth.Rows[22], cModifiedBy24P1, cModifiedBy24Label, cModifiedBy24P2, null, dtLabel.Rows[22], null, null, null);
+				base.SetFoldBehavior(cModifiedOn24, dtAuth.Rows[23], cModifiedOn24P1, cModifiedOn24Label, cModifiedOn24P2, null, dtLabel.Rows[23], null, null, null);
+				base.SetFoldBehavior(cLastGenDt24, dtAuth.Rows[24], cLastGenDt24P1, cLastGenDt24Label, cLastGenDt24P2, null, dtLabel.Rows[24], null, null, null);
 			}
 			if ((cRuleName24.Attributes["OnChange"] == null || cRuleName24.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cRuleName24.Visible && !cRuleName24.ReadOnly) {cRuleName24.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cRuleDescription24.Attributes["OnChange"] == null || cRuleDescription24.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cRuleDescription24.Visible && !cRuleDescription24.ReadOnly) {cRuleDescription24.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -1731,12 +1805,15 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if ((cParameterTypes24.Attributes["OnChange"] == null || cParameterTypes24.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cParameterTypes24.Visible && !cParameterTypes24.ReadOnly) {cParameterTypes24.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cCallingParams24.Attributes["OnChange"] == null || cCallingParams24.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCallingParams24.Visible && !cCallingParams24.ReadOnly) {cCallingParams24.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if (cCallingParams24Search.Attributes["OnClick"] == null || cCallingParams24Search.Attributes["OnClick"].IndexOf("_bConfirm") < 0) {cCallingParams24Search.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';";}
+			if ((cRemoveSP.Attributes["OnClick"] == null || cRemoveSP.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cRemoveSP.Visible && cRemoveSP.Enabled) {cRemoveSP.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cMasterTable24.Attributes["OnClick"] == null || cMasterTable24.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cMasterTable24.Visible && cMasterTable24.Enabled) {cMasterTable24.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cOnAdd24.Attributes["OnClick"] == null || cOnAdd24.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cOnAdd24.Visible && cOnAdd24.Enabled) {cOnAdd24.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cOnUpd24.Attributes["OnClick"] == null || cOnUpd24.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cOnUpd24.Visible && cOnUpd24.Enabled) {cOnUpd24.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cOnDel24.Attributes["OnClick"] == null || cOnDel24.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cOnDel24.Visible && cOnDel24.Enabled) {cOnDel24.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cBeforeCRUD24.Attributes["OnChange"] == null || cBeforeCRUD24.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cBeforeCRUD24.Visible && cBeforeCRUD24.Enabled) {cBeforeCRUD24.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();document.getElementById('" + bConfirm.ClientID + "').value='N';";}
 			if ((cCrudTypeDesc1289.Attributes["OnChange"] == null || cCrudTypeDesc1289.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCrudTypeDesc1289.Visible && cCrudTypeDesc1289.Enabled) {cCrudTypeDesc1289.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cSrcNS24.Attributes["OnChange"] == null || cSrcNS24.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSrcNS24.Visible && !cSrcNS24.ReadOnly) {cSrcNS24.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cRunMode24.Attributes["OnChange"] == null || cRunMode24.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cRunMode24.Visible && cRunMode24.Enabled) {cRunMode24.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cRuleCode24.Attributes["OnChange"] == null || cRuleCode24.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cRuleCode24.Visible && !cRuleCode24.ReadOnly) {cRuleCode24.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cSyncByDb.Attributes["OnChange"] == null || cSyncByDb.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSyncByDb.Visible && cSyncByDb.Enabled) {cSyncByDb.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();document.getElementById('" + bConfirm.ClientID + "').value='N';";}
 			if ((cSyncToDb.Attributes["OnChange"] == null || cSyncToDb.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSyncToDb.Visible && cSyncToDb.Enabled) {cSyncToDb.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();document.getElementById('" + bConfirm.ClientID + "').value='N';";}
@@ -1795,6 +1872,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				Session.Remove(KEY_dtRuleTypeId24);
 				Session.Remove(KEY_dtScreenId24);
 				Session.Remove(KEY_dtBeforeCRUD24);
+				Session.Remove(KEY_dtRunMode24);
 				Session.Remove(KEY_dtModifiedBy24);
 				GetCriteria(GetScrCriteria());
 				cFilterId_SelectedIndexChanged(sender, e);
@@ -1814,17 +1892,20 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[7]["ColVisible"].ToString() == "Y" && dt.Rows[7]["ColReadOnly"].ToString() != "Y") {cParameterNames24.Text = string.Empty;}
 			if (dt.Rows[8]["ColVisible"].ToString() == "Y" && dt.Rows[8]["ColReadOnly"].ToString() != "Y") {cParameterTypes24.Text = string.Empty;}
 			if (dt.Rows[9]["ColVisible"].ToString() == "Y" && dt.Rows[9]["ColReadOnly"].ToString() != "Y") {cCallingParams24.Text = string.Empty;}
-			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {cMasterTable24.Checked = base.GetBool("N");}
-			if (dt.Rows[11]["ColVisible"].ToString() == "Y" && dt.Rows[11]["ColReadOnly"].ToString() != "Y") {cOnAdd24.Checked = base.GetBool("N");}
-			if (dt.Rows[12]["ColVisible"].ToString() == "Y" && dt.Rows[12]["ColReadOnly"].ToString() != "Y") {cOnUpd24.Checked = base.GetBool("N");}
-			if (dt.Rows[13]["ColVisible"].ToString() == "Y" && dt.Rows[13]["ColReadOnly"].ToString() != "Y") {cOnDel24.Checked = base.GetBool("N");}
-			if (dt.Rows[14]["ColVisible"].ToString() == "Y" && dt.Rows[14]["ColReadOnly"].ToString() != "Y") {SetBeforeCRUD24(cBeforeCRUD24,string.Empty); cBeforeCRUD24_SelectedIndexChanged(cBeforeCRUD24, new EventArgs());}
-			if (dt.Rows[16]["ColVisible"].ToString() == "Y" && dt.Rows[16]["ColReadOnly"].ToString() != "Y") {cRuleCode24.Text = string.Empty;}
-			if (dt.Rows[17]["ColVisible"].ToString() == "Y" && dt.Rows[17]["ColReadOnly"].ToString() != "Y") {cSyncByDb.ImageUrl = "~/images/custom/adm/SyncByDb.gif"; }
-			if (dt.Rows[18]["ColVisible"].ToString() == "Y" && dt.Rows[18]["ColReadOnly"].ToString() != "Y") {cSyncToDb.ImageUrl = "~/images/custom/adm/SyncToDb.gif"; }
-			if (dt.Rows[19]["ColVisible"].ToString() == "Y" && dt.Rows[19]["ColReadOnly"].ToString() != "Y") {SetModifiedBy24(cModifiedBy24,string.Empty);}
-			if (dt.Rows[20]["ColVisible"].ToString() == "Y" && dt.Rows[20]["ColReadOnly"].ToString() != "Y") {cModifiedOn24.Text = string.Empty;}
-			if (dt.Rows[21]["ColVisible"].ToString() == "Y" && dt.Rows[21]["ColReadOnly"].ToString() != "Y") {cLastGenDt24.Text = string.Empty;}
+			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {cRemoveSP.Checked = base.GetBool("N");}
+			if (dt.Rows[11]["ColVisible"].ToString() == "Y" && dt.Rows[11]["ColReadOnly"].ToString() != "Y") {cMasterTable24.Checked = base.GetBool("N");}
+			if (dt.Rows[12]["ColVisible"].ToString() == "Y" && dt.Rows[12]["ColReadOnly"].ToString() != "Y") {cOnAdd24.Checked = base.GetBool("N");}
+			if (dt.Rows[13]["ColVisible"].ToString() == "Y" && dt.Rows[13]["ColReadOnly"].ToString() != "Y") {cOnUpd24.Checked = base.GetBool("N");}
+			if (dt.Rows[14]["ColVisible"].ToString() == "Y" && dt.Rows[14]["ColReadOnly"].ToString() != "Y") {cOnDel24.Checked = base.GetBool("N");}
+			if (dt.Rows[15]["ColVisible"].ToString() == "Y" && dt.Rows[15]["ColReadOnly"].ToString() != "Y") {SetBeforeCRUD24(cBeforeCRUD24,string.Empty); cBeforeCRUD24_SelectedIndexChanged(cBeforeCRUD24, new EventArgs());}
+			if (dt.Rows[17]["ColVisible"].ToString() == "Y" && dt.Rows[17]["ColReadOnly"].ToString() != "Y") {cSrcNS24.Text = string.Empty;}
+			if (dt.Rows[18]["ColVisible"].ToString() == "Y" && dt.Rows[18]["ColReadOnly"].ToString() != "Y") {SetRunMode24(cRunMode24,string.Empty);}
+			if (dt.Rows[19]["ColVisible"].ToString() == "Y" && dt.Rows[19]["ColReadOnly"].ToString() != "Y") {cRuleCode24.Text = string.Empty;}
+			if (dt.Rows[20]["ColVisible"].ToString() == "Y" && dt.Rows[20]["ColReadOnly"].ToString() != "Y") {cSyncByDb.ImageUrl = "~/images/custom/adm/SyncByDb.gif"; }
+			if (dt.Rows[21]["ColVisible"].ToString() == "Y" && dt.Rows[21]["ColReadOnly"].ToString() != "Y") {cSyncToDb.ImageUrl = "~/images/custom/adm/SyncToDb.gif"; }
+			if (dt.Rows[22]["ColVisible"].ToString() == "Y" && dt.Rows[22]["ColReadOnly"].ToString() != "Y") {SetModifiedBy24(cModifiedBy24,string.Empty);}
+			if (dt.Rows[23]["ColVisible"].ToString() == "Y" && dt.Rows[23]["ColReadOnly"].ToString() != "Y") {cModifiedOn24.Text = string.Empty;}
+			if (dt.Rows[24]["ColVisible"].ToString() == "Y" && dt.Rows[24]["ColReadOnly"].ToString() != "Y") {cLastGenDt24.Text = string.Empty;}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -1840,11 +1921,14 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cParameterNames24.Text = string.Empty;
 			cParameterTypes24.Text = string.Empty;
 			cCallingParams24.Text = string.Empty;
+			cRemoveSP.Checked = base.GetBool("N");
 			cMasterTable24.Checked = base.GetBool("N");
 			cOnAdd24.Checked = base.GetBool("N");
 			cOnUpd24.Checked = base.GetBool("N");
 			cOnDel24.Checked = base.GetBool("N");
 			SetBeforeCRUD24(cBeforeCRUD24,string.Empty); cBeforeCRUD24_SelectedIndexChanged(cBeforeCRUD24, new EventArgs());
+			cSrcNS24.Text = string.Empty;
+			SetRunMode24(cRunMode24,string.Empty);
 			cRuleCode24.Text = string.Empty;
 			cSyncByDb.ImageUrl = "~/images/custom/adm/SyncByDb.gif";
 			cSyncToDb.ImageUrl = "~/images/custom/adm/SyncToDb.gif";
@@ -1896,6 +1980,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cOnUpd24.Checked = base.GetBool(dr["OnUpd24"].ToString());} catch {cOnUpd24.Checked = false;}
 					try {cOnDel24.Checked = base.GetBool(dr["OnDel24"].ToString());} catch {cOnDel24.Checked = false;}
 					SetBeforeCRUD24(cBeforeCRUD24,dr["BeforeCRUD24"].ToString()); cBeforeCRUD24_SelectedIndexChanged(cBeforeCRUD24, new EventArgs());
+					try {cSrcNS24.Text = dr["SrcNS24"].ToString();} catch {cSrcNS24.Text = string.Empty;}
+					SetRunMode24(cRunMode24,dr["RunMode24"].ToString());
 					try {cRuleCode24.Text = dr["RuleCode24"].ToString();} catch {cRuleCode24.Text = string.Empty;}
 					cSyncByDb.ImageUrl = "~/images/custom/adm/SyncByDb.gif";
 					cSyncToDb.ImageUrl = "~/images/custom/adm/SyncToDb.gif";
@@ -2209,6 +2295,8 @@ string ss = string.Empty;
 			drType["ParameterTypes24"] = "VarChar"; drDisp["ParameterTypes24"] = "TextBox";
 			try {dr["CallingParams24"] = cCallingParams24.Text.Trim();} catch {}
 			drType["CallingParams24"] = "VarChar"; drDisp["CallingParams24"] = "TextBox";
+			try {dr["RemoveSP"] = base.SetBool(cRemoveSP.Checked);} catch {}
+			drType["RemoveSP"] = string.Empty; drDisp["RemoveSP"] = "CheckBox";
 			try {dr["MasterTable24"] = base.SetBool(cMasterTable24.Checked);} catch {}
 			drType["MasterTable24"] = "Char"; drDisp["MasterTable24"] = "CheckBox";
 			try {dr["OnAdd24"] = base.SetBool(cOnAdd24.Checked);} catch {}
@@ -2219,6 +2307,10 @@ string ss = string.Empty;
 			drType["OnDel24"] = "Char"; drDisp["OnDel24"] = "CheckBox";
 			try {dr["BeforeCRUD24"] = cBeforeCRUD24.SelectedValue;} catch {}
 			drType["BeforeCRUD24"] = "Char"; drDisp["BeforeCRUD24"] = "DropDownList";
+			try {dr["SrcNS24"] = cSrcNS24.Text.Trim();} catch {}
+			drType["SrcNS24"] = "VarChar"; drDisp["SrcNS24"] = "TextBox";
+			try {dr["RunMode24"] = cRunMode24.SelectedValue;} catch {}
+			drType["RunMode24"] = "Char"; drDisp["RunMode24"] = "DropDownList";
 			try {dr["RuleCode24"] = cRuleCode24.Text;} catch {}
 			drType["RuleCode24"] = "VarWChar"; drDisp["RuleCode24"] = "MultiLine";
 			try {dr["ModifiedBy24"] = base.LUser.UsrId.ToString();} catch {};

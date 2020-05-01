@@ -312,3 +312,9 @@
 1494~@~FK_WebRule_CtRuleReduxType~@~128~@~7550~@~1316~@~7555
 1495~@~FK_WebRule_CtRuleServiceType~@~128~@~7548~@~1315~@~7553
 1496~@~FK_WebRule_CtRuleAsmxType~@~128~@~7546~@~1310~@~7523
+1497~@~FK_ServerRule_VwServerRuleRunMode~@~24~@~7589~@~1320~@~7614
+1498~@~FK_AtServerRuleOvrd_ServerRule~@~1322~@~7624~@~24~@~186
+1499~@~FK_AtServerRuleOvrdPrm_VwPermKey~@~1321~@~7618~@~230~@~1882
+1500~@~FK_AtServerRuleOvrd_Screen~@~1322~@~7630~@~15~@~126
+1505~@~FK_AtServerRuleOvrdPrm_VwPermKeyRow~@~1321~@~7635~@~1299~@~7408
+1506~@~FK_AtServerRuleOvrd_VwServerRuleRunMode~@~1322~@~7640~@~1320~@~7614

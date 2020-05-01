@@ -23,25 +23,28 @@ cpx.copy('../Cmn/src/services/*.js','./src/services',{update:true,preserve:true,
 })
 */
 
-/* revised common files from Rintagi */
+/* revised common files from Rintagi, only if newer, i.e. update:true */
 cpx.copy('../Shared/src/**/*.js','./src',{update:true,preserve:true,dereference:true},(error)=>{
   console.log('cpx done for shared components');
 
   /* must be done AFTER shared ones as this is a final overwrite and cpx.copy is async
 
-  /* update local site data(image etc.) */
-  cpx.copy('../Site/src/img/**','./src/img',{update:true,preserve:true,dereference:true},(error)=>{
+  /* update local site data(image etc.) 
+  cpx.copy('../Site/src/img/**','./src/img',{update:false,preserve:true,dereference:true},(error)=>{
     console.log('cpx done for site react components');
   })
+  */
 
-  /* update local site data(configuration etc.) */
-  cpx.copy('../Site/public/**','./public',{update:true,preserve:true,dereference:true},(error)=>{
+  /* update local site data(configuration etc.) 
+  cpx.copy('../Site/public/**','./public',{update:false,preserve:true,dereference:true},(error)=>{
     console.log('cpx done for site public contents');
   })
-  
-  /* update local Login.js etc. always regardless of file timestamp */
+  */
+
+  /* update local Login.js etc. always regardless of file timestamp 
   cpx.copy('../Site/src/**','./src',{update:false,preserve:true,dereference:true},(error)=>{
     console.log('cpx done for site local js override');
   })
+  */
 
 })

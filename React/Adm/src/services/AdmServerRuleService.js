@@ -434,6 +434,23 @@ export function GetBeforeCRUD24List(query, topN, filterBy, accessScope) {
 }
 
 
+export function GetRunMode24List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmServerRuleWs.asmx/GetRunMode24List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
 export function GetModifiedBy24List(query, topN, filterBy, accessScope) {
     return fetchData(baseUrl + '/AdmServerRuleWs.asmx/GetModifiedBy24List'
         , {
