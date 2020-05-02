@@ -2537,4 +2537,4 @@ In default.master: replace section.css with the following:
 12600~@~  11. 163.00501~@~11~@~163~@~2020-05-01 00:00:00.000~@~~@~~@~1. minor enhancement to webhook deployment features
 2. change default deployment table exclusion for server rule related table~@~~@~en-US~@~
 12601~@~  11. 164.00501~@~11~@~164~@~2020-05-01 00:00:00.000~@~~@~~@~1. minor change to deployment git integration~@~~@~en-US~@~
-12602~@~  11. 165~@~11~@~165~@~~@~~@~~@~~@~~@~~@~
+12602~@~  11. 165~@~11~@~165~@~~@~~@~~@~1. handle empty Id for GetDbDoc/GetDbImg~@~~@~en-US~@~

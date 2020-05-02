@@ -2963,7 +2963,14 @@ namespace RO.Access3
             OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON"
                 + " SELECT DocName, MimeType, DocImage FROM " + TblName + " WHERE DocId = ?", cn);
             cmd.CommandType = CommandType.Text;
-            cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
+            if (string.IsNullOrWhiteSpace(DocId))
+            {
+                cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = System.DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
+            }
             cmd.CommandTimeout = 1800;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
@@ -2980,7 +2987,14 @@ namespace RO.Access3
             cn.Open();
             OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON SELECT " + ColName + " FROM " + TblName + " WHERE " + KeyName + " = ?", cn);
             cmd.CommandType = CommandType.Text;
-            cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
+            if (string.IsNullOrWhiteSpace(DocId))
+            {
+                cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = System.DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
+            }
             cmd.CommandTimeout = 1800;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
