@@ -1036,51 +1036,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "GuarantorId1", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmUsr");
-                var SearchList = GetAdmUsr1List("", 0, "");
-                var CultureId1List = GetCultureId1List("", 0, "");
-                var DefCompanyId1List = GetDefCompanyId1List("", 0, "");
-                var DefProjectId1List = GetDefProjectId1List("", 0, "");
-                var DefSystemId1List = GetDefSystemId1List("", 0, "");
-                var UsrGroupLs1List = GetUsrGroupLs1List("", 0, "");
-                var UsrImprLink1List = GetUsrImprLink1List("", 0, "");
-                var CompanyLs1List = GetCompanyLs1List("", 0, "");
-                var ProjectLs1List = GetProjectLs1List("", 0, "");
-                var HintQuestionId1List = GetHintQuestionId1List("", 0, "");
-                var InvestorId1List = GetInvestorId1List("", 0, "");
-                var CustomerId1List = GetCustomerId1List("", 0, "");
-                var VendorId1List = GetVendorId1List("", 0, "");
-                var AgentId1List = GetAgentId1List("", 0, "");
-                var BrokerId1List = GetBrokerId1List("", 0, "");
-                var MemberId1List = GetMemberId1List("", 0, "");
-                var LenderId1List = GetLenderId1List("", 0, "");
-                var BorrowerId1List = GetBorrowerId1List("", 0, "");
-                var GuarantorId1List = GetGuarantorId1List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

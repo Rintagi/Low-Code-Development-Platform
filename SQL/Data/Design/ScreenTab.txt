@@ -109,3 +109,4 @@
 127~@~Web Rule [ 40] Service Rule~@~80~@~Service Rule~@~40
 128~@~Web Rule [ 50] ASMX Rule~@~80~@~ASMX Rule~@~50
 129~@~~@~1025~@~Main~@~10
+130~@~~@~1026~@~Main~@~10

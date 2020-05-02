@@ -29,7 +29,7 @@ namespace RO.Web
 				System.IO.Stream oStream = null;
 				StreamWriter sw = null;
 				oStream = new MemoryStream();
-				sw = new StreamWriter(oStream, System.Text.Encoding.UTF32);
+				sw = new StreamWriter(oStream, System.Text.Encoding.UTF8);
 				sw.WriteLine(Session["ExportStr"].ToString());
 				sw.Flush();
 				oStream.Seek(0, SeekOrigin.Begin);

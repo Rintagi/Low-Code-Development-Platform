@@ -51,7 +51,7 @@ namespace RO.Web
             RO.Web.ZipDownloadRequest x = DecodeZipDownloadRequest(encodedZipAllRequest);
             if (DateTime.UtcNow.ToFileTimeUtc() > x.e)
             {
-                ErrorTrace(new Exception(string.Format("expired zipdownload request")), "error");
+                ErrorTrace(new Exception(string.Format("expired zipdownload request")), "error", null, Request);
                 throw new HttpException(403, "access denied");
             }
             RO.Web.ZipDownloadRequest y = new RO.Web.ZipDownloadRequest() { zN = x.zN, md = ExpandZipMultiDocRequest(x.md), ed = x.ed };
@@ -76,7 +76,7 @@ namespace RO.Web
                     }
                     catch (Exception ex)
                     {
-                        ErrorTrace(new Exception(string.Format("systemId {0}", string.Join(",", r.scr.ToArray())), ex), "error");
+                        ErrorTrace(new Exception(string.Format("systemId {0}", string.Join(",", r.scr.ToArray())), ex), "error", null, Request);
                         throw;
                     }
                 }

@@ -620,39 +620,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "CultureId99", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmReportObj");
-                var SearchList = GetAdmReportObj13List("", 0, "");
-                var ReportId23List = GetReportId23List("", 0, "");
-                var RptObjTypeCd23List = GetRptObjTypeCd23List("", 0, "");
-                var DataTypeId23List = GetDataTypeId23List("", 0, "");
-                var OperatorId23List = GetOperatorId23List("", 0, "");
-                var ReportCriId23List = GetReportCriId23List("", 0, "");
-                var CultureId99List = GetCultureId99List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

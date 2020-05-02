@@ -51,6 +51,7 @@ import AdmSctGrpColReduxObj from './AdmSctGrpCol';
 import AdmPageObjReduxObj from './AdmPageObj';
 import AdmSctGrpRowReduxObj from './AdmSctGrpRow';
 import AdmServerRuleReduxObj from './AdmServerRule';
+import AdmServerRuleOvrdReduxObj from './AdmServerRuleOvrd';
 import AdmSignupReduxObj from './AdmSignup';
 import AdmStaticCsReduxObj from './AdmStaticCs';
 import AdmStaticJsReduxObj from './AdmStaticJs';
@@ -117,6 +118,7 @@ export default {
     AdmPageObj: AdmPageObjReduxObj.ReduxReducer(),
     AdmSctGrpRow: AdmSctGrpRowReduxObj.ReduxReducer(),
     AdmServerRule: AdmServerRuleReduxObj.ReduxReducer(),
+    AdmServerRuleOvrd: AdmServerRuleOvrdReduxObj.ReduxReducer(),
     AdmSignup: AdmSignupReduxObj.ReduxReducer(),
     AdmStaticCs: AdmStaticCsReduxObj.ReduxReducer(),
     AdmStaticJs: AdmStaticJsReduxObj.ReduxReducer(),

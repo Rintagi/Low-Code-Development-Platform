@@ -15,6 +15,8 @@ AgentId
 END
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Borrower') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Borrower') AND type='U')
 DROP TABLE dbo.Borrower
 CREATE TABLE Borrower ( 
@@ -27,6 +29,7 @@ CONSTRAINT PK_Borrower PRIMARY KEY CLUSTERED (
 BorrowerId
 )
 )
+END
 
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Broker') and type='U')
@@ -59,6 +62,8 @@ CityId
 )
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Company') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Company') AND type='U')
 DROP TABLE dbo.Company
 CREATE TABLE Company ( 
@@ -71,6 +76,7 @@ CONSTRAINT PK_Company PRIMARY KEY CLUSTERED (
 CompanyId
 )
 )
+END
 
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Country') AND type='U')
@@ -102,6 +108,8 @@ CustomerId
 END
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Firm') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Firm') AND type='U')
 DROP TABLE dbo.Firm
 CREATE TABLE Firm ( 
@@ -127,8 +135,11 @@ CONSTRAINT PK_Firm PRIMARY KEY CLUSTERED (
 FirmId
 )
 )
+END
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.FxRate') and type='U')
+BEGIN
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_FxRate')
 DROP INDEX FxRate.IX_FxRate 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.FxRate') AND type='U')
@@ -144,8 +155,11 @@ CONSTRAINT PK_FxRate PRIMARY KEY CLUSTERED (
 FxRateId
 )
 )
+END
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Guarantor') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Guarantor') AND type='U')
 DROP TABLE dbo.Guarantor
 CREATE TABLE Guarantor ( 
@@ -158,6 +172,7 @@ CONSTRAINT PK_Guarantor PRIMARY KEY CLUSTERED (
 GuarantorId
 )
 )
+END
 
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Investor') and type='U')
@@ -177,6 +192,8 @@ InvestorId
 END
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Lender') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Lender') AND type='U')
 DROP TABLE dbo.Lender
 CREATE TABLE Lender ( 
@@ -189,6 +206,7 @@ CONSTRAINT PK_Lender PRIMARY KEY CLUSTERED (
 LenderId
 )
 )
+END
 
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Member') and type='U')

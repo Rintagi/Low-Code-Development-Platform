@@ -21,7 +21,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
     private static bool running = false;
     private static bool summNotify = false;
 
-    private void InvokeJob(int jobId, string systemId, string jobLink, string baseUrl)
+    private void InvokeJob(int jobId, string systemId, string jobLink, string baseUrl, Dictionary<string,string> requestInfo)
     {
         try
         {
@@ -105,7 +105,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
             if (e1 == null) throw;
             try
             {
-                ErrorTrace(e1, "warning");
+                ErrorTrace(e1, "warning", requestInfo);
             }
             catch { }
         }
@@ -135,6 +135,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
                 : http + (HttpRuntime.AppDomainAppVirtualPath == "/" ? "" : HttpRuntime.AppDomainAppVirtualPath) 
                 ;
         string myUrl = string.IsNullOrEmpty(cronjobBaseUrl) ? http + Request.Url.AbsolutePath : cronjobBaseUrl + "/CronJob.aspx";
+        Dictionary<string, string> requestInfo = GetRequestInfo();
         Func<DateTime> currentTime = () => DateTime.Parse(DateTime.Now.ToUniversalTime().ToString("g"));    // strip to minute for comparison.
         Action jobTask = () =>
         {
@@ -186,7 +187,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
                                             try
                                             {
                                                 string errorMsg = string.Format("Cronjob update status error for {0}({1})", jobLink, drvJob["CronJobId"].ToString());
-                                                ErrorTrace(new Exception(errorMsg, ex), "error");
+                                                ErrorTrace(new Exception(errorMsg, ex), "error", requestInfo);
                                             }
                                             catch { }
                                             //var d = new Dictionary<string,string>(){
@@ -206,7 +207,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
                                     {
                                         if (!links.ContainsKey(jobLink))
                                         {
-                                            InvokeJob((int)drvJob["CronJobId"], dr["SystemId"].ToString(), jobLink, baseUrl);
+                                            InvokeJob((int)drvJob["CronJobId"], dr["SystemId"].ToString(), jobLink, baseUrl, requestInfo);
                                             jobsRun.Add(drvJob["JobLink"].ToString() + " intended on " + nextRun.ToString() + " UTC invoked on " + now.ToString() + " UTC");
                                             links.Add(jobLink, jobLink);
                                             if (jobLink.ToLower().StartsWith("http"))
@@ -221,7 +222,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
                                                     try
                                                     {
                                                         string errorMsg = string.Format("Cronjob update status error for {0}({1})", jobLink, drvJob["CronJobId"].ToString());
-                                                        ErrorTrace(new Exception(errorMsg, ex), "error");
+                                                        ErrorTrace(new Exception(errorMsg, ex), "error", requestInfo);
                                                     }
                                                     catch { }
                                                     //var d = new Dictionary<string, string>(){
@@ -283,7 +284,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
                         try
                         {
                             string errorMsg = string.Format("Cronjob invoke error");
-                            ErrorTrace(new Exception(errorMsg, er), "error");
+                            ErrorTrace(new Exception(errorMsg, er), "error", requestInfo);
                         }
                         catch { }
 
@@ -344,18 +345,21 @@ public partial class CronJobModule : RO.Web.ModuleBase
                         try
                         {
                             string errorMsg = string.Format("Cronjob refresh error {0}", myUrl);
-                            ErrorTrace(new Exception(errorMsg, ex), "error");
+                            ErrorTrace(new Exception(errorMsg, ex), "error", requestInfo);
                         }
                         catch { }
                     }
                 }
+            }
+            catch (ThreadAbortException ex)
+            {
             }
             catch (Exception e)
             {
                 try
                 {
                     string errorMsg = string.Format("Cronjob daemon error {0}", myUrl);
-                    ErrorTrace(new Exception(errorMsg, e), "error");
+                    ErrorTrace(new Exception(errorMsg, e), "error", requestInfo);
                 }
                 catch { }
             }

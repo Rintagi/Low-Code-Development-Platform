@@ -28,6 +28,13 @@ namespace RO.Rule3
             sba = new StringBuilder("");
             si = new StringBuilder("");
         }
+        public DataTable GetRelease()
+        {
+            using (Access3.DeployAccess dac = new Access3.DeployAccess())
+            {
+                return dac.GetReleaseInf(-1);
+            }
+        }
         public string PrepInstall(int releaseId, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword)
         {
             throw new NotImplementedException("This feature is not available in community version, please acquire proper Rintagi license for this feature");
@@ -68,7 +75,7 @@ namespace RO.Rule3
 
         public List<string> TransferModule(string srcServerName, string srcUser, string srcPwd, string srcDbName, string srcNmSpace, string srcModule, string transferTables, string[] translateColumns, string tarServerName, string tarUser, string tarPwd, string tarNmSpace, string tarModule, bool frameOnly, bool updateRel, bool updSystem)
         {
-            string metaContent = ""; // table content to be transfer in the 'D' database for new module
+            //string metaContent = ""; // table content to be transfer in the 'D' database for new module
 
             throw new NotImplementedException("feature not implemented");
         }

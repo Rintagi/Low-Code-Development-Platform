@@ -690,42 +690,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "TarDataTierId192", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmRelease");
-                var SearchList = GetAdmRelease98List("", 0, "");
-                var ReleaseOs191List = GetReleaseOs191List("", 0, "");
-                var EntityId191List = GetEntityId191List("", 0, "");
-                var ReleaseTypeId191List = GetReleaseTypeId191List("", 0, "");
-                var ObjectType192List = GetObjectType192List("", 0, "");
-                var SProcOnly192List = GetSProcOnly192List("", 0, "");
-                var SrcClientTierId192List = GetSrcClientTierId192List("", 0, "");
-                var SrcRuleTierId192List = GetSrcRuleTierId192List("", 0, "");
-                var SrcDataTierId192List = GetSrcDataTierId192List("", 0, "");
-                var TarDataTierId192List = GetTarDataTierId192List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

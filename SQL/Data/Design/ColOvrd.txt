@@ -196,3 +196,9 @@
 1272~@~AdmSystems [  300] Main Info: FromSystemId   100 [Default]~@~4304~@~87~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
 1273~@~AdmSystems [  300] Main Info: UpdBaseSystemId   100 [Default]~@~4302~@~87~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
 1274~@~AdmSystems [  320] Main Info: UpdRefSystemId   100 [Default]~@~4303~@~87~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+1276~@~AdmLicense [   20] Main: SystemName   100 [Default]~@~4221~@~1022~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1277~@~AdmLicense [   30] Main: SystemAbbr   100 [Default]~@~4222~@~1022~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1278~@~AdmServerRule [  180] Main Info: SrcNS   100 [Default]~@~4355~@~14~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1279~@~AdmServerRuleOvrd [   50] Main: ScreenId   100 [Default]~@~4367~@~1026~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1280~@~AdmServerRuleOvrd [   10] Main: AtServerRuleOvrdId   100 [Default]~@~4356~@~1026~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1282~@~AdmServerRuleOvrd [   80] Main: ServerRuledOvrdPrmId   100 [Default]~@~4361~@~1026~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~

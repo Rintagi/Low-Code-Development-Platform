@@ -18,6 +18,7 @@ class AdmServerRuleRedux extends RintagiScreenRedux {
       { columnName: 'RuleTypeId24', payloadDdlName: 'RuleTypeId24List', keyName: 'RuleTypeId24', labelName: 'RuleTypeId24Text', forMst: true, isAutoComplete: false, apiServiceName: 'GetRuleTypeId24List', actionTypeName: 'GET_DDL_RuleTypeId24' },
       { columnName: 'ScreenId24', payloadDdlName: 'ScreenId24List', keyName: 'ScreenId24', labelName: 'ScreenId24Text', forMst: true, isAutoComplete: true, apiServiceName: 'GetScreenId24List', actionTypeName: 'GET_DDL_ScreenId24' },
       { columnName: 'BeforeCRUD24', payloadDdlName: 'BeforeCRUD24List', keyName: 'BeforeCRUD24', labelName: 'BeforeCRUD24Text', forMst: true, isAutoComplete: false, apiServiceName: 'GetBeforeCRUD24List', actionTypeName: 'GET_DDL_BeforeCRUD24' },
+      { columnName: 'RunMode24', payloadDdlName: 'RunMode24List', keyName: 'RunMode24', labelName: 'RunMode24Text', forMst: true, isAutoComplete: false, apiServiceName: 'GetRunMode24List', actionTypeName: 'GET_DDL_RunMode24' },
       { columnName: 'ModifiedBy24', payloadDdlName: 'ModifiedBy24List', keyName: 'ModifiedBy24', labelName: 'ModifiedBy24Text', forMst: true, isAutoComplete: false, apiServiceName: 'GetModifiedBy24List', actionTypeName: 'GET_DDL_ModifiedBy24' },
     ]
     this.ScreenOnDemandDef = [
@@ -90,8 +91,8 @@ class AdmServerRuleRedux extends RintagiScreenRedux {
           value: v.labelL || v.label || ' ',
           label: v.labelL || v.label || ' ',
           labelR: v.labelR || ' ',
-          detailR: v.detailR,
-          detail: v.detail || '',
+          detailR: v.detailR || ' ',
+          detail: v.detail || ' ',
           idx: i,
           isSelected: v.isSelected,
         }

@@ -1006,45 +1006,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "CultureId16", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmScreen");
-                var SearchList = GetAdmScreen9List("", 0, "");
-                var ScreenTypeId15List = GetScreenTypeId15List("", 0, "");
-                var ViewOnly15List = GetViewOnly15List("", 0, "");
-                var MasterTableId15List = GetMasterTableId15List("", 0, "");
-                var SearchTableId15List = GetSearchTableId15List("", 0, "");
-                var SearchId15List = GetSearchId15List("", 0, "");
-                var SearchIdR15List = GetSearchIdR15List("", 0, "");
-                var SearchDtlId15List = GetSearchDtlId15List("", 0, "");
-                var SearchDtlIdR15List = GetSearchDtlIdR15List("", 0, "");
-                var SearchUrlId15List = GetSearchUrlId15List("", 0, "");
-                var SearchImgId15List = GetSearchImgId15List("", 0, "");
-                var DetailTableId15List = GetDetailTableId15List("", 0, "");
-                var CultureId16List = GetCultureId16List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

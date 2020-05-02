@@ -1,0 +1,72 @@
+1~@~14~@~1~@~Y~@~Copy On Write~@~Server Rule   30 [Master: Last Rule] Copy On Write~@~Copy on Write logic to prepare for upstream deployment merge(run after ~@~30~@~Ir_UpdServerRuleCOW~@~ServerRuleId,UsrId~@~Int,Int~@~ServerRuleId24,LUser.UsrId~@~Y~@~Y~@~N~@~C~@~CREATE PROCEDURE [dbo].[Ir_UpdServerRule]
+ @ScreenId		int
+,@ServerRuleId	int
+,@CultureId		smallint
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ii		int
+	,@RuleId	int
+	,@RuleOrder	smallint
+SET NOCOUNT ON
+SELECT @RuleOrder = RuleOrder FROM dbo.ServerRule WHERE ServerRuleId = @ServerRuleId
+/* Need to reorder Tab Index */
+IF NOT (@RuleOrder is not null AND right(space(1)+convert(varchar,@RuleOrder),1) = '0')
+BEGIN
+	UPDATE dbo.ServerRule SET RuleOrder = 32757 WHERE ScreenId = @ScreenId AND RuleOrder is null
+	SELECT @ii = 1
+	DECLARE cur CURSOR FOR SELECT ServerRuleId, RuleOrder FROM dbo.ServerRule WHERE ScreenId = @ScreenId ORDER BY RuleOrder FOR READ ONLY
+	OPEN cur
+	FETCH NEXT FROM cur INTO @RuleId, @RuleOrder
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		UPDATE dbo.ServerRule SET RuleOrder = @ii
+			, RuleDesc = isnull(b.ScreenTitle,space(0)) + right(space(5)+convert(varchar,@ii * 10),5) + ': ' + a.RuleName
+			FROM dbo.ServerRule a INNER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId AND b.CultureId = @CultureId
+			WHERE a.ServerRuleId = @RuleId
+		IF @ii > 3275 SELECT @ii = 3276 ELSE SELECT @ii = @ii + 1
+		FETCH NEXT FROM cur INTO @RuleId, @RuleOrder
+	END
+	CLOSE cur
+	DEALLOCATE cur
+	UPDATE dbo.ServerRule SET RuleOrder = RuleOrder * 10 WHERE ScreenId = @ScreenId
+END
+UPDATE dbo.ServerRule SET RuleDesc = isnull(b.ScreenTitle,space(0)) + right(space(5)+convert(varchar,a.RuleOrder),5) + ': ' + a.RuleName
+	FROM dbo.ServerRule a INNER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId AND b.CultureId = @CultureId
+	WHERE a.ServerRuleId = @ServerRuleId
+RETURN 0~@~2~@~2020-04-24 20:22:56.497~@~2012-01-20 11:28:02.000~@~61F312F0-21F8-44B0-BCF4-D36A938E58E7~@~~@~RO
+2~@~14~@~1~@~Y~@~Update server rule order~@~Server Rule   30 [Master: After CRUD] Update server rule order~@~Update server rule execution order and other aux changes~@~30~@~Ir_UpdServerRule~@~ScreenId,CultureId,ServerRuleId~@~Int,SmallInt,Int~@~ScreenId24,LUser.CultureId,ServerRuleId24~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[Ir_UpdServerRule]
+ @ScreenId		int
+,@ServerRuleId	int
+,@CultureId		smallint
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @ii		int
+	,@RuleId	int
+	,@RuleOrder	smallint
+SET NOCOUNT ON
+SELECT @RuleOrder = RuleOrder FROM dbo.ServerRule WHERE ServerRuleId = @ServerRuleId
+/* Need to reorder Tab Index */
+IF NOT (@RuleOrder is not null AND right(space(1)+convert(varchar,@RuleOrder),1) = '0')
+BEGIN
+	UPDATE dbo.ServerRule SET RuleOrder = 32757 WHERE ScreenId = @ScreenId AND RuleOrder is null
+	SELECT @ii = 1
+	DECLARE cur CURSOR FOR SELECT ServerRuleId, RuleOrder FROM dbo.ServerRule WHERE ScreenId = @ScreenId ORDER BY RuleOrder FOR READ ONLY
+	OPEN cur
+	FETCH NEXT FROM cur INTO @RuleId, @RuleOrder
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		UPDATE dbo.ServerRule SET RuleOrder = @ii
+			, RuleDesc = isnull(b.ScreenTitle,space(0)) + right(space(5)+convert(varchar,@ii * 10),5) + ': ' + a.RuleName
+			FROM dbo.ServerRule a INNER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId AND b.CultureId = @CultureId
+			WHERE a.ServerRuleId = @RuleId
+		IF @ii > 3275 SELECT @ii = 3276 ELSE SELECT @ii = @ii + 1
+		FETCH NEXT FROM cur INTO @RuleId, @RuleOrder
+	END
+	CLOSE cur
+	DEALLOCATE cur
+	UPDATE dbo.ServerRule SET RuleOrder = RuleOrder * 10 WHERE ScreenId = @ScreenId
+END
+UPDATE dbo.ServerRule SET RuleDesc = isnull(b.ScreenTitle,space(0)) + right(space(5)+convert(varchar,a.RuleOrder),5) + ': ' + a.RuleName
+	FROM dbo.ServerRule a INNER JOIN dbo.ScreenHlp b ON a.ScreenId = b.ScreenId AND b.CultureId = @CultureId
+	WHERE a.ServerRuleId = @ServerRuleId
+RETURN 0~@~2~@~2020-04-23 16:07:04.257~@~2012-01-20 11:28:02.000~@~48655239-2BD2-453A-A0C6-46693633512B~@~~@~RO

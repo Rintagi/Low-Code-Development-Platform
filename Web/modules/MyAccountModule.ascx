@@ -428,7 +428,7 @@
                                     <asp:Label ID="cOTPAccessCodeLabel" runat="server" />:</b>
                             </div>
                             <div class="r-td rc-4-9">
-                                <rcasp:OTPTextBox ID="cOTPAccessCode" runat="server" OnTextChanged="cOTPAccessCode_TextChanged"  />
+                                <rcasp:OTPTextBox ID="cOTPAccessCode" TimeSkew="10" runat="server" OnTextChanged="cOTPAccessCode_TextChanged"  />
                             </div>
                             <div class="r-td rc-10-12">
                                 <asp:Button ID="cCodeVerifyBtn" CssClass="codeVerifyBtn " runat="server" Text="Verify" OnClick="cCodeVerifyBtn_Click" />

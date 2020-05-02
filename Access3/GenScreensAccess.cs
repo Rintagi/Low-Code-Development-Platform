@@ -294,7 +294,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetServerRule(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
+		public DataTable GetServerRule(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc, UsrImpr ui, UsrCurr uc)
 		{
 			if (da == null)
 			{
@@ -303,6 +303,27 @@ namespace RO.Access3
 			OleDbCommand cmd = new OleDbCommand("GetServerRule",new OleDbConnection(CSrc.SrcConnectionString + DecryptString(CSrc.SrcDbPassword)));
 			cmd.CommandType = CommandType.StoredProcedure;
 			cmd.Parameters.Add("@screenId", OleDbType.Numeric).Value = screenId;
+            if (ui != null && uc != null)
+            {
+                cmd.Parameters.Add("@Usrs", OleDbType.VarChar).Value = ui.Usrs;
+                cmd.Parameters.Add("@RowAuthoritys", OleDbType.VarChar).Value = ui.RowAuthoritys;
+                cmd.Parameters.Add("@Customers", OleDbType.VarChar).Value = ui.Customers;
+                cmd.Parameters.Add("@Vendors", OleDbType.VarChar).Value = ui.Vendors;
+                cmd.Parameters.Add("@Members", OleDbType.VarChar).Value = ui.Members;
+                cmd.Parameters.Add("@Investors", OleDbType.VarChar).Value = ui.Investors;
+                cmd.Parameters.Add("@Agents", OleDbType.VarChar).Value = ui.Agents;
+                cmd.Parameters.Add("@Brokers", OleDbType.VarChar).Value = ui.Brokers;
+                cmd.Parameters.Add("@UsrGroups", OleDbType.VarChar).Value = ui.UsrGroups;
+                cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
+                cmd.Parameters.Add("@Projects", OleDbType.VarChar).Value = ui.Projects;
+                cmd.Parameters.Add("@Cultures", OleDbType.VarChar).Value = ui.Cultures;
+                cmd.Parameters.Add("@Borrowers", OleDbType.VarChar).Value = ui.Borrowers;
+                cmd.Parameters.Add("@Guarantors", OleDbType.VarChar).Value = ui.Guarantors;
+                cmd.Parameters.Add("@Lenders", OleDbType.VarChar).Value = ui.Lenders;
+                cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
+                cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
+            }
+
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			da.Fill(dt);

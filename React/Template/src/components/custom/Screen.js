@@ -11,7 +11,7 @@ import { toCapital } from '../../helpers/formatter';
 import { bindActionCreators } from 'redux';
 import { connect, dispatch } from 'react-redux';
 import { Redirect, withRouter } from 'react-router';
-import { checkBundleUpdate, refreshApp } from '../../redux/Rintagi';
+import { checkBundleUpdate, refreshApp } from '../../redux/_Rintagi';
 
 const isEmptyFileList = (fileList) => Array.isArray(fileList) && (fileList.length === 0 || (fileList.length === 1 && fileList[0].isEmptyFileObject))
 

@@ -58,3 +58,14 @@ AS
 SELECT a.ScreenObjHlpId, a.ScreenObjHlpDesc, a.ScreenObjId, b.ScreenId, a.CultureId
 FROM dbo.ScreenObjHlp a INNER JOIN dbo.ScreenObj b ON a.ScreenObjId = b.ScreenObjId
 GO
+if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwServerRuleRunMode') and OBJECTPROPERTY(id, N'IsView') = 1)
+EXEC('CREATE VIEW dbo.VwServerRuleRunMode AS SELECT DUMMY=1')
+GO
+ALTER VIEW [dbo].[VwServerRuleRunMode]
+AS
+
+SELECT
+*
+FROM
+RODesign.dbo.VwServerRuleRunMode
+GO

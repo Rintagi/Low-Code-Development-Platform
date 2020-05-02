@@ -115,8 +115,6 @@ class MstRecord extends RintagiScreen {
     const columnLabel = (this.props.AdmLicense || {}).ColumnLabel || {};
     /* standard field validation */
     if (!values.cSystemId1317) { errors.cSystemId1317 = (columnLabel.SystemId1317 || {}).ErrMessage; }
-    if (!values.cSystemName1317) { errors.cSystemName1317 = (columnLabel.SystemName1317 || {}).ErrMessage; }
-    if (!values.cSystemAbbr1317) { errors.cSystemAbbr1317 = (columnLabel.SystemAbbr1317 || {}).ErrMessage; }
     return errors;
   }
 
@@ -540,7 +538,7 @@ class MstRecord extends RintagiScreen {
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmLicenseState)) && <Skeleton height='20px' />) ||
-                                      <label className='form__form-group-label'>{(columnLabel.SystemName1317 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.SystemName1317 || {}).ToolTip &&
+                                      <label className='form__form-group-label'>{(columnLabel.SystemName1317 || {}).ColumnHeader} {(columnLabel.SystemName1317 || {}).ToolTip &&
                                         (<ControlledPopover id={(columnLabel.SystemName1317 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SystemName1317 || {}).ToolTip} />
                                         )}
                                       </label>
@@ -561,7 +559,7 @@ class MstRecord extends RintagiScreen {
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmLicenseState)) && <Skeleton height='20px' />) ||
-                                      <label className='form__form-group-label'>{(columnLabel.SystemAbbr1317 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.SystemAbbr1317 || {}).ToolTip &&
+                                      <label className='form__form-group-label'>{(columnLabel.SystemAbbr1317 || {}).ColumnHeader} {(columnLabel.SystemAbbr1317 || {}).ToolTip &&
                                         (<ControlledPopover id={(columnLabel.SystemAbbr1317 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SystemAbbr1317 || {}).ToolTip} />
                                         )}
                                       </label>

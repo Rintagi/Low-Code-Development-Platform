@@ -1,6 +1,6 @@
-63~@~Rintagi App runtime Upgrade~@~RO:10.94.91218:Rintagi App runtime Upgrade [PDT]~@~10.94.91218~@~2019-12-31 00:00:00.000~@~M~@~3~@~3~@~/* Please be reminded that each user requires a valid Company and Project. */~@~Do not delete this even though it is not applicable for RO.  It is needed as sample for the applications. "doc" should be exempted in Client Tier if UsrPref is not exempted in Data Tier.
-84~@~Rintagi Runtime Upgrade~@~RO:11.145.00408:Rintagi Runtime Upgrade [DEV]~@~11.145.00408~@~2020-04-08 00:00:00.000~@~M~@~4~@~1~@~/* Please be reminded that each user requires a valid Company and Project. */~@~RO ONLY: This is for ordinary development and will deploy object code to upgrade existing application.
-85~@~Rintagi Runtime Install~@~RO:11.145.00408:Rintagi Runtime Install [NDEV]~@~11.145.00408~@~2020-04-08 00:00:00.000~@~M~@~4~@~7~@~IF EXISTS (SELECT object_id FROM sys.tables WHERE name = 'Systems')
+63~@~Rintagi App runtime Upgrade~@~RO:11.150.00412:Rintagi App runtime Upgrade [PDT]~@~11.150.00412~@~2020-04-12 00:00:00.000~@~M~@~3~@~3~@~/* Please be reminded that each user requires a valid Company and Project. */~@~Do not delete this even though it is not applicable for RO.  It is needed as sample for the applications. "doc" should be exempted in Client Tier if UsrPref is not exempted in Data Tier.
+84~@~Rintagi Runtime Upgrade~@~RO:11.164.00501:Rintagi Runtime Upgrade [DEV]~@~11.164.00501~@~2020-05-01 00:00:00.000~@~M~@~4~@~1~@~/* Please be reminded that each user requires a valid Company and Project. */~@~RO ONLY: This is for ordinary development and will deploy object code to upgrade existing application.
+85~@~Rintagi Runtime Install~@~RO:11.164.00501:Rintagi Runtime Install [NDEV]~@~11.164.00501~@~2020-05-01 00:00:00.000~@~M~@~4~@~7~@~IF EXISTS (SELECT object_id FROM sys.tables WHERE name = 'Systems')
 EXEC('
 SET NOCOUNT ON
 
@@ -111,12 +111,12 @@ inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.release
 inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
 WHERE d.ObjectType = ''D'' and ObjectName like ''%CmonD%'' AND SprocOnly <> ''A''
 ')~@~RO ONLY: This is for ordinary development and will deploy object code to create a new application.
-86~@~Rintagi Source Upgrade~@~RO:11.145.00408:Rintagi Source Upgrade [PTY]~@~11.145.00408~@~2020-04-08 00:00:00.000~@~M~@~2~@~2~@~~@~This is for exact prototype and will deploy all source code to override existing.
-87~@~Rintagi Source Install~@~RO:11.145.00408:Rintagi Source Install [NPTY]~@~11.145.00408~@~2020-04-08 00:00:00.000~@~M~@~2~@~5~@~~@~This is for exact prototype and will deploy all source code to create new.
-88~@~Rintagi App Runtime Install~@~RO:10.94.91218:Rintagi App Runtime Install [NPDT]~@~10.94.91218~@~2019-12-19 00:00:00.000~@~M~@~3~@~6~@~~@~Do not delete this even though it is obsolete for RO.  It is needed as sample for the applications.
-89~@~Rintagi Community Source Install~@~RO:11.148.00410:Rintagi Community Source Install [NPTY]~@~11.148.00410~@~2020-04-10 00:00:00.000~@~M~@~5~@~5~@~~@~This is for exact prototype and will deploy all source code to create new.
-90~@~Rintagi Community Source Upgrade~@~RO:11.148.00410:Rintagi Community Source Upgrade [PTY]~@~11.148.00410~@~2020-04-10 00:00:00.000~@~M~@~5~@~2~@~~@~This is for exact prototype and will deploy all source code to override existing.
-91~@~Rintagi Community Runtime Install~@~RO:11.145.00408:Rintagi Community Runtime Install [NDEV]~@~11.145.00408~@~2020-04-08 00:00:00.000~@~M~@~6~@~7~@~IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ReleaseDtl]'))
+86~@~Rintagi Source Upgrade~@~RO:11.164.00501:Rintagi Source Upgrade [PTY]~@~11.164.00501~@~2020-05-01 00:00:00.000~@~M~@~2~@~2~@~~@~This is for exact prototype and will deploy all source code to override existing.
+87~@~Rintagi Source Install~@~RO:11.164.00501:Rintagi Source Install [NPTY]~@~11.164.00501~@~2020-05-01 00:00:00.000~@~M~@~2~@~5~@~~@~This is for exact prototype and will deploy all source code to create new.
+88~@~Rintagi App Runtime Install~@~RO:11.150.00412:Rintagi App Runtime Install [NPDT]~@~11.150.00412~@~2020-04-12 00:00:00.000~@~M~@~3~@~6~@~~@~Do not delete this even though it is obsolete for RO.  It is needed as sample for the applications.
+89~@~Rintagi Community Source Install~@~RO:11.164.00501:Rintagi Community Source Install [NPTY]~@~11.164.00501~@~2020-05-01 00:00:00.000~@~M~@~5~@~5~@~~@~This is for exact prototype and will deploy all source code to create new.
+90~@~Rintagi Community Source Upgrade~@~RO:11.164.00501:Rintagi Community Source Upgrade [PTY]~@~11.164.00501~@~2020-05-01 00:00:00.000~@~M~@~5~@~2~@~~@~This is for exact prototype and will deploy all source code to override existing.
+91~@~Rintagi Community Runtime Install~@~RO:11.147.00410:Rintagi Community Runtime Install [NDEV]~@~11.147.00410~@~2020-04-10 00:00:00.000~@~M~@~6~@~7~@~IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ReleaseDtl]'))
 EXEC('
 SET NOCOUNT ON
 
@@ -225,7 +225,7 @@ inner join ctreleasetype rt on r.releasetypeid = rt.releasetypeid and rt.release
 inner join entity e on r.EntityId = e.entityid AND e.EntityCode = ''RO''
 WHERE d.ObjectType = ''D'' and ObjectName like ''%CmonD%'' AND SprocOnly <> ''A''
 ')~@~RO ONLY: This is for ordinary development and will deploy object code to create a new application.
-92~@~Rintagi Community Runtime Upgrade~@~RO:11.145.00408:Rintagi Community Runtime Upgrade [DEV]~@~11.145.00408~@~2020-04-08 00:00:00.000~@~M~@~6~@~1~@~/* Please be reminded that each user requires a valid Company and Project. */~@~RO ONLY: This is for ordinary development and will deploy object code to upgrade existing application.
-93~@~Rintagi Source DB Only Upgrade~@~RO:10.85.91018:Rintagi Source DB Only Upgrade [PTY]~@~10.85.91018~@~2019-11-18 00:00:00.000~@~M~@~7~@~2~@~~@~This is for exact prototype and will deploy all source code to override existing.
-94~@~Rintagi Source DB Only Install~@~RO:10.85.91018:Rintagi Source DB Only Install [NPTY]~@~10.85.91018~@~2019-11-18 00:00:00.000~@~M~@~7~@~5~@~~@~This is for exact prototype and will deploy all source code to create new.
-96~@~Rintagi Local DB Configuration~@~RO:11.110.00127:Rintagi Local DB Configuration [PTY]~@~11.110.00127~@~2020-01-27 00:00:00.000~@~M~@~8~@~2~@~~@~Local installation related DB setup(intended for passing, excluded local setup to another setup, transfer of PTY setups that is unrelated to system features)
+92~@~Rintagi Community Runtime Upgrade~@~RO:11.147.00410:Rintagi Community Runtime Upgrade [DEV]~@~11.147.00410~@~2020-04-10 00:00:00.000~@~M~@~6~@~1~@~/* Please be reminded that each user requires a valid Company and Project. */~@~RO ONLY: This is for ordinary development and will deploy object code to upgrade existing application.
+93~@~Rintagi Source DB Only Upgrade~@~RO:11.119.00211:Rintagi Source DB Only Upgrade [PTY]~@~11.119.00211~@~2020-02-11 00:00:00.000~@~M~@~7~@~2~@~~@~This is for exact prototype and will deploy all source code to override existing.
+94~@~Rintagi Source DB Only Install~@~RO:11.119.00211:Rintagi Source DB Only Install [NPTY]~@~11.119.00211~@~2020-02-11 00:00:00.000~@~M~@~7~@~5~@~~@~This is for exact prototype and will deploy all source code to create new.
+96~@~Rintagi Local DB Configuration~@~RO:11.151.00413:Rintagi Local DB Configuration [PTY]~@~11.151.00413~@~2020-04-15 00:00:00.000~@~M~@~8~@~2~@~~@~Local installation related DB setup(intended for passing, excluded local setup to another setup, transfer of PTY setups that is unrelated to system features)

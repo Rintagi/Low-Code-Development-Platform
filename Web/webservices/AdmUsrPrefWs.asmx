@@ -1025,51 +1025,6 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "GuarantorId93", emptyAutoCompleteResponse));
             return ret;
         }
-        public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> _LoadInitPage(SerializableDictionary<string, string> options)
-        {
-            Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
-            {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-                var dtAuthCol = _GetAuthCol(screenId);
-                var dtAuthRow = _GetAuthRow(screenId);
-                var dtScreenLabel = _GetScreenLabel(screenId);
-                var dtScreenCriteria = _GetScrCriteria(screenId);
-                var dtScreenFilter = _GetScreenFilter(screenId);
-                var dtScreenHlp = _GetScreenHlp(screenId);
-                var dtScreenButtonHlp = _GetScreenButtonHlp(screenId);
-                var dtLabel = _GetLabels("AdmUsrPref");
-                var SearchList = GetAdmUsrPref64List("", 0, "");
-                var MenuOptId93List = GetMenuOptId93List("", 0, "");
-                var ComListVisible93List = GetComListVisible93List("", 0, "");
-                var PrjListVisible93List = GetPrjListVisible93List("", 0, "");
-                var SysListVisible93List = GetSysListVisible93List("", 0, "");
-                var UsrId93List = GetUsrId93List("", 0, "");
-                var UsrGroupId93List = GetUsrGroupId93List("", 0, "");
-                var CompanyId93List = GetCompanyId93List("", 0, "");
-                var ProjectId93List = GetProjectId93List("", 0, "");
-                var SystemId93List = GetSystemId93List("", 0, "");
-                var MemberId93List = GetMemberId93List("", 0, "");
-                var AgentId93List = GetAgentId93List("", 0, "");
-                var BrokerId93List = GetBrokerId93List("", 0, "");
-                var CustomerId93List = GetCustomerId93List("", 0, "");
-                var InvestorId93List = GetInvestorId93List("", 0, "");
-                var VendorId93List = GetVendorId93List("", 0, "");
-                var LenderId93List = GetLenderId93List("", 0, "");
-                var BorrowerId93List = GetBorrowerId93List("", 0, "");
-                var GuarantorId93List = GetGuarantorId93List("", 0, "");
-
-                LoadScreenPageResponse result = new LoadScreenPageResponse();
-
-                ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>();
-                mr.status = "success";
-                mr.errorMsg = "";
-                mr.data = result;
-                return mr;
-            };
-            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
-            return ret;
-        }           
-            
 
         /* AsmxRule: Custom Function */
 

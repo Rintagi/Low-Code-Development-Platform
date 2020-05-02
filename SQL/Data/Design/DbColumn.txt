@@ -83,20 +83,20 @@
 176~@~23~@~40~@~~@~ColumnName~@~ReportObj - ColumnName~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unique column name to be referenced in the Select Clause.~@~
 179~@~23~@~100~@~~@~DataTypeId~@~ReportObj - DataTypeId~@~1~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the data type for this report column.~@~
 184~@~23~@~60~@~~@~TabIndex~@~ReportObj - TabIndex~@~2~@~2~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is an integer tab index order between 0 - 32767 with an interval of ~100 starting at 100.~@~
-186~@~24~@~20~@~~@~ServerRuleId~@~ServerRule - ServerRuleId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This is the internal ID uniquely representing this server rule.~@~
-188~@~24~@~40~@~~@~RuleTypeId~@~ServerRule - RuleTypeId~@~1~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the rule type for this server rule.~@~
-189~@~24~@~50~@~~@~MasterTable~@~ServerRule - MasterTable~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this server rule is to fire on each row of the master table.~@~
-190~@~24~@~60~@~~@~RuleName~@~ServerRule - RuleName~@~11~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unique name for this server rule 100 characters or less.~@~
-191~@~24~@~80~@~~@~RuleDescription~@~ServerRule - RuleDescription~@~11~@~500~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the detail description for this server rule.~@~
-192~@~24~@~90~@~~@~RuleOrder~@~ServerRule - RuleOrder~@~2~@~2~@~~@~~@~N~@~N~@~N~@~N~@~Y~@~This is the order of execution for this server rule.~@~
-193~@~24~@~100~@~~@~ProcedureName~@~ServerRule - ProcedureName~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the procedure name of this server rule 20 characters or less.~@~
-194~@~24~@~110~@~~@~ParameterNames~@~ServerRule - ParameterNames~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the parameter names to be used in the stored procedure comma delimited, if any.~@~
-195~@~24~@~120~@~~@~ParameterTypes~@~ServerRule - ParameterTypes~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the parameter types to be used in the stored procedure comma delimited, if any.~@~
-196~@~24~@~130~@~~@~CallingParams~@~ServerRule - CallingParams~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Please enter the calling parameters with trailing table ID and comma delimited, if any. LUser.?, LCurr.? and Config.? can be used~@~
-197~@~24~@~140~@~~@~OnAdd~@~ServerRule - OnAdd~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this is to fire when adding a row.~@~
-198~@~24~@~150~@~~@~OnUpd~@~ServerRule - OnUpd~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this is to fire when updating a row.~@~
-199~@~24~@~160~@~~@~OnDel~@~ServerRule - OnDel~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this is to fire when deleting a row.~@~
-200~@~24~@~170~@~~@~BeforeCRUD~@~ServerRule - BeforeCRUD~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this is to fire when before Create, Read, Update or Delete.~@~
+186~@~24~@~10~@~~@~ServerRuleId~@~ServerRule - ServerRuleId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This is the internal ID uniquely representing this server rule.~@~
+188~@~24~@~30~@~~@~RuleTypeId~@~ServerRule - RuleTypeId~@~1~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the rule type for this server rule.~@~
+189~@~24~@~40~@~~@~MasterTable~@~ServerRule - MasterTable~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this server rule is to fire on each row of the master table.~@~
+190~@~24~@~50~@~~@~RuleName~@~ServerRule - RuleName~@~11~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unique name for this server rule 100 characters or less.~@~
+191~@~24~@~70~@~~@~RuleDescription~@~ServerRule - RuleDescription~@~11~@~500~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the detail description for this server rule.~@~
+192~@~24~@~80~@~~@~RuleOrder~@~ServerRule - RuleOrder~@~2~@~2~@~~@~~@~N~@~N~@~N~@~N~@~Y~@~This is the order of execution for this server rule.~@~
+193~@~24~@~90~@~~@~ProcedureName~@~ServerRule - ProcedureName~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the procedure name of this server rule 20 characters or less.~@~
+194~@~24~@~100~@~~@~ParameterNames~@~ServerRule - ParameterNames~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the parameter names to be used in the stored procedure comma delimited, if any.~@~
+195~@~24~@~110~@~~@~ParameterTypes~@~ServerRule - ParameterTypes~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the parameter types to be used in the stored procedure comma delimited, if any.~@~
+196~@~24~@~120~@~~@~CallingParams~@~ServerRule - CallingParams~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Please enter the calling parameters with trailing table ID and comma delimited, if any. LUser.?, LCurr.? and Config.? can be used~@~
+197~@~24~@~130~@~~@~OnAdd~@~ServerRule - OnAdd~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this is to fire when adding a row.~@~
+198~@~24~@~140~@~~@~OnUpd~@~ServerRule - OnUpd~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this is to fire when updating a row.~@~
+199~@~24~@~150~@~~@~OnDel~@~ServerRule - OnDel~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this is to fire when deleting a row.~@~
+200~@~24~@~160~@~~@~BeforeCRUD~@~ServerRule - BeforeCRUD~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this is to fire when before Create, Read, Update or Delete.~@~
 201~@~25~@~10~@~~@~RuleTypeId~@~CtRuleType - RuleTypeId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is the internal ID uniquely represents this server rule type.~@~
 202~@~25~@~20~@~~@~RuleTypeDesc~@~CtRuleType - RuleTypeDesc~@~11~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unique description for this server rule type.~@~
 203~@~14~@~120~@~~@~ColumnDesc~@~ScreenObj - ColumnDesc~@~15~@~200~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is unique description of this screen column for searching.~@~
@@ -364,10 +364,10 @@
 1137~@~128~@~30~@~~@~RuleName~@~WebRule - RuleName~@~11~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unqiue name or brief description for this web rule.~@~
 1138~@~127~@~50~@~~@~RuleDescription~@~ClientRule - RuleDescription~@~11~@~500~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the detail description for this client rule.~@~
 1139~@~127~@~20~@~~@~RuleTypeId~@~ClientRule - RuleTypeId~@~1~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the rule type for this client rule.~@~
-1140~@~24~@~30~@~~@~ScreenId~@~ServerRule - ScreenId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~Y~@~This is the screen to apply this server rule.~@~
+1140~@~24~@~20~@~~@~ScreenId~@~ServerRule - ScreenId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~Y~@~This is the screen to apply this server rule.~@~
 1141~@~73~@~20~@~~@~WizardId~@~WizardRule - WizardId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the wizard to apply this wizard rule.~@~
 1142~@~127~@~40~@~~@~RuleDesc~@~ClientRule - RuleDesc~@~11~@~150~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
-1143~@~24~@~70~@~~@~RuleDesc~@~ServerRule - RuleDesc~@~11~@~150~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the unique description of the server rule for searching.~@~
+1143~@~24~@~60~@~~@~RuleDesc~@~ServerRule - RuleDesc~@~11~@~150~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the unique description of the server rule for searching.~@~
 1144~@~128~@~40~@~~@~RuleDesc~@~WebRule - RuleDesc~@~11~@~150~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the unique description of the web rule for searching.~@~
 1145~@~73~@~50~@~~@~RuleDesc~@~WizardRule - RuleDesc~@~11~@~150~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the unique description of this wizard rule for searching.~@~
 1146~@~130~@~10~@~~@~ButtonTypeId~@~VwScrButton - ButtonTypeId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is the internal ID unqiuely represents this button type.~@~
@@ -431,9 +431,9 @@
 1249~@~15~@~230~@~~@~ValidateReq~@~Screen - ValidateReq~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~Uncheck this if script-injection-attack is not a concern and inputs should allow html tags.~@~
 1258~@~141~@~10~@~~@~MsgTypeCd~@~CtMsgType - MsgTypeCd~@~14~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is the character that uniquely identifies this message type.~@~
 1259~@~141~@~20~@~~@~MsgTypeDesc~@~CtMsgType - MsgTypeDesc~@~11~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the description of this message type.~@~
-1263~@~24~@~180~@~~@~RuleCode~@~ServerRule - RuleCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This content will be executed as SQL on the relavant database(s) when not empty.~@~
-1264~@~24~@~190~@~~@~ModifiedBy~@~ServerRule - ModifiedBy~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This was last updated by this user.~@~
-1265~@~24~@~200~@~~@~ModifiedOn~@~ServerRule - ModifiedOn~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This captures the last update date and time for tracking purpose.~@~
+1263~@~24~@~170~@~~@~RuleCode~@~ServerRule - RuleCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This content will be executed as SQL on the relavant database(s) when not empty.~@~
+1264~@~24~@~180~@~~@~ModifiedBy~@~ServerRule - ModifiedBy~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This was last updated by this user.~@~
+1265~@~24~@~190~@~~@~ModifiedOn~@~ServerRule - ModifiedOn~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This captures the last update date and time for tracking purpose.~@~
 1266~@~5~@~30~@~~@~ColumnIndex~@~DbColumn - ColumnIndex~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the order of this column in the database table.~@~
 1267~@~5~@~100~@~~@~DefaultValue~@~DbColumn - DefaultValue~@~11~@~50~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the default value to be setup in the database; During data conversion (no default means 0 or empty string)~@~
 1294~@~18~@~20~@~~@~TypeName~@~CtDisplayType - TypeName~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the exact name of the display being used by Asp.Net.~@~
@@ -485,7 +485,7 @@
 1350~@~72~@~40~@~~@~ColumnDesc~@~WizardObj - ColumnDesc~@~15~@~100~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the unique description of this import wizard column.~@~
 1351~@~72~@~20~@~~@~WizardId~@~WizardObj - WizardId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the foreign key to the wizard table.~@~
 1352~@~70~@~20~@~~@~WizardTypeName~@~CtWizardType - WizardTypeName~@~14~@~2~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unique name for this import wizard type.~@~
-1355~@~24~@~210~@~~@~LastGenDt~@~ServerRule - LastGenDt~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This stored procedure was last generated on this date.~@~
+1355~@~24~@~200~@~~@~LastGenDt~@~ServerRule - LastGenDt~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This stored procedure was last generated on this date.~@~
 1356~@~151~@~10~@~~@~CrawlerCd~@~CtCrawler - CrawlerCd~@~14~@~2~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is the internal code unqiuely represents this crawler info.~@~
 1357~@~151~@~20~@~~@~CrawlerName~@~CtCrawler - CrawlerName~@~11~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is a short description for this specific crawler info.~@~
 1358~@~151~@~30~@~~@~CrawlerURL~@~CtCrawler - CrawlerURL~@~15~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the URL for this specific crawler info.~@~
@@ -1468,3 +1468,70 @@
 7581~@~1305~@~210~@~~@~UsrEmail~@~SrUsr - UsrEmail~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7582~@~1305~@~30~@~~@~UsrName~@~SrUsr - UsrName~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7587~@~39~@~130~@~~@~ReactQuickMenu~@~Menu - ReactQuickMenu~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~This menu item will show up on the react default page for quick access if checked.~@~
+7588~@~24~@~210~@~~@~Guid~@~ServerRule - Guid~@~15~@~50~@~~@~NEWID()~@~N~@~N~@~N~@~N~@~N~@~GUID for this record, for deployment/merging purpose~@~
+7589~@~24~@~220~@~~@~RunMode~@~ServerRule - RunMode~@~14~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~run order when merge with upstream rules~@~
+7590~@~1319~@~160~@~~@~BeforeCRUD~@~AtServerRule - BeforeCRUD~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7591~@~1319~@~120~@~~@~CallingParams~@~AtServerRule - CallingParams~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7592~@~1319~@~210~@~~@~Guid~@~AtServerRule - Guid~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7593~@~1319~@~200~@~~@~LastGenDt~@~AtServerRule - LastGenDt~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7594~@~1319~@~40~@~~@~MasterTable~@~AtServerRule - MasterTable~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7595~@~1319~@~180~@~~@~ModifiedBy~@~AtServerRule - ModifiedBy~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7596~@~1319~@~190~@~~@~ModifiedOn~@~AtServerRule - ModifiedOn~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7597~@~1319~@~130~@~~@~OnAdd~@~AtServerRule - OnAdd~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7598~@~1319~@~150~@~~@~OnDel~@~AtServerRule - OnDel~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7599~@~1319~@~140~@~~@~OnUpd~@~AtServerRule - OnUpd~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7600~@~1319~@~100~@~~@~ParameterNames~@~AtServerRule - ParameterNames~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7601~@~1319~@~110~@~~@~ParameterTypes~@~AtServerRule - ParameterTypes~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7602~@~1319~@~90~@~~@~ProcedureName~@~AtServerRule - ProcedureName~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7603~@~1319~@~170~@~~@~RuleCode~@~AtServerRule - RuleCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7604~@~1319~@~60~@~~@~RuleDesc~@~AtServerRule - RuleDesc~@~11~@~150~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7605~@~1319~@~70~@~~@~RuleDescription~@~AtServerRule - RuleDescription~@~11~@~500~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7606~@~1319~@~50~@~~@~RuleName~@~AtServerRule - RuleName~@~11~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7607~@~1319~@~80~@~~@~RuleOrder~@~AtServerRule - RuleOrder~@~2~@~2~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7608~@~1319~@~30~@~~@~RuleTypeId~@~AtServerRule - RuleTypeId~@~1~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7609~@~1319~@~220~@~~@~RunMode~@~AtServerRule - RunMode~@~14~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7610~@~1319~@~20~@~~@~ScreenId~@~AtServerRule - ScreenId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7611~@~1319~@~10~@~~@~ServerRuleId~@~AtServerRule - ServerRuleId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
+7612~@~24~@~230~@~~@~SrcNS~@~ServerRule - SrcNS~@~15~@~30~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~source of the server rule(where it is originally from)~@~
+7613~@~1319~@~230~@~~@~SrcNS~@~AtServerRule - SrcNS~@~15~@~30~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7614~@~1320~@~10~@~~@~RunModeCd~@~VwServerRuleRunMode - RunModeCd~@~15~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
+7615~@~1320~@~20~@~~@~RunModeDesc~@~VwServerRuleRunMode - RunModeDesc~@~15~@~18~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7616~@~1320~@~30~@~~@~SrtOrder~@~VwServerRuleRunMode - SrtOrder~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7617~@~1321~@~30~@~~@~AndCondition~@~AtServerRuleOvrdPrm - AndCondition~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7618~@~1321~@~20~@~~@~PermKeyId~@~AtServerRuleOvrdPrm - PermKeyId~@~2~@~2~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7619~@~1321~@~10~@~~@~ServerRuledOvrdPrmId~@~AtServerRuleOvrdPrm - ServerRuledOvrdPrmId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
+7622~@~1322~@~10~@~~@~AtServerRuleOvrdId~@~AtServerRuleOvrd - AtServerRuleOvrdId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
+7623~@~1322~@~50~@~~@~Disable~@~AtServerRuleOvrd - Disable~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7624~@~1322~@~40~@~~@~ServerRuleId~@~AtServerRuleOvrd - ServerRuleId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7625~@~1322~@~20~@~~@~ServerRuleOvrdDesc~@~AtServerRuleOvrd - ServerRuleOvrdDesc~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7626~@~1322~@~30~@~~@~ServerRuleOvrdName~@~AtServerRuleOvrd - ServerRuleOvrdName~@~15~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7628~@~1321~@~40~@~~@~AtServerRuleOvrdId~@~AtServerRuleOvrdPrm - AtServerRuleOvrdId~@~3~@~4~@~~@~-1~@~N~@~N~@~N~@~N~@~N~@~~@~
+7629~@~1322~@~60~@~~@~ServerRuleGuid~@~AtServerRuleOvrd - ServerRuleGuid~@~15~@~50~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7630~@~1322~@~70~@~~@~ScreenId~@~AtServerRuleOvrd - ScreenId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7631~@~1322~@~80~@~~@~Priority~@~AtServerRuleOvrd - Priority~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Priority of this rule, first match trump subsequent~@~
+7634~@~1321~@~50~@~~@~Match~@~AtServerRuleOvrdPrm - Match~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~~@~
+7635~@~1321~@~60~@~~@~PermKeyRowId~@~AtServerRuleOvrdPrm - PermKeyRowId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7636~@~1321~@~70~@~~@~PermId~@~AtServerRuleOvrdPrm - PermId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7637~@~1322~@~90~@~~@~Guid~@~AtServerRuleOvrd - Guid~@~15~@~50~@~~@~NEWID()~@~N~@~N~@~N~@~N~@~N~@~~@~
+7638~@~1321~@~80~@~~@~Guid~@~AtServerRuleOvrdPrm - Guid~@~15~@~50~@~~@~NEWID()~@~N~@~N~@~N~@~N~@~N~@~~@~
+7639~@~1321~@~90~@~~@~AtServerRuleOvrdGuid~@~AtServerRuleOvrdPrm - AtServerRuleOvrdGuid~@~15~@~50~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7640~@~1322~@~100~@~~@~RunMode~@~AtServerRuleOvrd - RunMode~@~14~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Leave blank for development time configuration or select the priority over upstream~@~
+7641~@~1323~@~10~@~~@~AtServerRuleOvrdId~@~utServerRuleOvrd - AtServerRuleOvrdId~@~3~@~4~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
+7642~@~1323~@~20~@~~@~ServerRuleOvrdDesc~@~utServerRuleOvrd - ServerRuleOvrdDesc~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7643~@~1323~@~30~@~~@~ServerRuleOvrdName~@~utServerRuleOvrd - ServerRuleOvrdName~@~15~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7644~@~1323~@~40~@~~@~ServerRuleId~@~utServerRuleOvrd - ServerRuleId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7645~@~1323~@~50~@~~@~Disable~@~utServerRuleOvrd - Disable~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7646~@~1323~@~60~@~~@~ServerRuleGuid~@~utServerRuleOvrd - ServerRuleGuid~@~15~@~50~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7647~@~1323~@~70~@~~@~ScreenId~@~utServerRuleOvrd - ScreenId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7648~@~1323~@~80~@~~@~Priority~@~utServerRuleOvrd - Priority~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Priority of this rule, first match trump subsequent~@~
+7649~@~1323~@~90~@~~@~Guid~@~utServerRuleOvrd - Guid~@~15~@~50~@~~@~NEWID()~@~N~@~N~@~N~@~N~@~N~@~~@~
+7650~@~1323~@~100~@~~@~RunMode~@~utServerRuleOvrd - RunMode~@~14~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7651~@~1324~@~10~@~~@~ServerRuledOvrdPrmId~@~utServerRuleOvrdPrm - ServerRuledOvrdPrmId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
+7652~@~1324~@~20~@~~@~PermKeyId~@~utServerRuleOvrdPrm - PermKeyId~@~2~@~2~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7653~@~1324~@~30~@~~@~AndCondition~@~utServerRuleOvrdPrm - AndCondition~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7654~@~1324~@~40~@~~@~AtServerRuleOvrdId~@~utServerRuleOvrdPrm - AtServerRuleOvrdId~@~3~@~4~@~~@~-1~@~N~@~N~@~N~@~N~@~N~@~~@~
+7655~@~1324~@~50~@~~@~Match~@~utServerRuleOvrdPrm - Match~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~~@~
+7656~@~1324~@~60~@~~@~PermKeyRowId~@~utServerRuleOvrdPrm - PermKeyRowId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7657~@~1324~@~70~@~~@~PermId~@~utServerRuleOvrdPrm - PermId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7658~@~1324~@~80~@~~@~Guid~@~utServerRuleOvrdPrm - Guid~@~15~@~50~@~~@~NEWID()~@~N~@~N~@~N~@~N~@~N~@~~@~
+7659~@~1324~@~90~@~~@~AtServerRuleOvrdGuid~@~utServerRuleOvrdPrm - AtServerRuleOvrdGuid~@~15~@~50~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
