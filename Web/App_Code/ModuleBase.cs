@@ -1732,9 +1732,11 @@ namespace RO.Web
                     }
                     catch
                     {
-                        if (!(Request.IsLocal &&
+                        if (!(
+                            Request.IsLocal &&
                             Request.Url.GetComponents(UriComponents.Path, UriFormat.Unescaped).ToLower().Contains("encryptpwd.aspx") &&
-                            (Request.QueryString["typ"] ?? "").Split(new char[] { ',' })[0] == "N"))
+                            (Request.QueryString["typ"] ?? "").ToUpper().Split(new char[] { ',' })[0] == "N")
+                            )
                             throw;
                     };
                 }

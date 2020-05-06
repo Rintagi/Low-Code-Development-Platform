@@ -294,8 +294,8 @@ namespace RO.Web
         {
             byte[] storedContent = null;
             bool dummyImage = false;
-            int maxHeght = 360;
-            int.TryParse(height, out maxHeght);
+            int maxHeight = 360;
+            int.TryParse(height, out maxHeight);
             try
             {
                 System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -309,7 +309,7 @@ namespace RO.Web
                     {
                         try
                         {
-                            content = ResizeImage(Convert.FromBase64String(fileObj.base64), maxHeght);
+                            content = ResizeImage(Convert.FromBase64String(fileObj.base64), maxHeight);
                         }
                         catch
                         {
@@ -363,7 +363,7 @@ namespace RO.Web
                             fileName = fileName,
                             base64 = Convert.ToBase64String(content),
                             mimeType = fileObj.mimeType,
-                            height = maxHeght,
+                            height = maxHeight,
                             lastModified = fileObj.lastModified,
                             previewUrl = null,
                             size = 0,

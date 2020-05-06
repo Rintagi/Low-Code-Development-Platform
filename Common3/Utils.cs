@@ -183,6 +183,8 @@
         public static string BlobPlaceHolder(byte[] content, bool blobOnly = false)
         {
             const int maxOriginalSize = 2000;
+            System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            jss.MaxJsonLength = int.MaxValue;
             Func<byte[], byte[]> tryResizeImage = (ba) =>
             {
                 try
@@ -200,7 +202,7 @@
                 if (mimeType.Contains("image"))
                 {
                     if (icon != null) return "data:application/base64;base64," + Convert.ToBase64String(icon);
-                    else if (mimeType.Contains("svg") && contentBase64.Length < maxOriginalSize) return "data:" + mimeType + ";base64," + contentBase64;
+                    else if (mimeType.Contains("svg") && (contentBase64 ?? "").Length < maxOriginalSize) return "data:" + mimeType + ";base64," + contentBase64;
                     else return "../images/DefaultImg.png";
                 }
                 else if (mimeType.Contains("pdf"))
@@ -211,7 +213,7 @@
                 {
                     return "../images/wordIcon.png";
                 }
-                else if (mimeType.Contains("openxmlformats"))
+                else if (mimeType.Contains("openxmlformats") || mimeType.Contains("excel"))
                 {
                     return "../images/ExcelIcon.png";
                 }
@@ -221,15 +223,91 @@
                 }
             };
 
+            Func<string, string> decodeSingleFile = (string fileContent) =>
+            {
+                FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
+                byte[] icon = fileInfo.base64 != null && (fileInfo.mimeType ?? "image").Contains("image") 
+                                ? tryResizeImage(Convert.FromBase64String(fileInfo.base64)) : null;
+                if (blobOnly)
+                {
+                    return makeInlineSrc(fileInfo.mimeType ?? "", fileInfo.base64, icon);
+                }
+                else return jss.Serialize(new FileUploadObj()
+                {
+                    icon = icon != null
+                        ? Convert.ToBase64String(icon)
+                                : ((fileInfo.mimeType ?? "").Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64 : null),
+                    mimeType = fileInfo.mimeType,
+                    lastModified = fileInfo.lastModified,
+                    fileName = fileInfo.fileName
+                });
+            };
+
+            Func<string, string> decodeFileList = (string fileContent) =>
+            {
+                List<_ReactFileUploadObj> fileList = jss.Deserialize<List<_ReactFileUploadObj>>(fileContent);
+                List<FileUploadObj> x = new List<FileUploadObj>();
+                foreach (var fileInfo in fileList)
+                {
+                    byte[] icon = fileInfo.base64 != null && (fileInfo.mimeType ?? "image").Contains("image")
+                                    ? tryResizeImage(Convert.FromBase64String(fileInfo.base64)) : null;
+                    if (blobOnly)
+                    {
+                        return makeInlineSrc(fileInfo.mimeType ?? "", fileInfo.base64, icon);
+                    }
+                    x.Add(new FileUploadObj()
+                    {
+                        icon = icon != null
+                            ? Convert.ToBase64String(icon)
+                            : ((fileInfo.mimeType ?? "").Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64 : null),
+                        mimeType = fileInfo.mimeType,
+                        lastModified = fileInfo.lastModified,
+                        fileName = fileInfo.fileName
+                    });
+                }
+                if (blobOnly && fileList.Count == 0) return null;
+                else return jss.Serialize(x);
+            };
+
+            Func<string, string> decodeRawFile = (string fileContent) =>
+            {
+                byte[] icon = tryResizeImage(Convert.FromBase64String(fileContent));
+                if (blobOnly) return "data:application/base64;base64," + Convert.ToBase64String(icon);
+                else return jss.Serialize(new List<FileUploadObj>() { 
+                            new FileUploadObj() { 
+                                icon = icon != null ? Convert.ToBase64String(icon) : null, 
+                                mimeType = "image/jpeg", 
+                                fileName = "image" } });
+            };
+
             try
             {
-                string fileContent = DecodeFileStream(content);
-                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-                jss.MaxJsonLength = int.MaxValue;
+                if (content == null || content.Length == 0) return null;
+
+                string fileContent = DecodeFileStream(content, true);
+                //System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                //jss.MaxJsonLength = int.MaxValue;
                 try
                 {
+                    if ((fileContent ?? "").Length > 0)
+                    {
+                        if (fileContent.StartsWith("{"))
+                        {
+                            return decodeSingleFile(fileContent);
+                        }
+                        else if (fileContent.StartsWith("["))
+                        {
+                            return decodeFileList(fileContent);
+                        }
+                        else
+                        {
+                            return decodeRawFile(fileContent);
+                        }
+                    }
+                    else return null;
+
                     FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
-                    byte[] icon = tryResizeImage(Convert.FromBase64String(fileInfo.base64));
+                    byte[] icon = fileInfo.base64 != null ? tryResizeImage(Convert.FromBase64String(fileInfo.base64)) : null;
                     if (blobOnly)
                     {
                         return makeInlineSrc(fileInfo.mimeType, fileInfo.base64, icon);
@@ -389,9 +467,16 @@
             }
         }
 
-        public static string DecodeFileStream(byte[] content)
+        public static string DecodeFileStream(byte[] content, bool headerOnly = false)
         {
-            byte[] header = content.Length > 256 ? content.Take(256).ToArray() : null;
+            byte[] header = null;
+
+            if (content != null && content.Length >= 256)
+            {
+                header = new byte[256];
+                Array.Copy(content, header, 256);
+            }
+
             if (header != null)
             {
                 try
@@ -402,18 +487,48 @@
                     int extensionSize = fileInfo.extensionSize;
                     if (extensionSize > 0)
                     {
-                        header = content.Skip(256).Take(fileInfo.extensionSize).ToArray();
+                        header = new byte[extensionSize];
+                        Array.Copy(content, 256, header, 0, extensionSize);    
                         headerString = System.Text.UTF8Encoding.UTF8.GetString(header);
                         fileInfo = jss.Deserialize<FileInStreamObj>(headerString.Substring(0, headerString.IndexOf('}') + 1));
                     }
-                    byte[] fileContent = content.Skip(256 + extensionSize).Take(content.Length - 256 - extensionSize).ToArray();
-                    if (fileInfo.contentIsJSON)
+                    if (headerOnly 
+                        && 
+                        (
+                        content.Length <= 256
+                        ||
+                        !(fileInfo.mimeType ?? "").Contains("image")
+                        ||
+                        !string.IsNullOrWhiteSpace(fileInfo.previewUrl)
+                        )
+                        )
                     {
-                        return System.Text.UTF8Encoding.UTF8.GetString(fileContent);
+                        return jss.Serialize(new FileUploadObj() { 
+                            base64 = null
+                            , previewUrl = fileInfo.previewUrl
+                            , mimeType = fileInfo.mimeType
+                            , lastModified = fileInfo.lastModified
+                            , fileName = fileInfo.fileName });
                     }
                     else
-                        return jss.Serialize(new FileUploadObj() { base64 = Convert.ToBase64String(fileContent), mimeType = fileInfo.mimeType, lastModified = fileInfo.lastModified, fileName = fileInfo.fileName });
-
+                    {
+                        byte[] fileContent = content.Length - 256 - extensionSize > 0 ? new byte[content.Length - 256 - extensionSize] : null;
+                        if (fileContent != null)
+                        {
+                            Array.Copy(content, 256 + extensionSize, fileContent, 0, content.Length - 256 - extensionSize);
+                        }
+                        if (fileInfo.contentIsJSON)
+                        {
+                            return fileContent != null ? System.Text.UTF8Encoding.UTF8.GetString(fileContent) : null;
+                        }
+                        else
+                            return jss.Serialize(new FileUploadObj() { 
+                                base64 = fileContent != null ? Convert.ToBase64String(fileContent) : null
+                                , mimeType = fileInfo.mimeType
+                                , lastModified = fileInfo.lastModified
+                                , fileName = fileInfo.fileName 
+                            });
+                    }
                 }
                 // Cannot add "ex.Message" to the return statement; do not remove "ex"; need it here for debugging purpose.
                 catch (Exception ex)
@@ -424,7 +539,7 @@
             }
             else
             {
-                return Convert.ToBase64String(content);
+                return content != null ? Convert.ToBase64String(content) : null;
             }
         }
 

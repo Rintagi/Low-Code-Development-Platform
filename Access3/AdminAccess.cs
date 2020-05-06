@@ -1456,7 +1456,12 @@ namespace RO.Access3
                         {
                             callp = Utils.PopFirstWord(callingParams, (char)44).Trim();
                             param = Utils.PopFirstWord(parameterNames, (char)44).Trim();
-                            object val = GetCallParam(callp, LUser, LImpr, LCurr, row, dis);
+                            object val = 
+                                (callp ?? "").ToLower() == "Action.FiringEvent".ToLower() ? (object) firingEvent
+                                : (callp ?? "").ToLower() == "Action.MasterTable".ToLower() ? (object)drv["MasterTable"].ToString()
+                                : (callp ?? "").ToLower() == "Action.BeforeCRUD".ToLower() ? (object)beforeCRUD
+                                : (callp ?? "").ToLower() == "Action.ServerRuleId".ToLower() ? (object)drv["ServerRuleId"].ToString()
+                                : GetCallParam(callp, LUser, LImpr, LCurr, row, dis);
                             if (string.IsNullOrEmpty(callp) 
                                 || val == null
                                 || (val is string && string.IsNullOrEmpty(val as string)) 
