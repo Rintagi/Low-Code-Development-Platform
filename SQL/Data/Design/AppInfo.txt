@@ -2537,4 +2537,10 @@ In default.master: replace section.css with the following:
 12600~@~  11. 163.00501~@~11~@~163~@~2020-05-01 00:00:00.000~@~~@~~@~1. minor enhancement to webhook deployment features
 2. change default deployment table exclusion for server rule related table~@~~@~en-US~@~
 12601~@~  11. 164.00501~@~11~@~164~@~2020-05-01 00:00:00.000~@~~@~~@~1. minor change to deployment git integration~@~~@~en-US~@~
-12602~@~  11. 165~@~11~@~165~@~~@~~@~~@~1. handle empty Id for GetDbDoc/GetDbImg~@~~@~en-US~@~
+12602~@~  11. 165.00501~@~11~@~165~@~2020-05-01 00:00:00.000~@~~@~~@~1. handle empty Id for GetDbDoc/GetDbImg~@~~@~en-US~@~
+12603~@~  11. 166.00504~@~11~@~166~@~2020-05-04 00:00:00.000~@~~@~~@~1. optimize image button content retrieval in grid(return only meta data from DB and/or specialized code in C# to avoid exceptions when possible)~@~~@~en-US~@~
+12604~@~  11. 167.00505~@~11~@~167~@~2020-05-05 00:00:00.000~@~~@~~@~1. enable community version to create extra modules(helper function on creating associated database)
+2. add more context information for server rule invocation to simplify # of server rule required
+3. various fix to historical wrong version content script(table upgrade etc.)~@~~@~en-US~@~
+12605~@~  11. 168.00505~@~11~@~168~@~2020-05-05 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+12606~@~  11. 169~@~11~@~169~@~~@~~@~~@~~@~~@~~@~

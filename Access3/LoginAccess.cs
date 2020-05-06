@@ -582,7 +582,7 @@ namespace RO.Access3
 			da.Fill(dt);
 
             int licensedCount = GetLicensedModuleCount();
-            if (licensedCount > 0)
+            if (licensedCount >= 0)
             {
                 int ii = 0;
                 bool rowsRemoved = false;

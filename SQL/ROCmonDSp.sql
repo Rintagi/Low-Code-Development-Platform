@@ -39413,16 +39413,19 @@ ALTER PROCEDURE [dbo].[GetScreenLis1Proc]
 AS
 SET NOCOUNT ON
 DECLARE @IsFromFuncTable CHAR(1) = 'N', @IsFilterTxtInFunc CHAR(1) = 'N', @IsTopNInFunc CHAR(1)='N'
-, @OpenBracketIdx int, @NoLockIdx int, @SubQueryIdx int
+, @OpenBracketIdx int, @NoLockIdx int, @SubQueryIdx int, @CrossDbIdx int
 
 SELECT @OpenBracketIdx = CHARINDEX('(', @fromClause)
 SELECT @NoLockIdx = CHARINDEX('(NOLOCK)', @fromClause)
 SELECT @SubQueryIdx = CHARINDEX('(SELECT DISTINCT', @fromClause)
+SELECT @CrossDbIdx = CHARINDEX('(SELECT 1 FROM master.dbo.sysdatabases', @fromClause)
 
 SELECT @IsFromFuncTable = CASE WHEN @OpenBracketIdx > 0 
-							AND (@OpenBracketIdx <> @NoLockIdx OR @NoLockIdx = 0) 
-							AND (@OpenBracketIdx <> @SubQueryIdx OR @SubQueryIdx = 0) 
+							AND (@OpenBracketIdx <> @NoLockIdx AND @NoLockIdx <> 0) 
+							AND (@OpenBracketIdx <> @SubQueryIdx AND @SubQueryIdx <> 0) 
+							AND (@OpenBracketIdx <> @CrossDbIdx AND @CrossDbIdx <> 0) 
 							THEN 'Y' ELSE 'N' END
+
 SELECT @IsFilterTxtInFunc = CASE WHEN CHARINDEX('@FilterTxt', @fromClause) > 0 THEN 'Y' ELSE 'N' END
 SELECT @IsTopNInFunc = CASE WHEN CHARINDEX('@topN', @fromClause) > 0 THEN 'Y' ELSE 'N' END
 IF @IsFromFuncTable = 'Y' AND @IsTopNInFunc = 'Y'
@@ -39596,10 +39599,19 @@ ALTER PROCEDURE [dbo].[GetScreenLis2Proc]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-DECLARE @IsFromFuncTable CHAR(1) = 'N', @IsFilterTxtInFunc CHAR(1) = 'N', @IsTopNInFunc CHAR(1)='N', @OpenBracketIdx int, @NoLockIdx int
+DECLARE @IsFromFuncTable CHAR(1) = 'N', @IsFilterTxtInFunc CHAR(1) = 'N', @IsTopNInFunc CHAR(1)='N'
+, @OpenBracketIdx int, @NoLockIdx int, @SubQueryIdx int, @CrossDbIdx int
+
 SELECT @OpenBracketIdx = CHARINDEX('(', @fromClause)
 SELECT @NoLockIdx = CHARINDEX('(NOLOCK)', @fromClause)
-SELECT @IsFromFuncTable = CASE WHEN @OpenBracketIdx > 0 AND (@OpenBracketIdx <> @NoLockIdx OR @NoLockIdx = 0) THEN 'Y' ELSE 'N' END
+SELECT @SubQueryIdx = CHARINDEX('(SELECT DISTINCT', @fromClause)
+SELECT @CrossDbIdx = CHARINDEX('(SELECT 1 FROM master.dbo.sysdatabases', @fromClause)
+
+SELECT @IsFromFuncTable = CASE WHEN @OpenBracketIdx > 0 
+							AND (@OpenBracketIdx <> @NoLockIdx AND @NoLockIdx <> 0) 
+							AND (@OpenBracketIdx <> @SubQueryIdx AND @SubQueryIdx <> 0) 
+							AND (@OpenBracketIdx <> @CrossDbIdx AND @CrossDbIdx <> 0) 
+							THEN 'Y' ELSE 'N' END
 
 DECLARE @KeyParamName varchar(max), @KeyIdStart int, @KeyIdEnd int
 SELECT @KeyIdStart = CHARINDEX('@KeyId', @param2Sql)
@@ -39655,15 +39667,17 @@ SET NOCOUNT ON
 /* @paramSql is temporary ignored */
 
 DECLARE @IsFromFuncTable CHAR(1) = 'N', @IsFilterTxtInFunc CHAR(1) = 'N', @IsTopNInFunc CHAR(1)='N'
-, @OpenBracketIdx int, @NoLockIdx int, @SubQueryIdx int
+, @OpenBracketIdx int, @NoLockIdx int, @SubQueryIdx int, @CrossDbIdx int
 
 SELECT @OpenBracketIdx = CHARINDEX('(', @fromClause)
 SELECT @NoLockIdx = CHARINDEX('(NOLOCK)', @fromClause)
 SELECT @SubQueryIdx = CHARINDEX('(SELECT DISTINCT', @fromClause)
+SELECT @CrossDbIdx = CHARINDEX('(SELECT 1 FROM master.dbo.sysdatabases', @fromClause)
 
 SELECT @IsFromFuncTable = CASE WHEN @OpenBracketIdx > 0 
-							AND (@OpenBracketIdx <> @NoLockIdx OR @NoLockIdx = 0) 
-							AND (@OpenBracketIdx <> @SubQueryIdx OR @SubQueryIdx = 0) 
+							AND (@OpenBracketIdx <> @NoLockIdx AND @NoLockIdx <> 0) 
+							AND (@OpenBracketIdx <> @SubQueryIdx AND @SubQueryIdx <> 0) 
+							AND (@OpenBracketIdx <> @CrossDbIdx AND @CrossDbIdx <> 0) 
 							THEN 'Y' ELSE 'N' END
 
 DECLARE @KeyParamName varchar(max), @KeyIdStart int, @KeyIdEnd int
@@ -40210,7 +40224,12 @@ BEGIN
 			END
 		END
 		-- Listbox and DataGrid are currently multiple selection and may return duplicate rows:
-		IF @displayName NOT IN ('ListBox','DataGrid') AND @displayMode <> 'Currency' AND @ddlKeyTableName IS NOT NULL AND @ddlRefTableName IS NOT NULL AND CHARINDEX(@ddlKeyTableAbbr + space(1),@from4Clause) = 0 AND NOT (@pullColumn = 'Y' AND @ddlKeyTableName = @ddlRefTableName)
+		IF @displayName NOT IN ('ListBox','DataGrid') 
+			AND @displayMode <> 'Currency' 
+			AND @ddlKeyTableName IS NOT NULL 
+			AND @ddlRefTableName IS NOT NULL 
+			AND CHARINDEX(@ddlKeyTableAbbr + space(1),@from4Clause) = 0 
+			AND NOT (@pullColumn = 'Y' AND @ddlKeyTableName = @ddlRefTableName)
 		BEGIN
 			SELECT @joinColumn1=d.ColumnName, @joinColumn2=e.ColumnName
 			FROM dbo.DbKey a
@@ -40704,9 +40723,12 @@ BEGIN
 				END
 				SELECT @select3Clause = @select3Clause + @columnName + CONVERT(VARCHAR,@tableId) + 'Text'
 				IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @dtlTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
-					SELECT @select3Clause = @select3Clause  + '='''' + case when charindex(''''' + @ddlKeyTableAbbr + ' '''',@fClause) > 0 then ''''' + @ddlKeyTableAbbr + '.' + @ddlRefColumnName + ''''' else ''''null'''' end'
+					SELECT @select3Clause = @select3Clause  + '='''' + case when charindex(''''' + @ddlKeyTableAbbr + ' '''',@fClause) > 0 then ''''' 
+															+ @ddlKeyTableAbbr + '.' + @ddlRefColumnName 
+															+ ''''' else ''''null'''' end'
 				ELSE
-					SELECT @select3Clause = @select3Clause + '=' + @ddlKeyTableAbbr + '.' + @ddlRefColumnName
+					SELECT @select3Clause = @select3Clause + '=' 
+															+ @ddlKeyTableAbbr + '.' + @ddlRefColumnName
 			END
 			ELSE
 			BEGIN
@@ -40734,9 +40756,16 @@ BEGIN
 				END
 				SELECT @select3Clause = @select3Clause + @columnName + CONVERT(VARCHAR,@tableId)
 				IF @ddlTableAbbr <> @dtlTableAbbr AND @tableDb <> 'RODesign' AND @tableDb <> 'ROCmon'
-					SELECT @select3Clause = @select3Clause + '='''' + case when charindex(''''' + @ddlTableAbbr + ' '''',@fClause) > 0 then ''''' + @ddlTableAbbr + '.' + @dbColumnName + ''''' else ''''null'''' end'
+					SELECT @select3Clause = @select3Clause + '='''' + case when charindex(''''' + @ddlTableAbbr + ' '''',@fClause) > 0 then ''''' 
+															+ CASE WHEN  @displayMode IN ('ImageButton') THEN 'RODesign.dbo.fEmbeddedImgMeta(' ELSE '' END
+															+ @ddlTableAbbr + '.' + @dbColumnName 
+															+ CASE WHEN  @displayMode IN ('ImageButton') THEN ')' ELSE '' END
+															+ ''''' else ''''null'''' end'
 				ELSE
-					SELECT @select3Clause = @select3Clause + '=' + @ddlTableAbbr + '.' + @dbColumnName
+					SELECT @select3Clause = @select3Clause + '=' 
+															+ CASE WHEN  @displayMode IN ('ImageButton') THEN 'RODesign.dbo.fEmbeddedImgMeta(' ELSE '' END
+															+ @ddlTableAbbr + '.' + @dbColumnName
+															+ CASE WHEN  @displayMode IN ('ImageButton') THEN ')' ELSE '' END
 				/* The following takes care of link column different from column displaying image */
 				IF lower(@displayMode) IN ('imagelink','imagepopup') AND @columnName <> @ddlKeyColumnName
 				BEGIN
@@ -41073,9 +41102,12 @@ BEGIN
 			END
 			SELECT @select1Clause = @select1Clause + @columnName + CONVERT(VARCHAR,@tableId) + 'Text'
 			IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @pKeyTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
-				SELECT @select1Clause = @select1Clause  + '='''' + case when charindex(''''' + @ddlKeyTableAbbr + ' '''',@fClause) > 0 then ''''' + @ddlKeyTableAbbr + '.' + @ddlRefColumnName + ''''' else ''''null'''' end'
+				SELECT @select1Clause = @select1Clause  + '='''' + case when charindex(''''' + @ddlKeyTableAbbr + ' '''',@fClause) > 0 then ''''' 
+																					+ @ddlKeyTableAbbr + '.' + @ddlRefColumnName
+																					+ ''''' else ''''null'''' end'
 			ELSE
-				SELECT @select1Clause = @select1Clause + '=' + @ddlKeyTableAbbr + '.' + @ddlRefColumnName
+				SELECT @select1Clause = @select1Clause + '=' 
+														+ @ddlKeyTableAbbr + '.' + @ddlRefColumnName
 		END
 		ELSE
 		BEGIN
@@ -41103,9 +41135,16 @@ BEGIN
 			END
 			SELECT @select1Clause = @select1Clause + @columnName + CONVERT(VARCHAR,@tableId)
 			IF @ddlTableAbbr <> @pKeyTableAbbr AND @tableDb <> 'RODesign' AND @tableDb <> 'ROCmon'
-				SELECT @select1Clause = @select1Clause + '='''' + case when charindex(''''' + @ddlTableAbbr + ' '''',@fClause) > 0 then ''''' + @ddlTableAbbr + '.' + @dbColumnName + ''''' else ''''null'''' end'
+				SELECT @select1Clause = @select1Clause + '='''' + case when charindex(''''' + @ddlTableAbbr + ' '''',@fClause) > 0 then ''''' 
+														+ CASE WHEN  @displayMode IN ('ImageButton') THEN 'RODesign.dbo.fEmbeddedImgMeta(' ELSE '' END	
+														+ @ddlTableAbbr + '.' + @dbColumnName 
+														+ CASE WHEN  @displayMode IN ('ImageButton') THEN ')' ELSE '' END
+														+ ''''' else ''''null'''' end'
 			ELSE
-				SELECT @select1Clause = @select1Clause + '=' + @ddlTableAbbr + '.' + @dbColumnName
+				SELECT @select1Clause = @select1Clause + '=' 
+														+ CASE WHEN  @displayMode IN ('ImageButton') THEN 'RODesign.dbo.fEmbeddedImgMeta(' ELSE '' END	
+														+ @ddlTableAbbr + '.' + @dbColumnName
+														+ CASE WHEN  @displayMode IN ('ImageButton') THEN ')' ELSE '' END
 		END
 	END
 	ELSE
@@ -42058,7 +42097,7 @@ SELECT a.BeforeCRUD,a.ProcedureName,a.MasterTable
 ,ParameterTypes = (CASE WHEN a.ParameterTypes IS NULL THEN '' ELSE REPLACE(a.ParameterTypes,SPACE(1),'') END)
 ,CallingParams = (CASE WHEN a.CallingParams IS NULL THEN '' ELSE REPLACE(a.CallingParams,SPACE(1),'') END)
 ,a.OnAdd,a.OnUpd,a.OnDel
-,a.RunMode
+,a.RunMode, a.ServerRuleId
 FROM dbo.ServerRule a
 LEFT OUTER JOIN @ServerRuleOvrd o ON o.ServerRuleId = a.ServerRuleId AND o.FirstPriority = o.Priority
 WHERE 

@@ -140,36 +140,12 @@ IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenLstCri')
     DROP INDEX ScreenLstCri.IX_ScreenLstCri 
 
 CREATE  UNIQUE INDEX IX_ScreenLstCri ON ScreenLstCri(UsrId, ScreenId, ScreenCriId)
-if exists (select * from dbo.sysobjects where id = object_id(N'dbo.FK_ScreenLstCri_UsrId') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
-ALTER TABLE dbo.ScreenLstCri DROP CONSTRAINT FK_ScreenLstCri_UsrId 
-
-
-ALTER TABLE ScreenLstCri ADD
-CONSTRAINT FK_ScreenLstCri_UsrId FOREIGN KEY
-(
-ScreenId)
- REFERENCES [dbo].[Screen]
-(
-ScreenId)
 GO
 
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenLstInf')
     DROP INDEX ScreenLstInf.IX_ScreenLstInf 
 
 CREATE INDEX IX_ScreenLstInf ON ScreenLstInf(UsrId, ScreenId)
-GO
-
-if exists (select * from dbo.sysobjects where id = object_id(N'dbo.FK_ScreenObj_Screen') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
-ALTER TABLE dbo.ScreenObj DROP CONSTRAINT FK_ScreenObj_Screen 
-
-
-ALTER TABLE ScreenObj ADD
-CONSTRAINT FK_ScreenObj_Screen FOREIGN KEY
-(
-ScreenId)
- REFERENCES [dbo].[Screen]
-(
-ScreenId)
 GO
 
 IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenTabHlp_ScreenTabId')

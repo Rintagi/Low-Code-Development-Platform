@@ -8256,7 +8256,7 @@ namespace RO.Rule3
                     if (drv["DisplayName"].ToString().ToLower() == "imagebutton" && drv["DataTypeSqlName"].ToString().ToLower() == "varbinary")
                     {
                         if (firstIb) { sb.Append("			DataTable dtImg = null;" + Environment.NewLine); firstIb = false; }
-                        sb.Append("			dtImg = (new AdminSystem()).GetDbImg(dv[GetDataItemIndex(e.ItemIndex)].Row[\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString(), \"dbo." + drv["TableName"].ToString() + "\", \"" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "\", \"" + drv["ColumnName"].ToString() + "\", LcAppConnString, LcAppPw);" + Environment.NewLine);
+                        sb.Append("			dtImg = (new AdminSystem()).GetDbImg(dv.Count == 0 ? \"0\" : dv[GetDataItemIndex(e.ItemIndex)].Row[\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString(), \"dbo." + drv["TableName"].ToString() + "\", \"" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "\", \"" + drv["ColumnName"].ToString() + "\", LcAppConnString, LcAppPw);" + Environment.NewLine);
                         sb.Append("			if (dtImg != null && dtImg.Rows.Count > 0)" + Environment.NewLine);
                         sb.Append("			{" + Environment.NewLine);
                         sb.Append("			    dv[GetDataItemIndex(e.ItemIndex)].Row[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"] = dtImg.Rows[0][0] as byte[];" + Environment.NewLine);
