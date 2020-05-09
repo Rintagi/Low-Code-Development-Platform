@@ -332,11 +332,11 @@ namespace RO.Facade3
             }
         }
 
-        public DataTable RunWrRule(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc)
+        public DataTable RunWrRule(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc, bool noTrans = false)
         {
             using (Access3.AdminAccess dac = new Access3.AdminAccess())
             {
-                return dac.RunWrRule(screenId, procedureName, dbConnectionString, dbPassword, parameterXML, ui, uc);
+                return dac.RunWrRule(screenId, procedureName, dbConnectionString, dbPassword, parameterXML, ui, uc, noTrans);
             }
         }
 
@@ -381,27 +381,27 @@ namespace RO.Facade3
             }
         }
 
-        public string AddData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc)
+        public string AddData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false, int commandTimeOut = 1800)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (Access3.AdminAccess dac = new Access3.AdminAccess(commandTimeOut))
             {
-                return dac.AddData(ScreenId, bDeferError, LUser, LImpr, LCurr, ds, dbConnectionString, dbPassword, CPrj, CSrc);
+                return dac.AddData(ScreenId, bDeferError, LUser, LImpr, LCurr, ds, dbConnectionString, dbPassword, CPrj, CSrc, noTrans);
             }
         }
 
-        public bool UpdData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc)
+        public bool UpdData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false, int commandTimeOut = 1800)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (Access3.AdminAccess dac = new Access3.AdminAccess(commandTimeOut))
             {
-                return dac.UpdData(ScreenId, bDeferError, LUser, LImpr, LCurr, ds, dbConnectionString, dbPassword, CPrj, CSrc);
+                return dac.UpdData(ScreenId, bDeferError, LUser, LImpr, LCurr, ds, dbConnectionString, dbPassword, CPrj, CSrc, noTrans);
             }
         }
 
-        public bool DelData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc)
+        public bool DelData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false, int commandTimeOut = 1800)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (Access3.AdminAccess dac = new Access3.AdminAccess(commandTimeOut))
             {
-                return dac.DelData(ScreenId, bDeferError, LUser, LImpr, LCurr, ds, dbConnectionString, dbPassword, CPrj, CSrc);
+                return dac.DelData(ScreenId, bDeferError, LUser, LImpr, LCurr, ds, dbConnectionString, dbPassword, CPrj, CSrc, noTrans);
             }
         }
 
@@ -448,9 +448,9 @@ namespace RO.Facade3
             }
         }
 
-        public DataTable GetRptDt(Int32 reportId, string procedureName, UsrImpr ui, UsrCurr uc, DataSet ds, DataView dvCri, string dbConnectionString, string dbPassword, bool bUpd, bool bXls, bool bVal)
+        public DataTable GetRptDt(Int32 reportId, string procedureName, UsrImpr ui, UsrCurr uc, DataSet ds, DataView dvCri, string dbConnectionString, string dbPassword, bool bUpd, bool bXls, bool bVal, int commandTimeOut = 1800)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (Access3.AdminAccess dac = new Access3.AdminAccess(commandTimeOut))
             {
                 return dac.GetRptDt(reportId, procedureName, ui, uc, ds, dvCri, dbConnectionString, dbPassword, bUpd, bXls, bVal);
             }
@@ -538,11 +538,11 @@ namespace RO.Facade3
             }
         }
 
-        public int ImportRows(Int32 wizardId, string procedureName, bool bOverwrite, Int32 usrId, DataSet ds, int iStart, string fileName, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc)
+        public int ImportRows(Int32 wizardId, string procedureName, bool bOverwrite, Int32 usrId, DataSet ds, int iStart, string fileName, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false, int commandTimeOut = 1800)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (Access3.AdminAccess dac = new Access3.AdminAccess(commandTimeOut))
             {
-                return dac.ImportRows(wizardId, procedureName, bOverwrite, usrId, ds, iStart, fileName, dbConnectionString, dbPassword, CPrj, CSrc);
+                return dac.ImportRows(wizardId, procedureName, bOverwrite, usrId, ds, iStart, fileName, dbConnectionString, dbPassword, CPrj, CSrc, noTrans);
             }
         }
 

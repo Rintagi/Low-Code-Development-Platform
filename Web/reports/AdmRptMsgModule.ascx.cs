@@ -475,7 +475,7 @@ namespace RO.Web
 		{
 			string reportName = "AdmRptMsg";
 			cCriteria.Visible = false; cClearCriButton.Visible = false; cShowCriButton.Visible = (bool)Session[KEY_bShCriVisible];
-			DataTable dt = (new AdminSystem()).GetRptDt(56,"GetAdmRptMsg",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria(),LcAppConnString,LcAppPw,false,false,false);
+			DataTable dt = (new AdminSystem()).GetRptDt(56,"GetAdmRptMsg",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria(),LcAppConnString,LcAppPw,false,false,false,Config.CommandTimeOut);
 			CovertRptUTC(dt);
 			if (dt.Rows.Count > 0) {if (dt.Columns.Contains("ReportName")) {reportName = dt.Rows[0]["ReportName"].ToString();}}
 			else {PreMsgPopup("For your information, no data is currently available as per your reporting criteria.");}

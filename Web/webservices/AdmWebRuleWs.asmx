@@ -386,12 +386,12 @@ namespace RO.Web
 
         protected override DataTable _GetMstById(string mstId)
         {
-            return (new RO.Access3.AdminAccess()).GetMstById("GetAdmWebRule80ById", string.IsNullOrEmpty(mstId) ? "-1" : mstId, LcAppConnString, LcAppPw);
+            return (new RO.Facade3.AdminSystem()).GetMstById("GetAdmWebRule80ById", string.IsNullOrEmpty(mstId) ? "-1" : mstId, LcAppConnString, LcAppPw);
 
         }
         protected override DataTable _GetDtlById(string mstId, int screenFilterId)
         {
-            return (new RO.Access3.AdminAccess()).GetDtlById(screenId, "GetAdmWebRule80DtlById", string.IsNullOrEmpty(mstId) ? "-1" : mstId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(screenFilterId.ToString(), false), LImpr, LCurr);
+            return (new RO.Facade3.AdminSystem()).GetDtlById(screenId, "GetAdmWebRule80DtlById", string.IsNullOrEmpty(mstId) ? "-1" : mstId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(screenFilterId.ToString(), false), LImpr, LCurr);
 
         }
         protected override Dictionary<string, SerializableDictionary<string, string>> GetDdlContext()
@@ -403,13 +403,15 @@ namespace RO.Web
         public ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> DelMst(SerializableDictionary<string, string> mst, SerializableDictionary<string, string> options)
         {
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y" ;
+            bool noTrans = Config.NoTrans;
+            int commandTimeOut = Config.CommandTimeOut;
 
             Func<ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
                 var pid = mst["WebRuleId128"];
                 var ds = PrepAdmWebRuleData(mst, new List<SerializableDictionary<string, string>>(), string.IsNullOrEmpty(mst["WebRuleId128"]));
-                (new RO.Access3.AdminAccess()).DelData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc);
+                (new RO.Facade3.AdminSystem()).DelData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);
 
                 ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
                 SaveDataResponse result = new SaveDataResponse();
@@ -430,6 +432,9 @@ namespace RO.Web
         {
             bool isAdd = false;
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y" ;
+            bool noTrans = Config.NoTrans;
+            int commandTimeOut = Config.CommandTimeOut;
+
             Func<ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
@@ -471,7 +476,7 @@ namespace RO.Web
 
                 if (isAdd)
                 {
-                    pid = (new RO.Access3.AdminAccess()).AddData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc);
+                    pid = (new RO.Facade3.AdminSystem()).AddData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);
 
                     if (!string.IsNullOrEmpty(pid))
                     {
@@ -480,7 +485,7 @@ namespace RO.Web
                 }
                 else
                 {
-                    bool ok = (new RO.Access3.AdminAccess()).UpdData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc);
+                    bool ok = (new RO.Facade3.AdminSystem()).UpdData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);
 
                     if (ok)
                     {
@@ -527,7 +532,7 @@ namespace RO.Web
                 bool bAll = !query.StartsWith("**");
                 bool bAddNew = !query.StartsWith("**");
                 string keyId = query.Replace("**", "");
-                DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, "GetDdlRuleTypeId3S1284", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
+                DataTable dt = (new RO.Facade3.AdminSystem()).GetDdl(screenId, "GetDdlRuleTypeId3S1284", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
                 return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "RuleTypeId128", emptyAutoCompleteResponse));
@@ -605,7 +610,7 @@ namespace RO.Web
                 bool bAll = !query.StartsWith("**");
                 bool bAddNew = !query.StartsWith("**");
                 string keyId = query.Replace("**", "");
-                DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, "GetDdlButtonTypeId3S1288", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
+                DataTable dt = (new RO.Facade3.AdminSystem()).GetDdl(screenId, "GetDdlButtonTypeId3S1288", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
                 return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "ButtonTypeId128", emptyAutoCompleteResponse));
@@ -621,7 +626,7 @@ namespace RO.Web
                 bool bAll = !query.StartsWith("**");
                 bool bAddNew = !query.StartsWith("**");
                 string keyId = query.Replace("**", "");
-                DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, "GetDdlEventId3S1289", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
+                DataTable dt = (new RO.Facade3.AdminSystem()).GetDdl(screenId, "GetDdlEventId3S1289", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
                 return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "EventId128", emptyAutoCompleteResponse));
@@ -637,7 +642,7 @@ namespace RO.Web
                 bool bAll = !query.StartsWith("**");
                 bool bAddNew = !query.StartsWith("**");
                 string keyId = query.Replace("**", "");
-                DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, "GetDdlReactEventId3S4207", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
+                DataTable dt = (new RO.Facade3.AdminSystem()).GetDdl(screenId, "GetDdlReactEventId3S4207", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
                 return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "ReactEventId128", emptyAutoCompleteResponse));
@@ -653,7 +658,7 @@ namespace RO.Web
                 bool bAll = !query.StartsWith("**");
                 bool bAddNew = !query.StartsWith("**");
                 string keyId = query.Replace("**", "");
-                DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, "GetDdlReduxEventId3S4210", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
+                DataTable dt = (new RO.Facade3.AdminSystem()).GetDdl(screenId, "GetDdlReduxEventId3S4210", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
                 return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "ReduxEventId128", emptyAutoCompleteResponse));
@@ -669,7 +674,7 @@ namespace RO.Web
                 bool bAll = !query.StartsWith("**");
                 bool bAddNew = !query.StartsWith("**");
                 string keyId = query.Replace("**", "");
-                DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, "GetDdlServiceEventId3S4212", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
+                DataTable dt = (new RO.Facade3.AdminSystem()).GetDdl(screenId, "GetDdlServiceEventId3S4212", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
                 return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "ServiceEventId128", emptyAutoCompleteResponse));
@@ -685,7 +690,7 @@ namespace RO.Web
                 bool bAll = !query.StartsWith("**");
                 bool bAddNew = !query.StartsWith("**");
                 string keyId = query.Replace("**", "");
-                DataTable dt = (new RO.Access3.AdminAccess()).GetDdl(screenId, "GetDdlAsmxEventId3S4214", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
+                DataTable dt = (new RO.Facade3.AdminSystem()).GetDdl(screenId, "GetDdlAsmxEventId3S4214", bAddNew, bAll, 0, keyId, LcAppConnString, LcAppPw, string.Empty, base.LImpr, base.LCurr);
                 return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "AsmxEventId128", emptyAutoCompleteResponse));

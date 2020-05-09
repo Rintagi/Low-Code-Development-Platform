@@ -26,6 +26,8 @@ import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
 import AdmWizardObjReduxObj, { ShowMstFilterApplied } from '../../redux/AdmWizardObj';
+import * as AdmWizardObjService from '../../services/AdmWizardObjService';
+import { getRintagiConfig } from '../../helpers/config';
 import Skeleton from 'react-skeleton-loader';
 import ControlledPopover from '../../components/custom/ControlledPopover';
 import log from '../../helpers/logger';
@@ -140,6 +142,8 @@ class MstRecord extends RintagiScreen {
           DefOverwrite71: values.cDefOverwrite71 ? 'Y' : 'N',
           OvwrReadonly71: values.cOvwrReadonly71 ? 'Y' : 'N',
           AuthRequired71: values.cAuthRequired71 ? 'Y' : 'N',
+          CommandTimeOut71: values.cCommandTimeOut71 || '',
+          NoTrans71: values.cNoTrans71 ? 'Y' : 'N',
         },
         [],
         {
@@ -347,6 +351,8 @@ class MstRecord extends RintagiScreen {
     const DefOverwrite71 = currMst.DefOverwrite71;
     const OvwrReadonly71 = currMst.OvwrReadonly71;
     const AuthRequired71 = currMst.AuthRequired71;
+    const CommandTimeOut71 = currMst.CommandTimeOut71;
+    const NoTrans71 = currMst.NoTrans71;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
@@ -397,6 +403,8 @@ class MstRecord extends RintagiScreen {
                     cDefOverwrite71: DefOverwrite71 === 'Y',
                     cOvwrReadonly71: OvwrReadonly71 === 'Y',
                     cAuthRequired71: AuthRequired71 === 'Y',
+                    cCommandTimeOut71: formatContent(CommandTimeOut71 || '', 'TextBox'),
+                    cNoTrans71: NoTrans71 === 'Y',
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -702,6 +710,48 @@ class MstRecord extends RintagiScreen {
                                     </label>
                                     {(columnLabel.AuthRequired71 || {}).ToolTip &&
                                       (<ControlledPopover id={(columnLabel.AuthRequired71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.AuthRequired71 || {}).ToolTip} />
+                                      )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.CommandTimeOut71 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.CommandTimeOut71 || {}).ColumnHeader} {(columnLabel.CommandTimeOut71 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.CommandTimeOut71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CommandTimeOut71 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmWizardObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cCommandTimeOut71'
+                                          disabled={(authCol.CommandTimeOut71 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cCommandTimeOut71 && touched.cCommandTimeOut71 && <span className='form__form-group-error'>{errors.cCommandTimeOut71}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.NoTrans71 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cNoTrans71'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cNoTrans71}
+                                        disabled={(authCol.NoTrans71 || {}).readonly || !(authCol.NoTrans71 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.NoTrans71 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.NoTrans71 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.NoTrans71 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.NoTrans71 || {}).ToolTip} />
                                       )}
                                   </div>
                                 </Col>

@@ -20,6 +20,8 @@ import { getAddDtlPath, getAddMstPath, getEditDtlPath, getEditMstPath, getNaviPa
 import { toMoney, toLocalAmountFormat, toLocalDateFormat, toDate, strFormat } from '../../helpers/formatter';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import AdmUsrGroupReduxObj, { ShowMstFilterApplied } from '../../redux/AdmUsrGroup';
+import * as AdmUsrGroupService from '../../services/AdmUsrGroupService';
+import { getRintagiConfig } from '../../helpers/config';
 import { checkBundleUpdate } from '../../redux/_Rintagi';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { getNaviBar } from './index';

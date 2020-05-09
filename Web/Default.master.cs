@@ -15,7 +15,7 @@ namespace RO.Web
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-            if (!IsPostBack && Request.QueryString["typ"] != null && (Request.QueryString["typ"] ?? "").Split(new char[] { ',' })[0].ToLower() == "n")
+            if (!IsPostBack && Request.QueryString["typ"] != null && (Request.QueryString["typ"] ?? "").ToUpper().Split(new char[] { ',' })[0].ToLower() == "n")
 			{
                 ModuleHeader.Visible = false; ModuleSidebar.Visible = false; ModuleFooter.Visible = false;
             }

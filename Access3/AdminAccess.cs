@@ -14,10 +14,11 @@ namespace RO.Access3
 	public class AdminAccess : Encryption, IDisposable
 	{
 		private OleDbDataAdapter da;
-	
-		public AdminAccess()
+        private int _CommandTimeout = 1800;
+        public AdminAccess(int CommandTimeout = 1800)
 		{
 			da = new OleDbDataAdapter();
+            _CommandTimeout = CommandTimeout;
 		}
 
 		public void Dispose()
@@ -138,7 +139,7 @@ namespace RO.Access3
 			cmd.Parameters.Add("@ScreenId", OleDbType.Numeric).Value = screenId;
 			cmd.Parameters.Add("@UsrId", OleDbType.Numeric).Value = usrId;
 			if (Config.DoubleByteDb) {cmd.Parameters.Add("@LastPageInfo", OleDbType.VarWChar).Value = lastPageInfo;} else {cmd.Parameters.Add("@LastPageInfo", OleDbType.VarChar).Value = lastPageInfo;}
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeout;
 			try {cmd.ExecuteNonQuery();}
             catch (Exception e) { ApplicationAssert.CheckCondition(false, "UpdLastPageInfo", "", e.Message.ToString()); }
 			finally {cn.Close(); cmd.Dispose(); cmd = null;}
@@ -168,7 +169,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@ScreenId", OleDbType.Numeric).Value = screenId;
             cmd.Parameters.Add("@ReportId", OleDbType.Numeric).Value = reportId;
             cmd.Parameters.Add("@UsrId", OleDbType.Numeric).Value = usrId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             try { cmd.ExecuteNonQuery(); }
             catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
             finally { cn.Close(); }
@@ -186,7 +187,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@ScreenId", OleDbType.Numeric).Value = screenId;
             cmd.Parameters.Add("@ReportId", OleDbType.Numeric).Value = reportId;
             cmd.Parameters.Add("@UsrId", OleDbType.Numeric).Value = usrId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             try { cmd.ExecuteNonQuery(); }
             catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
             finally { cn.Close(); }
@@ -202,7 +203,7 @@ namespace RO.Access3
             OleDbCommand cmd = new OleDbCommand("DelDshFldDtl", cn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@DshFldDtlId", OleDbType.Numeric).Value = DshFldDtlId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             try { cmd.ExecuteNonQuery(); }
             catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
             finally { cn.Close(); }
@@ -218,7 +219,7 @@ namespace RO.Access3
             OleDbCommand cmd = new OleDbCommand("DelDshFld", cn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@DshFldId", OleDbType.Numeric).Value = DshFldId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             try { cmd.ExecuteNonQuery(); }
             catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
             finally { cn.Close(); }
@@ -236,7 +237,7 @@ namespace RO.Access3
             OleDbTransaction tr = cn.BeginTransaction();
             OleDbCommand cmd = new OleDbCommand("UpdDshFld", cn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             cmd.Parameters.Add("@PublicAccess", OleDbType.Char).Value = PublicAccess;
             if (DshFldId == string.Empty)
@@ -436,7 +437,7 @@ namespace RO.Access3
 			{
 				cmd.Parameters.Add("@Miscellaneous", OleDbType.VarChar).Value = Miscellaneous;
 			}
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeout;
 			try {cmd.ExecuteNonQuery();}
 			catch(Exception e) {ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString());}
 			finally {cn.Close(); cmd.Dispose(); cmd = null;}
@@ -529,7 +530,7 @@ namespace RO.Access3
             OleDbTransaction tr = cn.BeginTransaction();
             OleDbCommand cmd = new OleDbCommand("UpdCronJob", cn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             cmd.Parameters.Add("@jobId", OleDbType.Numeric).Value = jobId;
             cmd.Parameters.Add("@lastRun", GetOleDbType("datetime")).Value = lastRun;
@@ -558,7 +559,7 @@ namespace RO.Access3
             OleDbTransaction tr = cn.BeginTransaction();
             OleDbCommand cmd = new OleDbCommand("UpdCronJobStatus", cn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             cmd.Parameters.Add("@jobId", OleDbType.Numeric).Value = jobId;
             cmd.Parameters.Add("@err", OleDbType.VarWChar).Value = Error.ToString();
@@ -607,7 +608,7 @@ namespace RO.Access3
 			{
 				cmd.Parameters.Add("@CompanyId", OleDbType.Numeric).Value = CompanyId;
 			}
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeout;
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			try { da.Fill(dt); rtn = dt.Rows[0][0].ToString(); }
@@ -640,7 +641,7 @@ namespace RO.Access3
 			{
 				cmd.Parameters.Add("@CompanyId", OleDbType.Numeric).Value = CompanyId;
 			}
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeout;
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
@@ -670,7 +671,7 @@ namespace RO.Access3
             OleDbTransaction tr = cn.BeginTransaction();
             OleDbCommand cmd = new OleDbCommand("MkGetScreenIn", cn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
 
             cmd.CommandType = CommandType.StoredProcedure;
@@ -731,7 +732,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@bAll", OleDbType.Char).Value = bAll ? "Y" : "N";
             cmd.Parameters.Add("@keyId", OleDbType.VarChar).Value = string.IsNullOrEmpty(keyId) ? System.DBNull.Value : (object)keyId;
             da.SelectCommand = cmd;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             DataTable dt = new DataTable();
             da.Fill(dt);
             //if (RequiredValid != "Y" && dt.Rows.Count >= TotalCnt) { dt.Rows.InsertAt(dt.NewRow(), 0); }
@@ -764,7 +765,7 @@ namespace RO.Access3
             OleDbTransaction tr = cn.BeginTransaction();
             OleDbCommand cmd = new OleDbCommand("Upd" + programName + "In", cn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             cmd.Parameters.Add("@screenId", OleDbType.Numeric).Value = screenId;
             cmd.Parameters.Add("@usrId", OleDbType.Numeric).Value = usrId;
@@ -986,7 +987,7 @@ namespace RO.Access3
                 if (Config.DoubleByteDb) { cmd.Parameters.Add("@filterTxt", OleDbType.VarWChar).Value = filterTxt; } else { cmd.Parameters.Add("@filterTxt", OleDbType.VarChar).Value = filterTxt; }
             }
             cmd.Parameters.Add("@topN", OleDbType.Numeric).Value = topN;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -994,7 +995,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public DataTable RunWrRule(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc)
+        public DataTable RunWrRule(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc, bool noTrans)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 
@@ -1032,10 +1033,10 @@ namespace RO.Access3
             da.SelectCommand = cmd;
 
             cn.Open();
-            OleDbTransaction tr = cn.BeginTransaction();
+            OleDbTransaction tr = noTrans ? null : cn.BeginTransaction();
             try
             {
-                cmd.Transaction = tr;
+                if (!noTrans) cmd.Transaction = tr;
                 DataSet ds = new DataSet();
                 //dt.Load(cmd.ExecuteReader());
                 da.Fill(ds);
@@ -1045,12 +1046,12 @@ namespace RO.Access3
                  * , i.e. not behave as one expect, Fill(DataSet) which would correctly capture the error thus we can rollback
                 da.Fill(dt); 
                 */
-                tr.Commit();
+                if (!noTrans) tr.Commit();
                 if (ds.Tables.Count > 0) return ds.Tables[0]; else return new DataTable();
             }
             catch (Exception e)
             {
-                tr.Rollback();
+                if (!noTrans) tr.Rollback();
                 throw new Exception(procedureName + ":" + e.Message);
             }
             finally
@@ -1131,7 +1132,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@screenFilterId", OleDbType.Numeric).Value = screenFilterId;
             cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -1211,7 +1212,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
             cmd.Parameters.Add("@topN", OleDbType.Numeric).Value = topN;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -1233,7 +1234,7 @@ namespace RO.Access3
             }
             cmd.CommandType = CommandType.StoredProcedure;
             if (string.IsNullOrEmpty(keyId1)) { cmd.Parameters.Add("@keyId1", OleDbType.VarWChar).Value = System.DBNull.Value; } else { cmd.Parameters.Add("@keyId1", OleDbType.VarWChar).Value = keyId1; }
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -1256,7 +1257,7 @@ namespace RO.Access3
             cmd.CommandType = CommandType.StoredProcedure;
             if (string.IsNullOrEmpty(keyId1)) { cmd.Parameters.Add("@keyId1", OleDbType.VarWChar).Value = System.DBNull.Value; } else { cmd.Parameters.Add("@keyId1", OleDbType.VarWChar).Value = keyId1; }
             if (string.IsNullOrEmpty(keyId2)) { cmd.Parameters.Add("@keyId2", OleDbType.VarWChar).Value = System.DBNull.Value; } else { cmd.Parameters.Add("@keyId2", OleDbType.VarWChar).Value = keyId2; }
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -1303,7 +1304,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@screenFilterId", OleDbType.Numeric).Value = screenFilterId;
             cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -1474,7 +1475,7 @@ namespace RO.Access3
                                 cmd.Parameters.Add("@" + param, GetOleDbType(Utils.PopFirstWord(parameterTypes, (char)44).Trim())).Value = val;
                             }
                         }
-                        cmd.Transaction = tr; cmd.CommandTimeout = 1800;
+                        cmd.Transaction = tr; cmd.CommandTimeout = _CommandTimeout;
                         if (beforeCRUD == "S" && firingEvent == "OnAdd")
                         {
                             da.SelectCommand = cmd;
@@ -1611,7 +1612,7 @@ namespace RO.Access3
         }
 
         // Only I1 or I2 would call this:
-        public string AddData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc)
+        public string AddData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false)
         {
             bool bHasErr = false;
             string sAddDataDt = string.Empty;
@@ -1654,12 +1655,12 @@ namespace RO.Access3
             OleDbConnection cn;
             if (string.IsNullOrEmpty(dbConnectionString)) { cn = new OleDbConnection(GetDesConnStr()); } else { cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword)); }
             cn.Open();
-            OleDbTransaction tr = cn.BeginTransaction();
+            OleDbTransaction tr = noTrans ? null : cn.BeginTransaction();
             DataRow row = ds.Tables[0].Rows[0];
             OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON " + dtAud.Rows[1][0].ToString().Replace("RODesign.", Config.AppNameSpace + "Design."), cn);
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 3600;
-            cmd.Transaction = tr;
+            if (!noTrans) cmd.Transaction = tr;
             DataRow typ = ds.Tables[0].Rows[1]; DataRow dis = ds.Tables[0].Rows[2];
             if (string.IsNullOrEmpty(row[pMKeyCol].ToString().Trim()) || row[pMKeyCol].ToString().Trim() == Convert.ToDateTime("0001.01.01").ToString())
             {
@@ -1760,7 +1761,7 @@ namespace RO.Access3
                     bHasErr = ExecSRule("MasterTable = 'Y'", dvSRule, "OnAdd", "C", LUser, LImpr, LCurr, row, bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, dis);
                 }
                 /* Only if both master and detail adds succeed */
-                if (!bHasErr) { tr.Commit(); }
+                if (!bHasErr) { if (!noTrans) tr.Commit(); }
                 else
                 {
                     StringBuilder sb = new StringBuilder();
@@ -1770,7 +1771,7 @@ namespace RO.Access3
             }
             catch (Exception e)
             {
-                tr.Rollback();
+                if (!noTrans) tr.Rollback();
                 ApplicationAssert.CheckCondition(false, "AddData", "", e.Message);
             }
             finally { cn.Close(); }
@@ -1789,7 +1790,7 @@ namespace RO.Access3
             return row[pMKeyCol].ToString();
         }
 
-        public bool UpdData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc)
+        public bool UpdData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false)
         {
             bool bHasErr = false;
             string sAddDataDt = string.Empty;
@@ -1818,7 +1819,7 @@ namespace RO.Access3
             OleDbConnection cn;
             if (string.IsNullOrEmpty(dbConnectionString)) { cn = new OleDbConnection(GetDesConnStr()); } else { cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword)); }
             cn.Open();
-            OleDbTransaction tr = cn.BeginTransaction();
+            OleDbTransaction tr = noTrans ? null : cn.BeginTransaction();
             int ii = 0;
             DataRow row = ds.Tables[0].Rows[0];
             if ("I1,I2".IndexOf(dtScr.Rows[0]["ScreenTypeName"].ToString()) >= 0)
@@ -1827,7 +1828,7 @@ namespace RO.Access3
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandTimeout = 3600;
                 da.UpdateCommand = cmd;
-                da.UpdateCommand.Transaction = tr;
+                if (!noTrans) da.UpdateCommand.Transaction = tr;
                 string pMKeyCol = string.Empty;
                 string pMKeyOle = string.Empty;
                 string pMKeyVal = string.Empty;
@@ -1923,7 +1924,7 @@ namespace RO.Access3
 
                     if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I3") 
                     { 
-                        ii = 0; sRowFilter = "MasterTable = 'Y'"; dis = ds.Tables[0].Rows[2];
+                        ii = 0; sRowFilter = "MasterTable = 'Y'"; dis = ds.Tables[0].Rows[1];
                     } 
                     else 
                     { 
@@ -2041,7 +2042,7 @@ namespace RO.Access3
                     {
                         if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I3") 
                         { 
-                            ii = 0; sRowFilter = "MasterTable = 'Y'"; dis = ds.Tables[ii].Rows[2];
+                            ii = 0; sRowFilter = "MasterTable = 'Y'"; dis = ds.Tables[ii].Rows[1];
                         } 
                         else 
                         { 
@@ -2074,11 +2075,11 @@ namespace RO.Access3
                     else if (GridRow != null) // I3 with at least one row changed
                     {
                         // would only run ONCE using the last row info (delete or update or add, in that order)
-                        bHasErr = ExecSRule("MasterTable = 'Y'", dvSRule, GridRowType, "C", LUser, LImpr, LCurr, GridRow, bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, ds.Tables[0].Rows[2]);
+                        bHasErr = ExecSRule("MasterTable = 'Y'", dvSRule, GridRowType, "C", LUser, LImpr, LCurr, GridRow, bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, ds.Tables[0].Rows[1]);
                     }
                 }
                 /* Only if both master and detail succeed */
-                if (!bHasErr) { tr.Commit(); }
+                if (!bHasErr) { if (!noTrans) tr.Commit(); }
                 else
                 {
                     StringBuilder sb = new StringBuilder();
@@ -2088,7 +2089,7 @@ namespace RO.Access3
             }
             catch (Exception e)
             {
-                tr.Rollback();
+                if (!noTrans) tr.Rollback();
                 ApplicationAssert.CheckCondition(false, "UpdData", "", e.Message);
             }
             finally { cn.Close(); }
@@ -2114,7 +2115,7 @@ namespace RO.Access3
         }
 
         // Only I1 or I2 would call this.
-        public bool DelData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc)
+        public bool DelData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false)
         {
             bool bHasErr = false;
             System.Collections.Generic.Dictionary<string, string> ErrLst = new System.Collections.Generic.Dictionary<string, string>();
@@ -2141,13 +2142,13 @@ namespace RO.Access3
             OleDbConnection cn;
             if (string.IsNullOrEmpty(dbConnectionString)) { cn = new OleDbConnection(GetDesConnStr()); } else { cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword)); }
             cn.Open();
-            OleDbTransaction tr = cn.BeginTransaction();
+            OleDbTransaction tr = noTrans ? null : cn.BeginTransaction();
             DataRow row = ds.Tables[0].Rows[0];
             // SQL in dtAud delete the detail rows for I2 as well:
             OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON " + dtAud.Rows[0][0].ToString().Replace("RODesign.", Config.AppNameSpace + "Design."), cn);
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 3600;
-            cmd.Transaction = tr;
+            if (!noTrans) cmd.Transaction = tr;
             dvCol.RowFilter = "PrimaryKey = 'Y'";
             foreach (DataRowView drv in dvCol)
             {
@@ -2194,7 +2195,7 @@ namespace RO.Access3
                 }
                 /* before commit */
                 bHasErr = ExecSRule("MasterTable = 'Y'", dvSRule, "OnDel", "C", LUser, LImpr, LCurr, row, bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, null);
-                if (!bHasErr) { tr.Commit(); }
+                if (!bHasErr) { if (!noTrans) tr.Commit(); }
                 else
                 {
                     StringBuilder sb = new StringBuilder();
@@ -2204,7 +2205,7 @@ namespace RO.Access3
             }
             catch (Exception e)
             {
-                tr.Rollback();
+                if (!noTrans) tr.Rollback();
                 ApplicationAssert.CheckCondition(false, "DelData", "", e.Message);
             }
             finally { cn.Close(); }
@@ -2241,7 +2242,7 @@ namespace RO.Access3
             + " END"
             + " SELECT @DocId", cn);
             cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             cmd.Parameters.Add("@MasterId", OleDbType.Numeric).Value = MasterId;
             cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
@@ -2297,7 +2298,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
             cmd.Parameters.Add("@bAll", OleDbType.Char).Value = bAll ? "Y" : "N";
             cmd.Parameters.Add("@keyId", OleDbType.VarChar).Value = string.IsNullOrEmpty(keyId) ? System.DBNull.Value : (object)keyId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -2334,7 +2335,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@Vendors", OleDbType.VarChar).Value = ui.Vendors;
             cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
             cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -2414,7 +2415,7 @@ namespace RO.Access3
             if (bXls) { cmd.Parameters.Add("@bXls", OleDbType.Char).Value = "Y"; } else { cmd.Parameters.Add("@bXls", OleDbType.Char).Value = "N"; }
             if (bVal) { cmd.Parameters.Add("@bVal", OleDbType.Char).Value = "Y"; } else { cmd.Parameters.Add("@bVal", OleDbType.Char).Value = "N"; }
             da.SelectCommand = cmd;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             DataTable dt = new DataTable();
             da.Fill(dt);
             return dt;
@@ -2429,7 +2430,7 @@ namespace RO.Access3
             OleDbTransaction tr = cn.BeginTransaction();
             OleDbCommand cmd = new OleDbCommand(procedureName, cn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.UpdateCommand = cmd;
             da.UpdateCommand.Transaction = tr;
             cmd.Parameters.Add("@reportId", OleDbType.Numeric).Value = reportId;
@@ -2529,7 +2530,7 @@ namespace RO.Access3
             {
                 if (Config.DoubleByteDb) { cmd.Parameters.Add("@LastCriteria", OleDbType.VarWChar).Value = lastCriteria; } else { cmd.Parameters.Add("@LastCriteria", OleDbType.VarChar).Value = lastCriteria; }
             }
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             try { cmd.ExecuteNonQuery(); }
             catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
             finally { cn.Close(); cmd.Dispose(); cmd = null; }
@@ -2669,7 +2670,7 @@ namespace RO.Access3
                 }
                 catch (Exception er) { throw new Exception("Col " + Utils.Num2ExcelCol(ii + 1) + " " + er.Message, er); };
             }
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             cmd.ExecuteNonQuery();
             cmd.Dispose();
@@ -2677,7 +2678,7 @@ namespace RO.Access3
             return;
         }
 
-        public int ImportRows(Int32 wizardId, string procedureName, bool bOverwrite, Int32 usrId, DataSet ds, int iStart, string fileName, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc)
+        public int ImportRows(Int32 wizardId, string procedureName, bool bOverwrite, Int32 usrId, DataSet ds, int iStart, string fileName, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans)
         {
             bool bDeferError = true;       // This can be false if error is to be trapped one at a time.
             bool bHasErr = false;
@@ -2702,7 +2703,7 @@ namespace RO.Access3
                 cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             }
             cn.Open();
-            OleDbTransaction tr = cn.BeginTransaction();
+            OleDbTransaction tr = noTrans ? null : cn.BeginTransaction();
             try
             {
                 bHasErr = ExecWRule(dvRul, "Y", bOverwrite, usrId, fileName, bDeferError, bHasErr, ErrLst, cn, tr);
@@ -2718,7 +2719,7 @@ namespace RO.Access3
                     }
                 }
                 bHasErr = ExecWRule(dvRul, "N", bOverwrite, usrId, fileName, bDeferError, bHasErr, ErrLst, cn, tr);
-                if (!bHasErr) { tr.Commit(); }
+                if (!bHasErr) { if (!noTrans) tr.Commit(); }
                 else
                 {
                     StringBuilder sb = new StringBuilder();
@@ -2728,7 +2729,7 @@ namespace RO.Access3
             }
             catch (Exception e)
             {
-                tr.Rollback();
+                if (!noTrans) tr.Rollback();
                 ApplicationAssert.CheckCondition(false, "ImportRows", "", e.Message);
             }
             finally { cn.Close(); }
@@ -2755,7 +2756,7 @@ namespace RO.Access3
                         if (bOverwrite) { cmd.Parameters.Add("@Overwrite", OleDbType.Char).Value = "Y"; } else { cmd.Parameters.Add("@Overwrite", OleDbType.Char).Value = "N"; }
                         cmd.Parameters.Add("@UsrId", OleDbType.Numeric).Value = usrId;
                         cmd.Parameters.Add("@ImportFileName", OleDbType.VarChar).Value = ImportFileName;
-                        cmd.Transaction = tr; cmd.CommandTimeout = 1800; cmd.ExecuteNonQuery(); cmd.Dispose(); cmd = null;
+                        cmd.Transaction = tr; cmd.CommandTimeout = _CommandTimeout; cmd.ExecuteNonQuery(); cmd.Dispose(); cmd = null;
                     }
                     catch (Exception e) { bHasErr = true; ErrLst[drv["ProcedureName"].ToString()] = e.Message; }
                 }
@@ -2811,7 +2812,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@DocSize", OleDbType.Numeric).Value = DocSize;
             cmd.Parameters.Add("@DocImage", OleDbType.Binary).Value = dc;
             cmd.Parameters.Add("@InputBy", OleDbType.Numeric).Value = lu.UsrId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
@@ -2848,7 +2849,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@MasterId", OleDbType.Numeric).Value = MasterId;
             cmd.Parameters.Add("@DocName", OleDbType.VarWChar).Value = DocName;
             cmd.Parameters.Add("@UsrId", OleDbType.Numeric).Value = UsrId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             try
@@ -2885,7 +2886,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@DocImage", OleDbType.Binary).Value = dc;
             cmd.Parameters.Add("@InputBy", OleDbType.Numeric).Value = lu.UsrId;
             cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.UpdateCommand = cmd;
             da.UpdateCommand.Transaction = tr;
             try
@@ -2923,7 +2924,7 @@ namespace RO.Access3
                 cmd.Parameters.Add("@DocImage", OleDbType.Binary).Value = dc;
             }
             cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.UpdateCommand = cmd;
             da.UpdateCommand.Transaction = tr;
             try
@@ -2976,7 +2977,7 @@ namespace RO.Access3
             {
                 cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
             }
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             try { da.Fill(dt); }
@@ -3000,7 +3001,7 @@ namespace RO.Access3
             {
                 cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
             }
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             try { da.Fill(dt); }
@@ -3022,7 +3023,7 @@ namespace RO.Access3
                      + " ORDER BY a.Version Dt DESC"
                      , cn);
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandTimeout = 1800;
+                cmd.CommandTimeout = _CommandTimeout;
                 da.SelectCommand = cmd;
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -3053,7 +3054,7 @@ namespace RO.Access3
                     + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = s.dbDesDatabase) "
                     + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = m.dbAppDatabase) ", cn);
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandTimeout = 1800;
+                cmd.CommandTimeout = _CommandTimeout;
                 da.SelectCommand = cmd;
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -3097,7 +3098,7 @@ namespace RO.Access3
                     + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = m.dbAppDatabase) ", cn);
 
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandTimeout = 1800;
+                cmd.CommandTimeout = _CommandTimeout;
                 da.SelectCommand = cmd;
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -3138,7 +3139,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@FrCurrency", OleDbType.VarChar).Value = FrCurrency;
             cmd.Parameters.Add("@ToCurrency", OleDbType.VarChar).Value = ToCurrency;
             cmd.Parameters.Add("@ToFxRate", OleDbType.VarChar).Value = ToFxRate; // Must use .VarChar to bypass the unable to convert error.
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             try { cmd.ExecuteNonQuery(); }
             catch (Exception e) { ApplicationAssert.CheckCondition(false, "UpdFxRate", "", e.Message.ToString()); }
             finally { cn.Close(); cmd.Dispose(); cmd = null; }
@@ -3154,7 +3155,7 @@ namespace RO.Access3
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@FrCurrency", OleDbType.VarChar).Value = FrCurrency;
             cmd.Parameters.Add("@ToCurrency", OleDbType.VarChar).Value = ToCurrency;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
             DataTable dt = new DataTable();
             try { da.Fill(dt); }

@@ -9583,6 +9583,7 @@ SELECT @sClause = 'SELECT ReportId22=b22.ReportId'
 + ', ModifiedOn22=b22.ModifiedOn'
 + ', TemplateName22=b22.TemplateName'
 + ', RptTemplate22=b22.RptTemplate'
++ ', CommandTimeOut22=b22.CommandTimeOut'
 + ', UnitCd22=b22.UnitCd'
 + ', TopMargin22=b22.TopMargin'
 + ', BottomMargin22=b22.BottomMargin'
@@ -12510,6 +12511,8 @@ SELECT @sClause = 'SELECT WizardId71=b71.WizardId'
 + ', DefOverwrite71=b71.DefOverwrite'
 + ', OvwrReadonly71=b71.OvwrReadonly'
 + ', AuthRequired71=b71.AuthRequired'
++ ', CommandTimeOut71=b71.CommandTimeOut'
++ ', NoTrans71=b71.NoTrans'
 SELECT @wClause = 'WHERE b71.WizardId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
@@ -41978,6 +41981,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', ModifiedOn22=b22.ModifiedOn'
 + ', TemplateName22=b22.TemplateName'
 + ', RptTemplate22=b22.RptTemplate'
++ ', CommandTimeOut22=b22.CommandTimeOut'
 + ', UnitCd22=x1487.UnitCd'
 + ', UnitCd22Text=x1487.UnitDesc'
 + ', TopMargin22=b22.TopMargin'
@@ -46518,6 +46522,8 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', DefOverwrite71=b71.DefOverwrite'
 + ', OvwrReadonly71=b71.OvwrReadonly'
 + ', AuthRequired71=b71.AuthRequired'
++ ', CommandTimeOut71=b71.CommandTimeOut'
++ ', NoTrans71=b71.NoTrans'
 + ', WizardObjId72=' + case when charindex('b72 ',@fClause) > 0 then 'b72.WizardObjId' else 'null' end
 + ', ColumnId72=x551.ColumnId'
 + ', ColumnId72Text=x551.ColumnDesc'
@@ -51205,7 +51211,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@RowAuthorityId	smallint
 SELECT @fClause='FROM RODesign.dbo.Entity b199'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' EntityId199=b199.EntityId'
-+ ', EntityImg199=b199.EntityImg'
++ ', EntityImg199=RODesign.dbo.fEmbeddedImgMeta(b199.EntityImg)'
 + ', EntityName199=b199.EntityName'
 + ', EntityCode199=b199.EntityCode'
 + ', DeployPath199=b199.DeployPath, MatchCount=COUNT(1) OVER ()'
@@ -51832,7 +51838,7 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT MemberId,MemberN
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SredMebrId274=b274.SredMebrId'
 + ', UserId274=x3235.UsrId'
 + ', UserId274Text=x3235.UsrName'
-+ ', PicMed275=x3235.PicMed'
++ ', PicMed275=RODesign.dbo.fEmbeddedImgMeta(x3235.PicMed)'
 + ', MemberId274=x3229.MemberId'
 + ', MemberId274Text=x3229.MemberName'
 + ', MemberTitle274=b274.MemberTitle'
@@ -51864,7 +51870,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
-		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		 SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
 		    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@Key,CHAR(191),','), '''',''''''),'NULL'))
@@ -58917,7 +58923,8 @@ SELECT @sClause = 'SELECT a.ReportId,a.ProgramName,a.GenerateRp,b.SysProgram,a.O
 + ',a.RegClause,a.UpdClause,a.XlsClause,b.dbAppDatabase,b.dbDesDatabase,a.TemplateName'
 + ',a.UnitCd,a.TopMargin,a.BottomMargin,a.LeftMargin,a.RightMargin,a.PageWidth,a.PageHeight'
 + ',RptWidth = a.PageWidth - a.LeftMargin - a.RightMargin'
-+ case when @GenPrefix = '' then ',a.AuthRequired' else '' end
++ case when @GenPrefix = '' then ',a.AuthRequired' else 'AuthRequired = ''Y''' end
++ case when @GenPrefix = '' then ',a.CommandTimeOut' else 'CommandTimeOut = NULL' end
 SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'Report a'
 + ' INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 SELECT @wClause = 'WHERE a.ReportId = ' + CONVERT(varchar,@reportId)
@@ -59240,14 +59247,15 @@ DECLARE	 @DefCultureId	smallint
 		,@ProgramName	varchar(50)
 		,@ReportTypeCd	char(1)
 		,@TemplateName  varchar(100)
+		,@CommandTimeOut smallint
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
-SELECT @ProgramName = ProgramName, @ReportTypeCd = ReportTypeCd,@TemplateName=TemplateName FROM dbo.Report WHERE ReportId = @ReportId
+SELECT @ProgramName = ProgramName, @ReportTypeCd = ReportTypeCd,@TemplateName=TemplateName, @CommandTimeOut = CommandTimeOut FROM dbo.Report WHERE ReportId = @ReportId
 IF @@ERROR <> 0 OR @@ROWCOUNT <> 1 BEGIN RAISERROR('{36}',18,2) WITH SETERROR RETURN 1 END
 IF @CultureId <> @DefCultureId AND EXISTS (SELECT 'true' FROM dbo.ReportHlp WHERE ReportId = @ReportId and CultureId = @CultureId)
-	SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd, TemplateName = @TemplateName
+	SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd, TemplateName = @TemplateName, CommandTimeOut = @CommandTimeOut
 		FROM dbo.ReportHlp WHERE ReportId = @ReportId and CultureId = @CultureId
 ELSE
-	SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd, TemplateName = @TemplateName
+	SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd, TemplateName = @TemplateName, CommandTimeOut = @CommandTimeOut
 		FROM dbo.ReportHlp WHERE ReportId = @ReportId and CultureId = @DefCultureId
 RETURN 0
 GO
@@ -59653,27 +59661,28 @@ DECLARE	 @DefCultureId	smallint
 		,@ProgramName	varchar(50)
 		,@ReportTypeCd	char(1)
 		,@TemplateName  varchar(100)
+		,@CommandTimeOut smallint
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 IF @GenPrefix = 'Ut'
 BEGIN
 	SELECT @ProgramName = ProgramName, @ReportTypeCd = ReportTypeCd, @TemplateName=TemplateName FROM dbo.UtReport WHERE ReportId = @ReportId
 	IF @@ERROR <> 0 OR @@ROWCOUNT <> 1 BEGIN RAISERROR('{36}',18,2) WITH SETERROR RETURN 1 END
 	IF @CultureId <> @DefCultureId AND EXISTS (SELECT 1 FROM dbo.UtReportHlp WHERE ReportId = @ReportId and CultureId = @CultureId)
-		SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd,TemplateName=@TemplateName
+		SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd,TemplateName=@TemplateName, CommandTimeOut = NULL
 			FROM dbo.UtReportHlp WHERE ReportId = @ReportId and CultureId = @CultureId
 	ELSE
-		SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd,TemplateName=@TemplateName
+		SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd,TemplateName=@TemplateName, CommandTimeOut = NULL
 			FROM dbo.UtReportHlp WHERE ReportId = @ReportId and CultureId = @DefCultureId
 END
 ELSE
 BEGIN
-	SELECT @ProgramName = ProgramName, @ReportTypeCd = ReportTypeCd, @TemplateName=TemplateName FROM dbo.Report WHERE ReportId = @ReportId
+	SELECT @ProgramName = ProgramName, @ReportTypeCd = ReportTypeCd, @TemplateName=TemplateName, @CommandTimeOut = CommandTimeOut FROM dbo.Report WHERE ReportId = @ReportId
 	IF @@ERROR <> 0 OR @@ROWCOUNT <> 1 BEGIN RAISERROR('{36}',18,2) WITH SETERROR RETURN 1 END
 	IF @CultureId <> @DefCultureId AND EXISTS (SELECT 1 FROM dbo.ReportHlp WHERE ReportId = @ReportId and CultureId = @CultureId)
-		SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd,TemplateName=@TemplateName
+		SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd,TemplateName=@TemplateName, CommandTimeOut = @CommandTimeOut
 			FROM dbo.ReportHlp WHERE ReportId = @ReportId and CultureId = @CultureId
 	ELSE
-		SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd,TemplateName=@TemplateName
+		SELECT DefaultHlpMsg, ReportTitle, ProgramName = @ProgramName, ReportTypeCd = @ReportTypeCd,TemplateName=@TemplateName, CommandTimeOut = @CommandTimeOut
 			FROM dbo.ReportHlp WHERE ReportId = @ReportId and CultureId = @DefCultureId
 END
 RETURN 0
@@ -64221,7 +64230,7 @@ DECLARE	 @sClause	varchar(8000)
 	,@wClause	varchar(8000)
 SET NOCOUNT ON
 SELECT @sClause = 'SELECT MasterTableName=c.TableName,a.ProgramName,b.SysProgram,b.dbAppDatabase,b.dbDesDatabase,a.DefWorkSheet,a.DefStartRow'
-+ ',a.DefOverwrite,a.OvwrReadonly,a.AuthRequired'
++ ',a.DefOverwrite,a.OvwrReadonly,a.AuthRequired, a.NoTrans, a.CommandTimeOut'
 SELECT @fClause = 'FROM dbo.Wizard a'
 + ' INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 + ' INNER JOIN dbo.DbTable c ON a.MasterTableId = c.TableId'

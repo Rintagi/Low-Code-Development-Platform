@@ -2543,4 +2543,11 @@ In default.master: replace section.css with the following:
 2. add more context information for server rule invocation to simplify # of server rule required
 3. various fix to historical wrong version content script(table upgrade etc.)~@~~@~en-US~@~
 12605~@~  11. 168.00505~@~11~@~168~@~2020-05-05 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
-12606~@~  11. 169~@~11~@~169~@~~@~~@~~@~~@~~@~~@~
+12606~@~  11. 169.00507~@~11~@~169~@~2020-05-07 00:00:00.000~@~~@~~@~1. controllable transaction wrapper in CRUD/Wizard save and SP timeout 
+2. minor change to make typ= case insensitive~@~~@~en-US~@~
+12607~@~  11. 170.00508~@~11~@~170~@~2020-05-08 00:00:00.000~@~~@~~@~1. enhance React generator to include import service layer and config helper for custom rule usage
+2. fix React screen add button race condition
+3. fix React local debug issue (localhost:3000) when async function returns Promise
+4. fix grid screen save issue due to April 4 change to Access3 layer
+5. fix IonicZip library not handle dangling temp file on unzip~@~~@~en-US~@~
+12608~@~  11. 171~@~11~@~171~@~~@~~@~~@~~@~~@~~@~

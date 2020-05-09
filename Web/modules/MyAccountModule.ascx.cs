@@ -1084,7 +1084,7 @@ namespace RO.Web
 
         public void CancelLoginBtn_Click(object sender, System.EventArgs e)
         {
-            this.Redirect("~/MyAccount.aspx?typ=" + Request.QueryString["typ"].ToString());
+            this.Redirect("~/MyAccount.aspx?typ=" + Request.QueryString["typ"].ToString().ToUpper());
         }
 
         public void PickLoginBtn_Click(object sender, System.EventArgs e)

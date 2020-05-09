@@ -24,9 +24,9 @@ namespace RO.Facade3
 			}
 		}
 
-		public DataTable GetSqlReport(string reportId, string programName, DataView dvCri, UsrImpr ui, UsrCurr uc, DataSet ds, string dbConnectionString, string dbPassword, bool bUpd, bool bXls, bool bVal)
+		public DataTable GetSqlReport(string reportId, string programName, DataView dvCri, UsrImpr ui, UsrCurr uc, DataSet ds, string dbConnectionString, string dbPassword, bool bUpd, bool bXls, bool bVal, int commandTimeOut = 1800)
 		{
-			using (Access3.SqlReportAccess dac = new Access3.SqlReportAccess())
+			using (Access3.SqlReportAccess dac = new Access3.SqlReportAccess(commandTimeOut))
 			{
 				return dac.GetSqlReport(reportId, programName, dvCri, ui, uc, ds, dbConnectionString, dbPassword, bUpd, bXls, bVal);
 			}

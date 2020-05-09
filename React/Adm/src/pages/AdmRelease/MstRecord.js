@@ -26,6 +26,8 @@ import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
 import AdmReleaseReduxObj, { ShowMstFilterApplied } from '../../redux/AdmRelease';
+import * as AdmReleaseService from '../../services/AdmReleaseService';
+import { getRintagiConfig } from '../../helpers/config';
 import Skeleton from 'react-skeleton-loader';
 import ControlledPopover from '../../components/custom/ControlledPopover';
 import log from '../../helpers/logger';

@@ -240,7 +240,7 @@ namespace RO.Web
 						try {rows[iRow][6] = rows[iRow][6].ToString().Replace("\r","").Replace("\n","");} catch {};
 					}
 				}
-				return (new AdminSystem()).ImportRows(1,"WizAdmImpCulture",bOverwrite,usrId,ds,iStart,fileName,LcAppConnString,LcAppPw,CPrj,CSrc);
+				return (new AdminSystem()).ImportRows(1,"WizAdmImpCulture",bOverwrite,usrId,ds,iStart,fileName,LcAppConnString,LcAppPw,CPrj,CSrc,false,Config.CommandTimeOut);
 			}
 			catch(Exception e) { if (e != null) throw e; }
 			return 0;
@@ -298,7 +298,7 @@ namespace RO.Web
 						rows[iRow][6] = rows[iRow][6].ToString().Replace("\r","").Replace("\n","");
 					}
 				}
-				return (new AdminSystem()).ImportRows(1,"WizAdmImpCulture",bOverwrite,usrId,ds,iStart,fileName,LcAppConnString,LcAppPw,CPrj,CSrc);
+				return (new AdminSystem()).ImportRows(1,"WizAdmImpCulture",bOverwrite,usrId,ds,iStart,fileName,LcAppConnString,LcAppPw,CPrj,CSrc,false,Config.CommandTimeOut);
 			}
 			catch (Exception e) { PreMsgPopup(e.Message); return 0; }
 		}

@@ -47,6 +47,7 @@ namespace RO.Common3.Data
 			columns.Add("ModifiedBy22", typeof(string));
 			columns.Add("TemplateName22", typeof(string));
 			columns.Add("RptTemplate22", typeof(string));
+			columns.Add("CommandTimeOut22", typeof(string));
 			columns.Add("UnitCd22", typeof(string));
 			columns.Add("TopMargin22", typeof(string));
 			columns.Add("BottomMargin22", typeof(string));
@@ -675,14 +676,14 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[5]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[5]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[6]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[7]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[9]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[9]["ColumnHeader"].ToString() + " Text" + (char)9);}
-						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[9]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[10]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[11]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[12]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[13]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[14]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[15]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[18]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[16]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[19]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[20]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[21]["ColumnHeader"].ToString() + (char)9);}
@@ -696,9 +697,10 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[29]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[30]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[31]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[32]["ColumnHeader"].ToString() + " Text" + (char)9);}
-						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[33]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[33]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[33]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[34]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[35]["ColumnHeader"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -711,30 +713,31 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["ModifiedBy22"].ToString() + (char)9 + drv["ModifiedBy22Text"].ToString() + (char)9);}
 						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn22"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
 						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["TemplateName22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["UnitCd22"].ToString().Replace("\"","\"\"") + "\"" + (char)9 + "\"" + drv["UnitCd22Text"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["TopMargin22"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["BottomMargin22"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["LeftMargin22"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["RightMargin22"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["PageWidth22"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["PageHeight22"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AllowSelect22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["GenerateRp22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt22"].ToString() + (char)9);}
-						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AuthRequired22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["WhereClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["RegClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["RegCode22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ValClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ValCode22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["UpdClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["UpdCode22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["XlsClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["XlsCode22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ReportHlpId96"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId96"].ToString() + (char)9 + drv["CultureId96Text"].ToString() + (char)9);}
-						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DefaultHlpMsg96"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ReportTitle96"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["CommandTimeOut22"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["UnitCd22"].ToString().Replace("\"","\"\"") + "\"" + (char)9 + "\"" + drv["UnitCd22Text"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["TopMargin22"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["BottomMargin22"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["LeftMargin22"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["RightMargin22"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["PageWidth22"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["PageHeight22"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AllowSelect22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["GenerateRp22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt22"].ToString() + (char)9);}
+						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AuthRequired22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["WhereClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["RegClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["RegCode22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ValClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ValCode22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["UpdClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["UpdCode22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["XlsClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["XlsCode22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ReportHlpId96"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId96"].ToString() + (char)9 + drv["CultureId96Text"].ToString() + (char)9);}
+						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DefaultHlpMsg96"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ReportTitle96"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmReport.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
@@ -798,7 +801,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
-					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
@@ -815,6 +818,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -839,7 +843,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[13]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[14]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[15]["ColumnHeader"].ToString() + @"\cell ");}
-					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[18]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[16]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[19]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[20]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[21]["ColumnHeader"].ToString() + @"\cell ");}
@@ -856,6 +860,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[33]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[34]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[35]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -886,30 +891,31 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["ModifiedBy22Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn22"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["TemplateName22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(drv["UnitCd22Text"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["TopMargin22"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["BottomMargin22"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["LeftMargin22"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["RightMargin22"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["PageWidth22"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["PageHeight22"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(drv["AllowSelect22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["GenerateRp22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt22"].ToString() + @"\cell ");}
-					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["AuthRequired22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["WhereClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(drv["RegClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["RegCode22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(drv["ValClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(drv["ValCode22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(drv["UpdClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(drv["UpdCode22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(drv["XlsClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["XlsCode22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ReportHlpId96"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId96Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["DefaultHlpMsg96"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(drv["ReportTitle96"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["CommandTimeOut22"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(drv["UnitCd22Text"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["TopMargin22"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["BottomMargin22"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["LeftMargin22"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["RightMargin22"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["PageWidth22"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["PageHeight22"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["AllowSelect22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["GenerateRp22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt22"].ToString() + @"\cell ");}
+					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["AuthRequired22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(drv["WhereClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["RegClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(drv["RegCode22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(drv["ValClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(drv["ValCode22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(drv["UpdClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(drv["UpdCode22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["XlsClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["XlsCode22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ReportHlpId96"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["CultureId96Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(drv["DefaultHlpMsg96"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(drv["ReportTitle96"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -2045,36 +2051,37 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cTemplateName22, dtAuth.Rows[7], cTemplateName22P1, cTemplateName22Label, cTemplateName22P2, null, dtLabel.Rows[7], null, null, null);
 				base.SetFoldBehavior(cRptTemplate22GV, dtAuth.Rows[8], cRptTemplate22P1, cRptTemplate22Label, cRptTemplate22P2, cRptTemplate22Tgo, cRptTemplate22Div, dtLabel.Rows[8], null, null, null);
 				cRptTemplate22Pan.Height = cRptTemplate22Div.Height; cRptTemplate22Pan.Width = cRptTemplate22Div.Width;
-				base.SetFoldBehavior(cUnitCd22, dtAuth.Rows[9], cUnitCd22P1, cUnitCd22Label, cUnitCd22P2, null, dtLabel.Rows[9], cRFVUnitCd22, null, null);
-				base.SetFoldBehavior(cTopMargin22, dtAuth.Rows[10], cTopMargin22P1, cTopMargin22Label, cTopMargin22P2, null, dtLabel.Rows[10], cRFVTopMargin22, null, null);
-				base.SetFoldBehavior(cBottomMargin22, dtAuth.Rows[11], cBottomMargin22P1, cBottomMargin22Label, cBottomMargin22P2, null, dtLabel.Rows[11], cRFVBottomMargin22, null, null);
-				base.SetFoldBehavior(cLeftMargin22, dtAuth.Rows[12], cLeftMargin22P1, cLeftMargin22Label, cLeftMargin22P2, null, dtLabel.Rows[12], cRFVLeftMargin22, null, null);
-				base.SetFoldBehavior(cRightMargin22, dtAuth.Rows[13], cRightMargin22P1, cRightMargin22Label, cRightMargin22P2, null, dtLabel.Rows[13], cRFVRightMargin22, null, null);
-				base.SetFoldBehavior(cPageWidth22, dtAuth.Rows[14], cPageWidth22P1, cPageWidth22Label, cPageWidth22P2, null, dtLabel.Rows[14], cRFVPageWidth22, null, null);
-				base.SetFoldBehavior(cPageHeight22, dtAuth.Rows[15], cPageHeight22P1, cPageHeight22Label, cPageHeight22P2, null, dtLabel.Rows[15], cRFVPageHeight22, null, null);
-				base.SetFoldBehavior(cSyncByDb, dtAuth.Rows[16], cSyncByDbP1, cSyncByDbLabel, cSyncByDbP2, null, dtLabel.Rows[16], null, null, null);
-				base.SetFoldBehavior(cSyncToDb, dtAuth.Rows[17], cSyncToDbP1, cSyncToDbLabel, cSyncToDbP2, null, dtLabel.Rows[17], null, null, null);
-				base.SetFoldBehavior(cAllowSelect22, dtAuth.Rows[18], cAllowSelect22P1, cAllowSelect22Label, cAllowSelect22P2, null, dtLabel.Rows[18], null, null, null);
-				base.SetFoldBehavior(cGenerateRp22, dtAuth.Rows[19], cGenerateRp22P1, cGenerateRp22Label, cGenerateRp22P2, null, dtLabel.Rows[19], null, null, null);
-				base.SetFoldBehavior(cLastGenDt22, dtAuth.Rows[20], cLastGenDt22P1, cLastGenDt22Label, cLastGenDt22P2, null, dtLabel.Rows[20], null, null, null);
-				base.SetFoldBehavior(cAuthRequired22, dtAuth.Rows[21], cAuthRequired22P1, cAuthRequired22Label, cAuthRequired22P2, null, dtLabel.Rows[21], null, null, null);
-				base.SetFoldBehavior(cWhereClause22, dtAuth.Rows[22], cWhereClause22P1, cWhereClause22Label, cWhereClause22P2, cWhereClause22E, null, dtLabel.Rows[22], null, null, null);
+				base.SetFoldBehavior(cCommandTimeOut22, dtAuth.Rows[9], cCommandTimeOut22P1, cCommandTimeOut22Label, cCommandTimeOut22P2, null, dtLabel.Rows[9], null, null, null);
+				base.SetFoldBehavior(cUnitCd22, dtAuth.Rows[10], cUnitCd22P1, cUnitCd22Label, cUnitCd22P2, null, dtLabel.Rows[10], cRFVUnitCd22, null, null);
+				base.SetFoldBehavior(cTopMargin22, dtAuth.Rows[11], cTopMargin22P1, cTopMargin22Label, cTopMargin22P2, null, dtLabel.Rows[11], cRFVTopMargin22, null, null);
+				base.SetFoldBehavior(cBottomMargin22, dtAuth.Rows[12], cBottomMargin22P1, cBottomMargin22Label, cBottomMargin22P2, null, dtLabel.Rows[12], cRFVBottomMargin22, null, null);
+				base.SetFoldBehavior(cLeftMargin22, dtAuth.Rows[13], cLeftMargin22P1, cLeftMargin22Label, cLeftMargin22P2, null, dtLabel.Rows[13], cRFVLeftMargin22, null, null);
+				base.SetFoldBehavior(cRightMargin22, dtAuth.Rows[14], cRightMargin22P1, cRightMargin22Label, cRightMargin22P2, null, dtLabel.Rows[14], cRFVRightMargin22, null, null);
+				base.SetFoldBehavior(cPageWidth22, dtAuth.Rows[15], cPageWidth22P1, cPageWidth22Label, cPageWidth22P2, null, dtLabel.Rows[15], cRFVPageWidth22, null, null);
+				base.SetFoldBehavior(cPageHeight22, dtAuth.Rows[16], cPageHeight22P1, cPageHeight22Label, cPageHeight22P2, null, dtLabel.Rows[16], cRFVPageHeight22, null, null);
+				base.SetFoldBehavior(cSyncByDb, dtAuth.Rows[17], cSyncByDbP1, cSyncByDbLabel, cSyncByDbP2, null, dtLabel.Rows[17], null, null, null);
+				base.SetFoldBehavior(cSyncToDb, dtAuth.Rows[18], cSyncToDbP1, cSyncToDbLabel, cSyncToDbP2, null, dtLabel.Rows[18], null, null, null);
+				base.SetFoldBehavior(cAllowSelect22, dtAuth.Rows[19], cAllowSelect22P1, cAllowSelect22Label, cAllowSelect22P2, null, dtLabel.Rows[19], null, null, null);
+				base.SetFoldBehavior(cGenerateRp22, dtAuth.Rows[20], cGenerateRp22P1, cGenerateRp22Label, cGenerateRp22P2, null, dtLabel.Rows[20], null, null, null);
+				base.SetFoldBehavior(cLastGenDt22, dtAuth.Rows[21], cLastGenDt22P1, cLastGenDt22Label, cLastGenDt22P2, null, dtLabel.Rows[21], null, null, null);
+				base.SetFoldBehavior(cAuthRequired22, dtAuth.Rows[22], cAuthRequired22P1, cAuthRequired22Label, cAuthRequired22P2, null, dtLabel.Rows[22], null, null, null);
+				base.SetFoldBehavior(cWhereClause22, dtAuth.Rows[23], cWhereClause22P1, cWhereClause22Label, cWhereClause22P2, cWhereClause22E, null, dtLabel.Rows[23], null, null, null);
 				cWhereClause22E.Attributes["label_id"] = cWhereClause22Label.ClientID; cWhereClause22E.Attributes["target_id"] = cWhereClause22.ClientID;
-				base.SetFoldBehavior(cRegClause22, dtAuth.Rows[23], cRegClause22P1, cRegClause22Label, cRegClause22P2, cRegClause22E, null, dtLabel.Rows[23], null, null, null);
+				base.SetFoldBehavior(cRegClause22, dtAuth.Rows[24], cRegClause22P1, cRegClause22Label, cRegClause22P2, cRegClause22E, null, dtLabel.Rows[24], null, null, null);
 				cRegClause22E.Attributes["label_id"] = cRegClause22Label.ClientID; cRegClause22E.Attributes["target_id"] = cRegClause22.ClientID;
-				base.SetFoldBehavior(cRegCode22, dtAuth.Rows[24], cRegCode22P1, cRegCode22Label, cRegCode22P2, cRegCode22E, null, dtLabel.Rows[24], null, null, null);
+				base.SetFoldBehavior(cRegCode22, dtAuth.Rows[25], cRegCode22P1, cRegCode22Label, cRegCode22P2, cRegCode22E, null, dtLabel.Rows[25], null, null, null);
 				cRegCode22E.Attributes["label_id"] = cRegCode22Label.ClientID; cRegCode22E.Attributes["target_id"] = cRegCode22.ClientID;
-				base.SetFoldBehavior(cValClause22, dtAuth.Rows[25], cValClause22P1, cValClause22Label, cValClause22P2, cValClause22E, null, dtLabel.Rows[25], null, null, null);
+				base.SetFoldBehavior(cValClause22, dtAuth.Rows[26], cValClause22P1, cValClause22Label, cValClause22P2, cValClause22E, null, dtLabel.Rows[26], null, null, null);
 				cValClause22E.Attributes["label_id"] = cValClause22Label.ClientID; cValClause22E.Attributes["target_id"] = cValClause22.ClientID;
-				base.SetFoldBehavior(cValCode22, dtAuth.Rows[26], cValCode22P1, cValCode22Label, cValCode22P2, cValCode22E, null, dtLabel.Rows[26], null, null, null);
+				base.SetFoldBehavior(cValCode22, dtAuth.Rows[27], cValCode22P1, cValCode22Label, cValCode22P2, cValCode22E, null, dtLabel.Rows[27], null, null, null);
 				cValCode22E.Attributes["label_id"] = cValCode22Label.ClientID; cValCode22E.Attributes["target_id"] = cValCode22.ClientID;
-				base.SetFoldBehavior(cUpdClause22, dtAuth.Rows[27], cUpdClause22P1, cUpdClause22Label, cUpdClause22P2, cUpdClause22E, null, dtLabel.Rows[27], null, null, null);
+				base.SetFoldBehavior(cUpdClause22, dtAuth.Rows[28], cUpdClause22P1, cUpdClause22Label, cUpdClause22P2, cUpdClause22E, null, dtLabel.Rows[28], null, null, null);
 				cUpdClause22E.Attributes["label_id"] = cUpdClause22Label.ClientID; cUpdClause22E.Attributes["target_id"] = cUpdClause22.ClientID;
-				base.SetFoldBehavior(cUpdCode22, dtAuth.Rows[28], cUpdCode22P1, cUpdCode22Label, cUpdCode22P2, cUpdCode22E, null, dtLabel.Rows[28], null, null, null);
+				base.SetFoldBehavior(cUpdCode22, dtAuth.Rows[29], cUpdCode22P1, cUpdCode22Label, cUpdCode22P2, cUpdCode22E, null, dtLabel.Rows[29], null, null, null);
 				cUpdCode22E.Attributes["label_id"] = cUpdCode22Label.ClientID; cUpdCode22E.Attributes["target_id"] = cUpdCode22.ClientID;
-				base.SetFoldBehavior(cXlsClause22, dtAuth.Rows[29], cXlsClause22P1, cXlsClause22Label, cXlsClause22P2, cXlsClause22E, null, dtLabel.Rows[29], null, null, null);
+				base.SetFoldBehavior(cXlsClause22, dtAuth.Rows[30], cXlsClause22P1, cXlsClause22Label, cXlsClause22P2, cXlsClause22E, null, dtLabel.Rows[30], null, null, null);
 				cXlsClause22E.Attributes["label_id"] = cXlsClause22Label.ClientID; cXlsClause22E.Attributes["target_id"] = cXlsClause22.ClientID;
-				base.SetFoldBehavior(cXlsCode22, dtAuth.Rows[30], cXlsCode22P1, cXlsCode22Label, cXlsCode22P2, cXlsCode22E, null, dtLabel.Rows[30], null, null, null);
+				base.SetFoldBehavior(cXlsCode22, dtAuth.Rows[31], cXlsCode22P1, cXlsCode22Label, cXlsCode22P2, cXlsCode22E, null, dtLabel.Rows[31], null, null, null);
 				cXlsCode22E.Attributes["label_id"] = cXlsCode22Label.ClientID; cXlsCode22E.Attributes["target_id"] = cXlsCode22.ClientID;
 			}
 			if ((cProgramName22.Attributes["OnChange"] == null || cProgramName22.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cProgramName22.Visible && !cProgramName22.ReadOnly) {cProgramName22.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -2085,6 +2092,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if ((cModifiedOn22.Attributes["OnChange"] == null || cModifiedOn22.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cModifiedOn22.Visible && !cModifiedOn22.ReadOnly) {cModifiedOn22.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cTemplateName22.Attributes["OnChange"] == null || cTemplateName22.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cTemplateName22.Visible && !cTemplateName22.ReadOnly) {cTemplateName22.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cRptTemplate22Tgo.Attributes["OnClick"] == null || cRptTemplate22Tgo.Attributes["OnClick"].IndexOf("_bConfirm") < 0) && cRptTemplate22Tgo.Visible) {cRptTemplate22Tgo.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';";}
+			if ((cCommandTimeOut22.Attributes["OnChange"] == null || cCommandTimeOut22.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCommandTimeOut22.Visible && !cCommandTimeOut22.ReadOnly) {cCommandTimeOut22.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cUnitCd22.Attributes["OnChange"] == null || cUnitCd22.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cUnitCd22.Visible && cUnitCd22.Enabled) {cUnitCd22.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cTopMargin22.Attributes["OnChange"] == null || cTopMargin22.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cTopMargin22.Visible && !cTopMargin22.ReadOnly) {cTopMargin22.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cBottomMargin22.Attributes["OnChange"] == null || cBottomMargin22.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cBottomMargin22.Visible && !cBottomMargin22.ReadOnly) {cBottomMargin22.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -2189,28 +2197,29 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[6]["ColVisible"].ToString() == "Y" && dt.Rows[6]["ColReadOnly"].ToString() != "Y") {cModifiedOn22.Text = string.Empty;}
 			if (dt.Rows[7]["ColVisible"].ToString() == "Y" && dt.Rows[7]["ColReadOnly"].ToString() != "Y") {cTemplateName22.Text = string.Empty;}
 			if (dt.Rows[8]["ColVisible"].ToString() == "Y" && dt.Rows[8]["ColReadOnly"].ToString() != "Y") {SetRptTemplate22(cRptTemplate22GV,string.Empty);}
-			if (dt.Rows[9]["ColVisible"].ToString() == "Y" && dt.Rows[9]["ColReadOnly"].ToString() != "Y") {SetUnitCd22(cUnitCd22,string.Empty);}
-			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {cTopMargin22.Text = string.Empty;}
-			if (dt.Rows[11]["ColVisible"].ToString() == "Y" && dt.Rows[11]["ColReadOnly"].ToString() != "Y") {cBottomMargin22.Text = string.Empty;}
-			if (dt.Rows[12]["ColVisible"].ToString() == "Y" && dt.Rows[12]["ColReadOnly"].ToString() != "Y") {cLeftMargin22.Text = string.Empty;}
-			if (dt.Rows[13]["ColVisible"].ToString() == "Y" && dt.Rows[13]["ColReadOnly"].ToString() != "Y") {cRightMargin22.Text = string.Empty;}
-			if (dt.Rows[14]["ColVisible"].ToString() == "Y" && dt.Rows[14]["ColReadOnly"].ToString() != "Y") {cPageWidth22.Text = string.Empty;}
-			if (dt.Rows[15]["ColVisible"].ToString() == "Y" && dt.Rows[15]["ColReadOnly"].ToString() != "Y") {cPageHeight22.Text = string.Empty;}
-			if (dt.Rows[16]["ColVisible"].ToString() == "Y" && dt.Rows[16]["ColReadOnly"].ToString() != "Y") {cSyncByDb.ImageUrl = "~/images/custom/adm/SyncByDb.gif"; }
-			if (dt.Rows[17]["ColVisible"].ToString() == "Y" && dt.Rows[17]["ColReadOnly"].ToString() != "Y") {cSyncToDb.ImageUrl = "~/images/custom/adm/SyncToDb.gif"; }
-			if (dt.Rows[18]["ColVisible"].ToString() == "Y" && dt.Rows[18]["ColReadOnly"].ToString() != "Y") {cAllowSelect22.Checked = base.GetBool("N");}
-			if (dt.Rows[19]["ColVisible"].ToString() == "Y" && dt.Rows[19]["ColReadOnly"].ToString() != "Y") {cGenerateRp22.Checked = base.GetBool("Y");}
-			if (dt.Rows[20]["ColVisible"].ToString() == "Y" && dt.Rows[20]["ColReadOnly"].ToString() != "Y") {cLastGenDt22.Text = string.Empty;}
-			if (dt.Rows[21]["ColVisible"].ToString() == "Y" && dt.Rows[21]["ColReadOnly"].ToString() != "Y") {cAuthRequired22.Checked = base.GetBool("Y");}
-			if (dt.Rows[22]["ColVisible"].ToString() == "Y" && dt.Rows[22]["ColReadOnly"].ToString() != "Y") {cWhereClause22.Text = string.Empty;}
-			if (dt.Rows[23]["ColVisible"].ToString() == "Y" && dt.Rows[23]["ColReadOnly"].ToString() != "Y") {cRegClause22.Text = string.Empty;}
-			if (dt.Rows[24]["ColVisible"].ToString() == "Y" && dt.Rows[24]["ColReadOnly"].ToString() != "Y") {cRegCode22.Text = string.Empty;}
-			if (dt.Rows[25]["ColVisible"].ToString() == "Y" && dt.Rows[25]["ColReadOnly"].ToString() != "Y") {cValClause22.Text = string.Empty;}
-			if (dt.Rows[26]["ColVisible"].ToString() == "Y" && dt.Rows[26]["ColReadOnly"].ToString() != "Y") {cValCode22.Text = string.Empty;}
-			if (dt.Rows[27]["ColVisible"].ToString() == "Y" && dt.Rows[27]["ColReadOnly"].ToString() != "Y") {cUpdClause22.Text = string.Empty;}
-			if (dt.Rows[28]["ColVisible"].ToString() == "Y" && dt.Rows[28]["ColReadOnly"].ToString() != "Y") {cUpdCode22.Text = string.Empty;}
-			if (dt.Rows[29]["ColVisible"].ToString() == "Y" && dt.Rows[29]["ColReadOnly"].ToString() != "Y") {cXlsClause22.Text = string.Empty;}
-			if (dt.Rows[30]["ColVisible"].ToString() == "Y" && dt.Rows[30]["ColReadOnly"].ToString() != "Y") {cXlsCode22.Text = string.Empty;}
+			if (dt.Rows[9]["ColVisible"].ToString() == "Y" && dt.Rows[9]["ColReadOnly"].ToString() != "Y") {cCommandTimeOut22.Text = string.Empty;}
+			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {SetUnitCd22(cUnitCd22,string.Empty);}
+			if (dt.Rows[11]["ColVisible"].ToString() == "Y" && dt.Rows[11]["ColReadOnly"].ToString() != "Y") {cTopMargin22.Text = string.Empty;}
+			if (dt.Rows[12]["ColVisible"].ToString() == "Y" && dt.Rows[12]["ColReadOnly"].ToString() != "Y") {cBottomMargin22.Text = string.Empty;}
+			if (dt.Rows[13]["ColVisible"].ToString() == "Y" && dt.Rows[13]["ColReadOnly"].ToString() != "Y") {cLeftMargin22.Text = string.Empty;}
+			if (dt.Rows[14]["ColVisible"].ToString() == "Y" && dt.Rows[14]["ColReadOnly"].ToString() != "Y") {cRightMargin22.Text = string.Empty;}
+			if (dt.Rows[15]["ColVisible"].ToString() == "Y" && dt.Rows[15]["ColReadOnly"].ToString() != "Y") {cPageWidth22.Text = string.Empty;}
+			if (dt.Rows[16]["ColVisible"].ToString() == "Y" && dt.Rows[16]["ColReadOnly"].ToString() != "Y") {cPageHeight22.Text = string.Empty;}
+			if (dt.Rows[17]["ColVisible"].ToString() == "Y" && dt.Rows[17]["ColReadOnly"].ToString() != "Y") {cSyncByDb.ImageUrl = "~/images/custom/adm/SyncByDb.gif"; }
+			if (dt.Rows[18]["ColVisible"].ToString() == "Y" && dt.Rows[18]["ColReadOnly"].ToString() != "Y") {cSyncToDb.ImageUrl = "~/images/custom/adm/SyncToDb.gif"; }
+			if (dt.Rows[19]["ColVisible"].ToString() == "Y" && dt.Rows[19]["ColReadOnly"].ToString() != "Y") {cAllowSelect22.Checked = base.GetBool("N");}
+			if (dt.Rows[20]["ColVisible"].ToString() == "Y" && dt.Rows[20]["ColReadOnly"].ToString() != "Y") {cGenerateRp22.Checked = base.GetBool("Y");}
+			if (dt.Rows[21]["ColVisible"].ToString() == "Y" && dt.Rows[21]["ColReadOnly"].ToString() != "Y") {cLastGenDt22.Text = string.Empty;}
+			if (dt.Rows[22]["ColVisible"].ToString() == "Y" && dt.Rows[22]["ColReadOnly"].ToString() != "Y") {cAuthRequired22.Checked = base.GetBool("Y");}
+			if (dt.Rows[23]["ColVisible"].ToString() == "Y" && dt.Rows[23]["ColReadOnly"].ToString() != "Y") {cWhereClause22.Text = string.Empty;}
+			if (dt.Rows[24]["ColVisible"].ToString() == "Y" && dt.Rows[24]["ColReadOnly"].ToString() != "Y") {cRegClause22.Text = string.Empty;}
+			if (dt.Rows[25]["ColVisible"].ToString() == "Y" && dt.Rows[25]["ColReadOnly"].ToString() != "Y") {cRegCode22.Text = string.Empty;}
+			if (dt.Rows[26]["ColVisible"].ToString() == "Y" && dt.Rows[26]["ColReadOnly"].ToString() != "Y") {cValClause22.Text = string.Empty;}
+			if (dt.Rows[27]["ColVisible"].ToString() == "Y" && dt.Rows[27]["ColReadOnly"].ToString() != "Y") {cValCode22.Text = string.Empty;}
+			if (dt.Rows[28]["ColVisible"].ToString() == "Y" && dt.Rows[28]["ColReadOnly"].ToString() != "Y") {cUpdClause22.Text = string.Empty;}
+			if (dt.Rows[29]["ColVisible"].ToString() == "Y" && dt.Rows[29]["ColReadOnly"].ToString() != "Y") {cUpdCode22.Text = string.Empty;}
+			if (dt.Rows[30]["ColVisible"].ToString() == "Y" && dt.Rows[30]["ColReadOnly"].ToString() != "Y") {cXlsClause22.Text = string.Empty;}
+			if (dt.Rows[31]["ColVisible"].ToString() == "Y" && dt.Rows[31]["ColReadOnly"].ToString() != "Y") {cXlsCode22.Text = string.Empty;}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -2225,6 +2234,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cModifiedOn22.Text = string.Empty;
 			cTemplateName22.Text = string.Empty;
 			SetRptTemplate22(cRptTemplate22GV,string.Empty);
+			cCommandTimeOut22.Text = string.Empty;
 			SetUnitCd22(cUnitCd22,string.Empty);
 			cTopMargin22.Text = string.Empty;
 			cBottomMargin22.Text = string.Empty;
@@ -2284,6 +2294,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cModifiedOn22.Text = RO.Common3.Utils.fmShortDateTimeUTC(dr["ModifiedOn22"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cModifiedOn22.Text = string.Empty;}
 					try {cTemplateName22.Text = dr["TemplateName22"].ToString();} catch {cTemplateName22.Text = string.Empty;}
 					SetRptTemplate22(cRptTemplate22GV,string.Empty);
+					try {cCommandTimeOut22.Text = RO.Common3.Utils.fmNumeric("0",dr["CommandTimeOut22"].ToString(),base.LUser.Culture);} catch {cCommandTimeOut22.Text = string.Empty;}
 					SetUnitCd22(cUnitCd22,dr["UnitCd22"].ToString());
 					try {cTopMargin22.Text = RO.Common3.Utils.fmNumeric("2",dr["TopMargin22"].ToString(),base.LUser.Culture);} catch {cTopMargin22.Text = string.Empty;}
 					try {cBottomMargin22.Text = RO.Common3.Utils.fmNumeric("2",dr["BottomMargin22"].ToString(),base.LUser.Culture);} catch {cBottomMargin22.Text = string.Empty;}
@@ -2471,7 +2482,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if ((cc != null && cc.ID.Equals("cAdmReport67List")) || cAdmReportGrid.EditIndex < 0 || UpdateGridRow(cAdmReportGrid, new CommandEventArgs("Save", "")))
 				{
 					string rf = string.Empty;
-					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 31, cFindFilter.SelectedValue) + ")"; }
+					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 32, cFindFilter.SelectedValue) + ")"; }
 					if (rf != string.Empty) { rf = "((" + rf + " or _NewRow = 'Y' ))"; }
 					dv.RowFilter = rf;
 					ViewState["_RowFilter"] = rf;
@@ -2881,7 +2892,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				cFindFilter.Items.Add(li);
 				foreach (DataRow dr in dtLabel.Rows)
 				{
-					if (ii >= 31 && !string.IsNullOrEmpty(dr["ColumnHeader"].ToString()) && !string.IsNullOrEmpty(dr["TableId"].ToString()) && dtAuth.Rows[ii]["ColVisible"].ToString() == "Y")
+					if (ii >= 32 && !string.IsNullOrEmpty(dr["ColumnHeader"].ToString()) && !string.IsNullOrEmpty(dr["TableId"].ToString()) && dtAuth.Rows[ii]["ColVisible"].ToString() == "Y")
 					{
 						li = new ListItem();
 						li.Value = ii.ToString(); li.Text = dr["ColumnHeader"].ToString().Replace("*", string.Empty);
@@ -2956,7 +2967,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (cAdmReportGrid.EditIndex > -1 && GetDataItemIndex(cAdmReportGrid.EditIndex) == e.Item.DataItemIndex)
 			{
 				isEditItem = true;
-				base.SetGridEnabled(e.Item, GetAuthCol(), GetLabel(), 31);
+				base.SetGridEnabled(e.Item, GetAuthCol(), GetLabel(), 32);
 				if (dvAdmReportGrid[e.Item.DataItemIndex]["CultureId96"].ToString() != string.Empty) {SetCultureId96((RoboCoder.WebControls.ComboBox)e.Item.FindControl("cCultureId96"),dvAdmReportGrid[e.Item.DataItemIndex]["CultureId96"].ToString(), e.Item);} else {SetCultureId96((RoboCoder.WebControls.ComboBox)e.Item.FindControl("cCultureId96"),"1", e.Item);}
 				GridChkPgDirty(e.Item);
 			}
@@ -3054,13 +3065,13 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		{
 		    Label ml = null;
 		    ml = lvi.FindControl("cReportHlpId96ml") as Label;
-		    if (ml != null) { ml.Text = ColumnHeaderText(31); }
-		    ml = lvi.FindControl("cCultureId96ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(32); }
-		    ml = lvi.FindControl("cDefaultHlpMsg96ml") as Label;
+		    ml = lvi.FindControl("cCultureId96ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(33); }
-		    ml = lvi.FindControl("cReportTitle96ml") as Label;
+		    ml = lvi.FindControl("cDefaultHlpMsg96ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(34); }
+		    ml = lvi.FindControl("cReportTitle96ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(35); }
 		}
 
 		protected void GridFill(ListViewItem lvi, DataTable dt, DataRow dr, bool bInsert)
@@ -3240,6 +3251,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		private string SaveDb(object sender, System.EventArgs e)
 		{
 			string rtn = string.Empty;
+			bool noTrans = Config.NoTrans;
+			int commandTimeOut = Config.CommandTimeOut;
 			//WebRule: Signal create program needed upon program name change
 bool bRegenNeeded = false;
             if (cAdmReport67List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName22.Text, 0, Int32.Parse(cAdmReport67List.SelectedValue), 0, (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }
@@ -3262,7 +3275,7 @@ bool bRegenNeeded = false;
 				{
 					if (ds != null)
 					{
-						pid = (new AdminSystem()).AddData(67,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc);
+						pid = (new AdminSystem()).AddData(67,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc,noTrans,commandTimeOut);
 					}
 					if (!string.IsNullOrEmpty(pid))
 					{
@@ -3273,7 +3286,7 @@ bool bRegenNeeded = false;
 				}
 				else {
 					bool bValid7 = false;
-					if (ds != null && (new AdminSystem()).UpdData(67,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc)) {bValid7 = true;}
+					if (ds != null && (new AdminSystem()).UpdData(67,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc,noTrans,commandTimeOut)) {bValid7 = true;}
 					if (bValid7)
 					{
 						cAdmReport67List.ClearSearch(); Session.Remove(KEY_dtAdmReport67List);
@@ -3353,6 +3366,8 @@ bool bRegenNeeded = false;
 			drType["TemplateName22"] = "VarChar"; drDisp["TemplateName22"] = "TextBox";
 			try {dr["RptTemplate22"] = string.Empty;} catch {}
 			drType["RptTemplate22"] = "Numeric"; drDisp["RptTemplate22"] = "Document";
+			try {dr["CommandTimeOut22"] = cCommandTimeOut22.Text.Trim();} catch {}
+			drType["CommandTimeOut22"] = "Numeric"; drDisp["CommandTimeOut22"] = "TextBox";
 			try {dr["UnitCd22"] = cUnitCd22.SelectedValue;} catch {}
 			drType["UnitCd22"] = "Char"; drDisp["UnitCd22"] = "DropDownList";
 			try {dr["TopMargin22"] = cTopMargin22.Text.Trim();} catch {}
@@ -3553,13 +3568,13 @@ bool bRegenNeeded = false;
 		    // Header:
 		    LinkButton lb = null;
 		    lb = cAdmReportGrid.FindControl("cReportHlpId96hl") as LinkButton;
-		    if (lb != null) { lb.Text = ColumnHeaderText(31); lb.ToolTip = ColumnToolTip(31); lb.Parent.Visible = GridColumnVisible(31); }
-		    lb = cAdmReportGrid.FindControl("cCultureId96hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(32); lb.ToolTip = ColumnToolTip(32); lb.Parent.Visible = GridColumnVisible(32); }
-		    lb = cAdmReportGrid.FindControl("cDefaultHlpMsg96hl") as LinkButton;
+		    lb = cAdmReportGrid.FindControl("cCultureId96hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(33); lb.ToolTip = ColumnToolTip(33); lb.Parent.Visible = GridColumnVisible(33); }
-		    lb = cAdmReportGrid.FindControl("cReportTitle96hl") as LinkButton;
+		    lb = cAdmReportGrid.FindControl("cDefaultHlpMsg96hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(34); lb.ToolTip = ColumnToolTip(34); lb.Parent.Visible = GridColumnVisible(34); }
+		    lb = cAdmReportGrid.FindControl("cReportTitle96hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(35); lb.ToolTip = ColumnToolTip(35); lb.Parent.Visible = GridColumnVisible(35); }
 		    // Hide DeleteAll:
 			DataTable dtAuthRow = GetAuthRow();
 			if (dtAuthRow != null)
@@ -3573,13 +3588,13 @@ bool bRegenNeeded = false;
 		    // footer:
 		    Label gc = null;
 		    gc = cAdmReportGrid.FindControl("cReportHlpId96fl") as Label;
-		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(31); }
-		    gc = cAdmReportGrid.FindControl("cCultureId96fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(32); }
-		    gc = cAdmReportGrid.FindControl("cDefaultHlpMsg96fl") as Label;
+		    gc = cAdmReportGrid.FindControl("cCultureId96fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(33); }
-		    gc = cAdmReportGrid.FindControl("cReportTitle96fl") as Label;
+		    gc = cAdmReportGrid.FindControl("cDefaultHlpMsg96fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(34); }
+		    gc = cAdmReportGrid.FindControl("cReportTitle96fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(35); }
 		}
 
 		protected void cbPostBack(object sender, System.EventArgs e)

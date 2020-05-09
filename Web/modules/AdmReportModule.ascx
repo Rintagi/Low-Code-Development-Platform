@@ -262,6 +262,14 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     		</asp:GridView></asp:Panel>
     		<asp:ImageButton id="cRptTemplate22Tgo" CssClass="r-docIcon" onclick="cRptTemplate22Tgo_Click" runat="server" ImageUrl="~/Images/UpLoad.png" CausesValidation="true" ToolTip="Click to upload a document." /></div>
     	</div>
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cCommandTimeOut22P1" class="r-td r-labelL r-labelT" runat="server"><asp:Label id="cCommandTimeOut22Label" CssClass="inp-lbl" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div class="r-td"></div>
+    		<div id="cCommandTimeOut22P2" class="r-td r-content" runat="server"><asp:TextBox id="cCommandTimeOut22" CssClass="inp-txt" runat="server" /></div>
+    	</div>
     </div></div></div>
     <div class="r-td rc-9-11"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
@@ -454,23 +462,23 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 	<ItemTemplate>
 	<tr id="cAdmReportGridRow" class='<%# Container.DisplayIndex % 2 == 0 ? "GrdItm" : "GrdAlt" %>' runat="server">
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:40px;text-align:right;' visible="<%# GridColumnVisible(31) %>" onclick='GridEdit("ReportHlpId96")' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:40px;text-align:right;' visible="<%# GridColumnVisible(32) %>" onclick='GridEdit("ReportHlpId96")' runat="server">
 			<asp:Label id="cReportHlpId96l" Text='<%# RO.Common3.Utils.fmNumeric("0",DataBinder.Eval(Container.DataItem,"ReportHlpId96").ToString(),base.LUser.Culture) %>' CssClass="GrdTxtLb" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(32) %>" onclick='GridEdit("CultureId96")' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(33) %>" onclick='GridEdit("CultureId96")' runat="server">
 			<asp:Label Text='<%# DataBinder.Eval(Container.DataItem,"CultureId96").ToString() %>' Visible="false" runat="server" />
 			<asp:Label id="cCultureId96l" text='<%# DataBinder.Eval(Container.DataItem,"CultureId96Text") %>' CssClass="GrdTxtLb" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:800px;text-align:left;' visible="<%# GridColumnVisible(33) %>" onclick='GridEdit("DefaultHlpMsg96")' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:800px;text-align:left;' visible="<%# GridColumnVisible(34) %>" onclick='GridEdit("DefaultHlpMsg96")' runat="server">
 			<asp:Label id="cDefaultHlpMsg96l" Text='<%# DataBinder.Eval(Container.DataItem,"DefaultHlpMsg96").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:150px;text-align:left;' visible="<%# GridColumnVisible(34) %>" onclick='GridEdit("ReportTitle96")' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:150px;text-align:left;' visible="<%# GridColumnVisible(35) %>" onclick='GridEdit("ReportTitle96")' runat="server">
 			<asp:Label id="cReportTitle96l" Text='<%# DataBinder.Eval(Container.DataItem,"ReportTitle96").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" runat="server" />
 		</div></div>
     </td>
@@ -483,22 +491,22 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 	<EditItemTemplate>
 	<tr class="GrdEdtTmp" runat="server">
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:40px;text-align:right;' visible="<%# GridColumnVisible(31) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cReportHlpId96ml" runat="server" /></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:40px;text-align:right;' visible="<%# GridColumnVisible(32) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cReportHlpId96ml" runat="server" /></div>
 		    <asp:TextBox id="cReportHlpId96" CssClass="GrdNum" Text='<%# RO.Common3.Utils.fmNumeric("0",DataBinder.Eval(Container.DataItem,"ReportHlpId96").ToString(),base.LUser.Culture) %>' runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(32) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cCultureId96ml" runat="server" /></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(33) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cCultureId96ml" runat="server" /></div>
 		    <rcasp:ComboBox autocomplete="off" id="cCultureId96" CssClass="GrdDdl" DataValueField="CultureId96" DataTextField="CultureId96Text" Mode="A" OnPostBack="cbPostBack" OnSearch="cbCultureId96" runat="server" /><asp:RequiredFieldValidator id="cRFVCultureId96" ControlToValidate="cCultureId96" display="none" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:800px;text-align:left;' visible="<%# GridColumnVisible(33) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDefaultHlpMsg96ml" runat="server" /></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:800px;text-align:left;' visible="<%# GridColumnVisible(34) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDefaultHlpMsg96ml" runat="server" /></div>
 		    <asp:TextBox id="cDefaultHlpMsg96" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"DefaultHlpMsg96").ToString() %>' runat="server" /><asp:RequiredFieldValidator id="cRFVDefaultHlpMsg96" ControlToValidate="cDefaultHlpMsg96" display="none" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:150px;text-align:left;' visible="<%# GridColumnVisible(34) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cReportTitle96ml" runat="server" /></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:150px;text-align:left;' visible="<%# GridColumnVisible(35) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cReportTitle96ml" runat="server" /></div>
 		    <asp:TextBox id="cReportTitle96" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"ReportTitle96").ToString() %>' MaxLength="50" runat="server" /><asp:RequiredFieldValidator id="cRFVReportTitle96" ControlToValidate="cReportTitle96" display="none" runat="server" />
 		</div></div>
     </td>

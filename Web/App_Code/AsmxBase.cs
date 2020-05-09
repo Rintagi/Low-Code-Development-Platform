@@ -775,9 +775,9 @@ namespace RO.Web
 
             if (dt == null || ignoreCache) {
                 dt = (new LoginSystem()).GetSystemsList(string.Empty, string.Empty);
-                cache.Insert(KEY_SystemsList,dt,new System.Web.Caching.CacheDependency(SystemListCacheWatchFile)
-                    , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
                 dt.PrimaryKey = new DataColumn[] { dt.Columns["SystemId"] };
+                cache.Insert(KEY_SystemsList, dt, new System.Web.Caching.CacheDependency(SystemListCacheWatchFile)
+                    , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
             }
             return dt;
         }

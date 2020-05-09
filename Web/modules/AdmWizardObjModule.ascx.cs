@@ -49,6 +49,8 @@ namespace RO.Common3.Data
 			columns.Add("DefOverwrite71", typeof(string));
 			columns.Add("OvwrReadonly71", typeof(string));
 			columns.Add("AuthRequired71", typeof(string));
+			columns.Add("CommandTimeOut71", typeof(string));
+			columns.Add("NoTrans71", typeof(string));
 			return dt;
 		}
 
@@ -629,8 +631,10 @@ namespace RO.Web
 						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[8]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[9]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[11]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[11]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[11]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[12]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[13]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[13]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[14]["ColumnHeader"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -645,9 +649,11 @@ namespace RO.Web
 						if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DefOverwrite71"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["OvwrReadonly71"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AuthRequired71"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["WizardObjId72"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["ColumnId72"].ToString() + (char)9 + drv["ColumnId72Text"].ToString() + (char)9);}
-						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["TabIndex72"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["CommandTimeOut71"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["NoTrans71"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["WizardObjId72"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["ColumnId72"].ToString() + (char)9 + drv["ColumnId72Text"].ToString() + (char)9);}
+						if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["TabIndex72"].ToString(),base.LUser.Culture) + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmWizardObj.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
@@ -709,6 +715,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -731,6 +739,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[10]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[11]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[12]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[13]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[14]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -763,9 +773,11 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[7]["ColExport"].ToString() == "Y") {sb.Append(drv["DefOverwrite71"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[8]["ColExport"].ToString() == "Y") {sb.Append(drv["OvwrReadonly71"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[9]["ColExport"].ToString() == "Y") {sb.Append(drv["AuthRequired71"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["WizardObjId72"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["ColumnId72Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["TabIndex72"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["CommandTimeOut71"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["NoTrans71"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["WizardObjId72"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[13]["ColExport"].ToString() == "Y") {sb.Append(drv["ColumnId72Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[14]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["TabIndex72"].ToString(),base.LUser.Culture) + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1639,6 +1651,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cDefOverwrite71, dtAuth.Rows[7], cDefOverwrite71P1, cDefOverwrite71Label, cDefOverwrite71P2, null, dtLabel.Rows[7], null, null, null);
 				base.SetFoldBehavior(cOvwrReadonly71, dtAuth.Rows[8], cOvwrReadonly71P1, cOvwrReadonly71Label, cOvwrReadonly71P2, null, dtLabel.Rows[8], null, null, null);
 				base.SetFoldBehavior(cAuthRequired71, dtAuth.Rows[9], cAuthRequired71P1, cAuthRequired71Label, cAuthRequired71P2, null, dtLabel.Rows[9], null, null, null);
+				base.SetFoldBehavior(cCommandTimeOut71, dtAuth.Rows[10], cCommandTimeOut71P1, cCommandTimeOut71Label, cCommandTimeOut71P2, null, dtLabel.Rows[10], null, null, null);
+				base.SetFoldBehavior(cNoTrans71, dtAuth.Rows[11], cNoTrans71P1, cNoTrans71Label, cNoTrans71P2, null, dtLabel.Rows[11], null, null, null);
 			}
 			if ((cWizardTypeId71.Attributes["OnChange"] == null || cWizardTypeId71.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cWizardTypeId71.Visible && cWizardTypeId71.Enabled) {cWizardTypeId71.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cMasterTableId71.Attributes["OnChange"] == null || cMasterTableId71.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cMasterTableId71.Visible && cMasterTableId71.Enabled) {cMasterTableId71.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -1649,6 +1663,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if ((cDefOverwrite71.Attributes["OnClick"] == null || cDefOverwrite71.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cDefOverwrite71.Visible && cDefOverwrite71.Enabled) {cDefOverwrite71.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cOvwrReadonly71.Attributes["OnClick"] == null || cOvwrReadonly71.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cOvwrReadonly71.Visible && cOvwrReadonly71.Enabled) {cOvwrReadonly71.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cAuthRequired71.Attributes["OnClick"] == null || cAuthRequired71.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cAuthRequired71.Visible && cAuthRequired71.Enabled) {cAuthRequired71.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
+			if ((cCommandTimeOut71.Attributes["OnChange"] == null || cCommandTimeOut71.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCommandTimeOut71.Visible && !cCommandTimeOut71.ReadOnly) {cCommandTimeOut71.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cNoTrans71.Attributes["OnClick"] == null || cNoTrans71.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cNoTrans71.Visible && cNoTrans71.Enabled) {cNoTrans71.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 		}
 
 		private DataTable SetFunctionality(DataTable dt)
@@ -1728,6 +1744,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[7]["ColVisible"].ToString() == "Y" && dt.Rows[7]["ColReadOnly"].ToString() != "Y") {cDefOverwrite71.Checked = base.GetBool("N");}
 			if (dt.Rows[8]["ColVisible"].ToString() == "Y" && dt.Rows[8]["ColReadOnly"].ToString() != "Y") {cOvwrReadonly71.Checked = base.GetBool("N");}
 			if (dt.Rows[9]["ColVisible"].ToString() == "Y" && dt.Rows[9]["ColReadOnly"].ToString() != "Y") {cAuthRequired71.Checked = base.GetBool("Y");}
+			if (dt.Rows[10]["ColVisible"].ToString() == "Y" && dt.Rows[10]["ColReadOnly"].ToString() != "Y") {cCommandTimeOut71.Text = string.Empty;}
+			if (dt.Rows[11]["ColVisible"].ToString() == "Y" && dt.Rows[11]["ColReadOnly"].ToString() != "Y") {cNoTrans71.Checked = base.GetBool("N");}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -1743,6 +1761,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cDefOverwrite71.Checked = base.GetBool("N");
 			cOvwrReadonly71.Checked = base.GetBool("N");
 			cAuthRequired71.Checked = base.GetBool("Y");
+			cCommandTimeOut71.Text = string.Empty;
+			cNoTrans71.Checked = base.GetBool("N");
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 		protected void cAdmWizardObj49List_TextChanged(object sender, System.EventArgs e)
@@ -1781,6 +1801,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cDefOverwrite71.Checked = base.GetBool(dr["DefOverwrite71"].ToString());} catch {cDefOverwrite71.Checked = false;}
 					try {cOvwrReadonly71.Checked = base.GetBool(dr["OvwrReadonly71"].ToString());} catch {cOvwrReadonly71.Checked = false;}
 					try {cAuthRequired71.Checked = base.GetBool(dr["AuthRequired71"].ToString());} catch {cAuthRequired71.Checked = false;}
+					try {cCommandTimeOut71.Text = RO.Common3.Utils.fmNumeric("0",dr["CommandTimeOut71"].ToString(),base.LUser.Culture);} catch {cCommandTimeOut71.Text = string.Empty;}
+					try {cNoTrans71.Checked = base.GetBool(dr["NoTrans71"].ToString());} catch {cNoTrans71.Checked = false;}
 				}
 			}
 			cButPanel.DataBind(); if (!cSaveButton.Visible) { cInsRowButton.Visible = false; }
@@ -1821,7 +1843,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if ((cc != null && cc.ID.Equals("cAdmWizardObj49List")) || cAdmWizardObjGrid.EditIndex < 0 || UpdateGridRow(cAdmWizardObjGrid, new CommandEventArgs("Save", "")))
 				{
 					string rf = string.Empty;
-					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 10, cFindFilter.SelectedValue) + ")"; }
+					if (cFind.Text != string.Empty) { rf = "(" + base.GetExpression(cFind.Text.Trim(), GetAuthCol(), 12, cFindFilter.SelectedValue) + ")"; }
 					if (rf != string.Empty) { rf = "((" + rf + " or _NewRow = 'Y' ))"; }
 					dv.RowFilter = rf;
 					ViewState["_RowFilter"] = rf;
@@ -2229,7 +2251,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				cFindFilter.Items.Add(li);
 				foreach (DataRow dr in dtLabel.Rows)
 				{
-					if (ii >= 10 && !string.IsNullOrEmpty(dr["ColumnHeader"].ToString()) && !string.IsNullOrEmpty(dr["TableId"].ToString()) && dtAuth.Rows[ii]["ColVisible"].ToString() == "Y")
+					if (ii >= 12 && !string.IsNullOrEmpty(dr["ColumnHeader"].ToString()) && !string.IsNullOrEmpty(dr["TableId"].ToString()) && dtAuth.Rows[ii]["ColVisible"].ToString() == "Y")
 					{
 						li = new ListItem();
 						li.Value = ii.ToString(); li.Text = dr["ColumnHeader"].ToString().Replace("*", string.Empty);
@@ -2302,7 +2324,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (cAdmWizardObjGrid.EditIndex > -1 && GetDataItemIndex(cAdmWizardObjGrid.EditIndex) == e.Item.DataItemIndex)
 			{
 				isEditItem = true;
-				base.SetGridEnabled(e.Item, GetAuthCol(), GetLabel(), 10);
+				base.SetGridEnabled(e.Item, GetAuthCol(), GetLabel(), 12);
 				SetColumnId72((RoboCoder.WebControls.ComboBox)e.Item.FindControl("cColumnId72"),dvAdmWizardObjGrid[e.Item.DataItemIndex]["ColumnId72"].ToString(), e.Item);
 				GridChkPgDirty(e.Item);
 			}
@@ -2393,11 +2415,11 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		{
 		    Label ml = null;
 		    ml = lvi.FindControl("cWizardObjId72ml") as Label;
-		    if (ml != null) { ml.Text = ColumnHeaderText(10); }
-		    ml = lvi.FindControl("cColumnId72ml") as Label;
-		    if (ml != null) { ml.Text = ColumnHeaderText(11); }
-		    ml = lvi.FindControl("cTabIndex72ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(12); }
+		    ml = lvi.FindControl("cColumnId72ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(13); }
+		    ml = lvi.FindControl("cTabIndex72ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(14); }
 		}
 
 		protected void GridFill(ListViewItem lvi, DataTable dt, DataRow dr, bool bInsert)
@@ -2572,6 +2594,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		private string SaveDb(object sender, System.EventArgs e)
 		{
 			string rtn = string.Empty;
+			bool noTrans = Config.NoTrans;
+			int commandTimeOut = Config.CommandTimeOut;
 			//WebRule: Signal create program needed upon program name change
 bool bRegenNeeded = false;
             if (cAdmWizardObj49List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName71.Text, 0, 0, Int32.Parse(cAdmWizardObj49List.SelectedValue), (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }
@@ -2594,7 +2618,7 @@ bool bRegenNeeded = false;
 				{
 					if (ds != null)
 					{
-						pid = (new AdminSystem()).AddData(49,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc);
+						pid = (new AdminSystem()).AddData(49,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc,noTrans,commandTimeOut);
 					}
 					if (!string.IsNullOrEmpty(pid))
 					{
@@ -2605,7 +2629,7 @@ bool bRegenNeeded = false;
 				}
 				else {
 					bool bValid7 = false;
-					if (ds != null && (new AdminSystem()).UpdData(49,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc)) {bValid7 = true;}
+					if (ds != null && (new AdminSystem()).UpdData(49,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc,noTrans,commandTimeOut)) {bValid7 = true;}
 					if (bValid7)
 					{
 						cAdmWizardObj49List.ClearSearch(); Session.Remove(KEY_dtAdmWizardObj49List);
@@ -2688,6 +2712,10 @@ bool bRegenNeeded = false;
 			drType["OvwrReadonly71"] = "Char"; drDisp["OvwrReadonly71"] = "CheckBox";
 			try {dr["AuthRequired71"] = base.SetBool(cAuthRequired71.Checked);} catch {}
 			drType["AuthRequired71"] = "Char"; drDisp["AuthRequired71"] = "CheckBox";
+			try {dr["CommandTimeOut71"] = cCommandTimeOut71.Text.Trim();} catch {}
+			drType["CommandTimeOut71"] = "Numeric"; drDisp["CommandTimeOut71"] = "TextBox";
+			try {dr["NoTrans71"] = base.SetBool(cNoTrans71.Checked);} catch {}
+			drType["NoTrans71"] = "Char"; drDisp["NoTrans71"] = "CheckBox";
 			if (dv != null)
 			{
 				ds.Tables["AdmWizardObjDef"].Rows.Add(MakeTypRow(ds.Tables["AdmWizardObjDef"].NewRow()));
@@ -2770,7 +2798,7 @@ bool bRegenNeeded = false;
 			{
 				dr["WizardObjId72"] = drv["WizardObjId72"].ToString().Trim();
 				dr["ColumnId72"] = drv["ColumnId72"];
-				if (bAdd && dtAuth.Rows[11]["ColReadOnly"].ToString() == "Y" && dr["ColumnId72"].ToString() == string.Empty) {dr["ColumnId72"] = System.DBNull.Value;}
+				if (bAdd && dtAuth.Rows[13]["ColReadOnly"].ToString() == "Y" && dr["ColumnId72"].ToString() == string.Empty) {dr["ColumnId72"] = System.DBNull.Value;}
 				dr["TabIndex72"] = drv["TabIndex72"].ToString().Trim();
 			}
 			return dr;
@@ -2834,11 +2862,11 @@ bool bRegenNeeded = false;
 		    // Header:
 		    LinkButton lb = null;
 		    lb = cAdmWizardObjGrid.FindControl("cWizardObjId72hl") as LinkButton;
-		    if (lb != null) { lb.Text = ColumnHeaderText(10); lb.ToolTip = ColumnToolTip(10); lb.Parent.Visible = GridColumnVisible(10); }
-		    lb = cAdmWizardObjGrid.FindControl("cColumnId72hl") as LinkButton;
-		    if (lb != null) { lb.Text = ColumnHeaderText(11); lb.ToolTip = ColumnToolTip(11); lb.Parent.Visible = GridColumnVisible(11); }
-		    lb = cAdmWizardObjGrid.FindControl("cTabIndex72hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(12); lb.ToolTip = ColumnToolTip(12); lb.Parent.Visible = GridColumnVisible(12); }
+		    lb = cAdmWizardObjGrid.FindControl("cColumnId72hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(13); lb.ToolTip = ColumnToolTip(13); lb.Parent.Visible = GridColumnVisible(13); }
+		    lb = cAdmWizardObjGrid.FindControl("cTabIndex72hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(14); lb.ToolTip = ColumnToolTip(14); lb.Parent.Visible = GridColumnVisible(14); }
 		    // Hide DeleteAll:
 			DataTable dtAuthRow = GetAuthRow();
 			if (dtAuthRow != null)
@@ -2852,11 +2880,11 @@ bool bRegenNeeded = false;
 		    // footer:
 		    Label gc = null;
 		    gc = cAdmWizardObjGrid.FindControl("cWizardObjId72fl") as Label;
-		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(10); }
-		    gc = cAdmWizardObjGrid.FindControl("cColumnId72fl") as Label;
-		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(11); }
-		    gc = cAdmWizardObjGrid.FindControl("cTabIndex72fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(12); }
+		    gc = cAdmWizardObjGrid.FindControl("cColumnId72fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(13); }
+		    gc = cAdmWizardObjGrid.FindControl("cTabIndex72fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(14); }
 		}
 
 		protected void cbPostBack(object sender, System.EventArgs e)

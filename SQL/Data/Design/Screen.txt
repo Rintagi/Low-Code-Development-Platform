@@ -13,7 +13,7 @@
 32~@~AdmCtDisplayType~@~Display Type Code~@~7~@~18~@~~@~~@~~@~Y~@~~@~~@~~@~~@~~@~20~@~AdmScreenObj.aspx?id=26&key=419&sys=3&typ=N~@~~@~Y~@~Y~@~N~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
 35~@~AdmMenu~@~Menu Item~@~5~@~39~@~~@~39~@~322~@~Y~@~~@~~@~~@~~@~~@~18~@~AdmScreenObj.aspx?id=26&key=431&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=35&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
 36~@~AdmMenuHlp~@~Menu Label~@~6~@~39~@~40~@~39~@~322~@~Y~@~~@~~@~~@~~@~~@~12~@~AdmScreenObj.aspx?id=26&key=446&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=36&typ=N&sys=3~@~Y~@~Y~@~Y~@~N~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
-49~@~AdmWizardObj~@~Wizard Object~@~6~@~71~@~72~@~71~@~545~@~Y~@~~@~~@~~@~~@~~@~15~@~AdmScreenObj.aspx?id=26&key=633&sys=3&typ=N~@~AdmScreenFilter.aspx?id=181&cri1=49&sys=3&typ=N~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
+49~@~AdmWizardObj~@~Wizard Object~@~6~@~71~@~72~@~71~@~545~@~Y~@~~@~~@~~@~~@~~@~15~@~AdmScreenObj.aspx?id=26&key=633&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=49&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
 50~@~AdmWizardRule~@~Wizard Rule~@~5~@~73~@~~@~73~@~1145~@~Y~@~~@~558~@~~@~~@~~@~~@~AdmScreenObj.aspx?id=26&key=652&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=50&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
 53~@~AdmTemplate~@~Report Template~@~7~@~79~@~~@~~@~~@~Y~@~~@~~@~~@~~@~~@~20~@~AdmScreenObj.aspx?id=26&key=706&sys=3&typ=N~@~~@~Y~@~Y~@~N~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
 54~@~AdmScreenTab~@~Screen Tab Folders~@~6~@~19~@~80~@~19~@~5339~@~Y~@~~@~~@~~@~~@~~@~15~@~AdmScreenObj.aspx?id=26&key=716&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=54&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N

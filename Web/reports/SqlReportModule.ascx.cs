@@ -51,6 +51,7 @@ namespace RO.Web
 		private string LcAppPw;
         private byte LcSystemId;
 		private string GenPrefix;
+        private int CommandTimeOut = Config.CommandTimeOut;
 
 		public SqlReportModule()
 		{
@@ -176,7 +177,14 @@ namespace RO.Web
                 }
                 // Temporary disabled: 2012.02.08
                 //else { cMemPanel.Visible = true; }
-                if (GetReportHlp().Rows[0]["ReportTypeCd"].ToString() == "E" || GetReportHlp().Rows[0]["ReportTypeCd"].ToString() == "R")
+
+                DataTable dtRptHlp = GetReportHlp();
+                try
+                {
+                    int.TryParse(dtRptHlp.Rows[0]["CommandTimeOut"].ToString(), out CommandTimeOut);
+                }
+                catch { }
+                if (dtRptHlp.Rows[0]["ReportTypeCd"].ToString() == "E" || dtRptHlp.Rows[0]["ReportTypeCd"].ToString() == "R")
                 {
                     cExpPdfButton.Visible = false;
                     cPrintButton.Visible = false;
@@ -1566,7 +1574,8 @@ namespace RO.Web
              * UrlBase on the other hand are for situation for href in report links, currently it is the external one 
             pms[ii] = new ReportParameter("IntUrlBase", base.IntUrlBase); ii = ii + 1;
              */
-            DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), dvCri, base.LImpr, base.LCurr, UpdCriteria(false, false), LcAppConnString, LcAppPw, false, false, true);
+
+            DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), dvCri, base.LImpr, base.LCurr, UpdCriteria(false, false), LcAppConnString, LcAppPw, false, false, true, CommandTimeOut);
 			if (dt == null || dt.Rows.Count <= 0) { throw new ApplicationException("Currently there is nothing to report on. Please try again later."); }
             CovertRptUTC(dt);
             DataView dv;
@@ -1583,7 +1592,7 @@ namespace RO.Web
 			string reportName = "SqlReport";
 			if (dt.Columns.Contains("ReportName")) { reportName = dt.Rows[0]["ReportName"].ToString(); }
 			cViewer.LocalReport.DisplayName = reportName + "_" + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString();
-			dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), dvCri, base.LImpr, base.LCurr, UpdCriteria(false, false), LcAppConnString, LcAppPw, false, false, false);
+            dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), dvCri, base.LImpr, base.LCurr, UpdCriteria(false, false), LcAppConnString, LcAppPw, false, false, false, CommandTimeOut);
 			ReportDataSource rptDataSource = new ReportDataSource(LcAppDb, dt);
 			cViewer.LocalReport.DataSources.Clear();
 			cViewer.ShowRefreshButton = false;
@@ -1624,7 +1633,7 @@ namespace RO.Web
 		private void DoTxtRpt(DataSet ds)
 		{
 			StringBuilder sb = new StringBuilder();
-			DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, false, false, false);
+            DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, false, false, false, CommandTimeOut);
 			if (dt == null || dt.Rows.Count <= 0) { throw new ApplicationException("Currently there is nothing to report on. Please try again later."); }
             CovertRptUTC(dt);
             string reportName = GetReportHlp().Rows[0]["ProgramName"].ToString();
@@ -1654,7 +1663,7 @@ namespace RO.Web
 			DataTable dtPrinters = (DataTable)Session[KEY_dtPrinters];
 			if (bPrintOK && dtPrinters != null && dtPrinters.Rows[cPrinter.SelectedIndex]["UpdatePrinted"].ToString() == "Y")
 			{
-				(new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, true, false, false);
+                (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, true, false, false, CommandTimeOut);
 			}
 		}
 
@@ -1680,7 +1689,7 @@ namespace RO.Web
         }
         private void DoXlsTmplRpt(DataSet ds)
         {
-            DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, false, false, false);
+            DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, false, false, false, CommandTimeOut);
             if (dt == null || dt.Rows.Count <= 0) { throw new ApplicationException("Currently there is nothing to report on. Please try again later."); }
             CovertRptUTC(dt);
             string reportName = GetReportHlp().Rows[0]["ProgramName"].ToString();
@@ -2245,7 +2254,7 @@ namespace RO.Web
         private void DoRtfRpt(DataSet ds)
 		{
 			StringBuilder sb = new StringBuilder();
-			DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, false, false, false);
+            DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, false, false, false, CommandTimeOut);
 			if (dt == null || dt.Rows.Count <= 0) { throw new ApplicationException("Currently there is nothing to report on. Please try again later."); }
             CovertRptUTC(dt);
             string reportName = GetReportHlp().Rows[0]["ProgramName"].ToString();
@@ -2283,7 +2292,7 @@ namespace RO.Web
 			sb.Append("xmlns:x=\"urn:schemas-microsoft-com:office:excel\"" + Environment.NewLine);
 			sb.Append("xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\"" + Environment.NewLine);
 			sb.Append("xmlns:html=\"http://www.w3.org/TR/REC-html40\">" + Environment.NewLine);
-			DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, false, false, false);
+            DataTable dt = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, false, false, false, CommandTimeOut);
 			if (dt == null || dt.Rows.Count <= 0) { throw new ApplicationException("Currently there is nothing to report on. Please try again later."); }
 			string reportName = GetReportHlp().Rows[0]["ProgramName"].ToString();
             CovertRptUTC(dt);
@@ -2485,7 +2494,7 @@ namespace RO.Web
 			StringBuilder sb = new StringBuilder();
 			sb.Append("<script type='text/javascript'>" + Environment.NewLine);
 			sb.Append("Event.observe(window, 'load', function() {loadcanvas('cv" + this.ID + "',");
-			DataTable dtn = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, false, false, false);
+            DataTable dtn = (new SqlReportSystem()).GetSqlReport(QueryStr["rpt"].ToString(), GetReportHlp().Rows[0]["ProgramName"].ToString(), GetSqlCriteria(), base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, false, false, false, CommandTimeOut);
 			if (dtn == null || dtn.Rows.Count <= 0 || dtn.Columns.Count <= 0) { throw new ApplicationException("Currently there is nothing to report on. Please try again later."); }
 			DataTable dts = (new SqlReportSystem()).GetGaugeValue(QueryStr["rpt"].ToString(), LcSysConnString, LcAppPw);
 			if (dts.Rows[0]["GMinValueCol"].ToString() != string.Empty)

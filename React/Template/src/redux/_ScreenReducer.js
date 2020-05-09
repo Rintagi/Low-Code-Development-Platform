@@ -1068,7 +1068,8 @@ export class RintagiScreenRedux {
       RememberCurrentAsync(persistDtlName, { mstId: mst[mstKeyColumeName], dtl: newDtl });
       //log.debug("add detail", newDtl, GetCurrent(persistDtlName));
       dispatchWithNotification(dispatch, { type: EDIT_DTL.SUCCEEDED, payload: { dtl: newDtl || {}, message: dtlId ? "New copy of the detail" : "" } });
-      return Promise.reslove(newDtl);
+      // return Promise.reslove(newDtl);
+      return newDtl;
     }).bind(this);
   }
 

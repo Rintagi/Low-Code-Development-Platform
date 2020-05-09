@@ -160,7 +160,7 @@ namespace RO.Web
             {
                 string loginUrl = System.Web.Security.FormsAuthentication.LoginUrl;
                 if (string.IsNullOrEmpty(loginUrl)) loginUrl = "MyAccount.aspx";
-                this.Redirect(loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "typ=" + Request.QueryString["typ"].ToString());
+                this.Redirect(loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "typ=" + Request.QueryString["typ"].ToString().ToUpper());
             }
         }
         private DataView GetCompanyList()

@@ -47,7 +47,7 @@ namespace RO.Web
                     SetCultureId(cLang, LUser.CultureId.ToString());
                     cWelcomeTime.Text = Utils.fmLongDate(DateTime.Now.ToString(), LUser.Culture);
                 }
-                if (base.LUser != null && base.LPref != null && Request.QueryString["typ"] != null && Request.QueryString["typ"].ToString() == "N")
+                if (base.LUser != null && base.LPref != null && Request.QueryString["typ"] != null && Request.QueryString["typ"].ToString().ToUpper() == "N")
                 {
                     cLogoHolder.Visible = false;
                     cLinkHolder.Visible = false;

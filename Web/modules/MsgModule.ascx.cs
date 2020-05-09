@@ -34,12 +34,12 @@ namespace RO.Web
 			Response.AppendHeader("Pragma","no-cache");
 			if (Request.QueryString["typ"] != null)
 			{
-				if (Request.QueryString["typ"].ToString() == "E")
+                if (Request.QueryString["typ"].ToString().ToUpper() == "E")
 				{
 					cImage.ImageUrl = "../Images/error.gif";
 					msg = Session["ErrMsg"] as string;
 				}
-				else if (Request.QueryString["typ"].ToString() == "W")
+                else if (Request.QueryString["typ"].ToString().ToUpper() == "W")
 				{
 					cImage.ImageUrl = "../Images/warning.gif";
                     msg = Session["WarnMsg"] as string;

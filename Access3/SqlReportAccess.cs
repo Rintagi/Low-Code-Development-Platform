@@ -11,10 +11,11 @@ namespace RO.Access3
 	public class SqlReportAccess : Encryption, IDisposable
 	{
 		private OleDbDataAdapter da;
-
-		public SqlReportAccess()
+        private int _CommandTimeOut = 1800;
+		public SqlReportAccess(int CommandTimeOut = 1800)
 		{
 			da = new OleDbDataAdapter();
+            _CommandTimeOut = 1800;
 		}
 
 		public void Dispose()
@@ -51,7 +52,7 @@ namespace RO.Access3
 			cmd.Parameters.Add("@ReportId", OleDbType.Numeric).Value = ReportId;
 			cmd.Parameters.Add("@TemplateId", OleDbType.Numeric).Value = TemplateId;
 			da.SelectCommand = cmd;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			return dt;
@@ -64,7 +65,7 @@ namespace RO.Access3
 			cmd.CommandType = CommandType.StoredProcedure;
 			cmd.Parameters.Add("@reportId", OleDbType.Numeric).Value = reportId;
 			da.SelectCommand = cmd;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			return dt;
@@ -131,7 +132,7 @@ namespace RO.Access3
 			if (bXls) {cmd.Parameters.Add("@bXls", OleDbType.Char).Value = "Y";} else {cmd.Parameters.Add("@bXls", OleDbType.Char).Value = "N";}
 			if (bVal) {cmd.Parameters.Add("@bVal", OleDbType.Char).Value = "Y";} else {cmd.Parameters.Add("@bVal", OleDbType.Char).Value = "N";}
 			da.SelectCommand = cmd;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			return dt;
@@ -145,7 +146,7 @@ namespace RO.Access3
 			OleDbTransaction tr = cn.BeginTransaction();
 			OleDbCommand cmd = new OleDbCommand("Upd" + programName, cn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			cmd.Transaction = tr;
 			DataRow dr = ds.Tables["DtSqlReportIn"].Rows[0];
 			cmd.Parameters.Add("@reportId", OleDbType.Numeric).Value = reportId;
@@ -218,7 +219,7 @@ namespace RO.Access3
 			OleDbTransaction tr = cn.BeginTransaction();
 			OleDbCommand cmd = new OleDbCommand("Mem" + programName, cn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			cmd.Transaction = tr;
 			DataRow dr = ds.Tables["DtSqlReportIn"].Rows[0];
 			cmd.Parameters.Add("@PublicAccess", OleDbType.Char).Value = PublicAccess;
@@ -326,7 +327,7 @@ namespace RO.Access3
 			OleDbTransaction tr = cn.BeginTransaction();
 			OleDbCommand cmd = new OleDbCommand("UpdMemViewdt", cn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			cmd.Transaction = tr;
 			cmd.Parameters.Add("@GenPrefix", OleDbType.VarChar).Value = GenPrefix;
 			cmd.Parameters.Add("@RptMemCriId", OleDbType.Numeric).Value = RptMemCriId;
@@ -357,7 +358,7 @@ namespace RO.Access3
 			cmd.Parameters.Add("@GenPrefix", OleDbType.VarChar).Value = GenPrefix;
 			cmd.Parameters.Add("@ReportId", OleDbType.Numeric).Value = reportId;
 			cmd.Parameters.Add("@UsrId", OleDbType.Numeric).Value = usrId;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			try { cmd.ExecuteNonQuery(); }
 			catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
 			finally { cn.Close(); }
@@ -375,7 +376,7 @@ namespace RO.Access3
 			cmd.Parameters.Add("@GenPrefix", OleDbType.VarChar).Value = GenPrefix;
 			cmd.Parameters.Add("@ReportId", OleDbType.Numeric).Value = reportId;
 			cmd.Parameters.Add("@UsrId", OleDbType.Numeric).Value = usrId;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			try { cmd.ExecuteNonQuery(); }
 			catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
 			finally { cn.Close(); }
@@ -484,7 +485,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@bAll", OleDbType.Char).Value = bAll ? "Y" : "N";
             cmd.Parameters.Add("@keyId", OleDbType.VarChar).Value = string.IsNullOrEmpty(keyId) ? System.DBNull.Value : (object)keyId;
             da.SelectCommand = cmd;
-            cmd.CommandTimeout = 1800;
+            cmd.CommandTimeout = _CommandTimeOut;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
             if (RequiredValid != "Y" && dt.Rows.Count >= TotalCnt) { dt.Rows.InsertAt(dt.NewRow(), 0); }
@@ -536,8 +537,8 @@ namespace RO.Access3
             {
                 if (Config.DoubleByteDb) { cmd.Parameters.Add("@filterTxt", OleDbType.VarWChar).Value = filterTxt; } else { cmd.Parameters.Add("@filterTxt", OleDbType.VarChar).Value = filterTxt; }
             }
-            cmd.Parameters.Add("@topN", OleDbType.Numeric).Value = topN; cmd.CommandTimeout = 1800;
-            cmd.CommandTimeout = 1800;
+            cmd.Parameters.Add("@topN", OleDbType.Numeric).Value = topN; 
+            cmd.CommandTimeout = _CommandTimeOut;
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
@@ -565,7 +566,7 @@ namespace RO.Access3
 			cmd.Parameters.Add("@Companys", OleDbType.VarChar).Value = ui.Companys;
 			cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
 			cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
@@ -645,7 +646,7 @@ namespace RO.Access3
 			cmd.Parameters.Add("@ReportId", OleDbType.Numeric).Value = reportId;
 			cmd.Parameters.Add("@MemCriId", OleDbType.Numeric).Value = MemCriId;
 			cmd.Parameters.Add("@DelHeader", OleDbType.Char).Value = DelHeader;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			try { cmd.ExecuteNonQuery(); }
 			catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
 			finally { cn.Close(); }
@@ -663,7 +664,7 @@ namespace RO.Access3
 			cmd.Parameters.Add("@GenPrefix", OleDbType.VarChar).Value = GenPrefix;
 			cmd.Parameters.Add("@ReportId", OleDbType.Numeric).Value = reportId;
 			cmd.Parameters.Add("@MemCriId", OleDbType.Numeric).Value = MemCriId;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			try { cmd.ExecuteNonQuery(); }
 			catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
 			finally { cn.Close(); }
@@ -717,7 +718,7 @@ namespace RO.Access3
 			cmd.Parameters.Add("@RowAuthoritys", OleDbType.VarChar).Value = ui.RowAuthoritys;
 			cmd.Parameters.Add("@currCompanyId", OleDbType.Numeric).Value = uc.CompanyId;
 			cmd.Parameters.Add("@currProjectId", OleDbType.Numeric).Value = uc.ProjectId;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			da.SelectCommand = cmd;
 			DataTable dt = new DataTable();
 			da.Fill(dt);
@@ -732,7 +733,7 @@ namespace RO.Access3
 			cmd.CommandType = CommandType.StoredProcedure;
 			cmd.Parameters.Add("@GenPrefix", OleDbType.VarChar).Value = GenPrefix;
 			cmd.Parameters.Add("@MemFldId", OleDbType.Numeric).Value = MemFldId;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			try { cmd.ExecuteNonQuery(); }
 			catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
 			finally { cn.Close(); }
@@ -750,7 +751,7 @@ namespace RO.Access3
 			OleDbTransaction tr = cn.BeginTransaction();
 			OleDbCommand cmd = new OleDbCommand("UpdMemFld", cn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.CommandTimeout = 1800;
+			cmd.CommandTimeout = _CommandTimeOut;
 			cmd.Transaction = tr;
 			cmd.Parameters.Add("@GenPrefix", OleDbType.VarChar).Value = GenPrefix;
 			cmd.Parameters.Add("@PublicAccess", OleDbType.Char).Value = PublicAccess;

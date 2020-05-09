@@ -26,6 +26,8 @@ import { setTitle, setSpinner } from '../../redux/Global';
 import { RememberCurrent, GetCurrent } from '../../redux/Persist'
 import { getNaviBar } from './index';
 import AdmReportReduxObj, { ShowMstFilterApplied } from '../../redux/AdmReport';
+import * as AdmReportService from '../../services/AdmReportService';
+import { getRintagiConfig } from '../../helpers/config';
 import Skeleton from 'react-skeleton-loader';
 import ControlledPopover from '../../components/custom/ControlledPopover';
 import log from '../../helpers/logger';
@@ -171,6 +173,7 @@ class MstRecord extends RintagiScreen {
           ModifiedBy22: (values.cModifiedBy22 || {}).value || '',
           ModifiedOn22: values.cModifiedOn22 || '',
           TemplateName22: values.cTemplateName22 || '',
+          CommandTimeOut22: values.cCommandTimeOut22 || '',
           UnitCd22: (values.cUnitCd22 || {}).value || '',
           TopMargin22: values.cTopMargin22 || '',
           BottomMargin22: values.cBottomMargin22 || '',
@@ -399,6 +402,7 @@ class MstRecord extends RintagiScreen {
     const ModifiedOn22 = currMst.ModifiedOn22;
     const TemplateName22 = currMst.TemplateName22;
     const RptTemplate22 = currMst.RptTemplate22;
+    const CommandTimeOut22 = currMst.CommandTimeOut22;
     const UnitCd22List = AdmReportReduxObj.ScreenDdlSelectors.UnitCd22(AdmReportState);
     const UnitCd22 = currMst.UnitCd22;
     const TopMargin22 = currMst.TopMargin22;
@@ -468,6 +472,7 @@ class MstRecord extends RintagiScreen {
                     cModifiedBy22: ModifiedBy22List.filter(obj => { return obj.key === ModifiedBy22 })[0],
                     cModifiedOn22: ModifiedOn22 || new Date(),
                     cTemplateName22: formatContent(TemplateName22 || '', 'TextBox'),
+                    cCommandTimeOut22: formatContent(CommandTimeOut22 || '', 'TextBox'),
                     cUnitCd22: UnitCd22List.filter(obj => { return obj.key === UnitCd22 })[0],
                     cTopMargin22: formatContent(TopMargin22 || '', 'TextBox'),
                     cBottomMargin22: formatContent(BottomMargin22 || '', 'TextBox'),
@@ -797,6 +802,27 @@ class MstRecord extends RintagiScreen {
                                       </div>
                                     }
                                     {errors.cRptTemplate22 && touched.cRptTemplate22 && <span className='form__form-group-error'>{errors.cRptTemplate22}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.CommandTimeOut22 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.CommandTimeOut22 || {}).ColumnHeader} {(columnLabel.CommandTimeOut22 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.CommandTimeOut22 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CommandTimeOut22 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cCommandTimeOut22'
+                                          disabled={(authCol.CommandTimeOut22 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cCommandTimeOut22 && touched.cCommandTimeOut22 && <span className='form__form-group-error'>{errors.cCommandTimeOut22}</span>}
                                   </div>
                                 </Col>
                               }
