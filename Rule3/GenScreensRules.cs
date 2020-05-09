@@ -8742,7 +8742,9 @@ namespace RO.Rule3
 			sb.Append("		private string SaveDb(object sender, System.EventArgs e)" + Environment.NewLine);
 			sb.Append("		{" + Environment.NewLine);
             sb.Append("			string rtn = string.Empty;" + Environment.NewLine);
-			bWebRule = false;
+            sb.Append("			bool noTrans = Config.NoTrans;" + Environment.NewLine);
+            sb.Append("			int commandTimeOut = Config.CommandTimeOut;" + Environment.NewLine);
+            bWebRule = false;
 			foreach (DataRowView drvr in dvWRule)
 			{
 				if (drvr["EventCode"].ToString() == "BUTCLR" && drvr["ObjectType"].ToString() == "S" && drvr["ButtonTypeName"].ToString() == "Save")
@@ -8825,7 +8827,7 @@ namespace RO.Rule3
 					sb.Append("				{" + Environment.NewLine);
 					sb.Append("					if (ds != null)" + Environment.NewLine);
 					sb.Append("					{" + Environment.NewLine);
-                    sb.Append("						pid = (new AdminSystem()).AddData(" + screenId.ToString() + "," + sDeferError + ",base.LUser,base.LImpr,base.LCurr,ds" + Robot.GetCnStr(dw["MultiDesignDb"].ToString(), dw["SysProgram"].ToString()) + ",base.CPrj,base.CSrc);" + Environment.NewLine);
+                    sb.Append("						pid = (new AdminSystem()).AddData(" + screenId.ToString() + "," + sDeferError + ",base.LUser,base.LImpr,base.LCurr,ds" + Robot.GetCnStr(dw["MultiDesignDb"].ToString(), dw["SysProgram"].ToString()) + ",base.CPrj,base.CSrc,noTrans,commandTimeOut);" + Environment.NewLine);
 					sb.Append("					}" + Environment.NewLine);
                     sb.Append("					if (!string.IsNullOrEmpty(pid))" + Environment.NewLine);
 					sb.Append("					{" + Environment.NewLine);
@@ -8845,7 +8847,7 @@ namespace RO.Rule3
 					sb.Append("				else {" + Environment.NewLine);
 				}
 				sb.Append("					bool bValid7 = false;" + Environment.NewLine);
-                sb.Append("					if (ds != null && (new AdminSystem()).UpdData(" + screenId.ToString() + "," + sDeferError + ",base.LUser,base.LImpr,base.LCurr,ds" + Robot.GetCnStr(dw["MultiDesignDb"].ToString(), dw["SysProgram"].ToString()) + ",base.CPrj,base.CSrc)) {bValid7 = true;}" + Environment.NewLine);
+                sb.Append("					if (ds != null && (new AdminSystem()).UpdData(" + screenId.ToString() + "," + sDeferError + ",base.LUser,base.LImpr,base.LCurr,ds" + Robot.GetCnStr(dw["MultiDesignDb"].ToString(), dw["SysProgram"].ToString()) + ",base.CPrj,base.CSrc,noTrans,commandTimeOut)) {bValid7 = true;}" + Environment.NewLine);
 				sb.Append("					if (bValid7)" + Environment.NewLine);
 				sb.Append("					{" + Environment.NewLine);
 				dv.RowFilter = string.Empty;

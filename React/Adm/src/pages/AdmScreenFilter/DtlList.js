@@ -24,6 +24,8 @@ import { getNaviBar } from './index';
 import DtlRecord from './DtlRecord';
 import log from '../../helpers/logger';
 import AdmScreenFilterReduxObj from '../../redux/AdmScreenFilter';
+import * as AdmScreenFilterService from '../../services/AdmScreenFilterService';
+import { getRintagiConfig } from '../../helpers/config';
 
 class DtlList extends RintagiScreen {
   constructor(props) {

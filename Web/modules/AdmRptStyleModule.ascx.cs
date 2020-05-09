@@ -2986,6 +2986,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		private string SaveDb(object sender, System.EventArgs e)
 		{
 			string rtn = string.Empty;
+			bool noTrans = Config.NoTrans;
+			int commandTimeOut = Config.CommandTimeOut;
 			// *** System Button Click (Before) Web Rule starts here *** //
 			string pid = string.Empty;
 			if (ValidPage())
@@ -3000,7 +3002,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					if (ds != null)
 					{
-						pid = (new AdminSystem()).AddData(89,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc);
+						pid = (new AdminSystem()).AddData(89,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc,noTrans,commandTimeOut);
 					}
 					if (!string.IsNullOrEmpty(pid))
 					{
@@ -3011,7 +3013,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				}
 				else {
 					bool bValid7 = false;
-					if (ds != null && (new AdminSystem()).UpdData(89,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc)) {bValid7 = true;}
+					if (ds != null && (new AdminSystem()).UpdData(89,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc,noTrans,commandTimeOut)) {bValid7 = true;}
 					if (bValid7)
 					{
 						cAdmRptStyle89List.ClearSearch(); Session.Remove(KEY_dtAdmRptStyle89List);

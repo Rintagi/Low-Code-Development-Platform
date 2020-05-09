@@ -2100,6 +2100,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		private string SaveDb(object sender, System.EventArgs e)
 		{
 			string rtn = string.Empty;
+			bool noTrans = Config.NoTrans;
+			int commandTimeOut = Config.CommandTimeOut;
 			// *** System Button Click (Before) Web Rule starts here *** //
 			if (ValidPage() && UpdateGridRow(cAdmTemplateGrid, new CommandEventArgs("Save", "")))
 			{
@@ -2110,7 +2112,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				AdmTemplate53 ds = PrepAdmTemplateData(dv,false);
 				if (ftr != string.Empty) {dv.RowFilter = ftr;}
 					bool bValid7 = false;
-					if (ds != null && (new AdminSystem()).UpdData(53,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc)) {bValid7 = true;}
+					if (ds != null && (new AdminSystem()).UpdData(53,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc,noTrans,commandTimeOut)) {bValid7 = true;}
 					if (bValid7)
 					{
 						Session[KEY_currPageIndex] = GetCurrPageIndex();

@@ -2252,6 +2252,8 @@ document.Rintagi = {{
 		private string SaveDb(object sender, System.EventArgs e)
 		{
 			string rtn = string.Empty;
+			bool noTrans = Config.NoTrans;
+			int commandTimeOut = Config.CommandTimeOut;
 			// *** System Button Click (Before) Web Rule starts here *** //
 			string pid = string.Empty;
 			if (ValidPage())
@@ -2266,7 +2268,7 @@ document.Rintagi = {{
 				{
 					if (ds != null)
 					{
-						pid = (new AdminSystem()).AddData(87,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc);
+						pid = (new AdminSystem()).AddData(87,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc,noTrans,commandTimeOut);
 					}
 					if (!string.IsNullOrEmpty(pid))
 					{
@@ -2277,7 +2279,7 @@ document.Rintagi = {{
 				}
 				else {
 					bool bValid7 = false;
-					if (ds != null && (new AdminSystem()).UpdData(87,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc)) {bValid7 = true;}
+					if (ds != null && (new AdminSystem()).UpdData(87,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc,noTrans,commandTimeOut)) {bValid7 = true;}
 					if (bValid7)
 					{
 						cAdmSystems87List.ClearSearch(); Session.Remove(KEY_dtAdmSystems87List);

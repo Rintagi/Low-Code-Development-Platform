@@ -813,6 +813,15 @@ namespace Ionic.Zip
                         zombie = targetFileName + ".PendingOverwrite";
                         try
                         {
+                            try
+                            {
+                                if (File.Exists(zombie))
+                                {
+                                    File.Delete(zombie);
+                                }
+                            }
+                            catch { }
+
                             File.Move(targetFileName, zombie);
                         }
                         catch (Exception ex)

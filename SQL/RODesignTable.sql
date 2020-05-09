@@ -1892,6 +1892,7 @@ LastGenDt datetime NULL ,
 CompanyLs varchar (1000) NULL ,
 NeedRegen char (1) NOT NULL CONSTRAINT DF_Report_NeedRegen DEFAULT ('N'),
 AuthRequired char (1) NOT NULL CONSTRAINT DF_Report_AuthRequired DEFAULT ('Y'),
+CommandTimeOut smallint NULL ,
 CONSTRAINT PK_Report PRIMARY KEY CLUSTERED (
 ReportId
 )
@@ -3797,6 +3798,8 @@ DefOverwrite char (1) NOT NULL ,
 OvwrReadonly char (1) NOT NULL ,
 NeedRegen char (1) NOT NULL CONSTRAINT DF_Wizard_NeedRegen DEFAULT ('N'),
 AuthRequired char (1) NOT NULL CONSTRAINT DF_Wizard_AuthRequired DEFAULT ('Y'),
+NoTrans char (1) NOT NULL CONSTRAINT DF_Wizard_NoTrans DEFAULT ('N'),
+CommandTimeOut smallint NULL ,
 CONSTRAINT PK_Wizard PRIMARY KEY CLUSTERED (
 WizardId
 )

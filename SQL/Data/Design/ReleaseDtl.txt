@@ -27,10 +27,10 @@
 425~@~84~@~30~@~React\*.* |Lib\*.* |.gitignore~@~~@~.git |.vs |.Vscode |*.user |*\Adm\public\runtime\*.* |React\Adm\src\scripts\*.*~@~R~@~~@~7~@~~@~~@~A~@~N
 426~@~85~@~30~@~*\Adm\public\runtime\*.* |React\Adm\src\scripts\*.*~@~~@~.git |.vs |*.user~@~R~@~~@~7~@~~@~~@~A~@~N
 427~@~89~@~10~@~Web.Config |rintagi.js~@~~@~.git |Thumbs.* |.vs |*.pdb | Common3.dll |License3.dll |Rule3.dll~@~C~@~2~@~~@~~@~~@~A~@~N
-428~@~89~@~20~@~RODesign~@~~@~Deleted |Printer |Printer_MemberId |Printer_UsrGroupId |ReportLstCri |ScreenLstInf |ScreenLstCri |Usage |Usr |UsrAudit |UsrImpr |UsrLink |UsrProvider |UsrPwd |UsrSafeIP |ScrAudit |ScrAuditDtl~@~D~@~~@~2~@~2~@~2~@~X~@~N
+428~@~89~@~20~@~RODesign~@~~@~Deleted |Printer |Printer_MemberId |Printer_UsrGroupId |ReportLstCri |ScreenLstInf |ScreenLstCri |Usage |Usr |UsrAudit |UsrImpr |UsrLink |UsrProvider |UsrPwd |UsrSafeIP |ScrAudit |ScrAuditDtl~@~D~@~~@~~@~2~@~2~@~X~@~N
 430~@~89~@~40~@~n/a~@~~@~.git |Key.cs |UsrRule.cs |UsrAccess.cs |Common3\Encryption.cs |Rule3\Deploy.cs |.vs |*.pdb |*.user~@~R~@~~@~2~@~~@~~@~A~@~N
-431~@~89~@~50~@~ROCmon~@~~@~Agent |Borrower |Broker |Company |Customer |Firm |FxRate |Guarantor |Investor |Lender |Member |Project |Vendor~@~D~@~~@~2~@~2~@~2~@~P~@~N
-433~@~89~@~70~@~ROCmonD~@~~@~Deleted |Usage |ScrAudit |ScrAuditDtl |Template~@~D~@~~@~2~@~2~@~2~@~X~@~N
+431~@~89~@~50~@~ROCmon~@~~@~Agent |Borrower |Broker |Company |Customer |Firm |FxRate |Guarantor |Investor |Lender |Member |Project |Vendor~@~D~@~~@~~@~2~@~2~@~P~@~N
+433~@~89~@~70~@~ROCmonD~@~~@~Deleted |Usage |ScrAudit |ScrAuditDtl |Template~@~D~@~~@~~@~2~@~2~@~X~@~N
 435~@~90~@~10~@~*.*~@~~@~Web.config |.git |Thumbs.* |dashboards |.vs |.Vscode |*.pdb |Common3.dll |License3.dll |Rule3.dll |rintagi.js |*.user |License.txt~@~C~@~2~@~~@~~@~~@~A~@~N
 436~@~90~@~20~@~RODesign~@~~@~ClientTier |DataTier |Deleted |Entity |LastEmail |Printer |Printer_MemberId |Printer_UsrGroupId |ReportLstCri |RuleTier |ScrAudit |ScrAuditDtl |ScreenLstInf |ScreenLstCri |Systems |Usage |Usr |UsrAudit |UsrImpr |UsrLink |UsrProvider |UsrPwd |UsrSafeIP |UtReport |UtReportCri |UtReportCriHlp |UtReportDel |UtReportHlp |UtReportLstCri |UtReportObj |UtReportObjHlp |UtRptCel |UtRptCha |UtRptCtr |UtRptElm |UtRptMemCri |UtRptMemCriDtl |UtRptMemFld |UtRptTbl~@~D~@~~@~~@~2~@~2~@~P~@~N
 438~@~90~@~40~@~Access3\*.* |Common3\*.* |Facade3\*.* |License3\*.* |Rule3\*.* |Service3\*.* |Systemframewk\*.* |WebControls\*.* |WebRules\*.* |Lib\*.* |UsrAccess\*.* |UsrRules\*.* |Shadow\ComPty\*.*  |React\*.* |.gitignore~@~~@~.git |Key.cs |Common3\Encryption.cs |Rule3\Deploy.cs |*.pdb  |*\public\runtime\rintagi.js  |*.user~@~R~@~~@~2~@~~@~~@~A~@~N

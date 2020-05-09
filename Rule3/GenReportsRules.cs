@@ -2027,7 +2027,7 @@ namespace RO.Rule3
                     //sb.Append("			else" + Environment.NewLine);
                     //sb.Append("			{" + Environment.NewLine);
                     //sb.Append("			dt = (new " + dw["ProgramName"].ToString() + "System()).Get" + dw["ProgramName"].ToString() + "(" + reportId.ToString() + ",base.LImpr,base.LCurr,UpdCriteria(false)" + Robot.GetCnCall("N", "N") + ",false,false,false);" + Environment.NewLine);
-                    sb.Append("			DataTable dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false);" + Environment.NewLine);
+                    sb.Append("			DataTable dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "Config.CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
                     //sb.Append("			}" + Environment.NewLine);
 					sb.Append("			if (dt.Rows.Count > 0)" + Environment.NewLine);
 					sb.Append("			{" + Environment.NewLine);
@@ -2050,7 +2050,7 @@ namespace RO.Rule3
                 //sb.Append("			}" + Environment.NewLine);
                 //sb.Append("			else" + Environment.NewLine);
                 //sb.Append("			{" + Environment.NewLine);
-                sb.Append("			DataTable dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false);" + Environment.NewLine);
+                sb.Append("			DataTable dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "Config.CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
                 //sb.Append("			dt = (new " + dw["ProgramName"].ToString() + "System()).Get" + dw["ProgramName"].ToString() + "(" + reportId.ToString() + ",base.LImpr,base.LCurr,UpdCriteria(false)" + Robot.GetCnCall("N", "N") + ",false,false,false);" + Environment.NewLine);
                 //sb.Append("			}" + Environment.NewLine);
                 sb.Append("			CovertRptUTC(dt);" + Environment.NewLine);
@@ -2135,7 +2135,7 @@ namespace RO.Rule3
                 //sb.Append("				}" + Environment.NewLine);
                 //sb.Append("				else" + Environment.NewLine);
                 //sb.Append("				{" + Environment.NewLine);
-                sb.Append("			    dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false);" + Environment.NewLine);
+                sb.Append("			    dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "Config.CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
                 //sb.Append("				dt = (new " + dw["ProgramName"].ToString() + "System()).Get" + dw["ProgramName"].ToString() + "(" + reportId.ToString() + ",base.LImpr,base.LCurr,UpdCriteria(false)" + Robot.GetCnCall("N", "N") + ",false,false,false);" + Environment.NewLine);
                 //sb.Append("				}" + Environment.NewLine);
                 sb.Append("				CovertRptUTC(dt);" + Environment.NewLine);
@@ -2165,7 +2165,7 @@ namespace RO.Rule3
                 //sb.Append("				}" + Environment.NewLine);
                 //sb.Append("				else" + Environment.NewLine);
                 //sb.Append("				{" + Environment.NewLine);
-                sb.Append("			    dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,true,false);" + Environment.NewLine);
+                sb.Append("			    dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,true,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "Config.CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
                 //sb.Append("				dt = (new " + dw["ProgramName"].ToString() + "System()).Get" + dw["ProgramName"].ToString() + "(" + reportId.ToString() + ",base.LImpr,base.LCurr,UpdCriteria(false)" + Robot.GetCnCall("N", "N") + ",false,true,false);" + Environment.NewLine);
                 //sb.Append("				}" + Environment.NewLine);
 				sb.Append("				reportName = \"" + dw["ProgramName"].ToString() + "\";" + Environment.NewLine);

@@ -79,6 +79,8 @@ namespace RO.Common3
         private static string wIntDomain;
         private static string wIntBasePath;
         private static string wTranslateExtUrl;
+        private static bool wNoTrans = false;
+        private static int wCommandTimeOut = 1800;
 
         static Config()
 		{
@@ -183,6 +185,16 @@ namespace RO.Common3
                     wIntDomain = match.Groups[1].Value;
                 }
             }
+            try
+            {
+                wNoTrans = (ConfigurationManager.AppSettings["NoTrans"] ?? "").ToUpper() == "Y";
+            }
+            catch { }
+            try
+            {
+                int.TryParse(ConfigurationManager.AppSettings["CommandTimeOut"], out wCommandTimeOut);
+            }
+            catch { }
         }
         
         public static string WsConverterUrl { get { return wConverterUrl; } }
@@ -324,6 +336,10 @@ namespace RO.Common3
         public static string WsXlsUrl { get { return wWsXlsUrl; } }
 
         public static bool TranslateExtUrl { get { return wTranslateExtUrl == "Y"; } }
+
+        public static bool NoTrans { get { return wNoTrans; } }
+
+        public static int CommandTimeOut { get { return wCommandTimeOut; } }
 
         public static string RintagiLicense
         { 

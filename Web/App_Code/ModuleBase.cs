@@ -1746,7 +1746,7 @@ namespace RO.Web
                     if (string.IsNullOrEmpty(loginUrl)) loginUrl = "MyAccount.aspx";
                     /* Get typ from Referrer.  UrlReferrer is null on Window.open.  */
 
-                    string typ = (Request.QueryString["typ"] ?? "").Split(new char[] { ',' })[0];
+                    string typ = (Request.QueryString["typ"] ?? "").ToUpper().Split(new char[] { ',' })[0];
                     bool isDefaultPage = new Regex("^/(\\w+/)*Default.aspx", RegexOptions.IgnoreCase).IsMatch(Request.Url.PathAndQuery.Split(new char[] { '?' })[0]);
 
                     if (string.IsNullOrEmpty(typ))
@@ -1780,7 +1780,7 @@ namespace RO.Web
                     if (string.IsNullOrEmpty(loginUrl)) loginUrl = "MyAccount.aspx";
                     /* Get typ from Referrer.  UrlReferrer is null on Window.open.  */
 
-                    string typ = (Request.QueryString["typ"] ?? "").Split(new char[] { ',' })[0];
+                    string typ = (Request.QueryString["typ"] ?? "").ToUpper().Split(new char[] { ',' })[0];
                     bool isDefaultPage = new Regex("^/(\\w+/)*Default.aspx", RegexOptions.IgnoreCase).IsMatch(Request.Url.PathAndQuery.Split(new char[] { '?' })[0]);
 
                     if (string.IsNullOrEmpty(typ))
@@ -4128,7 +4128,7 @@ document.Rintagi = {{
                     {
                         List<string> errors = GetExceptionMessage(ex);
                         ErrorTrace(new Exception(string.Format("Create {1} Installer error \r\n{0}"
-                            , string.Join("\r\n\r\n", errors.ToArray(), package)))
+                            , string.Join("\r\n\r\n", errors.ToArray()), package))
                             , "error", requestInfo);
                         return new Tuple<bool, string, string, string, string>(false, package, string.Join("\r\n\r\n", GetExceptionMessage(ex).ToArray()), "", "");
                     }

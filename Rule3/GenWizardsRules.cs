@@ -749,7 +749,7 @@ namespace RO.Rule3
             //sb.Append("				}" + Environment.NewLine);
             //sb.Append("				else" + Environment.NewLine);
             //sb.Append("				{" + Environment.NewLine);
-            sb.Append("				return (new AdminSystem()).ImportRows(" + wizardId.ToString() + ",\"Wiz" + dw["ProgramName"].ToString() + "\",bOverwrite,usrId,ds,iStart,fileName" + Robot.GetCnStr("N", "N") + ",CPrj,CSrc);" + Environment.NewLine);
+            sb.Append("				return (new AdminSystem()).ImportRows(" + wizardId.ToString() + ",\"Wiz" + dw["ProgramName"].ToString() + "\",bOverwrite,usrId,ds,iStart,fileName" + Robot.GetCnStr("N", "N") + ",CPrj,CSrc," + (dw["NoTrans"].ToString() == "Y" ? "true" : "false") + "," + (!string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? dw["CommandTimeOut"].ToString() : "Config.CommandTimeOut") + ");" + Environment.NewLine);
             //sb.Append("				return (new " + dw["ProgramName"].ToString() + "System()).ImportRows" + wizardId.ToString() + "(bOverwrite,usrId,ds,iStart,fileName" + Robot.GetCnParm("N", "N") + ");" + Environment.NewLine);
             //sb.Append("				}" + Environment.NewLine);
 			sb.Append("			}" + Environment.NewLine);
@@ -842,7 +842,7 @@ namespace RO.Rule3
                 sb.Append("					}" + Environment.NewLine);
             }
             sb.Append("				}" + Environment.NewLine);
-            sb.Append("				return (new AdminSystem()).ImportRows(" + wizardId.ToString() + ",\"Wiz" + dw["ProgramName"].ToString() + "\",bOverwrite,usrId,ds,iStart,fileName" + Robot.GetCnStr("N", "N") + ",CPrj,CSrc);" + Environment.NewLine);
+            sb.Append("				return (new AdminSystem()).ImportRows(" + wizardId.ToString() + ",\"Wiz" + dw["ProgramName"].ToString() + "\",bOverwrite,usrId,ds,iStart,fileName" + Robot.GetCnStr("N", "N") + ",CPrj,CSrc," + (dw["NoTrans"].ToString() == "Y" ? "true" : "false") + "," +  (!string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? dw["CommandTimeOut"].ToString() : "Config.CommandTimeOut") + ");" + Environment.NewLine);
             sb.Append("			}" + Environment.NewLine);
             sb.Append("			catch (Exception e) { PreMsgPopup(e.Message); return 0; }" + Environment.NewLine);
             sb.Append("		}" + Environment.NewLine);

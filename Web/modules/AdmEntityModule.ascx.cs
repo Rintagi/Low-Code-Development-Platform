@@ -2074,7 +2074,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 			if (dt.Columns.Contains("_SortOrder")) dt.DefaultView[GetDataItemIndex(e.ItemIndex)].Row["_SortOrder"] = null;
 			DataTable dtImg = null;
-			dtImg = (new AdminSystem()).GetDbImg(dv[GetDataItemIndex(e.ItemIndex)].Row["EntityId199"].ToString(), "dbo.Entity", "EntityId", "EntityImg", LcAppConnString, LcAppPw);
+			dtImg = (new AdminSystem()).GetDbImg(dv.Count == 0 ? "0" : dv[GetDataItemIndex(e.ItemIndex)].Row["EntityId199"].ToString(), "dbo.Entity", "EntityId", "EntityImg", LcAppConnString, LcAppPw);
 			if (dtImg != null && dtImg.Rows.Count > 0)
 			{
 			    dv[GetDataItemIndex(e.ItemIndex)].Row["EntityImg199"] = dtImg.Rows[0][0] as byte[];
@@ -2149,6 +2149,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		private string SaveDb(object sender, System.EventArgs e)
 		{
 			string rtn = string.Empty;
+			bool noTrans = Config.NoTrans;
+			int commandTimeOut = Config.CommandTimeOut;
 			// *** System Button Click (Before) Web Rule starts here *** //
 			if (ValidPage() && UpdateGridRow(cAdmEntityGrid, new CommandEventArgs("Save", "")))
 			{
@@ -2159,7 +2161,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				AdmEntity103 ds = PrepAdmEntityData(dv,false);
 				if (ftr != string.Empty) {dv.RowFilter = ftr;}
 					bool bValid7 = false;
-					if (ds != null && (new AdminSystem()).UpdData(103,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc)) {bValid7 = true;}
+					if (ds != null && (new AdminSystem()).UpdData(103,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc,noTrans,commandTimeOut)) {bValid7 = true;}
 					if (bValid7)
 					{
 						Session[KEY_currPageIndex] = GetCurrPageIndex();

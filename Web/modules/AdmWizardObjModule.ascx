@@ -212,6 +212,14 @@
     		<div id="cAuthRequired71P1" class="r-td r-labelR" runat="server"><asp:Label id="cAuthRequired71Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cAuthRequired71P2" class="r-td r-content" runat="server"><asp:CheckBox id="cAuthRequired71" CssClass="inp-chk" runat="server" /></div>
     	</div>
+    	<div class="r-tr">
+    		<div id="cCommandTimeOut71P1" class="r-td r-labelR" runat="server"><asp:Label id="cCommandTimeOut71Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cCommandTimeOut71P2" class="r-td r-content" runat="server"><asp:TextBox id="cCommandTimeOut71" CssClass="inp-txt" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cNoTrans71P1" class="r-td r-labelR" runat="server"><asp:Label id="cNoTrans71Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cNoTrans71P2" class="r-td r-content" runat="server"><asp:CheckBox id="cNoTrans71" CssClass="inp-chk" runat="server" /></div>
+    	</div>
     </div></div></div>
     </div></div>
 <div id="GridDiv" class="grid-container rg-1-12">
@@ -316,18 +324,18 @@
 	<ItemTemplate>
 	<tr id="cAdmWizardObjGridRow" class='<%# Container.DisplayIndex % 2 == 0 ? "GrdItm" : "GrdAlt" %>' runat="server">
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnMobile' style='max-width:100px;text-align:right;' visible="<%# GridColumnVisible(10) %>" onclick='GridEdit("WizardObjId72")' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner HideObjOnMobile' style='max-width:100px;text-align:right;' visible="<%# GridColumnVisible(12) %>" onclick='GridEdit("WizardObjId72")' runat="server">
 			<asp:Label id="cWizardObjId72l" Text='<%# RO.Common3.Utils.fmNumeric("0",DataBinder.Eval(Container.DataItem,"WizardObjId72").ToString(),base.LUser.Culture) %>' CssClass="GrdTxtLb" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:400px;text-align:left;' visible="<%# GridColumnVisible(11) %>" onclick='GridEdit("ColumnId72")' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:400px;text-align:left;' visible="<%# GridColumnVisible(13) %>" onclick='GridEdit("ColumnId72")' runat="server">
 			<asp:Label Text='<%# DataBinder.Eval(Container.DataItem,"ColumnId72").ToString() %>' Visible="false" runat="server" />
 			<asp:Label id="cColumnId72l" text='<%# DataBinder.Eval(Container.DataItem,"ColumnId72Text") %>' CssClass="GrdTxtLb" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:100px;text-align:right;' visible="<%# GridColumnVisible(12) %>" onclick='GridEdit("TabIndex72")' runat="server">
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:100px;text-align:right;' visible="<%# GridColumnVisible(14) %>" onclick='GridEdit("TabIndex72")' runat="server">
 			<asp:Label id="cTabIndex72l" Text='<%# RO.Common3.Utils.fmNumeric("0",DataBinder.Eval(Container.DataItem,"TabIndex72").ToString(),base.LUser.Culture) %>' CssClass="GrdTxtLb" runat="server" />
 		</div></div>
     </td>
@@ -340,17 +348,17 @@
 	<EditItemTemplate>
 	<tr class="GrdEdtTmp" runat="server">
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:100px;text-align:right;' visible="<%# GridColumnVisible(10) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cWizardObjId72ml" runat="server" /></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:100px;text-align:right;' visible="<%# GridColumnVisible(12) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cWizardObjId72ml" runat="server" /></div>
 		    <asp:TextBox id="cWizardObjId72" CssClass="GrdNum" Text='<%# RO.Common3.Utils.fmNumeric("0",DataBinder.Eval(Container.DataItem,"WizardObjId72").ToString(),base.LUser.Culture) %>' runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:400px;text-align:left;' visible="<%# GridColumnVisible(11) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cColumnId72ml" runat="server" /></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:400px;text-align:left;' visible="<%# GridColumnVisible(13) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cColumnId72ml" runat="server" /></div>
 		    <rcasp:ComboBox autocomplete="off" id="cColumnId72" CssClass="GrdDdl" DataValueField="ColumnId72" DataTextField="ColumnId72Text" Mode="A" OnPostBack="cbPostBack" OnSearch="cbColumnId72" runat="server" />
 		</div></div>
     </td>
     <td>
-		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:100px;text-align:right;' visible="<%# GridColumnVisible(12) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cTabIndex72ml" runat="server" /></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:100px;text-align:right;' visible="<%# GridColumnVisible(14) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cTabIndex72ml" runat="server" /></div>
 		    <asp:TextBox id="cTabIndex72" CssClass="GrdNum" Text='<%# RO.Common3.Utils.fmNumeric("0",DataBinder.Eval(Container.DataItem,"TabIndex72").ToString(),base.LUser.Culture) %>' runat="server" /><asp:RequiredFieldValidator id="cRFVTabIndex72" ControlToValidate="cTabIndex72" display="none" runat="server" />
 		</div></div>
     </td>

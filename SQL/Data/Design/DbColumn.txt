@@ -130,7 +130,7 @@
 467~@~14~@~340~@~~@~GenerateSp~@~ScreenObj - GenerateSp~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~When uncehcked, the dropdown stored proc. will not be generated.~@~
 469~@~60~@~10~@~~@~VendorId~@~Vendor - VendorId~@~3~@~4~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
 470~@~60~@~30~@~~@~VendorName~@~Vendor - VendorName~@~11~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
-483~@~22~@~90~@~~@~CopyReportId~@~Report - CopyReportId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the report to copy the columns from, if desired.~@~
+483~@~22~@~80~@~~@~CopyReportId~@~Report - CopyReportId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the report to copy the columns from, if desired.~@~
 538~@~39~@~90~@~~@~WizardId~@~Menu - WizardId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the import wizard this menu item should invoke, if applicable~@~
 539~@~70~@~10~@~~@~WizardTypeId~@~CtWizardType - WizardTypeId~@~1~@~1~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This is the internal ID uniquely identifies this import wizard type.~@~
 541~@~70~@~30~@~~@~WizardTypeDesc~@~CtWizardType - WizardTypeDesc~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unique description of this import wizard type for searching.~@~
@@ -206,9 +206,9 @@
 889~@~95~@~10~@~~@~UsrImprId~@~UsrImpr - UsrImprId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This internal identity uniquely represents this impersonation.~@~
 890~@~95~@~20~@~~@~UsrId~@~UsrImpr - UsrId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the User to impersonate others.~@~
 891~@~95~@~30~@~~@~ImprUsrId~@~UsrImpr - ImprUsrId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the User to be impersonated.~@~
-894~@~22~@~170~@~~@~WhereClause~@~Report - WhereClause~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Please enter additions to the Where caluse in SQL, if any.~@~
-895~@~22~@~180~@~~@~RegClause~@~Report - RegClause~@~15~@~400~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This will be filled with a standard clause when unattended to provide data for the fields.~@~
-896~@~22~@~220~@~~@~UpdClause~@~Report - UpdClause~@~15~@~200~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This will be filled with a standard clause when unattended and Template has a .txt extension.~@~
+894~@~22~@~160~@~~@~WhereClause~@~Report - WhereClause~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Please enter additions to the Where caluse in SQL, if any.~@~
+895~@~22~@~170~@~~@~RegClause~@~Report - RegClause~@~15~@~400~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This will be filled with a standard clause when unattended to provide data for the fields.~@~
+896~@~22~@~210~@~~@~UpdClause~@~Report - UpdClause~@~15~@~200~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This will be filled with a standard clause when unattended and Template has a .txt extension.~@~
 897~@~96~@~10~@~~@~ReportHlpId~@~ReportHlp - ReportHlpId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This is the internal ID uniquely identify this cultural specific name for the report.~@~
 898~@~96~@~20~@~~@~ReportId~@~ReportHlp - ReportId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the foreign key to the report table.~@~
 899~@~96~@~30~@~~@~CultureId~@~ReportHlp - CultureId~@~2~@~2~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the culture for this cultural specific report name.~@~
@@ -243,7 +243,7 @@
 933~@~100~@~20~@~~@~OperatorName~@~CtOperator - OperatorName~@~15~@~10~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unique symbol of this operator.~@~
 934~@~14~@~20~@~~@~ScreenId~@~ScreenObj - ScreenId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the screen that this column should appears.~@~
 936~@~97~@~30~@~~@~ReportCriDesc~@~ReportCri - ReportCriDesc~@~15~@~100~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the description for this criteria for searching.~@~
-937~@~22~@~240~@~~@~XlsClause~@~Report - XlsClause~@~15~@~200~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This will be filled with a standard clause when unattended and "To Excel Only" is checked.~@~
+937~@~22~@~230~@~~@~XlsClause~@~Report - XlsClause~@~15~@~200~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This will be filled with a standard clause when unattended and "To Excel Only" is checked.~@~
 942~@~1~@~20~@~~@~LoginName~@~Usr - LoginName~@~11~@~32~@~~@~~@~N~@~N~@~N~@~Y~@~N~@~This is the unique login name for this user.~@~
 943~@~1~@~80~@~~@~ExtPassword~@~Usr - ExtPassword~@~9~@~255~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~When UsrPassword is null, this password will be used for authentication and deem user as external system user.~@~
 944~@~1~@~270~@~~@~FailedAttempt~@~Usr - FailedAttempt~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the number of times this users failed to login.~@~
@@ -386,7 +386,7 @@
 1163~@~1~@~260~@~~@~DefCompanyId~@~Usr - DefCompanyId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the company to be selected after login.~@~
 1164~@~93~@~190~@~~@~ComListVisible~@~UsrPref - ComListVisible~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~Company list will be hidden upon login if "No" is selected.~@~
 1165~@~93~@~40~@~~@~CompanyId~@~UsrPref - CompanyId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the Company to be using this preference, if chosen.~@~
-1166~@~22~@~260~@~~@~GenerateRp~@~Report - GenerateRp~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~Uncheck this if temporary no programs should be generated for this report.~@~
+1166~@~22~@~250~@~~@~GenerateRp~@~Report - GenerateRp~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~Uncheck this if temporary no programs should be generated for this report.~@~
 1187~@~71~@~80~@~~@~DefOverwrite~@~Wizard - DefOverwrite~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if the default for this import wizard is to overwrite.~@~
 1188~@~71~@~90~@~~@~OvwrReadonly~@~Wizard - OvwrReadonly~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if the Overwrite option for this import wizard is not changeable by user.~@~
 1190~@~3~@~90~@~~@~TblObjective~@~DbTable - TblObjective~@~11~@~500~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Please describe the objectives of this table.~@~
@@ -517,14 +517,14 @@
 1401~@~156~@~10~@~~@~RptObjTypeCd~@~CtRptObjType - RptObjTypeCd~@~14~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is a single charater uniquely represents this report column type.~@~
 1402~@~156~@~20~@~~@~RptObjTypeName~@~CtRptObjType - RptObjTypeName~@~11~@~10~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unqiue name describing this report column type.~@~
 1403~@~23~@~30~@~~@~RptObjTypeCd~@~ReportObj - RptObjTypeCd~@~14~@~1~@~~@~'F'~@~N~@~N~@~N~@~N~@~N~@~This is the report column type type for this report column.~@~
-1405~@~22~@~200~@~~@~ValClause~@~Report - ValClause~@~15~@~400~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This will be filled with a standard clause when unattended and at least one report column is a parameter.~@~
-1406~@~22~@~190~@~~@~RegCode~@~Report - RegCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~
-1407~@~22~@~210~@~~@~ValCode~@~Report - ValCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~
-1408~@~22~@~230~@~~@~UpdCode~@~Report - UpdCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~
-1409~@~22~@~250~@~~@~XlsCode~@~Report - XlsCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~
-1410~@~22~@~280~@~~@~ModifiedBy~@~Report - ModifiedBy~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This was last updated by this user.~@~
-1411~@~22~@~290~@~~@~ModifiedOn~@~Report - ModifiedOn~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This captures the last update date and time for tracking purpose.~@~
-1412~@~22~@~300~@~~@~LastGenDt~@~Report - LastGenDt~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~These stored procedures were last generated on this date.~@~
+1405~@~22~@~190~@~~@~ValClause~@~Report - ValClause~@~15~@~400~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This will be filled with a standard clause when unattended and at least one report column is a parameter.~@~
+1406~@~22~@~180~@~~@~RegCode~@~Report - RegCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~
+1407~@~22~@~200~@~~@~ValCode~@~Report - ValCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~
+1408~@~22~@~220~@~~@~UpdCode~@~Report - UpdCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~
+1409~@~22~@~240~@~~@~XlsCode~@~Report - XlsCode~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~
+1410~@~22~@~270~@~~@~ModifiedBy~@~Report - ModifiedBy~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This was last updated by this user.~@~
+1411~@~22~@~280~@~~@~ModifiedOn~@~Report - ModifiedOn~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This captures the last update date and time for tracking purpose.~@~
+1412~@~22~@~290~@~~@~LastGenDt~@~Report - LastGenDt~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~These stored procedures were last generated on this date.~@~
 1413~@~157~@~10~@~~@~RptCtrTypeCd~@~CtRptCtrType - RptCtrTypeCd~@~14~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is a single charater uniquely represents this report control type.~@~
 1414~@~157~@~20~@~~@~RptCtrTypeName~@~CtRptCtrType - RptCtrTypeName~@~11~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unqiue name describing this report control type.~@~
 1415~@~158~@~10~@~~@~RptElmTypeCd~@~CtRptElmType - RptElmTypeCd~@~14~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is a single charater uniquely represents this report element type.~@~
@@ -582,13 +582,13 @@
 1480~@~162~@~80~@~~@~TblOrder~@~RptTbl - TblOrder~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This number indicates the relative order of the table columns, default is 10 apart.~@~
 1482~@~14~@~460~@~~@~TrimOnEntry~@~ScreenObj - TrimOnEntry~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~When unchecked, this column will not be trimmed upon any Insert or Update.~@~
 1486~@~162~@~30~@~~@~ParentId~@~RptTbl - ParentId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the parent report table of this table, if applicable.~@~
-1487~@~22~@~160~@~~@~UnitCd~@~Report - UnitCd~@~14~@~2~@~~@~'in'~@~N~@~N~@~N~@~N~@~N~@~This is the unit of measure for the margins, positions, etc. of this report.~@~
-1488~@~22~@~150~@~~@~PageWidth~@~Report - PageWidth~@~18~@~8~@~2~@~8.5~@~N~@~N~@~N~@~N~@~N~@~This is the page width of this report. Only applicable to SQL Reporting.~@~
-1489~@~22~@~140~@~~@~PageHeight~@~Report - PageHeight~@~18~@~8~@~2~@~11~@~N~@~N~@~N~@~N~@~N~@~This is the page height of this report. Only applicable to SQL Reporting.~@~
-1490~@~22~@~120~@~~@~LeftMargin~@~Report - LeftMargin~@~18~@~8~@~2~@~1~@~N~@~N~@~N~@~N~@~N~@~This is the left margin of this report. Only applicable to SQL Reporting.~@~
-1491~@~22~@~110~@~~@~BottomMargin~@~Report - BottomMargin~@~18~@~8~@~2~@~1~@~N~@~N~@~N~@~N~@~N~@~This is the bottom margin of this report. Only applicable to SQL Reporting.~@~
-1492~@~22~@~100~@~~@~TopMargin~@~Report - TopMargin~@~18~@~8~@~2~@~1~@~N~@~N~@~N~@~N~@~N~@~This is the top margin of this report. Only applicable to SQL Reporting.~@~
-1493~@~22~@~130~@~~@~RightMargin~@~Report - RightMargin~@~18~@~8~@~2~@~1~@~N~@~N~@~N~@~N~@~N~@~This is the right margin of this report. Only applicable to SQL Reporting.~@~
+1487~@~22~@~150~@~~@~UnitCd~@~Report - UnitCd~@~14~@~2~@~~@~'in'~@~N~@~N~@~N~@~N~@~N~@~This is the unit of measure for the margins, positions, etc. of this report.~@~
+1488~@~22~@~140~@~~@~PageWidth~@~Report - PageWidth~@~18~@~8~@~2~@~8.5~@~N~@~N~@~N~@~N~@~N~@~This is the page width of this report. Only applicable to SQL Reporting.~@~
+1489~@~22~@~130~@~~@~PageHeight~@~Report - PageHeight~@~18~@~8~@~2~@~11~@~N~@~N~@~N~@~N~@~N~@~This is the page height of this report. Only applicable to SQL Reporting.~@~
+1490~@~22~@~110~@~~@~LeftMargin~@~Report - LeftMargin~@~18~@~8~@~2~@~1~@~N~@~N~@~N~@~N~@~N~@~This is the left margin of this report. Only applicable to SQL Reporting.~@~
+1491~@~22~@~100~@~~@~BottomMargin~@~Report - BottomMargin~@~18~@~8~@~2~@~1~@~N~@~N~@~N~@~N~@~N~@~This is the bottom margin of this report. Only applicable to SQL Reporting.~@~
+1492~@~22~@~90~@~~@~TopMargin~@~Report - TopMargin~@~18~@~8~@~2~@~1~@~N~@~N~@~N~@~N~@~N~@~This is the top margin of this report. Only applicable to SQL Reporting.~@~
+1493~@~22~@~120~@~~@~RightMargin~@~Report - RightMargin~@~18~@~8~@~2~@~1~@~N~@~N~@~N~@~N~@~N~@~This is the right margin of this report. Only applicable to SQL Reporting.~@~
 1494~@~167~@~10~@~~@~RptStyleId~@~RptStyle - RptStyleId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This internal identity uniquely represents this report style.~@~
 1495~@~167~@~20~@~~@~RptStyleDesc~@~RptStyle - RptStyleDesc~@~11~@~300~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unique description representing this report style.~@~
 1496~@~167~@~30~@~~@~BorderColorD~@~RptStyle - BorderColorD~@~15~@~100~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the default color name or RGB color code in the form #HHHHHH for the border.~@~
@@ -847,7 +847,7 @@
 1789~@~213~@~40~@~~@~InputBy~@~RptMemFld - InputBy~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This folder was created by this user and only this user has the right to manage this folder.~@~
 1790~@~210~@~80~@~~@~InputBy~@~RptMemCri - InputBy~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This memorized criteria was created by this user and only this user has the right to manage this.~@~
 1791~@~210~@~50~@~~@~RptMemCriLink~@~RptMemCri - RptMemCriLink~@~15~@~200~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the hyperlink to launch this report.~@~
-1792~@~22~@~270~@~~@~AllowSelect~@~Report - AllowSelect~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~Check if columns can be deselected at run time; Relevant to document merging only.~@~
+1792~@~22~@~260~@~~@~AllowSelect~@~Report - AllowSelect~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~Check if columns can be deselected at run time; Relevant to document merging only.~@~
 1793~@~215~@~10~@~~@~LabelId~@~Label - LabelId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
 1794~@~215~@~40~@~~@~LabelCat~@~Label - LabelCat~@~15~@~50~@~~@~'NA'~@~N~@~N~@~N~@~Y~@~N~@~Enter the category for this custom label.~@~
 1795~@~215~@~50~@~~@~LabelKey~@~Label - LabelKey~@~15~@~50~@~~@~~@~N~@~N~@~N~@~Y~@~N~@~Enter the key within the above category for this custom label.~@~
@@ -994,7 +994,7 @@
 2005~@~247~@~10~@~~@~ProfileNm~@~VwMailProfile - ProfileNm~@~11~@~128~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
 2006~@~1~@~390~@~~@~PwdDuration~@~Usr - PwdDuration~@~2~@~2~@~~@~9999~@~N~@~N~@~N~@~N~@~N~@~The user password will expire in this number of days counting from the last change date.~@~
 2007~@~1~@~400~@~~@~PwdWarn~@~Usr - PwdWarn~@~2~@~2~@~~@~0~@~N~@~N~@~N~@~N~@~N~@~This is the number of days that the user will receive a warning counting from the password expiry date.~@~
-2011~@~22~@~310~@~~@~CompanyLs~@~Report - CompanyLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This report is either runnable by everyone in the companies that the owner has access to or only by the owner.~@~
+2011~@~22~@~300~@~~@~CompanyLs~@~Report - CompanyLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This report is either runnable by everyone in the companies that the owner has access to or only by the owner.~@~
 2012~@~210~@~120~@~~@~CompanyLs~@~RptMemCri - CompanyLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This report is either runnable by everyone in the companies that the owner has access to or only by the owner.~@~
 2013~@~248~@~130~@~~@~InputBy~@~MyMenuOpt - InputBy~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This menu option is entered by this user.~@~
 2014~@~248~@~140~@~~@~InputOn~@~MyMenuOpt - InputOn~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This menu option is entered on this date.~@~
@@ -1014,7 +1014,7 @@
 2028~@~39~@~110~@~~@~IconUrl~@~Menu - IconUrl~@~11~@~300~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the icon link representing this menu item~@~
 2030~@~215~@~80~@~~@~SortOrder~@~Label - SortOrder~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Enter a sort order within the above category if this is important.~@~
 2035~@~15~@~280~@~~@~NeedRegen~@~Screen - NeedRegen~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~When 'Y' this asp.net screen will regenerate upon page_init.~@~
-2039~@~22~@~320~@~~@~NeedRegen~@~Report - NeedRegen~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~When 'Y' this report will regenerate upon page_init.~@~
+2039~@~22~@~310~@~~@~NeedRegen~@~Report - NeedRegen~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~When 'Y' this report will regenerate upon page_init.~@~
 2040~@~71~@~100~@~~@~NeedRegen~@~Wizard - NeedRegen~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~When 'Y' this wizard will regenerate upon page_init.~@~
 2045~@~15~@~190~@~~@~GenerateSr~@~Screen - GenerateSr~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~Uncheck this if temporary no backend programs should be generated for this screen.~@~
 2053~@~215~@~20~@~~@~LabelDesc~@~Label - LabelDesc~@~15~@~200~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This uniquely identify this label.~@~
@@ -1054,7 +1054,7 @@
 2117~@~115~@~50~@~~@~ButtonVisible~@~CtButtonType - ButtonVisible~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 2118~@~97~@~210~@~~@~DefaultValue~@~ReportCri - DefaultValue~@~11~@~100~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Enter a client-side default value for this column, you may use DateTime.Today, LUser, LCurr or Config.?.ToString(), etc.; No quote required. Date in YYYY.MM.DD format.~@~
 2119~@~15~@~250~@~~@~AuthRequired~@~Screen - AuthRequired~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~Check this when authentication is required.~@~
-2120~@~22~@~330~@~~@~AuthRequired~@~Report - AuthRequired~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~Check this when authentication is required.~@~
+2120~@~22~@~320~@~~@~AuthRequired~@~Report - AuthRequired~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~Check this when authentication is required.~@~
 2121~@~71~@~110~@~~@~AuthRequired~@~Wizard - AuthRequired~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~Check this if authentication is required.~@~
 2122~@~93~@~230~@~~@~MasterPgFile~@~UsrPref - MasterPgFile~@~15~@~100~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This master page file will be used as MasterPageFile layout for this theme.~@~
 2123~@~93~@~260~@~~@~SampleImage~@~UsrPref - SampleImage~@~9~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This master page file will be used as MasterPageFile layout for this theme, if available. The default is Default.master.~@~
@@ -1535,3 +1535,6 @@
 7657~@~1324~@~70~@~~@~PermId~@~utServerRuleOvrdPrm - PermId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
 7658~@~1324~@~80~@~~@~Guid~@~utServerRuleOvrdPrm - Guid~@~15~@~50~@~~@~NEWID()~@~N~@~N~@~N~@~N~@~N~@~~@~
 7659~@~1324~@~90~@~~@~AtServerRuleOvrdGuid~@~utServerRuleOvrdPrm - AtServerRuleOvrdGuid~@~15~@~50~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7660~@~71~@~120~@~~@~NoTrans~@~Wizard - NoTrans~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~When 'Y', there is no transaction wrap(no rollback on failure)~@~
+7661~@~71~@~130~@~~@~CommandTimeOut~@~Wizard - CommandTimeOut~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~SQL command timeout in seconds~@~
+7662~@~22~@~330~@~~@~CommandTimeOut~@~Report - CommandTimeOut~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~SQL command timeout in seconds~@~

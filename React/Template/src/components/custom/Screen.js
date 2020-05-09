@@ -968,15 +968,21 @@ class RintagiScreen extends Component {
     return function (evt) {
       const path = getNaviPath(naviBar, "MstRecord", "/");
       const x = getAddMstPath(path);
-      this.props.AddMst(null, "MstRecord", 0);
-      this.props.history.push(getAddMstPath(getNaviPath(naviBar, "MstRecord", "/")))
+      const _this = this;
+      this.props.AddMst(null, "MstRecord", 0)
+                .then(newMst => {
+                  _this.props.history.push(getAddMstPath(getNaviPath(naviBar, "MstRecord", "/")))
+                })
       evt.preventDefault();
     }.bind(this);
   };
   AddNewDtl({ naviBar, mstId }) {
     return function (evt) {
-      this.props.AddDtl(mstId, null, -1);
-      this.props.history.push(getAddDtlPath(getNaviPath(naviBar, "DtlRecord", "/")));
+      const _this = this;
+      this.props.AddDtl(mstId, null, -1)
+                .then(newDtl => {
+                  _this.props.history.push(getAddDtlPath(getNaviPath(naviBar, "DtlRecord", "/")));
+                })
       evt.preventDefault();
     }.bind(this);
   }

@@ -306,19 +306,19 @@
                     }
                     else return null;
 
-                    FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
-                    byte[] icon = fileInfo.base64 != null ? tryResizeImage(Convert.FromBase64String(fileInfo.base64)) : null;
-                    if (blobOnly)
-                    {
-                        return makeInlineSrc(fileInfo.mimeType, fileInfo.base64, icon);
-                    }
-                    else return jss.Serialize(new FileUploadObj() { 
-                        icon = icon != null 
-                            ? Convert.ToBase64String(icon)
-                                    : (fileInfo.mimeType.Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64 : null),
-                        mimeType = fileInfo.mimeType, 
-                        lastModified = fileInfo.lastModified, 
-                        fileName = fileInfo.fileName });
+                    //FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
+                    //byte[] icon = fileInfo.base64 != null ? tryResizeImage(Convert.FromBase64String(fileInfo.base64)) : null;
+                    //if (blobOnly)
+                    //{
+                    //    return makeInlineSrc(fileInfo.mimeType, fileInfo.base64, icon);
+                    //}
+                    //else return jss.Serialize(new FileUploadObj() { 
+                    //    icon = icon != null 
+                    //        ? Convert.ToBase64String(icon)
+                    //                : (fileInfo.mimeType.Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64 : null),
+                    //    mimeType = fileInfo.mimeType, 
+                    //    lastModified = fileInfo.lastModified, 
+                    //    fileName = fileInfo.fileName });
                 }
                 catch
                 {
@@ -1197,6 +1197,7 @@
             if (Directory.Exists(destinationPath))
             {
                 DirectoryCleanup(destinationPath, "*.tmp", true);
+                DirectoryCleanup(destinationPath, "*.PendingOverwrite", true);
             }
             using (Ionic.Zip.ZipFile zipFile = new Ionic.Zip.ZipFile(zipFileName, System.Text.Encoding.UTF8))
             {

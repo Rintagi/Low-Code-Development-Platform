@@ -1,6 +1,6 @@
-2~@~AdmRptDbTable~@~Tables and Columns~@~P~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptTblR @usrName, @wClause, @Id~@~~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2007-10-17 12:06:10.983~@~~@~~@~N~@~Y
-53~@~AdmRptUsr~@~Users Information~@~L~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptUsrR @usrName, @wClause, @RowAuthoritys, @UsrGroupId, @CompanyId, @currProjectId~@~~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2012-05-24 18:03:32.103~@~~@~~@~N~@~Y
-54~@~AdmRptUsage~@~Usage Report~@~P~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptUsageR @usrName, @wClause, @RowAuthoritys, @Summary, @SystemId, @CompanyId, @AgentId, @BrokerId, @VendorId, @ProjectId, @CustomerId, @InvestorId, @MemberId, @BorrowerId, @GuarantorId, @LenderId, @UsrGroupId, @UserId~@~~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2018-10-24 21:22:06.270~@~~@~~@~N~@~Y
+2~@~AdmRptDbTable~@~Tables and Columns~@~P~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptTblR @usrName, @wClause, @Id~@~~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2007-10-17 12:06:10.983~@~~@~~@~N~@~Y~@~
+53~@~AdmRptUsr~@~Users Information~@~L~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptUsrR @usrName, @wClause, @RowAuthoritys, @UsrGroupId, @CompanyId, @currProjectId~@~~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2012-05-24 18:03:32.103~@~~@~~@~N~@~Y~@~
+54~@~AdmRptUsage~@~Usage Report~@~P~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptUsageR @usrName, @wClause, @RowAuthoritys, @Summary, @SystemId, @CompanyId, @AgentId, @BrokerId, @VendorId, @ProjectId, @CustomerId, @InvestorId, @MemberId, @BorrowerId, @GuarantorId, @LenderId, @UsrGroupId, @UserId~@~~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2018-10-24 21:22:06.270~@~~@~~@~N~@~Y~@~
 55~@~AdmRptBizRule~@~Server Rules Listing~@~L~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptBizRuleR @usrName, @wClause, @SystemId~@~CREATE PROCEDURE _GetAdmRptBizRuleR
  @usrName	nvarchar(50)
 ,@wClause	varchar(4000)
@@ -49,7 +49,7 @@ SELECT @fClause = 'FROM #br'
 SELECT @oClause = 'ORDER BY SystemName,ScreenDesc,RuleOrder'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 DROP table dbo.#br
-RETURN 0~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2014-12-03 23:32:40.640~@~2007-10-03 06:34:41.000~@~~@~N~@~Y
+RETURN 0~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2014-12-03 23:32:40.640~@~2007-10-03 06:34:41.000~@~~@~N~@~Y~@~
 56~@~AdmRptMsg~@~Message & Label List~@~L~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptMsgR @usrName, @wClause, @CultureId, @SystemId~@~CREATE PROCEDURE _GetAdmRptMsgR
  @usrName	nvarchar(50)
 ,@wClause	varchar(4000)
@@ -101,13 +101,13 @@ SELECT @fClause = 'FROM #msg'
 SELECT @oClause = 'ORDER BY SystemName,ScreenTitle,MasterTable desc,TabIndex'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 DROP table dbo.#msg
-RETURN 0~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2015-10-29 22:33:55.083~@~2007-10-03 06:51:17.000~@~~@~N~@~Y
-57~@~AdmRptDataDict~@~Data Dictionary~@~P~@~S~@~~@~~@~~@~1.00~@~1.00~@~.50~@~.50~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptDataDictR @wClause, @SystemId, @TableName, @ColumnName~@~~@~EXEC dbo._GetAdmRptDataDictV @wClause, @SystemId, @TableName, @ColumnName~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2013-11-07 19:48:22.067~@~2009-09-05 09:50:30.000~@~~@~N~@~Y
-58~@~AdmRptPrgList~@~Program Listing~@~P~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptPrgListR @usrName, @wClause, @CultureId, @SystemId~@~~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~1~@~~@~~@~~@~N~@~Y
-59~@~AdmRptSred~@~SR&ED Remittance~@~P~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptSredR @usrName, @wClause, @MonthEnding, @NumMonths~@~~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2014-07-13 23:54:32.780~@~~@~~@~N~@~Y
-60~@~AdmRptTime~@~SR&ED Time Report~@~L~@~S~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~8.50~@~11.00~@~in~@~~@~EXEC dbo._GetAdmRptTimeR @wClause, @MonthEnding, @NumMonths~@~~@~EXEC dbo._GetAdmRptTimeV @wClause, @MonthEnding, @NumMonths~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2013-06-17 20:41:31.897~@~2013-06-17 11:52:09.000~@~~@~N~@~Y
-61~@~AdmRptStat~@~SR&ED Statistic~@~L~@~S~@~~@~~@~~@~.00~@~.00~@~.00~@~.00~@~4.00~@~7.00~@~in~@~~@~EXEC dbo._GetAdmRptStatR @wClause, @MemberId, @MnFr, @MnTo~@~~@~EXEC dbo._GetAdmRptStatV @wClause, @MemberId~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2013-06-18 04:29:23.860~@~2013-06-17 16:16:23.000~@~~@~N~@~Y
-62~@~AdmRptPerm~@~Permission Listing~@~P~@~S~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptPermR @usrName, @wClause, @ActiveOnly, @EntityName, @CultureId, @SystemId~@~~@~EXEC dbo._GetAdmRptPermV @usrName, @wClause, @ActiveOnly, @EntityName, @CultureId, @SystemId~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2015-04-13 18:28:11.137~@~2007-10-03 06:51:17.000~@~~@~N~@~Y
+RETURN 0~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2015-10-29 22:33:55.083~@~2007-10-03 06:51:17.000~@~~@~N~@~Y~@~
+57~@~AdmRptDataDict~@~Data Dictionary~@~P~@~S~@~~@~~@~~@~1.00~@~1.00~@~.50~@~.50~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptDataDictR @wClause, @SystemId, @TableName, @ColumnName~@~~@~EXEC dbo._GetAdmRptDataDictV @wClause, @SystemId, @TableName, @ColumnName~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2013-11-07 19:48:22.067~@~2009-09-05 09:50:30.000~@~~@~N~@~Y~@~
+58~@~AdmRptPrgList~@~Program Listing~@~P~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptPrgListR @usrName, @wClause, @CultureId, @SystemId~@~~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~1~@~~@~~@~~@~N~@~Y~@~
+59~@~AdmRptSred~@~SR&ED Remittance~@~P~@~C~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptSredR @usrName, @wClause, @MonthEnding, @NumMonths~@~~@~~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2014-07-13 23:54:32.780~@~~@~~@~N~@~Y~@~
+60~@~AdmRptTime~@~SR&ED Time Report~@~L~@~S~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~8.50~@~11.00~@~in~@~~@~EXEC dbo._GetAdmRptTimeR @wClause, @MonthEnding, @NumMonths~@~~@~EXEC dbo._GetAdmRptTimeV @wClause, @MonthEnding, @NumMonths~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2013-06-17 20:41:31.897~@~2013-06-17 11:52:09.000~@~~@~N~@~Y~@~
+61~@~AdmRptStat~@~SR&ED Statistic~@~L~@~S~@~~@~~@~~@~.00~@~.00~@~.00~@~.00~@~4.00~@~7.00~@~in~@~~@~EXEC dbo._GetAdmRptStatR @wClause, @MemberId, @MnFr, @MnTo~@~~@~EXEC dbo._GetAdmRptStatV @wClause, @MemberId~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2013-06-18 04:29:23.860~@~2013-06-17 16:16:23.000~@~~@~N~@~Y~@~
+62~@~AdmRptPerm~@~Permission Listing~@~P~@~S~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptPermR @usrName, @wClause, @ActiveOnly, @EntityName, @CultureId, @SystemId~@~~@~EXEC dbo._GetAdmRptPermV @usrName, @wClause, @ActiveOnly, @EntityName, @CultureId, @SystemId~@~~@~~@~~@~~@~~@~Y~@~N~@~55~@~2015-04-13 18:28:11.137~@~2007-10-03 06:51:17.000~@~~@~N~@~Y~@~
 64~@~AdmRptUsrAudit~@~Login Audit Report~@~P~@~S~@~~@~~@~~@~1.00~@~1.00~@~1.00~@~1.00~@~11.00~@~8.50~@~in~@~~@~EXEC dbo._GetAdmRptUsrAuditR @wClause, @LoginSuccess10, @ValidUser20, @LoginName30, @AttemptDt40, @AttemptDt50~@~CREATE PROCEDURE dbo._GetAdmRptUsrAuditR
  @wClause	nvarchar(4000)
 ,@LoginSuccess10	Char(1)
@@ -146,4 +146,4 @@ SET NOCOUNT ON
 SELECT @sClause = ''SELECT ReportName=''''UserLoginAuditReport_''''''
 EXEC (@sClause)
 RETURN 0
-~@~~@~~@~~@~~@~Y~@~N~@~55~@~2015-03-15 22:45:54.740~@~2015-03-15 14:36:07.000~@~~@~N~@~Y
+~@~~@~~@~~@~~@~Y~@~N~@~55~@~2015-03-15 22:45:54.740~@~2015-03-15 14:36:07.000~@~~@~N~@~Y~@~

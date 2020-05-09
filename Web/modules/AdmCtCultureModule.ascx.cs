@@ -2604,6 +2604,8 @@ bInfoNow.Value = "Y";
 		private string SaveDb(object sender, System.EventArgs e)
 		{
 			string rtn = string.Empty;
+			bool noTrans = Config.NoTrans;
+			int commandTimeOut = Config.CommandTimeOut;
 			//WebRule: Prevent unauthorized changes
 			if (Config.AppNameSpace != "RO")
 			{
@@ -2628,7 +2630,7 @@ bInfoNow.Value = "Y";
 				{
 					if (ds != null)
 					{
-						pid = (new AdminSystem()).AddData(8,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc);
+						pid = (new AdminSystem()).AddData(8,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc,noTrans,commandTimeOut);
 					}
 					if (!string.IsNullOrEmpty(pid))
 					{
@@ -2639,7 +2641,7 @@ bInfoNow.Value = "Y";
 				}
 				else {
 					bool bValid7 = false;
-					if (ds != null && (new AdminSystem()).UpdData(8,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc)) {bValid7 = true;}
+					if (ds != null && (new AdminSystem()).UpdData(8,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc,noTrans,commandTimeOut)) {bValid7 = true;}
 					if (bValid7)
 					{
 						cAdmCtCulture8List.ClearSearch(); Session.Remove(KEY_dtAdmCtCulture8List);
