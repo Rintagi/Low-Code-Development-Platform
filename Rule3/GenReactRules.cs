@@ -117,7 +117,7 @@ namespace RO.Rule3
                 DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
                 string screenTypeName = dvItms[0]["ScreenTypeName"].ToString();
 
-                if ("I1,I2".IndexOf(screenTypeName) >= 0)
+                if ("I1,I2,I3".IndexOf(screenTypeName) >= 0)
                 {
                     DataView dvReactRule = new DataView((new WebRule()).WrGetWebRule(screenId, dbConnectionString, dbPassword));
 
@@ -128,7 +128,7 @@ namespace RO.Rule3
                     StringBuilder sbReactJsMstRecord = MakeReactJsMstRecord(screenId, screenName, dvReactRule);
                     StringBuilder sbReactJsRedux = MakeReactJsRedux(screenId, screenName, dvReactRule);
                     StringBuilder sbReactJsService = MakeReactJsService(screenId, screenName, dvReactRule);
-                    StringBuilder sbAsmx = MakeReactJsAsmx(screenId, screenName);
+                    StringBuilder sbAsmx = MakeReactJsAsmx(screenId, screenName, screenTypeName);
 
                     StreamWriter sw = new StreamWriter(fileDirectory + "src/app/route.js");
                     try { sw.Write(sbReactJsRoute); }
@@ -333,6 +333,9 @@ export default {
         private StringBuilder MakeReactJsIndex(string screenId, string screenName)
         {
             DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+            string screenTypeName = dvItms[0]["ScreenTypeName"].ToString();
+            bool gridOnly = screenTypeName == "I3";
+
             string screenPrimaryKey = "";
             foreach (DataRowView drv in dvItms)
             {
@@ -345,7 +348,7 @@ export default {
             string screenDetailKey = "";
             foreach (DataRowView drv in dvItms)
             {
-                if (drv["MasterTable"].ToString() == "N" && !string.IsNullOrEmpty(drv["PrimaryKey"].ToString()))
+                if ((drv["MasterTable"].ToString() == "N" || gridOnly) && !string.IsNullOrEmpty(drv["PrimaryKey"].ToString()))
                 {
                     screenDetailKey = drv["PrimaryKey"].ToString() + drv["TableId"].ToString();
                     break;
@@ -355,9 +358,8 @@ export default {
             string ImportRouter = "";
             string DetailRouter = "";
             string NaviPath = "";
-            string screenTypeName = dvItms[0]["ScreenTypeName"].ToString();
 
-            if ("I1".IndexOf(screenTypeName) >= 0)
+            if ("I1".IndexOf(screenTypeName) >= 0 || "I3".IndexOf(screenTypeName) >= 0)
             {
                 NaviPath = "path: naviPath(v.type === 'MstList' ? '_' : mst.[[---ScreenPrimaryKey---]], '', v.path),";
             }
@@ -4519,6 +4521,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
     };
   }";
             }
+            else if ("I3".IndexOf(screenTypeName) >= 0)
+            {
+                ExpandDtl = @"  ExpandDtl(dtlList, copy) {
+    return dtlList;
+  }";
+
+            }
 
             foreach (DataRowView drv in dvItms)
             {
@@ -4671,9 +4680,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
 import { getAsyncTypes } from '../helpers/actionType'
 import * as [[---ScreenName---]]Service from '../services/[[---ScreenName---]]Service'
 import { RintagiScreenRedux, initialRintagiScreenReduxState } from './_ScreenReducer'
-const Label = {
-  PostToAp: 'Post to AP',
-}
 class [[---ScreenName---]]Redux extends RintagiScreenRedux {
   allowTmpDtl = false;
   constructor() {
@@ -4733,7 +4739,6 @@ class [[---ScreenName---]]Redux extends RintagiScreenRedux {
       ...initialRintagiScreenReduxState,
       Label: {
         ...initialRintagiScreenReduxState.Label,
-        ...Label,
       }
     }
   };
@@ -5379,7 +5384,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
         //End React Service Generation
 
         //Asmx Generation
-        private StringBuilder MakeReactJsAsmx(string screenId, string screenName)
+        private StringBuilder MakeReactJsAsmx(string screenId, string screenName, string screenTypeName)
         {
             List<string> AsmxCustomFunctionResults = new List<string>();
             Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
@@ -5395,6 +5400,8 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             string screenPrimaryTableName = "";
             string screenPrimaryKeyColumIdentity = "";
             string SystemId = DbId.ToString();
+            bool gridOnly = screenTypeName == "I3";
+
             string multiDesignDb = "N";
             foreach (DataRowView drv in dvItms)
             {
@@ -5429,7 +5436,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
 
             foreach (DataRowView drv in dvItms)
             {
-                if (drv["MasterTable"].ToString() == "N" && !string.IsNullOrEmpty(drv["PrimaryKey"].ToString()))
+                if ((drv["MasterTable"].ToString() == "N" || gridOnly) && !string.IsNullOrEmpty(drv["PrimaryKey"].ToString()))
                 {
                     screenDetailKeyName = drv["PrimaryKey"].ToString();
                     screenDetailKey = drv["PrimaryKey"].ToString() + drv["TableId"].ToString();
@@ -5462,7 +5469,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
     using System.Web.SessionState;
     using System.Linq;
             ");
-            sb.Append(GetScreenDataSet(screenId, screenName, screenPrimaryKey, dvItms));
+            sb.Append(GetScreenDataSet(screenId, screenName, screenPrimaryKey, dvItms, screenTypeName));
             sb.Append(@"
     [ScriptService()]
     [WebService(Namespace = ""http://Rintagi.com/"")]
@@ -5509,11 +5516,13 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             return sb;
         }
 
-        private StringBuilder GetScreenDataSet(string screenId, string screenName, string screenPrimaryKey, DataView dvItms)
+        private StringBuilder GetScreenDataSet(string screenId, string screenName, string screenPrimaryKey, DataView dvItms, string screenTypeName)
         {
             List<string> ScreenDataSetMasterResults = new List<string>();
             List<string> ScreenDataSetDetailResults = new List<string>();
             Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
+            bool gridOnly = ("I3".IndexOf(screenTypeName) >= 0);
+
             foreach (DataRowView drv in dvItms)
             {
                 string columnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
@@ -5526,7 +5535,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                     || (drv["DefAlways"].ToString() == "Y" && string.IsNullOrEmpty(drv["SystemValue"].ToString()))
                     )))
                 {
-                    if (drv["MasterTable"].ToString() == "Y")
+                    if (drv["MasterTable"].ToString() == "Y" && !gridOnly)
                     {
                         string ScreenDataSetValue = "columns.Add(\"" + columnId + "\", typeof(string));";
                         ScreenDataSetMasterResults.Add(ScreenDataSetValue);
@@ -5548,7 +5557,8 @@ export function GetDocZipDownload(keyId, options, accessScope) {
     {
         public [[---ScreenDef---]]()
         {
-            this.Tables.Add(MakeColumns(new DataTable(""[[---ScreenName---]]"")));
+" + (gridOnly ? "" : @"
+            this.Tables.Add(MakeColumns(new DataTable(""[[---ScreenName---]]"")));") + @"
             this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Def"")));
             this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Add"")));
             this.Tables.Add(MakeDtlColumns(new DataTable(""[[---ScreenName---]]Upd"")));
@@ -5570,7 +5580,10 @@ export function GetDocZipDownload(keyId, options, accessScope) {
         {
             DataColumnCollection columns = dt.Columns;
 ");
-            sb.Append(addIndent("", 12) + "columns.Add(\"" + screenPrimaryKey + "\", typeof(string));" + Environment.NewLine);
+            if (!gridOnly)
+            {
+                sb.Append(addIndent("", 12) + "columns.Add(\"" + screenPrimaryKey + "\", typeof(string));" + Environment.NewLine);
+            }
             sb.Append(ScreenDataSetDetailCnt);
             sb.Append(@"
             return dt;
@@ -5679,6 +5692,8 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             List<string> InitDtlResults = new List<string>();
             bool bHasDocument = false;
             int ii = 0;
+            string screenTypeName = dvItms[0]["ScreenTypeName"].ToString();
+            bool gridOnly = screenTypeName == "I3";
 
             foreach (DataRowView drv in dvAsmxRule)
             {
@@ -5712,7 +5727,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 bool directSaveToDB = DirectSaveToDb(drv.Row);
                 bool isRefColumnControl = IsRefColumn(drv.Row);
 
-                if (drv["MasterTable"].ToString() == "Y")
+                if (drv["MasterTable"].ToString() == "Y" && !gridOnly)
                 {
                     if (drv["DefAlways"].ToString() == "N" 
                         || (drv["DefAlways"].ToString() == "Y" && string.IsNullOrEmpty(drv["SystemValue"].ToString()))
@@ -5971,25 +5986,39 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
         private DataRow MakeTypRow(DataRow dr)
-        {
+        {");
+            if (!gridOnly)
+            {
+                sb.Append(@"
             dr[""" + screenPrimaryKey + @"""] = System.Data.OleDb.OleDbType." + screenPrimaryKeyType + ".ToString();" + Environment.NewLine
-            );
+                );
+            }
+            else sb.Append(Environment.NewLine);
             sb.Append(MakeTypRowCnt + Environment.NewLine);
             sb.Append(@"
             return dr;
         }
 
         private DataRow MakeDisRow(DataRow dr)
-        {
+        {");
+            if (!gridOnly)
+            {
+                sb.Append(@"
             dr[""" + screenPrimaryKey + @"""] = """ + screenPrimaryKeyDis + "\";" + Environment.NewLine);
+            }
+            else sb.Append(Environment.NewLine);
             sb.Append(MakeDisRowCnt + Environment.NewLine);
             sb.Append(@"
             return dr;
         }
 
         private DataRow MakeColRow(DataRow dr, SerializableDictionary<string, string> drv, string keyId, bool bAdd)
-        {
+        {" +
+(gridOnly ? @"
+"
+: @"
             dr[""" + screenPrimaryKey + @"""] = keyId;
+") + @"
             DataTable dtAuth = _GetAuthCol(screenId);
             if (dtAuth != null)
             {
@@ -6002,13 +6031,19 @@ export function GetDocZipDownload(keyId, options, accessScope) {
 
         private [[---ScreenDef---]] Prep[[---ScreenName---]]Data(SerializableDictionary<string, string> mst, List<SerializableDictionary<string, string>> dtl, bool bAdd)
         {
-            [[---ScreenDef---]] ds = new [[---ScreenDef---]]();
+            [[---ScreenDef---]] ds = new [[---ScreenDef---]]();" +
+(gridOnly ? ""
+: @"
             DataRow dr = ds.Tables[""[[---ScreenName---]]""].NewRow();
             DataRow drType = ds.Tables[""[[---ScreenName---]]""].NewRow();
             DataRow drDisp = ds.Tables[""[[---ScreenName---]]""].NewRow();
 
-");
-            sb.Append(PrepDataCnt + Environment.NewLine);
+")
+);
+            if (!gridOnly)
+            {
+                sb.Append(PrepDataCnt + Environment.NewLine);
+            }
             sb.Append(@"
             if (dtl != null)
             {
@@ -6039,8 +6074,11 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                         ds.Tables[""[[---ScreenName---]]Del""].Rows.Add(MakeColRow(ds.Tables[""[[---ScreenName---]]Del""].NewRow(), drv, mst[""[[---ScreenPrimaryKey---]]""], false));
                     }
                 }
-            }
+            }" +
+(gridOnly ? ""
+:@"
             ds.Tables[""[[---ScreenName---]]""].Rows.Add(dr); ds.Tables[""[[---ScreenName---]]""].Rows.Add(drType); ds.Tables[""[[---ScreenName---]]""].Rows.Add(drDisp);
+") + @"
             return ds;
         }
 
@@ -6104,8 +6142,8 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
             bool hasDtlImageUpload = false;
             bool hasMstImageUpload = false;
-
             string screenTypeName = dvItms[0]["ScreenTypeName"].ToString();
+            bool gridOnly = screenTypeName == "I3";
 
             foreach (DataRowView drv in dvAsmxRule)
             {
@@ -6237,8 +6275,15 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 string DtlValue = "result.dtl = DataTableToListOfObject(dtDtl, IncludeBLOB.None, colAuth, utcColumns);";
                 DtlResults.Add(DtlValue);
             }
-            else
+            else if ("I3".IndexOf(screenTypeName) >= 0) /* Grid only Screen*/ 
             {
+                string CurrentDataValue = "DataTable dtDtl = _GetDtlById(null, 0);";
+                CurrentDataResults.Add(CurrentDataValue);
+
+                string GetDtlByIdValue = @"
+                ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
+                mr.data = new List<SerializableDictionary<string,string>>();";
+                GetDtlByIdResults.Add(GetDtlByIdValue);
 
             }
 
@@ -6250,7 +6295,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             string DtlCnt = string.Join(Environment.NewLine, DtlResults.Select(s => addIndent(s, 16)));
             string AsmxSaveDataBeforeCnt = string.Join(Environment.NewLine, AsmxSaveDataBeforeResults.Select(s => addIndent(s, 0)));
             string AsmxSaveDataAfterCnt = string.Join(Environment.NewLine, AsmxSaveDataAfterResults.Select(s => addIndent(s, 0)));
-
+            
             StringBuilder sb = new StringBuilder();
 
             sb.Append(@"
@@ -6259,7 +6304,18 @@ export function GetDocZipDownload(keyId, options, accessScope) {
         {
             Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
-                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);"
++ (
+("I3".IndexOf(screenTypeName) >= 0) 
+?
+@"
+                DataTable dtSuggest = GetLis(""GetLis[[---ScreenDef---]]"", GetSystemId(), GetScreenId(), """", _CurrentScreenCriteria ?? new List<string>(), filterId, """", """+ Robot.GetIsSys(multiDesignDb, "N") + @""", 0, false);
+                Dictionary<string, string> filterOptions = new Dictionary<string, string>();
+                filterOptions[""_FilterValue""] = searchStr; 
+                AutoCompleteResponse r = GridLisSuggests(dtSuggest, topN, filterOptions, true);
+"
+: 
+@"
                 System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                 Dictionary<string, string> context = new Dictionary<string, string>();
                 context[""method""] = ""GetLis[[---ScreenDef---]]"";
@@ -6274,7 +6330,8 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 context[""isSys""] = """ + Robot.GetIsSys(multiDesignDb, "N") + @""";
                 context[""conn""] = string.Empty;
                 AutoCompleteResponse r = LisSuggests(searchStr, jss.Serialize(context), topN, _CurrentScreenCriteria);
-                ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+") +
+@"                ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>();
                 mr.errorMsg = """";
                 mr.data = r;
                 mr.status = ""success"";
@@ -6307,7 +6364,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 var mstBlob = GetBlobOption(mstBlobIconOption);
                 var dtlBlob = GetBlobOption(dtlBlobIconOption);
                 string jsonCri = options.ContainsKey(""CurrentScreenCriteria"") ? options[""CurrentScreenCriteria""] : null;
-                bool includeDtl = (!options.ContainsKey(""IncludeDtl"") || options[""IncludeDtl""] == ""Y"") && !String.IsNullOrEmpty(GetDtlTableName());
+                bool includeDtl = !IsGridOnlyScreen() && (!options.ContainsKey(""IncludeDtl"") || options[""IncludeDtl""] == ""Y"") && !String.IsNullOrEmpty(GetDtlTableName());
                 ValidatedMstId(""GetLis[[---ScreenDef---]]"", systemId, screenId, ""**"" + keyId, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));
                 DataTable dt = _GetMstById(keyId);
                 DataTable dtColAuth = _GetAuthCol(GetScreenId());
@@ -6390,14 +6447,31 @@ export function GetDocZipDownload(keyId, options, accessScope) {
         }
 
         protected override DataTable _GetMstById(string mstId)
-        {
-            return (new RO.Facade3.AdminSystem()).GetMstById(""Get[[---ScreenDef---]]ById"", string.IsNullOrEmpty(mstId) ? ""-1"" : mstId, LcAppConnString, LcAppPw);
-
+        {" +
+(gridOnly ?
+@"
+            return GetLis(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), ""**"" + mstId, null, ""0"", """", """ + Robot.GetIsSys(multiDesignDb, "N") + @""", 1, false);
+"
+:
+@"
+            return (new RO.Facade3.AdminSystem()).GetMstById(""Get[[---ScreenDef---]]ById"", string.IsNullOrEmpty(mstId) ? ""-1"" : mstId, LcAppConnString, LcAppPw);"
+)
++
+@"
         }
-        protected override DataTable _GetDtlById(string mstId, int screenFilterId)
-        {
-            return (new RO.Facade3.AdminSystem()).GetDtlById(screenId, ""Get[[---ScreenDef---]]DtlById"", string.IsNullOrEmpty(mstId) ? ""-1"" : mstId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(screenFilterId.ToString(), false), LImpr, LCurr);
 
+        protected override DataTable _GetDtlById(string mstId, int screenFilterId)
+        {" +
+(gridOnly ?
+@"
+            return GetLis(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), ""**"" + mstId, null, screenFilterId.ToString(), """", """ + Robot.GetIsSys(multiDesignDb, "N") + @""", 0, false);
+"
+:
+@"
+            return (new RO.Facade3.AdminSystem()).GetDtlById(screenId, ""Get[[---ScreenDef---]]DtlById"", string.IsNullOrEmpty(mstId) ? ""-1"" : mstId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(screenFilterId.ToString(), false), LImpr, LCurr);"
+)
++
+@"
         }
         protected override Dictionary<string, SerializableDictionary<string, string>> GetDdlContext()
         {
@@ -6415,8 +6489,18 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
                 var pid = mst[""[[---ScreenPrimaryKey---]]""];
-                var ds = Prep[[---ScreenName---]]Data(mst, new List<SerializableDictionary<string, string>>(), string.IsNullOrEmpty(mst[""[[---ScreenPrimaryKey---]]""]));
-                (new RO.Facade3.AdminSystem()).DelData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);
+                var dtl = new List<SerializableDictionary<string, string>>();
+                if (IsGridOnlyScreen())
+                {
+                    mst[""_mode""] = ""delete"";
+                    dtl.Add(mst.Clone());                    
+                }
+                var ds = Prep[[---ScreenName---]]Data(mst, dtl, IsGridOnlyScreen() ? false : string.IsNullOrEmpty(mst[""[[---ScreenPrimaryKey---]]""]));
+
+                if (IsGridOnlyScreen())
+                    (new RO.Facade3.AdminSystem()).UpdData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);                    
+                else    
+                    (new RO.Facade3.AdminSystem()).DelData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);
 
                 ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
                 SaveDataResponse result = new SaveDataResponse();
@@ -6445,6 +6529,10 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
                 System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
                 SerializableDictionary<string, string> skipValidation = new SerializableDictionary<string, string>() { { ""SkipAllMst"", ""SilentColReadOnly"" }, { ""SkipAllDtl"", ""SilentColReadOnly"" } };
+                if (IsGridOnlyScreen() && dtl.Count == 0)
+                {
+                    dtl.Add(mst.Clone());
+                }
                 /* AsmxRule: Save Data Before */
 ");
             sb.Append(AsmxSaveDataBeforeCnt + Environment.NewLine);
@@ -6488,7 +6576,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 var ds = Prep[[---ScreenName---]]Data(mst, dtl, string.IsNullOrEmpty(mst[""[[---ScreenPrimaryKey---]]""]));
                 string msg = string.Empty;
 
-                if (isAdd)
+                if (isAdd && !IsGridOnlyScreen())
                 {
                     pid = (new RO.Facade3.AdminSystem()).AddData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);
 

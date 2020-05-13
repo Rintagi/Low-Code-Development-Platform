@@ -2720,6 +2720,68 @@ namespace RO.Web
             return GetQSHash(string.Join("&", param.OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim());
         }
 
+        public FileUploadObj GetImageButtonFileObject(string fileContentJSON)
+        {
+
+            if (string.IsNullOrEmpty(fileContentJSON))
+            {
+                return new FileUploadObj()
+                {
+                    mimeType = "image/jpeg",
+                    fileName = "",
+                    base64 = null, // rare case from old data, not even a JSON but just straight binary in base64
+                };
+            }
+            System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            jss.MaxJsonLength = Int32.MaxValue;
+
+            if (fileContentJSON.StartsWith("["))
+            {
+                List<RO.Common3._ReactFileUploadObj> fileList = jss.Deserialize<List<RO.Common3._ReactFileUploadObj>>(fileContentJSON);
+                List<FileUploadObj> x = new List<FileUploadObj>();
+                foreach (var fileInfo in fileList)
+                {
+                    return new FileUploadObj()
+                    {
+                        mimeType = fileInfo.mimeType,
+                        fileName = fileInfo.fileName,
+                        base64 = fileInfo.base64,
+                    };
+                }
+                return new FileUploadObj()
+                {
+                    mimeType = "image/jpeg",
+                    fileName = "",
+                    base64 = null, // rare case from old data, not even a JSON but just straight binary in base64
+                };
+            }
+            else if (fileContentJSON.StartsWith("{"))
+            {
+                try
+                {
+                    RO.Common3.FileUploadObj fileInfo = jss.Deserialize<RO.Common3.FileUploadObj>(fileContentJSON);
+                    return fileInfo;
+                }
+                catch
+                {
+                    return new FileUploadObj()
+                    {
+                        mimeType = "image/jpeg",
+                        fileName = "",
+                        base64 = fileContentJSON, // rare case from old data, not even a JSON but just straight binary in base64
+                    };
+                }
+            }
+            else
+            {
+                return new FileUploadObj()
+                {
+                    mimeType = "image/jpeg",
+                    fileName = "",
+                    base64 = fileContentJSON, // rare case from old data, not even a JSON but just straight binary in base64
+                };
+            }
+        }
         // constant time comparision to avoid timing attack which is a form of online attack on hash value
         private bool SecureEquals(byte[] a, byte[] b)
         {

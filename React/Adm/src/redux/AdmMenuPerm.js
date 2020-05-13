@@ -2,9 +2,6 @@
 import { getAsyncTypes } from '../helpers/actionType'
 import * as AdmMenuPermService from '../services/AdmMenuPermService'
 import { RintagiScreenRedux, initialRintagiScreenReduxState } from './_ScreenReducer'
-const Label = {
-  PostToAp: 'Post to AP',
-}
 class AdmMenuPermRedux extends RintagiScreenRedux {
   allowTmpDtl = false;
   constructor() {
@@ -58,7 +55,6 @@ class AdmMenuPermRedux extends RintagiScreenRedux {
       ...initialRintagiScreenReduxState,
       Label: {
         ...initialRintagiScreenReduxState.Label,
-        ...Label,
       }
     }
   };

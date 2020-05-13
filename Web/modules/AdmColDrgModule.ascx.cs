@@ -288,7 +288,7 @@ namespace RO.Web
 				base.CTar = new CurrTar(true, row);
 				if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && (new AdminSystem()).IsRegenNeeded(string.Empty,1007,0,0,LcSysConnString,LcAppPw))
 				{
-					(new GenScreensSystem()).CreateProgram(1007, "Object IDE ( -- no react gen -- )", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
+					(new GenScreensSystem()).CreateProgram(1007, "Object IDE", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
 					this.Redirect(Request.RawUrl);
 				}
 			}

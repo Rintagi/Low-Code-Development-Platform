@@ -260,7 +260,7 @@ namespace RO.Web
 				base.CTar = new CurrTar(true, row);
 				if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && (new AdminSystem()).IsRegenNeeded(string.Empty,122,0,0,LcSysConnString,LcAppPw))
 				{
-					(new GenScreensSystem()).CreateProgram(122, "Member for SR&ED ( -- no react gen -- )", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
+					(new GenScreensSystem()).CreateProgram(122, "Member for SR&ED", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
 					this.Redirect(Request.RawUrl);
 				}
 			}
@@ -2148,9 +2148,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			    try {
 			        string fileContent = RO.Common3.Utils.DecodeFileStream((byte[])dvAdmMemberGrid[e.Item.DataItemIndex]["PicMed275"]);
 			        hasImageContent = !fileContent.Trim().Equals(string.Empty);
-			        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-			        FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
-			       string mimeType = fileInfo.mimeType;
+			        FileUploadObj fileInfo = GetImageButtonFileObject(fileContent);
+			        string mimeType = fileInfo.mimeType;
 			        isImage = "image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png".IndexOf(mimeType) >= 0;
 			    } catch { isImage = hasImageContent; }
 			    ImageGridDisplay = e.Item.FindControl("cPicMed275") as ImageButton;
@@ -2168,9 +2167,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			    try {
 			        string fileContent = RO.Common3.Utils.DecodeFileStream((byte[])dvAdmMemberGrid[e.Item.DataItemIndex]["PicMed275"]);
 			        hasImageContent = !fileContent.Trim().Equals(string.Empty);
-			        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-			        FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
-			       string mimeType = fileInfo.mimeType;
+			        FileUploadObj fileInfo = GetImageButtonFileObject(fileContent);
+			        string mimeType = fileInfo.mimeType;
 			        isImage = "image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png".IndexOf(mimeType) >= 0;
 			    } catch { isImage = hasImageContent; }
 			    ImageGridDisplay = e.Item.FindControl("cPicMed275l") as ImageButton;

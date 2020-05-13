@@ -2550,4 +2550,8 @@ In default.master: replace section.css with the following:
 3. fix React local debug issue (localhost:3000) when async function returns Promise
 4. fix grid screen save issue due to April 4 change to Access3 layer
 5. fix IonicZip library not handle dangling temp file on unzip~@~~@~en-US~@~
-12608~@~  11. 171~@~11~@~171~@~~@~~@~~@~~@~~@~~@~
+12608~@~  11. 171.00512~@~11~@~171~@~2020-05-12 00:00:00.000~@~~@~~@~1. Enable Grid only screen React generation
+2. fix changed embedded image field structure for Grid usage~@~~@~en-US~@~
+12609~@~  11. 172.00513~@~11~@~172~@~2020-05-13 00:00:00.000~@~~@~~@~1. tighten grid only screen asmx API security
+2. re-generate all screen(both asp.net and react adm modules)~@~~@~en-US~@~
+12610~@~  11. 173~@~11~@~173~@~~@~~@~~@~~@~~@~~@~

@@ -289,7 +289,7 @@ namespace RO.Web
                 {
                     if (cAllScreen.Checked || cScreenList.Items[ii].Selected)
                     {
-                        if (dts != null && (drv["ScreenType"].ToString() != "I3"))
+                        if (dts != null && (drv["ScreenType"].ToString() != "I4"))
                         {
                             (new RO.WebRules.WebRule()).WrUpdScreenReactGen(drv["ScreenId"].ToString(), CSrc.SrcConnectionString, CSrc.SrcDbPassword);
                         }
@@ -297,7 +297,7 @@ namespace RO.Web
                         //string projectRootPath = CPrj.SrcRuleProgramPath;
 
                         if (dts != null &&
-                            (drv["GenerateSc"].ToString() == "Y" || drv["GenerateSr"].ToString() == "Y") && (drv["ScreenType"].ToString() != "I3") &&
+                            (drv["GenerateSc"].ToString() == "Y" || drv["GenerateSr"].ToString() == "Y") && (drv["ScreenType"].ToString() != "I4") &&
                             (new GenReactRules(base.LUser.CultureId, CSrc.SrcConnectionString, CSrc.SrcDbPassword, sAbbr, projectRootPath + "/React/" + sAbbr + "/", CSrc.SrcSystemId)).CreateProgram(drv["ScreenId"].ToString(), drv["ProgramName"].ToString())
                             )
                         { iGen = iGen + 1; }

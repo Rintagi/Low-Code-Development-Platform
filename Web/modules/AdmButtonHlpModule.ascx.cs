@@ -275,7 +275,7 @@ namespace RO.Web
 				base.CTar = new CurrTar(true, row);
 				if ((Config.DeployType == "DEV" || row["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View") && !(base.CPrj.EntityCode != "RO" && row["SysProgram"].ToString() == "Y") && (new AdminSystem()).IsRegenNeeded(string.Empty,76,0,0,LcSysConnString,LcAppPw))
 				{
-					(new GenScreensSystem()).CreateProgram(76, "Button Override ( -- no react gen -- )", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
+					(new GenScreensSystem()).CreateProgram(76, "Button Override", row["dbAppDatabase"].ToString(), base.CPrj, base.CSrc, base.CTar, LcAppConnString, LcAppPw);
 					this.Redirect(Request.RawUrl);
 				}
 			}

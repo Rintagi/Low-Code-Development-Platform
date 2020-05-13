@@ -7827,9 +7827,9 @@ namespace RO.Rule3
                             sb.Append("			    try {" + Environment.NewLine);
                             sb.Append("			        string fileContent = RO.Common3.Utils.DecodeFileStream((byte[])dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"]);" + Environment.NewLine);
                             sb.Append("			        hasImageContent = !fileContent.Trim().Equals(string.Empty);" + Environment.NewLine);
-                            sb.Append("			        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();" + Environment.NewLine);
-                            sb.Append("			        FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);" + Environment.NewLine);
-                            sb.Append("			       string mimeType = fileInfo.mimeType;" + Environment.NewLine);
+//                            sb.Append("			        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();" + Environment.NewLine);
+                            sb.Append("			        FileUploadObj fileInfo = GetImageButtonFileObject(fileContent);" + Environment.NewLine);
+                            sb.Append("			        string mimeType = fileInfo.mimeType;" + Environment.NewLine);
                             sb.Append("			        isImage = \"image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png\".IndexOf(mimeType) >= 0;" + Environment.NewLine);
                             sb.Append("			    } catch { isImage = hasImageContent; }" + Environment.NewLine);
                             sb.Append("			    ImageGridDisplay = e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") as ImageButton;" + Environment.NewLine);
@@ -7853,9 +7853,9 @@ namespace RO.Rule3
                             sb.Append("			    try {" + Environment.NewLine);
                             sb.Append("			        string fileContent = RO.Common3.Utils.DecodeFileStream((byte[])dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"]);" + Environment.NewLine);
                             sb.Append("			        hasImageContent = !fileContent.Trim().Equals(string.Empty);" + Environment.NewLine);
-                            sb.Append("			        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();" + Environment.NewLine);
-                            sb.Append("			        FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);" + Environment.NewLine);
-                            sb.Append("			       string mimeType = fileInfo.mimeType;" + Environment.NewLine);
+//                            sb.Append("			        System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();" + Environment.NewLine);
+                            sb.Append("			        FileUploadObj fileInfo = GetImageButtonFileObject(fileContent);" + Environment.NewLine);
+                            sb.Append("			        string mimeType = fileInfo.mimeType;" + Environment.NewLine);
                             sb.Append("			        isImage = \"image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png\".IndexOf(mimeType) >= 0;" + Environment.NewLine);
                             sb.Append("			    } catch { isImage = hasImageContent; }" + Environment.NewLine);
                             sb.Append("			    ImageGridDisplay = e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "l\") as ImageButton;" + Environment.NewLine);
