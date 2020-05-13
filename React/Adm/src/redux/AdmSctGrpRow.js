@@ -2,9 +2,6 @@
 import { getAsyncTypes } from '../helpers/actionType'
 import * as AdmSctGrpRowService from '../services/AdmSctGrpRowService'
 import { RintagiScreenRedux, initialRintagiScreenReduxState } from './_ScreenReducer'
-const Label = {
-  PostToAp: 'Post to AP',
-}
 class AdmSctGrpRowRedux extends RintagiScreenRedux {
   allowTmpDtl = false;
   constructor() {
@@ -57,7 +54,6 @@ class AdmSctGrpRowRedux extends RintagiScreenRedux {
       ...initialRintagiScreenReduxState,
       Label: {
         ...initialRintagiScreenReduxState.Label,
-        ...Label,
       }
     }
   };

@@ -314,7 +314,7 @@
 1205~@~AdmCtButtonHlp [   20] Main Info: CultureId (en-US)~@~1296~@~1~@~Culture~@~This is the culture for this button characteristic default.~@~Please select the culture for this button characteristic default.~@~
 1206~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (en-US)~@~1297~@~1~@~Button Type~@~This is the button type this button characteristic override should apply.~@~Please select the button type this button characteristic override should apply.~@~
 1207~@~AdmCtButtonHlp [   40] Main Info: ButtonName (en-US)~@~1298~@~1~@~Button Name~@~This is the default name to be displayed on this button type.~@~Please enter the default name to be displayed on this button type.~@~
-1208~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (en-US)~@~1299~@~1~@~Button ToolTip~@~This is the default tool tip to be displayed on this button type.~@~Please enter the default tool tip to be displayed on this button type.~@~
+1208~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (en-US)~@~1299~@~1~@~Button ToolTip~@~This is the default tool tip to be displayed on this button type.~@~Please enter the default tool tip to be displayed on this button type.~@~
 1209~@~AdmCtCulture [   20] Main Info: CultureTypeDesc (en-US)~@~1300~@~1~@~Culture Description~@~This is the description specifying the language and country for this culture.~@~Please enter a description specifying the language and country for this culture.~@~
 1210~@~AdmScreen [  160] Main Info: HasDeleteAll (en-US)~@~1301~@~1~@~DeleteAll Visible~@~Check this if the "Delete All" option should be visible on data grid.~@~~@~
 1213~@~AdmUsr [   50] Main Info: DefCompanyId (en-US)~@~1304~@~1~@~Default Company~@~This is the company to be selected after login.~@~~@~
@@ -623,7 +623,7 @@
 1736~@~AdmCtButtonHlp [   20] Main Info: CultureId (zh-CN)~@~1296~@~4~@~文化~@~这是本文化特征违约按钮.~@~这是本文化特征违约按钮.~@~
 1737~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (zh-CN)~@~1297~@~4~@~按钮式~@~这是这个按钮按钮式特点凌驾应适用.~@~这是这个按钮按钮式特点凌驾应适用.~@~
 1738~@~AdmCtButtonHlp [   40] Main Info: ButtonName (zh-CN)~@~1298~@~4~@~按钮名称~@~这是缺省名称为展示这一按钮式.~@~请进入缺省名字张贴在此按钮式.~@~
-1739~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (zh-CN)~@~1299~@~4~@~掣长刀~@~这是缺省工具,是展示这个按钮蝶类.~@~请进入坏帐冰山工具来展示这个按钮式.~@~
+1739~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (zh-CN)~@~1299~@~4~@~掣长刀~@~这是缺省工具,是展示这个按钮蝶类.~@~请进入坏帐冰山工具来展示这个按钮式.~@~
 1741~@~AdmScreen [  160] Main Info: HasDeleteAll (zh-CN)~@~1301~@~4~@~deleteall看得见~@~如果这一检查&"全部删除&"应该选择有形数据网.~@~~@~
 1744~@~AdmUsr [   50] Main Info: DefCompanyId (zh-CN)~@~1304~@~4~@~公司违约~@~这是该公司挑选后登录.~@~~@~
 1745~@~AdmUsrPref [   70] Main Info: ComListVisible (zh-CN)~@~1305~@~4~@~可见公司名单~@~经公司名单将登录隐性如果&"不&"选定.~@~经公司名单将登录隐性如果&"不&"选定.~@~
@@ -923,7 +923,7 @@
 2254~@~AdmCtButtonHlp [   20] Main Info: CultureId (fr-FR)~@~1296~@~2~@~Culture~@~C'est la culture pour ce défaut caractéristique de bouton.~@~C'est la culture pour ce défaut caractéristique de bouton.~@~
 2255~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (fr-FR)~@~1297~@~2~@~Type de bouton~@~C'est le type de bouton ce bouton le dépassement que caractéristique devrait appliquer.~@~C'est le type de bouton ce bouton le dépassement que caractéristique devrait appliquer.~@~
 2256~@~AdmCtButtonHlp [   40] Main Info: ButtonName (fr-FR)~@~1298~@~2~@~Nom de bouton~@~C'est le nom de défaut à montrer sur ce type de bouton.~@~Veuillez écrire le nom de défaut à montrer sur ce type de bouton.~@~
-2257~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (fr-FR)~@~1299~@~2~@~Bouton ToolTip~@~C'est la pointe de défaut à montrer sur ce type de bouton.~@~Veuillez écrire la pointe de défaut à montrer sur ce type de bouton.~@~
+2257~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (fr-FR)~@~1299~@~2~@~Bouton ToolTip~@~C'est la pointe de défaut à montrer sur ce type de bouton.~@~Veuillez écrire la pointe de défaut à montrer sur ce type de bouton.~@~
 2259~@~AdmScreen [  160] Main Info: HasDeleteAll (fr-FR)~@~1301~@~2~@~DeleteAll évident~@~Vérifier ceci si le « effacement toute la » option est évident sur la grille de données.~@~~@~
 2262~@~AdmUsr [   50] Main Info: DefCompanyId (fr-FR)~@~1304~@~2~@~Compagnie de défaut~@~C'est la compagnie à choisir après ouverture.~@~~@~
 2263~@~AdmUsrPref [   70] Main Info: ComListVisible (fr-FR)~@~1305~@~2~@~Liste de compagnie évidente~@~La liste de compagnie sera cachée sur l'ouverture si « non » n'est choisi.~@~La liste de compagnie sera cachée sur l'ouverture si « non » n'est choisi.~@~
@@ -2125,7 +2125,7 @@
 3965~@~AdmCtButtonHlp [   20] Main Info: CultureId (hi-IN)~@~1296~@~8~@~संस्कृति~@~यह इस बटन को विशिष्ट डिफ़ॉल्ट के लिए संस्कृति है.~@~कृपया इस बटन को विशिष्ट डिफ़ॉल्ट के लिए संस्कृति का चयन करें.~@~
 3966~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (hi-IN)~@~1297~@~8~@~बटन प्रकार~@~इस बटन के प्रकार इस बटन को ओवरराइड विशेषता लागू करना चाहिए.~@~कृपया बटन प्रकार इस बटन को चुनें विशेषता ओवरराइड चाहिए लागू होते हैं.~@~
 3967~@~AdmCtButtonHlp [   40] Main Info: ButtonName (hi-IN)~@~1298~@~8~@~बटन का नाम~@~यह डिफ़ॉल्ट नाम को इस प्रकार के बटन पर प्रदर्शित किया जाता है.~@~कृपया डिफ़ॉल्ट नाम दर्ज इस बटन को टाइप पर प्रदर्शित होगा.~@~
-3968~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (hi-IN)~@~1299~@~8~@~बटन ToolTip~@~यह डिफ़ॉल्ट उपकरण टिप इस प्रकार बटन पर प्रदर्शित किया जाता है.~@~कृपया डिफ़ॉल्ट उपकरण टिप दर्ज इस बटन को टाइप पर प्रदर्शित होगा.~@~
+3968~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (hi-IN)~@~1299~@~8~@~बटन ToolTip~@~यह डिफ़ॉल्ट उपकरण टिप इस प्रकार बटन पर प्रदर्शित किया जाता है.~@~कृपया डिफ़ॉल्ट उपकरण टिप दर्ज इस बटन को टाइप पर प्रदर्शित होगा.~@~
 3970~@~AdmScreen [  160] Main Info: HasDeleteAll (hi-IN)~@~1301~@~8~@~DeleteAll दर्शनीय~@~यह जाँच करें कि &"सभी को नष्ट करें&" विकल्प डेटा ग्रिड पर दिखाई जानी चाहिए.~@~~@~
 3972~@~AdmUsr [   50] Main Info: DefCompanyId (hi-IN)~@~1304~@~8~@~डिफ़ॉल्ट कंपनी~@~इस कंपनी में प्रवेश के बाद चयनित किया जाता है.~@~~@~
 3973~@~AdmUsrPref [   70] Main Info: ComListVisible (hi-IN)~@~1305~@~8~@~कंपनी सूची दर्शनीय~@~कंपनी सूची में प्रवेश पर छिपा हुआ होगा तो &"नहीं&" चुना है.~@~कंपनी सूची में प्रवेश पर छिपा हुआ होगा तो &"नहीं&" चुना है.~@~
@@ -2674,7 +2674,7 @@
 4711~@~AdmCtButtonHlp [   20] Main Info: CultureId (pt-BR)~@~1296~@~9~@~Cultura~@~Esta é a cultura padrão para esta característica botão.~@~Por favor seleccione a cultura para esse padrão característico botão.~@~
 4712~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (pt-BR)~@~1297~@~9~@~Tipo de botão~@~Este é o tipo de botão essa substituição característica botão deve aplicar.~@~Por favor, selecione o tipo de botão essa substituição característica botão deve aplicar.~@~
 4713~@~AdmCtButtonHlp [   40] Main Info: ButtonName (pt-BR)~@~1298~@~9~@~Nome do Botão~@~Este é o nome padrão a ser exibido neste tipo de botão.~@~Por favor, digite o nome do padrão a ser exibido neste tipo de botão.~@~
-4714~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (pt-BR)~@~1299~@~9~@~Botão ToolTip~@~Esta é a dica de ferramenta padrão a ser exibido neste tipo de botão.~@~Por favor introduza a ponta da ferramenta padrão a ser exibido neste tipo de botão.~@~
+4714~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (pt-BR)~@~1299~@~9~@~Botão ToolTip~@~Esta é a dica de ferramenta padrão a ser exibido neste tipo de botão.~@~Por favor introduza a ponta da ferramenta padrão a ser exibido neste tipo de botão.~@~
 4716~@~AdmScreen [  160] Main Info: HasDeleteAll (pt-BR)~@~1301~@~9~@~DeleteAll Visible~@~Marque esta opção se o "Delete All" opção deve ser visível em grade de dados.~@~~@~
 4718~@~AdmUsr [   50] Main Info: DefCompanyId (pt-BR)~@~1304~@~9~@~Empresa padrão~@~Esta é a empresa a ser selecionada após o login.~@~~@~
 4719~@~AdmUsrPref [   70] Main Info: ComListVisible (pt-BR)~@~1305~@~9~@~Lista empresa Visible~@~Lista de empresa será escondido após o login, se "Não" está selecionada.~@~Lista de empresa será escondido após o login, se "Não" está selecionada.~@~
@@ -3429,7 +3429,7 @@
 5742~@~AdmCtButtonHlp [   20] Main Info: CultureId (tr-TR)~@~1296~@~11~@~Kültür~@~Bu kültür bu düğmeye özelliği varsayılan.~@~Lütfen bu düğmeye özelliği varsayılan kültür seçin.~@~
 5743~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (tr-TR)~@~1297~@~11~@~Düğme Tipi~@~Bu düğme tipi bu düğmeye karakteristik geçersiz kılma başvurmalıdır.~@~Lütfen düğme türünü bu düğmeye karakteristik geçersiz kılma başvurmalıdır seçin.~@~
 5744~@~AdmCtButtonHlp [   40] Main Info: ButtonName (tr-TR)~@~1298~@~11~@~Düğme Adı~@~Bu, bu düğme tipi görüntülenecek varsayılan adıdır.~@~Bu düğme tipi görüntülenecek varsayılan adını giriniz.~@~
-5745~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (tr-TR)~@~1299~@~11~@~Düğme ToolTip~@~Bu düğme tipi görüntülenecek varsayılan araç ipucu.~@~Bu düğme tipi görüntülenecek varsayılan araç ipucu giriniz.~@~
+5745~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (tr-TR)~@~1299~@~11~@~Düğme ToolTip~@~Bu düğme tipi görüntülenecek varsayılan araç ipucu.~@~Bu düğme tipi görüntülenecek varsayılan araç ipucu giriniz.~@~
 5747~@~AdmScreen [  160] Main Info: HasDeleteAll (tr-TR)~@~1301~@~11~@~DeleteAll Görünür~@~Bu onay seçeneği veri ızgara üzerinde görünür olmalı "Tümünü Sil".~@~~@~
 5749~@~AdmUsr [   50] Main Info: DefCompanyId (tr-TR)~@~1304~@~11~@~Standart Şirketi~@~Bu giriş yaptıktan sonra seçilecek olan şirkettir.~@~~@~
 5750~@~AdmUsrPref [   70] Main Info: ComListVisible (tr-TR)~@~1305~@~11~@~Görünür Firma Listesi~@~Şirket listesi giriş üzerine ise "Hayır" seçili gizli olacak.~@~Şirket listesi giriş üzerine ise "Hayır" seçili gizli olacak.~@~
@@ -4046,7 +4046,7 @@
 6568~@~AdmCtButtonHlp [   20] Main Info: CultureId (ja-JP)~@~1296~@~14~@~文化~@~これは、このボタンの特性のデフォルトのための文化です。~@~このボタンの特性のデフォルトのカルチャを選択してください。~@~
 6569~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (ja-JP)~@~1297~@~14~@~ボタンの種類~@~これは、このボタンの特性のオーバーライドを適用するボタンの種類です。~@~このボタンの特性のオーバーライドを適用するボタンの種類を選択してください。~@~
 6570~@~AdmCtButtonHlp [   40] Main Info: ButtonName (ja-JP)~@~1298~@~14~@~ボタン名~@~これは、このボタンタイプに表示されるデフォルトの名前です。~@~このボタンタイプに表示されるデフォルトの名前を入力してください。~@~
-6571~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (ja-JP)~@~1299~@~14~@~ボタンのツールチップ~@~これは、このボタンタイプに表示されるデフォルトのツールチップです。~@~このボタンタイプに表示されるデフォルトのツールチップを入力してください。~@~
+6571~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (ja-JP)~@~1299~@~14~@~ボタンのツールチップ~@~これは、このボタンタイプに表示されるデフォルトのツールチップです。~@~このボタンタイプに表示されるデフォルトのツールチップを入力してください。~@~
 6573~@~AdmScreen [  160] Main Info: HasDeleteAll (ja-JP)~@~1301~@~14~@~可視DeleteAll~@~オプションデータグリッド上に表示するか"すべて削除"場合は、これを確認してください。~@~~@~
 6575~@~AdmUsr [   50] Main Info: DefCompanyId (ja-JP)~@~1304~@~14~@~デフォルトの企業~@~これにより、ログイン後に選択する会社です。~@~~@~
 6576~@~AdmUsrPref [   70] Main Info: ComListVisible (ja-JP)~@~1305~@~14~@~可視企業リスト~@~"いいえ"を選択した場合、会社のリストは、ログイン時に非表示になります。~@~"いいえ"を選択した場合、会社のリストは、ログイン時に非表示になります。~@~
@@ -4663,7 +4663,7 @@
 7394~@~AdmCtButtonHlp [   20] Main Info: CultureId (ru-RU)~@~1296~@~12~@~Культура~@~Это культура для этого по умолчанию характерные кнопки.~@~Пожалуйста, выберите для этой культуры характерно умолчанию кнопки.~@~
 7395~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (ru-RU)~@~1297~@~12~@~Кнопка типа~@~Это кнопка типа этого переопределить кнопки характеристика должна применяться.~@~Пожалуйста, выберите тип кнопки этой переопределить кнопки характеристика должна применяться.~@~
 7396~@~AdmCtButtonHlp [   40] Main Info: ButtonName (ru-RU)~@~1298~@~12~@~Название кнопки~@~Это имя по умолчанию, которое будет отображаться на этой кнопке типа.~@~Пожалуйста, введите имя по умолчанию, которое будет отображаться на этой кнопке типа.~@~
-7397~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (ru-RU)~@~1299~@~12~@~Кнопка подсказки~@~Это кончик инструмента по умолчанию, которое будет отображаться на этой кнопке типа.~@~Пожалуйста, введите кончик инструмента по умолчанию, которое будет отображаться на этой кнопке типа.~@~
+7397~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (ru-RU)~@~1299~@~12~@~Кнопка подсказки~@~Это кончик инструмента по умолчанию, которое будет отображаться на этой кнопке типа.~@~Пожалуйста, введите кончик инструмента по умолчанию, которое будет отображаться на этой кнопке типа.~@~
 7399~@~AdmScreen [  160] Main Info: HasDeleteAll (ru-RU)~@~1301~@~12~@~DeleteAll Видимый~@~Проверьте это, если "Удалить все" опция должна быть видна на сетке данных.~@~~@~
 7401~@~AdmUsr [   50] Main Info: DefCompanyId (ru-RU)~@~1304~@~12~@~По умолчанию компания~@~Это компании, которые будут отобраны после Войти.~@~~@~
 7402~@~AdmUsrPref [   70] Main Info: ComListVisible (ru-RU)~@~1305~@~12~@~Каталог фирм Видимый~@~Список компании будут скрыты от Войти, если «Нет» выбран.~@~Список компании будут скрыты от Войти, если «Нет» выбран.~@~
@@ -5280,7 +5280,7 @@
 8220~@~AdmCtButtonHlp [   20] Main Info: CultureId (es-ES)~@~1296~@~13~@~Cultura~@~Esta es la cultura de este defecto característico botón.~@~Por favor, seleccione la cultura de este defecto característico botón.~@~
 8221~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (es-ES)~@~1297~@~13~@~Botón Tipo de~@~Este es el tipo de botón anular esta característica botón debe aplicarse.~@~Por favor, seleccione el tipo de botón anular esta característica botón debe aplicarse.~@~
 8222~@~AdmCtButtonHlp [   40] Main Info: ButtonName (es-ES)~@~1298~@~13~@~Nombre del botón~@~Este es el nombre predeterminado que se muestra en este tipo de botón.~@~Por favor, introduzca el nombre predeterminado que se muestra en este tipo de botón.~@~
-8223~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (es-ES)~@~1299~@~13~@~Botón de información sobre herramientas~@~Esta es la punta de la herramienta por defecto para que aparezca en este tipo de botón.~@~Por favor, introduzca la punta de la herramienta por defecto para que aparezca en este tipo de botón.~@~
+8223~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (es-ES)~@~1299~@~13~@~Botón de información sobre herramientas~@~Esta es la punta de la herramienta por defecto para que aparezca en este tipo de botón.~@~Por favor, introduzca la punta de la herramienta por defecto para que aparezca en este tipo de botón.~@~
 8225~@~AdmScreen [  160] Main Info: HasDeleteAll (es-ES)~@~1301~@~13~@~DeleteAll Visible~@~Seleccione esta opción si la opción "Eliminar todo" opción debe ser visible en la red de datos.~@~~@~
 8227~@~AdmUsr [   50] Main Info: DefCompanyId (es-ES)~@~1304~@~13~@~Predeterminada de la empresa~@~Esta es la empresa para ser seleccionados después de inicio de sesión.~@~~@~
 8228~@~AdmUsrPref [   70] Main Info: ComListVisible (es-ES)~@~1305~@~13~@~Lista compañía Visible~@~La lista de empresas se oculta al iniciar la sesión si el "No" está seleccionada.~@~La lista de empresas se oculta al iniciar la sesión si el "No" está seleccionada.~@~
@@ -6262,7 +6262,7 @@
 10545~@~AdmCtButtonHlp [   20] Main Info: CultureId (de-DE)~@~1296~@~68~@~Kultur~@~Das ist die Kultur für diese Taste charakteristischen Standard.~@~Bitte wählen Sie die Kultur für diese Taste charakteristischen Standard.~@~
 10546~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (de-DE)~@~1297~@~68~@~Button Type~@~Dies ist der Button-Typ dieser Taste charakteristischen override gelten soll.~@~Bitte wählen Sie den Button-Typ dieser Taste charakteristischen override gelten soll.~@~
 10547~@~AdmCtButtonHlp [   40] Main Info: ButtonName (de-DE)~@~1298~@~68~@~Button Name~@~Dies ist die Standardeinstellung Namen auf diese Schaltfläche Typs angezeigt werden.~@~Bitte geben Sie den voreingestellten Namen auf diese Schaltfläche Typs angezeigt werden.~@~
-10548~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (de-DE)~@~1299~@~68~@~Button ToolTip~@~Dies ist die Standardeinstellung Werkzeugspitze auf diese Schaltfläche Typs angezeigt werden.~@~Bitte geben Sie die Standard-Werkzeug-Spitze auf diese Schaltfläche Typs angezeigt werden.~@~
+10548~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (de-DE)~@~1299~@~68~@~Button ToolTip~@~Dies ist die Standardeinstellung Werkzeugspitze auf diese Schaltfläche Typs angezeigt werden.~@~Bitte geben Sie die Standard-Werkzeug-Spitze auf diese Schaltfläche Typs angezeigt werden.~@~
 10549~@~AdmCtCulture [   20] Main Info: CultureTypeDesc (de-DE)~@~1300~@~68~@~Kultur Beschreibung~@~Dies ist die Beschreibung, die die Sprache und das Land für diese Kultur.~@~Bitte geben Sie eine Beschreibung Angabe der Sprache und das Land für diese Kultur.~@~
 10550~@~AdmScreen [  160] Main Info: HasDeleteAll (de-DE)~@~1301~@~68~@~DeleteAll Visible~@~Aktivieren Sie diese Option, wenn die "Delete All" Option sollte sichtbar sein Datenraster.~@~~@~
 10552~@~AdmUsr [   50] Main Info: DefCompanyId (de-DE)~@~1304~@~68~@~Standard Unternehmen~@~Dies ist die Firma nach dem Login ausgewählt werden.~@~~@~
@@ -7181,7 +7181,7 @@
 11672~@~AdmCtButtonHlp [   20] Main Info: CultureId (ko-KR)~@~1296~@~28~@~문화~@~이 버튼 특성 기본의 문화입니다.~@~이 버튼 특성 기본의 문화를 선택하십시오.~@~
 11673~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (ko-KR)~@~1297~@~28~@~버튼 종류~@~이 버튼의 특성을 재정의를 적용 할 버튼 타입이다.~@~이 버튼 특성을 재정의를 적용 할 버튼 유형을 선택하십시오.~@~
 11674~@~AdmCtButtonHlp [   40] Main Info: ButtonName (ko-KR)~@~1298~@~28~@~버튼 이름~@~이 버튼 유형에 표시 할 기본 이름입니다.~@~이 버튼 유형에 표시 할 기본 이름을 입력하십시오.~@~
-11675~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (ko-KR)~@~1299~@~28~@~버튼 툴팁~@~이 버튼 유형에 표시 할 기본 도구 팁입니다.~@~이 버튼 유형에 표시 할 기본 도구 팁을 입력하십시오.~@~
+11675~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (ko-KR)~@~1299~@~28~@~버튼 툴팁~@~이 버튼 유형에 표시 할 기본 도구 팁입니다.~@~이 버튼 유형에 표시 할 기본 도구 팁을 입력하십시오.~@~
 11676~@~AdmCtCulture [   20] Main Info: CultureTypeDesc (ko-KR)~@~1300~@~28~@~문화 설명~@~이이 문화에 대한 언어 및 국가를 지정 설명입니다.~@~이 문화에 대한 언어 및 국가를 지정에 대한 설명을 입력하십시오.~@~
 11677~@~AdmScreen [  160] Main Info: HasDeleteAll (ko-KR)~@~1301~@~28~@~DeleteAll 공개~@~"모두 삭제"옵션은 데이터 그리드에 표시해야하는 경우이 항목을 선택합니다.~@~~@~
 11679~@~AdmUsr [   50] Main Info: DefCompanyId (ko-KR)~@~1304~@~28~@~기본 회사~@~이 로그인 한 후 선택되는 회사입니다.~@~~@~
@@ -8672,10 +8672,10 @@
 16671~@~AdmClientRule [   60] Main Info: RuleTypeId (en-US)~@~1293~@~114~@~Type de règle~@~Il s'agit du type de règle (contrainte, calcul, inférence ou action enabler) pour cette règle client.~@~Veuillez sélectionner le type de règle (contrainte, calcul, inférence ou action enabler) pour cette règle client.~@~
 16672~@~AdmClientRule [   40] Main Info: RuleName (en-US)~@~1294~@~114~@~Nom de la règle~@~Il s'agit du nom unique de cette règle client de 100 caractères ou moins.~@~Veuillez saisir une brève description comme nom pour cette règle client.~@~
 16673~@~AdmCtButtonHlp [   10] Main Info: ButtonHlpId (en-US)~@~1295~@~114~@~ID Hlp~@~Il s'agit de l'ID interne qui représente uniquement cette caractéristique de bouton par défaut.~@~~@~
-16674~@~AdmCtButtonHlp [   20] Main Info: CultureId (en-US)~@~1296~@~114~@~Culture~@~Il s'agit de la culture par défaut de cette caractéristique de bouton.~@~Veuillez sélectionner la culture pour cette caractéristique de bouton par défaut.~@~
-16675~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (en-US)~@~1297~@~114~@~Type de bouton~@~Il s'agit du type de bouton auquel cette substitution de caractéristique de bouton doit s'appliquer.~@~Veuillez sélectionner le type de bouton auquel cette substitution de caractéristique de bouton doit s'appliquer.~@~
-16676~@~AdmCtButtonHlp [   40] Main Info: ButtonName (en-US)~@~1298~@~114~@~Nom du bouton~@~Il s'agit du nom par défaut à afficher sur ce type de bouton.~@~Veuillez saisir le nom par défaut à afficher sur ce type de bouton.~@~
-16677~@~AdmCtButtonHlp [   50] Main Info: ButtonToolTip (en-US)~@~1299~@~114~@~Info-bulle du bouton~@~Il s'agit de l'info-bulle par défaut à afficher sur ce type de bouton.~@~Veuillez saisir l'info-bulle par défaut à afficher sur ce type de bouton.~@~
+16674~@~AdmCtButtonHlp [   20] Main Info: CultureId (fr-CA)~@~1296~@~114~@~Culture~@~Il s'agit de la culture par défaut de cette caractéristique de bouton.~@~Veuillez sélectionner la culture pour cette caractéristique de bouton par défaut.~@~
+16675~@~AdmCtButtonHlp [   30] Main Info: ButtonTypeId (fr-CA)~@~1297~@~114~@~Type de bouton~@~Il s'agit du type de bouton auquel cette substitution de caractéristique de bouton doit s'appliquer.~@~Veuillez sélectionner le type de bouton auquel cette substitution de caractéristique de bouton doit s'appliquer.~@~
+16676~@~AdmCtButtonHlp [   40] Main Info: ButtonName (fr-CA)~@~1298~@~114~@~Nom du bouton~@~Il s'agit du nom par défaut à afficher sur ce type de bouton.~@~Veuillez saisir le nom par défaut à afficher sur ce type de bouton.~@~
+16677~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (fr-CA)~@~1299~@~114~@~Info-bulle du bouton~@~Il s'agit de l'info-bulle par défaut à afficher sur ce type de bouton.~@~Veuillez saisir l'info-bulle par défaut à afficher sur ce type de bouton.~@~
 16678~@~AdmCtCulture [   20] Main Info: CultureTypeDesc (en-US)~@~1300~@~114~@~Description de la culture~@~Il s'agit de la description précisant la langue et le pays de cette culture.~@~Veuillez saisir une description précisant la langue et le pays de cette culture.~@~
 16679~@~AdmScreen [  160] Main Info: HasDeleteAll (en-US)~@~1301~@~114~@~Supprimer tout visible~@~Cochez cette case si l'option "Supprimer tout" doit être visible sur la grille de données.~@~~@~
 16680~@~AdmUsr [   50] Main Info: DefCompanyId (en-US)~@~1304~@~114~@~Société par défaut~@~Il s'agit de l'entreprise à sélectionner après la connexion.~@~~@~

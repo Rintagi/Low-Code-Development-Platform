@@ -24,6 +24,7 @@ namespace RO.Web
     {
         public AdmSystems87()
         {
+
             this.Tables.Add(MakeColumns(new DataTable("AdmSystems")));
             this.Tables.Add(MakeDtlColumns(new DataTable("AdmSystemsDef")));
             this.Tables.Add(MakeDtlColumns(new DataTable("AdmSystemsAdd")));
@@ -116,6 +117,7 @@ namespace RO.Web
         private DataRow MakeColRow(DataRow dr, SerializableDictionary<string, string> drv, string keyId, bool bAdd)
         {
             dr["SystemId45"] = keyId;
+
             DataTable dtAuth = _GetAuthCol(screenId);
             if (dtAuth != null)
             {
@@ -218,6 +220,7 @@ namespace RO.Web
                 }
             }
             ds.Tables["AdmSystems"].Rows.Add(dr); ds.Tables["AdmSystems"].Rows.Add(drType); ds.Tables["AdmSystems"].Rows.Add(drDisp);
+
             return ds;
         }
 
@@ -335,7 +338,7 @@ namespace RO.Web
                 var mstBlob = GetBlobOption(mstBlobIconOption);
                 var dtlBlob = GetBlobOption(dtlBlobIconOption);
                 string jsonCri = options.ContainsKey("CurrentScreenCriteria") ? options["CurrentScreenCriteria"] : null;
-                bool includeDtl = (!options.ContainsKey("IncludeDtl") || options["IncludeDtl"] == "Y") && !String.IsNullOrEmpty(GetDtlTableName());
+                bool includeDtl = !IsGridOnlyScreen() && (!options.ContainsKey("IncludeDtl") || options["IncludeDtl"] == "Y") && !String.IsNullOrEmpty(GetDtlTableName());
                 ValidatedMstId("GetLisAdmSystems87", systemId, screenId, "**" + keyId, MatchScreenCriteria(_GetScrCriteria(screenId).DefaultView, jsonCri));
                 DataTable dt = _GetMstById(keyId);
                 DataTable dtColAuth = _GetAuthCol(GetScreenId());
@@ -420,12 +423,11 @@ namespace RO.Web
         protected override DataTable _GetMstById(string mstId)
         {
             return (new RO.Facade3.AdminSystem()).GetMstById("GetAdmSystems87ById", string.IsNullOrEmpty(mstId) ? "-1" : mstId, LcAppConnString, LcAppPw);
-
         }
+
         protected override DataTable _GetDtlById(string mstId, int screenFilterId)
         {
             return (new RO.Facade3.AdminSystem()).GetDtlById(screenId, "GetAdmSystems87DtlById", string.IsNullOrEmpty(mstId) ? "-1" : mstId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(screenFilterId.ToString(), false), LImpr, LCurr);
-
         }
         protected override Dictionary<string, SerializableDictionary<string, string>> GetDdlContext()
         {
@@ -443,8 +445,18 @@ namespace RO.Web
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
                 var pid = mst["SystemId45"];
-                var ds = PrepAdmSystemsData(mst, new List<SerializableDictionary<string, string>>(), string.IsNullOrEmpty(mst["SystemId45"]));
-                (new RO.Facade3.AdminSystem()).DelData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);
+                var dtl = new List<SerializableDictionary<string, string>>();
+                if (IsGridOnlyScreen())
+                {
+                    mst["_mode"] = "delete";
+                    dtl.Add(mst.Clone());                    
+                }
+                var ds = PrepAdmSystemsData(mst, dtl, IsGridOnlyScreen() ? false : string.IsNullOrEmpty(mst["SystemId45"]));
+
+                if (IsGridOnlyScreen())
+                    (new RO.Facade3.AdminSystem()).UpdData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);                    
+                else    
+                    (new RO.Facade3.AdminSystem()).DelData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);
 
                 ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
                 SaveDataResponse result = new SaveDataResponse();
@@ -473,6 +485,10 @@ namespace RO.Web
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId, true, true, refreshUsrImpr);
                 System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
                 SerializableDictionary<string, string> skipValidation = new SerializableDictionary<string, string>() { { "SkipAllMst", "SilentColReadOnly" }, { "SkipAllDtl", "SilentColReadOnly" } };
+                if (IsGridOnlyScreen() && dtl.Count == 0)
+                {
+                    dtl.Add(mst.Clone());
+                }
                 /* AsmxRule: Save Data Before */
 
 
@@ -507,7 +523,7 @@ namespace RO.Web
                 var ds = PrepAdmSystemsData(mst, dtl, string.IsNullOrEmpty(mst["SystemId45"]));
                 string msg = string.Empty;
 
-                if (isAdd)
+                if (isAdd && !IsGridOnlyScreen())
                 {
                     pid = (new RO.Facade3.AdminSystem()).AddData(screenId, false, base.LUser, base.LImpr, base.LCurr, ds, LcAppConnString, LcAppPw, base.CPrj, base.CSrc, noTrans, commandTimeOut);
 

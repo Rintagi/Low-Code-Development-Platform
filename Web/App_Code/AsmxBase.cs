@@ -285,7 +285,7 @@ namespace RO.Web
             public string status;
             public string errorMsg;
         }
-        #region Subclass overide
+        #region Subclass override
         protected virtual bool PreSaveMultiDoc(string mstId, string dtlId, bool isMaster, string docId, bool overwrite, string screenColumnName, string tableName, string docJson, SerializableDictionary<string, string> options)
         {
             return true;
@@ -1963,7 +1963,10 @@ namespace RO.Web
             }
             else return val;
         }
-
+        protected bool IsGridOnlyScreen()
+        {
+            return GetMstTableName() == GetDtlTableName();
+        }
         protected DataSet MakeScrCriteria(int screenId, DataView dvCri, List<string> lastScrCri, bool refresh, bool isSave)
         {
             DataSet ds = new DataSet();
@@ -2784,10 +2787,11 @@ namespace RO.Web
                 try
                 {
                     System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-                    Dictionary<string, string> cri = jss.Deserialize<Dictionary<string, string>>(jsonCri);
+                    Dictionary<string, string> cri = jss.Deserialize<Dictionary<string, string>>(jsonCri ?? "{}");
                     foreach (DataRowView drv in dvCri)
                     {
-                        scrCri.Add(cri[drv["ColumnName"].ToString()]);
+                        string columnName = drv["ColumnName"].ToString();
+                        scrCri.Add(cri.ContainsKey(columnName) ? cri[columnName] : null);
                     }
                 }
                 catch { }
@@ -3640,6 +3644,131 @@ namespace RO.Web
             return ret;
         }
 
+        protected string GetDVFilterExpression(string sFind, DataTable dtAuth, string filteredColName, bool isMaster)
+        {
+            List<string> filterExpression = new List<string>();
+            if (dtAuth != null)
+            {
+                foreach (DataRow dr in dtAuth.Rows)
+                {
+                    string sExpression = string.Empty;
+                    if (
+                        (isMaster && dr["MasterTable"].ToString().ToUpper() != "Y")
+                        ||
+                        (!isMaster && dr["MasterTable"].ToString().ToUpper() != "N")
+                        ||
+                        dr["ColVisible"].ToString().ToUpper() != "Y"
+                        ||
+                        (!string.IsNullOrEmpty(filteredColName) && filteredColName != dr["ColName"].ToString())
+                        ) 
+                        continue;
+
+                    if (dr["DisplayMode"].ToString().Contains("Date"))
+                    {
+                        DateTime searchDate;
+                        bool isDate = DateTime.TryParse(sFind, out searchDate);
+
+                        if (isDate)
+                        {
+                            sExpression = string.Format(System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat, "{0} = #{1}#", dr["ColName"].ToString(), searchDate);
+                        }
+                        else
+                        {
+                            sExpression = string.Format("convert({0},'System.String') like '*{1}*'", dr["ColName"].ToString(), sFind.Replace("*", string.Empty).Replace("%", string.Empty).Replace("'", "''"));
+                        }
+                    }
+                    else
+                    {
+                        sExpression = "convert(" + dr["ColName"].ToString() + ",'System.String') like '*" + sFind.Replace("*", string.Empty).Replace("%", string.Empty).Replace("'", "''") + "*'";
+                    }
+                    filterExpression.Add(sExpression);
+                    if (filteredColName == dr["ColName"].ToString()) break;
+                }
+            }
+            return string.Join(" OR ", filterExpression.ToArray());
+        }
+
+        protected virtual AutoCompleteResponse GridLisSuggests(DataTable dtSuggest, int topN, Dictionary<string,string> options, bool isMaster)
+        {
+            AutoCompleteResponse r = new AutoCompleteResponse();
+            DataTable dtColAuth = _GetAuthCol(GetScreenId());
+            DataTable dtColLabel = _GetScreenLabel(GetScreenId());
+            Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr["ColName"].ToString());
+            var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr["DisplayMode"].ToString().Contains("UTC")).Select(dr => dr["ColumnName"].ToString() + dr["TableId"].ToString()).ToArray();
+            HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
+            Dictionary<string, string> listPosMap = new Dictionary<string, string>();
+            var ddlContext = GetDdlContext();
+            string mstKeyColumnName = GetMstKeyColumnName();
+            string sortColumn = options != null && options.ContainsKey("_SortColumn") ? options["_SortColumn"] : "";
+            string filterColumn = options != null && options.ContainsKey("_FilterColumn") ? options["_FilterColumn"] : "";
+            string filterValue = options != null && options.ContainsKey("_FilterValue") ? options["_FilterValue"] : "";
+            string filterExpression = string.IsNullOrEmpty(filterValue) ? "" : GetDVFilterExpression(filterValue, dtColAuth, filterColumn, isMaster);
+            List<string> listColumns = dtColLabel.AsEnumerable()
+                .Select(dr =>
+                {
+                    var pos = dr["DtlLstPosId"].ToString();
+                    var columnName = dr["ColumnName"].ToString() + dr["TableId"].ToString();
+
+                    if (
+                        !string.IsNullOrEmpty(pos)
+                        ||
+                        columnName == GetMstKeyColumnName()
+                        )
+                    {
+                        columnName = columnName + (ddlContext.ContainsKey(columnName) && columnName != mstKeyColumnName ? "Text" : "");
+                        if (!string.IsNullOrEmpty(pos)) listPosMap[columnName] = pos;
+                        return columnName;
+                    }
+                    else return null;
+                })
+                .Where(s => !string.IsNullOrEmpty(s)).ToList();
+            DataTable dt = dtSuggest.Clone();
+            DataView dv = new DataView(dtSuggest);
+            dv.Sort = sortColumn;
+            dv.RowFilter = filterExpression;
+
+            int ii = 0;
+            foreach (DataRowView drv in dv)
+            {
+                dt.ImportRow(drv.Row);
+                ii = ii + 1;
+                if (ii >= topN && topN != 0) break;
+            }
+            r.data = DataTableToListOfObject(dt, IncludeBLOB.Icon, colAuth, utcColumns, listColumns)
+                        .Select(d =>
+                        {
+                            SerializableDictionary<string, string> x = new SerializableDictionary<string, string>();
+                            foreach (var y in d.Keys)
+                            {
+                                if (!listPosMap.ContainsKey(y))
+                                {
+                                    if (y == mstKeyColumnName)
+                                    {
+                                        x["key"] = d[y];
+                                        x["value"] = d[y];
+                                    }
+                                    else
+                                        x[y] = d[y];
+                                }
+                                else
+                                {
+                                    var pos = listPosMap[y];
+                                    if (pos == "1") x["label"] = d[y];
+                                    else if (pos == "2") x["detail"] = d[y];
+                                    else if (pos == "3") x["labelR"] = d[y];
+                                    else if (pos == "4") x["detailR"] = d[y];
+                                    else x[y] = d[y];
+                                }
+                            }
+                            return x;
+                        })
+                        .ToList();
+            r.query = "";
+            r.topN = topN;
+            r.total = dv.Count;
+            r.matchCount = dv.Count;
+            return r;
+        }
         private string GetKeyValue(DataRow dr, List<string> keyColumns)
         {
             string key = string.Empty;
@@ -4243,7 +4372,7 @@ namespace RO.Web
             else if (isDdlType.Contains(displayName))
             {
                 // this would empty out invalidate field selection
-                val = ValidatedDdlValue(colName, refRecord, revisedRecord, drAuth["MasterTable"].ToString() == "Y" ? revisedRecord : refMaster, isMultiValueType.Contains(displayName));
+                val = ValidatedDdlValue(colName, refRecord, revisedRecord, drAuth["MasterTable"].ToString() == "Y" || IsGridOnlyScreen() ? revisedRecord : refMaster, isMultiValueType.Contains(displayName));
             }
             else if (isSimpleTextType.Contains(displayMode) && isStringDataType.Contains(dataType))
             {
@@ -4346,10 +4475,52 @@ namespace RO.Web
             var screenId = GetScreenId();
             DataTable dtAut = _GetAuthCol(screenId);
             DataTable dtLabel = _GetScreenLabel(screenId);
+            bool isGridOnlyScreen = IsGridOnlyScreen();
+            List<string> accessViolation = new List<string>();
             for (int ii = 0; ii < dtlList.Count; ii++)
             {
-                var newDtl = InitDtl();
+                var newDtl = isGridOnlyScreen ? InitMaster() : InitDtl();
                 var dtl = dtlList[ii];
+                var keyId = dtl[dtlKeyIdName];
+                var isDelete = dtl["_mode"] == "delete";
+                var isAdd = string.IsNullOrEmpty(keyId);
+                if (isGridOnlyScreen)
+                {
+                    HashSet<string> keys = null;
+                    if (dtlList.Count > 20)
+                    {
+                        DataTable dtSuggest = GetLis(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "", new List<string>(), "0", "", "N", 0, false);
+                        keys = new HashSet<string>();
+                        foreach (DataRow dr in dtSuggest.Rows)
+                        {
+                            var k = dr[dtlKeyIdName].ToString();
+                            if (!string.IsNullOrEmpty(k)) keys.Add(k);
+                        }
+                    }
+                    try
+                    {
+                        if (isAdd || isDelete)
+                        {
+                            ValidateAction(GetScreenId(), isDelete ? "D" : "A");
+                        }
+                        if (!string.IsNullOrEmpty(keyId)) 
+                        {
+                            if (keys != null) 
+                            {
+                                if (!keys.Contains(keyId)) throw new Exception(string.Format("access denied **", keyId));
+                            }
+                            else
+                            {
+                                ValidatedMstId(GetValidateMstIdSPName(), GetSystemId(), GetScreenId(), "**" + keyId, new List<string>(), false);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        accessViolation.Add(string.Format("{0} KeyId: {1} - {2} ", isDelete ? "delete" : isAdd ? "add" : "update",  keyId, ex.Message));
+                        continue;
+                    }
+                }
                 if (dtl["_mode"] == "delete" && !string.IsNullOrEmpty(dtl[dtlKeyIdName]))
                 {
                     var revisedDtl = newDtl;
@@ -4368,7 +4539,7 @@ namespace RO.Web
                     foreach (DataRow drLabel in dtLabel.Rows)
                     {
                         DataRow drAuth = dtAut.Rows[jj];
-                        if (!string.IsNullOrEmpty(drLabel["TableId"].ToString()) && drAuth["MasterTable"].ToString() == "N")
+                        if (!string.IsNullOrEmpty(drLabel["TableId"].ToString()) && (drAuth["MasterTable"].ToString() == "N" || IsGridOnlyScreen()))
                         {
                             string colName = drAuth["ColName"].ToString();
                             ValidateField(drAuth, drLabel, currentDtl,InitDtl(), ref revisedDtl, mst, ref dtlErrors, skipValidation);

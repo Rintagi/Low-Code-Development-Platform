@@ -6691,8 +6691,8 @@ BEGIN
 	SELECT @u2Clause = @u2Clause + ' AND c.ButtonTypeId=b.ButtonTypeId AND c.CultureId=' + convert(varchar,@CultureId) + ')'
 END
 EXEC (@i1Clause + @i2Clause + @u0Clause + @u1Clause + @u2Clause)
-/* Assuming ViewItem button is visible to all screens, hide it when screen type is TabFolder Only */
-UPDATE bh SET bh.ButtonVisible = CASE WHEN s.ScreenTypeId = 5 THEN 'N' ELSE ButtonVisible END
+/* Assuming ViewItem button is visible to all screens, hide it when screen type is TabFolder or Grid Only(both have no detail) */
+UPDATE bh SET bh.ButtonVisible = CASE WHEN s.ScreenTypeId IN (5,7) THEN 'N' ELSE ButtonVisible END
 	FROM #bh bh
 	INNER JOIN Screen s ON s.ScreenId = @ScreenId
 	WHERE bh.ButtonTypeName = 'DrillDown'
@@ -41356,7 +41356,7 @@ SELECT @sClause = 'SELECT a.ScreenId, ScreenType = c.ScreenTypeName, b.GenerateS
 + ' WHEN b.GenerateSc = ''N'' AND b.GenerateSr = ''N'' THEN '' (no gen)'''
 + ' WHEN b.GenerateSc = ''Y'' AND b.GenerateSr = ''N'' THEN '' (cln gen)'''
 + ' WHEN b.GenerateSc = ''N'' AND b.GenerateSr = ''Y'' THEN '' (srv gen)'''
-+ ' WHEN c.ScreenTypeName = ''I3'' THEN '' ( -- no react gen -- )'''
+--+ ' WHEN c.ScreenTypeName = ''I3'' THEN '' ( -- no react gen -- )'''
 + ' ELSE space(0) END'
 SELECT @fClause = 'FROM dbo.ScreenHlp a'
 + ' INNER JOIN dbo.Screen b ON a.ScreenId = b.ScreenId'
@@ -41369,7 +41369,7 @@ ELSE
 	+ ' WHEN b.GenerateSc = ''N'' AND b.GenerateSr = ''N'' THEN '' (no gen)'''
 	+ ' WHEN b.GenerateSc = ''Y'' AND b.GenerateSr = ''N'' THEN '' (cln gen)'''
 	+ ' WHEN b.GenerateSc = ''N'' AND b.GenerateSr = ''Y'' THEN '' (srv gen)'''
-	+ ' WHEN c.ScreenTypeName = ''I3'' THEN '' ( -- no react gen -- )'''
+--	+ ' WHEN c.ScreenTypeName = ''I3'' THEN '' ( -- no react gen -- )'''
 	+ ' ELSE space(0) END LIKE ''%' + LOWER(@searchTxt) + '%'''
 SELECT @oClause = 'ORDER BY a.ScreenTitle'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)

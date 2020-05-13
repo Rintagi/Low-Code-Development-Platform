@@ -2,9 +2,6 @@
 import { getAsyncTypes } from '../helpers/actionType'
 import * as AdmMsgCenterService from '../services/AdmMsgCenterService'
 import { RintagiScreenRedux, initialRintagiScreenReduxState } from './_ScreenReducer'
-const Label = {
-  PostToAp: 'Post to AP',
-}
 class AdmMsgCenterRedux extends RintagiScreenRedux {
   allowTmpDtl = false;
   constructor() {
@@ -59,7 +56,6 @@ class AdmMsgCenterRedux extends RintagiScreenRedux {
       ...initialRintagiScreenReduxState,
       Label: {
         ...initialRintagiScreenReduxState.Label,
-        ...Label,
       }
     }
   };

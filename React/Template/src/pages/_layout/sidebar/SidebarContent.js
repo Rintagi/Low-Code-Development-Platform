@@ -56,13 +56,13 @@ class SidebarContent extends PureComponent {
     // log.debug("fullList2", myFullList);
 
     const myFullList = this.props.myFullList;
-
+    const menuTree = myFullList.length > 0 ? this.buildTree(myFullList, '') : '';
     return (
       <div className='sidebar__content'>
         <ul className='sidebar__block'>
           <div>
           {
-            myFullList.length > 0 ? this.buildTree(myFullList, '') : ''
+            menuTree
           }
           </div>
 
