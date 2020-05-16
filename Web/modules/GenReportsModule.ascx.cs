@@ -321,6 +321,7 @@ namespace RO.Web
             bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
             if (singleSQLCredential)
             {
+                dt.Rows[cSystemId.SelectedIndex]["dbAppProvider"] = Config.DesProvider;
                 dt.Rows[cSystemId.SelectedIndex]["ServerName"] = Config.DesServer;
                 dt.Rows[cSystemId.SelectedIndex]["dbAppUserId"] = Config.DesUserId;
                 dt.Rows[cSystemId.SelectedIndex]["dbAppPassword"] = Config.DesPassword;

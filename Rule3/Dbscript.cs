@@ -566,7 +566,7 @@ ORDER BY so1.name"
                     )
 				{
                     // we use the [name] form to distinguish between hand coded string from sp_helptext
-                    Regex rx = new Regex("(CREATE PROCEDURE)(\\s+[^+]*)((\\[)?" + dr[0].ToString() + "(\\])?)", RegexOptions.Multiline);
+                    Regex rx = new Regex("(CREATE PROCEDURE)(\\s+[^+]*)((\\[)?" + dr[0].ToString() + "(\\])?)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
                     sb.Append(ScriptDropSp(dr[0].ToString(), dr[1].ToString().Trim()));
 					sb.Append("GO\r\n");
 					sb.Append("SET QUOTED_IDENTIFIER ON\r\n");

@@ -2554,4 +2554,12 @@ In default.master: replace section.css with the following:
 2. fix changed embedded image field structure for Grid usage~@~~@~en-US~@~
 12609~@~  11. 172.00513~@~11~@~172~@~2020-05-13 00:00:00.000~@~~@~~@~1. tighten grid only screen asmx API security
 2. re-generate all screen(both asp.net and react adm modules)~@~~@~en-US~@~
-12610~@~  11. 173~@~11~@~173~@~~@~~@~~@~~@~~@~~@~
+12610~@~  11. 173.00514~@~11~@~173~@~2020-05-14 00:00:00.000~@~~@~~@~1. correct GetProjectList/GetCompanyList to proper intended behavior
+2. enhance deployment to handle case sensitivity of create PROCEDURE style
+3. revised deployed solution file for RO PTY to handle rebuild with release configuration~@~~@~en-US~@~
+12611~@~  11. 174.00515~@~11~@~174~@~2020-05-15 00:00:00.000~@~~@~~@~1. Revise GetCompanyList/GetProjectList to be reset per module(and fallback to SELF if module is set to 'NO ACCESS')
+2. set default sql drvier to use MSOLEDBSQL to support TLS 1.2(must be installed, not come with .NET)
+3. expand covering of DB provider for the 'share des credential'(use web.config setting, ignore database content) configuration~@~~@~en-US~@~
+12612~@~  11. 175.00515~@~11~@~175~@~2020-05-15 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+12613~@~  11. 176.00516~@~11~@~176~@~2020-05-16 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+12614~@~  11. 177~@~11~@~177~@~~@~~@~~@~~@~~@~~@~

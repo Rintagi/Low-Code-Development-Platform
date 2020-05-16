@@ -341,6 +341,7 @@ namespace RO.Web
             bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
             if (singleSQLCredential)
             {
+                dt.Rows[cSystemId.SelectedIndex]["dbAppProvider"] = Config.DesProvider;
                 dt.Rows[cSystemId.SelectedIndex]["ServerName"] = Config.DesServer;
                 dt.Rows[cSystemId.SelectedIndex]["dbAppUserId"] = Config.DesUserId;
                 dt.Rows[cSystemId.SelectedIndex]["dbAppPassword"] = Config.DesPassword;
@@ -382,7 +383,7 @@ namespace RO.Web
             if (base.CPrj != null && SetCTar(Config.GetConnStr(dr["DbProviderOle"].ToString(), dr["DesServer"].ToString(), dr["DesDatabase"].ToString(), "", dr["DesUserId"].ToString()), dr["DesPassword"].ToString()))
             {
                 base.CPrj.TarDesProviderCd = dr["DbProviderCd"].ToString();
-                base.CPrj.TarDesProvider = dr["DbProviderOle"].ToString();
+                base.CPrj.TarDesProvider = singleSQLCredential ? Config.DesProvider : dr["DbProviderOle"].ToString();
                 base.CPrj.TarDesServer = singleSQLCredential ? Config.DesServer : dr["DesServer"].ToString();
                 base.CPrj.TarDesDatabase = dr["DesDatabase"].ToString();
                 base.CPrj.TarDesUserId = singleSQLCredential ? Config.DesUserId : dr["DesUserId"].ToString();

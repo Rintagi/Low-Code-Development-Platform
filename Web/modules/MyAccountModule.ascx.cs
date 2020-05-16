@@ -275,11 +275,53 @@ namespace RO.Web
                         string returnUrl = Request.QueryString["ReturnUrl"];
                         if (!string.IsNullOrEmpty(returnUrl) && !needToResetPassword)
                         {
-                            string script =
-                            @"<script type='text/javascript' language='javascript'>
+                            if ((Request.QueryString["response_type"] ?? "").Contains("id_token"))
+                            {
+                                System.Web.Configuration.SessionStateSection SessionSettings = ConfigurationManager.GetSection("system.web/sessionState") as System.Web.Configuration.SessionStateSection;
+                                string sessionCookieName = SessionSettings != null ? SessionSettings.CookieName : null;
+                                int defCompanyId = LUser.DefCompanyId;
+                                byte defSystemId = LUser.DefSystemId;
+                                int defProjectId = LUser.DefProjectId;
+                                string resources = "";
+                                int validSeconds = 300;
+                                string guidHandle = Guid.NewGuid().ToString();
+                                string LoginJWT = GetAuthObject().CreateLoginJWT(LUser, defCompanyId, defProjectId, defSystemId, LCurr, LImpr, resources, validSeconds, guidHandle);
+                                HttpCookie sessionCookie = Request.Cookies[sessionCookieName];
+                                HttpCookie c = new HttpCookie("RintagiLoginToken", LoginJWT);
+                                c.Path = "/";
+                                c.HttpOnly = true;
+                                c.Domain = sessionCookie.Domain;
+                                SetupSSD();
+                                Response.Cookies.Set(c);
+                            }
+
+                            if ((Request.QueryString["response_mode"] == "fragment") && !string.IsNullOrEmpty(Request.QueryString["response_type"]))
+                            {
+                                string access_code = Guid.NewGuid().ToString().Replace("-", "").ToLower();
+                                Session["RintagiLoginAccessCode"] = access_code;
+
+                                if (returnUrl.StartsWith("urn:ietf:wg:oauth:2.0:oob:auto")
+                                || returnUrl.StartsWith("urn:ietf:wg:oauth:2.0:oob"))
+                                {
+                                    this.Page.Title = "Success code=" + access_code;
+                                    this.Visible = false;
+                                    //Response.End();
+                                }
+                                else
+                                {
+                                    this.Redirect(returnUrl + (Request.QueryString["response_mode"] == "fragment"
+                                        ? "#code=" + access_code // +"&id_token=" + LoginJWT 
+                                        : ""));
+                                }
+                            }
+                            else
+                            {
+                                string script =
+                                @"<script type='text/javascript' language='javascript'>
 			                Sys.Application.add_load(function () {setTimeout(function() { try { window.location = '" + (!string.IsNullOrEmpty(returnUrl) ? returnUrl : Config.SslUrl) + @"';} catch (er) {};}, 0);});
 			            </script>";
-                            ScriptManager.RegisterStartupScript(cMsgContent, typeof(Label), "AutoRedirect", script, false);
+                                ScriptManager.RegisterStartupScript(cMsgContent, typeof(Label), "AutoRedirect", script, false);
+                            }
                         }
                         else
                         {
@@ -394,7 +436,7 @@ namespace RO.Web
                 }
             }
 
-            /* login from JWT Token */
+            /* login from JWT Token(from React side) */
             if (IsPostBack
               && !string.IsNullOrEmpty(cJWTToken.Text))
             {

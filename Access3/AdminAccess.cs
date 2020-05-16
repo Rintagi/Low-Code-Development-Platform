@@ -21,6 +21,11 @@ namespace RO.Access3
             _CommandTimeout = CommandTimeout;
 		}
 
+        private DateTime ToOleDbDatetime(DateTime d)
+        {
+            // MSOLEDBSQL cannot handle extra precisions, only ms
+            return new DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Millisecond);
+        }
 		public void Dispose()
 		{
 			Dispose(true);
@@ -533,8 +538,14 @@ namespace RO.Access3
             cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             cmd.Parameters.Add("@jobId", OleDbType.Numeric).Value = jobId;
-            cmd.Parameters.Add("@lastRun", GetOleDbType("datetime")).Value = lastRun;
-            cmd.Parameters.Add("@nextRun", GetOleDbType("datetime")).Value = nextRun;
+            cmd.Parameters.Add("@lastRun", GetOleDbType("datetime")).Value = lastRun.HasValue ? (object) ToOleDbDatetime(lastRun.Value) : DBNull.Value;
+            cmd.Parameters.Add("@nextRun", GetOleDbType("datetime")).Value = nextRun.HasValue ? (object) ToOleDbDatetime(nextRun.Value) : DBNull.Value;
+            cmd.Parameters[1].Size = 16;
+            cmd.Parameters[1].Precision = 20;
+            cmd.Parameters[1].Scale = 3;
+            cmd.Parameters[2].Size = 16;
+            cmd.Parameters[2].Precision = 20;
+            cmd.Parameters[2].Scale = 3;
             try
             {
                 da.UpdateCommand = cmd;

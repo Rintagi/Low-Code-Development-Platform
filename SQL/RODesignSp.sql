@@ -190,6 +190,62 @@ END
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fEffectiveRowAuthoritys') AND type='IF')
+DROP FUNCTION dbo.fEffectiveRowAuthoritys
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE FUNCTION [dbo].[fEffectiveRowAuthoritys] 
+(
+@Usrs		varchar(max)
+,@CompanyId		int
+,@ProjectId		int
+,@SystemId		tinyint
+)
+RETURNS TABLE 
+/* WITH ENCRYPTION */  
+AS
+RETURN 
+(
+SELECT
+*
+FROM
+(
+SELECT
+*, MaxMatchCount = MAX(MatchCount) OVER (PARTITION BY UsrGroupId)
+FROM
+(
+SELECT 
+ug.UsrGroupId, EffectiveRowAuthorityId = ISNULL(uga.SysRowAuthorityId, ug.RowAuthorityId)
+,ug.RowAuthorityId, uga.SysRowAuthorityId
+, MatchCount = 
+	CASE WHEN uga.CompanyId IS NOT NULL AND uga.CompanyId = @companyId THEN 1 ELSE 0 END 
+	+
+	CASE WHEN uga.ProjectId IS NOT NULL AND uga.ProjectId = @projectId THEN 1 ELSE 0 END 
+	+
+	CASE WHEN uga.SystemId IS NOT NULL AND uga.SystemId = @systemId THEN 1 ELSE 0 END 
+
+FROM
+dbo.usr u
+INNER JOIN dbo.UsrGroup ug on CHARINDEX(',' + CONVERT(varchar, ug.UsrGroupId) + ',', REPLACE(REPLACE(REPLACE(u.UsrGroupLs,')',','),'(',','),CHAR(191),',')) > 0
+LEFT OUTER JOIN dbo.UsrGroupAuth uga on uga.UsrGroupId = ug.UsrGroupId
+											AND 
+											(uga.CompanyId IS NULL OR uga.CompanyId = @companyId)
+											AND 
+											(uga.ProjectId IS NULL OR uga.ProjectId = @projectId)
+											AND 
+											(uga.SystemId IS NULL OR uga.SystemId = @systemId)
+WHERE 
+CHARINDEX(',' + CONVERT(varchar, u.UsrId) + ',', ',' + REPLACE(@Usrs,CHAR(191),',') + ',') > 0
+) x
+) y
+WHERE y.MatchCount = y.MaxMatchCount
+)
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fEmbeddedImgMeta') AND type='FN')
 DROP FUNCTION dbo.fEmbeddedImgMeta
 GO
@@ -13220,6 +13276,34 @@ DECLARE	 @sClause		varchar(8000)
 	,@CompanyId		int
 	,@RowAuthId		smallint
 SET NOCOUNT ON
+
+/* passed in RowAuthoritys are useless as it depends on specific calling sequence to
+ * implicitly override the defined ACL rule of the system, only work specifically
+ * for asp.net where the result is stored once in session which is impossible
+ * for any other usage
+ *
+ * the ACTUAL logic requirement is use the user's default row auth, regardless of what 
+ * system he/she is in when getting Company/Project List
+ *
+--DECLARE @UsrId int
+--SELECT @UsrId = dbo.fGetCurrUsrId(@Usrs)
+--SELECT @RowAuthoritys = NULL
+--SELECT @RowAuthoritys = COALESCE(@RowAuthoritys + CHAR(191), '') + CONVERT(varchar,ug.RowAuthorityId) 
+--FROM
+--dbo.usr u
+--INNER JOIN dbo.UsrGroup ug on CHARINDEX(',' + CONVERT(varchar, ug.UsrGroupId) + ',', REPLACE(REPLACE(REPLACE(u.UsrGroupLs,')',','),'(',','),CHAR(191),',')) > 0
+--WHERE 
+--CHARINDEX(',' + CONVERT(varchar, u.UsrId) + ',', ',' + REPLACE(@Usrs,CHAR(191),',') + ',') > 0
+--SELECT @RowAuthoritys = dbo.fCompressLs(@RowAuthoritys)
+
+ * re-work again as the requirement changed per Nelson(to be per system based), thus above is not used
+
+ */
+
+-- REPLACE NO ACCESS(7) to Self(1) per the change requested 
+-- If there is user defined 'no access', this would not work
+SELECT @RowAuthoritys = SUBSTRING(REPLACE(CHAR(191) + @RowAuthoritys + CHAR(191),CHAR(191) + '7' + CHAR(191), CHAR(191) + '1' + CHAR(191)), 2, LEN(@RowAuthoritys))
+
 SELECT @sClause = 'SELECT CompanyId, CompanyDesc'
 SELECT @fClause = 'FROM ROCmon.dbo.Company'
 SELECT @oClause = 'ORDER BY CompanyDesc'
@@ -58722,6 +58806,34 @@ DECLARE	 @sClause		varchar(8000)
 	,@ProjectId		int
 	,@RowAuthId		smallint
 SET NOCOUNT ON
+
+/* passed in RowAuthoritys are useless as it depends on specific calling sequence to
+ * implicitly override the defined ACL rule of the system, only work specifically
+ * for asp.net where the result is stored once in session which is impossible
+ * for any other usage
+ *
+ * the ACTUAL logic requirement is use the user's default row auth, regardless of what 
+ * system he/she is in when getting Company/Project List
+
+--DECLARE @UsrId int
+--SELECT @UsrId = dbo.fGetCurrUsrId(@Usrs)
+--SELECT @RowAuthoritys = NULL
+--SELECT @RowAuthoritys = COALESCE(@RowAuthoritys + CHAR(191), '') + CONVERT(varchar,ug.RowAuthorityId) 
+--FROM
+--dbo.usr u
+--INNER JOIN dbo.UsrGroup ug on CHARINDEX(',' + CONVERT(varchar, ug.UsrGroupId) + ',', REPLACE(REPLACE(REPLACE(u.UsrGroupLs,')',','),'(',','),CHAR(191),',')) > 0
+--WHERE 
+--CHARINDEX(',' + CONVERT(varchar, u.UsrId) + ',', ',' + REPLACE(@Usrs,CHAR(191),',') + ',') > 0
+--SELECT @RowAuthoritys = dbo.fCompressLs(@RowAuthoritys)
+
+ * re-work again as the requirement changed per Nelson(to be per system based), thus above is not used
+
+ */
+
+-- REPLACE NO ACCESS(7) to Self(1) per the change requested 
+-- If there is user defined 'no access', this would not work
+SELECT @RowAuthoritys = SUBSTRING(REPLACE(CHAR(191) + @RowAuthoritys + CHAR(191),CHAR(191) + '7' + CHAR(191), CHAR(191) + '1' + CHAR(191)), 2, LEN(@RowAuthoritys))
+
 SELECT @sClause = 'SELECT ProjectId, ProjectDesc'
 SELECT @fClause = 'FROM ROCmon.dbo.Project'
 SELECT @oClause = 'ORDER BY ProjectDesc'

@@ -357,10 +357,12 @@ namespace RO.Common3
 
 		public static string GetConnStr(string dbProvider, string dbServer, string dbDatabase, string dbService, string dbUserId)
 		{
-            if (dbProvider == "Sqloledb" || dbProvider == "MSOLEDBSQL")
+            
+            if ((dbProvider??"").ToUpper() == "Sqloledb".ToUpper() || (dbProvider??"").ToUpper() == "MSOLEDBSQL")
 			{
-                bool bIntegratedSecurity = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y" && (System.Configuration.ConfigurationManager.AppSettings["SSPI"] ?? "N") == "Y";
-                return "Provider=" + dbProvider + ";Data Source=" + dbServer + ";database=" + dbDatabase + ";Connect Timeout=" + DesTimeout + ";" + (bIntegratedSecurity ? "Integrated Security=sspi;" : "User ID=" + dbUserId + ";") + dbService + ";password=";
+                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                bool bIntegratedSecurity = singleSQLCredential && (System.Configuration.ConfigurationManager.AppSettings["SSPI"] ?? "N") == "Y";
+                return "Provider=" + (singleSQLCredential ? Config.DesProvider : dbProvider) + ((dbProvider ?? "").ToUpper() == "MSOLEDBSQL" && false ? ";DataTypeCompatibility=80" : "") + ";Data Source=" + (singleSQLCredential ? Config.DesServer : dbServer) + ";database=" + dbDatabase + ";Connect Timeout=" + DesTimeout + ";" + (bIntegratedSecurity ? "Integrated Security=sspi;" : "User ID=" + dbUserId + ";") + dbService + ";password=";
 			}
 			else	// Sybase for now.
 			{
