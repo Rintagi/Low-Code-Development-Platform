@@ -31,7 +31,7 @@ choco install git -y
 
 #helpful and recommended even for non-developer BUT not really needed so here and not prerequesite 
 #SQL Server Management Sutdio
-Write-Output "choco install sql-server-management-studio --version=14.0.17285.0 -y"
-choco install sql-server-management-studio --version=14.0.17285.0
+Write-Output "choco install sql-server-management-studio --version=15.0.18330.0 -y"
+choco install sql-server-management-studio --version=15.0.18330.0
 
 Write-Output "You have to reboot for nodejs installation to be initialized properly"

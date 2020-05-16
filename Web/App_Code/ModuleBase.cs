@@ -252,6 +252,10 @@ namespace RO.Web
                     else if (singleSQLCredential)
                     {
                         dr["ServerName"] = Config.DesServer;
+                        dr["dbAppProvider"] = Config.DesProvider;
+                        dr["dbAppUserId"] = Config.DesUserId;
+                        dr["dbAppPassword"] = Config.DesPassword;
+
                     }
                 }
                 dt.AcceptChanges();
@@ -260,8 +264,8 @@ namespace RO.Web
                 {
 
                     Dictionary<string, string> dict = new Dictionary<string, string>();
-                    dict[KEY_SysConnectStr] = Config.GetConnStr(dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
-                    dict[KEY_AppConnectStr] = Config.GetConnStr(dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
+                    dict[KEY_SysConnectStr] = Config.GetConnStr(singleSQLCredential ? Config.DesProvider : dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
+                    dict[KEY_AppConnectStr] = Config.GetConnStr(singleSQLCredential ? Config.DesProvider : dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
                     dict[KEY_SystemAbbr] = dr["SystemAbbr"].ToString();
                     dict[KEY_DesDb] = dr["dbDesDatabase"].ToString();
                     dict[KEY_AppDb] = dr["dbAppDatabase"].ToString();
@@ -399,9 +403,11 @@ namespace RO.Web
 
                 if (singleSQLCredential)
                 {
+                    value.SrcDesProvider = Config.DesProvider;
                     value.SrcDesServer = Config.DesServer;
                     value.SrcDesUserId = Config.DesUserId;
                     value.SrcDesPassword = Config.DesPassword;
+                    value.TarDesProvider = Config.DesProvider;
                     value.TarDesServer = Config.DesServer;
                     value.TarDesUserId = Config.DesUserId;
                     value.TarDesPassword = Config.DesPassword;
@@ -438,6 +444,7 @@ namespace RO.Web
                 bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
                 if (singleSQLCredential)
                 {
+                    value.SrcDbProvider = Config.DesProvider;
                     value.SrcServerName = Config.DesServer;
                     value.SrcDbServer = Config.DesServer;
                     value.SrcDbUserId = Config.DesUserId;
@@ -460,6 +467,7 @@ namespace RO.Web
                 bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
                 if (singleSQLCredential)
                 {
+                    value.TarDbProvider = Config.DesProvider;
                     value.TarServerName = Config.DesServer;
                     value.TarDbServer = Config.DesServer;
                     value.TarDbUserId = Config.DesUserId;

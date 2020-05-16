@@ -73,7 +73,7 @@ public partial class SystemWs : AsmxBase
     }
 
     [WebMethod(EnableSession = false)]
-    public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetCompanyList()
+    public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetCompanyList(byte SystemId)
     {
         Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
         {
@@ -81,7 +81,7 @@ public partial class SystemWs : AsmxBase
             DataTable dt = _GetCompanyList(true);
             return DataTableToDdlApiResponse(dt, "CompanyId", "CompanyDesc");
         };
-        var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", ""));
+        var ret = ProtectedCall(RestrictedApiCall(fn, SystemId, screenId, "R", ""));
         return ret;
     }
 
@@ -104,14 +104,14 @@ public partial class SystemWs : AsmxBase
     }
         
     [WebMethod(EnableSession = false)]
-    public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetProjectList(int CompanyId)
+    public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetProjectList(byte SystemId, int CompanyId)
     {
         Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
         {
             DataTable dt = _GetProjectList(CompanyId,true);
             return DataTableToDdlApiResponse(dt, "ProjectId", "ProjectDesc");
         };
-        var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", ""));
+        var ret = ProtectedCall(RestrictedApiCall(fn, SystemId, screenId, "R", ""));
         return ret;
     }
 

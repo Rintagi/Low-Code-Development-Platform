@@ -726,6 +726,9 @@ namespace RO.Web
                     else if (singleSQLCredential)
                     {
                         dr["ServerName"] = Config.DesServer;
+                        dr["dbAppProvider"] = Config.DesProvider;
+                        dr["dbAppUserId"] = Config.DesUserId;
+                        dr["dbAppPassword"] = Config.DesPassword;
                     }
 
                 }
@@ -733,8 +736,8 @@ namespace RO.Web
                 foreach (DataRow dr in dt.Rows)
 			    {
 				    Dictionary<string,string> dict = new Dictionary<string,string>();
-                    dict[KEY_SysConnectStr] = Config.GetConnStr(dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
-                    dict[KEY_AppConnectStr] = Config.GetConnStr(dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
+                    dict[KEY_SysConnectStr] = Config.GetConnStr(singleSQLCredential ? Config.DesProvider : dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
+                    dict[KEY_AppConnectStr] = Config.GetConnStr(singleSQLCredential ? Config.DesProvider : dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
                     dict[KEY_SystemAbbr] = dr["SystemAbbr"].ToString();
 				    dict[KEY_DesDb] = dr["dbDesDatabase"].ToString();
 				    dict[KEY_AppDb] = dr["dbAppDatabase"].ToString();
@@ -801,7 +804,7 @@ namespace RO.Web
         {
             var context = HttpContext.Current;
             var cache = context.Cache;
-            string cacheKey = KEY_CompanyList + "_" + LUser.UsrId.ToString();
+            string cacheKey = KEY_CompanyList + "_" + LCurr.SystemId.ToString() + "_" + LUser.UsrId.ToString();
             int minutesToCache = companyListCacheMinutes; //1;
             Tuple<string, DataTable> dtCacheX = cache[cacheKey] as Tuple<string, DataTable>;
             if (dtCacheX == null || dtCacheX.Item1 != loginHandle || ignoreCache)
@@ -817,7 +820,7 @@ namespace RO.Web
         {
             var context = HttpContext.Current;
             var cache = context.Cache;
-            string cacheKey = KEY_ProjectList + "_" +  companyId.ToString() + "_" + LUser.UsrId.ToString();
+            string cacheKey = KEY_ProjectList + "_" + LCurr.SystemId.ToString() + "_" + companyId.ToString() + "_" + LUser.UsrId.ToString();
             int minutesToCache = projectListCacheMinutes; // 1;
             Tuple<string, DataTable> dtCacheX = cache[cacheKey] as Tuple<string, DataTable>;
             if (dtCacheX == null || dtCacheX.Item1 != loginHandle || ignoreCache)
@@ -925,18 +928,22 @@ namespace RO.Web
                 CTar = new CurrTar(true, row);
                 if (singleSQLCredential)
                 {
+                    CPrj.SrcDesProvider = Config.DesProvider;
                     CPrj.SrcDesServer = Config.DesServer;
                     CPrj.SrcDesUserId = Config.DesUserId;
                     CPrj.SrcDesPassword = Config.DesPassword;
+                    CPrj.TarDesProvider = Config.DesProvider;
                     CPrj.TarDesServer = Config.DesServer;
                     CPrj.TarDesUserId = Config.DesUserId;
                     CPrj.TarDesPassword = Config.DesPassword;
 
+                    CSrc.SrcDbProvider = Config.DesProvider;
                     CSrc.SrcServerName = Config.DesServer;
                     CSrc.SrcDbServer = Config.DesServer;
                     CSrc.SrcDbUserId = Config.DesUserId;
                     CSrc.SrcDbPassword = Config.DesPassword;
 
+                    CTar.TarDbProvider = Config.DesProvider;
                     CTar.TarServerName = Config.DesServer;
                     CTar.TarDbServer = Config.DesServer;
                     CTar.TarDbUserId = Config.DesUserId;
@@ -1381,7 +1388,7 @@ namespace RO.Web
         {
             Func<ApiResponse<T,S>> fn = () =>
             {
-                SwitchContext(GetSystemId(), LCurr.CompanyId, LCurr.ProjectId);
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
                 Func<ApiResponse<T, S>> errRetFn = () =>
                 {
                     if (OnErrorResponse != null) return OnErrorResponse();
@@ -1447,7 +1454,7 @@ namespace RO.Web
         {
             Func<Task<ApiResponse<T, S>>> fn = async () =>
             {
-                SwitchContext(GetSystemId(), LCurr.CompanyId, LCurr.ProjectId);
+                SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
                 Func<Task<ApiResponse<T, S>>> errRetFn = async () =>
                 {
                     if (OnErrorResponse != null) return await OnErrorResponse();
@@ -4947,7 +4954,7 @@ namespace RO.Web
                 mr.errorMsg = "";
                 return mr;
             };
-            var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), 0, "R", null));
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, 0, "R", null));
             return ret;
         }
 
