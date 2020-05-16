@@ -2562,4 +2562,5 @@ In default.master: replace section.css with the following:
 3. expand covering of DB provider for the 'share des credential'(use web.config setting, ignore database content) configuration~@~~@~en-US~@~
 12612~@~  11. 175.00515~@~11~@~175~@~2020-05-15 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
 12613~@~  11. 176.00516~@~11~@~176~@~2020-05-16 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
-12614~@~  11. 177~@~11~@~177~@~~@~~@~~@~~@~~@~~@~
+12614~@~  11. 177.00516~@~11~@~177~@~2020-05-16 00:00:00.000~@~~@~~@~1. revised deployment package~@~~@~en-US~@~
+12615~@~  11. 178~@~11~@~178~@~~@~~@~~@~~@~~@~~@~
