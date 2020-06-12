@@ -241,6 +241,7 @@ namespace RO.Web
             bool isSecureConntection = Request.IsSecureConnection;
             string myUrl = ResolveUrlCustom(Request.Path, true, true);
 
+            // assuming this would never happened on production i.e. non-proxy and non-ssl
             if (!requestIsProxied
                 &&
                 !isSecureConntection
@@ -330,6 +331,7 @@ namespace RO.Web
                 else if (qs["CreateInstaller"] != null)
                 {
                     string somethingRunning = Application["BuildRunning"] as string;
+                    bool fixedInstallerName = (qs["FixedName"] ?? "").ToUpper() == "Y";
                     if (string.IsNullOrEmpty(somethingRunning))
                     {
                         if (LUser == null) AnonymousLogin();
@@ -358,7 +360,7 @@ namespace RO.Web
                             }
                         }
                         foreach (var x in releases) {
-                            installerTasks.Add(CreateInstallerAsync(x.Value.Item1, x.Value.Item2, x.Value.Item3, x.Value.Item4, x.Value.Item5, LcSysConnString, LcAppConnString, GetRequestInfo()));
+                            installerTasks.Add(CreateInstallerAsync(x.Value.Item1, x.Value.Item2, x.Value.Item3, x.Value.Item4, x.Value.Item5, LcSysConnString, LcAppConnString, GetRequestInfo(), fixedInstallerName));
                         }
                         if (qs["Wait"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("wait"))
                         {

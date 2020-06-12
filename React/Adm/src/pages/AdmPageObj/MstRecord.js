@@ -372,6 +372,10 @@ class MstRecord extends RintagiScreen {
     const LinkTypeCd1277List = AdmPageObjReduxObj.ScreenDdlSelectors.LinkTypeCd1277(AdmPageObjState);
     const LinkTypeCd1277 = currMst.LinkTypeCd1277;
     const PageObjOrd1277 = currMst.PageObjOrd1277;
+    const SctGrpRow1277 = currMst.SctGrpRow1277;
+    const SctGrpRow1277URL = currMst.SctGrpRow1277URL;
+    const SctGrpCol1277 = currMst.SctGrpCol1277;
+    const SctGrpCol1277URL = currMst.SctGrpCol1277URL;
     const PageObjCss1277 = currMst.PageObjCss1277;
     const PageObjSrp1277 = currMst.PageObjSrp1277;
 
@@ -420,6 +424,10 @@ class MstRecord extends RintagiScreen {
                     cGroupColId1277: GroupColId1277List.filter(obj => { return obj.key === GroupColId1277 })[0],
                     cLinkTypeCd1277: LinkTypeCd1277List.filter(obj => { return obj.key === LinkTypeCd1277 })[0],
                     cPageObjOrd1277: formatContent(PageObjOrd1277 || '', 'TextBox'),
+                    cSctGrpRow1277: formatContent(SctGrpRow1277 || '', 'ImagePopUp'),
+                    cSctGrpRow1277URL: formatContent(SctGrpRow1277URL || '', 'ImagePopUp'),
+                    cSctGrpCol1277: formatContent(SctGrpCol1277 || '', 'ImagePopUp'),
+                    cSctGrpCol1277URL: formatContent(SctGrpCol1277URL || '', 'ImagePopUp'),
                     cPageObjCss1277: formatContent(PageObjCss1277 || '', 'MultiLine'),
                     cPageObjSrp1277: formatContent(PageObjSrp1277 || '', 'MultiLine'),
                   }}
@@ -659,6 +667,62 @@ class MstRecord extends RintagiScreen {
                                       </div>
                                     }
                                     {errors.cPageObjOrd1277 && touched.cPageObjOrd1277 && <span className='form__form-group-error'>{errors.cPageObjOrd1277}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.SctGrpRow1277 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.SctGrpRow1277 || {}).ColumnHeader} {(columnLabel.SctGrpRow1277 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.SctGrpRow1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SctGrpRow1277 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
+                                      (values.cSctGrpRow1277URL && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(values.cSctGrpRow1277URL, false, false, {values, name: 'SctGrpRow1277'})}
+                                          onClick={this.PopUpSearchLink(values.cSctGrpRow1277URL, false, false, {values, name: 'SctGrpRow1277'})}
+                                          disabled={(authCol.SctGrpRow1277 || {}).readonly ? 'disabled' : ''}
+                                          >
+                                            <img 
+                                                alt={values.cSctGrpRow1277}
+                                                src={require('../../img/Link.gif')}
+                                            />
+                                        </a>
+                                      </div>)
+                                    }
+                                    {errors.cSctGrpRow1277 && touched.cSctGrpRow1277 && <span className='form__form-group-error'>{errors.cSctGrpRow1277}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.SctGrpCol1277 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.SctGrpCol1277 || {}).ColumnHeader} {(columnLabel.SctGrpCol1277 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.SctGrpCol1277 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.SctGrpCol1277 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
+                                      (values.cSctGrpCol1277URL && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(values.cSctGrpCol1277URL, false, false, {values, name: 'SctGrpCol1277'})}
+                                          onClick={this.PopUpSearchLink(values.cSctGrpCol1277URL, false, false, {values, name: 'SctGrpCol1277'})}
+                                          disabled={(authCol.SctGrpCol1277 || {}).readonly ? 'disabled' : ''}
+                                          >
+                                            <img 
+                                                alt={values.cSctGrpCol1277}
+                                                src={require('../../img/Link.gif')}
+                                            />
+                                        </a>
+                                      </div>)
+                                    }
+                                    {errors.cSctGrpCol1277 && touched.cSctGrpCol1277 && <span className='form__form-group-error'>{errors.cSctGrpCol1277}</span>}
                                   </div>
                                 </Col>
                               }

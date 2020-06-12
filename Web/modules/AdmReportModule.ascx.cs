@@ -141,7 +141,34 @@ namespace RO.Web
 		private string LcDesDb;
 		private string LcAppPw;
 		protected System.Collections.Generic.Dictionary<string, DataRow> LcAuth;
-		// *** Custom Function/Procedure Web Rule starts here *** //
+
+		//WebRule: Helper Functions RptTemplate Doc handling
+        protected string WrRptTemplateDoc(string MasterId, string DocId, string UsrId, string DocTableName, string MasterTableName, string MasterColumnName, string MasterKey, string dbConnectionString, string dbPassword)
+        {
+            // delete
+            return (new AdminSystem()).DelDoc(MasterId, DocId, UsrId, DocTableName, MasterTableName, MasterColumnName, MasterKey, dbConnectionString, dbPassword);
+        }
+
+        public string WrRptTemplateDoc(string MasterId, string MasterTblName, string DocFileName, string UsrId, string dbConnectionString, string dbPassword)
+        {
+            // read
+            return new AdminSystem().GetDocId(MasterId, MasterTblName, DocFileName, UsrId, dbConnectionString, dbPassword);
+
+        }
+        public string WrRptTemplateDoc(string MasterId, string MasterTblName, string DocFileName, string MimeType, long DocSize, byte[] dc, string dbConnectionString, string dbPassword, LoginUsr CurrUser)
+        {
+            // add
+            return new AdminSystem().AddDbDoc(MasterId, MasterTblName, DocFileName, MimeType, DocSize, dc, dbConnectionString, dbPassword, CurrUser);
+
+        }
+        public void WrRptTemplateDoc(string DocId, string MasterTblName, string DocFileName, string MimeType, long DocSize, byte[] dc, string dbConnectionString, string dbPassword, LoginUsr CurrUser, string MasterId)
+        {
+            // update
+            new AdminSystem().UpdDbDoc(DocId, MasterTblName, DocFileName, MimeType, DocSize, dc, dbConnectionString, dbPassword, CurrUser, MasterId);
+        }
+
+
+		// *** WebRule End *** //
 
 		public AdmReportModule()
 		{
@@ -973,14 +1000,14 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					}
 					// In case DocId has not been saved properly, always find the most recent to replace as long as it has the same file name:
 					string DocId = string.Empty;
-					DocId = new AdminSystem().GetDocId(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), base.LUser.UsrId.ToString(), (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId));
+					DocId = WrRptTemplateDoc(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), base.LUser.UsrId.ToString(), (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId));
 					if (DocId == string.Empty || !cRptTemplate22Ow.Checked)
 					{
-						DocId = new AdminSystem().AddDbDoc(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId), base.LUser);
+						DocId = WrRptTemplateDoc(cReportId22.Text, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId), base.LUser);
 					}
 					else
 					{
-						new AdminSystem().UpdDbDoc(DocId, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId), base.LUser);
+						WrRptTemplateDoc(DocId, "dbo.RptTemplate", Path.GetFileName(cRptTemplate22Fi.PostedFile.FileName), cRptTemplate22Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId), base.LUser, cReportId22.Text);
 					}
 					cRptTemplate22Pan.Visible = false; cRptTemplate22Div.Visible = true;
 					SetRptTemplate22(cRptTemplate22GV, string.Empty);
@@ -2358,7 +2385,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			{
 				try
 				{
-					(new AdminSystem()).DelDoc(cReportId22.Text, e.CommandArgument.ToString(), base.LUser.UsrId.ToString(), "RptTemplate", "Report", "RptTemplate", "ReportId",(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId));
+					WrRptTemplateDoc(cReportId22.Text, e.CommandArgument.ToString(), base.LUser.UsrId.ToString(), "RptTemplate", "Report", "RptTemplate", "ReportId",(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId));
 				}
 				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
 				Session.Remove(KEY_dtRptTemplate22); SetRptTemplate22(cRptTemplate22GV, string.Empty);

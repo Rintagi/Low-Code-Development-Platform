@@ -349,6 +349,19 @@ class DtlRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
     const ColVisible241 = currDtl.ColVisible241;
     const ColReadOnly241 = currDtl.ColReadOnly241;
     const ColExport241 = currDtl.ColExport241;

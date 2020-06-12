@@ -45,13 +45,14 @@ namespace RO.Web
 			if (!IsPostBack)
 			{
                 TranslateItems();
+                string pg = GetNumQSParm("pg");
                 /* Stop IIS from Caching but allowing export to Excel to work */
                 HttpContext.Current.Response.Cache.SetAllowResponseInBrowserHistory(false);
                 HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 HttpContext.Current.Response.Cache.SetNoStore();
                 Response.Cache.SetExpires(DateTime.Now.AddSeconds(-60));
                 Response.Cache.SetValidUntilExpires(true);
-                new AdminSystem().LogUsage(base.LUser != null ? base.LUser.UsrId : 0, string.Empty, dtPage.Rows[0]["StaticPgNm259"].ToString(), 0, Int32.Parse(Request.QueryString["pg"].ToString().ToString().Split(new char[] { ',' }).First()), 0, string.Empty, LcSysConnString, LcAppPw);
+                new AdminSystem().LogUsage(base.LUser != null ? base.LUser.UsrId : 0, string.Empty, dtPage.Rows[0]["StaticPgNm259"].ToString(), 0, Int32.Parse(pg.Split(new char[] { ',' }).First()), 0, string.Empty, LcSysConnString, LcAppPw);
                 cStyle.Controls.Add(new LiteralControl("<style>" + (!string.IsNullOrEmpty(sharedCssName) ? "/* " + sharedCssName.Replace("*", "").Replace("/", "") + "*/" : "") + sharedCssContent + " " + dtPage.Rows[0]["StaticPgCss259"].ToString() + "</style>"));
                 cContent.Controls.Add(new LiteralControl(dtPage.Rows[0]["StaticPgHtm259"].ToString()));
                 Page.Title = dtPage.Rows[0]["StaticPgTitle259"].ToString();
@@ -75,20 +76,28 @@ namespace RO.Web
 		/// </summary>
 		private void InitializeComponent()
 		{
-            if ((Request.QueryString["csy"] ?? "").ToString() == string.Empty)
+            string csy = GetNumQSParm("csy");
+            string pg = GetNumQSParm("pg");
+            if (string.IsNullOrEmpty(csy) && string.IsNullOrEmpty(pg))
+            {
+                // most likely attack, go to home page
+                this.Redirect(ResolveUrlCustom("~/"));
+            }
+
+            if (string.IsNullOrEmpty(csy))
             {
                 throw new Exception("Please make sure QueryString has 'csy=' followed by the SystemId and try again.");
             }
-            if ((Request.QueryString["pg"] ?? "").ToString() == string.Empty)
+            if (string.IsNullOrEmpty(pg))
             {
                 throw new Exception("Please make sure QueryString has 'pg=' followed by the PageId and try again.");
             }
             CheckAuthentication(true, false);
 
-            byte SystemId = byte.Parse(Request.QueryString["csy"].ToString().Split(new char[] { ',' }).First());
+            byte SystemId = byte.Parse(csy.ToString().Split(new char[] { ',' }).First());
             SetSystem(SystemId);
             /* GetAdmPage115ById must match the AdmPage definition, thus changes there may invalidate this gary */
-            dtPage = (new AdminSystem()).GetMstById("GetAdmStaticPg114ById", Request.QueryString["pg"].ToString().Split(new char[] { ',' }).First(), LcSysConnString, LcAppPw);
+            dtPage = (new AdminSystem()).GetMstById("GetAdmStaticPg114ById", pg.Split(new char[] { ',' }).First(), LcSysConnString, LcAppPw);
             if (dtPage.Rows.Count == 0) { this.Redirect(Config.OrdUrl); }
             else
             {

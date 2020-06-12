@@ -260,7 +260,7 @@ namespace RO.Web
                 DataTable dt = _GetMstById(keyId);
                 DataTable dtColAuth = _GetAuthCol(GetScreenId());
                 DataTable dtColLabel = _GetScreenLabel(GetScreenId());
-                Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr["ColName"].ToString());
+                Dictionary<string, DataRow> colAuth = _GetAuthColDict(dtColAuth, GetScreenId());
                 var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr["DisplayMode"].ToString().Contains("UTC")).Select(dr => dr["ColumnName"].ToString() + dr["TableId"].ToString()).ToArray();
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
                 ApiResponse <List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
@@ -471,7 +471,7 @@ namespace RO.Web
                 SaveDataResponse result = new SaveDataResponse();
                 DataTable dtColAuth = _GetAuthCol(GetScreenId());
                 DataTable dtColLabel = _GetScreenLabel(GetScreenId());
-                Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr["ColName"].ToString());
+                Dictionary<string, DataRow> colAuth = _GetAuthColDict(dtColAuth, GetScreenId());
                 var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr["DisplayMode"].ToString().Contains("UTC")).Select(dr => dr["ColumnName"].ToString() + dr["TableId"].ToString()).ToArray();
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
 

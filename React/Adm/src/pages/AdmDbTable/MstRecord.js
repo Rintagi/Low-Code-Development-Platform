@@ -170,6 +170,13 @@ class MstRecord extends RintagiScreen {
           TblObjective3: values.cTblObjective3 || '',
           VirtualTbl3: values.cVirtualTbl3 ? 'Y' : 'N',
           MultiDesignDb3: values.cMultiDesignDb3 ? 'Y' : 'N',
+          UploadSheet: values.cUploadSheet && values.cUploadSheet.ts ?
+            JSON.stringify({
+              ...values.cUploadSheet,
+              ts: undefined,
+              lastTS: values.cUploadSheet.ts,
+              base64: this.StripEmbeddedBase64Prefix(values.cUploadSheet.base64)
+            }) : values.cUploadSheet || ' ',
           SheetNameList: (values.cSheetNameList || {}).value || '',
           RowsToExamine: values.cRowsToExamine || '',
           ModifiedBy3: (values.cModifiedBy3 || {}).value || '',
@@ -379,6 +386,8 @@ class MstRecord extends RintagiScreen {
     const TblObjective3 = currMst.TblObjective3;
     const VirtualTbl3 = currMst.VirtualTbl3;
     const MultiDesignDb3 = currMst.MultiDesignDb3;
+    const UploadSheet = currMst.UploadSheet;
+    const UploadSheet_DownloadLink = currMst.UploadSheet_DownloadLink;
     const SheetNameListList = AdmDbTableReduxObj.ScreenDdlSelectors.SheetNameList(AdmDbTableState);
     const SheetNameList = currMst.SheetNameList;
     const RowsToExamine = currMst.RowsToExamine;
@@ -434,6 +443,7 @@ class MstRecord extends RintagiScreen {
                     cTblObjective3: formatContent(TblObjective3 || '', 'MultiLine'),
                     cVirtualTbl3: VirtualTbl3 === 'Y',
                     cMultiDesignDb3: MultiDesignDb3 === 'Y',
+                    cUploadSheet: formatContent(UploadSheet || '', 'Upload'),
                     cSheetNameList: SheetNameListList.filter(obj => { return obj.key === SheetNameList })[0],
                     cRowsToExamine: formatContent(RowsToExamine || '', 'TextBox'),
                     cModifiedBy3: ModifiedBy3List.filter(obj => { return obj.key === ModifiedBy3 })[0],
@@ -731,6 +741,40 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </div>
                               </Col>
+
+                              {(authCol.UploadSheet || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.UploadSheet || {}).ColumnHeader} {(columnLabel.UploadSheet || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.UploadSheet || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.UploadSheet || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <FileInputFieldV1
+                                          name='cUploadSheet'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'cUploadSheet')}
+                                          fileInfo={{ downloadLink: UploadSheet_DownloadLink, downloadFileName: UploadSheet }}
+                                          options={fileFileUploadOptions}
+                                          value={values.cUploadSheet || UploadSheet}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />
+                                        {!(values.cUploadSheet || {}).base64 &&
+                                        <Field
+                                          type='text'
+                                          name='cUploadSheet'
+                                          disabled={(authCol.UploadSheet || {}).readonly ? 'disabled' : ''} />
+                                        }
+                                      </div>
+                                    }
+                                    {errors.cUploadSheet && touched.cUploadSheet && <span className='form__form-group-error'>{errors.cUploadSheet}</span>}
+                                  </div>
+                                </Col>
+                              }
+
                               {(authCol.SheetNameList || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>

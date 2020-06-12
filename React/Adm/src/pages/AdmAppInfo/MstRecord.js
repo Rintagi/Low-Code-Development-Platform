@@ -638,12 +638,12 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmAppInfoState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (<div className='form__form-group-field'>
                                         <Field
                                           type='text'
                                           name='cVersionValue135'
                                           disabled={(authCol.VersionValue135 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      </div>)
                                     }
                                     {errors.cVersionValue135 && touched.cVersionValue135 && <span className='form__form-group-error'>{errors.cVersionValue135}</span>}
                                   </div>

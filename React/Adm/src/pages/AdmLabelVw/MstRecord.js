@@ -330,6 +330,8 @@ class MstRecord extends RintagiScreen {
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
 
     const LabelId265 = currMst.LabelId265;
+    const LabelLink265 = currMst.LabelLink265;
+    const LabelLink265URL = currMst.LabelLink265URL;
     const CultureId265 = currMst.CultureId265;
     const LabelCat265 = currMst.LabelCat265;
     const LabelKey265 = currMst.LabelKey265;
@@ -376,6 +378,8 @@ class MstRecord extends RintagiScreen {
                 <Formik
                   initialValues={{
                     cLabelId265: formatContent(LabelId265 || '', 'TextBox'),
+                    cLabelLink265: formatContent(LabelLink265 || '', 'ImagePopUp'),
+                    cLabelLink265URL: formatContent(LabelLink265URL || '', 'ImagePopUp'),
                     cCultureId265: formatContent(CultureId265 || '', 'TextBox'),
                     cLabelCat265: formatContent(LabelCat265 || '', 'TextBox'),
                     cLabelKey265: formatContent(LabelKey265 || '', 'TextBox'),
@@ -492,6 +496,34 @@ class MstRecord extends RintagiScreen {
                                       </div>
                                     }
                                     {errors.cLabelId265 && touched.cLabelId265 && <span className='form__form-group-error'>{errors.cLabelId265}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.LabelLink265 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmLabelVwState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.LabelLink265 || {}).ColumnHeader} {(columnLabel.LabelLink265 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.LabelLink265 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.LabelLink265 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmLabelVwState)) && <Skeleton height='36px' />) ||
+                                      (values.cLabelLink265URL && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(values.cLabelLink265URL, false, false, {values, name: 'LabelLink265'})}
+                                          onClick={this.PopUpSearchLink(values.cLabelLink265URL, false, false, {values, name: 'LabelLink265'})}
+                                          disabled={(authCol.LabelLink265 || {}).readonly ? 'disabled' : ''}
+                                          >
+                                            <img 
+                                                alt={values.cLabelLink265}
+                                                src={require('../../img/Link.gif')}
+                                            />
+                                        </a>
+                                      </div>)
+                                    }
+                                    {errors.cLabelLink265 && touched.cLabelLink265 && <span className='form__form-group-error'>{errors.cLabelLink265}</span>}
                                   </div>
                                 </Col>
                               }

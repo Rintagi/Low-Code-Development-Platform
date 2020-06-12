@@ -1746,9 +1746,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                     ,"UsrAccess" 
                     ,"UsrRules"
                 };
-                bool needMSBuild = true || ruleTierProjects
+                bool needMSBuild = ruleTierProjects
                                         .Where(m => new Regex(string.Format("/{0}/", m), RegexOptions.IgnoreCase).IsMatch(changedFilesRet.Item2))
-                                        .Any();
+                                        .Any() || true;
                 bool noWebSiteBuild = true;
 
                 System.Collections.Generic.List<string> stdOut = new System.Collections.Generic.List<string>();
@@ -1793,7 +1793,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
             {
                 PreMsgPopup(ex.Message);
             }
-
 
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.

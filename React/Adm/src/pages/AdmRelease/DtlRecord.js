@@ -347,6 +347,19 @@ class DtlRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
     const ObjectType192List = AdmReleaseReduxObj.ScreenDdlSelectors.ObjectType192(AdmReleaseState);
     const ObjectType192 = currDtl.ObjectType192;
     const RunOrder192 = currDtl.RunOrder192;

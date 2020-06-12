@@ -2286,6 +2286,19 @@ namespace RO.Access3
             if (dt.Rows.Count >= 1) { return dt.Rows[0][0].ToString(); } else { return string.Empty; }
         }
 
+        public string WrCloneReport(string ReportId, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OleDbCommand cmd = new OleDbCommand("WrCloneReport", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ReportId", OleDbType.Integer).Value = ReportId;
+            cmd.CommandTimeout = 1800;
+            da.SelectCommand = cmd;
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            if (dt.Rows.Count >= 1) { return dt.Rows[0][0].ToString(); } else { return string.Empty; }
+        }
+
         public void PurgeScrAudit(Int16 YearOld, string dbConnectionString, string dbPassword)
         {
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));

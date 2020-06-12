@@ -237,12 +237,12 @@ class FileInputField extends Component {
   render() {
     let previewClass = classNames({
       'd-none': true,
-      'd-table-cell': this.state.previewUrl != null,
+      'd-block': this.state.previewUrl != null,
     });
 
     let deleteClass = classNames({
       'd-none': !this.state.deleteBtnVisibility,
-      'd-table-cell': this.state.deleteBtnVisibility,
+      'd-block': this.state.deleteBtnVisibility,
     });
 
     let previewIconClass = classNames({
@@ -280,15 +280,15 @@ class FileInputField extends Component {
     const emptyFile = 'iVBORw0KGgoAAAANSUhEUgAAAhwAAAABCAQAAAA/IL+bAAAAFElEQVR42mN89p9hFIyCUTAKSAIABgMB58aXfLgAAAAASUVORK5CYII=';
 
     return (
-      <div className="wth-100">
+      <div>
         <Row>
-          <Col className="mw-133 mb-15">
-            <div className='form__form-group-input-wrap w-103'>
+          <Col>
+            <div className='form__form-group-input-wrap w-103 fileInputV1'>
               <div className='form__form-group-file'>
                 <label htmlFor={this.props.name}>{this.props.label}</label>
-                <label className={`ml-15 ${previewClass}`} onClick={this.removeSelectedFile}>{options.CancelFileButton}</label>
+                <label className={`${previewClass}`} onClick={this.removeSelectedFile}>{options.CancelFileButton}</label>
                 {
-                  (fileInfo.base64 || fileInfo.icon || '').length > 0 && <label className={`ml-15 ${deleteClass}`} onClick={this.sendEmptyFile}>{options.DeleteFileButton}</label>
+                  (fileInfo.base64 || fileInfo.icon || '').length > 0 && <label className={`${deleteClass}`} onClick={this.sendEmptyFile}>{options.DeleteFileButton}</label>
                 }
                 <input
                   className="fileInput"
@@ -297,11 +297,17 @@ class FileInputField extends Component {
                   id={this.props.name}
                   onChange={this.handleChange}
                 />
+                 {
+                    (this.props.fileInfo || {}).downloadLink &&
+                    <label><a href={this.props.fileInfo.downloadLink} target='_blank'>
+                      Download
+                    </a></label>
+                 }
               </div>
             </div>
 
           </Col>
-          <Col className="mw-133">
+          <Col>
             {
               (fileInfo.base64 || '').length > 0 && inPlaceImg && fileInfo.base64 !== emptyFile &&
               <div className={`form__form-group truncate pointer ${deleteIconClass}`} onClick={this.previewServerFile(fileContent, mimeType)} src={fileContent || iconContent}>

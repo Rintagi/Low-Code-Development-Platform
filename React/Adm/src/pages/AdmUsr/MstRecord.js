@@ -414,7 +414,9 @@ class MstRecord extends RintagiScreen {
     const InternalUsr1 = currMst.InternalUsr1;
     const TechnicalUsr1 = currMst.TechnicalUsr1;
     const EmailLink1 = currMst.EmailLink1;
+    const UsrEmail1URL = currMst.UsrEmail1URL;
     const MobileLink1 = currMst.MobileLink1;
+    const UsrMobile1URL = currMst.UsrMobile1URL;
     const FailedAttempt1 = currMst.FailedAttempt1;
     const LastSuccessDt1 = currMst.LastSuccessDt1;
     const LastFailedDt1 = currMst.LastFailedDt1;
@@ -504,7 +506,9 @@ class MstRecord extends RintagiScreen {
                     cInternalUsr1: InternalUsr1 === 'Y',
                     cTechnicalUsr1: TechnicalUsr1 === 'Y',
                     cEmailLink1: formatContent(EmailLink1 || '', 'HyperLink'),
+                    cUsrEmail1URL: formatContent(UsrEmail1URL || '', 'HyperLink'),
                     cMobileLink1: formatContent(MobileLink1 || '', 'HyperLink'),
+                    cUsrMobile1URL: formatContent(UsrMobile1URL || '', 'HyperLink'),
                     cFailedAttempt1: formatContent(FailedAttempt1 || '', 'StarRating'),
                     cLastSuccessDt1: LastSuccessDt1 || new Date(),
                     cLastFailedDt1: LastFailedDt1 || new Date(),
@@ -1052,12 +1056,15 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cEmailLink1'
-                                          disabled={(authCol.EmailLink1 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      (values.cUsrEmail1URL && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(values.cUsrEmail1URL, false, false, {values, name: 'EmailLink1'})}
+                                          onClick={this.PopUpSearchLink(values.cUsrEmail1URL, false, true, {values, name: 'EmailLink1'})}
+                                          disabled={(authCol.EmailLink1 || {}).readonly ? 'disabled' : ''}
+                                          >{values.cEmailLink1}
+                                        </a>
+                                      </div>)
                                     }
                                     {errors.cEmailLink1 && touched.cEmailLink1 && <span className='form__form-group-error'>{errors.cEmailLink1}</span>}
                                   </div>
@@ -1073,12 +1080,15 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cMobileLink1'
-                                          disabled={(authCol.MobileLink1 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      (values.cUsrMobile1URL && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(values.cUsrMobile1URL, false, false, {values, name: 'MobileLink1'})}
+                                          onClick={this.PopUpSearchLink(values.cUsrMobile1URL, false, true, {values, name: 'MobileLink1'})}
+                                          disabled={(authCol.MobileLink1 || {}).readonly ? 'disabled' : ''}
+                                          >{values.cMobileLink1}
+                                        </a>
+                                      </div>)
                                     }
                                     {errors.cMobileLink1 && touched.cMobileLink1 && <span className='form__form-group-error'>{errors.cMobileLink1}</span>}
                                   </div>
@@ -1094,12 +1104,12 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (<div className='form__form-group-field'>
                                         <Field
                                           type='text'
                                           name='cFailedAttempt1'
                                           disabled={(authCol.FailedAttempt1 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      </div>)
                                     }
                                     {errors.cFailedAttempt1 && touched.cFailedAttempt1 && <span className='form__form-group-error'>{errors.cFailedAttempt1}</span>}
                                   </div>

@@ -1862,6 +1862,25 @@ namespace RO.Web
             }
             return dtAuthCol;
         }
+        protected Dictionary<string, DataRow> _GetAuthColDict(DataTable dtColAuth, int screenId)
+        {
+            Dictionary<string, DataRow> colAuth = new Dictionary<string, DataRow>();
+            foreach (DataRow dr in dtColAuth.Rows)
+            {
+                colAuth[dr["ColName"].ToString()] = dr;
+                if (dtColAuth.Columns.Contains("LinkColName"))
+                {
+                    string linkColumnName = dr["LinkColName"].ToString();
+                    if (!string.IsNullOrEmpty(linkColumnName))
+                    {
+                        colAuth[linkColumnName] = dr;
+                    }
+                }
+            }
+            return colAuth;
+        }
+
+
         protected DataTable _GetScreenLabel(int screenId)
         {
             var context = HttpContext.Current;
@@ -3101,7 +3120,10 @@ namespace RO.Web
                 DataTable dtMenu = (new MenuSystem()).GetMenu(LUser.CultureId, systemId, LImpr, LcSysConnString, LcAppPw, screenId, null, null);
                 if (dtMenu.Rows.Count > 0)
                 {
-                    m[screenId.ToString()] = dtMenu.Rows[0];
+                    lock (m)
+                    {
+                        m[screenId.ToString()] = dtMenu.Rows[0];
+                    }
                 }
                 if (mCacheX == null || mCacheX.Item1 != loginHandle)
                 {
@@ -3431,15 +3453,15 @@ namespace RO.Web
                     }
                     else return null;
 
-                    FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
-                    byte[] icon = tryResizeImage(Convert.FromBase64String(fileInfo.base64));
-                    return jss.Serialize(new FileUploadObj() {
-                        icon = icon != null
-                            ? Convert.ToBase64String(icon)
-                            : (fileInfo.mimeType.Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64 : null),
-                        mimeType = fileInfo.mimeType, 
-                        lastModified = fileInfo.lastModified, 
-                        fileName = fileInfo.fileName });
+                    //FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
+                    //byte[] icon = tryResizeImage(Convert.FromBase64String(fileInfo.base64));
+                    //return jss.Serialize(new FileUploadObj() {
+                    //    icon = icon != null
+                    //        ? Convert.ToBase64String(icon)
+                    //        : (fileInfo.mimeType.Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64 : null),
+                    //    mimeType = fileInfo.mimeType, 
+                    //    lastModified = fileInfo.lastModified, 
+                    //    fileName = fileInfo.fileName });
                 }
                 catch {
                     try
@@ -3520,12 +3542,30 @@ namespace RO.Web
                                             ? null 
                                             : "data:image/png;base64," + Convert.ToBase64String(dr[columnName] as byte[]);
                 }
+                else if (displayMode == "Upload")
+                {
+                    if (
+                        (includeBLOB == IncludeBLOB.DownloadLink || includeBLOB == IncludeBLOB.Icon)
+                        &&
+                        !string.IsNullOrEmpty(dr[columnName].ToString())
+                        )
+                    {
+                        string url = "~/Dnload.aspx?"
+                                + "file=" + dr[columnName].ToString()
+                                ;
+                        return ResolveUrlCustom(GetUrlWithQSHashV2(url), false, true);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
                 else
                 {
                     // assume to be ImageButton;
                     if (includeBLOB == IncludeBLOB.None)
                         return null;
-                    else if (includeBLOB == IncludeBLOB.DownloadLink 
+                    else if (includeBLOB == IncludeBLOB.DownloadLink
                             && !string.IsNullOrEmpty(tableName)
                             && (
                             (!string.IsNullOrEmpty(tableId) && rxBaseCol.IsMatch(columnName))
@@ -3535,7 +3575,7 @@ namespace RO.Web
                             )
                     {
                         var keyId = dr[keyColumnName].ToString();
-                        var baseColName = rxBaseCol.Replace(columnName,"");
+                        var baseColName = rxBaseCol.Replace(columnName, "");
                         if (GetDdlContext().ContainsKey(columnName))
                         {
                             // pull up image from another table
@@ -3558,7 +3598,8 @@ namespace RO.Web
                         return DecodeFileStream((byte[])(dr[columnName]), true);
                     else if (includeBLOB == IncludeBLOB.Icon)
                         return BlobPlaceHolder((byte[])(dr[columnName]));
-                    else if (includeBLOB == IncludeBLOB.DownloadLink && string.IsNullOrEmpty(tableName)) {
+                    else if (includeBLOB == IncludeBLOB.DownloadLink && string.IsNullOrEmpty(tableName))
+                    {
                         // inplace link instead if not table backed
                         return RO.Common3.Utils.BlobPlaceHolder(dr[columnName] as byte[], true);
                         //var x = BlobImage(dr[columnName] as byte[], true);
@@ -3574,6 +3615,7 @@ namespace RO.Web
                 foreach (DataColumn col in dt.Columns)
                 {                
                     var columnName = col.ColumnName;
+                    var baseColumnName = columnName.EndsWith("URL") ? columnName.Substring(0, columnName.Length - 3) : columnName;
                     var colType = dr[columnName].GetType();
 
                     if (colList != null && !colList.Contains(columnName)) continue;
@@ -3581,16 +3623,23 @@ namespace RO.Web
                         || columnName == GetMstKeyColumnName()
                         || columnName == GetDtlKeyColumnName()
                         || (colAuth.ContainsKey(columnName) && colAuth[columnName]["ColVisible"].ToString() != "N")
+                        || (columnName.EndsWith("URL") && colAuth.ContainsKey(baseColumnName) && colAuth[baseColumnName]["ColVisible"].ToString() != "N")
                         || (colAuth.ContainsKey(columnName + "Text") && colAuth[columnName + "Text"]["ColVisible"].ToString() != "N")
                         )
+                    {
                         rec[columnName] =
                             colType == typeof(DateTime) ? (((DateTime)dr[columnName]).ToString("o") + (utcColumns == null || !utcColumns.Contains(columnName) ? "" : "Z")) :
-                            colType == typeof(byte[]) ? 
+                            colType == typeof(byte[]) ?
                                 (dr[columnName] != null
-                                    ? convertByteArrayToString(columnName, dr) 
-                                    : null) 
+                                    ? convertByteArrayToString(columnName, dr)
+                                    : null)
                             : dr[columnName].ToString()
                             ;
+                        if (colAuth != null && colAuth.ContainsKey(columnName) && colAuth[columnName]["DisplayMode"].ToString() == "Upload")
+                        {
+                            rec[columnName + "_DownloadLink"] = convertByteArrayToString(columnName, dr);
+                        }
+                    }
                     else rec[columnName] = null;
                 }
                 ret.Add(rec);
@@ -3934,7 +3983,7 @@ namespace RO.Web
         protected string ResolveUrlCustom(string relativeUrl, bool isInternal = false, bool withDomain = false)
         {
             var Request = Context.Request;
-            string url = ResolveUrl(relativeUrl);
+            string url = ResolveUrl((relativeUrl.StartsWith("http:") || relativeUrl.StartsWith("~/") || relativeUrl.StartsWith("/") ? "" : "~/") + relativeUrl);
             string extBasePath = Config.ExtBasePath;
             string extDomain = Config.ExtDomain;
             string extBaseUrl = Config.ExtBaseUrl;
@@ -4374,6 +4423,48 @@ namespace RO.Web
                         // bounce
                         errors.Add(new KeyValuePair<string, string>(colName, "invalid file upload format"));
                     }
+                }
+            }
+            else if (displayMode == "Upload")
+            {
+                try
+                {
+                    if ((val ?? "").Trim().StartsWith("{") || (val ?? "").StartsWith("["))
+                    {
+                        List<_ReactFileUploadObj> fileArray = DestructureFileUploadObject(val);
+                        if (fileArray.Where(f => string.IsNullOrEmpty(f.base64)).Count() > 0
+                            && fileArray.Count > 1
+                            )
+                        {
+                            errors.Add(new KeyValuePair<string, string>(colName, "invalid file upload, incomplete content"));
+                        }
+                        _ReactFileUploadObj file = fileArray[0];
+                        string programSubDirName = new Regex(GetScreenId().ToString() + "$").Replace(GetProgramName(), "");
+                        string basePath = drLabel["ColumnLink"].ToString() + "/" + programSubDirName + "_" + GetSystemId() + "/";
+                        string localDir = Server.MapPath(basePath);
+                        if (!Directory.Exists(localDir)) { Directory.CreateDirectory(localDir); }
+                        string fname = file.fileName.Replace(":", "").Replace("..", "").Replace("/", "_").Replace(@"\", "_");
+                        fname = Regex.Replace(fname, "[ #=+]", string.Empty);
+                        string filePath = localDir + "/" + fname;
+                        using (FileStream fws = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+                        {
+                            byte[] content = Convert.FromBase64String(file.base64);
+                            fws.Write(content, 0, content.Length);
+                            fws.Close();
+                            val = basePath + fname;
+                        }
+                    }
+                    else
+                    {
+                        // no new upload, must preserve existing value even when incoming is null but if not empty, treat as textbox data entry
+                        var revertedVal = !string.IsNullOrEmpty(oldVal) ? oldVal : defaultValue ;
+                        val = (val ?? "").Length > 0 ? val.Trim() : revertedVal;
+                    }
+                }
+                catch
+                {
+                    // bounce
+                    errors.Add(new KeyValuePair<string, string>(colName, "invalid file upload format"));
                 }
             }
             else if (isDdlType.Contains(displayName))
@@ -5058,6 +5149,7 @@ namespace RO.Web
                 DataTable dtS = _GetLabels("cSystem");
                 dtS.Merge(_GetLabels("QFilter"));
                 dtS.Merge(_GetLabels("cGrid"));
+                dtS.AcceptChanges();
                 return DataTableToApiResponse(dtS, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, 3, 0, "R", null), AllowAnonymous());
@@ -5214,7 +5306,12 @@ namespace RO.Web
                 foreach (DataRow drLabel in dtLabel.Rows)
                 {
                     DataRow drAuth = dtAut.Rows[ii];
-                    if ("HyperLink,ImageButton".IndexOf(drLabel["DisplayName"].ToString()) >= 0
+                    if (
+                        (
+                        "HyperLink,ImageButton".IndexOf(drLabel["DisplayName"].ToString()) >= 0
+                        ||
+                        drLabel["DisplayMode"].ToString() == "Upload"
+                        )
                         && !string.IsNullOrEmpty(drLabel["TableId"].ToString())
                         && drAuth["MasterTable"].ToString() == (isMaster ? "Y" : "N")
                         && drAuth["ColVisible"].ToString() == "Y"
@@ -5233,7 +5330,7 @@ namespace RO.Web
                         try
                         {
                             // can't pass in the colauth or it would be filtered out DB column name vs Screen column name, FIXEM
-                            mr.data = DataTableToListOfObject(dt, IncludeBLOB.Content, null, null);
+                            mr.data = DataTableToListOfObject(dt,drLabel["DisplayMode"].ToString() == "Upload" ? IncludeBLOB.DownloadLink : IncludeBLOB.Content, null, null);
                             mr.status = "success";
                             mr.errorMsg = "";
                             return mr;

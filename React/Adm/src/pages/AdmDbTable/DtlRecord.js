@@ -117,7 +117,7 @@ class DtlRecord extends RintagiScreen {
           ColumnLength5: values.cColumnLength5 || '',
           ColumnScale5: values.cColumnScale5 || '',
           DefaultValue5: values.cDefaultValue5 || '',
-          AllowNulls5: values.cAllowNulls5 || '',
+          AllowNulls5: values.cAllowNulls5 ? 'Y' : 'N',
           ColumnIdentity5: values.cColumnIdentity5 ? 'Y' : 'N',
           PrimaryKey5: values.cPrimaryKey5 ? 'Y' : 'N',
           IsIndexU5: values.cIsIndexU5 ? 'Y' : 'N',
@@ -349,6 +349,19 @@ class DtlRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
     const ColumnIndex5 = currDtl.ColumnIndex5;
     const ExternalTable5 = currDtl.ExternalTable5;
     const ColumnName5 = currDtl.ColumnName5;
@@ -390,7 +403,7 @@ class DtlRecord extends RintagiScreen {
                     cColumnLength5: formatContent(currDtl.ColumnLength5 || '', 'TextBox'),
                     cColumnScale5: formatContent(currDtl.ColumnScale5 || '', 'TextBox'),
                     cDefaultValue5: formatContent(currDtl.DefaultValue5 || '', 'TextBox'),
-                    cAllowNulls5: formatContent(currDtl.AllowNulls5 || '', 'CheckBoxAll'),
+                    cAllowNulls5: currDtl.AllowNulls5 === 'Y',
                     cColumnIdentity5: currDtl.ColumnIdentity5 === 'Y',
                     cPrimaryKey5: currDtl.PrimaryKey5 === 'Y',
                     cIsIndexU5: currDtl.IsIndexU5 === 'Y',
@@ -627,24 +640,24 @@ class DtlRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.AllowNulls5 || {}).visible &&
+                              {(authCol.AllowNulls5 || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
-                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='20px' />) ||
-                                      <label className='form__form-group-label'>{(columnLabel.AllowNulls5 || {}).ColumnHeader} {(columnLabel.AllowNulls5 || {}).ToolTip &&
-                                        (<ControlledPopover id={(columnLabel.AllowNulls5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.AllowNulls5 || {}).ToolTip} />
-                                        )}
-                                      </label>
-                                    }
-                                    {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cAllowNulls5'
-                                          disabled={(authCol.AllowNulls5 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
-                                    }
-                                    {errors.cAllowNulls5 && touched.cAllowNulls5 && <span className='form__form-group-error'>{errors.cAllowNulls5}</span>}
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cAllowNulls5'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cAllowNulls5}
+                                        disabled={(authCol.AllowNulls5 || {}).readonly || !(authCol.AllowNulls5 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.AllowNulls5 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.AllowNulls5 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.AllowNulls5 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.AllowNulls5 || {}).ToolTip} />
+                                      )}
                                   </div>
                                 </Col>
                               }

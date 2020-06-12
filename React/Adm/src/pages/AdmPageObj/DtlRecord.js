@@ -110,6 +110,20 @@ class DtlRecord extends RintagiScreen {
           PageLnkId1278: values.cPageLnkId1278 || null,
           PageLnkTxt1278: values.cPageLnkTxt1278 || '',
           PageLnkRef1278: values.cPageLnkRef1278 || '',
+          PageLnkImg1278: values.cPageLnkImg1278 && values.cPageLnkImg1278.ts ?
+            JSON.stringify({
+              ...values.cPageLnkImg1278,
+              ts: undefined,
+              lastTS: values.cPageLnkImg1278.ts,
+              base64: this.StripEmbeddedBase64Prefix(values.cPageLnkImg1278.base64)
+            }) : values.cPageLnkImg1278 || ' ',
+          PageLnkAlt1278: values.cPageLnkAlt1278 && values.cPageLnkAlt1278.ts ?
+            JSON.stringify({
+              ...values.cPageLnkAlt1278,
+              ts: undefined,
+              lastTS: values.cPageLnkAlt1278.ts,
+              base64: this.StripEmbeddedBase64Prefix(values.cPageLnkAlt1278.base64)
+            }) : values.cPageLnkAlt1278 || ' ',
           PageLnkOrd1278: values.cPageLnkOrd1278 || '',
           Popup1278: values.cPopup1278 ? 'Y' : 'N',
           PageLnkCss1278: values.cPageLnkCss1278 || '',
@@ -339,8 +353,25 @@ class DtlRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
     const PageLnkTxt1278 = currDtl.PageLnkTxt1278;
     const PageLnkRef1278 = currDtl.PageLnkRef1278;
+    const PageLnkImg1278 = currDtl.PageLnkImg1278;
+    const PageLnkImg1278_DownloadLink = currDtl.PageLnkImg1278_DownloadLink;
+    const PageLnkAlt1278 = currDtl.PageLnkAlt1278;
+    const PageLnkAlt1278_DownloadLink = currDtl.PageLnkAlt1278_DownloadLink;
     const PageLnkOrd1278 = currDtl.PageLnkOrd1278;
     const Popup1278 = currDtl.Popup1278;
     const PageLnkCss1278 = currDtl.PageLnkCss1278;
@@ -366,6 +397,8 @@ class DtlRecord extends RintagiScreen {
                     cPageLnkId1278: currDtl.PageLnkId1278 || '',
                     cPageLnkTxt1278: formatContent(currDtl.PageLnkTxt1278 || '', 'TextBox'),
                     cPageLnkRef1278: formatContent(currDtl.PageLnkRef1278 || '', 'TextBox'),
+                    cPageLnkImg1278: formatContent(currDtl.PageLnkImg1278 || '', 'Upload'),
+                    cPageLnkAlt1278: formatContent(currDtl.PageLnkAlt1278 || '', 'Upload'),
                     cPageLnkOrd1278: formatContent(currDtl.PageLnkOrd1278 || '', 'TextBox'),
                     cPopup1278: currDtl.Popup1278 === 'Y',
                     cPageLnkCss1278: formatContent(PageLnkCss1278 || '', 'MultiLine'),
@@ -489,6 +522,70 @@ class DtlRecord extends RintagiScreen {
                                       </div>
                                     }
                                     {errors.cPageLnkRef1278 && touched.cPageLnkRef1278 && <span className='form__form-group-error'>{errors.cPageLnkRef1278}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.PageLnkImg1278 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PageLnkImg1278 || {}).ColumnHeader} {(columnLabel.PageLnkImg1278 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PageLnkImg1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PageLnkImg1278 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <FileInputFieldV1
+                                          name='cPageLnkImg1278'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'cPageLnkImg1278')}
+                                          fileInfo={{ downloadLink: PageLnkImg1278_DownloadLink, downloadFileName: PageLnkImg1278 }}
+                                          options={fileFileUploadOptions}
+                                          value={values.cPageLnkImg1278 || PageLnkImg1278}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />
+                                        {!(values.cPageLnkImg1278 || {}).base64 &&
+                                        <Field
+                                          type='text'
+                                          name='cPageLnkImg1278'
+                                          disabled={(authCol.PageLnkImg1278 || {}).readonly ? 'disabled' : ''} />
+                                        }
+                                      </div>
+                                    }
+                                    {errors.cPageLnkImg1278 && touched.cPageLnkImg1278 && <span className='form__form-group-error'>{errors.cPageLnkImg1278}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.PageLnkAlt1278 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.PageLnkAlt1278 || {}).ColumnHeader} {(columnLabel.PageLnkAlt1278 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.PageLnkAlt1278 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.PageLnkAlt1278 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmPageObjState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <FileInputFieldV1
+                                          name='cPageLnkAlt1278'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'cPageLnkAlt1278')}
+                                          fileInfo={{ downloadLink: PageLnkAlt1278_DownloadLink, downloadFileName: PageLnkAlt1278 }}
+                                          options={fileFileUploadOptions}
+                                          value={values.cPageLnkAlt1278 || PageLnkAlt1278}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />
+                                        {!(values.cPageLnkAlt1278 || {}).base64 &&
+                                        <Field
+                                          type='text'
+                                          name='cPageLnkAlt1278'
+                                          disabled={(authCol.PageLnkAlt1278 || {}).readonly ? 'disabled' : ''} />
+                                        }
+                                      </div>
+                                    }
+                                    {errors.cPageLnkAlt1278 && touched.cPageLnkAlt1278 && <span className='form__form-group-error'>{errors.cPageLnkAlt1278}</span>}
                                   </div>
                                 </Col>
                               }

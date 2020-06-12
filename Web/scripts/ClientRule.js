@@ -2483,10 +2483,15 @@ function _ApplyMultiSelect(e) {
     }
 }
 
-function CloneScript(CloneContent) {
+function CloneScript(CloneContent, footer) {
 
     var newDiv = $(document.createElement('div'));
-    $(newDiv).html('<textarea id="cloneContent">' + CloneContent + '</textarea><div><span class=\'initialMsg\'>To clone selected screen, run this SQL script on the design database of your choice.</span></div><div><span class=\'successMsg\' style=\'display:none; color: green;\'>Script copied to clipboard</span></div>');
+    var footerMsg = footer || "To clone selected screen, run this SQL script on the design database of your choice.";
+    $(newDiv).html('<textarea id="cloneContent">'
+            + CloneContent
+            + '</textarea><div><span class=\'initialMsg\'>'
+            + footerMsg
+            + '</span></div><div><span class=\'successMsg\' style=\'display:none; color: green;\'>Script copied to clipboard</span></div>');
     $(newDiv).dialog({
         modal: true, width: '600',
         buttons: {

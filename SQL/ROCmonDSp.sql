@@ -6418,8 +6418,8 @@ DECLARE @DfltColReadOnly char(1)
 SELECT @DfltColReadOnly = CASE WHEN AllowUpd='Y' OR AllowAdd = 'Y' THEN 'N' ELSE 'Y' END FROM @rowAuth 
 IF object_id('tempdb.dbo.#tbl') is not null DROP TABLE dbo.#tbl
 CREATE TABLE #tbl (tid smallint IDENTITY(1,1) not null, ScreenObjId int not null, MasterTable char(1) not null, DisplayName varchar(50) not null
-	, DisplayMode varchar(50) not null, ColVisible char(1) not null, ColReadOnly char(1) not null, ColName varchar(100) not null)
-INSERT #tbl (ScreenObjId, MasterTable, DisplayName, DisplayMode, ColVisible, ColReadOnly, ColName)
+	, DisplayMode varchar(50) not null, ColVisible char(1) not null, ColReadOnly char(1) not null, ColName varchar(100) not null, LinkColName varchar(100))
+INSERT #tbl (ScreenObjId, MasterTable, DisplayName, DisplayMode, ColVisible, ColReadOnly, ColName, LinkColName)
 	SELECT b.ScreenObjId, b.MasterTable, DisplayName = c.TypeName, DisplayMode = c.TypeDesc, 'Y'
 	, ColReadOnly = CASE 
 		WHEN c.TypeName IN ('HyperLink','Button','ImageButton') THEN 'N' 
@@ -6429,10 +6429,12 @@ INSERT #tbl (ScreenObjId, MasterTable, DisplayName, DisplayMode, ColVisible, Col
 	, ColName = CASE WHEN c.TypeName NOT IN ('DropDownList','ComboBox','ListBox','RadioButtonList')
 		THEN b.ColumnName + isnull(convert(varchar,d.TableId),'')
 		ELSE b.ColumnName + isnull(convert(varchar,d.TableId),'') + 'Text' END
+	, LinkColName = e.ColumnName + CONVERT(varchar, e.TableId) + 'URL'
 	FROM dbo.ScreenObj b
 	INNER JOIN dbo.Screen s ON b.ScreenId = s.ScreenId
 	INNER JOIN RODesign.dbo.CtDisplayType c ON b.DisplayModeId = c.TypeId
 	LEFT OUTER JOIN dbo.DbColumn d ON b.ColumnId = d.ColumnId
+	LEFT OUTER JOIN dbo.DbColumn e on b.DdlKeyColumnId = e.ColumnId AND c.TypeName IN ('HyperLink')
 	WHERE b.ScreenId = @ScreenId
 	ORDER BY b.TabIndex
 DECLARE cur1 CURSOR FAST_FORWARD FOR
@@ -6478,7 +6480,7 @@ BEGIN
 	FETCH NEXT FROM cur1 INTO @ScreenObjId, @PermKeyDesc, @PermId, @ColVisible, @ColReadOnly
 END
 CLOSE cur1 DEALLOCATE cur1
-SELECT MasterTable, DisplayName, DisplayMode, ColVisible, ColReadOnly, ColName FROM #tbl ORDER BY tid
+SELECT MasterTable, DisplayName, DisplayMode, ColVisible, ColReadOnly, ColName, LinkColName FROM #tbl ORDER BY tid
 DROP TABLE dbo.#tbl
 RETURN 0
 GO
@@ -39383,6 +39385,7 @@ SELECT ColumnHeader = isnull(a.ColumnHeader,''), b.ResizeWidth, b.ResizeHeight
 	, b.ColumnName, DisplayMode = e.TypeDesc, DisplayName = e.TypeName, b.IgnoreConfirm, b.GridGrpCd
 	, c.ColumnLength, c.DataType, b.DtlLstPosId
 	, b.ScreenObjId
+	, b.ColumnLink 
 	FROM #hlp a
 	INNER JOIN dbo.ScreenObj b ON a.ScreenObjId = b.ScreenObjId
 	INNER JOIN RODesign.dbo.CtDisplayType e ON b.DisplayModeId = e.TypeId
@@ -49813,6 +49816,7 @@ SELECT a.ScreenTabId, ah.TabFolderName, a.TabFolderOrder, c.GridGrpCd, c.ColumnH
 	,d.ColumnLength
 	,e.SystemId
 	,MultiDesignDb=ISNULL(e.MultiDesignDb,'N')
+	,c.HyperLinkUrl
 FROM dbo.ScreenTab a
 INNER JOIN dbo.ScreenTabHlp ah ON a.ScreenTabId = ah.ScreenTabId 
 AND (ah.CultureId = @CultureId

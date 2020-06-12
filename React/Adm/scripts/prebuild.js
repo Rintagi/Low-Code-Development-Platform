@@ -24,7 +24,7 @@ cpx.copy('../Cmn/src/services/*.js','./src/services',{update:true,preserve:true,
 */
 
 /* revised common files from Rintagi, only if newer, i.e. update:true */
-cpx.copy('../Shared/src/**/*.js','./src',{update:true,preserve:true,dereference:true},(error)=>{
+cpx.copy('../Shared/src/**/*.*','./src',{update:true,preserve:true,dereference:true},(error)=>{
   console.log('cpx done for shared components');
 
   /* must be done AFTER shared ones as this is a final overwrite and cpx.copy is async

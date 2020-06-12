@@ -651,12 +651,15 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmLicenseState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cRegisterInsall'
-                                          disabled={(authCol.RegisterInsall || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      ('http://www.rintagi.com' && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink('http://www.rintagi.com', false, false, {values, name: 'RegisterInsall'})}
+                                          onClick={this.PopUpSearchLink('http://www.rintagi.com', false, false, {values, name: 'RegisterInsall'})}
+                                          disabled={(authCol.RegisterInsall || {}).readonly ? 'disabled' : ''}
+                                          >{'http://www.rintagi.com'}
+                                        </a>
+                                      </div>)
                                     }
                                     {errors.cRegisterInsall && touched.cRegisterInsall && <span className='form__form-group-error'>{errors.cRegisterInsall}</span>}
                                   </div>

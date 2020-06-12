@@ -337,6 +337,19 @@ class DtlRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
     const PermKeyId237List = AdmAtRowAuthReduxObj.ScreenDdlSelectors.PermKeyId237(AdmAtRowAuthState);
     const PermKeyId237 = currDtl.PermKeyId237;
     const SelLevel237List = AdmAtRowAuthReduxObj.ScreenDdlSelectors.SelLevel237(AdmAtRowAuthState);

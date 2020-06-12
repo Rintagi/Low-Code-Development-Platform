@@ -103,7 +103,7 @@ class MstRecord extends RintagiScreen {
     const errors = {};
     const columnLabel = (this.props.AdmStaticFi || {}).ColumnLabel || {};
     /* standard field validation */
-
+    if (!values.cStaticFiUrl262) { errors.cStaticFiUrl262 = (columnLabel.StaticFiUrl262 || {}).ErrMessage; }
     return errors;
   }
 
@@ -128,6 +128,13 @@ class MstRecord extends RintagiScreen {
         this.props.AdmStaticFi,
         {
           StaticFiId262: values.cStaticFiId262 || '',
+          StaticFiUrl262: values.cStaticFiUrl262 && values.cStaticFiUrl262.ts ?
+            JSON.stringify({
+              ...values.cStaticFiUrl262,
+              ts: undefined,
+              lastTS: values.cStaticFiUrl262.ts,
+              base64: this.StripEmbeddedBase64Prefix(values.cStaticFiUrl262.base64)
+            }) : values.cStaticFiUrl262 || ' ',
         },
         [],
         {
@@ -324,6 +331,8 @@ class MstRecord extends RintagiScreen {
     const selectedMst = (selectList || []).filter(v => v.isSelected)[0] || {};
 
     const StaticFiId262 = currMst.StaticFiId262;
+    const StaticFiUrl262 = currMst.StaticFiUrl262;
+    const StaticFiUrl262_DownloadLink = currMst.StaticFiUrl262_DownloadLink;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
@@ -365,6 +374,7 @@ class MstRecord extends RintagiScreen {
                 <Formik
                   initialValues={{
                     cStaticFiId262: formatContent(StaticFiId262 || '', 'TextBox'),
+                    cStaticFiUrl262: formatContent(StaticFiUrl262 || '', 'Upload'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -479,6 +489,40 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
+
+                              {(authCol.StaticFiUrl262 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmStaticFiState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.StaticFiUrl262 || {}).ColumnHeader} <span className='text-danger'>*</span>{(columnLabel.StaticFiUrl262 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.StaticFiUrl262 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.StaticFiUrl262 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmStaticFiState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <FileInputFieldV1
+                                          name='cStaticFiUrl262'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'cStaticFiUrl262')}
+                                          fileInfo={{ downloadLink: StaticFiUrl262_DownloadLink, downloadFileName: StaticFiUrl262 }}
+                                          options={fileFileUploadOptions}
+                                          value={values.cStaticFiUrl262 || StaticFiUrl262}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />
+                                        {!(values.cStaticFiUrl262 || {}).base64 &&
+                                        <Field
+                                          type='text'
+                                          name='cStaticFiUrl262'
+                                          disabled={(authCol.StaticFiUrl262 || {}).readonly ? 'disabled' : ''} />
+                                        }
+                                      </div>
+                                    }
+                                    {errors.cStaticFiUrl262 && touched.cStaticFiUrl262 && <span className='form__form-group-error'>{errors.cStaticFiUrl262}</span>}
+                                  </div>
+                                </Col>
+                              }
+
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>

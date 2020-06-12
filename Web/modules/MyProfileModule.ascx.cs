@@ -38,8 +38,9 @@ namespace RO.Web
                 else
                 {
                     string extAppDomainUrl =
-                        !string.IsNullOrWhiteSpace(Config.ExtBaseUrl) && !string.IsNullOrEmpty(Request.Headers["X-Forwarded-For"])
+                        !string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["ExtBaseUrl"])
                             ? Config.ExtBaseUrl
+                            : string.IsNullOrEmpty(Request.Url.Query) ? Request.Url.AbsoluteUri.Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "")
                             : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
                     cAppDomainUrl.Text = extAppDomainUrl.EndsWith("/") ? extAppDomainUrl.Substring(0, extAppDomainUrl.Length - 1) : extAppDomainUrl;
                     cAppDomainUrl.Visible = true;

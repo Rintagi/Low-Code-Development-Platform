@@ -141,7 +141,7 @@
 193~@~AdmLabelVw    30: CultureId   100 [Default]~@~2037~@~119~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 194~@~AdmLabelVw    40: LabelCat   100 [Default]~@~2038~@~119~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 195~@~AdmLabelVw    70: SortOrder   100 [Default]~@~2042~@~119~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
-196~@~AdmUsrGroup    80: Filler   100 [Default]~@~2066~@~5~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+196~@~AdmUsrGroup [   80] Main Info: Filler   100 [Default]~@~2066~@~5~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 197~@~AdmCtCulture    40: CurrencyCd   100 [Default]~@~2071~@~8~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 198~@~AdmAppInfo    50: CultureTypeName   100 [Default]~@~3073~@~82~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 201~@~AdmUsrImpr    70: TestCulture   100 [Default]~@~3076~@~66~@~Y~@~Y~@~N~@~~@~~@~~@~~@~~@~100~@~

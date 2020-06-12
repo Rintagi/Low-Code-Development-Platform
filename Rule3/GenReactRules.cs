@@ -88,9 +88,11 @@ namespace RO.Rule3
             return
                 DisplayMode == "PlaceHolder"
 //                || DisplayMode == "DataGridLink"
-                || DisplayMode == "Upload"
-                || DisplayMode == "ImageLink"
-                || DisplayMode == "ImagePopUp"
+//                || DisplayMode == "Upload"
+//                || DisplayMode == "HyperPopUp"
+//                || DisplayMode == "HyperLink"
+//                || DisplayMode == "ImageLink"
+//                || DisplayMode == "ImagePopUp"
 //                || DisplayMode == "TokenInput"
 //                || DisplayMode == "Signature"
 //                || DisplayMode == "EncryptedTextBox"
@@ -1253,6 +1255,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                     string skeletonEnabled = "true";
                     string columnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
                     string ColumnName = drv["ColumnName"].ToString();
+                    string ColumnId = drv["ColumnId"].ToString();
                     string DdlFtrColumnId = drv["DdlFtrColumnId"].ToString();
                     string DdlFtrColumnName = drv["DdlFtrColumnName"].ToString();
                     string DdlAdnColumnName = drv["DdlAdnColumnName"].ToString();
@@ -1260,10 +1263,14 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                     string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
                     string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
                     string DdlKeyColumnId = drv["DdlKeyColumnId"].ToString();
+                    string DdlKeyColumnName = drv["DdlKeyColumnName"].ToString();
+                    string DdlKeyTableId = drv["DdlKeyTableId"].ToString();
                     string DisplayMode = drv["DisplayMode"].ToString();
                     string DisplayName = drv["DisplayName"].ToString();
                     string DdlRefColumnId = drv["DdlRefColumnId"].ToString();
                     string refColumnName = drv["DdlRefColumnName"].ToString() + screenMstTableId;
+                    string DefaultValue = drv["DefaultValue"].ToString();
+
                     bool isRefColumnControl = IsRefColumn(drv.Row);
                     bool isPullUpColumnControl = IsPullUpColumn(drv.Row, dvItms);
                     bool hasDependents = HasDependents(drv.Row, dvItms);
@@ -1992,8 +1999,22 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                             }
 
                             //save button function call
-                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
-                            saveBtnResults.Add(saveBtnValue);
+                            if (DisplayMode == "Upload")
+                            {
+                                string saveBtnValue = columnId + ": values.c" + columnId + @" && values.c" + columnId + @".ts ?
+            JSON.stringify({
+              ...values.c" + columnId + @",
+              ts: undefined,
+              lastTS: values.c" + columnId + @".ts,
+              base64: this.StripEmbeddedBase64Prefix(values.c" + columnId + @".base64)
+            }) : values.c" + columnId + " || ' ',";
+                                saveBtnResults.Add(saveBtnValue);
+                            }
+                            else
+                            {
+                                string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                                saveBtnResults.Add(saveBtnValue);
+                            }
 
                             //render label
                             string renderLabelValue = "    const " + columnId
@@ -2004,6 +2025,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                                             ;
                             renderLabelResults.Add(renderLabelValue);
 
+                            
                             //formik initial value
                             string formikInitialValue = "c" + columnId + ": formatContent(" + columnId + " || '', '" + DisplayMode + "'),";
                             formikInitialResults.Add(formikInitialValue);
@@ -2015,7 +2037,109 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                             && DisplayMode != "Money"
                                             && false; // don't hide
 
-                            string formikControlValue = @"
+                            if (DisplayMode == "Upload")
+                            {
+                                // additional label
+                                renderLabelValue = "    const " + columnId + "_DownloadLink"
+                                                                + (!isRefColumnControl || isPullUpColumnControl
+                                                                    ? " = currMst." + columnId + "_DownloadLink" + ";"
+                                                                    : " = " + refColumnBinding + ";"
+                                                                )
+                                                                ;
+                                renderLabelResults.Add(renderLabelValue);
+
+                                //formik control
+                                bool isRefColumn = false;
+                                string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + @"{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>"
+                                         + (isRefColumn
+                                            ? @"
+                                        <Field
+                                          component={FileInputField}
+                                          name='c" + columnId + @"'
+                                          options={{ ...fileFileUploadOptions, maxFileCount: 1 }}
+                                          files={(this.BindFileObject(" + columnId + @", values.c" + columnId + @") || []).filter(f => !f.isEmptyFileObject)}
+                                          label={(columnLabel." + columnId + @" || {}).ToolTip}
+                                          disabled={true}
+                                        />" : @"
+                                        <FileInputFieldV1
+                                          name='c" + columnId + @"'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
+                                          fileInfo={{ downloadLink: " + columnId + "_DownloadLink" + ", downloadFileName: " + columnId + @" }}
+                                          options={" + "file" + @"FileUploadOptions}
+                                          value={values.c" + columnId + @" || " + columnId + @"}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />") + @"
+                                        {!(values.c" + columnId + @" || {}).base64 &&
+                                        <Field
+                                          type='text'
+                                          name='c" + columnId + @"'
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}"
+                                                                   + (isRefColumnControl && !isPullUpColumnControl ? @"
+                                          value={" + formikRefColumnBinding + "}" : "") + @" />
+                                        }
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
+                                formikControlResults.Add(formikControlValue);
+
+                            }
+                            else
+                            {
+                                bool isHyperLink = DisplayMode == "HyperLink" || DisplayMode == "HyperPopUp";
+                                bool isImageLink = DisplayMode == "ImageLink" || DisplayMode == "ImagePopUp";
+                                bool isLink = isHyperLink || isImageLink;
+                                string staticLink = drv["HyperLinkUrl"].ToString();
+                                Regex rx = new Regex("^(~/)?images/", RegexOptions.IgnoreCase);
+                                string sameWindow = DisplayMode.Contains("PopUp") ? "false" : "true";
+                                string linkColumnName = DdlKeyColumnName + DdlKeyTableId;
+                                string imageSrc = !string.IsNullOrEmpty(DefaultValue)
+                                                    ? string.Format("require('../../{0}')", rx.Replace(DefaultValue,"img/"))
+                                                    : ColumnId == DdlKeyColumnId ? "require('../../img/Link.gif')"
+                                                    : (isRefColumnControl && !isPullUpColumnControl ? formikRefColumnBinding : "values.c" + columnId)
+                                                    ;
+                                string navigationUrl = !string.IsNullOrEmpty(staticLink) 
+                                                        ? string.Format("'{0}'", staticLink)
+                                                        : !string.IsNullOrEmpty(DdlKeyColumnId) ? (isRefColumnControl && !isPullUpColumnControl ? formikRefColumnBinding : "values.c" + linkColumnName + "URL")
+                                                        : "''"
+                                                        ;
+                                string navigationLabel = !string.IsNullOrEmpty(DefaultValue)
+                                                        ? string.Format("'{0}'", DefaultValue)
+                                                        : !string.IsNullOrEmpty(ColumnId) ? (isRefColumnControl && !isPullUpColumnControl ? formikRefColumnBinding : "values.c" + columnId)
+                                                        : "''"
+                                                        ;
+                                if (isLink && !string.IsNullOrEmpty(DdlKeyColumnId))
+                                {
+                                    // additional label for link content
+                                    renderLabelValue = "    const " + linkColumnName + "URL"
+                                                                    + (!isRefColumnControl || isPullUpColumnControl
+                                                                        ? " = currMst." + linkColumnName + "URL" + ";"
+                                                                        : " = " + refColumnBinding + ";"
+                                                                    )
+                                                                    ;
+                                    renderLabelResults.Add(renderLabelValue);
+
+                                    //additional formik initial value
+                                    formikInitialValue = "c" + linkColumnName + "URL" + ": formatContent(" + linkColumnName + "URL" + " || '', '" + DisplayMode + "'),";
+                                    formikInitialResults.Add(formikInitialValue);
+                                }
+
+                                string formikControlValue = @"
                               {" + (hide ? "false && " : "") + @"(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -2026,14 +2150,37 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (" + (isLink ? navigationUrl + " && ": "") + "<div className='form__form-group-field'>" + (
+isHyperLink ? @"
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(" + navigationUrl + @", false, false, {values, name: '" + columnId + @"'})}
+                                          onClick={this.PopUpSearchLink(" + navigationUrl + @", false, " + sameWindow + @", {values, name: '" + columnId + @"'})}
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}
+                                          >{" + navigationLabel + "}" + @"
+                                        </a>"
+: isImageLink ? @"
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(" + navigationUrl + @", false, false, {values, name: '" + columnId + @"'})}
+                                          onClick={this.PopUpSearchLink(" + navigationUrl + @", false, " + sameWindow + @", {values, name: '" + columnId + @"'})}
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}
+                                          >" + @"
+                                            <img " + @"
+                                                alt={" + navigationLabel + "}" + @"
+                                                src={" + imageSrc + "}" + @"
+                                            " + @"/>
+                                        </a>"
+:
+@"
                                         <Field
                                           type='text'
                                           name='c" + columnId + @"'
                                           disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}"
-                                                               + (isRefColumnControl && !isPullUpColumnControl ? @"
-                                          value={" + formikRefColumnBinding + "}" : "") + @" />
-                                      </div>
+                                                                   + (isRefColumnControl && !isPullUpColumnControl ? @"
+                                          value={" + formikRefColumnBinding + "}" : "") + @" />"
+                                                   ) + @"
+                                      </div>)
                                     }
                                     {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
                                   </div>
@@ -2041,7 +2188,8 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                               }
 
 ";
-                            formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                                formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
+                            }
                         }
                     }
                 }
@@ -3281,6 +3429,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                     string skeletonEnabled = "true";
                     string columnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
                     string ColumnName = drv["ColumnName"].ToString();
+                    string ColumnId = drv["ColumnId"].ToString();
                     string DdlFtrColumnId = drv["DdlFtrColumnId"].ToString();
                     string DdlFtrColumnName = drv["DdlFtrColumnName"].ToString();
                     string DdlAdnColumnName = drv["DdlAdnColumnName"].ToString();
@@ -3288,6 +3437,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                     string DdlFtrDataType = drv["DdlFtrDataType"].ToString();
                     string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
                     string DdlKeyColumnId = drv["DdlKeyColumnId"].ToString();
+                    string DdlKeyColumnName = drv["DdlKeyColumnName"].ToString();
+                    string DdlKeyTableId = drv["DdlKeyTableId"].ToString();
                     string DisplayMode = drv["DisplayMode"].ToString();
                     string DdlRefColumnId = drv["DdlRefColumnId"].ToString();
                     bool isRefColumnControl = IsRefColumn(drv.Row);
@@ -3298,6 +3449,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                     string refColumnName = drv["DdlRefColumnName"].ToString() + screenDtlTableId;
                     string refColumnBinding = "this.BindReferenceField(" + refColumnName + ", " + refColumnName + "List" + ", { valuefieldname: '" + columnId + "' })";
                     string formikRefColumnBinding = "this.BindReferenceField((((values || {}).c" + refColumnName + " || {}).value), " + refColumnName + "List" + ", { valuefieldname: '" + columnId + "' })";
+                    string DefaultValue = drv["DefaultValue"].ToString();
 
                     if (columnId == screenDetailKey)
                     {
@@ -3644,7 +3796,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
 ";
                             formikControlResults.Add(formikControlValue);
                         }
-                        else if (DisplayMode == "CheckBox") //---------Checkbox
+                        else if (DisplayMode == "CheckBox" || DisplayMode == "CheckBoxAll") //---------Checkbox
                         {
                             //save button function call
                             string saveBtnValue = isRefColumnControl ? "" : columnId + ": values.c" + columnId + " ? 'Y' : 'N',";
@@ -3685,7 +3837,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
 ";
                             formikControlResults.Add(formikControlValue);
                         }
-                        else if (DisplayMode == "ImageButton") //---------ImageButton
+                        else if (DisplayMode == "ImageButton") 
                         {
                             bool isRefColumn = !string.IsNullOrEmpty(drv["DdlRefColumnId"].ToString());
 
@@ -3881,8 +4033,23 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                             }
 
                             //save button function call
-                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
-                            saveBtnResults.Add(saveBtnValue);
+                            if (DisplayMode == "Upload")
+                            {
+                                string saveBtnValue = columnId + ": values.c" + columnId + @" && values.c" + columnId + @".ts ?
+            JSON.stringify({
+              ...values.c" + columnId + @",
+              ts: undefined,
+              lastTS: values.c" + columnId + @".ts,
+              base64: this.StripEmbeddedBase64Prefix(values.c" + columnId + @".base64)
+            }) : values.c" + columnId + " || ' ',";
+                                saveBtnResults.Add(saveBtnValue);
+                            }
+                            else
+                            {
+                                string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                                saveBtnResults.Add(saveBtnValue);
+                            }
+
 
                             //render label
                             string renderLabelValue = "    const " + columnId
@@ -3898,9 +4065,114 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                             formikInitialResults.Add(formikInitialValue);
 
                             //formik control
-                            bool hide = drv["RequiredValid"].ToString() != "Y" && DisplayMode != "Currency" && DisplayMode != "Money";
+                            bool hide = drv["RequiredValid"].ToString() != "Y" 
+                                        && DisplayMode != "Currency" 
+                                        && DisplayMode != "Money"
+                                        && false; // don't hide
+                                        ;
 
-                            string formikControlValue = @"
+                            if (DisplayMode == "Upload")
+                            {
+                                // additional label
+                                renderLabelValue = "    const " + columnId + "_DownloadLink"
+                                                                + (!isRefColumnControl || isPullUpColumnControl
+                                                                    ? " = currDtl." + columnId + "_DownloadLink" + ";"
+                                                                    : " = " + refColumnBinding + ";"
+                                                                )
+                                                                ;
+                                renderLabelResults.Add(renderLabelValue);
+
+                                //formik control
+                                bool isRefColumn = false;
+                                string formikControlValue = @"
+                              {(authCol." + columnId + @" || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel." + columnId + @" || {}).ColumnHeader} " + ((drv["RequiredValid"].ToString() == "Y") ? "<span className='text-danger'>*</span>" : "") + @"{(columnLabel." + columnId + @" || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel." + columnId + @" || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel." + columnId + @" || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>"
+                                         + (isRefColumn
+                                            ? @"
+                                        <Field
+                                          component={FileInputField}
+                                          name='c" + columnId + @"'
+                                          options={{ ...fileFileUploadOptions, maxFileCount: 1 }}
+                                          files={(this.BindFileObject(" + columnId + @", values.c" + columnId + @") || []).filter(f => !f.isEmptyFileObject)}
+                                          label={(columnLabel." + columnId + @" || {}).ToolTip}
+                                          disabled={true}
+                                        />" : @"
+                                        <FileInputFieldV1
+                                          name='c" + columnId + @"'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
+                                          fileInfo={{ downloadLink: " + columnId + "_DownloadLink" + ", downloadFileName: " + columnId + @" }}
+                                          options={" + "file" + @"FileUploadOptions}
+                                          value={values.c" + columnId + @" || " + columnId + @"}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />") + @"
+                                        {!(values.c" + columnId + @" || {}).base64 &&
+                                        <Field
+                                          type='text'
+                                          name='c" + columnId + @"'
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}"
+                                                                   + (isRefColumnControl && !isPullUpColumnControl ? @"
+                                          value={" + formikRefColumnBinding + "}" : "") + @" />
+                                        }
+                                      </div>
+                                    }
+                                    {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
+                                  </div>
+                                </Col>
+                              }
+";
+                                formikControlResults.Add(formikControlValue);
+                            }
+                            else
+                            {
+                                bool isHyperLink = DisplayMode == "HyperLink" || DisplayMode == "HyperPopUp";
+                                bool isImageLink = DisplayMode == "ImageLink" || DisplayMode == "ImagePopUp";
+                                bool isLink = isHyperLink || isImageLink;
+                                string staticLink = drv["HyperLinkUrl"].ToString();
+                                Regex rx = new Regex("^(~/)?images/", RegexOptions.IgnoreCase);
+                                string sameWindow = DisplayMode.Contains("PopUp") ? "false" : "true";
+                                string linkColumnName = DdlKeyColumnName + DdlKeyTableId;
+                                string imageSrc = !string.IsNullOrEmpty(DefaultValue)
+                                                    ? string.Format("require('../../{0}')", rx.Replace(DefaultValue, "img/"))
+                                                    : ColumnId == DdlKeyColumnId ? "require('../../img/Link.gif')"
+                                                    : (isRefColumnControl && !isPullUpColumnControl ? formikRefColumnBinding : "values.c" + columnId)
+                                                    ;
+                                string navigationUrl = !string.IsNullOrEmpty(staticLink)
+                                                        ? string.Format("'{0}'", staticLink)
+                                                        : !string.IsNullOrEmpty(DdlKeyColumnId) ? (isRefColumnControl && !isPullUpColumnControl ? formikRefColumnBinding : "values.c" + linkColumnName + "URL")
+                                                        : "''"
+                                                        ;
+                                string navigationLabel = !string.IsNullOrEmpty(DefaultValue)
+                                                        ? string.Format("'{0}'", DefaultValue)
+                                                        : !string.IsNullOrEmpty(ColumnId) ? (isRefColumnControl && !isPullUpColumnControl ? formikRefColumnBinding : "values.c" + columnId)
+                                                        : "''"
+                                                        ;
+                                if (isLink && !string.IsNullOrEmpty(DdlKeyColumnId))
+                                {
+                                    // additional label for link content
+                                    renderLabelValue = "    const " + linkColumnName + "URL"
+                                                                    + (!isRefColumnControl || isPullUpColumnControl
+                                                                        ? " = currMst." + linkColumnName + "URL" + ";"
+                                                                        : " = " + refColumnBinding + ";"
+                                                                    )
+                                                                    ;
+                                    renderLabelResults.Add(renderLabelValue);
+
+                                    //additional formik initial value
+                                    formikInitialValue = "c" + linkColumnName + "URL" + ": formatContent(" + linkColumnName + "URL" + " || '', '" + DisplayMode + "'),";
+                                    formikInitialResults.Add(formikInitialValue);
+                                }
+
+                                string formikControlValue = @"
                               {" + (hide ? "false && " : "") + "(authCol." + columnId + @" || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
@@ -3911,21 +4183,45 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                       </label>
                                     }
                                     {((" + skeletonEnabled + @" && this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (" + (isLink ? navigationUrl + " && " : "") + "<div className='form__form-group-field'>" + (
+isHyperLink ? @"
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(" + navigationUrl + @", false, false, {values, name: '" + columnId + @"'})}
+                                          onClick={this.PopUpSearchLink(" + navigationUrl + @", false, " + sameWindow + @", {values, name: '" + columnId + @"'})}
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}
+                                          >{" + navigationLabel + "}" + @"
+                                        </a>"
+: isImageLink ? @"
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(" + navigationUrl + @", false, false, {values, name: '" + columnId + @"'})}
+                                          onClick={this.PopUpSearchLink(" + navigationUrl + @", false, " + sameWindow + @", {values, name: '" + columnId + @"'})}
+                                          disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}
+                                          >" + @"
+                                            <img " + @"
+                                                alt={" + navigationLabel + "}" + @"
+                                                src={" + imageSrc + "}" + @"
+                                            " + @"/>
+                                        </a>"
+:
+@"
                                         <Field
                                           type='text'
                                           name='c" + columnId + @"'
                                           disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}"
-                                                               + (isRefColumnControl && !isPullUpColumnControl ? @"
-                                          value={" + formikRefColumnBinding + "}" : "") + @" />
-                                      </div>
+                                                                   + (isRefColumnControl && !isPullUpColumnControl ? @"
+                                          value={" + formikRefColumnBinding + "}" : "") + @" />"
+                                                   ) + @"
+                                      </div>)
                                     }
                                     {errors.c" + columnId + @" && touched.c" + columnId + @" && <span className='form__form-group-error'>{errors.c" + columnId + @"}</span>}
                                   </div>
                                 </Col>
                               }
 ";
-                            formikControlResults.Add(formikControlValue);
+                                formikControlResults.Add(formikControlValue);
+                            }
                         }
                     }
                 }
@@ -4287,6 +4583,19 @@ class DtlRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
 ");
             sb.Append(renderLabelCnt);
             sb.Append(@"
@@ -5715,6 +6024,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             foreach (DataRowView drv in dvItms)
             {
                 string ColumnId = drv["ColumnName"].ToString() + drv["TableId"].ToString();
+                string TableId = drv["TableId"].ToString();
                 string ColumnName = drv["ColumnName"].ToString();
                 string PrimaryKey = drv["PrimaryKey"].ToString();
                 string DataType = drv["DataTypeDByteOle"].ToString();
@@ -5773,7 +6083,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                                         PrepDataResults.Add(PrepDataValue);
                                     }
                                 }
-                                else if (DisplayMode == "CheckBox") //---------CheckBox
+                                else if (DisplayMode == "CheckBox" || DisplayMode == "CheckBoxAll") //---------CheckBox
                                 {
                                     if (!string.IsNullOrEmpty(drv["ColumnId"].ToString()))
                                     {
@@ -5825,7 +6135,9 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                                 else
                                 {
                                     if (DisplayMode == "ImageButton" 
-                                        || DisplayMode == "CheckBox") //---------ImageButton or CheckBox
+                                        || DisplayMode == "CheckBox"
+                                        || DisplayMode == "CheckBoxAll"
+                                        ) //---------ImageButton or CheckBox
                                     {
                                         string InitMasterValue = "{\"" + ColumnId + "\",\"" + DefaultValue.Replace('"', '\"') + "\"},";
                                         InitMasterResults.Add(InitMasterValue);
@@ -5886,7 +6198,11 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                         if (directSaveToDB)
                         {
                             string MakeTypRowValue = "dr[\"" + ColumnId + "\"] = System.Data.OleDb.OleDbType." + DataType + ".ToString();";
-                            MakeTypRowResults.Add(MakeTypRowValue);
+                            if (!string.IsNullOrEmpty(TableId))
+                            {
+                                // there can be textbox but not backed by data table column, MUST SKIP but only type and not display or actual data
+                                MakeTypRowResults.Add(MakeTypRowValue);
+                            }
 
                             string MakeDisRowValue = "dr[\"" + ColumnId + "\"] = \"" + DisplayMode + "\";";
                             MakeDisRowResults.Add(MakeDisRowValue);
@@ -5920,7 +6236,9 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                             if (!string.IsNullOrEmpty(DefaultValue))
                             {
                                 if (DisplayMode == "ImageButton" 
-                                    || DisplayMode == "CheckBox") //---------ImageButton or CheckBox
+                                    || DisplayMode == "CheckBox"
+                                    || DisplayMode == "CheckBoxAll"
+                                    ) //---------ImageButton or CheckBox
                                 {
                                     string InitDtlValue = "{\"" + ColumnId + "\",\"" + DefaultValue.Replace('"', '\"') + "\"},";
                                     InitDtlResults.Add(InitDtlValue);
@@ -6207,7 +6525,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 DataTable dtColLabel = _GetScreenLabel(GetScreenId());
                 var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr[""DisplayMode""].ToString().Contains(""UTC"")).Select(dr => dr[""ColumnName""].ToString() + dr[""TableId""].ToString()).ToArray();
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);;
-                Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr[""ColName""].ToString());
+                Dictionary<string, DataRow> colAuth = _GetAuthColDict(dtColAuth, GetScreenId());
                 ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
                 DataTable dt = (new RO.Facade3.AdminSystem()).GetDtlById(screenId, ""Get[[---ScreenDef---]]DtlById"", keyId, LcAppConnString, LcAppPw, GetEffectiveScreenFilterId(!string.IsNullOrEmpty(filterName) ? filterName : filterId.ToString(), false), base.LImpr, base.LCurr);
                 mr.data = DataTableToListOfObject(dt, dtlBlob, colAuth, utcColumns);";
@@ -6369,7 +6687,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 DataTable dt = _GetMstById(keyId);
                 DataTable dtColAuth = _GetAuthCol(GetScreenId());
                 DataTable dtColLabel = _GetScreenLabel(GetScreenId());
-                Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr[""ColName""].ToString());
+                Dictionary<string, DataRow> colAuth = _GetAuthColDict(dtColAuth, GetScreenId());
                 var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr[""DisplayMode""].ToString().Contains(""UTC"")).Select(dr => dr[""ColumnName""].ToString() + dr[""TableId""].ToString()).ToArray();
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
                 ApiResponse <List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
@@ -6625,7 +6943,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 SaveDataResponse result = new SaveDataResponse();
                 DataTable dtColAuth = _GetAuthCol(GetScreenId());
                 DataTable dtColLabel = _GetScreenLabel(GetScreenId());
-                Dictionary<string, DataRow> colAuth = dtColAuth.AsEnumerable().ToDictionary(dr => dr[""ColName""].ToString());
+                Dictionary<string, DataRow> colAuth = _GetAuthColDict(dtColAuth, GetScreenId());
                 var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr[""DisplayMode""].ToString().Contains(""UTC"")).Select(dr => dr[""ColumnName""].ToString() + dr[""TableId""].ToString()).ToArray();
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
 

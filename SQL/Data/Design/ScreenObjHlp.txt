@@ -50,7 +50,7 @@
 104~@~AdmScreenObj [  250] Main Info: DdlRefColumnId (en-US)~@~83~@~1~@~Reference Column~@~If applicable, this is display column of DropDown, ComboBox, RadioButton, ListBox or reference to a previous column as pull up; This is to-culture (readonly) of currency or LUser.Culture is assumed.~@~~@~
 105~@~AdmScreenObj   140: TabFolderId (en-US)~@~84~@~1~@~Tab Folder~@~This is the folder on which this column will be displayed.~@~Please select a folder on which this column will be displayed.~@~
 107~@~AdmScreenObj [   30] Main Info: RequiredValid (en-US)~@~86~@~1~@~Mandatory~@~This should be checked if the column in the database does not allow null, unless it is an identity.~@~~@~
-108~@~AdmScreenObj [  400] Main Info: MaskValid (en-US)~@~87~@~1~@~Input Mask~@~This is the input mask for TextBox display, if applicable.~@~~@~
+108~@~AdmScreenObj [  400] Main Info: MaskValid (en-US)~@~87~@~1~@~Input Mask~@~This is the input mask for TextBox display, if applicable. For 'Document', this would be the alternative WebRule function name to handle add/get/update/delete~@~~@~
 109~@~AdmScreenObj [  410] Main Info: RangeValidType (en-US)~@~88~@~1~@~Range Type~@~This is the mask type of the following range, if applicable. e.g. Integer.~@~~@~
 110~@~AdmScreenObj [  420] Main Info: RangeValidMax (en-US)~@~89~@~1~@~Range Max~@~This is the maximum of the range mask. e.g. 1000.~@~~@~
 111~@~AdmScreenObj [  430] Main Info: RangeValidMin (en-US)~@~90~@~1~@~Range Min~@~This is the minimum of the range mask. e.g. 0.~@~~@~
@@ -168,12 +168,12 @@
 833~@~AdmUsr [  330] Status: AgentId (en-US)~@~934~@~1~@~Agent~@~This is the agent this user has access to, empty means all.~@~~@~
 834~@~AdmUsr [  340] Status: BrokerId (en-US)~@~935~@~1~@~Broker~@~This is the broker this user has access to, empty means all.~@~~@~
 841~@~AdmUsrPref [   10] Main Info: UsrPrefId (en-US)~@~939~@~1~@~UsrPref ID~@~This is the internal ID representing this user preference.~@~~@~
-842~@~AdmUsrPref [  130] Applied: UsrId (en-US)~@~940~@~1~@~User~@~This is the only user to be using this preference, if chosen.~@~~@~
-843~@~AdmUsrPref [  170] Applied: SystemId (en-US)~@~941~@~1~@~System~@~This is the only system to apply this preference, if chosen.~@~~@~
+842~@~AdmUsrPref [  140] Applied: UsrId (en-US)~@~940~@~1~@~User~@~This is the only user to be using this preference, if chosen.~@~~@~
+843~@~AdmUsrPref [  180] Applied: SystemId (en-US)~@~941~@~1~@~System~@~This is the only system to apply this preference, if chosen.~@~~@~
 844~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (en-US)~@~942~@~1~@~Preference Name~@~This is the unique description for this user preference.~@~Please enter a unique description for this user preference.~@~
 845~@~AdmUsrPref [   90] Main Info: SysListVisible (en-US)~@~943~@~1~@~System List Visible~@~System list will be hidden upon login if "No" is selected.~@~System list will be hidden upon login if "No" is selected.~@~
 846~@~AdmUsrPref [   30] Main Info: MenuOptId (en-US)~@~944~@~1~@~Menu Option~@~This is the menu choice for this profile.~@~Please select the menu choice for this profile.~@~
-862~@~AdmUsrPref [  120] Style: UsrStyleSheet (en-US)~@~960~@~1~@~Style Override~@~This is the overriding style sheet commands. Image-url starts from the root level here thus no need for "../".~@~~@~
+862~@~AdmUsrPref [  130] Style: UsrStyleSheet (en-US)~@~960~@~1~@~Style Override~@~This is the overriding style sheet commands. Image-url starts from the root level here thus no need for "../".~@~~@~
 869~@~AdmReportGrp [   20] Main Info: ReportId (en-US)~@~967~@~1~@~Report~@~This dropdown list all the available reports to be selected for this group.~@~This dropdown list all the available reports to be selected for this group.~@~
 877~@~AdmReportGrp [   10] Main Info: ReportGrpId (en-US)~@~977~@~1~@~Group ID~@~This is the internal ID uniquely represents this report criteria group.~@~~@~
 878~@~AdmReportGrp [   50] Main Info: ReportGrpName (en-US)~@~978~@~1~@~Group Name~@~This is the unqiue name representing this criteria group.~@~Please enter a meaningful and unique name for this criteria group.~@~
@@ -228,13 +228,13 @@
 1029~@~AdmChgPwd [   10] Main Info: UsrId (en-US)~@~1121~@~1~@~Usr Id~@~This is the internal ID uniquely represents this user.~@~~@~
 1032~@~AdmChgPwd [   20] Main Info: UsrPassword (en-US)~@~1124~@~1~@~New Password~@~This is new password set by administrator; no restriction or complexity requirement.~@~Please enter new password, no restriction or complexity requirement.~@~
 1044~@~AdmChgPwd [   30] Main Info: ConfirmPwd (en-US)~@~1136~@~1~@~Confirm Password~@~This confirms the previous password.~@~Please enter the same previous password as confirmation.~@~
-1045~@~AdmUsrPref [  140] Applied: UsrGroupId (en-US)~@~1143~@~1~@~User Group~@~This is the only user group to be using this preference, if chosen.~@~~@~
-1046~@~AdmUsrPref [  180] Applied: MemberId (en-US)~@~1144~@~1~@~Member~@~This is the only member to be using this preference, if chosen.~@~~@~
-1047~@~AdmUsrPref [  190] Applied: AgentId (en-US)~@~1145~@~1~@~Agent~@~This is the only agent to be using this preference, if chosen.~@~~@~
-1048~@~AdmUsrPref [  200] Applied: BrokerId (en-US)~@~1146~@~1~@~Broker~@~This is the only broker to be using this preference, if chosen.~@~~@~
-1049~@~AdmUsrPref [  210] Applied: CustomerId (en-US)~@~1147~@~1~@~Customer~@~This is the only customer to be using this preference, if chosen.~@~~@~
-1050~@~AdmUsrPref [  220] Applied: InvestorId (en-US)~@~1148~@~1~@~Investor~@~This is the only Investor to be using this preference, if chosen.~@~~@~
-1051~@~AdmUsrPref [  230] Applied: VendorId (en-US)~@~1149~@~1~@~Vendor~@~This is the only vendor to be using this preference, if chosen.~@~~@~
+1045~@~AdmUsrPref [  150] Applied: UsrGroupId (en-US)~@~1143~@~1~@~User Group~@~This is the only user group to be using this preference, if chosen.~@~~@~
+1046~@~AdmUsrPref [  190] Applied: MemberId (en-US)~@~1144~@~1~@~Member~@~This is the only member to be using this preference, if chosen.~@~~@~
+1047~@~AdmUsrPref [  200] Applied: AgentId (en-US)~@~1145~@~1~@~Agent~@~This is the only agent to be using this preference, if chosen.~@~~@~
+1048~@~AdmUsrPref [  210] Applied: BrokerId (en-US)~@~1146~@~1~@~Broker~@~This is the only broker to be using this preference, if chosen.~@~~@~
+1049~@~AdmUsrPref [  220] Applied: CustomerId (en-US)~@~1147~@~1~@~Customer~@~This is the only customer to be using this preference, if chosen.~@~~@~
+1050~@~AdmUsrPref [  230] Applied: InvestorId (en-US)~@~1148~@~1~@~Investor~@~This is the only Investor to be using this preference, if chosen.~@~~@~
+1051~@~AdmUsrPref [  240] Applied: VendorId (en-US)~@~1149~@~1~@~Vendor~@~This is the only vendor to be using this preference, if chosen.~@~~@~
 1052~@~AdmUsrPref [  100] Main Info: PrefDefault (en-US)~@~1150~@~1~@~Default for System~@~This is checked if this preference is to apply to the above system for all logins.~@~~@~
 1059~@~AdmReport [  350] Main Info: DefaultHlpMsg (en-US)~@~1156~@~1~@~Default Help Message~@~This is the message with unlimited characters to be displayed as help message in the language specified.~@~Please enter the message with unlimited characters to be displayed as help message.~@~
 1061~@~AdmReportCri [  150] Main Info: ColumnSize (en-US)~@~1158~@~1~@~Column Size (px)~@~This is the column size in pixels for this criteria column.~@~~@~
@@ -319,7 +319,7 @@
 1210~@~AdmScreen [  160] Main Info: HasDeleteAll (en-US)~@~1301~@~1~@~DeleteAll Visible~@~Check this if the "Delete All" option should be visible on data grid.~@~~@~
 1213~@~AdmUsr [   50] Main Info: DefCompanyId (en-US)~@~1304~@~1~@~Default Company~@~This is the company to be selected after login.~@~~@~
 1214~@~AdmUsrPref [   70] Main Info: ComListVisible (en-US)~@~1305~@~1~@~Company List Visible~@~Company list will be hidden upon login if "No" is selected.~@~Company list will be hidden upon login if "No" is selected.~@~
-1215~@~AdmUsrPref [  150] Applied: CompanyId (en-US)~@~1306~@~1~@~Company~@~This is the only company to be using this preference, if chosen.~@~~@~
+1215~@~AdmUsrPref [  160] Applied: CompanyId (en-US)~@~1306~@~1~@~Company~@~This is the only company to be using this preference, if chosen.~@~~@~
 1216~@~AdmReport [  200] Main Info: GenerateRp (en-US)~@~1307~@~1~@~Generate~@~Uncheck this if temporary no programs should be generated for this report.~@~~@~
 1217~@~AdmRowOvrd [  120] Main Info: SelLevel (en-US)~@~1308~@~1~@~Allow Select~@~This is the overriding select permission for the selected entity type.~@~Please select the overriding select permission for the selected entity type.~@~
 1237~@~AdmWizardObj [   80] Main Info: DefOverwrite (en-US)~@~1328~@~1~@~Default Overwrite~@~This is checked if the default for this import wizard is to overwrite.~@~~@~
@@ -503,8 +503,8 @@
 1519~@~AdmUsr [  330] Status: AgentId (zh-CN)~@~934~@~4~@~代理~@~这是这家公司已获得,空手段.~@~~@~
 1520~@~AdmUsr [  340] Status: BrokerId (zh-CN)~@~935~@~4~@~经纪人~@~这是这家经纪已经进入,就是空的.~@~~@~
 1523~@~AdmUsrPref [   10] Main Info: UsrPrefId (zh-CN)~@~939~@~4~@~usrpref身份证~@~这是这家国内身分较偏好.~@~~@~
-1524~@~AdmUsrPref [  130] Applied: UsrId (zh-CN)~@~940~@~4~@~用户~@~这是唯一的用户可以使用此偏好,如果选择.~@~~@~
-1525~@~AdmUsrPref [  170] Applied: SystemId (zh-CN)~@~941~@~4~@~系统~@~这是唯一的选择适用这一制度,如果选择.~@~~@~
+1524~@~AdmUsrPref [  140] Applied: UsrId (zh-CN)~@~940~@~4~@~用户~@~这是唯一的用户可以使用此偏好,如果选择.~@~~@~
+1525~@~AdmUsrPref [  180] Applied: SystemId (zh-CN)~@~941~@~4~@~系统~@~这是唯一的选择适用这一制度,如果选择.~@~~@~
 1526~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (zh-CN)~@~942~@~4~@~偏好名称~@~这说明这个用户的独特喜好.~@~请描述这一用户进入一个独特的喜好.~@~
 1527~@~AdmUsrPref [   90] Main Info: SysListVisible (zh-CN)~@~943~@~4~@~有形制度名单~@~名单将隐藏在系统登录如果&"不&"选定.~@~名单将隐藏在系统登录如果&"不&"选定.~@~
 1528~@~AdmUsrPref [   30] Main Info: MenuOptId (zh-CN)~@~944~@~4~@~菜单选择~@~这是菜单选择这个姿态.~@~这是菜单选择这个姿态.~@~
@@ -556,13 +556,13 @@
 1601~@~AdmUsr [  270] Status: HintAnswer (zh-CN)~@~1120~@~4~@~一抹答案~@~这是暗示答案如密码遗忘,须以电邮.~@~~@~
 1602~@~AdmChgPwd [   10] Main Info: UsrId (zh-CN)~@~1121~@~4~@~硅肥身份证~@~这是代表这个独一无二的内部使用者身分.~@~~@~
 1604~@~AdmChgPwd [   30] Main Info: ConfirmPwd (zh-CN)~@~1136~@~4~@~确认密码~@~这证实了以前的密码.~@~请进入密码同以往作为确认.~@~
-1605~@~AdmUsrPref [  140] Applied: UsrGroupId (zh-CN)~@~1143~@~4~@~用户组~@~这是唯一的集团用户可以利用这个偏好,如果选择.~@~~@~
-1606~@~AdmUsrPref [  180] Applied: MemberId (zh-CN)~@~1144~@~4~@~会员~@~这是唯一的会员将以此偏好,如果选择.~@~~@~
-1607~@~AdmUsrPref [  190] Applied: AgentId (zh-CN)~@~1145~@~4~@~代理~@~这是唯一可以利用这个代理人偏好,如果选择.~@~~@~
-1608~@~AdmUsrPref [  200] Applied: BrokerId (zh-CN)~@~1146~@~4~@~经纪人~@~这是唯一可以利用这个经纪人偏好,如果选择.~@~~@~
-1609~@~AdmUsrPref [  210] Applied: CustomerId (zh-CN)~@~1147~@~4~@~客户~@~这是唯一可以使用此客户偏好,如果选择.~@~~@~
-1610~@~AdmUsrPref [  220] Applied: InvestorId (zh-CN)~@~1148~@~4~@~投资者~@~这是唯一的投资者可以利用这种偏好,如果选择.~@~~@~
-1611~@~AdmUsrPref [  230] Applied: VendorId (zh-CN)~@~1149~@~4~@~卖主~@~这是唯一的卖主可利用这个偏好,如果选择.~@~~@~
+1605~@~AdmUsrPref [  150] Applied: UsrGroupId (zh-CN)~@~1143~@~4~@~用户组~@~这是唯一的集团用户可以利用这个偏好,如果选择.~@~~@~
+1606~@~AdmUsrPref [  190] Applied: MemberId (zh-CN)~@~1144~@~4~@~会员~@~这是唯一的会员将以此偏好,如果选择.~@~~@~
+1607~@~AdmUsrPref [  200] Applied: AgentId (zh-CN)~@~1145~@~4~@~代理~@~这是唯一可以利用这个代理人偏好,如果选择.~@~~@~
+1608~@~AdmUsrPref [  210] Applied: BrokerId (zh-CN)~@~1146~@~4~@~经纪人~@~这是唯一可以利用这个经纪人偏好,如果选择.~@~~@~
+1609~@~AdmUsrPref [  220] Applied: CustomerId (zh-CN)~@~1147~@~4~@~客户~@~这是唯一可以使用此客户偏好,如果选择.~@~~@~
+1610~@~AdmUsrPref [  230] Applied: InvestorId (zh-CN)~@~1148~@~4~@~投资者~@~这是唯一的投资者可以利用这种偏好,如果选择.~@~~@~
+1611~@~AdmUsrPref [  240] Applied: VendorId (zh-CN)~@~1149~@~4~@~卖主~@~这是唯一的卖主可利用这个偏好,如果选择.~@~~@~
 1612~@~AdmUsrPref [  100] Main Info: PrefDefault (zh-CN)~@~1150~@~4~@~对于违约制度~@~这是遏制这种倾向如果上述系统适用于所有登记号码.~@~~@~
 1619~@~AdmReportCri [  150] Main Info: ColumnSize (zh-CN)~@~1158~@~4~@~栏尺寸(二甲苯)~@~这是本准则的象素大小一栏柱.~@~~@~
 1628~@~AdmScreenCri [   10] Main Info: ScreenCriId (zh-CN)~@~1178~@~4~@~标准编号~@~这是国内独一无二的身分代表本准则栏.~@~~@~
@@ -627,7 +627,7 @@
 1741~@~AdmScreen [  160] Main Info: HasDeleteAll (zh-CN)~@~1301~@~4~@~deleteall看得见~@~如果这一检查&"全部删除&"应该选择有形数据网.~@~~@~
 1744~@~AdmUsr [   50] Main Info: DefCompanyId (zh-CN)~@~1304~@~4~@~公司违约~@~这是该公司挑选后登录.~@~~@~
 1745~@~AdmUsrPref [   70] Main Info: ComListVisible (zh-CN)~@~1305~@~4~@~可见公司名单~@~经公司名单将登录隐性如果&"不&"选定.~@~经公司名单将登录隐性如果&"不&"选定.~@~
-1746~@~AdmUsrPref [  150] Applied: CompanyId (zh-CN)~@~1306~@~4~@~公司~@~这是唯一的公司可以利用这种倾向,如果选择.~@~~@~
+1746~@~AdmUsrPref [  160] Applied: CompanyId (zh-CN)~@~1306~@~4~@~公司~@~这是唯一的公司可以利用这种倾向,如果选择.~@~~@~
 1747~@~AdmReport [  200] Main Info: GenerateRp (zh-CN)~@~1307~@~4~@~生成~@~如果没有这种不受制约的节目应产生的临时报告.~@~~@~
 1768~@~AdmWizardObj [   80] Main Info: DefOverwrite (zh-CN)~@~1328~@~4~@~违约改写~@~这是这个检查如果违约进口男巫是改写.~@~~@~
 1769~@~AdmWizardObj [   90] Main Info: OvwrReadonly (zh-CN)~@~1329~@~4~@~改写只读~@~如果这是遏制这一选择改写进口男巫不是多变的用户.~@~~@~
@@ -802,8 +802,8 @@
 2037~@~AdmUsr [  330] Status: AgentId (fr-FR)~@~934~@~2~@~Agent~@~C'est l'agent que cet utilisateur a accès à, vident des moyens tous.~@~~@~
 2038~@~AdmUsr [  340] Status: BrokerId (fr-FR)~@~935~@~2~@~Sponsoriser~@~C'est le sponsoriser que cet utilisateur a accès à, vident des moyens tous.~@~~@~
 2041~@~AdmUsrPref [   10] Main Info: UsrPrefId (fr-FR)~@~939~@~2~@~Identification d'UsrPref~@~C'est l'identification interne représentant cette préférence d'utilisateur.~@~~@~
-2042~@~AdmUsrPref [  130] Applied: UsrId (fr-FR)~@~940~@~2~@~Utilisateur~@~C'est le seul utilisateur pour employer cette préférence, si choisi.~@~~@~
-2043~@~AdmUsrPref [  170] Applied: SystemId (fr-FR)~@~941~@~2~@~Système~@~C'est le seul système pour appliquer cette préférence, si choisi.~@~~@~
+2042~@~AdmUsrPref [  140] Applied: UsrId (fr-FR)~@~940~@~2~@~Utilisateur~@~C'est le seul utilisateur pour employer cette préférence, si choisi.~@~~@~
+2043~@~AdmUsrPref [  180] Applied: SystemId (fr-FR)~@~941~@~2~@~Système~@~C'est le seul système pour appliquer cette préférence, si choisi.~@~~@~
 2044~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (fr-FR)~@~942~@~2~@~Nom de préférence~@~C'est la description unique pour cette préférence d'utilisateur.~@~Veuillez écrire une description unique pour cette préférence d'utilisateur.~@~
 2045~@~AdmUsrPref [   90] Main Info: SysListVisible (fr-FR)~@~943~@~2~@~Liste de système évidente~@~La liste de système sera cachée sur l'ouverture si « non » n'est choisi.~@~La liste de système sera cachée sur l'ouverture si « non » n'est choisi.~@~
 2046~@~AdmUsrPref [   30] Main Info: MenuOptId (fr-FR)~@~944~@~2~@~Option de menu~@~C'est le choix de menu pour ce profil.~@~C'est le choix de menu pour ce profil.~@~
@@ -856,13 +856,13 @@
 2119~@~AdmUsr [  270] Status: HintAnswer (fr-FR)~@~1120~@~2~@~Réponse de conseil~@~C'est la réponse de conseil au cas où le mot de passe serait oublié et le besoin d'être emailed à.~@~~@~
 2120~@~AdmChgPwd [   10] Main Info: UsrId (fr-FR)~@~1121~@~2~@~Identification d'Usr~@~C'est l'identification interne représente uniquement cet utilisateur.~@~~@~
 2122~@~AdmChgPwd [   30] Main Info: ConfirmPwd (fr-FR)~@~1136~@~2~@~Confirmer le mot de passe~@~Ceci confirme le mot de passe précédent.~@~Veuillez entrer le même mot de passe précédent que la confirmation.~@~
-2123~@~AdmUsrPref [  140] Applied: UsrGroupId (fr-FR)~@~1143~@~2~@~Groupe d'utilisateur~@~C'est le seul groupe d'utilisateur pour employer cette préférence, si choisi.~@~~@~
-2124~@~AdmUsrPref [  180] Applied: MemberId (fr-FR)~@~1144~@~2~@~Membre~@~C'est le seul membre pour employer cette préférence, si choisi.~@~~@~
-2125~@~AdmUsrPref [  190] Applied: AgentId (fr-FR)~@~1145~@~2~@~Agent~@~C'est le seul agent pour employer cette préférence, si choisi.~@~~@~
-2126~@~AdmUsrPref [  200] Applied: BrokerId (fr-FR)~@~1146~@~2~@~Sponsoriser~@~C'est le seul sponsorisent employer cette préférence, si choisi.~@~~@~
-2127~@~AdmUsrPref [  210] Applied: CustomerId (fr-FR)~@~1147~@~2~@~Client~@~C'est le seul client pour employer cette préférence, si choisi.~@~~@~
-2128~@~AdmUsrPref [  220] Applied: InvestorId (fr-FR)~@~1148~@~2~@~Investisseur~@~C'est le seul investisseur pour employer cette préférence, si choisi.~@~~@~
-2129~@~AdmUsrPref [  230] Applied: VendorId (fr-FR)~@~1149~@~2~@~Fournisseur~@~C'est le seul fournisseur pour employer cette préférence, si choisi.~@~~@~
+2123~@~AdmUsrPref [  150] Applied: UsrGroupId (fr-FR)~@~1143~@~2~@~Groupe d'utilisateur~@~C'est le seul groupe d'utilisateur pour employer cette préférence, si choisi.~@~~@~
+2124~@~AdmUsrPref [  190] Applied: MemberId (fr-FR)~@~1144~@~2~@~Membre~@~C'est le seul membre pour employer cette préférence, si choisi.~@~~@~
+2125~@~AdmUsrPref [  200] Applied: AgentId (fr-FR)~@~1145~@~2~@~Agent~@~C'est le seul agent pour employer cette préférence, si choisi.~@~~@~
+2126~@~AdmUsrPref [  210] Applied: BrokerId (fr-FR)~@~1146~@~2~@~Sponsoriser~@~C'est le seul sponsorisent employer cette préférence, si choisi.~@~~@~
+2127~@~AdmUsrPref [  220] Applied: CustomerId (fr-FR)~@~1147~@~2~@~Client~@~C'est le seul client pour employer cette préférence, si choisi.~@~~@~
+2128~@~AdmUsrPref [  230] Applied: InvestorId (fr-FR)~@~1148~@~2~@~Investisseur~@~C'est le seul investisseur pour employer cette préférence, si choisi.~@~~@~
+2129~@~AdmUsrPref [  240] Applied: VendorId (fr-FR)~@~1149~@~2~@~Fournisseur~@~C'est le seul fournisseur pour employer cette préférence, si choisi.~@~~@~
 2130~@~AdmUsrPref [  100] Main Info: PrefDefault (fr-FR)~@~1150~@~2~@~Défaut pour le système~@~Ceci est vérifié si cette préférence est de s'appliquer au système ci-dessus pour toutes les ouvertures.~@~~@~
 2137~@~AdmReportCri [  150] Main Info: ColumnSize (fr-FR)~@~1158~@~2~@~Taille de colonne (px)~@~C'est la taille de colonne en Pixel pour le ce des critères de colonne.~@~~@~
 2146~@~AdmScreenCri [   10] Main Info: ScreenCriId (fr-FR)~@~1178~@~2~@~Critères d'identification~@~C'est l'identification interne représente uniquement ce des critères de colonne.~@~~@~
@@ -927,7 +927,7 @@
 2259~@~AdmScreen [  160] Main Info: HasDeleteAll (fr-FR)~@~1301~@~2~@~DeleteAll évident~@~Vérifier ceci si le « effacement toute la » option est évident sur la grille de données.~@~~@~
 2262~@~AdmUsr [   50] Main Info: DefCompanyId (fr-FR)~@~1304~@~2~@~Compagnie de défaut~@~C'est la compagnie à choisir après ouverture.~@~~@~
 2263~@~AdmUsrPref [   70] Main Info: ComListVisible (fr-FR)~@~1305~@~2~@~Liste de compagnie évidente~@~La liste de compagnie sera cachée sur l'ouverture si « non » n'est choisi.~@~La liste de compagnie sera cachée sur l'ouverture si « non » n'est choisi.~@~
-2264~@~AdmUsrPref [  150] Applied: CompanyId (fr-FR)~@~1306~@~2~@~Compagnie~@~C'est la seule compagnie pour employer cette préférence, si choisie.~@~~@~
+2264~@~AdmUsrPref [  160] Applied: CompanyId (fr-FR)~@~1306~@~2~@~Compagnie~@~C'est la seule compagnie pour employer cette préférence, si choisie.~@~~@~
 2265~@~AdmReport [  200] Main Info: GenerateRp (fr-FR)~@~1307~@~2~@~Se produire~@~Uncheck ceci si provisoire aucuns programmes devrait être produit pour ce rapport.~@~~@~
 2286~@~AdmWizardObj [   80] Main Info: DefOverwrite (fr-FR)~@~1328~@~2~@~Le défaut recouvrent~@~Ceci est vérifié si le défaut pour ce magicien d'importation est de recouvrir.~@~~@~
 2287~@~AdmWizardObj [   90] Main Info: OvwrReadonly (fr-FR)~@~1329~@~2~@~Recouvrir fixe~@~Ceci est vérifié si l'option de recouvrement pour ce magicien d'importation n'est pas variable par l'utilisateur.~@~~@~
@@ -1000,7 +1000,7 @@
 2398~@~AdmDbTable [  130] Main Info: LastSyncDt (en-US)~@~1452~@~1~@~Synchronized on~@~This table was last synchronized on this date.~@~~@~
 2399~@~AdmReportGrp [   90] Main Info: GrpStyle (en-US)~@~1453~@~1~@~Override Style~@~Override the default group style by either a CssClass starting with a "." or the actual style content.~@~~@~
 2402~@~AdmReportObj [   80] Main Info: PaddChar (en-US)~@~1456~@~1~@~With Character~@~This is the character to be padded to the left of this column if the total padding size has been specified; default is blank.~@~~@~
-2407~@~AdmUsrPref [  160] Applied: ProjectId (en-US)~@~1459~@~1~@~Project~@~This is the only project to be using this preference, if chosen.~@~~@~
+2407~@~AdmUsrPref [  170] Applied: ProjectId (en-US)~@~1459~@~1~@~Project~@~This is the only project to be using this preference, if chosen.~@~~@~
 2415~@~AdmUsrPref [   80] Main Info: PrjListVisible (en-US)~@~1467~@~1~@~Project List Visible~@~Project list will be hidden upon login if "No" is selected.~@~Project list will be hidden upon login if "No" is selected.~@~
 2417~@~AdmReportObj [   40] Main Info: RptObjTypeCd (en-US)~@~1469~@~1~@~Column Type~@~This is the report column type for this report column.  Currently either “Field” or “Parameter”.~@~Please select the report column type for this report column.~@~
 2418~@~AdmReport [   60] Main Info: ModifiedBy (en-US)~@~1470~@~1~@~Modified By~@~This report definition was last modified by this user.~@~This report definition was last modified by this user.~@~
@@ -1271,7 +1271,7 @@
 2839~@~AdmDbTable [  110] Main Info: ModifiedBy (zh-CN)~@~1451~@~4~@~修改~@~有关此表的最后修改该用户。~@~有关此表的最后修改该用户。~@~
 2840~@~AdmDbTable [  130] Main Info: LastSyncDt (zh-CN)~@~1452~@~4~@~同步~@~此表最后同步在这个日子。~@~~@~
 2843~@~AdmReportObj [   80] Main Info: PaddChar (zh-CN)~@~1456~@~4~@~字符~@~这是性质是垫的左侧，如果此列的总规模已填充指定;默认是空白的。~@~~@~
-2845~@~AdmUsrPref [  160] Applied: ProjectId (zh-CN)~@~1459~@~4~@~项目~@~这是唯一的项目要使用此优惠，如果选择。~@~~@~
+2845~@~AdmUsrPref [  170] Applied: ProjectId (zh-CN)~@~1459~@~4~@~项目~@~这是唯一的项目要使用此优惠，如果选择。~@~~@~
 2849~@~AdmUsrPref [   80] Main Info: PrjListVisible (zh-CN)~@~1467~@~4~@~项目清单可见~@~项目清单将会隐藏登录后，如果“否”的选择。~@~项目清单将会隐藏登录后，如果“否”的选择。~@~
 2850~@~AdmReportObj [   40] Main Info: RptObjTypeCd (zh-CN)~@~1469~@~4~@~柱式~@~这是报告列类型本报告列。目前是“场”或“参数” 。~@~请选择报告列类型本报告列。~@~
 2851~@~AdmReport [   60] Main Info: ModifiedBy (zh-CN)~@~1470~@~4~@~修改~@~该报告定义的最后修改该用户。~@~该报告定义的最后修改该用户。~@~
@@ -1526,7 +1526,7 @@
 3176~@~AdmDbTable [  110] Main Info: ModifiedBy (fr-FR)~@~1451~@~2~@~Par jour~@~Informations sur cette table a été modifié par cet utilisateur.~@~Informations sur cette table a été modifié par cet utilisateur.~@~
 3177~@~AdmDbTable [  130] Main Info: LastSyncDt (fr-FR)~@~1452~@~2~@~Synchronisé sur~@~Ce tableau a été synchronisé sur cette dernière date.~@~~@~
 3180~@~AdmReportObj [   80] Main Info: PaddChar (fr-FR)~@~1456~@~2~@~Avec personnage~@~C'est le caractère à rembourré à la gauche de cette colonne, si la taille totale de remplissage a été spécifiée par défaut est vide.~@~~@~
-3182~@~AdmUsrPref [  160] Applied: ProjectId (fr-FR)~@~1459~@~2~@~Project~@~C'est le seul projet à l'aide de cette préférence, si elle est choisie.~@~~@~
+3182~@~AdmUsrPref [  170] Applied: ProjectId (fr-FR)~@~1459~@~2~@~Project~@~C'est le seul projet à l'aide de cette préférence, si elle est choisie.~@~~@~
 3186~@~AdmUsrPref [   80] Main Info: PrjListVisible (fr-FR)~@~1467~@~2~@~Liste des projets visibles~@~Liste de projets seront cachés au moment de la connexion, si &"Non&" est sélectionné.~@~Liste de projets seront cachés au moment de la connexion, si &"Non&" est sélectionné.~@~
 3187~@~AdmReportObj [   40] Main Info: RptObjTypeCd (fr-FR)~@~1469~@~2~@~Le type de colonne~@~Ce rapport est le type de colonne pour ce rapport de la colonne. Actuellement, soit &"Domaine&" ou &"Paramètre&".~@~S'il vous plaît sélectionner le type de rapport de la colonne de la colonne de ce rapport.~@~
 3188~@~AdmReport [   60] Main Info: ModifiedBy (fr-FR)~@~1470~@~2~@~Par jour~@~Ce rapport de définition a été modifiée en dernier lieu par l'utilisateur.~@~Ce rapport de définition a été modifiée en dernier lieu par l'utilisateur.~@~
@@ -2000,8 +2000,8 @@
 3795~@~AdmUsr [  330] Status: AgentId (hi-IN)~@~934~@~8~@~एजेंट~@~इस एजेंट इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
 3796~@~AdmUsr [  340] Status: BrokerId (hi-IN)~@~935~@~8~@~दलाल~@~इस दलाल इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
 3797~@~AdmUsrPref [   10] Main Info: UsrPrefId (hi-IN)~@~939~@~8~@~UsrPref आईडी~@~यह आंतरिक इस उपयोगकर्ता वरीयता का प्रतिनिधित्व आईडी है.~@~~@~
-3798~@~AdmUsrPref [  130] Applied: UsrId (hi-IN)~@~940~@~8~@~उपयोगकर्ता~@~यह केवल उपयोगकर्ता है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
-3799~@~AdmUsrPref [  170] Applied: SystemId (hi-IN)~@~941~@~8~@~प्रणाली~@~यह केवल इस व्यवस्था को लागू पसंद है, अगर चुन लिया जाता है.~@~~@~
+3798~@~AdmUsrPref [  140] Applied: UsrId (hi-IN)~@~940~@~8~@~उपयोगकर्ता~@~यह केवल उपयोगकर्ता है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
+3799~@~AdmUsrPref [  180] Applied: SystemId (hi-IN)~@~941~@~8~@~प्रणाली~@~यह केवल इस व्यवस्था को लागू पसंद है, अगर चुन लिया जाता है.~@~~@~
 3800~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (hi-IN)~@~942~@~8~@~पसंद का नाम~@~यह इस उपयोगकर्ता वरीयता के लिए अनूठा वर्णन है.~@~कृपया इस उपयोगकर्ता वरीयता के लिए एक अनूठा वर्णन दर्ज करें.~@~
 3801~@~AdmUsrPref [   90] Main Info: SysListVisible (hi-IN)~@~943~@~8~@~सिस्टम की सूची दर्शनीय~@~सिस्टम की सूची प्रवेश पर छिपा हुआ होगा यदि &"नहीं&" चुना है.~@~सिस्टम की सूची प्रवेश पर छिपा हुआ होगा यदि &"नहीं&" चुना है.~@~
 3802~@~AdmUsrPref [   30] Main Info: MenuOptId (hi-IN)~@~944~@~8~@~मेनू विकल्प~@~यह इस प्रोफाइल के लिए मेनू पसंद है.~@~कृपया इस प्रोफाइल के लिए मेनू विकल्प का चयन करें.~@~
@@ -2056,13 +2056,13 @@
 3855~@~AdmUsr [  270] Status: HintAnswer (hi-IN)~@~1120~@~8~@~संकेत जवाब~@~यह संकेत जवाब के मामले में और पासवर्ड भूल की जरूरत करने के लिए ईमेल सकता है.~@~~@~
 3856~@~AdmChgPwd [   10] Main Info: UsrId (hi-IN)~@~1121~@~8~@~Usr आईडी~@~यह आंतरिक आईडी विशिष्ट इस उपयोगकर्ता का प्रतिनिधित्व करता है.~@~~@~
 3858~@~AdmChgPwd [   30] Main Info: ConfirmPwd (hi-IN)~@~1136~@~8~@~पासवर्ड की पुष्टि करें~@~यह पिछले पासवर्ड की पुष्टि करता है.~@~कृपया पुष्टि के रूप में ही पिछले पासवर्ड दर्ज करें.~@~
-3859~@~AdmUsrPref [  140] Applied: UsrGroupId (hi-IN)~@~1143~@~8~@~उपयोगकर्ता समूह~@~यह केवल उपयोगकर्ता समूह है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
-3860~@~AdmUsrPref [  180] Applied: MemberId (hi-IN)~@~1144~@~8~@~सदस्य~@~यह केवल सदस्य है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
-3861~@~AdmUsrPref [  190] Applied: AgentId (hi-IN)~@~1145~@~8~@~एजेंट~@~यह केवल एजेंट है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
-3862~@~AdmUsrPref [  200] Applied: BrokerId (hi-IN)~@~1146~@~8~@~दलाल~@~यह केवल दलाल है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
-3863~@~AdmUsrPref [  210] Applied: CustomerId (hi-IN)~@~1147~@~8~@~ग्राहक~@~यह केवल ग्राहकों के लिए है यह पसंद का प्रयोग होगा, अगर चुना.~@~~@~
-3864~@~AdmUsrPref [  220] Applied: InvestorId (hi-IN)~@~1148~@~8~@~निवेशक~@~यह केवल इन्वेस्टर है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
-3865~@~AdmUsrPref [  230] Applied: VendorId (hi-IN)~@~1149~@~8~@~विक्रेता~@~यह केवल विक्रेता है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
+3859~@~AdmUsrPref [  150] Applied: UsrGroupId (hi-IN)~@~1143~@~8~@~उपयोगकर्ता समूह~@~यह केवल उपयोगकर्ता समूह है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
+3860~@~AdmUsrPref [  190] Applied: MemberId (hi-IN)~@~1144~@~8~@~सदस्य~@~यह केवल सदस्य है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
+3861~@~AdmUsrPref [  200] Applied: AgentId (hi-IN)~@~1145~@~8~@~एजेंट~@~यह केवल एजेंट है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
+3862~@~AdmUsrPref [  210] Applied: BrokerId (hi-IN)~@~1146~@~8~@~दलाल~@~यह केवल दलाल है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
+3863~@~AdmUsrPref [  220] Applied: CustomerId (hi-IN)~@~1147~@~8~@~ग्राहक~@~यह केवल ग्राहकों के लिए है यह पसंद का प्रयोग होगा, अगर चुना.~@~~@~
+3864~@~AdmUsrPref [  230] Applied: InvestorId (hi-IN)~@~1148~@~8~@~निवेशक~@~यह केवल इन्वेस्टर है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
+3865~@~AdmUsrPref [  240] Applied: VendorId (hi-IN)~@~1149~@~8~@~विक्रेता~@~यह केवल विक्रेता है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
 3866~@~AdmUsrPref [  100] Main Info: PrefDefault (hi-IN)~@~1150~@~8~@~सिस्टम के लिए डिफ़ॉल्ट~@~इस जाँच की अगर इस वरीयता के लिए सभी लॉगिन के लिए ऊपर प्रणाली पर लागू होता है.~@~~@~
 3867~@~AdmReport [  350] Main Info: DefaultHlpMsg (hi-IN)~@~1156~@~8~@~डिफ़ॉल्ट सहायता संदेश~@~हो निर्दिष्ट भाषा में यह असीमित अक्षर के साथ संदेश है मदद संदेश के रूप में प्रदर्शित.~@~कृपया असीमित अक्षर के साथ संदेश में प्रवेश मदद संदेश के रूप में प्रदर्शित होगा.~@~
 3868~@~AdmReportCri [  150] Main Info: ColumnSize (hi-IN)~@~1158~@~8~@~कॉलम आकार पिक्सल ()~@~इस पिक्सल में कॉलम इस स्तंभ के लिए मानदंड का आकार है.~@~~@~
@@ -2129,7 +2129,7 @@
 3970~@~AdmScreen [  160] Main Info: HasDeleteAll (hi-IN)~@~1301~@~8~@~DeleteAll दर्शनीय~@~यह जाँच करें कि &"सभी को नष्ट करें&" विकल्प डेटा ग्रिड पर दिखाई जानी चाहिए.~@~~@~
 3972~@~AdmUsr [   50] Main Info: DefCompanyId (hi-IN)~@~1304~@~8~@~डिफ़ॉल्ट कंपनी~@~इस कंपनी में प्रवेश के बाद चयनित किया जाता है.~@~~@~
 3973~@~AdmUsrPref [   70] Main Info: ComListVisible (hi-IN)~@~1305~@~8~@~कंपनी सूची दर्शनीय~@~कंपनी सूची में प्रवेश पर छिपा हुआ होगा तो &"नहीं&" चुना है.~@~कंपनी सूची में प्रवेश पर छिपा हुआ होगा तो &"नहीं&" चुना है.~@~
-3974~@~AdmUsrPref [  150] Applied: CompanyId (hi-IN)~@~1306~@~8~@~कंपनी~@~यह एकमात्र कंपनी है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
+3974~@~AdmUsrPref [  160] Applied: CompanyId (hi-IN)~@~1306~@~8~@~कंपनी~@~यह एकमात्र कंपनी है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
 3975~@~AdmReport [  200] Main Info: GenerateRp (hi-IN)~@~1307~@~8~@~उत्पन्न~@~यदि सही का निशान हटाएँ इस अस्थायी कोई प्रोग्राम इस रिपोर्ट के लिए निर्मित किया जाना चाहिए.~@~~@~
 3976~@~AdmRowOvrd [  120] Main Info: SelLevel (hi-IN)~@~1308~@~8~@~अनुमति दें चुनें~@~इस प्रकार के लिए चयनित इकाई अधिभावी चुनें अनुमति है.~@~कृपया चुने इकाई प्रकार के लिए अधिभावी चुनें अनुमति का चयन करें.~@~
 3977~@~AdmWizardObj [   80] Main Info: DefOverwrite (hi-IN)~@~1328~@~8~@~डिफ़ॉल्ट मिटाकरलिखें~@~इस जाँच अगर यह आयात विज़ार्ड के लिए डिफ़ॉल्ट को अधिलेखित है.~@~~@~
@@ -2201,7 +2201,7 @@
 4079~@~AdmDbTable [  130] Main Info: LastSyncDt (hi-IN)~@~1452~@~8~@~सिंक्रनाइज़ पर~@~इस मेज पिछले इस तिथि पर सिंक्रनाइज़ था.~@~~@~
 4080~@~AdmReportGrp [   90] Main Info: GrpStyle (hi-IN)~@~1453~@~8~@~ओवरराइड पहनाव~@~या तो एक CssClass के साथ शुरू से समूह डिफ़ॉल्ट शैली ओवरराइड एक. &" या वास्तविक शैली सामग्री.~@~~@~
 4082~@~AdmReportObj [   80] Main Info: PaddChar (hi-IN)~@~1456~@~8~@~चरित्र के साथ~@~इस चरित्र को इस स्तंभ की बाईं अगर कुल padding आकार दिया गया है निर्दिष्ट करने मोटा होना है, डिफ़ॉल्ट रिक्त है.~@~~@~
-4084~@~AdmUsrPref [  160] Applied: ProjectId (hi-IN)~@~1459~@~8~@~परियोजना~@~यह केवल परियोजना है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
+4084~@~AdmUsrPref [  170] Applied: ProjectId (hi-IN)~@~1459~@~8~@~परियोजना~@~यह केवल परियोजना है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
 4085~@~AdmUsrPref [   80] Main Info: PrjListVisible (hi-IN)~@~1467~@~8~@~परियोजना की सूची दर्शनीय~@~परियोजना की सूची प्रवेश पर छिपा हुआ होगा यदि &"नहीं&" चुना है.~@~परियोजना की सूची प्रवेश पर छिपा हुआ होगा यदि &"नहीं&" चुना है.~@~
 4086~@~AdmReportObj [   40] Main Info: RptObjTypeCd (hi-IN)~@~1469~@~8~@~स्तंभ प्रकार~@~इस इस रिपोर्ट के लिए रिपोर्ट कॉलम प्रकार स्तंभ है. वर्तमान में या तो &"फील्ड&" या &"पैरामीटर&".~@~कृपया इस रिपोर्ट के लिए रिपोर्ट कॉलम प्रकार स्तंभ का चयन करें.~@~
 4087~@~AdmReport [   60] Main Info: ModifiedBy (hi-IN)~@~1470~@~8~@~संशोधित करके~@~इस रिपोर्ट को अंतिम परिभाषा इस उपयोगकर्ता के द्वारा संशोधित किया गया था.~@~इस रिपोर्ट को अंतिम परिभाषा इस उपयोगकर्ता के द्वारा संशोधित किया गया था.~@~
@@ -2549,8 +2549,8 @@
 4541~@~AdmUsr [  330] Status: AgentId (pt-BR)~@~934~@~9~@~Agente~@~Este é o agente deste utilizador tem acesso a vazio, todos os meios.~@~~@~
 4542~@~AdmUsr [  340] Status: BrokerId (pt-BR)~@~935~@~9~@~Corretor~@~Este é o corretor este usuário tem acesso, vazia significa todos.~@~~@~
 4543~@~AdmUsrPref [   10] Main Info: UsrPrefId (pt-BR)~@~939~@~9~@~UsrPref ID~@~Esta é a identificação interna que representa essa preferência do usuário.~@~~@~
-4544~@~AdmUsrPref [  130] Applied: UsrId (pt-BR)~@~940~@~9~@~Usuário~@~Este é o único usuário estar usando essa preferência, se escolhida.~@~~@~
-4545~@~AdmUsrPref [  170] Applied: SystemId (pt-BR)~@~941~@~9~@~Sistema~@~Este é o único sistema para aplicar esta preferência, se escolhida.~@~~@~
+4544~@~AdmUsrPref [  140] Applied: UsrId (pt-BR)~@~940~@~9~@~Usuário~@~Este é o único usuário estar usando essa preferência, se escolhida.~@~~@~
+4545~@~AdmUsrPref [  180] Applied: SystemId (pt-BR)~@~941~@~9~@~Sistema~@~Este é o único sistema para aplicar esta preferência, se escolhida.~@~~@~
 4546~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (pt-BR)~@~942~@~9~@~Nome preferência~@~Esta é a descrição exclusivo para esta preferência do usuário.~@~Por favor, digite uma descrição única para essa preferência do usuário.~@~
 4547~@~AdmUsrPref [   90] Main Info: SysListVisible (pt-BR)~@~943~@~9~@~Lista sistema visível~@~Lista do sistema será escondido após o login, se "Não" está selecionada.~@~Lista do sistema será escondido após o login, se "Não" está selecionada.~@~
 4548~@~AdmUsrPref [   30] Main Info: MenuOptId (pt-BR)~@~944~@~9~@~Opção de menu~@~Esta é a opção de menu para este perfil.~@~Por favor, selecione a opção de menu para este perfil.~@~
@@ -2605,13 +2605,13 @@
 4601~@~AdmUsr [  270] Status: HintAnswer (pt-BR)~@~1120~@~9~@~Resposta dica~@~Esta é a resposta em caso dica de senha é esquecido e precisa ser enviado para.~@~~@~
 4602~@~AdmChgPwd [   10] Main Info: UsrId (pt-BR)~@~1121~@~9~@~Usr Id~@~Este é o ID exclusivamente interna representa este usuário.~@~~@~
 4604~@~AdmChgPwd [   30] Main Info: ConfirmPwd (pt-BR)~@~1136~@~9~@~Confirme sua senha~@~Isso confirma a senha anterior.~@~Por favor, digite a mesma senha anterior como confirmação.~@~
-4605~@~AdmUsrPref [  140] Applied: UsrGroupId (pt-BR)~@~1143~@~9~@~Grupo de Usuários~@~Este é o grupo de usuários apenas estar usando essa preferência, se escolhida.~@~~@~
-4606~@~AdmUsrPref [  180] Applied: MemberId (pt-BR)~@~1144~@~9~@~Membro~@~Este é o único membro estar usando essa preferência, se escolhida.~@~~@~
-4607~@~AdmUsrPref [  190] Applied: AgentId (pt-BR)~@~1145~@~9~@~Agente~@~Este é o único agente de estar usando esta preferência, se escolhida.~@~~@~
-4608~@~AdmUsrPref [  200] Applied: BrokerId (pt-BR)~@~1146~@~9~@~Corretor~@~Este é o corretor só para estar usando essa preferência, se escolhida.~@~~@~
-4609~@~AdmUsrPref [  210] Applied: CustomerId (pt-BR)~@~1147~@~9~@~Cliente~@~Este é o único cliente estar usando essa preferência, se escolhida.~@~~@~
-4610~@~AdmUsrPref [  220] Applied: InvestorId (pt-BR)~@~1148~@~9~@~Investidor~@~Este é o único investidor estar usando essa preferência, se escolhida.~@~~@~
-4611~@~AdmUsrPref [  230] Applied: VendorId (pt-BR)~@~1149~@~9~@~Vendedor~@~Este é o único fornecedor de estar usando esta preferência, se escolhida.~@~~@~
+4605~@~AdmUsrPref [  150] Applied: UsrGroupId (pt-BR)~@~1143~@~9~@~Grupo de Usuários~@~Este é o grupo de usuários apenas estar usando essa preferência, se escolhida.~@~~@~
+4606~@~AdmUsrPref [  190] Applied: MemberId (pt-BR)~@~1144~@~9~@~Membro~@~Este é o único membro estar usando essa preferência, se escolhida.~@~~@~
+4607~@~AdmUsrPref [  200] Applied: AgentId (pt-BR)~@~1145~@~9~@~Agente~@~Este é o único agente de estar usando esta preferência, se escolhida.~@~~@~
+4608~@~AdmUsrPref [  210] Applied: BrokerId (pt-BR)~@~1146~@~9~@~Corretor~@~Este é o corretor só para estar usando essa preferência, se escolhida.~@~~@~
+4609~@~AdmUsrPref [  220] Applied: CustomerId (pt-BR)~@~1147~@~9~@~Cliente~@~Este é o único cliente estar usando essa preferência, se escolhida.~@~~@~
+4610~@~AdmUsrPref [  230] Applied: InvestorId (pt-BR)~@~1148~@~9~@~Investidor~@~Este é o único investidor estar usando essa preferência, se escolhida.~@~~@~
+4611~@~AdmUsrPref [  240] Applied: VendorId (pt-BR)~@~1149~@~9~@~Vendedor~@~Este é o único fornecedor de estar usando esta preferência, se escolhida.~@~~@~
 4612~@~AdmUsrPref [  100] Main Info: PrefDefault (pt-BR)~@~1150~@~9~@~Padrão para o Sistema~@~Isso é verificado se essa preferência se deve aplicar ao sistema acima para todos os logins.~@~~@~
 4613~@~AdmReport [  350] Main Info: DefaultHlpMsg (pt-BR)~@~1156~@~9~@~Mensagem da Ajuda padrão~@~Esta é a mensagem com caracteres ilimitados para ser exibido como mensagem de ajuda no idioma especificado.~@~Por favor insira a mensagem com caracteres ilimitados para ser exibido como mensagem de ajuda.~@~
 4614~@~AdmReportCri [  150] Main Info: ColumnSize (pt-BR)~@~1158~@~9~@~Tamanho da coluna (px)~@~Este é o tamanho da coluna em pixels para esta coluna critérios.~@~~@~
@@ -2678,7 +2678,7 @@
 4716~@~AdmScreen [  160] Main Info: HasDeleteAll (pt-BR)~@~1301~@~9~@~DeleteAll Visible~@~Marque esta opção se o "Delete All" opção deve ser visível em grade de dados.~@~~@~
 4718~@~AdmUsr [   50] Main Info: DefCompanyId (pt-BR)~@~1304~@~9~@~Empresa padrão~@~Esta é a empresa a ser selecionada após o login.~@~~@~
 4719~@~AdmUsrPref [   70] Main Info: ComListVisible (pt-BR)~@~1305~@~9~@~Lista empresa Visible~@~Lista de empresa será escondido após o login, se "Não" está selecionada.~@~Lista de empresa será escondido após o login, se "Não" está selecionada.~@~
-4720~@~AdmUsrPref [  150] Applied: CompanyId (pt-BR)~@~1306~@~9~@~Companhia~@~Esta é a única empresa a utilizar esta preferência, se escolhida.~@~~@~
+4720~@~AdmUsrPref [  160] Applied: CompanyId (pt-BR)~@~1306~@~9~@~Companhia~@~Esta é a única empresa a utilizar esta preferência, se escolhida.~@~~@~
 4721~@~AdmReport [  200] Main Info: GenerateRp (pt-BR)~@~1307~@~9~@~Gerar~@~Desmarque esta opção se não existem programas temporários devem ser gerados para este relatório.~@~~@~
 4722~@~AdmRowOvrd [  120] Main Info: SelLevel (pt-BR)~@~1308~@~9~@~Permitir Select~@~Esta é a permissão primordial selecionar para o tipo de entidade selecionada.~@~Por favor seleccione a permissão primordial selecionar para o tipo de entidade selecionada.~@~
 4723~@~AdmWizardObj [   80] Main Info: DefOverwrite (pt-BR)~@~1328~@~9~@~Padrão Overwrite~@~Isso é verificado se o padrão para esta assistente de importação é para substituir.~@~~@~
@@ -2751,7 +2751,7 @@
 4825~@~AdmDbTable [  130] Main Info: LastSyncDt (pt-BR)~@~1452~@~9~@~Sincronizados em~@~Esta tabela foi sincronizado pela última vez nesta data.~@~~@~
 4826~@~AdmReportGrp [   90] Main Info: GrpStyle (pt-BR)~@~1453~@~9~@~Substituir Estilo~@~Sobrepor o estilo de grupo padrão por qualquer CssClass uma começando com um "." ou o conteúdo de estilo real.~@~~@~
 4828~@~AdmReportObj [   80] Main Info: PaddChar (pt-BR)~@~1456~@~9~@~Com caracteres~@~Este é o personagem a ser acolchoados à esquerda desta coluna se o tamanho do preenchimento total foi especificado; padrão em branco.~@~~@~
-4830~@~AdmUsrPref [  160] Applied: ProjectId (pt-BR)~@~1459~@~9~@~Projeto~@~Este é o único projeto a ser usando essa preferência, se escolhida.~@~~@~
+4830~@~AdmUsrPref [  170] Applied: ProjectId (pt-BR)~@~1459~@~9~@~Projeto~@~Este é o único projeto a ser usando essa preferência, se escolhida.~@~~@~
 4831~@~AdmUsrPref [   80] Main Info: PrjListVisible (pt-BR)~@~1467~@~9~@~Lista do projeto Visible~@~Lista de projetos será escondido após o login, se "Não" está selecionada.~@~Lista de projetos será escondido após o login, se "Não" está selecionada.~@~
 4832~@~AdmReportObj [   40] Main Info: RptObjTypeCd (pt-BR)~@~1469~@~9~@~Tipo de coluna~@~Este é o tipo coluna de relatório para esta coluna do relatório. Atualmente qualquer um "campo" ou "parâmetro".~@~Por favor, selecione o tipo de coluna de relatório para esta coluna do relatório.~@~
 4833~@~AdmReport [   60] Main Info: ModifiedBy (pt-BR)~@~1470~@~9~@~Modificado por~@~Esta definição relatório foi modificada pela última vez por esse usuário.~@~Esta definição relatório foi modificada pela última vez por esse usuário.~@~
@@ -3304,8 +3304,8 @@
 5572~@~AdmUsr [  330] Status: AgentId (tr-TR)~@~934~@~11~@~Ajan~@~Bu kullanıcıya erişim aracı, boş tüm anlamına gelir.~@~~@~
 5573~@~AdmUsr [  340] Status: BrokerId (tr-TR)~@~935~@~11~@~Komisyoncu~@~Bu kullanıcıya erişim komisyoncu, boş tüm anlamına gelir.~@~~@~
 5574~@~AdmUsrPref [   10] Main Info: UsrPrefId (tr-TR)~@~939~@~11~@~UsrPref ID~@~Bu kullanıcının tercihi temsil eden iç kimliğidir.~@~~@~
-5575~@~AdmUsrPref [  130] Applied: UsrId (tr-TR)~@~940~@~11~@~Kullanıcı~@~Bu sadece bir kullanıcı seçilmiş ise, bu tercihi kullanarak.~@~~@~
-5576~@~AdmUsrPref [  170] Applied: SystemId (tr-TR)~@~941~@~11~@~Sistem~@~Bu seçilmiş, bu tercihi uygulamak için tek sistemdir.~@~~@~
+5575~@~AdmUsrPref [  140] Applied: UsrId (tr-TR)~@~940~@~11~@~Kullanıcı~@~Bu sadece bir kullanıcı seçilmiş ise, bu tercihi kullanarak.~@~~@~
+5576~@~AdmUsrPref [  180] Applied: SystemId (tr-TR)~@~941~@~11~@~Sistem~@~Bu seçilmiş, bu tercihi uygulamak için tek sistemdir.~@~~@~
 5577~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (tr-TR)~@~942~@~11~@~Tercih Adı~@~Bu kullanıcının tercihi için benzersiz bir açıklamasıdır.~@~Bu kullanıcının tercihi için eşsiz bir açıklama giriniz.~@~
 5578~@~AdmUsrPref [   90] Main Info: SysListVisible (tr-TR)~@~943~@~11~@~Görünür Sistemi Listesi~@~Sistem listesi giriş üzerine ise "Hayır" seçili gizli olacak.~@~Sistem listesi giriş üzerine ise "Hayır" seçili gizli olacak.~@~
 5579~@~AdmUsrPref [   30] Main Info: MenuOptId (tr-TR)~@~944~@~11~@~Menü Seçeneği~@~Bu profil için menü seçimdir.~@~Lütfen bu profil için menü seçeneği seçin.~@~
@@ -3360,13 +3360,13 @@
 5632~@~AdmUsr [  270] Status: HintAnswer (tr-TR)~@~1120~@~11~@~İpucu Cevap~@~Bu parolayı unutmuş durumda ipucu cevap ve e-postayla gönderilmesi gerekmektedir.~@~~@~
 5633~@~AdmChgPwd [   10] Main Info: UsrId (tr-TR)~@~1121~@~11~@~Usr Id~@~Bu iç ID Bu kullanıcının benzersiz temsil eder.~@~~@~
 5635~@~AdmChgPwd [   30] Main Info: ConfirmPwd (tr-TR)~@~1136~@~11~@~Şifre Tekrarı~@~Bu bir önceki şifre onaylar.~@~Aynı onay önceki şifrenizi giriniz.~@~
-5636~@~AdmUsrPref [  140] Applied: UsrGroupId (tr-TR)~@~1143~@~11~@~Kullanıcı Grubu~@~Bu sadece bir kullanıcı grubu seçilmiş ise, bu tercihi kullanarak.~@~~@~
-5637~@~AdmUsrPref [  180] Applied: MemberId (tr-TR)~@~1144~@~11~@~Üye~@~Bu seçilmiş ise, bu tercihi kullanarak tek üyesi.~@~~@~
-5638~@~AdmUsrPref [  190] Applied: AgentId (tr-TR)~@~1145~@~11~@~Ajan~@~Bu seçilmiş ise, bu tercihi kullanarak tek ajandır.~@~~@~
-5639~@~AdmUsrPref [  200] Applied: BrokerId (tr-TR)~@~1146~@~11~@~Komisyoncu~@~Bu seçilmiş ise, bu tercihi kullanarak sadece komisyoncu.~@~~@~
-5640~@~AdmUsrPref [  210] Applied: CustomerId (tr-TR)~@~1147~@~11~@~Müşteri~@~Bu sadece müşteri seçilmiş ise, bu tercihi kullanarak.~@~~@~
-5641~@~AdmUsrPref [  220] Applied: InvestorId (tr-TR)~@~1148~@~11~@~Yatırımcı~@~Bu seçilmiş ise, bu tercihi kullanarak sadece Yatırımcı.~@~~@~
-5642~@~AdmUsrPref [  230] Applied: VendorId (tr-TR)~@~1149~@~11~@~Satıcı~@~Bu seçilmiş ise, bu tercihi kullanarak tek satıcısıdır.~@~~@~
+5636~@~AdmUsrPref [  150] Applied: UsrGroupId (tr-TR)~@~1143~@~11~@~Kullanıcı Grubu~@~Bu sadece bir kullanıcı grubu seçilmiş ise, bu tercihi kullanarak.~@~~@~
+5637~@~AdmUsrPref [  190] Applied: MemberId (tr-TR)~@~1144~@~11~@~Üye~@~Bu seçilmiş ise, bu tercihi kullanarak tek üyesi.~@~~@~
+5638~@~AdmUsrPref [  200] Applied: AgentId (tr-TR)~@~1145~@~11~@~Ajan~@~Bu seçilmiş ise, bu tercihi kullanarak tek ajandır.~@~~@~
+5639~@~AdmUsrPref [  210] Applied: BrokerId (tr-TR)~@~1146~@~11~@~Komisyoncu~@~Bu seçilmiş ise, bu tercihi kullanarak sadece komisyoncu.~@~~@~
+5640~@~AdmUsrPref [  220] Applied: CustomerId (tr-TR)~@~1147~@~11~@~Müşteri~@~Bu sadece müşteri seçilmiş ise, bu tercihi kullanarak.~@~~@~
+5641~@~AdmUsrPref [  230] Applied: InvestorId (tr-TR)~@~1148~@~11~@~Yatırımcı~@~Bu seçilmiş ise, bu tercihi kullanarak sadece Yatırımcı.~@~~@~
+5642~@~AdmUsrPref [  240] Applied: VendorId (tr-TR)~@~1149~@~11~@~Satıcı~@~Bu seçilmiş ise, bu tercihi kullanarak tek satıcısıdır.~@~~@~
 5643~@~AdmUsrPref [  100] Main Info: PrefDefault (tr-TR)~@~1150~@~11~@~Sistem için varsayılan~@~Bu tercih, tüm oturumlar için yukarıdaki sistem uygulamak için ise bu kontrol edilir.~@~~@~
 5644~@~AdmReport [  350] Main Info: DefaultHlpMsg (tr-TR)~@~1156~@~11~@~Varsayılan Yardım Mesaj~@~Bu sınırsız karakterler ile belirtilen dil yardım iletisi olarak görüntülenecek mesajı.~@~Yardım iletisi olarak görüntülenir sınırsız karakterler ile mesaj giriniz.~@~
 5645~@~AdmReportCri [  150] Main Info: ColumnSize (tr-TR)~@~1158~@~11~@~Sütun Boyutu (piksel)~@~Bu, bu kriterler sütun için piksel cinsinden sütun boyutu.~@~~@~
@@ -3433,7 +3433,7 @@
 5747~@~AdmScreen [  160] Main Info: HasDeleteAll (tr-TR)~@~1301~@~11~@~DeleteAll Görünür~@~Bu onay seçeneği veri ızgara üzerinde görünür olmalı "Tümünü Sil".~@~~@~
 5749~@~AdmUsr [   50] Main Info: DefCompanyId (tr-TR)~@~1304~@~11~@~Standart Şirketi~@~Bu giriş yaptıktan sonra seçilecek olan şirkettir.~@~~@~
 5750~@~AdmUsrPref [   70] Main Info: ComListVisible (tr-TR)~@~1305~@~11~@~Görünür Firma Listesi~@~Şirket listesi giriş üzerine ise "Hayır" seçili gizli olacak.~@~Şirket listesi giriş üzerine ise "Hayır" seçili gizli olacak.~@~
-5751~@~AdmUsrPref [  150] Applied: CompanyId (tr-TR)~@~1306~@~11~@~Şirket~@~Bu tek şirket seçilmiş ise, bu tercihi kullanarak.~@~~@~
+5751~@~AdmUsrPref [  160] Applied: CompanyId (tr-TR)~@~1306~@~11~@~Şirket~@~Bu tek şirket seçilmiş ise, bu tercihi kullanarak.~@~~@~
 5752~@~AdmReport [  200] Main Info: GenerateRp (tr-TR)~@~1307~@~11~@~Oluşturmak~@~Işaretini kaldırın bu programları geçici yoksa bu rapor için oluşturulan olmalıdır.~@~~@~
 5753~@~AdmRowOvrd [  120] Main Info: SelLevel (tr-TR)~@~1308~@~11~@~Seçin izin ver~@~Seçilen varlık türü için öncelikli seçme izindir.~@~Seçilen varlık türü için öncelikli seçme izni seçin.~@~
 5754~@~AdmWizardObj [   80] Main Info: DefOverwrite (tr-TR)~@~1328~@~11~@~Standart Overwrite~@~Bu ithalat sihirbazı varsayılan üzerine yazmak için ise bu kontrol edilir.~@~~@~
@@ -3506,7 +3506,7 @@
 5856~@~AdmDbTable [  130] Main Info: LastSyncDt (tr-TR)~@~1452~@~11~@~Senkronize~@~Bu tablo, en son bu tarihte senkronize oldu.~@~~@~
 5857~@~AdmReportGrp [   90] Main Info: GrpStyle (tr-TR)~@~1453~@~11~@~Stili Geçersiz Kılma~@~Bir başlangıç ​​ya bir CssClass varsayılan grup stilini geçersiz "." ya da gerçek bir stil içerik.~@~~@~
 5859~@~AdmReportObj [   80] Main Info: PaddChar (tr-TR)~@~1456~@~11~@~Karakter ile~@~Bu, toplam dolgu boyutu belirtilmişse, bu sütunun sol doldurulur karakter, varsayılan olarak boştur.~@~~@~
-5861~@~AdmUsrPref [  160] Applied: ProjectId (tr-TR)~@~1459~@~11~@~Proje~@~Bu seçilmiş ise, bu tercihi kullanarak tek bir projedir.~@~~@~
+5861~@~AdmUsrPref [  170] Applied: ProjectId (tr-TR)~@~1459~@~11~@~Proje~@~Bu seçilmiş ise, bu tercihi kullanarak tek bir projedir.~@~~@~
 5862~@~AdmUsrPref [   80] Main Info: PrjListVisible (tr-TR)~@~1467~@~11~@~Görünür Proje listesi~@~Proje listesi giriş üzerine ise "Hayır" seçili gizli olacak.~@~Proje listesi giriş üzerine ise "Hayır" seçili gizli olacak.~@~
 5863~@~AdmReportObj [   40] Main Info: RptObjTypeCd (tr-TR)~@~1469~@~11~@~Kolon Tipi~@~Bu rapor Bu rapor sütunu sütun türü. Şu anda "Alan" veya "Parametre".~@~Lütfen bu rapor sütunu için rapor sütun türünü seçin.~@~
 5864~@~AdmReport [   60] Main Info: ModifiedBy (tr-TR)~@~1470~@~11~@~Değiştiren~@~Bu rapor tanımı son olarak bu kullanıcı tarafından güncellenmiştir.~@~Bu rapor tanımı son olarak bu kullanıcı tarafından güncellenmiştir.~@~
@@ -3921,8 +3921,8 @@
 6398~@~AdmUsr [  330] Status: AgentId (ja-JP)~@~934~@~14~@~エージェント~@~これは、このユーザーがアクセス権を持つエージェントである、空はすべてを意味する。~@~~@~
 6399~@~AdmUsr [  340] Status: BrokerId (ja-JP)~@~935~@~14~@~ブローカー~@~これは、このユーザーがアクセス権を持っているブローカーである、空はすべてを意味する。~@~~@~
 6400~@~AdmUsrPref [   10] Main Info: UsrPrefId (ja-JP)~@~939~@~14~@~UsrPref ID~@~これは、このユーザの嗜好を表す内部IDです。~@~~@~
-6401~@~AdmUsrPref [  130] Applied: UsrId (ja-JP)~@~940~@~14~@~ユーザー~@~選択された場合、これは、このプリファレンスを使用する唯一のユーザーです。~@~~@~
-6402~@~AdmUsrPref [  170] Applied: SystemId (ja-JP)~@~941~@~14~@~システム~@~これは、選択された場合、この設定を適用する唯一のシステムです。~@~~@~
+6401~@~AdmUsrPref [  140] Applied: UsrId (ja-JP)~@~940~@~14~@~ユーザー~@~選択された場合、これは、このプリファレンスを使用する唯一のユーザーです。~@~~@~
+6402~@~AdmUsrPref [  180] Applied: SystemId (ja-JP)~@~941~@~14~@~システム~@~これは、選択された場合、この設定を適用する唯一のシステムです。~@~~@~
 6403~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (ja-JP)~@~942~@~14~@~設定名~@~これは、このユーザー設定に固有の説明です。~@~このユーザー設定に固有の説明を入力してください。~@~
 6404~@~AdmUsrPref [   90] Main Info: SysListVisible (ja-JP)~@~943~@~14~@~可視システムのリスト~@~"いいえ"を選択されている場合、システムのリストは、ログイン時に非表示になります。~@~"いいえ"を選択されている場合、システムのリストは、ログイン時に非表示になります。~@~
 6405~@~AdmUsrPref [   30] Main Info: MenuOptId (ja-JP)~@~944~@~14~@~メニューオプション~@~これは、このプロファイルのメニューの選択です。~@~このプロファイルのメニューの選択肢を選択してください。~@~
@@ -3977,13 +3977,13 @@
 6458~@~AdmUsr [  270] Status: HintAnswer (ja-JP)~@~1120~@~14~@~ヒントの回答~@~これは、パスワードを忘れてしまった場合のヒントの答えであり、に電子メールで送信する必要があります。~@~~@~
 6459~@~AdmChgPwd [   10] Main Info: UsrId (ja-JP)~@~1121~@~14~@~USRイド~@~これは、内部​​IDは一意にこのユーザーを表すです。~@~~@~
 6461~@~AdmChgPwd [   30] Main Info: ConfirmPwd (ja-JP)~@~1136~@~14~@~パスワードを確認~@~これは、以前のパスワードを確認する。~@~確認と同じ以前のパスワードを入力してください。~@~
-6462~@~AdmUsrPref [  140] Applied: UsrGroupId (ja-JP)~@~1143~@~14~@~ユーザグループ~@~選択された場合、これは、このプリファレンスを使用する唯一のユーザーグループです。~@~~@~
-6463~@~AdmUsrPref [  180] Applied: MemberId (ja-JP)~@~1144~@~14~@~メンバー~@~これは、選択された場合、このプリファレンスを使用する唯一のメンバーです。~@~~@~
-6464~@~AdmUsrPref [  190] Applied: AgentId (ja-JP)~@~1145~@~14~@~エージェント~@~これは、選択された場合、このプリファレンスを使用する唯一のエージェントです。~@~~@~
-6465~@~AdmUsrPref [  200] Applied: BrokerId (ja-JP)~@~1146~@~14~@~ブローカー~@~これは、選択された場合、このプリファレンスを使用する唯一のブローカーです。~@~~@~
-6466~@~AdmUsrPref [  210] Applied: CustomerId (ja-JP)~@~1147~@~14~@~お客様~@~選択された場合、これは、このプリファレンスを使用していることが唯一の顧客である。~@~~@~
-6467~@~AdmUsrPref [  220] Applied: InvestorId (ja-JP)~@~1148~@~14~@~投資家~@~これは、選択された場合、このプリファレンスを使用する唯一の投資家です。~@~~@~
-6468~@~AdmUsrPref [  230] Applied: VendorId (ja-JP)~@~1149~@~14~@~ベンダ~@~これは、選択された場合、このプリファレンスを使用する唯一のベンダーです。~@~~@~
+6462~@~AdmUsrPref [  150] Applied: UsrGroupId (ja-JP)~@~1143~@~14~@~ユーザグループ~@~選択された場合、これは、このプリファレンスを使用する唯一のユーザーグループです。~@~~@~
+6463~@~AdmUsrPref [  190] Applied: MemberId (ja-JP)~@~1144~@~14~@~メンバー~@~これは、選択された場合、このプリファレンスを使用する唯一のメンバーです。~@~~@~
+6464~@~AdmUsrPref [  200] Applied: AgentId (ja-JP)~@~1145~@~14~@~エージェント~@~これは、選択された場合、このプリファレンスを使用する唯一のエージェントです。~@~~@~
+6465~@~AdmUsrPref [  210] Applied: BrokerId (ja-JP)~@~1146~@~14~@~ブローカー~@~これは、選択された場合、このプリファレンスを使用する唯一のブローカーです。~@~~@~
+6466~@~AdmUsrPref [  220] Applied: CustomerId (ja-JP)~@~1147~@~14~@~お客様~@~選択された場合、これは、このプリファレンスを使用していることが唯一の顧客である。~@~~@~
+6467~@~AdmUsrPref [  230] Applied: InvestorId (ja-JP)~@~1148~@~14~@~投資家~@~これは、選択された場合、このプリファレンスを使用する唯一の投資家です。~@~~@~
+6468~@~AdmUsrPref [  240] Applied: VendorId (ja-JP)~@~1149~@~14~@~ベンダ~@~これは、選択された場合、このプリファレンスを使用する唯一のベンダーです。~@~~@~
 6469~@~AdmUsrPref [  100] Main Info: PrefDefault (ja-JP)~@~1150~@~14~@~システムのデフォルト~@~このプリファレンスは、すべてのログインに対する上記のシステムに適用するかどうかこれがチェックされます。~@~~@~
 6470~@~AdmReport [  350] Main Info: DefaultHlpMsg (ja-JP)~@~1156~@~14~@~デフォルトのヘルプメッセージ~@~これにより、指定した言語でヘルプメッセージとして表示されるように無制限の文字を持つメッセージです。~@~ヘルプメッセージとして表示されるように無制限の文字でメッセージを入力してください。~@~
 6471~@~AdmReportCri [  150] Main Info: ColumnSize (ja-JP)~@~1158~@~14~@~列のサイズ（ピクセル）~@~これは、この基準の列のピクセル単位の列のサイズです。~@~~@~
@@ -4050,7 +4050,7 @@
 6573~@~AdmScreen [  160] Main Info: HasDeleteAll (ja-JP)~@~1301~@~14~@~可視DeleteAll~@~オプションデータグリッド上に表示するか"すべて削除"場合は、これを確認してください。~@~~@~
 6575~@~AdmUsr [   50] Main Info: DefCompanyId (ja-JP)~@~1304~@~14~@~デフォルトの企業~@~これにより、ログイン後に選択する会社です。~@~~@~
 6576~@~AdmUsrPref [   70] Main Info: ComListVisible (ja-JP)~@~1305~@~14~@~可視企業リスト~@~"いいえ"を選択した場合、会社のリストは、ログイン時に非表示になります。~@~"いいえ"を選択した場合、会社のリストは、ログイン時に非表示になります。~@~
-6577~@~AdmUsrPref [  150] Applied: CompanyId (ja-JP)~@~1306~@~14~@~会社~@~選択された場合、これは、このプリファレンスを使用する唯一の会社です。~@~~@~
+6577~@~AdmUsrPref [  160] Applied: CompanyId (ja-JP)~@~1306~@~14~@~会社~@~選択された場合、これは、このプリファレンスを使用する唯一の会社です。~@~~@~
 6578~@~AdmReport [  200] Main Info: GenerateRp (ja-JP)~@~1307~@~14~@~生成~@~チェックを外してこの一時的な場合はプログラムがこのレポートのために生成しないようにしてください。~@~~@~
 6579~@~AdmRowOvrd [  120] Main Info: SelLevel (ja-JP)~@~1308~@~14~@~選択できるように~@~これは、選択したエンティティタイプのオーバーライドselectパーミッションです。~@~選択したエンティティタイプのオーバーライドselectパーミッションを選択してください。~@~
 6580~@~AdmWizardObj [   80] Main Info: DefOverwrite (ja-JP)~@~1328~@~14~@~デフォルトは上書き~@~このインポートウィザードのデフォルトを上書きするかどうかこれがチェックされます。~@~~@~
@@ -4123,7 +4123,7 @@
 6682~@~AdmDbTable [  130] Main Info: LastSyncDt (ja-JP)~@~1452~@~14~@~に同期さ~@~このテーブルは、最後のこの日に同期化されていました。~@~~@~
 6683~@~AdmReportGrp [   90] Main Info: GrpStyle (ja-JP)~@~1453~@~14~@~スタイルをオーバーライド~@~で始まるいずれかのCssClassでデフォルトグループのスタイルを上書きする"。"または実際のスタイルのコンテンツ。~@~~@~
 6685~@~AdmReportObj [   80] Main Info: PaddChar (ja-JP)~@~1456~@~14~@~文字と~@~これは全体のパディングのサイズが指定されている場合、この列の左側にパディングされる文字で、デフォルトは空白です。~@~~@~
-6687~@~AdmUsrPref [  160] Applied: ProjectId (ja-JP)~@~1459~@~14~@~プロジェクト~@~これは、選択された場合、このプリファレンスを使用する唯一のプロジェクトです。~@~~@~
+6687~@~AdmUsrPref [  170] Applied: ProjectId (ja-JP)~@~1459~@~14~@~プロジェクト~@~これは、選択された場合、このプリファレンスを使用する唯一のプロジェクトです。~@~~@~
 6688~@~AdmUsrPref [   80] Main Info: PrjListVisible (ja-JP)~@~1467~@~14~@~プロジェクトのリストは、可視~@~"いいえ"を選択されている場合、プロジェクトのリストは、ログイン時に非表示になります。~@~"いいえ"を選択されている場合、プロジェクトのリストは、ログイン時に非表示になります。~@~
 6689~@~AdmReportObj [   40] Main Info: RptObjTypeCd (ja-JP)~@~1469~@~14~@~カラムの種類~@~これは、このレポートの列のレポートの列のタイプです。現在、"フィールド"または"パラメータ"のどちらか。~@~このレポートの列のレポートの列の種類を選択してください。~@~
 6690~@~AdmReport [   60] Main Info: ModifiedBy (ja-JP)~@~1470~@~14~@~変更者~@~このレポート定義は、最後に、このユーザによって変更されました。~@~このレポート定義は、最後に、このユーザによって変更されました。~@~
@@ -4538,8 +4538,8 @@
 7224~@~AdmUsr [  330] Status: AgentId (ru-RU)~@~934~@~12~@~Агент~@~Это агент этот пользователь имеет доступ к пустым означает все.~@~~@~
 7225~@~AdmUsr [  340] Status: BrokerId (ru-RU)~@~935~@~12~@~Брокер~@~Это брокера этот пользователь имеет доступ к пустым означает все.~@~~@~
 7226~@~AdmUsrPref [   10] Main Info: UsrPrefId (ru-RU)~@~939~@~12~@~UsrPref ID~@~Это внутренний идентификатор, представляющий этот предпочтений пользователя.~@~~@~
-7227~@~AdmUsrPref [  130] Applied: UsrId (ru-RU)~@~940~@~12~@~Пользователь~@~Это единственный пользователь, используют этот параметр, если выбрана.~@~~@~
-7228~@~AdmUsrPref [  170] Applied: SystemId (ru-RU)~@~941~@~12~@~Система~@~Это единственная система, применять этот параметр, если выбрана.~@~~@~
+7227~@~AdmUsrPref [  140] Applied: UsrId (ru-RU)~@~940~@~12~@~Пользователь~@~Это единственный пользователь, используют этот параметр, если выбрана.~@~~@~
+7228~@~AdmUsrPref [  180] Applied: SystemId (ru-RU)~@~941~@~12~@~Система~@~Это единственная система, применять этот параметр, если выбрана.~@~~@~
 7229~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (ru-RU)~@~942~@~12~@~Предпочтение Имя~@~Это уникальное описание для этой предпочтений пользователя.~@~Пожалуйста, введите уникальное описание для этой предпочтений пользователя.~@~
 7230~@~AdmUsrPref [   90] Main Info: SysListVisible (ru-RU)~@~943~@~12~@~Система Список Видимый~@~Система список исчезнет после Войти, если «Нет» выбран.~@~Система список исчезнет после Войти, если «Нет» выбран.~@~
 7231~@~AdmUsrPref [   30] Main Info: MenuOptId (ru-RU)~@~944~@~12~@~Вариант меню~@~Это выбор меню для данного профиля.~@~Пожалуйста, выберите в меню выбора для данного профиля.~@~
@@ -4594,13 +4594,13 @@
 7284~@~AdmUsr [  270] Status: HintAnswer (ru-RU)~@~1120~@~12~@~Подсказка Ответ~@~Это намек ответа в случае пароль был забыт, и их необходимо по электронной почте.~@~~@~
 7285~@~AdmChgPwd [   10] Main Info: UsrId (ru-RU)~@~1121~@~12~@~Usr Id~@~Это внутренний идентификатор однозначно представляет этот пользователь.~@~~@~
 7287~@~AdmChgPwd [   30] Main Info: ConfirmPwd (ru-RU)~@~1136~@~12~@~Подтвердите пароль~@~Это подтверждает предыдущие пароль.~@~Пожалуйста, введите тот же пароль, как предыдущие подтверждения.~@~
-7288~@~AdmUsrPref [  140] Applied: UsrGroupId (ru-RU)~@~1143~@~12~@~Группа пользователей~@~Это единственная группа, чтобы пользователь с помощью этого предпочтения, если выбрана.~@~~@~
-7289~@~AdmUsrPref [  180] Applied: MemberId (ru-RU)~@~1144~@~12~@~Член~@~Это единственный член, использует этот параметр, если выбрана.~@~~@~
-7290~@~AdmUsrPref [  190] Applied: AgentId (ru-RU)~@~1145~@~12~@~Агент~@~Это единственное средство, чтобы использовать этот параметр, если выбрана.~@~~@~
-7291~@~AdmUsrPref [  200] Applied: BrokerId (ru-RU)~@~1146~@~12~@~Брокер~@~Это единственный брокер, использует этот параметр, если выбрана.~@~~@~
-7292~@~AdmUsrPref [  210] Applied: CustomerId (ru-RU)~@~1147~@~12~@~Клиент~@~Это единственный клиент, использует этот параметр, если выбрана.~@~~@~
-7293~@~AdmUsrPref [  220] Applied: InvestorId (ru-RU)~@~1148~@~12~@~Инвестор~@~Это единственный инвестор, чтобы использовать этот параметр, если выбрана.~@~~@~
-7294~@~AdmUsrPref [  230] Applied: VendorId (ru-RU)~@~1149~@~12~@~Продавец~@~Это единственный производитель, использует этот параметр, если выбрана.~@~~@~
+7288~@~AdmUsrPref [  150] Applied: UsrGroupId (ru-RU)~@~1143~@~12~@~Группа пользователей~@~Это единственная группа, чтобы пользователь с помощью этого предпочтения, если выбрана.~@~~@~
+7289~@~AdmUsrPref [  190] Applied: MemberId (ru-RU)~@~1144~@~12~@~Член~@~Это единственный член, использует этот параметр, если выбрана.~@~~@~
+7290~@~AdmUsrPref [  200] Applied: AgentId (ru-RU)~@~1145~@~12~@~Агент~@~Это единственное средство, чтобы использовать этот параметр, если выбрана.~@~~@~
+7291~@~AdmUsrPref [  210] Applied: BrokerId (ru-RU)~@~1146~@~12~@~Брокер~@~Это единственный брокер, использует этот параметр, если выбрана.~@~~@~
+7292~@~AdmUsrPref [  220] Applied: CustomerId (ru-RU)~@~1147~@~12~@~Клиент~@~Это единственный клиент, использует этот параметр, если выбрана.~@~~@~
+7293~@~AdmUsrPref [  230] Applied: InvestorId (ru-RU)~@~1148~@~12~@~Инвестор~@~Это единственный инвестор, чтобы использовать этот параметр, если выбрана.~@~~@~
+7294~@~AdmUsrPref [  240] Applied: VendorId (ru-RU)~@~1149~@~12~@~Продавец~@~Это единственный производитель, использует этот параметр, если выбрана.~@~~@~
 7295~@~AdmUsrPref [  100] Main Info: PrefDefault (ru-RU)~@~1150~@~12~@~По умолчанию для системы~@~Это проверяется, если это предпочтение должно обратиться в выше система для всех логинов.~@~~@~
 7296~@~AdmReport [  350] Main Info: DefaultHlpMsg (ru-RU)~@~1156~@~12~@~Сообщение по умолчанию Справка~@~Это сообщение с неограниченным символов, которые будут отображаться в виде подсказки на языке, указанном.~@~Пожалуйста, введите сообщение с неограниченным символов, которые будут отображаться в виде подсказки.~@~
 7297~@~AdmReportCri [  150] Main Info: ColumnSize (ru-RU)~@~1158~@~12~@~Колонка Размер (пикселей)~@~Это размер столбца в пикселях для этого столбца критериям.~@~~@~
@@ -4667,7 +4667,7 @@
 7399~@~AdmScreen [  160] Main Info: HasDeleteAll (ru-RU)~@~1301~@~12~@~DeleteAll Видимый~@~Проверьте это, если "Удалить все" опция должна быть видна на сетке данных.~@~~@~
 7401~@~AdmUsr [   50] Main Info: DefCompanyId (ru-RU)~@~1304~@~12~@~По умолчанию компания~@~Это компании, которые будут отобраны после Войти.~@~~@~
 7402~@~AdmUsrPref [   70] Main Info: ComListVisible (ru-RU)~@~1305~@~12~@~Каталог фирм Видимый~@~Список компании будут скрыты от Войти, если «Нет» выбран.~@~Список компании будут скрыты от Войти, если «Нет» выбран.~@~
-7403~@~AdmUsrPref [  150] Applied: CompanyId (ru-RU)~@~1306~@~12~@~Компания~@~Это единственная компания, которая использует этот параметр, если выбрана.~@~~@~
+7403~@~AdmUsrPref [  160] Applied: CompanyId (ru-RU)~@~1306~@~12~@~Компания~@~Это единственная компания, которая использует этот параметр, если выбрана.~@~~@~
 7404~@~AdmReport [  200] Main Info: GenerateRp (ru-RU)~@~1307~@~12~@~Порождать~@~Снимите это, если не временного программы должны быть созданы для этого отчета.~@~~@~
 7405~@~AdmRowOvrd [  120] Main Info: SelLevel (ru-RU)~@~1308~@~12~@~Разрешить Выберите~@~Это основной выбор разрешения для выбранного типа сущности.~@~Пожалуйста, выберите переопределения выбора разрешения для выбранного типа сущности.~@~
 7406~@~AdmWizardObj [   80] Main Info: DefOverwrite (ru-RU)~@~1328~@~12~@~По умолчанию перезапись~@~Это проверяется, если по умолчанию для данного мастера импорта является для перезаписи.~@~~@~
@@ -4740,7 +4740,7 @@
 7508~@~AdmDbTable [  130] Main Info: LastSyncDt (ru-RU)~@~1452~@~12~@~Синхронизированная на~@~Эта таблица была последней синхронизации на эту дату.~@~~@~
 7509~@~AdmReportGrp [   90] Main Info: GrpStyle (ru-RU)~@~1453~@~12~@~Переопределение стиля~@~Переопределение стиля по умолчанию группы либо CssClass, начиная с "". или фактическое содержание стиле.~@~~@~
 7511~@~AdmReportObj [   80] Main Info: PaddChar (ru-RU)~@~1456~@~12~@~С помощью символа~@~Это символ, который будет дополнен до слева от этой колонке, если общий размер обивка была указана, по умолчанию пустой.~@~~@~
-7513~@~AdmUsrPref [  160] Applied: ProjectId (ru-RU)~@~1459~@~12~@~Проект~@~Это единственный проект, чтобы использовать это предпочтение, если выбрана.~@~~@~
+7513~@~AdmUsrPref [  170] Applied: ProjectId (ru-RU)~@~1459~@~12~@~Проект~@~Это единственный проект, чтобы использовать это предпочтение, если выбрана.~@~~@~
 7514~@~AdmUsrPref [   80] Main Info: PrjListVisible (ru-RU)~@~1467~@~12~@~Список проектов Видимый~@~Список проектов, будут скрыты от Войти, если «Нет» выбран.~@~Список проектов, будут скрыты от Войти, если «Нет» выбран.~@~
 7515~@~AdmReportObj [   40] Main Info: RptObjTypeCd (ru-RU)~@~1469~@~12~@~Колонка типа~@~Это тип отчета колонки для настоящего доклада колонке. В настоящее время либо "Нива" или "Параметры".~@~Пожалуйста, выберите тип отчета колонки для настоящего доклада колонке.~@~
 7516~@~AdmReport [   60] Main Info: ModifiedBy (ru-RU)~@~1470~@~12~@~Автор изменений~@~Это определение отчета Последнее изменение этого пользователя.~@~Это определение отчета Последнее изменение этого пользователя.~@~
@@ -5155,8 +5155,8 @@
 8050~@~AdmUsr [  330] Status: AgentId (es-ES)~@~934~@~13~@~Agente~@~Este es el agente de este usuario tiene acceso a todos los medios vacíos.~@~~@~
 8051~@~AdmUsr [  340] Status: BrokerId (es-ES)~@~935~@~13~@~Corredor~@~Este es el corredor de este usuario tiene acceso a todos los medios vacíos.~@~~@~
 8052~@~AdmUsrPref [   10] Main Info: UsrPrefId (es-ES)~@~939~@~13~@~UsrPref ID~@~Este es el ID interno que representa esta preferencia del usuario.~@~~@~
-8053~@~AdmUsrPref [  130] Applied: UsrId (es-ES)~@~940~@~13~@~Usuario~@~Este es el único usuario que se utiliza esta opción, si es elegido.~@~~@~
-8054~@~AdmUsrPref [  170] Applied: SystemId (es-ES)~@~941~@~13~@~Sistema~@~Este es el único sistema para aplicar esta preferencia, si es elegido.~@~~@~
+8053~@~AdmUsrPref [  140] Applied: UsrId (es-ES)~@~940~@~13~@~Usuario~@~Este es el único usuario que se utiliza esta opción, si es elegido.~@~~@~
+8054~@~AdmUsrPref [  180] Applied: SystemId (es-ES)~@~941~@~13~@~Sistema~@~Este es el único sistema para aplicar esta preferencia, si es elegido.~@~~@~
 8055~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (es-ES)~@~942~@~13~@~Nombre de la preferencia~@~Esta es la única descripción para esta preferencia del usuario.~@~Por favor, introduzca una descripción única de esta preferencia del usuario.~@~
 8056~@~AdmUsrPref [   90] Main Info: SysListVisible (es-ES)~@~943~@~13~@~Sistema de Visible Lista~@~Lista del sistema se oculta al iniciar la sesión si el "No" está seleccionada.~@~Lista del sistema se oculta al iniciar la sesión si el "No" está seleccionada.~@~
 8057~@~AdmUsrPref [   30] Main Info: MenuOptId (es-ES)~@~944~@~13~@~Menú de opciones~@~Esta es la opción de menú para este perfil.~@~Por favor, seleccione la opción de menú para este perfil.~@~
@@ -5211,13 +5211,13 @@
 8110~@~AdmUsr [  270] Status: HintAnswer (es-ES)~@~1120~@~13~@~Sugerencia Respuesta~@~Esta es la respuesta pista en el caso de la contraseña es olvidada y necesita ser enviado por correo electrónico.~@~~@~
 8111~@~AdmChgPwd [   10] Main Info: UsrId (es-ES)~@~1121~@~13~@~Usr Id~@~Este es el ID interno único representa este usuario.~@~~@~
 8113~@~AdmChgPwd [   30] Main Info: ConfirmPwd (es-ES)~@~1136~@~13~@~Confirm Password~@~Esto confirma la contraseña anterior.~@~Por favor, introduzca la misma contraseña anterior como una confirmación.~@~
-8114~@~AdmUsrPref [  140] Applied: UsrGroupId (es-ES)~@~1143~@~13~@~Grupo de usuarios~@~Este es el grupo de usuarios sólo para uso de esta preferencia, si es elegido.~@~~@~
-8115~@~AdmUsrPref [  180] Applied: MemberId (es-ES)~@~1144~@~13~@~Miembro~@~Este es el único miembro que se utiliza esta opción, si es elegido.~@~~@~
-8116~@~AdmUsrPref [  190] Applied: AgentId (es-ES)~@~1145~@~13~@~Agente~@~Este es el único agente que se utiliza esta opción, si es elegido.~@~~@~
-8117~@~AdmUsrPref [  200] Applied: BrokerId (es-ES)~@~1146~@~13~@~Corredor~@~Este es el único broker que se utiliza esta opción, si es elegido.~@~~@~
-8118~@~AdmUsrPref [  210] Applied: CustomerId (es-ES)~@~1147~@~13~@~Cliente~@~Este es el único cliente que se utiliza esta opción, si es elegido.~@~~@~
-8119~@~AdmUsrPref [  220] Applied: InvestorId (es-ES)~@~1148~@~13~@~Inversor~@~Este es el único inversor que se utiliza esta opción, si es elegido.~@~~@~
-8120~@~AdmUsrPref [  230] Applied: VendorId (es-ES)~@~1149~@~13~@~Vendedor~@~Este es el único proveedor que utilizar esta preferencia, si es elegido.~@~~@~
+8114~@~AdmUsrPref [  150] Applied: UsrGroupId (es-ES)~@~1143~@~13~@~Grupo de usuarios~@~Este es el grupo de usuarios sólo para uso de esta preferencia, si es elegido.~@~~@~
+8115~@~AdmUsrPref [  190] Applied: MemberId (es-ES)~@~1144~@~13~@~Miembro~@~Este es el único miembro que se utiliza esta opción, si es elegido.~@~~@~
+8116~@~AdmUsrPref [  200] Applied: AgentId (es-ES)~@~1145~@~13~@~Agente~@~Este es el único agente que se utiliza esta opción, si es elegido.~@~~@~
+8117~@~AdmUsrPref [  210] Applied: BrokerId (es-ES)~@~1146~@~13~@~Corredor~@~Este es el único broker que se utiliza esta opción, si es elegido.~@~~@~
+8118~@~AdmUsrPref [  220] Applied: CustomerId (es-ES)~@~1147~@~13~@~Cliente~@~Este es el único cliente que se utiliza esta opción, si es elegido.~@~~@~
+8119~@~AdmUsrPref [  230] Applied: InvestorId (es-ES)~@~1148~@~13~@~Inversor~@~Este es el único inversor que se utiliza esta opción, si es elegido.~@~~@~
+8120~@~AdmUsrPref [  240] Applied: VendorId (es-ES)~@~1149~@~13~@~Vendedor~@~Este es el único proveedor que utilizar esta preferencia, si es elegido.~@~~@~
 8121~@~AdmUsrPref [  100] Main Info: PrefDefault (es-ES)~@~1150~@~13~@~Por defecto para el sistema~@~Esto se comprueba si esta preferencia se aplicará a dicho sistema para todas las entradas.~@~~@~
 8122~@~AdmReport [  350] Main Info: DefaultHlpMsg (es-ES)~@~1156~@~13~@~Default Mensaje Ayuda~@~Este es el mensaje con caracteres ilimitado que se mostrará como mensaje de ayuda en el idioma especificado.~@~Por favor introduce el mensaje con caracteres ilimitado que se mostrará como mensaje de ayuda.~@~
 8123~@~AdmReportCri [  150] Main Info: ColumnSize (es-ES)~@~1158~@~13~@~Columna de tamaño (px)~@~Este es el tamaño de la columna en píxeles para esta columna los criterios.~@~~@~
@@ -5284,7 +5284,7 @@
 8225~@~AdmScreen [  160] Main Info: HasDeleteAll (es-ES)~@~1301~@~13~@~DeleteAll Visible~@~Seleccione esta opción si la opción "Eliminar todo" opción debe ser visible en la red de datos.~@~~@~
 8227~@~AdmUsr [   50] Main Info: DefCompanyId (es-ES)~@~1304~@~13~@~Predeterminada de la empresa~@~Esta es la empresa para ser seleccionados después de inicio de sesión.~@~~@~
 8228~@~AdmUsrPref [   70] Main Info: ComListVisible (es-ES)~@~1305~@~13~@~Lista compañía Visible~@~La lista de empresas se oculta al iniciar la sesión si el "No" está seleccionada.~@~La lista de empresas se oculta al iniciar la sesión si el "No" está seleccionada.~@~
-8229~@~AdmUsrPref [  150] Applied: CompanyId (es-ES)~@~1306~@~13~@~Empresa~@~Esta es la única empresa que utiliza esta preferencia, si es elegido.~@~~@~
+8229~@~AdmUsrPref [  160] Applied: CompanyId (es-ES)~@~1306~@~13~@~Empresa~@~Esta es la única empresa que utiliza esta preferencia, si es elegido.~@~~@~
 8230~@~AdmReport [  200] Main Info: GenerateRp (es-ES)~@~1307~@~13~@~Generar~@~Desactive esta si es temporal no se deben generar programas para el presente informe.~@~~@~
 8231~@~AdmRowOvrd [  120] Main Info: SelLevel (es-ES)~@~1308~@~13~@~Seleccione Permitir~@~Esto es primordial seleccionar el permiso para el tipo de entidad seleccionada.~@~Por favor, seleccione el permiso primordial seleccionar el tipo de entidad seleccionada.~@~
 8232~@~AdmWizardObj [   80] Main Info: DefOverwrite (es-ES)~@~1328~@~13~@~Default Sobrescribir~@~Esto se comprueba si el valor predeterminado para este asistente de importación es sobrescribir.~@~~@~
@@ -5357,7 +5357,7 @@
 8334~@~AdmDbTable [  130] Main Info: LastSyncDt (es-ES)~@~1452~@~13~@~Sincronizados en~@~Esta tabla se sincronizó por última en esta fecha.~@~~@~
 8335~@~AdmReportGrp [   90] Main Info: GrpStyle (es-ES)~@~1453~@~13~@~Anular estilo~@~Reemplazar el estilo de grupo por omisión ya sea por un CssClass a partir de un "." o el contenido de estilo actual.~@~~@~
 8337~@~AdmReportObj [   80] Main Info: PaddChar (es-ES)~@~1456~@~13~@~Con carácter~@~Este es el carácter que se rellena a la izquierda de esta columna si el tamaño total de relleno se ha especificado, por defecto está en blanco.~@~~@~
-8339~@~AdmUsrPref [  160] Applied: ProjectId (es-ES)~@~1459~@~13~@~Proyecto~@~Este es el único proyecto que se utiliza esta opción, si es elegido.~@~~@~
+8339~@~AdmUsrPref [  170] Applied: ProjectId (es-ES)~@~1459~@~13~@~Proyecto~@~Este es el único proyecto que se utiliza esta opción, si es elegido.~@~~@~
 8340~@~AdmUsrPref [   80] Main Info: PrjListVisible (es-ES)~@~1467~@~13~@~Proyecto Visible Lista~@~Lista de proyectos se oculta al iniciar la sesión si el "No" está seleccionada.~@~Lista de proyectos se oculta al iniciar la sesión si el "No" está seleccionada.~@~
 8341~@~AdmReportObj [   40] Main Info: RptObjTypeCd (es-ES)~@~1469~@~13~@~Columna Tipo~@~Este es el tipo de columna del informe de esta columna del informe. En la actualidad ya sea "campo" o "parámetros".~@~Por favor, seleccione el tipo de columna del informe de esta columna del informe.~@~
 8342~@~AdmReport [   60] Main Info: ModifiedBy (es-ES)~@~1470~@~13~@~Modificado por~@~Esta definición de informe fue modificada por última vez de este usuario.~@~Esta definición de informe fue modificada por última vez de este usuario.~@~
@@ -6132,8 +6132,8 @@
 10376~@~AdmUsr [  330] Status: AgentId (de-DE)~@~934~@~68~@~Agent~@~Dies ist der Agent dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
 10377~@~AdmUsr [  340] Status: BrokerId (de-DE)~@~935~@~68~@~Makler~@~Dies ist der Vermittler dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
 10378~@~AdmUsrPref [   10] Main Info: UsrPrefId (de-DE)~@~939~@~68~@~UsrPref ID~@~Dies ist die interne ID, die diesem Benutzer Präferenz.~@~~@~
-10379~@~AdmUsrPref [  130] Applied: UsrId (de-DE)~@~940~@~68~@~Benutzer~@~Dies ist der einzige Benutzer verwenden diese Einstellung, wenn gewählt.~@~~@~
-10380~@~AdmUsrPref [  170] Applied: SystemId (de-DE)~@~941~@~68~@~System~@~Dies ist das einzige System, um diese Einstellung zu beantragen, wenn gewählt.~@~~@~
+10379~@~AdmUsrPref [  140] Applied: UsrId (de-DE)~@~940~@~68~@~Benutzer~@~Dies ist der einzige Benutzer verwenden diese Einstellung, wenn gewählt.~@~~@~
+10380~@~AdmUsrPref [  180] Applied: SystemId (de-DE)~@~941~@~68~@~System~@~Dies ist das einzige System, um diese Einstellung zu beantragen, wenn gewählt.~@~~@~
 10381~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (de-DE)~@~942~@~68~@~Einstellungsname~@~Dies ist die eindeutige Beschreibung für diesen Benutzer Präferenz.~@~Bitte geben Sie eine eindeutige Beschreibung für diesen Benutzer Präferenz.~@~
 10382~@~AdmUsrPref [   90] Main Info: SysListVisible (de-DE)~@~943~@~68~@~System List Visible~@~System-Liste wird bei der Anmeldung ausgeblendet werden, wenn "Nein" ausgewählt ist.~@~System-Liste wird bei der Anmeldung ausgeblendet werden, wenn "Nein" ausgewählt ist.~@~
 10383~@~AdmUsrPref [   30] Main Info: MenuOptId (de-DE)~@~944~@~68~@~Menü Option~@~Dies ist die Menüwahl für dieses Profil.~@~Bitte wählen Sie das Menü Wahl für dieses Profil.~@~
@@ -6188,13 +6188,13 @@
 10436~@~AdmUsr [  270] Status: HintAnswer (de-DE)~@~1120~@~68~@~Hinweis Antwort~@~Dies ist der Hinweis Antwort bei vergessenem Passwort und müssen an zugesendet.~@~~@~
 10437~@~AdmChgPwd [   10] Main Info: UsrId (de-DE)~@~1121~@~68~@~Usr Id~@~Dies ist die interne ID eindeutig repräsentiert dieses Benutzers.~@~~@~
 10439~@~AdmChgPwd [   30] Main Info: ConfirmPwd (de-DE)~@~1136~@~68~@~Passwort bestätigen~@~Dies bestätigt die bisherige Passwort.~@~Bitte geben Sie die gleichen alten Passwort als Bestätigung.~@~
-10440~@~AdmUsrPref [  140] Applied: UsrGroupId (de-DE)~@~1143~@~68~@~User Group~@~Dies ist die einzige Benutzergruppe verwenden Sie diese Einstellung, wenn gewählt.~@~~@~
-10441~@~AdmUsrPref [  180] Applied: MemberId (de-DE)~@~1144~@~68~@~Mitglied~@~Dies ist das einzige Mitglied zu sein mit diese Einstellung, wenn gewählt.~@~~@~
-10442~@~AdmUsrPref [  190] Applied: AgentId (de-DE)~@~1145~@~68~@~Agent~@~Dies ist das einzige Mittel, um mit diesen werden bevorzugt, wenn gewählt.~@~~@~
-10443~@~AdmUsrPref [  200] Applied: BrokerId (de-DE)~@~1146~@~68~@~Makler~@~Dies ist der einzige Broker, werden diese Einstellung verwendet werden, wenn gewählt.~@~~@~
-10444~@~AdmUsrPref [  210] Applied: CustomerId (de-DE)~@~1147~@~68~@~Kunde~@~Dies ist der einzige Kunde zu sein mit diese Einstellung, wenn gewählt.~@~~@~
-10445~@~AdmUsrPref [  220] Applied: InvestorId (de-DE)~@~1148~@~68~@~Investor~@~Dies ist der einzige Investor zu sein mit diese Einstellung, wenn gewählt.~@~~@~
-10446~@~AdmUsrPref [  230] Applied: VendorId (de-DE)~@~1149~@~68~@~Verkäufer~@~Dies ist der einzige Anbieter, werden diese Einstellung verwendet werden, wenn gewählt.~@~~@~
+10440~@~AdmUsrPref [  150] Applied: UsrGroupId (de-DE)~@~1143~@~68~@~User Group~@~Dies ist die einzige Benutzergruppe verwenden Sie diese Einstellung, wenn gewählt.~@~~@~
+10441~@~AdmUsrPref [  190] Applied: MemberId (de-DE)~@~1144~@~68~@~Mitglied~@~Dies ist das einzige Mitglied zu sein mit diese Einstellung, wenn gewählt.~@~~@~
+10442~@~AdmUsrPref [  200] Applied: AgentId (de-DE)~@~1145~@~68~@~Agent~@~Dies ist das einzige Mittel, um mit diesen werden bevorzugt, wenn gewählt.~@~~@~
+10443~@~AdmUsrPref [  210] Applied: BrokerId (de-DE)~@~1146~@~68~@~Makler~@~Dies ist der einzige Broker, werden diese Einstellung verwendet werden, wenn gewählt.~@~~@~
+10444~@~AdmUsrPref [  220] Applied: CustomerId (de-DE)~@~1147~@~68~@~Kunde~@~Dies ist der einzige Kunde zu sein mit diese Einstellung, wenn gewählt.~@~~@~
+10445~@~AdmUsrPref [  230] Applied: InvestorId (de-DE)~@~1148~@~68~@~Investor~@~Dies ist der einzige Investor zu sein mit diese Einstellung, wenn gewählt.~@~~@~
+10446~@~AdmUsrPref [  240] Applied: VendorId (de-DE)~@~1149~@~68~@~Verkäufer~@~Dies ist der einzige Anbieter, werden diese Einstellung verwendet werden, wenn gewählt.~@~~@~
 10447~@~AdmUsrPref [  100] Main Info: PrefDefault (de-DE)~@~1150~@~68~@~Standard für System~@~Dies wird überprüft, ob diese Einstellung ist auf dem obigen System für alle Logins gelten.~@~~@~
 10448~@~AdmReport [  350] Main Info: DefaultHlpMsg (de-DE)~@~1156~@~68~@~Standard Hilfe Nachricht~@~Dies ist die Botschaft mit unbegrenzter Zeichen als Hilfe Nachricht in der angegebenen Sprache angezeigt.~@~Bitte geben Sie die Nachricht mit unbegrenzter Zeichen als Hilfe angezeigt werden.~@~
 10449~@~AdmReportCri [  150] Main Info: ColumnSize (de-DE)~@~1158~@~68~@~Column Größe (px)~@~Dies ist die Größe der Spalte in Pixeln für diese Kriterien Spalte.~@~~@~
@@ -6267,7 +6267,7 @@
 10550~@~AdmScreen [  160] Main Info: HasDeleteAll (de-DE)~@~1301~@~68~@~DeleteAll Visible~@~Aktivieren Sie diese Option, wenn die "Delete All" Option sollte sichtbar sein Datenraster.~@~~@~
 10552~@~AdmUsr [   50] Main Info: DefCompanyId (de-DE)~@~1304~@~68~@~Standard Unternehmen~@~Dies ist die Firma nach dem Login ausgewählt werden.~@~~@~
 10553~@~AdmUsrPref [   70] Main Info: ComListVisible (de-DE)~@~1305~@~68~@~Firmenliste Visible~@~Unternehmen Liste wird bei der Anmeldung ausgeblendet werden, wenn "Nein" ausgewählt ist.~@~Unternehmen Liste wird bei der Anmeldung ausgeblendet werden, wenn "Nein" ausgewählt ist.~@~
-10554~@~AdmUsrPref [  150] Applied: CompanyId (de-DE)~@~1306~@~68~@~Firma~@~Dies ist das einzige Unternehmen, werden diese Einstellung verwendet werden, wenn gewählt.~@~~@~
+10554~@~AdmUsrPref [  160] Applied: CompanyId (de-DE)~@~1306~@~68~@~Firma~@~Dies ist das einzige Unternehmen, werden diese Einstellung verwendet werden, wenn gewählt.~@~~@~
 10555~@~AdmReport [  200] Main Info: GenerateRp (de-DE)~@~1307~@~68~@~Erzeugen~@~Deaktivieren Sie diese Option, wenn temporäre keine Programme sollten für diesen Bericht generiert werden.~@~~@~
 10556~@~AdmRowOvrd [  120] Main Info: SelLevel (de-DE)~@~1308~@~68~@~Lassen Sie~@~Dies ist das übergeordnete select-Berechtigung für den ausgewählten Entitätstyp.~@~Bitte wählen Sie den übergeordneten select-Berechtigung für den ausgewählten Entitätstyp.~@~
 10557~@~AdmWizardObj [   80] Main Info: DefOverwrite (de-DE)~@~1328~@~68~@~Standardeinstellung zu überschreiben~@~Dies wird überprüft, ob die Standardeinstellung für diese Import-Assistenten ist es, zu überschreiben.~@~~@~
@@ -6342,7 +6342,7 @@
 10657~@~AdmDbTable [  130] Main Info: LastSyncDt (de-DE)~@~1452~@~68~@~Synchronisiert werden~@~Diese Tabelle wurde zuletzt an diesem Tag synchronisiert.~@~~@~
 10658~@~AdmReportGrp [   90] Main Info: GrpStyle (de-DE)~@~1453~@~68~@~Überschreiben Stil~@~Überschreiben Sie die Default-Gruppe Stil entweder durch eine CssClass beginnend mit einem "." oder die tatsächlichen Stil Inhalt.~@~~@~
 10660~@~AdmReportObj [   80] Main Info: PaddChar (de-DE)~@~1456~@~68~@~Mit Charakter~@~Dies ist das Zeichen, das in der linken Spalte aufgefüllt werden, wenn die gesamte Polsterung Größe angegeben wurde; Standardeinstellung ist leer.~@~~@~
-10662~@~AdmUsrPref [  160] Applied: ProjectId (de-DE)~@~1459~@~68~@~Projekt~@~Dies ist das einzige Projekt zu sein mit diese Einstellung, wenn gewählt.~@~~@~
+10662~@~AdmUsrPref [  170] Applied: ProjectId (de-DE)~@~1459~@~68~@~Projekt~@~Dies ist das einzige Projekt zu sein mit diese Einstellung, wenn gewählt.~@~~@~
 10663~@~AdmUsrPref [   80] Main Info: PrjListVisible (de-DE)~@~1467~@~68~@~Project List Visible~@~Projekt Liste wird bei der Anmeldung ausgeblendet werden, wenn "Nein" ausgewählt ist.~@~Projekt Liste wird bei der Anmeldung ausgeblendet werden, wenn "Nein" ausgewählt ist.~@~
 10664~@~AdmReportObj [   40] Main Info: RptObjTypeCd (de-DE)~@~1469~@~68~@~Column Type~@~Dies ist der Bericht Spaltentyp für diesen Bericht Spalte. Derzeit entweder "Field" oder "Parameter".~@~Bitte wählen Sie den Bericht Spaltentyp für diesen Bericht Spalte.~@~
 10665~@~AdmReport [   60] Main Info: ModifiedBy (de-DE)~@~1470~@~68~@~Geändert von~@~Dieser Bericht Definition wurde zuletzt dieses Benutzers geändert.~@~Dieser Bericht Definition wurde zuletzt dieses Benutzers geändert.~@~
@@ -7051,8 +7051,8 @@
 11503~@~AdmUsr [  330] Status: AgentId (ko-KR)~@~934~@~28~@~대리인~@~이이 사용자가에 액세스 할 수 있습니다 에이전트, 빈은 모두를 의미합니다.~@~~@~
 11504~@~AdmUsr [  340] Status: BrokerId (ko-KR)~@~935~@~28~@~브로커~@~이이 사용자가에 액세스 할 수 있습니다 브로커이며, 빈은 모두를 의미합니다.~@~~@~
 11505~@~AdmUsrPref [   10] Main Info: UsrPrefId (ko-KR)~@~939~@~28~@~UsrPref ID~@~이렇게하면이 사용자가 환경 설정을 나타내는 내부 ID입니다.~@~~@~
-11506~@~AdmUsrPref [  130] Applied: UsrId (ko-KR)~@~940~@~28~@~사용자~@~이 밖에 사용자가 선택한 경우이 환경 설정을 사용하여 할 수 있습니다.~@~~@~
-11507~@~AdmUsrPref [  170] Applied: SystemId (ko-KR)~@~941~@~28~@~체계~@~이 선택한 경우이 환경 설정을 적용 할 수있는 유일한 시스템입니다.~@~~@~
+11506~@~AdmUsrPref [  140] Applied: UsrId (ko-KR)~@~940~@~28~@~사용자~@~이 밖에 사용자가 선택한 경우이 환경 설정을 사용하여 할 수 있습니다.~@~~@~
+11507~@~AdmUsrPref [  180] Applied: SystemId (ko-KR)~@~941~@~28~@~체계~@~이 선택한 경우이 환경 설정을 적용 할 수있는 유일한 시스템입니다.~@~~@~
 11508~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (ko-KR)~@~942~@~28~@~환경 설정 이름~@~이렇게하면이 사용자가 환경 설정에 대한 고유 한 설명입니다.~@~이 사용자 환경 설정에 대한 고유 한 설명을 입력하십시오.~@~
 11509~@~AdmUsrPref [   90] Main Info: SysListVisible (ko-KR)~@~943~@~28~@~공개 시스템 목록~@~"아니오"를 선택하는 경우 시스템 목록은 로그인시 숨겨집니다.~@~"아니오"를 선택하는 경우 시스템 목록은 로그인시 숨겨집니다.~@~
 11510~@~AdmUsrPref [   30] Main Info: MenuOptId (ko-KR)~@~944~@~28~@~메뉴 옵션~@~이 프로필에 대한 메뉴 선택이 될 것입니다.~@~이 프로필에 대한 메뉴 선택을 선택하십시오.~@~
@@ -7107,13 +7107,13 @@
 11563~@~AdmUsr [  270] Status: HintAnswer (ko-KR)~@~1120~@~28~@~답변을두기~@~이 암호를 잊어되어 경우에 힌트 답하고 이메일로 전송해야합니다.~@~~@~
 11564~@~AdmChgPwd [   10] Main Info: UsrId (ko-KR)~@~1121~@~28~@~USR 이드~@~이 내부 ID는 고유 사용자를 대표하는 것입니다.~@~~@~
 11566~@~AdmChgPwd [   30] Main Info: ConfirmPwd (ko-KR)~@~1136~@~28~@~비밀번호 확인~@~이 이전 암호를 확인합니다.~@~확인과 같은 이전 비밀번호를 입력하세요.~@~
-11567~@~AdmUsrPref [  140] Applied: UsrGroupId (ko-KR)~@~1143~@~28~@~사용자 그룹~@~이 선택한 경우이 환경 설정을 사용하는 유일한 사용자 그룹입니다.~@~~@~
-11568~@~AdmUsrPref [  180] Applied: MemberId (ko-KR)~@~1144~@~28~@~회원~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 회원입니다.~@~~@~
-11569~@~AdmUsrPref [  190] Applied: AgentId (ko-KR)~@~1145~@~28~@~대리인~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 대리인이다.~@~~@~
-11570~@~AdmUsrPref [  200] Applied: BrokerId (ko-KR)~@~1146~@~28~@~브로커~@~이 밖에 브로커 선택한 경우이 환경 설정을 사용하여 할 수 있습니다.~@~~@~
-11571~@~AdmUsrPref [  210] Applied: CustomerId (ko-KR)~@~1147~@~28~@~고객~@~이 선택한 경우이 환경 설정을 사용하는 유일한 고객입니다.~@~~@~
-11572~@~AdmUsrPref [  220] Applied: InvestorId (ko-KR)~@~1148~@~28~@~투자자~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 투자이다.~@~~@~
-11573~@~AdmUsrPref [  230] Applied: VendorId (ko-KR)~@~1149~@~28~@~공급 업체~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 업체입니다.~@~~@~
+11567~@~AdmUsrPref [  150] Applied: UsrGroupId (ko-KR)~@~1143~@~28~@~사용자 그룹~@~이 선택한 경우이 환경 설정을 사용하는 유일한 사용자 그룹입니다.~@~~@~
+11568~@~AdmUsrPref [  190] Applied: MemberId (ko-KR)~@~1144~@~28~@~회원~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 회원입니다.~@~~@~
+11569~@~AdmUsrPref [  200] Applied: AgentId (ko-KR)~@~1145~@~28~@~대리인~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 대리인이다.~@~~@~
+11570~@~AdmUsrPref [  210] Applied: BrokerId (ko-KR)~@~1146~@~28~@~브로커~@~이 밖에 브로커 선택한 경우이 환경 설정을 사용하여 할 수 있습니다.~@~~@~
+11571~@~AdmUsrPref [  220] Applied: CustomerId (ko-KR)~@~1147~@~28~@~고객~@~이 선택한 경우이 환경 설정을 사용하는 유일한 고객입니다.~@~~@~
+11572~@~AdmUsrPref [  230] Applied: InvestorId (ko-KR)~@~1148~@~28~@~투자자~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 투자이다.~@~~@~
+11573~@~AdmUsrPref [  240] Applied: VendorId (ko-KR)~@~1149~@~28~@~공급 업체~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 업체입니다.~@~~@~
 11574~@~AdmUsrPref [  100] Main Info: PrefDefault (ko-KR)~@~1150~@~28~@~시스템에 대한 기본~@~이 환경 설정은 모든 로그인에 대한 위의 시스템에 적용 할 경우이를 확인합니다.~@~~@~
 11575~@~AdmReport [  350] Main Info: DefaultHlpMsg (ko-KR)~@~1156~@~28~@~기본 도움말 메시지~@~이 지정된 언어로 도움말 메시지로 표시 할 무제한 문자 메시지입니다.~@~도움말 메시지로 표시 할 무제한 문자 메시지를 입력하세요.~@~
 11576~@~AdmReportCri [  150] Main Info: ColumnSize (ko-KR)~@~1158~@~28~@~열 크기 (픽셀)~@~이이 기준 열의 픽셀의 열 크기입니다.~@~~@~
@@ -7186,7 +7186,7 @@
 11677~@~AdmScreen [  160] Main Info: HasDeleteAll (ko-KR)~@~1301~@~28~@~DeleteAll 공개~@~"모두 삭제"옵션은 데이터 그리드에 표시해야하는 경우이 항목을 선택합니다.~@~~@~
 11679~@~AdmUsr [   50] Main Info: DefCompanyId (ko-KR)~@~1304~@~28~@~기본 회사~@~이 로그인 한 후 선택되는 회사입니다.~@~~@~
 11680~@~AdmUsrPref [   70] Main Info: ComListVisible (ko-KR)~@~1305~@~28~@~공개 회사 목록~@~"아니오"를 선택하는 경우 회사 목록은 로그인시 숨겨집니다.~@~"아니오"를 선택하는 경우 회사 목록은 로그인시 숨겨집니다.~@~
-11681~@~AdmUsrPref [  150] Applied: CompanyId (ko-KR)~@~1306~@~28~@~회사~@~이것은 유일한 회사 선택된 경우이 환경 설정을 사용하여 할 수 있습니다.~@~~@~
+11681~@~AdmUsrPref [  160] Applied: CompanyId (ko-KR)~@~1306~@~28~@~회사~@~이것은 유일한 회사 선택된 경우이 환경 설정을 사용하여 할 수 있습니다.~@~~@~
 11682~@~AdmReport [  200] Main Info: GenerateRp (ko-KR)~@~1307~@~28~@~생성~@~선택을 취소이 임시하더라도 프로그램은이 보고서에 대해 생성되지해야합니다.~@~~@~
 11683~@~AdmRowOvrd [  120] Main Info: SelLevel (ko-KR)~@~1308~@~28~@~선택 허용~@~이것은 선택한 개체 유형에 대한 가장 중요한 선택 권한이 있습니다.~@~선택한 개체 유형에 대한 가장 중요한 선택 권한을 선택하십시오.~@~
 11684~@~AdmWizardObj [   80] Main Info: DefOverwrite (ko-KR)~@~1328~@~28~@~덮어 쓰기 기본~@~이 가져 오기 마법사에 대한 기본은 덮어 쓰기하는 경우를 검사한다.~@~~@~
@@ -7261,7 +7261,7 @@
 11784~@~AdmDbTable [  130] Main Info: LastSyncDt (ko-KR)~@~1452~@~28~@~에 동기화~@~이 표는 최근이 날짜에 동기화되었습니다.~@~~@~
 11785~@~AdmReportGrp [   90] Main Info: GrpStyle (ko-KR)~@~1453~@~28~@~스타일을 덮어 쓰기~@~로 시작하는 CssClass에 의해 기본 그룹 스타일을 덮어 쓰기 "." 또는 실제 스타일의 콘텐츠입니다.~@~~@~
 11787~@~AdmReportObj [   80] Main Info: PaddChar (ko-KR)~@~1456~@~28~@~문자로~@~이 전체 패딩 크기가 지정되어있는 경우이 항목의 왼쪽에 패드를 물렸다 할 문자이며 기본값은 비어 있습니다.~@~~@~
-11789~@~AdmUsrPref [  160] Applied: ProjectId (ko-KR)~@~1459~@~28~@~계획~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 프로젝트입니다.~@~~@~
+11789~@~AdmUsrPref [  170] Applied: ProjectId (ko-KR)~@~1459~@~28~@~계획~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 프로젝트입니다.~@~~@~
 11790~@~AdmUsrPref [   80] Main Info: PrjListVisible (ko-KR)~@~1467~@~28~@~공개 프로젝트 목록~@~"아니오"를 선택하는 경우 프로젝트 목록은 로그인시 숨겨집니다.~@~"아니오"를 선택하는 경우 프로젝트 목록은 로그인시 숨겨집니다.~@~
 11791~@~AdmReportObj [   40] Main Info: RptObjTypeCd (ko-KR)~@~1469~@~28~@~열 유형~@~이이 보고서 항목에 대한 보고서 항목 유형입니다. 현재 중 "필드"또는 "매개 변수".~@~이 보고서 열의 보고서 항목 유형을 선택하십시오.~@~
 11792~@~AdmReport [   60] Main Info: ModifiedBy (ko-KR)~@~1470~@~28~@~으로 수정~@~이 보고서 정의를 마지막 사용자가 바뀌 었습니다.~@~이 보고서 정의를 마지막 사용자가 바뀌 었습니다.~@~
@@ -8057,7 +8057,7 @@
 14775~@~AdmDbTable [  120] Main Info: ModifiedOn (ko-KR)~@~14~@~28~@~에 수정~@~이 테이블에 대한 정보는 마지막이 날짜에 수정되었습니다.~@~~@~
 14776~@~AdmScreenTab [   70] Main Info: CultureId (ko-KR)~@~721~@~28~@~문화~@~이것은이 표시 이름에 대한 문화입니다.~@~이 표시 이름에 대한 문화를 선택하십시오.~@~
 14777~@~AdmDbTable [  100] Main Info: MultiDesignDb (ko-KR)~@~933~@~28~@~멀티 디자인 DB~@~같은 테이블은 모든 응용 프로그램 디자인 데이터베이스에 나타나는 경우이 옵션을 선택합니다.~@~~@~
-14778~@~AdmUsrPref [  120] Style: UsrStyleSheet (ko-KR)~@~960~@~28~@~스타일 재정의~@~이 오버라이드 스타일 시트 명령이다. 이미지 URL 따라서 여기에 루트 레벨 "../"에 대한 필요에서 시작됩니다.~@~~@~
+14778~@~AdmUsrPref [  130] Style: UsrStyleSheet (ko-KR)~@~960~@~28~@~스타일 재정의~@~이 오버라이드 스타일 시트 명령이다. 이미지 URL 따라서 여기에 루트 레벨 "../"에 대한 필요에서 시작됩니다.~@~~@~
 14779~@~AdmReport [   80] Main Info: TemplateName (ko-KR)~@~1013~@~28~@~템플릿 이름~@~이 TXT 또는 RTF 템플릿이있는 경우, 문서 병합에 사용됩니다.~@~~@~
 14780~@~AdmScreenObj [  190] Main Info: GroupColId (ko-KR)~@~1204~@~28~@~열 그룹~@~이것은 12 컬럼 그리드에서 컬럼 그룹이다.~@~12 기둥 그리드에서 해당 열 그룹을 선택하십시오.~@~
 14781~@~AdmWebRule [   90] Main Info: WebRuleProg (ko-KR)~@~1290~@~28~@~C # 비즈니스 규칙~@~이것은 프로그램 상에 생성 될 잘 시험 규칙이다.~@~프로그램에 생성 할 수있는 잘 테스트 규칙을 여기에 복사하세요.~@~
@@ -8142,7 +8142,7 @@
 14874~@~AdmDbTable [  280] Main Info: AllowNulls (zh-CN)~@~20~@~4~@~可空~@~如果列可以为空这被选中。~@~~@~
 14876~@~AdmMenuHlp [   30] Main Info: CultureId (zh-CN)~@~448~@~4~@~文化~@~这就是文化这个标签。~@~请选择培养此标签。~@~
 14877~@~AdmMenuHlp [   10] Main Info: MenuId (zh-CN)~@~446~@~4~@~菜单ID~@~这是代表该菜单的内部ID。~@~~@~
-14878~@~AdmUsrPref [  120] Style: UsrStyleSheet (zh-CN)~@~960~@~4~@~样式替代~@~这是压倒一切的样式表的命令。图像的URL从这里开始的根级别因而没有必要“../”。~@~~@~
+14878~@~AdmUsrPref [  130] Style: UsrStyleSheet (zh-CN)~@~960~@~4~@~样式替代~@~这是压倒一切的样式表的命令。图像的URL从这里开始的根级别因而没有必要“../”。~@~~@~
 14879~@~AdmUsr [  260] Status: HintQuestionId (zh-CN)~@~1119~@~4~@~提示问题~@~这是以防密码提示问题忘记了，需要通过电子邮件发送给。~@~~@~
 14880~@~AdmScreenObj [   80] Main Info: RefreshOnCUD (zh-CN)~@~1280~@~4~@~刷新CUD~@~选中后，该文件，DropDownList中，列表框，单选模式，或DataGridLink列将被刷新后，每一个创建，更新或删除并可能导致性能损失。~@~~@~
 14881~@~AdmDbTable [  320] Main Info: IsIndex (zh-CN)~@~1774~@~4~@~N / U-指数~@~当这列非唯一的非聚集索引的一部分，这是检查。~@~~@~
@@ -8325,9 +8325,9 @@
 16243~@~AdmUsr [  360] Status: LenderId (en-US)~@~4185~@~1~@~Lender~@~This is the lender this user has access to, empty means all.~@~~@~
 16244~@~AdmUsr [  370] Status: BorrowerId (en-US)~@~4186~@~1~@~Borrower~@~This is the borrower this user has access to, empty means all.~@~~@~
 16245~@~AdmUsr [  380] Status: GuarantorId (en-US)~@~4187~@~1~@~Guarantor~@~This is the guarantor this user has access to, empty means all.~@~~@~
-16246~@~AdmUsrPref [  240] Applied: LenderId (en-US)~@~4188~@~1~@~Lender~@~This is the only lender to be using this preference, if chosen.~@~~@~
-16247~@~AdmUsrPref [  250] Applied: BorrowerId (en-US)~@~4189~@~1~@~Borrower~@~This is the only borrower to be using this preference, if chosen.~@~~@~
-16248~@~AdmUsrPref [  260] Applied: GuarantorId (en-US)~@~4190~@~1~@~Guarantor~@~This is the only guarantor to be using this preference, if chosen.~@~~@~
+16246~@~AdmUsrPref [  250] Applied: LenderId (en-US)~@~4188~@~1~@~Lender~@~This is the only lender to be using this preference, if chosen.~@~~@~
+16247~@~AdmUsrPref [  260] Applied: BorrowerId (en-US)~@~4189~@~1~@~Borrower~@~This is the only borrower to be using this preference, if chosen.~@~~@~
+16248~@~AdmUsrPref [  270] Applied: GuarantorId (en-US)~@~4190~@~1~@~Guarantor~@~This is the only guarantor to be using this preference, if chosen.~@~~@~
 16264~@~AdmScreenObj [  170] Main Info: DtlLstPosId (en-US)~@~4206~@~1~@~Mobile Search Position~@~Please select the search position for mobile presentation.~@~~@~
 16265~@~AdmWebRule [  140] React Rule: ReactEventId (en-US)~@~4207~@~1~@~React Event/Type~@~This is the event to fire this react rule.~@~Please select the event to fire this react rule.~@~
 16266~@~AdmWebRule [  150] React Rule: ReactRuleProg (en-US)~@~4208~@~1~@~React Business Rule~@~This is the well tested React rule to be generated onto the program.~@~Please copy to here the well tested React rule to be generated onto the program.~@~
@@ -8528,13 +8528,13 @@
 16527~@~AdmDbTable [  100] Main Info: MultiDesignDb (en-US)~@~933~@~114~@~DB multi-design~@~Cochez cette case si le même tableau apparaît dans toutes les bases de données de conception d'application.~@~~@~
 16528~@~AdmUsr [  330] Status: AgentId (en-US)~@~934~@~114~@~Agent~@~Il s'agit de l'agent auquel cet utilisateur a accès, vide signifie tout.~@~~@~
 16529~@~AdmUsr [  340] Status: BrokerId (en-US)~@~935~@~114~@~Courtier~@~Il s'agit du courtier auquel cet utilisateur a accès, vide signifie tout.~@~~@~
-16530~@~AdmUsrPref [   10] Main Info: UsrPrefId (en-US)~@~939~@~114~@~ID UsrPref~@~Il s'agit de l'ID interne représentant cette préférence utilisateur.~@~~@~
-16531~@~AdmUsrPref [  130] Applied: UsrId (en-US)~@~940~@~114~@~Utilisateur~@~C'est le seul utilisateur à utiliser cette préférence, s'il est choisi.~@~~@~
-16532~@~AdmUsrPref [  170] Applied: SystemId (en-US)~@~941~@~114~@~Système~@~C'est le seul système à appliquer cette préférence, s'il est choisi.~@~~@~
-16533~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (en-US)~@~942~@~114~@~Nom de préférence~@~Il s'agit de la description unique de cette préférence utilisateur.~@~Veuillez saisir une description unique pour cette préférence utilisateur.~@~
-16534~@~AdmUsrPref [   90] Main Info: SysListVisible (en-US)~@~943~@~114~@~Liste système visible~@~La liste des systèmes sera masquée lors de la connexion si "Non" est sélectionné.~@~La liste des systèmes sera masquée lors de la connexion si "Non" est sélectionné.~@~
-16535~@~AdmUsrPref [   30] Main Info: MenuOptId (en-US)~@~944~@~114~@~Option de menu~@~Il s'agit du choix de menu pour ce profil.~@~Veuillez sélectionner le choix de menu pour ce profil.~@~
-16536~@~AdmUsrPref [  120] Style: UsrStyleSheet (en-US)~@~960~@~114~@~Remplacement de style~@~Il s'agit des commandes de feuille de style de remplacement. Image-url commence ici au niveau racine donc pas besoin de "../".~@~~@~
+16530~@~AdmUsrPref [   10] Main Info: UsrPrefId (fr-CA)~@~939~@~114~@~ID UsrPref~@~Il s'agit de l'ID interne représentant cette préférence utilisateur.~@~~@~
+16531~@~AdmUsrPref [  140] Applied: UsrId (fr-CA)~@~940~@~114~@~Utilisateur~@~C'est le seul utilisateur à utiliser cette préférence, s'il est choisi.~@~~@~
+16532~@~AdmUsrPref [  180] Applied: SystemId (fr-CA)~@~941~@~114~@~Système~@~C'est le seul système à appliquer cette préférence, s'il est choisi.~@~~@~
+16533~@~AdmUsrPref [   20] Main Info: UsrPrefDesc (fr-CA)~@~942~@~114~@~Nom de préférence~@~Il s'agit de la description unique de cette préférence utilisateur.~@~Veuillez saisir une description unique pour cette préférence utilisateur.~@~
+16534~@~AdmUsrPref [   90] Main Info: SysListVisible (fr-CA)~@~943~@~114~@~Liste système visible~@~La liste des systèmes sera masquée lors de la connexion si "Non" est sélectionné.~@~La liste des systèmes sera masquée lors de la connexion si "Non" est sélectionné.~@~
+16535~@~AdmUsrPref [   30] Main Info: MenuOptId (fr-CA)~@~944~@~114~@~Option de menu~@~Il s'agit du choix de menu pour ce profil.~@~Veuillez sélectionner le choix de menu pour ce profil.~@~
+16536~@~AdmUsrPref [  130] Style: UsrStyleSheet (fr-CA)~@~960~@~114~@~Remplacement de style~@~Il s'agit des commandes de feuille de style de remplacement. Image-url commence ici au niveau racine donc pas besoin de "../".~@~~@~
 16537~@~AdmReportGrp [   20] Main Info: ReportId (en-US)~@~967~@~114~@~rapport~@~Cette liste déroulante répertorie tous les rapports disponibles à sélectionner pour ce groupe.~@~Cette liste déroulante répertorie tous les rapports disponibles à sélectionner pour ce groupe.~@~
 16538~@~AdmReportGrp [   10] Main Info: ReportGrpId (en-US)~@~977~@~114~@~ID de groupe~@~Il s'agit de l'ID interne qui représente uniquement ce groupe de critères de rapport.~@~~@~
 16539~@~AdmReportGrp [   50] Main Info: ReportGrpName (en-US)~@~978~@~114~@~Nom de groupe~@~Il s'agit du nom unqiue représentant ce groupe de critères.~@~Veuillez saisir un nom significatif et unique pour ce groupe de critères.~@~
@@ -8589,14 +8589,14 @@
 16588~@~AdmChgPwd [   10] Main Info: UsrId (en-US)~@~1121~@~114~@~Identifiant Usr~@~Il s'agit de l'ID interne qui représente uniquement cet utilisateur.~@~~@~
 16589~@~AdmChgPwd [   20] Main Info: UsrPassword (en-US)~@~1124~@~114~@~nouveau mot de passe~@~Il s'agit du nouveau mot de passe défini par l'administrateur; aucune restriction ni exigence de complexité.~@~Veuillez saisir un nouveau mot de passe, aucune restriction ni exigence de complexité.~@~
 16590~@~AdmChgPwd [   30] Main Info: ConfirmPwd (en-US)~@~1136~@~114~@~Confirmez le mot de passe~@~Cela confirme le mot de passe précédent.~@~Veuillez saisir le même mot de passe précédent que la confirmation.~@~
-16591~@~AdmUsrPref [  140] Applied: UsrGroupId (en-US)~@~1143~@~114~@~Groupe d'utilisateurs~@~Il s'agit du seul groupe d'utilisateurs à utiliser cette préférence, s'il est choisi.~@~~@~
-16592~@~AdmUsrPref [  180] Applied: MemberId (en-US)~@~1144~@~114~@~Membre~@~C'est le seul membre à utiliser cette préférence, s'il est choisi.~@~~@~
-16593~@~AdmUsrPref [  190] Applied: AgentId (en-US)~@~1145~@~114~@~Agent~@~C'est le seul agent à utiliser cette préférence, s'il est choisi.~@~~@~
-16594~@~AdmUsrPref [  200] Applied: BrokerId (en-US)~@~1146~@~114~@~Courtier~@~C'est le seul courtier à utiliser cette préférence, s'il est choisi.~@~~@~
-16595~@~AdmUsrPref [  210] Applied: CustomerId (en-US)~@~1147~@~114~@~Client~@~C'est le seul client à utiliser cette préférence, s'il est choisi.~@~~@~
-16596~@~AdmUsrPref [  220] Applied: InvestorId (en-US)~@~1148~@~114~@~Investisseur~@~C'est le seul investisseur à utiliser cette préférence, s'il est choisi.~@~~@~
-16597~@~AdmUsrPref [  230] Applied: VendorId (en-US)~@~1149~@~114~@~Vendeur~@~C'est le seul fournisseur à utiliser cette préférence, s'il est choisi.~@~~@~
-16598~@~AdmUsrPref [  100] Main Info: PrefDefault (en-US)~@~1150~@~114~@~Par défaut pour le système~@~Ceci est vérifié si cette préférence doit s'appliquer au système ci-dessus pour toutes les connexions.~@~~@~
+16591~@~AdmUsrPref [  150] Applied: UsrGroupId (fr-CA)~@~1143~@~114~@~Groupe d'utilisateurs~@~Il s'agit du seul groupe d'utilisateurs à utiliser cette préférence, s'il est choisi.~@~~@~
+16592~@~AdmUsrPref [  190] Applied: MemberId (fr-CA)~@~1144~@~114~@~Membre~@~C'est le seul membre à utiliser cette préférence, s'il est choisi.~@~~@~
+16593~@~AdmUsrPref [  200] Applied: AgentId (fr-CA)~@~1145~@~114~@~Agent~@~C'est le seul agent à utiliser cette préférence, s'il est choisi.~@~~@~
+16594~@~AdmUsrPref [  210] Applied: BrokerId (fr-CA)~@~1146~@~114~@~Courtier~@~C'est le seul courtier à utiliser cette préférence, s'il est choisi.~@~~@~
+16595~@~AdmUsrPref [  220] Applied: CustomerId (fr-CA)~@~1147~@~114~@~Client~@~C'est le seul client à utiliser cette préférence, s'il est choisi.~@~~@~
+16596~@~AdmUsrPref [  230] Applied: InvestorId (fr-CA)~@~1148~@~114~@~Investisseur~@~C'est le seul investisseur à utiliser cette préférence, s'il est choisi.~@~~@~
+16597~@~AdmUsrPref [  240] Applied: VendorId (fr-CA)~@~1149~@~114~@~Vendeur~@~C'est le seul fournisseur à utiliser cette préférence, s'il est choisi.~@~~@~
+16598~@~AdmUsrPref [  100] Main Info: PrefDefault (fr-CA)~@~1150~@~114~@~Par défaut pour le système~@~Ceci est vérifié si cette préférence doit s'appliquer au système ci-dessus pour toutes les connexions.~@~~@~
 16599~@~AdmReport [  350] Main Info: DefaultHlpMsg (fr-CA)~@~1156~@~114~@~Message d'aide par défaut~@~Il s'agit du message avec un nombre illimité de caractères à afficher comme message d'aide dans la langue spécifiée.~@~Veuillez saisir le message avec un nombre illimité de caractères à afficher comme message d'aide.~@~
 16600~@~AdmReportCri [  150] Main Info: ColumnSize (en-US)~@~1158~@~114~@~Taille de la colonne (px)~@~Il s'agit de la taille de la colonne en pixels pour cette colonne de critères.~@~~@~
 16601~@~AdmScreenCri [   10] Main Info: ScreenCriId (en-US)~@~1178~@~114~@~Identifiant des critères~@~Il s'agit de l'ID interne qui représente uniquement cette colonne de critères.~@~~@~
@@ -8679,8 +8679,8 @@
 16678~@~AdmCtCulture [   20] Main Info: CultureTypeDesc (en-US)~@~1300~@~114~@~Description de la culture~@~Il s'agit de la description précisant la langue et le pays de cette culture.~@~Veuillez saisir une description précisant la langue et le pays de cette culture.~@~
 16679~@~AdmScreen [  160] Main Info: HasDeleteAll (en-US)~@~1301~@~114~@~Supprimer tout visible~@~Cochez cette case si l'option "Supprimer tout" doit être visible sur la grille de données.~@~~@~
 16680~@~AdmUsr [   50] Main Info: DefCompanyId (en-US)~@~1304~@~114~@~Société par défaut~@~Il s'agit de l'entreprise à sélectionner après la connexion.~@~~@~
-16681~@~AdmUsrPref [   70] Main Info: ComListVisible (en-US)~@~1305~@~114~@~Liste des sociétés visible~@~La liste des sociétés sera masquée lors de la connexion si "Non" est sélectionné.~@~La liste des sociétés sera masquée lors de la connexion si "Non" est sélectionné.~@~
-16682~@~AdmUsrPref [  150] Applied: CompanyId (en-US)~@~1306~@~114~@~Entreprise~@~C'est la seule entreprise à utiliser cette préférence, si elle est choisie.~@~~@~
+16681~@~AdmUsrPref [   70] Main Info: ComListVisible (fr-CA)~@~1305~@~114~@~Liste des sociétés visible~@~La liste des sociétés sera masquée lors de la connexion si "Non" est sélectionné.~@~La liste des sociétés sera masquée lors de la connexion si "Non" est sélectionné.~@~
+16682~@~AdmUsrPref [  160] Applied: CompanyId (fr-CA)~@~1306~@~114~@~Entreprise~@~C'est la seule entreprise à utiliser cette préférence, si elle est choisie.~@~~@~
 16683~@~AdmReport [  200] Main Info: GenerateRp (fr-CA)~@~1307~@~114~@~produire~@~Décochez cette case si aucun programme temporaire ne doit être généré pour ce rapport.~@~~@~
 16684~@~AdmRowOvrd [  120] Main Info: SelLevel (en-US)~@~1308~@~114~@~Autoriser la sélection~@~Il s'agit de l'autorisation de sélection prioritaire pour le type d'entité sélectionné.~@~Veuillez sélectionner l'autorisation de sélection prioritaire pour le type d'entité sélectionné.~@~
 16685~@~AdmWizardObj [   80] Main Info: DefOverwrite (fr-CA)~@~1328~@~114~@~Écraser par défaut~@~Ceci est vérifié si la valeur par défaut de cet assistant d'importation est d'écraser.~@~~@~
@@ -8763,8 +8763,8 @@
 16762~@~AdmDbTable [  130] Main Info: LastSyncDt (en-US)~@~1452~@~114~@~Synchronisé sur~@~Cette table a été synchronisée pour la dernière fois à cette date.~@~~@~
 16763~@~AdmReportGrp [   90] Main Info: GrpStyle (en-US)~@~1453~@~114~@~Remplacer le style~@~Remplacez le style de groupe par défaut par une classe Css commençant par un "." ou le contenu du style réel.~@~~@~
 16764~@~AdmReportObj [   80] Main Info: PaddChar (en-US)~@~1456~@~114~@~Avec caractère~@~Il s'agit du caractère à compléter à gauche de cette colonne si la taille totale du remplissage a été spécifiée; la valeur par défaut est vide.~@~~@~
-16765~@~AdmUsrPref [  160] Applied: ProjectId (en-US)~@~1459~@~114~@~Projet~@~C'est le seul projet à utiliser cette préférence, s'il est choisi.~@~~@~
-16766~@~AdmUsrPref [   80] Main Info: PrjListVisible (en-US)~@~1467~@~114~@~Liste de projets visible~@~La liste des projets sera masquée lors de la connexion si "Non" est sélectionné.~@~La liste des projets sera masquée lors de la connexion si "Non" est sélectionné.~@~
+16765~@~AdmUsrPref [  170] Applied: ProjectId (fr-CA)~@~1459~@~114~@~Projet~@~C'est le seul projet à utiliser cette préférence, s'il est choisi.~@~~@~
+16766~@~AdmUsrPref [   80] Main Info: PrjListVisible (fr-CA)~@~1467~@~114~@~Liste de projets visible~@~La liste des projets sera masquée lors de la connexion si "Non" est sélectionné.~@~La liste des projets sera masquée lors de la connexion si "Non" est sélectionné.~@~
 16767~@~AdmReportObj [   40] Main Info: RptObjTypeCd (en-US)~@~1469~@~114~@~Type de colonne~@~Il s'agit du type de colonne de rapport pour cette colonne de rapport. Actuellement, soit «Champ» ou «Paramètre».~@~Veuillez sélectionner le type de colonne de rapport pour cette colonne de rapport.~@~
 16768~@~AdmReport [   60] Main Info: ModifiedBy (fr-CA)~@~1470~@~114~@~Modifié par~@~Cette définition de rapport a été modifiée pour la dernière fois par cet utilisateur.~@~Cette définition de rapport a été modifiée pour la dernière fois par cet utilisateur.~@~
 16769~@~AdmReport [   70] Main Info: ModifiedOn (fr-CA)~@~1471~@~114~@~Modifié le~@~Cette définition de rapport a été modifiée pour la dernière fois à cette date et à cette heure.~@~~@~
@@ -9085,8 +9085,8 @@
 17084~@~AdmUsr [  120] Main Info: PicMed (en-US)~@~1984~@~114~@~~@~Cliquez sur l'icône à droite pour télécharger votre photo la plus récente.~@~~@~
 17085~@~AdmEntity [   20] Main Info: EntityImg (en-US)~@~1985~@~114~@~Icon~@~Cliquez sur l'icône à droite pour télécharger votre image préférée pour représenter cette entité.~@~~@~
 17086~@~AdmReportCri [   80] Main Info: DefaultValue (en-US)~@~1986~@~114~@~Valeur par défaut~@~Entrez une valeur par défaut côté client en JavaScript; vous pouvez utiliser une fonction telle que currentDate () pour la date du jour, etc .; Peut nécessiter des guillemets simples et respecter la casse. Constante de date au format 'YYYY.MM.DD'.~@~~@~
-17087~@~AdmUsrPref [   40] Main Info: MasterPgFile (en-US)~@~1987~@~114~@~La page principale~@~Ce fichier de page maître sera utilisé comme mise en page MasterPageFile pour ce thème, si disponible. La valeur par défaut est "Default.master".~@~~@~
-17088~@~AdmUsrPref [  110] Main Info: SampleImage (en-US)~@~1988~@~114~@~~@~Il s'agit de l'exemple d'image d'une page utilisant ce thème.~@~~@~
+17087~@~AdmUsrPref [   40] Main Info: MasterPgFile (fr-CA)~@~1987~@~114~@~La page principale~@~Ce fichier de page maître sera utilisé comme mise en page MasterPageFile pour ce thème, si disponible. La valeur par défaut est "Default.master".~@~~@~
+17088~@~AdmUsrPref [  110] Main Info: SampleImage (fr-CA)~@~1988~@~114~@~~@~Il s'agit de l'exemple d'image d'une page utilisant ce thème.~@~~@~
 17089~@~AdmScreen [  220] Main Info: AuthRequired (en-US)~@~1989~@~114~@~Authentification~@~Cochez cette case lorsque l'authentification est requise.~@~~@~
 17090~@~AdmReport [  220] Main Info: AuthRequired (fr-CA)~@~1991~@~114~@~Authentification~@~Cochez cette case lorsque l'authentification est requise.~@~~@~
 17091~@~AdmWizardObj [  100] Main Info: AuthRequired (fr-CA)~@~1992~@~114~@~Authentification~@~Cochez cette case si l'authentification est requise.~@~~@~

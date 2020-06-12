@@ -677,12 +677,12 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmMemberState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (<div className='form__form-group-field'>
                                         <Field
                                           type='text'
                                           name='cMnSalary274'
                                           disabled={(authCol.MnSalary274 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      </div>)
                                     }
                                     {errors.cMnSalary274 && touched.cMnSalary274 && <span className='form__form-group-error'>{errors.cMnSalary274}</span>}
                                   </div>
@@ -698,12 +698,12 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmMemberState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (<div className='form__form-group-field'>
                                         <Field
                                           type='text'
                                           name='cMnNtxBenefit274'
                                           disabled={(authCol.MnNtxBenefit274 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      </div>)
                                     }
                                     {errors.cMnNtxBenefit274 && touched.cMnNtxBenefit274 && <span className='form__form-group-error'>{errors.cMnNtxBenefit274}</span>}
                                   </div>
@@ -719,12 +719,12 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmMemberState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (<div className='form__form-group-field'>
                                         <Field
                                           type='text'
                                           name='cMnTaxBenefit274'
                                           disabled={(authCol.MnTaxBenefit274 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      </div>)
                                     }
                                     {errors.cMnTaxBenefit274 && touched.cMnTaxBenefit274 && <span className='form__form-group-error'>{errors.cMnTaxBenefit274}</span>}
                                   </div>
@@ -740,12 +740,12 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmMemberState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (<div className='form__form-group-field'>
                                         <Field
                                           type='text'
                                           name='cMnWorkHours274'
                                           disabled={(authCol.MnWorkHours274 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      </div>)
                                     }
                                     {errors.cMnWorkHours274 && touched.cMnWorkHours274 && <span className='form__form-group-error'>{errors.cMnWorkHours274}</span>}
                                   </div>

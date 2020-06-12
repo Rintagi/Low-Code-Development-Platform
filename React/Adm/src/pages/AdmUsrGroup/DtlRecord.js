@@ -339,6 +339,19 @@ class DtlRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
     const CompanyId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.CompanyId58(AdmUsrGroupState);
     const CompanyId58 = currDtl.CompanyId58;
     const ProjectId58List = AdmUsrGroupReduxObj.ScreenDdlSelectors.ProjectId58(AdmUsrGroupState);
@@ -537,7 +550,7 @@ class DtlRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              {false && (authCol.MoreInfo || {}).visible &&
+                              {(authCol.MoreInfo || {}).visible &&
                                 <Col lg={12} xl={12}>
                                   <div className='form__form-group'>
                                     {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='20px' />) ||
@@ -547,12 +560,15 @@ class DtlRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrGroupState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cMoreInfo'
-                                          disabled={(authCol.MoreInfo || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      ('http://www.robocoder.com' && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink('http://www.robocoder.com', false, false, {values, name: 'MoreInfo'})}
+                                          onClick={this.PopUpSearchLink('http://www.robocoder.com', false, false, {values, name: 'MoreInfo'})}
+                                          disabled={(authCol.MoreInfo || {}).readonly ? 'disabled' : ''}
+                                          >{'Info'}
+                                        </a>
+                                      </div>)
                                     }
                                     {errors.cMoreInfo && touched.cMoreInfo && <span className='form__form-group-error'>{errors.cMoreInfo}</span>}
                                   </div>

@@ -104,9 +104,9 @@ export function cutHash(value) {
 
 export function toLower(value) {
   try {
-      return value.toLowerCase();
+    return value.toLowerCase();
   } catch (e) {
-      return value;
+    return value;
   }
 }
 
@@ -288,17 +288,25 @@ export function formatBytes(bytes, decimals = 2) {
 }
 
 export function formatContent(value, format) {
-  if(format === 'Money' || format === 'Currency'){
+  if (format === 'Money' || format === 'Currency') {
     try {
-      if(value.length > 0){
+      if (value.length > 0) {
         return parseFloat(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-      }else{
+      } else {
         return value;
       }
     } catch (e) {
       return value;
     }
-  }else{
+  } 
+  else if (format === 'HyperLink' || format === 'HyperLink')
+  {
+    if ((value || '').match("@") && !(value || '').match("^(http|ftp|mailto|tel)")) {
+      return "mailto:" + value;
+    }
+    else return value;
+  }
+  else {
     return value;
   }
 }

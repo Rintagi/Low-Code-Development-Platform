@@ -894,6 +894,15 @@ namespace RO.WebRules
             }
         }
 
+        // Return SQL script for cloning purpose given Report ID.
+        public string WrCloneReport(string ReportId, string dbConnectionString, string dbPassword)
+        {
+            using (Access3.WebAccess dac = new Access3.WebAccess())
+            {
+                return dac.WrCloneReport(ReportId, dbConnectionString, dbPassword);
+            }
+        }
+
         // Purge audit trails older than YearOld:
         public void PurgeScrAudit(Int16 YearOld, string dbConnectionString, string dbPassword)
         {

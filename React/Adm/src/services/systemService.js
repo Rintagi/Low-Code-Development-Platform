@@ -1,22 +1,24 @@
 import { fetchData, getAccessControlInfo, getAccessScope, baseUrl } from './webAPIBase';
 import log from '../helpers/logger';
 
-export function getCompanyList() {
+export function getCompanyList(systemId) {
     return fetchData(baseUrl + '/SystemWs.asmx/GetCompanyList'
         , {
             requestOptions: {
                 body: JSON.stringify({
+                    SystemId: systemId || ''
                 }),
             },
             ...(getAccessControlInfo())
         }
     )
 }
-export function getProjectList(companyId) {
+export function getProjectList(systemId, companyId) {
     return fetchData(baseUrl + '/SystemWs.asmx/GetProjectList'
         , {
             requestOptions: {
                 body: JSON.stringify({
+                    SystemId: systemId || 0,
                     CompanyId: companyId || 0
                 }),
             },

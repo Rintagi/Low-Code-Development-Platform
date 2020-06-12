@@ -2563,4 +2563,20 @@ In default.master: replace section.css with the following:
 12612~@~  11. 175.00515~@~11~@~175~@~2020-05-15 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
 12613~@~  11. 176.00516~@~11~@~176~@~2020-05-16 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
 12614~@~  11. 177.00516~@~11~@~177~@~2020-05-16 00:00:00.000~@~~@~~@~1. revised deployment package~@~~@~en-US~@~
-12615~@~  11. 178~@~11~@~178~@~~@~~@~~@~~@~~@~~@~
+12615~@~  11. 178.00516~@~11~@~178~@~2020-05-16 00:00:00.000~@~~@~~@~1. reset company/project list in session when switching system~@~~@~en-US~@~
+12616~@~  11. 179.00529~@~11~@~179~@~2020-05-29 00:00:00.000~@~~@~~@~1. add report clone machinery~@~~@~en-US~@~
+12617~@~  11. 180.00530~@~11~@~180~@~2020-05-30 00:00:00.000~@~~@~~@~1. add manual override for mis-configured proxy setup(to assist SSL detection and avoid unnecessary self redirect to https)
+2. configurable cronjob execution(multi-server usage say behind load balancer)
+3. fixed name installer option for DevOp installer creation~@~~@~en-US~@~
+12618~@~  11. 181.00604~@~11~@~181~@~2020-06-04 00:00:00.000~@~~@~~@~1. add multi-doc handling override in asp.net page(see report definition for structure)
+2. enable 'upload' control in react screen
+3. better handling of numeric query string with ending //
+4. installer naming convention change for dropbox file(easy to sort by system)~@~~@~en-US~@~
+12619~@~  11. 182.00605~@~11~@~182~@~2020-06-05 00:00:00.000~@~~@~~@~1. enable 'Upload' Control in React screen~@~~@~en-US~@~
+12620~@~  11. 183.00610~@~11~@~183~@~2020-06-10 00:00:00.000~@~~@~~@~1. generated Hyperlink control in React
+2. fix rare bug in imagebutton reference 'non-base' column in grid
+3. more configurable command timeout fixed in access layer
+4. OTP cookie name cleanup
+5. proper column list in grid save dataset(Type/Display/Data)~@~~@~en-US~@~
+12621~@~  11. 184.00611~@~11~@~184~@~2020-06-11 00:00:00.000~@~~@~~@~1. Revise React Template and re-generate React Adm module~@~~@~en-US~@~
+12622~@~  11. 185~@~11~@~185~@~~@~~@~~@~~@~~@~~@~

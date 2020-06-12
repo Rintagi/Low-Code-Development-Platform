@@ -343,6 +343,7 @@ class MstRecord extends RintagiScreen {
     const StaticJsId259List = AdmStaticPgReduxObj.ScreenDdlSelectors.StaticJsId259(AdmStaticPgState);
     const StaticJsId259 = currMst.StaticJsId259;
     const StaticPgUrl259 = currMst.StaticPgUrl259;
+    const StaticPgUrl259URL = currMst.StaticPgUrl259URL;
     const StaticMeta259 = currMst.StaticMeta259;
     const StaticPgHtm259 = currMst.StaticPgHtm259;
     const StaticPgCss259 = currMst.StaticPgCss259;
@@ -394,6 +395,7 @@ class MstRecord extends RintagiScreen {
                     cStaticCsId259: StaticCsId259List.filter(obj => { return obj.key === StaticCsId259 })[0],
                     cStaticJsId259: StaticJsId259List.filter(obj => { return obj.key === StaticJsId259 })[0],
                     cStaticPgUrl259: formatContent(StaticPgUrl259 || '', 'HyperPopUp'),
+                    cStaticPgUrl259URL: formatContent(StaticPgUrl259URL || '', 'HyperPopUp'),
                     cStaticMeta259: formatContent(StaticMeta259 || '', 'MultiLine'),
                     cStaticPgHtm259: formatContent(StaticPgHtm259 || '', 'HtmlEditor'),
                     cStaticPgCss259: formatContent(StaticPgCss259 || '', 'MultiLine'),
@@ -633,12 +635,15 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmStaticPgState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cStaticPgUrl259'
-                                          disabled={(authCol.StaticPgUrl259 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      (values.cStaticPgUrl259URL && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(values.cStaticPgUrl259URL, false, false, {values, name: 'StaticPgUrl259'})}
+                                          onClick={this.PopUpSearchLink(values.cStaticPgUrl259URL, false, false, {values, name: 'StaticPgUrl259'})}
+                                          disabled={(authCol.StaticPgUrl259 || {}).readonly ? 'disabled' : ''}
+                                          >{values.cStaticPgUrl259}
+                                        </a>
+                                      </div>)
                                     }
                                     {errors.cStaticPgUrl259 && touched.cStaticPgUrl259 && <span className='form__form-group-error'>{errors.cStaticPgUrl259}</span>}
                                   </div>
@@ -675,12 +680,12 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmStaticPgState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (<div className='form__form-group-field'>
                                         <Field
                                           type='text'
                                           name='cStaticPgHtm259'
                                           disabled={(authCol.StaticPgHtm259 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      </div>)
                                     }
                                     {errors.cStaticPgHtm259 && touched.cStaticPgHtm259 && <span className='form__form-group-error'>{errors.cStaticPgHtm259}</span>}
                                   </div>

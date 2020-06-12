@@ -18,6 +18,10 @@ import { getNaviBar } from './index';
 import {switchLanguage} from '../../helpers/formatter';
 import DocumentTitle from 'react-document-title';
 import { setTitle } from '../../redux/Global';
+import { getRintagiConfig } from '../../helpers/config';
+
+const runtimeConfig = getRintagiConfig() || {};
+const curSystemId = runtimeConfig.systemId || '';
 
 class Setting extends Component {
   constructor(props) {
@@ -42,8 +46,8 @@ class Setting extends Component {
     if (this.props.user) {
 
       const promises = [
-        systemService.getCompanyList(),
-        systemService.getProjectList(this.props.user.CompanyId),
+        systemService.getCompanyList(curSystemId),
+        systemService.getProjectList(curSystemId, this.props.user.CompanyId),
         systemService.getTimeZoneList(),
         systemService.getCultureList("1","en"),
       ]

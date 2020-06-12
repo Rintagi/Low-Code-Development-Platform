@@ -1040,7 +1040,7 @@ namespace RO.Access3
             {
                 if (Config.DoubleByteDb) { cmd.Parameters.Add("@parameterXML", OleDbType.VarWChar).Value = parameterXML; } else { cmd.Parameters.Add("@parameterXML", OleDbType.VarChar).Value = parameterXML; }
             }
-            cmd.CommandTimeout = 3600;
+            cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = cmd;
 
             cn.Open();
@@ -1513,7 +1513,7 @@ namespace RO.Access3
             OleDbCommand cmd;
             cmd = new OleDbCommand("SET NOCOUNT ON " + sql.Replace("RODesign.", Config.AppNameSpace + "Design."), cn);
             cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 3600;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             if (!string.IsNullOrEmpty(pMKeyOle))    // I2
             {
@@ -1576,7 +1576,7 @@ namespace RO.Access3
             OleDbCommand cmd;
             cmd = new OleDbCommand("SET NOCOUNT ON " + sql.Replace("RODesign.", Config.AppNameSpace + "Design."), cn);
             cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 3600;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             cmd.Parameters.Add("@" + pKeyCol, GetOleDbType(pKeyOle)).Value = row[pKeyCol].ToString().Trim();
             foreach (DataColumn dc in cols)
@@ -1612,7 +1612,7 @@ namespace RO.Access3
             OleDbCommand cmd;
             cmd = new OleDbCommand("SET NOCOUNT ON " + sql.Replace("RODesign.", Config.AppNameSpace + "Design."), cn);
             cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 3600;
+            cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             cmd.Parameters.Add("@" + pKeyCol, GetOleDbType(pKeyOle)).Value = row[pKeyCol].ToString().Trim();
             cmd.Parameters.Add("@UsrId", OleDbType.Numeric).Value = LUser.UsrId.ToString();
@@ -1670,7 +1670,7 @@ namespace RO.Access3
             DataRow row = ds.Tables[0].Rows[0];
             OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON " + dtAud.Rows[1][0].ToString().Replace("RODesign.", Config.AppNameSpace + "Design."), cn);
             cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 3600;
+            cmd.CommandTimeout = _CommandTimeout;
             if (!noTrans) cmd.Transaction = tr;
             DataRow typ = ds.Tables[0].Rows[1]; DataRow dis = ds.Tables[0].Rows[2];
             if (string.IsNullOrEmpty(row[pMKeyCol].ToString().Trim()) || row[pMKeyCol].ToString().Trim() == Convert.ToDateTime("0001.01.01").ToString())
@@ -1837,7 +1837,7 @@ namespace RO.Access3
             {
                 OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON " + dtAud.Rows[2][0].ToString().Replace("RODesign.", Config.AppNameSpace + "Design."), cn);
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandTimeout = 3600;
+                cmd.CommandTimeout = _CommandTimeout;
                 da.UpdateCommand = cmd;
                 if (!noTrans) da.UpdateCommand.Transaction = tr;
                 string pMKeyCol = string.Empty;
@@ -2158,7 +2158,7 @@ namespace RO.Access3
             // SQL in dtAud delete the detail rows for I2 as well:
             OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON " + dtAud.Rows[0][0].ToString().Replace("RODesign.", Config.AppNameSpace + "Design."), cn);
             cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 3600;
+            cmd.CommandTimeout = _CommandTimeout;
             if (!noTrans) cmd.Transaction = tr;
             dvCol.RowFilter = "PrimaryKey = 'Y'";
             foreach (DataRowView drv in dvCol)

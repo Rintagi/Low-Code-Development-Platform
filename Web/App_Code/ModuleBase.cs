@@ -1266,6 +1266,8 @@ namespace RO.Web
             LCurr = curr;
             LImpr = null;
             VMenu = null;
+            Session.Remove("ProjectList");
+            Session.Remove("CompanyList");
             try
             {
                 SetUsrPreference();
@@ -1370,7 +1372,7 @@ namespace RO.Web
             bool bFromReferrer = false;
             if (Request.QueryString["ssd"] != null && Request.QueryString["ssd"].ToString() != string.Empty)
             {
-                ssd = Request.QueryString["ssd"].ToString();
+                ssd = GetNumQSParm("ssd").ToString();
             }
             else
             {
@@ -1423,8 +1425,12 @@ namespace RO.Web
                 }
                 catch { ssd = string.Empty; }
             }
-            if (!string.IsNullOrEmpty(Request.QueryString["msy"])) { csy = Request.QueryString["msy"].ToString().Split(new char[] { ',' }).Last(); }
-            else if (!string.IsNullOrEmpty(Request.QueryString["csy"])) { csy = Request.QueryString["csy"].ToString().Split(new char[] { ',' }).Last(); }
+            if (!string.IsNullOrEmpty(Request.QueryString["msy"])) { 
+                csy = GetNumQSParm("msy").Split(new char[] { ',' }).Last(); 
+            }
+            else if (!string.IsNullOrEmpty(Request.QueryString["csy"])) {
+                csy = GetNumQSParm("csy").Split(new char[] { ',' }).Last(); 
+            }
             if (Request.IsAuthenticated && LUser != null)
             {
                 /* Need to do these again when this program is redirected to. */
@@ -1453,9 +1459,9 @@ namespace RO.Web
                 if (LCurr != null)
                 {
                     byte cSys = LCurr.SystemId;
-                    string[] qSys = (Request.QueryString["csy"] ?? "").Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
+                    string[] qSys = GetNumQSParm("csy").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     bool multiSys = Request.Path.ToLower().Contains("sqlreport.aspx") || Request.Path.ToLower().Contains("showpage.aspx");
-                    if (!string.IsNullOrEmpty(Request.QueryString["msy"]) || !multiSys || qSys.Length > 1)
+                    if (!string.IsNullOrEmpty(GetNumQSParm("msy")) || !multiSys || qSys.Length > 1)
                     {
                         LCurr = new UsrCurr(Int32.Parse(CmpPrj["cmp"]), Int32.Parse(CmpPrj["prj"]), byte.Parse(csy), LCurr.DbId);
                         if (cSys.ToString() != csy) { SwitchSystem(LCurr); }
@@ -1806,14 +1812,17 @@ namespace RO.Web
         {
             if (!Request.IsLocal 
                 && (Config.EnableSsl ||
-                    (IsProxy() && Config.ExtBaseUrl.ToLower().StartsWith("https:"))) 
-                && !Request.Path.ToLower().Contains("msg.aspx"))
+                    (IsProxy() && Config.ExtBaseUrl.ToLower().StartsWith("https:")))
+                && !Request.Path.ToLower().Contains("msg.aspx")
+                && !IsSecureConnection()
+                )
             {
                 System.Web.Configuration.SessionStateSection SessionSettings = ConfigurationManager.GetSection("system.web/sessionState") as System.Web.Configuration.SessionStateSection;
                 string sessionCookieName = SessionSettings != null ? SessionSettings.CookieName : null;
 
                 HttpCookie sessionCookie = Response.Cookies[sessionCookieName];
-                if (Request.Cookies["secureChannel"] == null)
+                if (Request.Cookies["secureChannel"] == null
+                    )
                 {
                     HttpCookie x = new HttpCookie("secureChannel", "test");
                     x.Secure = true;
@@ -2808,14 +2817,22 @@ namespace RO.Web
             return SecureEquals(b1, b2);
         }
 
-        public void ValidatedQS()
+        public bool ValidatedQS(bool hardStop = true)
         {
             string qsHash = Request.QueryString["hash"];
-            if (!SecureEquals(qsHash, GetQSHash())) throw new HttpException(403, "Accessed denied");
+            if (!SecureEquals(qsHash, GetQSHash()))
+            {
+                if (hardStop)
+                    throw new HttpException(403, "Accessed denied");
+                else
+                    return false;
+            }
+            return true;
         }
 
-        protected void ValidateQSV2()
+        protected bool ValidateQSV2(bool hardStop = true)
         {
+            bool validLink = true;
             try
             {
                 /* must sync wih asmxbase.cs */
@@ -2833,7 +2850,6 @@ namespace RO.Web
                                                 System.Text.UTF8Encoding.UTF8.GetBytes(password),
                                                 System.Text.UTF8Encoding.UTF8.GetBytes(salt), round)));
                 long expiry = long.Parse(request["e"]);
-
                 if (DateTime.UtcNow.ToFileTimeUtc() > expiry) throw new HttpException(403, "Accessed denied");
 
                 List<string> param = new List<string>();
@@ -2852,7 +2868,13 @@ namespace RO.Web
                 System.Security.Cryptography.HMACMD5 hmac = new System.Security.Cryptography.HMACMD5(code);
                 byte[] hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(Convert.ToBase64String(code) + qsToHash.ToString()));
                 string hashString = Convert.ToBase64String(hash);
-                if (!SecureEquals(hashString, request["_h"])) throw new HttpException(403, "Accessed denied");
+                if (!SecureEquals(hashString, request["_h"]))
+                {
+                    if (hardStop)
+                        throw new HttpException(403, "Accessed denied");
+                    else
+                        validLink = true;
+                }
                 if (LUser == null)
                 {
                     AnonymousLogin();
@@ -2865,6 +2887,7 @@ namespace RO.Web
                 ErrorTrace(ex, "error", null, Request);
                 throw;
             }
+            return validLink;
         }
 
         public string GetQSHash()
@@ -2883,6 +2906,11 @@ namespace RO.Web
 
             /* url with hash to prevent tampering of manual construction, only for dnload.aspx */
             return path + "?" + qs + "&hash=" + GetQSHash(string.Join("&", qs.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries).OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim());
+        }
+
+        public string GetNumQSParm(string qsName)
+        {
+            return new System.Text.RegularExpressions.Regex(@"[^0-9\,]+", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Replace(Request.QueryString[qsName] ?? "", "");
         }
 
         protected byte[] Encrypt(byte[] clearData, byte[] password, byte[] salt, int round = 1000)
@@ -3008,7 +3036,9 @@ namespace RO.Web
         {
             try
             {
-                HttpCookie cookie = Request.Cookies[name + "_" + "ASP.NET_" + Config.AppNameSpace + "SessionId"];
+                System.Web.Configuration.SessionStateSection SessionSettings = ConfigurationManager.GetSection("system.web/sessionState") as System.Web.Configuration.SessionStateSection;
+                string sessionCookieName = SessionSettings != null ? SessionSettings.CookieName : null;
+                HttpCookie cookie = Request.Cookies[name + "_" + sessionCookieName];
                 System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string[] val = cookie.Value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 string content = System.Text.UTF8Encoding.UTF8.GetString(Decrypt(Convert.FromBase64String(val[1]), System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword), System.Text.UTF8Encoding.UTF8.GetBytes(val[0])));
@@ -3135,9 +3165,11 @@ namespace RO.Web
             string host = Request.Url.Host;
             string appPath = Request.ApplicationPath;
             string behindProxy = System.Configuration.ConfigurationManager.AppSettings["BehindProxy"];
-
+            string behindSecureProxy = System.Configuration.ConfigurationManager.AppSettings["BehindSecureProxy"];
             return
                 behindProxy == "Y"
+                ||
+                behindSecureProxy == "Y"
                 ||
                 (
                 !string.IsNullOrEmpty(extBasePath)
@@ -3149,7 +3181,7 @@ namespace RO.Web
         protected string ResolveUrlCustom(string relativeUrl, bool isInternal = false, bool withDomain = false)
         {
             var Request = Context.Request;
-            string url = ResolveUrl(relativeUrl);
+            string url = ResolveUrl((relativeUrl.StartsWith("http:") || relativeUrl.StartsWith("~/") || relativeUrl.StartsWith("/") ? "" : "~/") + relativeUrl);
             string extBasePath = Config.ExtBasePath;
             string extDomain = Config.ExtDomain;
             string extBaseUrl = Config.ExtBaseUrl;
@@ -3292,6 +3324,7 @@ namespace RO.Web
                 || (xForwardedHttps ?? "").ToLower() == "on"
                 || (isaHttps ?? "").ToLower() == "on"
                 || Request.Cookies["secureChannelTest"] != null
+                || System.Configuration.ConfigurationManager.AppSettings["BehindSecureProxy"] == "Y"
                 ;
         }
 
@@ -3572,9 +3605,9 @@ namespace RO.Web
                     ,"UsrAccess" 
                     ,"UsrRules"
                 };
-                bool needMSBuild = true || ruleTierProjects
+                bool needMSBuild = ruleTierProjects
                                         .Where(m => new Regex(string.Format("/{0}/", m), RegexOptions.IgnoreCase).IsMatch(changedFilesRet.Item2))
-                                        .Any();
+                                        .Any() || true;
                 bool noWebSiteBuild = true;
 
                 System.Collections.Generic.List<string> stdOut = new System.Collections.Generic.List<string>();
@@ -4067,7 +4100,7 @@ document.Rintagi = {{
 
         }
 
-        protected Task<Tuple<bool, string, string, string, string>> CreateInstallerAsync(short upgradeReleaseId, short newReleaseId, string DeployPath, string releaseTypeAbbr, string package, string SysConnString, string SysAppPw, Dictionary<string, string> requestInfo)
+        protected Task<Tuple<bool, string, string, string, string>> CreateInstallerAsync(short upgradeReleaseId, short newReleaseId, string DeployPath, string releaseTypeAbbr, string package, string SysConnString, string SysAppPw, Dictionary<string, string> requestInfo, bool fixedInstallerName = false)
         {
             string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
             string appRoot = webAppRoot.Replace("/Web/", "");
@@ -4154,8 +4187,8 @@ document.Rintagi = {{
                     else
                     {
                         installerPath = new Regex(@"Install\s*->\s*(.*)\r\n$").Match(compileResult).Groups[1].Value;
-                        installerFileName = DateTime.Now.ToString("yyyyMMdd") + "_" 
-                                                    + new Regex("^Deploy",RegexOptions.IgnoreCase).Replace(package,"").ToUpper() 
+                        installerFileName = new Regex("^Deploy", RegexOptions.IgnoreCase).Replace(package, "").ToUpper()
+                                                    + (!fixedInstallerName ? "_" + DateTime.Now.ToString("yyyyMMdd") : "") 
                                                     + "_Install.exe";
                         hasError = false;
                         try

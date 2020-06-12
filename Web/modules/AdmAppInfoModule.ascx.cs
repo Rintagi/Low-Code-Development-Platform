@@ -735,7 +735,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					}
 					else
 					{
-						new AdminSystem().UpdDbDoc(DocId, "dbo.AppZipId", Path.GetFileName(cAppZipId135Fi.PostedFile.FileName), cAppZipId135Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId), base.LUser);
+						new AdminSystem().UpdDbDoc(DocId, "dbo.AppZipId", Path.GetFileName(cAppZipId135Fi.PostedFile.FileName), cAppZipId135Fi.PostedFile.ContentType, dc.Length, dc, (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId), base.LUser, cAppInfoId135.Text);
 					}
 					cAppZipId135Pan.Visible = false; cAppZipId135Div.Visible = true;
 					SetAppZipId135(cAppZipId135GV, string.Empty);

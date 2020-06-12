@@ -570,12 +570,12 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmSredTimeState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (<div className='form__form-group-field'>
                                         <Field
                                           type='text'
                                           name='cHourSpent272'
                                           disabled={(authCol.HourSpent272 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      </div>)
                                     }
                                     {errors.cHourSpent272 && touched.cHourSpent272 && <span className='form__form-group-error'>{errors.cHourSpent272}</span>}
                                   </div>

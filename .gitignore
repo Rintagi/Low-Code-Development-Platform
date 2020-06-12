@@ -43,6 +43,7 @@ SQL/Data*/Ut*.txt
 SQL/Data*/*Lst*.txt
 SQL/Data*/CronJob.txt
 !Deploy*PDT/Default*
+!Deploy*PDT/*.cs
 !Deploy*PDT/Install*
 !Deploy*PDT/License*
 !Deploy*PDT/Program*
@@ -53,6 +54,7 @@ SQL/Data*/CronJob.txt
 !Deploy*PDT/Utils.*
 !Deploy*PDT/Help.*
 !Deploy*PTY/Default*
+!Deploy*PTY/*.cs
 !Deploy*PTY/Install*
 !Deploy*PTY/License*
 !Deploy*PTY/Program*
@@ -73,6 +75,7 @@ package-lock.json
 .DS_Store
 .vs
 *.refresh
+*.sln.cache
 .npmrc
 npm
 *.pfx

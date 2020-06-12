@@ -714,12 +714,12 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (<div className='form__form-group-field'>
                                         <Field
                                           type='text'
                                           name='cFailedAttempt1'
                                           disabled={(authCol.FailedAttempt1 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      </div>)
                                     }
                                     {errors.cFailedAttempt1 && touched.cFailedAttempt1 && <span className='form__form-group-error'>{errors.cFailedAttempt1}</span>}
                                   </div>
@@ -858,12 +858,12 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
+                                      (<div className='form__form-group-field'>
                                         <Field
                                           type='text'
                                           name='cTestCurrency95'
                                           disabled={(authCol.TestCurrency95 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      </div>)
                                     }
                                     {errors.cTestCurrency95 && touched.cTestCurrency95 && <span className='form__form-group-error'>{errors.cTestCurrency95}</span>}
                                   </div>

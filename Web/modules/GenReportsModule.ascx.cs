@@ -13,6 +13,7 @@ namespace RO.Web
 	using RO.Facade3;
 	using RO.Common3;
 	using RO.Common3.Data;
+    using RO.WebRules;
 	using AjaxControlToolkit;
 
 	public partial class GenReportsModule : RO.Web.ModuleBase
@@ -171,6 +172,23 @@ namespace RO.Web
 		{
 			PopReportList(cSearch.Text);
 		}
+
+        protected void cCloneButton_Click(object sender, System.EventArgs e)
+        {
+            if (cReportList.GetSelectedIndices().Length <= 0 || cReportList.GetSelectedIndices().Length > 1 || cAllReport.Checked)
+            {
+                PreMsgPopup("Please select one and only one report to clone.");
+            }
+            else
+            {
+                string strc = (new WebRule()).WrCloneReport(cReportList.SelectedValue, base.CSrc.SrcConnectionString, base.CSrc.SrcDbPassword);
+                string script =
+                @"<script type='text/javascript' language='javascript'>
+			            CloneScript('" + HttpUtility.JavaScriptStringEncode(strc) + @"','To clone selected report, run this SQL script on the design database of your choice.');
+			    </script>";
+                ScriptManager.RegisterStartupScript(this.Page, typeof(HtmlTextArea), "Popup", script, false);
+            }
+        }
 
         protected void cGenButton_Click(object sender, System.EventArgs e)
 		{

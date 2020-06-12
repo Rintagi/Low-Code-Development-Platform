@@ -157,12 +157,16 @@ public partial class CronJobModule : RO.Web.ModuleBase
                     string admEmail = base.SysAdminEmail(3);
                     List<Tuple<Exception, Dictionary<string, string>>> errorList = new List<Tuple<Exception, Dictionary<string, string>>>();
                     bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
-
+                    string RunCronJobModules = System.Configuration.ConfigurationManager.AppSettings["RunCronJob"] ?? "";
                     try
                     {
                         foreach (DataRow dr in SystemList.Rows)
                         {
-                            if (dr["Active"].ToString() != "Y") continue;
+                            if (dr["Active"].ToString() != "Y"
+                                ||
+                                (!string.IsNullOrEmpty(RunCronJobModules) && !RunCronJobModules.Contains(dr["dbDesDatabase"].ToString()))
+                                ) 
+                                continue;
                             string connStr = Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", dr["dbAppUserId"].ToString());
                             DataTable dtJobs = (new AdminSystem()).GetCronJob(null,string.Empty, connStr
                                 , singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString());
@@ -353,6 +357,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
             }
             catch (ThreadAbortException ex)
             {
+                RO.Common3.Utils.NeverThrow(ex);
             }
             catch (Exception e)
             {

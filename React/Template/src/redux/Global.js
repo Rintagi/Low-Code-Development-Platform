@@ -12,6 +12,8 @@ export const TOPBAR_CENTER = 'TOPBAR_CENTER';
 export const TOPBAR_RIGHT = 'TOPBAR_RIGHT';
 export const SHOW_SKELETON = 'SHOW_SKELETON';
 export const HIDE_SIDEBAR = 'HIDE_SIDEBAR';
+export const SET_MENU = 'SET_MENU';
+export const HIDE_TOPBAR = 'HIDE_TOPBAR';
 
 /* demo role based navigation */
 export const roles = {
@@ -44,6 +46,10 @@ export function globalReducer(state = { role: roles["1"] }, action) {
       return { ...state, pageSkeleton: action.payload.showSkeleton };
     case HIDE_SIDEBAR:
       return { ...state, hideSidebar: action.payload.hideSidebar };
+    case SET_MENU:
+      return { ...state, topbarMenu: action.payload.setMenu };
+    case HIDE_TOPBAR:
+      return { ...state, hideTopbarMenu: action.payload.hideTopbarMenu };
     default:
       return state;
   }
@@ -122,5 +128,19 @@ export function switchRole(role) {
   return {
     type: SWITCH_ROLE,
     payload: { role: role }
+  };
+}
+
+export function setTopbarMenu(setMenu) {
+  return {
+    type: SET_MENU,
+    payload: { setMenu: setMenu }
+  };
+}
+
+export function hideTopbarMenu(hideTopbarMenu) {
+  return {
+    type: HIDE_TOPBAR,
+    payload: { hideTopbarMenu: hideTopbarMenu }
   };
 }

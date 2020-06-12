@@ -562,7 +562,7 @@ namespace RO.Facade3
             }
         }
 
-        public void UpdDbDoc(string DocId, string TblName, string DocName, string MimeType, long DocSize, byte[] dc, string dbConnectionString, string dbPassword, LoginUsr lu)
+        public void UpdDbDoc(string DocId, string TblName, string DocName, string MimeType, long DocSize, byte[] dc, string dbConnectionString, string dbPassword, LoginUsr lu, string MasterId = null)
         {
             using (Access3.AdminAccess dac = new Access3.AdminAccess())
             {

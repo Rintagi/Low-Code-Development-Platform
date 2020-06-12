@@ -254,26 +254,45 @@ namespace RO.Web
                         bool pub = true;
                         if (LImpr != null)
                         {
+                            string[] allowedGroupId = (System.Configuration.ConfigurationManager.AppSettings["DownloadGroupLs"] ?? "5").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                             string UsrGroup = (char)191 + base.LImpr.UsrGroups + (char)191;
-                            if (UsrGroup.IndexOf((char)191 + "25" + (char)191) < 0 && UsrGroup.IndexOf((char)191 + "5" + (char)191) < 0)
-                                pub = true;
-                            else
-                                pub = false;
+                            foreach (var id in allowedGroupId)
+                            {
+                                if (UsrGroup.IndexOf((char)191 + id.ToString() + (char)191) >= 0
+                                    ||
+                                    UsrGroup.IndexOf((char)191 + "5" + (char)191) >= 0
+                                    )
+                                {
+                                    pub = false;
+                                    break;
+                                }
+                            }
                         }
-                        string fileName = Request.QueryString["file"].ToString();
-                        string key = Request.QueryString["key"].ToString();
-                        string DownloadLinkCode = Session.SessionID;
-                        byte[] Download_code = System.Text.Encoding.ASCII.GetBytes(DownloadLinkCode);
-                        System.Security.Cryptography.HMACMD5 bkup_hmac = new System.Security.Cryptography.HMACMD5(Download_code);
-                        byte[] Download_hash = bkup_hmac.ComputeHash(System.Text.Encoding.ASCII.GetBytes(fileName));
-                        string Download_hashString = BitConverter.ToString(Download_hash);
-                        bool allowDownload = Download_hashString == key;
-                        fileName = fileName.ToLower().Replace("/guarded/", "/source/");
+
+                        string fileName = (Request.QueryString["file"] ?? "").ToString().Replace("../","");
+                        fileName = (fileName.StartsWith("~/") ? "" : "~/") + fileName;
+                        string key = (Request.QueryString["key"] ?? "").ToString();
+                        //string DownloadLinkCode = Session.SessionID;
+                        //byte[] Download_code = System.Text.Encoding.ASCII.GetBytes(DownloadLinkCode);
+                        //System.Security.Cryptography.HMACMD5 bkup_hmac = new System.Security.Cryptography.HMACMD5(Download_code);
+                        //byte[] Download_hash = bkup_hmac.ComputeHash(System.Text.Encoding.ASCII.GetBytes(fileName));
+                        //string Download_hashString = BitConverter.ToString(Download_hash);
+                        bool allowDownload = string.IsNullOrEmpty(Request.QueryString["_h"]) ? ValidatedQS(false) : ValidateQSV2(false);
+                        fileName = (fileName.StartsWith("~/") ? "" : "~/") + fileName.ToLower().Replace("~/guarded/", "~/secure/").Replace("/guarded/", "/secure/");
                         string url = fileName;
                         string fullfileName = Server.MapPath(fileName);   // we enforce everything file for download is under ../files
                         System.IO.FileInfo file = new System.IO.FileInfo(fullfileName);
                         string oname = file.Name;
-                        if (!allowDownload && pub && !(file.Name.StartsWith("Pub") || file.Name.StartsWith("pub")))
+                        
+                        if (oname.ToLower().EndsWith(".config")) throw new Exception("Access Denied");
+
+                        if (pub
+                            && !allowDownload
+                            && !(file.Name.StartsWith("Pub") 
+                                || 
+                                file.Name.StartsWith("pub")
+                                )
+                            )
                         {
                             if (file.Name.EndsWith(".wmv"))
                             {
@@ -299,6 +318,9 @@ namespace RO.Web
                         Response.AddHeader("Content-Disposition", "Attachment; Filename=" + file.Name);
                         Response.AddHeader("Content-Length", file.Length.ToString());
                         Server.Transfer(url);
+                    }
+                    catch (ThreadAbortException)
+                    {
                     }
                     catch (Exception err) { ApplicationAssert.CheckCondition(false, "DnLoadModule", "", err.Message); }
                 }

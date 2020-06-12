@@ -89,6 +89,7 @@
         <div class="wizard-action">
 		    <span style="text-align:right;">
 			    <asp:label cssclass="MsgText" id="cMsgLabel" runat="server" />
+			    <asp:Button id="cCloneButton" CssClass="small blue button" onClick="cCloneButton_Click" runat="server" text="Clone" tooltip="Click here to clone codes for selected report." />
 			    <asp:Button id="cGenButton" CssClass="small blue button" onClick="cGenButton_Click" runat="server" text="Create" tooltip="Click here to generate codes for selected report(s)." />
 		    </span>
         </div>

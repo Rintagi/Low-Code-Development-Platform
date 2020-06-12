@@ -2153,12 +2153,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			        isImage = "image/gif,image/jpeg,image/png,image/tiff,image/pjpeg,image/x-png".IndexOf(mimeType) >= 0;
 			    } catch { isImage = hasImageContent; }
 			    ImageGridDisplay = e.Item.FindControl("cPicMed275") as ImageButton;
-			    ((FileUpload)e.Item.FindControl("cPicMed275Fi")).Attributes["onchange"] = "if('" + dvAdmMemberGrid[e.Item.DataItemIndex]["SredMebrId274"].ToString() + "'==''){PopDialog('','Please save the record first before upload.','');}else{sendFile(this.files[0],'" + GetUrlWithQSHash("UpLoad.aspx?key=" + dvAdmMemberGrid[e.Item.DataItemIndex]["SredMebrId274"].ToString() + "&tbl=dbo.VwIntUsr&knm=SredMebrId&col=PicMed&hgt=25&wth=25&sys=3") + "',refreshUploadCallback(this,'" + ImageGridDisplay.ClientID + "')); return false;} ";
-			    ((ImageButton)e.Item.FindControl("cPicMed275Del")).Attributes["onclick"] = "sendFile('','" + GetUrlWithQSHash("UpLoad.aspx?del=true&key=" + dvAdmMemberGrid[e.Item.DataItemIndex]["SredMebrId274"].ToString() + "&tbl=dbo.VwIntUsr&knm=SredMebrId&col=PicMed&hgt=25&wth=25&sys=3") + "',refreshUploadCallback(this,'" + ImageGridDisplay.ClientID + "'));return false;";
 			    if (!hasImageContent || (hasImageContent && isImage)) {
-			        ImageGridDisplay.OnClientClick = "PopDialog('','<img src= \"" + (!hasImageContent ?"images/DefaultImg.png": GetUrlWithQSHash("DnLoad.aspx?key=" + dvAdmMemberGrid[e.Item.DataItemIndex]["SredMebrId274"].ToString() + "&tbl=dbo.VwIntUsr&knm=SredMebrId&col=PicMed&hgt=25&wth=25&sys=3")) + "\" />',''); return false;";
+			        ImageGridDisplay.OnClientClick = "PopDialog('','<img src= \"" + (!hasImageContent ?"images/DefaultImg.png": GetUrlWithQSHash("DnLoad.aspx?key=" + dvAdmMemberGrid[e.Item.DataItemIndex]["UserId274"].ToString() + "&tbl=dbo.VwIntUsr&knm=UsrId&col=PicMed&hgt=25&wth=25&sys=3")) + "\" />',''); return false;";
 			    } else {
-			        ImageGridDisplay.OnClientClick = "window.open('" + GetUrlWithQSHash("DnLoad.aspx?key=" + dvAdmMemberGrid[e.Item.DataItemIndex]["SredMebrId274"].ToString() + "&tbl=dbo.VwIntUsr&knm=SredMebrId&col=PicMed&hgt=25&wth=25&sys=3") + "'); return false;";
+			        ImageGridDisplay.OnClientClick = "window.open('" + GetUrlWithQSHash("DnLoad.aspx?key=" + dvAdmMemberGrid[e.Item.DataItemIndex]["UserId274"].ToString() + "&tbl=dbo.VwIntUsr&knm=UsrId&col=PicMed&hgt=25&wth=25&sys=3") + "'); return false;";
 			    }
 			}
 			else
@@ -2173,9 +2171,9 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			    } catch { isImage = hasImageContent; }
 			    ImageGridDisplay = e.Item.FindControl("cPicMed275l") as ImageButton;
 			    if (!hasImageContent || (hasImageContent && isImage)) {
-			        ImageGridDisplay.OnClientClick = "PopDialog('','<img src= \"" + (!hasImageContent? "images/DefaultImg.png": GetUrlWithQSHash("DnLoad.aspx?key=" + dvAdmMemberGrid[e.Item.DataItemIndex]["SredMebrId274"].ToString() + "&tbl=dbo.VwIntUsr&knm=SredMebrId&col=PicMed&hgt=25&wth=25&sys=3")) + "\" />',''); return false;";
+			        ImageGridDisplay.OnClientClick = "PopDialog('','<img src= \"" + (!hasImageContent? "images/DefaultImg.png": GetUrlWithQSHash("DnLoad.aspx?key=" + dvAdmMemberGrid[e.Item.DataItemIndex]["UserId274"].ToString() + "&tbl=dbo.VwIntUsr&knm=UsrId&col=PicMed&hgt=25&wth=25&sys=3")) + "\" />',''); return false;";
 			    } else {
-			        ImageGridDisplay.OnClientClick = "window.open('" + GetUrlWithQSHash("DnLoad.aspx?key=" + dvAdmMemberGrid[e.Item.DataItemIndex]["SredMebrId274"].ToString() + "&tbl=dbo.VwIntUsr&knm=SredMebrId&col=PicMed&hgt=25&wth=25&sys=3") + "'); return false;";
+			        ImageGridDisplay.OnClientClick = "window.open('" + GetUrlWithQSHash("DnLoad.aspx?key=" + dvAdmMemberGrid[e.Item.DataItemIndex]["UserId274"].ToString() + "&tbl=dbo.VwIntUsr&knm=UsrId&col=PicMed&hgt=25&wth=25&sys=3") + "'); return false;";
 			    }
 			}
 			// *** GridItemDataBound (after) Web Rule End *** //
@@ -2381,7 +2379,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		    {
 		        if (lvi.FindControl("cPicMed275") != null)
 		        {
-		            dtImg = (new AdminSystem()).GetDbImg(dr["SredMebrId274"].ToString(), "dbo.VwIntUsr", "SredMebrId", "PicMed", LcAppConnString, LcAppPw);
+		            dtImg = (new AdminSystem()).GetDbImg(dr["UserId274"].ToString(), "dbo.VwIntUsr", "UsrId", "PicMed", LcAppConnString, LcAppPw);
 		            if (dtImg != null && dtImg.Rows.Count > 0)
 		            {
 		                dr["PicMed275"] = dtImg.Rows[0][0] as byte[];
@@ -2417,7 +2415,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			}
 			if (dt.Columns.Contains("_SortOrder")) dt.DefaultView[GetDataItemIndex(e.ItemIndex)].Row["_SortOrder"] = null;
 			DataTable dtImg = null;
-			dtImg = (new AdminSystem()).GetDbImg(dv.Count == 0 ? "0" : dv[GetDataItemIndex(e.ItemIndex)].Row["SredMebrId274"].ToString(), "dbo.VwIntUsr", "SredMebrId", "PicMed", LcAppConnString, LcAppPw);
+			dtImg = (new AdminSystem()).GetDbImg(dv.Count == 0 ? "0" : dv[GetDataItemIndex(e.ItemIndex)].Row["UserId274"].ToString(), "dbo.VwIntUsr", "UsrId", "PicMed", LcAppConnString, LcAppPw);
 			if (dtImg != null && dtImg.Rows.Count > 0)
 			{
 			    dv[GetDataItemIndex(e.ItemIndex)].Row["PicMed275"] = dtImg.Rows[0][0] as byte[];

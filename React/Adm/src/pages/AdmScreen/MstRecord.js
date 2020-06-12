@@ -391,6 +391,9 @@ class MstRecord extends RintagiScreen {
     const AuthRequired15 = currMst.AuthRequired15;
     const GenAudit15 = currMst.GenAudit15;
     const ScreenObj15 = currMst.ScreenObj15;
+    const ScreenObj15URL = currMst.ScreenObj15URL;
+    const ScreenFilter = currMst.ScreenFilter;
+    const ScreenFilter15URL = currMst.ScreenFilter15URL;
     const MoreInfo = currMst.MoreInfo;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -456,6 +459,9 @@ class MstRecord extends RintagiScreen {
                     cAuthRequired15: AuthRequired15 === 'Y',
                     cGenAudit15: GenAudit15 === 'Y',
                     cScreenObj15: formatContent(ScreenObj15 || '', 'HyperPopUp'),
+                    cScreenObj15URL: formatContent(ScreenObj15URL || '', 'HyperPopUp'),
+                    cScreenFilter: formatContent(ScreenFilter || '', 'ImagePopUp'),
+                    cScreenFilter15URL: formatContent(ScreenFilter15URL || '', 'ImagePopUp'),
                     cMoreInfo: formatContent(MoreInfo || '', 'HyperPopUp'),
                   }}
                   validate={this.ValidatePage}
@@ -1103,14 +1109,45 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cScreenObj15'
-                                          disabled={(authCol.ScreenObj15 || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      (values.cScreenObj15URL && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(values.cScreenObj15URL, false, false, {values, name: 'ScreenObj15'})}
+                                          onClick={this.PopUpSearchLink(values.cScreenObj15URL, false, false, {values, name: 'ScreenObj15'})}
+                                          disabled={(authCol.ScreenObj15 || {}).readonly ? 'disabled' : ''}
+                                          >{values.cScreenObj15}
+                                        </a>
+                                      </div>)
                                     }
                                     {errors.cScreenObj15 && touched.cScreenObj15 && <span className='form__form-group-error'>{errors.cScreenObj15}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ScreenFilter || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ScreenFilter || {}).ColumnHeader} {(columnLabel.ScreenFilter || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ScreenFilter || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ScreenFilter || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
+                                      (values.cScreenFilter15URL && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink(values.cScreenFilter15URL, false, false, {values, name: 'ScreenFilter'})}
+                                          onClick={this.PopUpSearchLink(values.cScreenFilter15URL, false, false, {values, name: 'ScreenFilter'})}
+                                          disabled={(authCol.ScreenFilter || {}).readonly ? 'disabled' : ''}
+                                          >
+                                            <img 
+                                                alt={'images/custom/adm/AnalToDb.gif'}
+                                                src={require('../../img/custom/adm/AnalToDb.gif')}
+                                            />
+                                        </a>
+                                      </div>)
+                                    }
+                                    {errors.cScreenFilter && touched.cScreenFilter && <span className='form__form-group-error'>{errors.cScreenFilter}</span>}
                                   </div>
                                 </Col>
                               }
@@ -1124,12 +1161,15 @@ class MstRecord extends RintagiScreen {
                                       </label>
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmScreenState)) && <Skeleton height='36px' />) ||
-                                      <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
-                                          name='cMoreInfo'
-                                          disabled={(authCol.MoreInfo || {}).readonly ? 'disabled' : ''} />
-                                      </div>
+                                      ('http://www.robocoder.com' && <div className='form__form-group-field'>
+                                        <a
+                                          target='_blank'
+                                          href={this.TranslateHyperLink('http://www.robocoder.com', false, false, {values, name: 'MoreInfo'})}
+                                          onClick={this.PopUpSearchLink('http://www.robocoder.com', false, false, {values, name: 'MoreInfo'})}
+                                          disabled={(authCol.MoreInfo || {}).readonly ? 'disabled' : ''}
+                                          >{'www.robocoder.com'}
+                                        </a>
+                                      </div>)
                                     }
                                     {errors.cMoreInfo && touched.cMoreInfo && <span className='form__form-group-error'>{errors.cMoreInfo}</span>}
                                   </div>

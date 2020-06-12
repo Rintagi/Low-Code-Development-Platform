@@ -5,9 +5,10 @@ import { getAddMstPath, getAddDtlPath, getNaviPath, getEditDtlPath, getEditMstPa
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation';
 import { GetDropdownAction, GetBottomAction, GetRowAction } from '../../redux/_ScreenReducer'
 import { getDefaultPath, getReactContainerInfo, getReactContainerStatus, uuid } from '../../helpers/utils';
+import { parsedUrl } from '../../helpers/domutils';
 import { getUrl } from '../../services/systemService';
 import log from '../../helpers/logger';
-import { toCapital } from '../../helpers/formatter';
+import { toCapital , _getQueryString, getUrlBeforeRouter } from '../../helpers/formatter';
 import { bindActionCreators } from 'redux';
 import { connect, dispatch } from 'react-redux';
 import { Redirect, withRouter } from 'react-router';
@@ -938,6 +939,56 @@ class RintagiScreen extends Component {
   }
   /* end validator function */
 
+  TranslateHyperLink(url, dtl, relative, options) {
+    var fullUrl = (url || '').match('^[a-zA-Z0-9]+:');    
+    if (!url) return url;
+    else if (fullUrl) {
+      //window.open(url);
+      return url;
+    }
+    else {
+      var x = parsedUrl(url);
+      if (x.pathname.match(/\.aspx$/i)) {
+        var path = (x.pathname ||'').replace(/\.aspx$/i,'');
+        var key = _getQueryString(x,'key');
+        var sub = key ? (dtl ? "/Dtl/" :"/Mst/") + (key || '') : (dtl ? "/DtlList" :""); 
+        return (relative ? "" : "/#") + path + sub;  
+      }
+      else return url;
+    }
+  }
+
+  PopUpSearchLink(url, dtl, sameWindow, options) {
+    const _this = this;
+    return function (evt) {
+      var fullUrl = (url || '').match('^[a-zA-Z0-9]+:');
+      if (fullUrl) {
+        //window.open(url);
+        return true;
+      }
+      else {
+        var translatedPath = _this.TranslateHyperLink(url, dtl, true, options);
+        var myBaseUrl = getUrlBeforeRouter();
+        if (translatedPath) {
+          var newUrl = myBaseUrl + "/#" + translatedPath;
+          if (sameWindow) {
+            //window.location = newUrl;
+            this.props.history.push(translatedPath);
+          }
+          else {
+            window.open(newUrl);
+          }
+          evt.preventDefault();
+          return false;
+        }
+        else {
+
+        }
+        return true;
+      }
+      }.bind(this);
+  }
+ 
   StripEmbeddedBase64Prefix(base64string) {
     if (base64string && base64string.length > 0) {
       return base64string.replace(/^data:.+;base64,/, '');

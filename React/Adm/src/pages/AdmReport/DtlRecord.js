@@ -345,6 +345,19 @@ class DtlRecord extends RintagiScreen {
 
     const isMobileView = this.state.isMobile;
     const useMobileView = (isMobileView && !(this.props.user || {}).desktopView);
+    const fileFileUploadOptions = {
+      CancelFileButton: 'Cancel',
+      DeleteFileButton: 'Delete',
+      MaxImageSize: {
+        Width: 1024,
+        Height: 768,
+      },
+      MinImageSize: {
+        Width: 40,
+        Height: 40,
+      },
+      maxSize: 5 * 1024 * 1024,
+    }
     const CultureId96List = AdmReportReduxObj.ScreenDdlSelectors.CultureId96(AdmReportState);
     const CultureId96 = currDtl.CultureId96;
     const DefaultHlpMsg96 = currDtl.DefaultHlpMsg96;

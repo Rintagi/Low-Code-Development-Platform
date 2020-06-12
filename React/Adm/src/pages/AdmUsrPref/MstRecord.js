@@ -146,6 +146,20 @@ class MstRecord extends RintagiScreen {
           UsrPrefDesc93: values.cUsrPrefDesc93 || '',
           MenuOptId93: (values.cMenuOptId93 || {}).value || '',
           MasterPgFile93: values.cMasterPgFile93 || '',
+          LoginImage93: values.cLoginImage93 && values.cLoginImage93.ts ?
+            JSON.stringify({
+              ...values.cLoginImage93,
+              ts: undefined,
+              lastTS: values.cLoginImage93.ts,
+              base64: this.StripEmbeddedBase64Prefix(values.cLoginImage93.base64)
+            }) : values.cLoginImage93 || ' ',
+          MobileImage93: values.cMobileImage93 && values.cMobileImage93.ts ?
+            JSON.stringify({
+              ...values.cMobileImage93,
+              ts: undefined,
+              lastTS: values.cMobileImage93.ts,
+              base64: this.StripEmbeddedBase64Prefix(values.cMobileImage93.base64)
+            }) : values.cMobileImage93 || ' ',
           ComListVisible93: (values.cComListVisible93 || {}).value || '',
           PrjListVisible93: (values.cPrjListVisible93 || {}).value || '',
           SysListVisible93: (values.cSysListVisible93 || {}).value || '',
@@ -372,6 +386,10 @@ class MstRecord extends RintagiScreen {
     const MenuOptId93List = AdmUsrPrefReduxObj.ScreenDdlSelectors.MenuOptId93(AdmUsrPrefState);
     const MenuOptId93 = currMst.MenuOptId93;
     const MasterPgFile93 = currMst.MasterPgFile93;
+    const LoginImage93 = currMst.LoginImage93;
+    const LoginImage93_DownloadLink = currMst.LoginImage93_DownloadLink;
+    const MobileImage93 = currMst.MobileImage93;
+    const MobileImage93_DownloadLink = currMst.MobileImage93_DownloadLink;
     const ComListVisible93List = AdmUsrPrefReduxObj.ScreenDdlSelectors.ComListVisible93(AdmUsrPrefState);
     const ComListVisible93 = currMst.ComListVisible93;
     const PrjListVisible93List = AdmUsrPrefReduxObj.ScreenDdlSelectors.PrjListVisible93(AdmUsrPrefState);
@@ -465,6 +483,8 @@ class MstRecord extends RintagiScreen {
                     cUsrPrefDesc93: formatContent(UsrPrefDesc93 || '', 'TextBox'),
                     cMenuOptId93: MenuOptId93List.filter(obj => { return obj.key === MenuOptId93 })[0],
                     cMasterPgFile93: formatContent(MasterPgFile93 || '', 'TextBox'),
+                    cLoginImage93: formatContent(LoginImage93 || '', 'Upload'),
+                    cMobileImage93: formatContent(MobileImage93 || '', 'Upload'),
                     cComListVisible93: ComListVisible93List.filter(obj => { return obj.key === ComListVisible93 })[0],
                     cPrjListVisible93: PrjListVisible93List.filter(obj => { return obj.key === PrjListVisible93 })[0],
                     cSysListVisible93: SysListVisible93List.filter(obj => { return obj.key === SysListVisible93 })[0],
@@ -665,6 +685,74 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
+
+                              {(authCol.LoginImage93 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrPrefState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.LoginImage93 || {}).ColumnHeader} {(columnLabel.LoginImage93 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.LoginImage93 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.LoginImage93 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrPrefState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <FileInputFieldV1
+                                          name='cLoginImage93'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'cLoginImage93')}
+                                          fileInfo={{ downloadLink: LoginImage93_DownloadLink, downloadFileName: LoginImage93 }}
+                                          options={fileFileUploadOptions}
+                                          value={values.cLoginImage93 || LoginImage93}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />
+                                        {!(values.cLoginImage93 || {}).base64 &&
+                                        <Field
+                                          type='text'
+                                          name='cLoginImage93'
+                                          disabled={(authCol.LoginImage93 || {}).readonly ? 'disabled' : ''} />
+                                        }
+                                      </div>
+                                    }
+                                    {errors.cLoginImage93 && touched.cLoginImage93 && <span className='form__form-group-error'>{errors.cLoginImage93}</span>}
+                                  </div>
+                                </Col>
+                              }
+
+
+                              {(authCol.MobileImage93 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrPrefState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.MobileImage93 || {}).ColumnHeader} {(columnLabel.MobileImage93 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.MobileImage93 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.MobileImage93 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrPrefState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <FileInputFieldV1
+                                          name='cMobileImage93'
+                                          onChange={this.FileUploadChangeV1(setFieldValue, setFieldTouched, 'cMobileImage93')}
+                                          fileInfo={{ downloadLink: MobileImage93_DownloadLink, downloadFileName: MobileImage93 }}
+                                          options={fileFileUploadOptions}
+                                          value={values.cMobileImage93 || MobileImage93}
+                                          label={auxSystemLabels.PickFileBtnLabel}
+                                          onError={(e, fileName) => { this.props.showNotification('E', { message: 'problem loading file ' + fileName }) }}
+                                        />
+                                        {!(values.cMobileImage93 || {}).base64 &&
+                                        <Field
+                                          type='text'
+                                          name='cMobileImage93'
+                                          disabled={(authCol.MobileImage93 || {}).readonly ? 'disabled' : ''} />
+                                        }
+                                      </div>
+                                    }
+                                    {errors.cMobileImage93 && touched.cMobileImage93 && <span className='form__form-group-error'>{errors.cMobileImage93}</span>}
+                                  </div>
+                                </Col>
+                              }
+
                               {(authCol.ComListVisible93 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>

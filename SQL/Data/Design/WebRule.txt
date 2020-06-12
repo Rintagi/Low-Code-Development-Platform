@@ -2296,9 +2296,9 @@ document.Rintagi = {{
                     ,"UsrAccess" 
                     ,"UsrRules"
                 };
-                bool needMSBuild = true || ruleTierProjects
+                bool needMSBuild = ruleTierProjects
                                         .Where(m => new Regex(string.Format("/{0}/", m), RegexOptions.IgnoreCase).IsMatch(changedFilesRet.Item2))
-                                        .Any();
+                                        .Any() || true;
                 bool noWebSiteBuild = true;
 
                 System.Collections.Generic.List<string> stdOut = new System.Collections.Generic.List<string>();
@@ -2343,7 +2343,6 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
-
 ~@~~@~~@~~@~~@~~@~~@~~@~
 181~@~4~@~Publish React to Site~@~Systems Maintenance: Publish React to Site~@~Ready React code for production~@~87~@~4219~@~~@~1~@~            try
             {
@@ -2637,6 +2636,7 @@ document.Rintagi = {{
             bool isSecureConntection = Request.IsSecureConnection;
             string myUrl = ResolveUrlCustom(Request.Path, true, true);
 
+            // assuming this would never happened on production i.e. non-proxy and non-ssl
             if (!requestIsProxied
                 &&
                 !isSecureConntection
@@ -2726,6 +2726,7 @@ document.Rintagi = {{
                 else if (qs["CreateInstaller"] != null)
                 {
                     string somethingRunning = Application["BuildRunning"] as string;
+                    bool fixedInstallerName = (qs["FixedName"] ?? "").ToUpper() == "Y";
                     if (string.IsNullOrEmpty(somethingRunning))
                     {
                         if (LUser == null) AnonymousLogin();
@@ -2754,7 +2755,7 @@ document.Rintagi = {{
                             }
                         }
                         foreach (var x in releases) {
-                            installerTasks.Add(CreateInstallerAsync(x.Value.Item1, x.Value.Item2, x.Value.Item3, x.Value.Item4, x.Value.Item5, LcSysConnString, LcAppConnString, GetRequestInfo()));
+                            installerTasks.Add(CreateInstallerAsync(x.Value.Item1, x.Value.Item2, x.Value.Item3, x.Value.Item4, x.Value.Item5, LcSysConnString, LcAppConnString, GetRequestInfo(), fixedInstallerName));
                         }
                         if (qs["Wait"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("wait"))
                         {
@@ -2773,5 +2774,30 @@ document.Rintagi = {{
                     }
                 }
             }
+
+~@~~@~~@~~@~~@~~@~~@~~@~
+190~@~4~@~Helper Functions RptTemplate Doc handling~@~Report Definition: Helper Functions RptTemplate Doc handling~@~~@~67~@~~@~~@~16~@~        protected string WrRptTemplateDoc(string MasterId, string DocId, string UsrId, string DocTableName, string MasterTableName, string MasterColumnName, string MasterKey, string dbConnectionString, string dbPassword)
+        {
+            // delete
+            return (new AdminSystem()).DelDoc(MasterId, DocId, UsrId, DocTableName, MasterTableName, MasterColumnName, MasterKey, dbConnectionString, dbPassword);
+        }
+
+        public string WrRptTemplateDoc(string MasterId, string MasterTblName, string DocFileName, string UsrId, string dbConnectionString, string dbPassword)
+        {
+            // read
+            return new AdminSystem().GetDocId(MasterId, MasterTblName, DocFileName, UsrId, dbConnectionString, dbPassword);
+
+        }
+        public string WrRptTemplateDoc(string MasterId, string MasterTblName, string DocFileName, string MimeType, long DocSize, byte[] dc, string dbConnectionString, string dbPassword, LoginUsr CurrUser)
+        {
+            // add
+            return new AdminSystem().AddDbDoc(MasterId, MasterTblName, DocFileName, MimeType, DocSize, dc, dbConnectionString, dbPassword, CurrUser);
+
+        }
+        public void WrRptTemplateDoc(string DocId, string MasterTblName, string DocFileName, string MimeType, long DocSize, byte[] dc, string dbConnectionString, string dbPassword, LoginUsr CurrUser, string MasterId)
+        {
+            // update
+            new AdminSystem().UpdDbDoc(DocId, MasterTblName, DocFileName, MimeType, DocSize, dc, dbConnectionString, dbPassword, CurrUser, MasterId);
+        }
 
 ~@~~@~~@~~@~~@~~@~~@~~@~

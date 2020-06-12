@@ -2223,7 +2223,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		private DataRow MakeTypRow(DataRow dr)
 		{
 			dr["LabelId265"] = System.Data.OleDb.OleDbType.Numeric.ToString();
-			dr["LabelLink265"] = System.Data.OleDb.OleDbType.VarChar.ToString();
 			dr["CultureId265"] = System.Data.OleDb.OleDbType.Numeric.ToString();
 			dr["LabelCat265"] = System.Data.OleDb.OleDbType.VarChar.ToString();
 			dr["LabelKey265"] = System.Data.OleDb.OleDbType.VarChar.ToString();
@@ -2235,7 +2234,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		private DataRow MakeDisRow(DataRow dr)
 		{
 			dr["LabelId265"] = "TextBox";
-			dr["LabelLink265"] = "ImagePopUp";
 			dr["CultureId265"] = "TextBox";
 			dr["LabelCat265"] = "TextBox";
 			dr["LabelKey265"] = "TextBox";
@@ -2250,8 +2248,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dtAuth != null)
 			{
 				dr["LabelId265"] = drv["LabelId265"].ToString().Trim();
-				dr["LabelLink265"] = drv["LabelLink265"];
-				if (bAdd && dtAuth.Rows[1]["ColReadOnly"].ToString() == "Y" && dr["LabelLink265"].ToString() == string.Empty) {dr["LabelLink265"] = System.DBNull.Value;}
 				dr["CultureId265"] = drv["CultureId265"].ToString().Trim();
 				dr["LabelCat265"] = drv["LabelCat265"].ToString().Trim();
 				dr["LabelKey265"] = drv["LabelKey265"].ToString().Trim();
